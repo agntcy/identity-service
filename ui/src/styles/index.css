@@ -3,19 +3,19 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-@import url("tailwindcss");
-@plugin url("tailwindcss-animate");
+@import "tailwindcss";
+@plugin "tailwindcss-animate";
 
 :root {
-  font-family: "Inter", "Sharp Sans", sans-serif;
+  font-family: Inter, Sharp Sans, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgb(255, 255, 255);
+  color: rgba(255, 255, 255, 0.87);
   background-color: #EFF3FC;
 
-  text-rendering: optimizelegibility;
+  text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   --radius: 0.5rem;
@@ -32,8 +32,8 @@
   --card: #004A8C;
   --card-foreground: #00142B;
 
-  --popover: oklch(100% 0 0deg);
-  --popover-foreground: oklch(14.5% 0 0deg);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
 
   --primary: #187ADC;
   --primary-foreground: oklch(0.985 0 0);
