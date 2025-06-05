@@ -5,9 +5,10 @@
 
 import {BasePage} from '@/components/layout/base-page';
 import {EmptyProvider} from '@/components/shared/empty-provider';
+import {Button} from '@/components/ui/button';
 import PlaceholderPageContent from '@/components/ui/placeholder-page-content';
 import {useStore} from '@/store';
-import {Link} from 'react-router-dom';
+import {PlusIcon} from 'lucide-react';
 import {useShallow} from 'zustand/react/shallow';
 
 const Applications: React.FC = () => {
@@ -23,7 +24,7 @@ const Applications: React.FC = () => {
       title="Applications"
       description={
         <div className="space-y-4 max-w-[80%]">
-          <p>
+          {/* <p>
             The <b>AGNTCY</b> supports various types of verifiable credentials, referred to as <b>VCs</b>. A verifiable credential is a specific way
             to express and present a set of claims made by an issuer, such as an agent definition (e.g., an <b>OASF Definition</b>, or an{' '}
             <b>A2A Agent Card</b>), a deployment configuration, or an authorization claim that could be used during a MFA process.
@@ -34,10 +35,17 @@ const Applications: React.FC = () => {
               here
             </Link>
             .
-          </p>
+          </p> */}
+          TODO
         </div>
       }
       useBreadcrumbs={false}
+      rightSideItems={
+        <Button className="flex gap-2 items-center">
+          Create Application
+          <PlusIcon />
+        </Button>
+      }
     >
       {identityProvider && passwordManagementProvider ? <PlaceholderPageContent /> : <EmptyProvider />}
     </BasePage>

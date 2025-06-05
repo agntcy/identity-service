@@ -7,13 +7,15 @@ import {FingerprintIcon, PlusIcon} from 'lucide-react';
 import {Button} from '../ui/button';
 import {Card} from '../ui/card';
 import {useCallback} from 'react';
+import {useNavigate} from 'react-router-dom';
+import {PATHS} from '@/router/paths';
 
 export const EmptyProvider = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const onClick = useCallback(() => {
-    // void navigate(PATHS.identityProvider, {replace: true});
-  }, []);
+    void navigate(PATHS.settingsIdentityProvider, {replace: true});
+  }, [navigate]);
 
   return (
     <Card>
