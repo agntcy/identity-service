@@ -1,11 +1,36 @@
-# Repo Template
-This is a simple repo template to use together with Safe-Settings for repo creation
+# Identity SaaS
 
-## CODEOWNERS
-Please modify this file to include your team and CODEOWNER rules
+[![Lint](https://github.com/cisco-eti/pyramid-saas/actions/workflows/lint.yml/badge.svg?branch=main)](https://github.com/marketplace/actions/super-linter)
+[![Contributor-Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-fbab2c.svg)](CODE_OF_CONDUCT.md)
 
-## Jenkins pipeline
-Please refer to the [SRE-Pipeline-Library](https://wwwin-github.cisco.com/pages/eti/sre-pipeline-library/) documentation for further information on how to modify your Jenkinsfile to your needs
+<p align="center">
+  <a href="https://agntcy.org">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="img/_logo-Agntcy_White@2x.png" width="300">
+      <img alt="" src="img/_logo-Agntcy_FullColor@2x.png" width="300">
+    </picture>
+  </a>
+  <br />
+  <caption>Welcome to the <b>Identity SaaS</b> repository</caption>
+</p>
 
-## Github Actions Workflow
-Please refer to the [Github Actions](https://platform-docs.eticloud.io/services/pipeline-services/ci/github-actions/) platform documentation for further information on how to modify your [ci.yaml](.github/workflows/ci.yaml) to your needs
+---
+
+## Roadmap
+
+See the [open issues](https://github.com/cisco-eti/pyramid-saas/issues) for a list
+of proposed features (and known issues).
+
+## Contributing
+
+Contributions are what make the open source community such an amazing place to
+learn, inspire, and create. Any contributions you make are **greatly
+appreciated**. For detailed contributing guidelines, please see
+[CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Copyright Notice
+
+[Copyright Notice and License](LICENSE)
+
+Distributed under Apache 2.0 License. See LICENSE for more information.
+Copyright [AGNTCY](https://github.com/agntcy) Contributors.
