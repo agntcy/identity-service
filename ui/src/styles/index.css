@@ -1,0 +1,174 @@
+/**
+ * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+@import url("tailwindcss");
+@plugin url("tailwindcss-animate");
+
+:root {
+  font-family: "Inter", "Sharp Sans", sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgb(255, 255, 255);
+  background-color: #EFF3FC;
+
+  text-rendering: optimizelegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  --radius: 0.5rem;
+  font-synthesis: none;
+
+  --background: #EFF3FC;
+  --foreground: #EFF3FC;
+
+  --side-nav-background: #EFF3FC;
+  --side-nav-hover: #E8F1FF;
+  --side-nav-selected: #E8F1FF;
+  --side-nav-selected-hover: #E8F1FF;
+
+  --card: #004A8C;
+  --card-foreground: #00142B;
+
+  --popover: oklch(100% 0 0deg);
+  --popover-foreground: oklch(14.5% 0 0deg);
+
+  --primary: #187ADC;
+  --primary-foreground: oklch(0.985 0 0);
+
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+
+  --muted: #E8F1FF;
+  --muted-foreground: #3C4551;
+
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+
+  --success: oklch(0.723 0.219 149.579);
+  --destructive: oklch(0.637 0.237 25.331);
+  --border: oklch(0.922 0 0);
+  --input: #FBFCFE;
+  --ring: #D5DFF7;
+}
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+ 
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  
+  --color-success: var(--success);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  
+  --color-side-nav-background: var(--side-nav-background);
+  --color-side-nav-hover: var(--side-nav-hover);
+  --color-side-nav-selected: var(--side-nav-selected);
+  --color-side-nav-selected-hover: var(--side-nav-selected-hover);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    /* word-break: break-all; */
+  }
+  .inline-link {
+    @apply hover:text-primary cursor-pointer hover:decoration-primary font-semibold hover:underline;
+  }
+}
+
+.card-group {
+  align-items: stretch;
+  display: flex;
+  flex: 0 1 auto;
+  flex-flow: wrap;
+  gap: 12px;
+  justify-content: flex-start;
+}
+
+.card-flex-group {
+  flex: 1 1 20%;
+  max-width: unset;
+}
+
+.card-style {
+  box-shadow: 0px 4px 4px 0px #C8D5F554;
+}
+
+.app-bar {
+  border-bottom: 1px solid #D5DFF7;
+  overflow: hidden;
+}
+
+.side-bar {
+  border-right: 1px solid #D5DFF7;
+  padding-top: 32px;
+  padding-right: 12px;
+  padding-bottom: 64px;
+  padding-left: 12px;
+}
+
+.product-name {
+  font-family: Sharp Sans;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 18px;
+  letter-spacing: 0%;
+  vertical-align: middle;
+  color: #00142B;
+}
+
+.collapse-button {
+  border: 2px solid #FBAF45;
+}
+
+.custom-border {
+  border-width: 2px;
+  border-style: solid;
+  border-bottom-color: #FBAB2C;
+  border-right-color: #FBAB2C;
+}
+
+.menu-item {
+  font-family: Inter;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 24px;
+  letter-spacing: 0.5px;
+  color: #3C4551;
+}

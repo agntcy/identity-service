@@ -1,0 +1,35 @@
+.welcome-title {
+  font-family: "Sharp Sans", sans-serif;
+  font-weight: 700;
+  font-size: 46.19px;
+  line-height: 56.97px;
+  letter-spacing: 0;
+  color: #FBFCFE;
+}
+
+.welcome-desc {
+  font-family: "Sharp Sans", sans-serif;
+  font-weight: 700;
+  font-size: 48px;
+  line-height: 52px;
+  letter-spacing: 0;
+  color: #FBAB2C;
+}
+
+.striped-bar {
+  width: 100%;
+  height: 26px;
+  background-color: #187ADC;
+  background-image: linear-gradient(-45deg, #00142B 25%, transparent 25%, transparent 50%, #00142B 50%, #00142B 75%, transparent 75%, transparent);
+  background-size: 30px 30px;
+}
+
+.welcome-title-1 {
+  font-family: "Sharp Sans", sans-serif;
+  font-weight: 700;
+  font-size: 36px;
+  line-height: 44px;
+  letter-spacing: 0;
+  text-align: center;
+  color: #00142B;
+}
