@@ -10,27 +10,26 @@ import {cn} from '@/lib/utils';
 import {PATHS} from '@/router/paths';
 import {Button} from '../ui/button';
 import {BoxesIcon, ChevronLeftIcon, SettingsIcon} from 'lucide-react';
+import '@/styles/side-nav.css';
 
 export const SideNav: React.FC<{isCollapsed?: boolean; onChangeCollapsed?: (value?: boolean) => void}> = ({isCollapsed, onChangeCollapsed}) => {
   const sideNavLinks: {
     href: string;
     label: ReactNode;
     icon: ReactNode;
-    description: ReactNode;
+    description?: ReactNode;
     onClick?: () => void;
   }[] = useMemo(() => {
     return [
       {
         href: PATHS.applications,
         label: 'Applications',
-        icon: <BoxesIcon className="w-4 h-4" />,
-        description: 'View your applications.'
+        icon: <BoxesIcon className="w-4 h-4" />
       },
       {
         href: PATHS.settings,
         label: 'Settings',
-        icon: <SettingsIcon className="w-4 h-4" />,
-        description: 'View your settings.'
+        icon: <SettingsIcon className="w-4 h-4" />
       }
     ];
   }, []);
@@ -67,7 +66,7 @@ const SideNavLink: React.FC<{
   isActive?: boolean;
   isCollapsed?: boolean;
   isExternal?: boolean;
-  description: ReactNode;
+  description?: ReactNode;
   onClick?: () => void;
 }> = ({label, href, icon, isActive, isCollapsed, description, isExternal, onClick}) => {
   const ThisLink = (
@@ -118,7 +117,7 @@ const SideNavLink: React.FC<{
 const SideNavTooltip: React.FC<{
   children: ReactNode;
   label: ReactNode;
-  description: ReactNode;
+  description?: ReactNode;
 }> = ({children, label, description}) => {
   return (
     <Tooltip>
@@ -126,7 +125,7 @@ const SideNavTooltip: React.FC<{
       <TooltipContent side="right" sideOffset={12} className="font-semibold" align="start">
         <div className="flex flex-col gap-1 p-1 text-sm">
           <div className="font-semibold">{label}</div>
-          <div className="text-muted-foreground font-normal">{description}</div>
+          {description && <div className="text-muted-foreground font-normal">{description}</div>}
         </div>
       </TooltipContent>
     </Tooltip>

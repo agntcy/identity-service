@@ -20,7 +20,7 @@ function Card({className, variant = 'primary', loading, isEmpty, error, ...props
       data-slot="card"
       className={cn(
         variant === 'primary' && 'text-card-foreground shadow-sm border flex flex-col rounded-xl border py-6 bg-[#FBFCFE]',
-        variant === 'secondary' && 'flex flex-col rounded-xl border bg-muted',
+        variant === 'secondary' && 'flex flex-col rounded-xl border bg-[#0D274D0D]',
         'card-style',
         className,
         loading || isEmpty || error ? 'h-fit' : ''

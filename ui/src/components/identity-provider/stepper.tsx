@@ -4,7 +4,7 @@
  */
 
 import {defineStepper} from '@/components/ui/stepper';
-import {IdentityProvidersSchema, PasswordManagmentProviderSchema} from '@/schemas/identity-provider-schema';
+import {IdentityProvidersSchema} from '@/schemas/identity-provider-schema';
 import {z} from 'zod';
 
 export const {StepperProvider, StepperControls, StepperNavigation, StepperStep, StepperTitle, StepperDescription, StepperPanel, useStepper} =
@@ -16,15 +16,9 @@ export const {StepperProvider, StepperControls, StepperNavigation, StepperStep, 
       schema: IdentityProvidersSchema
     },
     {
-      id: 'passwordManagement',
-      title: 'Password Management',
-      description: 'Select the password management provider you want to use',
-      schema: PasswordManagmentProviderSchema
-    },
-    {
-      id: 'last',
-      title: '',
-      description: '',
+      id: 'registerProvider',
+      title: 'Register Provider',
+      description: 'Register the identity provider with the necessary details',
       schema: z.object({})
     }
   );

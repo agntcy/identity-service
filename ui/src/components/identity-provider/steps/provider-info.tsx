@@ -16,7 +16,7 @@ import {Input} from '@/components/ui/input';
 import {PasswordInput} from '@/components/ui/password-input';
 import {IdentityProviders} from '@/types/providers';
 
-export const ProviderInfo = () => {
+export const ProviderInfo = ({isLoading = false}: {isLoading?: boolean}) => {
   const {control, reset} = useFormContext<IdentityProvidersFormValues>();
   const methods = useStepper();
 
@@ -25,13 +25,15 @@ export const ProviderInfo = () => {
       type: IdentityProviders.OKTA,
       name: 'Okta',
       details: 'Identity and access management',
-      imgURI: <OktaLogo className="w-12 h-12" />
+      imgURI: <OktaLogo className="w-12 h-12" />,
+      isDisabled: isLoading
     },
     {
       type: IdentityProviders.DUO,
       name: 'DUO',
       details: 'Multi-factor authentication',
-      imgURI: <img src={DuoLogo} className="w-12 h-12" />
+      imgURI: <img src={DuoLogo} className="w-12 h-12" />,
+      isDisabled: true
     }
   ];
 
@@ -80,8 +82,9 @@ export const ProviderInfo = () => {
               name="issuer"
               render={({field}) => (
                 <FormItem>
+                  <FormLabel className="form-label">Issuer</FormLabel>
                   <FormControl>
-                    <Input placeholder="Issuer..." {...field} />
+                    <Input placeholder="Issuer..." {...field} disabled={isLoading} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -92,8 +95,9 @@ export const ProviderInfo = () => {
               name="clientId"
               render={({field}) => (
                 <FormItem>
+                  <FormLabel className="form-label">Client ID</FormLabel>
                   <FormControl>
-                    <PasswordInput placeholder="Cliend ID..." {...field} />
+                    <PasswordInput placeholder="Client ID..." {...field} disabled={isLoading} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -104,8 +108,9 @@ export const ProviderInfo = () => {
               name="clientSecret"
               render={({field}) => (
                 <FormItem>
+                  <FormLabel className="form-label">Client Secret</FormLabel>
                   <FormControl>
-                    <PasswordInput placeholder="Cliend Secret..." {...field} />
+                    <PasswordInput placeholder="Client Secret..." {...field} disabled={isLoading} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

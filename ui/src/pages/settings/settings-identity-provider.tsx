@@ -5,14 +5,15 @@
 
 import {CreateUpdateIdentityProvider} from '@/components/identity-provider/create-update-identity-provider';
 import {BasePage} from '@/components/layout/base-page';
+import {PATHS} from '@/router/paths';
 import {Link} from 'react-router-dom';
 
-const IdentityProvider: React.FC = () => {
+const SettingsIdentityProvider: React.FC = () => {
   return (
     <BasePage
       title="Identity Provider"
       description={
-        <div className="space-y-4 max-w-[80%]">
+        <div className="space-y-2">
           <p>
             The <b>AGNTCY</b> supports various types of identities, referred to as IDs, which serve as universally unique identifiers for the main
             entities or subjects operated by the <b>AGNTCY</b>, including Agents and Multi-Agent Systems (MAS).
@@ -27,11 +28,26 @@ const IdentityProvider: React.FC = () => {
           </p>
         </div>
       }
-      useBreadcrumbs={false}
+      useBreadcrumbs={true}
+      subNav={[
+        {
+          label: 'Identity Provider',
+          href: PATHS.settingsIdentityProvider
+        }
+      ]}
+      breadcrumbs={[
+        {
+          text: 'Settings',
+          href: PATHS.settings
+        },
+        {
+          text: 'Identity Provider'
+        }
+      ]}
     >
       <CreateUpdateIdentityProvider />
     </BasePage>
   );
 };
 
-export default IdentityProvider;
+export default SettingsIdentityProvider;

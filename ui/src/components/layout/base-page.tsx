@@ -26,19 +26,19 @@ export const BasePage: React.FC<BasePageProps> = ({
   return (
     <>
       {useBreadcrumbs ? (
-        <div className="flex justify-between px-5 py-4 items-center max-w-screen overflow-hidden">
+        <div className="flex justify-between px-5 pb-3 pt-5 items-center max-w-screen overflow-hidden">
           <Breadcrumbs breadcrumbs={breadcrumbs} />
         </div>
       ) : null}
       <div>
         {showHeader && (
-          <div className={cn('flex items-center justify-between gap-2 flex-wrap mx-5 pb-2 mb-2', !useBreadcrumbs && 'mt-6')}>
-            <div className="flex items-center justify-between border-b w-full flex-wrap pb-2 gap-2">
+          <div className={cn('flex items-center justify-between gap-2 flex-wrap mx-5 pb-2 mb-2', !useBreadcrumbs && 'mt-6', subNav && 'mb-0 pb-0')}>
+            <div className={cn('flex items-center justify-between w-full flex-wrap pb-2 gap-2', !subNav && ' border-b')}>
               <div>
                 <h1 className="text-[24px] flex items-center gap-2 mb-1 font-semibold text-[#00142B]">{parentTitle || title}</h1>
                 <div className="text-[#3C4551] text-[14px] min-h-4">{description}</div>
               </div>
-              <div className="flex items-center gap-2">{rightSideItems}</div>
+              {rightSideItems && <div className="flex items-center gap-2">{rightSideItems}</div>}
             </div>
           </div>
         )}
@@ -52,10 +52,12 @@ export const BasePage: React.FC<BasePageProps> = ({
                 })?.href || subNav[0].href
               }
             >
-              <TabsList>
+              <TabsList className="w-full">
                 {subNav.map((item) => (
                   <Link to={item.href} key={`subNavItem-${item.href}`}>
-                    <TabsTrigger value={item.href}>{item.label}</TabsTrigger>
+                    <TabsTrigger value={item.href} className="hover:cursor-pointer">
+                      {item.label}
+                    </TabsTrigger>
                   </Link>
                 ))}
               </TabsList>

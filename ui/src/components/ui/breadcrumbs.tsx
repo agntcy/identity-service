@@ -28,24 +28,24 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({breadcrumbs}) => {
   }
 
   return (
-    <div className="flex items-center gap-2 text-sm whitespace-nowrap overflow-hidden overflow-ellipsis flex-shrink-1 min-w-[10rem]">
+    <div className="flex items-center gap-2 text-[14px] whitespace-nowrap overflow-hidden overflow-ellipsis flex-shrink-1 min-w-[10rem]">
       {breadcrumbs?.map((breadcrumb, index) => {
         return (
           <div className="flex items-center gap-2 whitespace-nowrap overflow-hidden overflow-ellipsis" key={`breadcrumb-${index}-${breadcrumb.href}`}>
             {breadcrumb.href === undefined ? (
-              <span className="font-medium text-[#00142B] whitespace-nowrap overflow-hidden overflow-ellipsis">{breadcrumb.text}</span>
+              <span className="text-[#00142B] font-semibold whitespace-nowrap overflow-hidden overflow-ellipsis">{breadcrumb.text}</span>
             ) : (
               <Link
                 to={breadcrumb.href}
                 className={cn(
-                  'font-medium hover:text-primary-light text-primary hover:underline whitespace-nowrap overflow-hidden overflow-ellipsis',
-                  index === (breadcrumbs?.length || 0) - 1 && 'text-[#0051AF]'
+                  'font-medium hover:[#263B62] text-[#062242] hover:underline whitespace-nowrap overflow-hidden overflow-ellipsis',
+                  index === (breadcrumbs?.length || 0) - 1 && 'text-[#263B62]'
                 )}
               >
                 {breadcrumb.text}
               </Link>
             )}
-            {index !== (breadcrumbs?.length || 0) - 1 && <ChevronRightIcon className="w-3 h-3 text-[#0051AF]" />}
+            {index !== (breadcrumbs?.length || 0) - 1 && <ChevronRightIcon className="w-3 h-3 text-[#263B62] stroke-[#263B62]" />}
           </div>
         );
       })}

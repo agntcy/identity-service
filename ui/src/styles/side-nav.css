@@ -1,0 +1,21 @@
+.side-bar {
+  border-right: 1px solid #D5DFF7;
+  padding-top: 32px;
+  padding-right: 12px;
+  padding-bottom: 64px;
+  padding-left: 12px;
+}
+
+.product-name {
+  font-family: Sharp Sans;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 18px;
+  letter-spacing: 0%;
+  vertical-align: middle;
+  color: #00142B;
+}
+
+.collapse-button {
+  border: 2px solid #FBAF45;
+}

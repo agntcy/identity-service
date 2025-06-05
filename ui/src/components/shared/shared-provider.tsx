@@ -14,7 +14,7 @@ export const SharedProvider = <T,>({imgURI, name, details, isDisabled = false, i
       className={cn(
         'bg-[#FBFCFE] opacity-85 p-[0.75rem] text-[0.875rem] flex justify-between max-w-[225px] w-full flex-row items-center rounded-lg gap-[0.625rem] px-2 py-2 cursor-pointer hover:outline-1 hover:outline hover:opacity-100',
         isSelected && 'opacity-100 outline border-solid',
-        isDisabled && 'opacity-55 cursor-no-drop',
+        isDisabled && 'opacity-55 cursor-no-drop pointer-events-none',
         'min-w-[300px]',
         'card-flex-group'
       )}
