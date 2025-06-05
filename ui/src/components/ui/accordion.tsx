@@ -17,7 +17,11 @@ function AccordionItem({className, ...props}: React.ComponentProps<typeof Accord
   return <AccordionPrimitive.Item data-slot="accordion-item" className={cn('border-b last:border-b-0', className)} {...props} />;
 }
 
-function AccordionTrigger({className, children, ...props}: React.ComponentProps<typeof AccordionPrimitive.Trigger>) {
+interface AccordionTriggerProps extends React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Trigger> {
+  useArrow?: boolean;
+}
+
+function AccordionTrigger({className, children, useArrow = true, ...props}: AccordionTriggerProps) {
   return (
     <AccordionPrimitive.Header className="flex">
       <AccordionPrimitive.Trigger
@@ -28,8 +32,10 @@ function AccordionTrigger({className, children, ...props}: React.ComponentProps<
         )}
         {...props}
       >
-        <ChevronDownIcon className="text-muted-foreground pointer-events-none size-4 shrink-0 translate-y-0.5 transition-transform duration-200" />
         {children}
+        {useArrow && (
+          <ChevronDownIcon className="text-muted-foreground pointer-events-none size-4 shrink-0 translate-y-0.5 transition-transform duration-200" />
+        )}
       </AccordionPrimitive.Trigger>
     </AccordionPrimitive.Header>
   );

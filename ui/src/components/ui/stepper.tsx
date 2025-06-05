@@ -166,7 +166,7 @@ const defineStepper = <const Steps extends Stepperize.Step[]>(...steps: Steps): 
               role="tab"
               tabIndex={dataState !== 'inactive' ? 0 : -1}
               className={cn(
-                'stepper-step-indicator rounded-full border-2 border-[#D5DFF7] w-6 h-6',
+                'stepper-step-indicator rounded-full border-2 border-[#D5DFF7] w-6 h-6 cursor-default hover:bg-inherit',
                 dataState === 'completed' && ' border-[#0051AF]',
                 dataState === 'active' && 'custom-border',
                 isLoading && 'animate-spin'
@@ -205,7 +205,7 @@ const defineStepper = <const Steps extends Stepperize.Step[]>(...steps: Steps): 
           )}
 
           {variant === 'vertical' && (
-            <div className="flex gap-4 h-[31px]">
+            <div className="flex gap-4 h-full mb-1">
               {!isLast && (
                 <div className={cn('flex justify-center ps-5', onlyIcon && 'ps-4.5')}>
                   <StepperSeparator orientation="vertical" isLast={isLast} state={dataState} disabled={props.disabled} />
@@ -357,7 +357,7 @@ const listVariants = cva('stepper-navigation-list flex gap-1 w-[38px]', {
   variants: {
     variant: {
       horizontal: 'flex-row items-center justify-between',
-      vertical: 'flex-col',
+      vertical: 'flex-col h-full',
       circle: 'flex-row items-center justify-between'
     }
   }

@@ -6,7 +6,10 @@
 export const PATHS = {
   basePath: '/',
   welcome: '/welcome',
+  callBackLoading: '/login/callback',
+  // application paths
   applications: '/applications',
+  // settings paths
   settings: '/settings',
-  callBackLoading: '/login/callback'
+  settingsIdentityProvider: '/settings/identity-provider'
 };

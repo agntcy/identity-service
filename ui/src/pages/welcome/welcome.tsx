@@ -25,7 +25,7 @@ const Welcome = () => {
         <Card className="h-fit dark:rounded-none dark:border-none flex items-center justify-center w-fit p-10">
           <div className="max-w-[30rem] flex flex-col gap-8">
             <div className="min-w-[300px]">
-              <h1 className="text-2xl mb-4 font-semibold welcome-title-1">AGNTCY Identity</h1>
+              <h1 className="text-2xl mb-4 font-semibold title-product">AGNTCY Identity</h1>
               <div className="text-center">
                 <h2 className="text-muted-foreground mb-2 text-lg">Secure and Verifiable Agent Identification</h2>
                 <p className="text-sm">

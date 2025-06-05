@@ -10,6 +10,7 @@ import {cn} from '@/lib/utils';
 import {PATHS} from '@/router/paths';
 import {Button} from '../ui/button';
 import {BoxesIcon, ChevronLeftIcon, SettingsIcon} from 'lucide-react';
+import '@/styles/side-nav.css';
 
 export const SideNav: React.FC<{isCollapsed?: boolean; onChangeCollapsed?: (value?: boolean) => void}> = ({isCollapsed, onChangeCollapsed}) => {
   const sideNavLinks: {

@@ -112,8 +112,8 @@ export const AppBar: React.FC = () => {
                   <ChevronDownIcon className={cn('w-3 h-3 stroke-[#187ADC]', menuOpen && 'rotate-180')} />
                 </div>
                 <p className="app-bar-desc">
-                  {authInfo?.user?.tenant?.name && authInfo?.user?.tenant?.name.length > 10
-                    ? `${authInfo?.user?.tenant?.name.substring(0, 10)}...`
+                  {authInfo?.user?.tenant?.name && authInfo?.user?.tenant?.name.length > 15
+                    ? `${authInfo?.user?.tenant?.name.substring(0, 15)}...`
                     : authInfo?.user?.tenant?.name}
                 </p>
               </div>
@@ -125,7 +125,7 @@ export const AppBar: React.FC = () => {
               <span className="text-xs">
                 <b>Email:</b> {authInfo?.user?.username}
               </span>
-              <MaxWHover className="text-xs">
+              <MaxWHover className="text-xs text-left">
                 <b>Tenant:</b> {authInfo?.user?.tenant?.name}
               </MaxWHover>
             </DropdownMenuLabel>

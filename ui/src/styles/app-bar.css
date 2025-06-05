@@ -15,3 +15,8 @@
   letter-spacing: 0.4px;
   color: #3C4551;
 }
+
+.app-bar {
+  border-bottom: 1px solid #D5DFF7;
+  overflow: hidden;
+}

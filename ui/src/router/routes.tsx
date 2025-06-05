@@ -16,7 +16,7 @@ import {Loading} from '@/components/ui/loading';
 
 const Welcome = React.lazy(() => import('@/pages/welcome/welcome'));
 const Applications = React.lazy(() => import('@/pages/applications/applications'));
-const Settings = React.lazy(() => import('@/pages/settings/settings'));
+const SettingsIdentityProvider = React.lazy(() => import('@/pages/settings/settings-identity-provider'));
 
 export const generateRoutes = (routes: Route[]): Route[] => {
   return [
@@ -69,7 +69,24 @@ export const useRoutes = () => {
       },
       {
         path: PATHS.settings,
-        element: <Settings />
+        children: [
+          {
+            index: true,
+            element: <Navigate to={PATHS.settingsIdentityProvider} replace />
+          },
+          {
+            path: PATHS.settingsIdentityProvider,
+            element: (
+              <NodeRoute>
+                <SettingsIdentityProvider />
+              </NodeRoute>
+            )
+          },
+          {
+            path: '*',
+            element: <NotFound />
+          }
+        ]
       }
     ];
   }, []);

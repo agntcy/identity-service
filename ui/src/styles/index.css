@@ -130,33 +130,6 @@
   box-shadow: 0px 4px 4px 0px #C8D5F554;
 }
 
-.app-bar {
-  border-bottom: 1px solid #D5DFF7;
-  overflow: hidden;
-}
-
-.side-bar {
-  border-right: 1px solid #D5DFF7;
-  padding-top: 32px;
-  padding-right: 12px;
-  padding-bottom: 64px;
-  padding-left: 12px;
-}
-
-.product-name {
-  font-family: Sharp Sans;
-  font-weight: 700;
-  font-size: 18px;
-  line-height: 18px;
-  letter-spacing: 0%;
-  vertical-align: middle;
-  color: #00142B;
-}
-
-.collapse-button {
-  border: 2px solid #FBAF45;
-}
-
 .custom-border {
   border-width: 2px;
   border-style: solid;
@@ -180,4 +153,43 @@
   line-height: 16px;
   letter-spacing: 0.4px;
   color: #777D85;
+}
+
+.form-label {
+  font-family: Inter;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.1px;
+  color: #3C4551;
+} 
+
+.button-link {
+  font-family: Inter;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 125%;
+  letter-spacing: 0%;
+  color: #187ADC;
+}
+
+.code-block {
+  background-color: #FBFCFE;
+  padding: 16px;
+  border: 1px solid #D5DFF7;
+  border-radius: 8px;
+}
+
+.text-code {
+  font-family: Roboto Mono;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0px;
+  vertical-align: middle;
+  color: #00142B
+}
+
+.copy-button {
+  border: 1px solid #D5DFF7;
 }
