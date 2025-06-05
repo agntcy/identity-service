@@ -1,0 +1,335 @@
+name: Reusable Workflow CI
+
+on:
+  # Uncomment bellow to your needs, default stays only for PRs (the example GHA CI will fail; as it is not fully configured)
+  # push:
+  #   branches:
+  #     - '*'
+  # # Only build when important files change
+  # paths:
+  #   - 'foleder-name/**'
+  #   - '.github/workflows/ci-vault-approle.yaml'
+  # tags:
+  #   - "[0-9]+.[0-9]+.[0-9]+"
+  pull_request:
+    branches:
+      - 'main'
+  workflow_dispatch:
+
+# Define a concurrency group based on branch name/PR name if exists to batch builds
+concurrency:
+  group: ${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+# Grant read access for GITHUB_TOKEN on all jobs     
+permissions:
+  id-token: write # This is required for requesting the JWT
+  contents: read  # This is required for actions/checkout
+  packages: write # needed to push docker image to gar or ecr
+
+jobs:
+  ################################## Pre Job ######################################
+  #################################################################################
+
+  # This job will make sure to cancel any concurrent feature branch build in case there is an open PR for it
+  pre_job:
+    runs-on: ${{ vars.UBUNTU_RUNNER }}
+    outputs:
+      has_open_pr: ${{ steps.check_pr.outputs.exists }}
+    steps:
+      # Check if there is an open PR for the current branch using the GitHub API
+      - name: Check if PR exists
+        id: check_pr
+        run: |
+          pr_exists=$(curl -s -H "Authorization: Bearer ${{ secrets.GHCR_TOKEN }}" \
+          https://api.github.com/repos/${{ github.repository }}/pulls?head=${{ github.repository_owner }}:${{ github.ref_name }} \
+          | jq -r '.[] | select(.state=="open")')
+          if [[ -n "$pr_exists" ]]; then
+            echo -e "\033[33m*** An open PR was found for this branch ***\033[0m"
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo -e "\e[1;36m>>> An open PR was not found for this branch <<<\e[0m" 
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+        shell: bash
+
+  ################################## checkout & unit tests ######################
+  ###############################################################################
+  checkout-unit-tests:
+    name: Set Parameters & Unit Test
+    needs: pre_job
+    if: needs.pre_job.outputs.has_open_pr != 'true'
+    # An example of using a (Large) runner group that has multiple (Large) runners in it
+    # These are managed by the SRE team on the GHEC org level scope/settings
+    runs-on: 
+      group: CWPP-Runners
+    container: 
+      image:  ${{ vars.SRE_BUILD_IMAGE }}
+      options: --user root   
+      credentials:
+        username: ${{ secrets.GHCR_USERNAME }}
+        password: ${{ secrets.GHCR_TOKEN }}  
+    
+    outputs:
+      image_tag: ${{ steps.set_image_tag.outputs.image_tag }}
+      deployment_env: ${{ steps.set_deployment_env.outputs.deployment_env }}
+      namespace_name: ${{ steps.set_deployment_env.outputs.namespace_name }}
+      db_user: ${{ steps.set_deployment_env.outputs.db_user }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@83b7061638ee4956cf7545a6f7efe594e5ad0247 # v3.5.1
+        with:
+          # The branch, tag or SHA to checkout, otherwise, uses the default branch.
+          ref: ${{ github.ref }}
+          # Relative path under $GITHUB_WORKSPACE to place the repository
+          path: ''
+          # Whether to execute `git clean -ffdx && git reset --hard HEAD` before fetching
+          # Default: true
+          clean: true
+          # Whether to download Git-LFS files
+          # Default: false
+          lfs: ''
+          # Whether to checkout submodules: `true` to checkout submodules or `recursive` to
+          # recursively checkout submodules.
+          # Default: false
+          submodules: true
+          token: ${{ secrets.GHCR_TOKEN }}
+    
+      # Run your custom script for unit testing your code
+      - name: Unit Tests
+        run: |
+          #chmod +x scripts/unit-test.sh
+          bash build/unit-test.sh
+    
+      # Example of how you may assign a custom image tag for the build docker image job
+      - name: Set Custom Image Tag
+        id: set_image_tag
+        run: |
+          git config --global --add safe.directory '*'
+          commit=$(git rev-parse --short=7 "$GITHUB_SHA")
+        
+          if git describe --exact-match --tags $(git log -n1 --pretty='%h') 2>/dev/null;
+          then
+            rawTag=$(git describe --exact-match --tags)
+            branch="${rawTag//./-}"
+          else
+            branch=${GITHUB_REF##*/}
+          fi;
+        
+          ServerTag=${branch}-${commit}
+          echo -e "\e[1;36m>>> Image tag is: [$ServerTag] <<<\e[0m"
+          echo "image_tag=$ServerTag" >> $GITHUB_OUTPUT
+        shell: bash
+      
+      # Example for how you may assign the deployment environment per branch condition
+      - name: Set Deployment Env
+        id: set_deployment_env
+        run: |
+          if [[ ${{ github.ref }} == *"main"* || ${{ github.ref }} == *"migration"* ]]; then
+            echo "deployment_env=staging" >> $GITHUB_OUTPUT
+            echo "namespace_name=cwpp-backend" >> $GITHUB_OUTPUT
+          else
+            echo "deployment_env=dev" >> $GITHUB_OUTPUT
+            ACTOR="${GITHUB_TRIGGERING_ACTOR//-/}"
+            ACTOR="${ACTOR,,}"
+            echo "db_user=$ACTOR" >> $GITHUB_OUTPUT
+            echo "namespace_name=user-$GITHUB_TRIGGERING_ACTOR" >> $GITHUB_OUTPUT
+          fi
+        shell: bash
+  
+  ################################## Docker build, Panoptica Scan & push ##########################
+  #################################################################################################
+  call-docker-build-push:
+    name: Call Docker Build Panoptica Scan & Push
+    needs: [ pre_job, checkout-unit-tests ]
+    if: needs.pre_job.outputs.has_open_pr != 'true'
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/build-push-docker.yaml@main
+    # Example of using MATRIX strategy to build multiple images from the same repo in parallel jobs
+    strategy:
+      matrix:
+        image: 
+          - name: "backend-image"
+            dockerfile: "$GITHUB_WORKSPACE/Dockerfile"
+            buildArgs: "--no-cache --pull"
+            runner-docker-image: ghcr.io/cisco-eti/<venture name>/custom_image_builder:v1
+          - name: "frontend-image"
+            dockerfile: "$GITHUB_WORKSPACE/src/ui/Dockerfile"
+            buildArgs: "--no-cache --build-arg TEST_ENVIRONMENT=true"
+            runner-docker-image: ghcr.io/cisco-eti/<venture name>/custom_ui_image_builder:v1
+    secrets:
+      # Only needed if with:ecr-enabled or with:gar-enabled is true below
+      vault-approle-role-id: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
+      vault-approle-secret-id: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
+      # These two secrets are ONLY needed when you are trying to access GAR/GCR in a venture specific project (e.g. 'k8sec-dev' for example).
+      # The values should be consistent with the vault namespace (set by 'VAULT_VENTURE_NAMESPACE' var)
+      # These secrets should be set in the Repo settings to override the default ones in the Org scope
+      vault-venture-approle-role-id: ${{ secrets.VAULT_SECURECN_APPROLE_ROLE_ID }}
+      vault-venture-approle-secret-id: ${{ secrets.VAULT_SECURECN_APPROLE_SECRET_ID }}
+      #######
+      ghcr-username: ${{ secrets.GHCR_USERNAME }}
+      ghcr-token: ${{ secrets.GHCR_TOKEN }}
+      ghcr-org-token: ${{ secrets.GHCR_TOKEN }}
+    
+    with:
+      # Example of using a custom (Large) runner for the job, these are managed by the SRE team in the GHEC org settings
+      runner: example-large-runner-1
+      # This is an example of using the venture's custom builder image to build, instead of using the SRE default
+      runner-docker-image: ${{ matrix.image.runner-docker-image }}
+      # Incase you have submodules in your repo you may assign this to true
+      checkout-submodules: true
+      ### REQUIRED 
+      ### Docker image name
+      image-name: "<venture name>/${{ github.event.repository.name }}-${{ matrix.image.name }}"
+      # This is how you may pass a custom image tag from the above job
+      image-custom-tag: ${{ needs.checkout-unit-tests.outputs.image_tag }}
+          
+      ### path to where docker should copy files into image
+      ### defaults to root of repository (.)
+      # context: .
+      
+      ### Dockerfile alternate name. Default is Dockerfile (relative to context path)
+      dockerfile: ${{ matrix.image.dockerfile }}
+      use-basic-build: false # If true, will use the basic Docker build command
+      use-build-script: true # If true, will use the build-docker script instead of the basic one (make sure to set the `use-basic-build` to false)
+      # use-maven-cache: true # If true, will use the Maven cache to speed up the build
+      # cache-dependency-path: "$GITHUB_WORKSPACE/src/management/pom.xml" # Path to the dependency pom.xml file to use for the Maven cache
+      build-args: ${{ matrix.image.buildArgs }} # Extra build arguments to pass to the docker build command 
+      ### REQUIRED
+      ### ENABLE ONE OR BOTH REGISTRIES
+      ### tell docker where to push.
+      ecr-enabled: true
+      gar-enabled: true
+      gcr-enabled: false
+      gcp-project-name: "eticloud-scratch" # GCP project used for GAR/GCR login
+      ghcr-enabled: true
+      ghcr-org-registry: ${{ vars.GHCR_REGISTRY }}
+      panoptica-scan-enabled: true # Enable/Disable the local Panoptica Scan
+      panoptica-scan-args: "--highest-severity-allowed MEDIUM --ignore-no-fix" # Extra Panoptica Scan arguments to pass to the CLI command
+
+  ################################# Corona & blackduck ###########################
+  ################################################################################ 
+  call-corona-blackduck-scan:
+    name: Call Corona & Blackduck scan
+    # Depending on your strategy, these scans may run independently and in parallel of your workflow
+    needs: [ pre_job,checkout-unit-tests,call-docker-build-push ]
+    if: needs.pre_job.outputs.has_open_pr != 'true'
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/corona-blackduck-scan.yaml@main
+    # Example of using MATRIX strategy to scan multiple images from the same repo in parallel jobs
+    strategy:
+      matrix:
+        image: 
+          - name: "backend-image"
+          - name: "frontend-image"
+    secrets:
+      vault-approle-role-id: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
+      vault-approle-secret-id: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
+      # GHCR Login for docker build runner
+      ghcr-username: ${{ secrets.GHCR_USERNAME }}
+      ghcr-token: ${{ secrets.GHCR_TOKEN }}
+      # GHCR Login for docker scan
+      ghcr-org-username: ${{ secrets.GHCR_USERNAME }}
+      ghcr-org-token: ${{ secrets.GHCR_TOKEN }}
+    
+    with:
+      # Example of using a custom (Large) runner for the job, these are managed by the SRE team in the GHEC org settings
+      runner: example-large-runner-1
+      runner-docker-image: ${{ vars.SRE_BUILD_IMAGE }}
+      # Enable the different required scans Carona/Blackduck
+      enable-corona: false
+      enable-blackduck: false
+      # The below variables should be set in the repo settings to override the default ones in the org scope/settings
+      # If you are not sure what the values should be, please reach out the the SRE team
+      corona-product-name: ${{ vars.CORONA_PRODUCT_NAME }}
+      corona-product-id: ${{ vars.CORONA_PRODUCT_ID }}
+      corona-release-id: ${{ vars.CORONA_RELEASE_ID }}
+      corona-csdl-id: ${{ vars.CORONA_CSDL_ID }}
+      corona-security-contact: ${{ vars.CORONA_SECURITY_CONTACT }}
+      corona-engineering-contact: ${{ vars.CORONA_ENGINEERING_CONTACT }}
+      corona-image-admins: ${{ vars.CORONA_IMAGE_ADMINS }}
+      # ghcr-org-registry: ${{ vars.GHCR_REGISTRY }}
+      # optional
+      image-name: "<venture name>/${{ github.event.repository.name }}-${{ matrix.image.name }}"
+      image-tag: ${{ needs.checkout-unit-tests.outputs.image_tag }}
+
+  ################################## Helm Publish #################################
+  #################################################################################
+  call-helm-publish:
+    name: Helm publish
+    needs: [ pre_job,call-docker-build-push ]
+    if: needs.pre_job.outputs.has_open_pr != 'true'
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@main
+    # Another example of using the MATRIX strategy to publish multiple Helm charts in parallel
+    strategy:
+        matrix:
+          chart-path: 
+            - "helm-charts/Micro-Service-A"
+            - "helm-charts/Micro-Service-B"
+    with:
+      # Example of using a custom (Large) runner for the job, these are managed by the SRE team in the GHEC org settings
+      runner: example-large-runner-1
+      # REQUIRED: By default you should always push to the private registry which resides in the ETICLOUD aws account
+      # You may enable to public registry in case you want to publish customer-facing charts
+      enable-private-ecr: true
+      enable-public-ecr: false
+      chart-path: ${{ matrix.chart-path }}
+      # REQUIRED: In the case that you have enabled publishing to the public registry above
+      #ecr-public-registry-alias: ${{ vars.ECR_PUBLIC_REGISTRY_ALIAS}}
+    secrets:
+      # GHCR Login for docker build runner
+      ghcr-username: ${{ secrets.GHCR_USERNAME }}
+      ghcr-token: ${{ secrets.GHCR_TOKEN }}
+      vault-approle-role-id: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
+      vault-approle-secret-id: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
+
+  ################################## Trigger Deployment ###########################
+  ################################################################################# 
+  call-trigger-cd:
+    name: Trigger CD
+    needs: [ pre_job,call-helm-publish,checkout-unit-tests ]
+    if: needs.pre_job.outputs.has_open_pr != 'true'
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/trigger-deploy.yaml@main
+    with:
+      deployment-repo: "cisco-eti/cwpp-backend-deployment"
+      # Example of the client payload to send to the deployment repo (this will trigger the GHA in that repo to update helm chart values)
+      client-payload: |-
+        {
+          "app-repo": "${{ github.event.repository.name }}",
+          "repo-branch": "${{ github.ref }}",
+          "values-file-path": "applications/Micro-Service-A", 
+          "environment": "${{ needs.checkout-unit-tests.outputs.deployment_env }}",
+          "db_user_name": "${{ needs.checkout-unit-tests.outputs.db_user }}",
+          "target": "${{ needs.checkout-unit-tests.outputs.namespace_name }}",
+          "property-path": ".cwpp-backend.global.version.tagVersion", 
+          "value": "${{ needs.checkout-unit-tests.outputs.image_tag }}"
+        }
+    secrets:
+      # GHCR Login for docker build runner
+      ghcr-username: ${{ secrets.GHCR_USERNAME }}
+      ghcr-token: ${{ secrets.GHCR_TOKEN }}
+      # GHCR Login for docker scan
+      ghcr-org-username: ${{ secrets.GHCR_USERNAME }}
+      ghcr-org-token: ${{ secrets.GHCR_TOKEN }}
+      vault-approle-role-id: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
+      vault-approle-secret-id: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
+
+  ################################## Send Status for PR Checks ###########################
+  ########################################################################################
+  # This Job is REQUIRED, it is what allows for the WHOLE workflow to show up in the PR status checks as a requirement for branch rules
+  reusable-workflow-ci-status:
+    name: Reusable Workflow CI Status [${{ github.event_name }}] # This will expand to: Reusable Workflow CI Status [pull_request]
+    # This should be an array of ALL active/required jobs that are used/run during a PR (notice that the carona/blackduck scans are not included)
+    needs: [ pre_job,checkout-unit-tests,call-docker-build-push,call-helm-publish,call-trigger-cd ]
+    if: always() && needs.pre_job.outputs.has_open_pr != 'true'
+    runs-on: ${{ vars.UBUNTU_RUNNER }}
+    steps:
+      - name: report failure
+        # Update this in accordance to the array above (unfortunately using 'needs.*.result' syntax does not work)
+        if: (needs.checkout-unit-tests.result != 'success' || needs.call-docker-build-push.result != 'success' || needs.call-helm-publish.result != 'success' || needs.call-trigger-cd.result != 'success')
+        run: |
+          echo -e "\033[31m*** WORKFLOW FAILED ***\033[0m"
+          exit 1
+      - name: report success
+        run: |
+          echo -e "\033[1;36m*** WORKFLOW SUCCESS ***\033[0m"
+          exit 0
