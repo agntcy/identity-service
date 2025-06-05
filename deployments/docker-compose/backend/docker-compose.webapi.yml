@@ -1,0 +1,19 @@
+# Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
+---
+name: identity-backend
+include:
+  - docker-compose.db.yml
+services:
+  identity-backend:
+    container_name: identity-backend
+    image: ghcr.io/cisco-eti/pyramid/backend:latest
+    restart: always
+    depends_on:
+      - identity-postgres
+    ports:
+      - "4000:4000"
+      - "4001:4001"
+    env_file:
+      - .env

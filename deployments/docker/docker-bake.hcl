@@ -1,0 +1,41 @@
+# Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
+# Docker build args
+variable "IMAGE_REPO" {default = ""}
+variable "IMAGE_TAG" {default = "v0.0.0"}
+
+function "get_tag" {
+  params = [tags, name]
+  result = [for tag in tags: "${IMAGE_REPO}/${name}:${tag}"]
+}
+
+group "default" {
+  targets = [
+    "backend",
+  ]
+}
+
+target "docker-metadata-action" {
+  tags = []
+}
+
+target "_common" {
+  output = [
+    "type=image",
+  ]
+  platforms = [
+    "linux/amd64",
+    "linux/arm64",
+  ]
+}
+
+target "backend" {
+  context = "."
+  dockerfile = "./deployments/docker/backend/Dockerfile"
+  inherits = [
+    "_common",
+    "docker-metadata-action",
+  ]
+  tags = get_tag(target.docker-metadata-action.tags, "${target.backend.name}")
+}
