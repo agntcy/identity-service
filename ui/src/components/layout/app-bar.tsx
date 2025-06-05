@@ -29,6 +29,7 @@ import UserIcon from '@/assets/user.svg';
 import '@/styles/app-bar.css';
 import {ChevronDownIcon, LogOutIcon} from 'lucide-react';
 import {cn} from '@/lib/utils';
+import MaxWHover from '../ui/max-w-hover';
 
 export const AppBar: React.FC = () => {
   const [menuOpen, setMenuOpen] = React.useState(false);
@@ -111,21 +112,22 @@ export const AppBar: React.FC = () => {
                   <ChevronDownIcon className={cn('w-3 h-3 stroke-[#187ADC]', menuOpen && 'rotate-180')} />
                 </div>
                 <p className="app-bar-desc">
-                  {authInfo?.user?.tenant?.name && authInfo?.user?.tenant?.name.length > 15
-                    ? `${authInfo?.user?.tenant?.name.substring(0, 15)}...`
+                  {authInfo?.user?.tenant?.name && authInfo?.user?.tenant?.name.length > 10
+                    ? `${authInfo?.user?.tenant?.name.substring(0, 10)}...`
                     : authInfo?.user?.tenant?.name}
                 </p>
               </div>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="z-50 rounded-md shadow-md">
+            <DropdownMenuLabel className="menu-label">User Information</DropdownMenuLabel>
             <DropdownMenuLabel className="flex flex-col gap-1">
               <span className="text-xs">
                 <b>Email:</b> {authInfo?.user?.username}
               </span>
-              <span className="text-xs">
+              <MaxWHover className="text-xs">
                 <b>Tenant:</b> {authInfo?.user?.tenant?.name}
-              </span>
+              </MaxWHover>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>

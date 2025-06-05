@@ -167,8 +167,17 @@
 .menu-item {
   font-family: Inter;
   font-weight: 400;
-  font-size: 14px;
+  font-size: 13px;
   line-height: 24px;
   letter-spacing: 0.5px;
   color: #3C4551;
+}
+
+.menu-label {
+  font-family: Inter;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.4px;
+  color: #777D85;
 }
