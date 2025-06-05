@@ -1,0 +1,21 @@
+# Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
+---
+name: pre-commit
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+      - uses: actions/setup-go@v5
+      - run: go install golang.org/x/lint/golint@latest
+      - run: echo "PATH=$PATH:/home/runner/go/bin" >> "$GITHUB_ENV"
+      - uses: pre-commit/action@v3.0.1

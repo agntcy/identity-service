@@ -1,0 +1,26 @@
+# Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
+---
+# Lint directives.
+lint:
+  # Linter files to walk.
+  files:
+    # The specific files to exclude.
+    exclude:
+      # NOTE: UNIX paths will be properly accepted by both UNIX and Windows.
+      - api/spec/proto/agntcy/identity/core/v1alpha1/errors.proto
+      - api/spec/proto/agntcy/identity/core/v1alpha1/id.proto
+      - api/spec/proto/agntcy/identity/core/v1alpha1/issuer.proto
+      - api/spec/proto/agntcy/identity/core/v1alpha1/mcp.proto
+      - api/spec/proto/agntcy/identity/core/v1alpha1/vc.proto
+
+  rules:
+    remove:
+      - REPEATED_FIELD_NAMES_PLURALIZED
+
+  # Linter rules option.
+  rules_option:
+    # MAX_LINE_LENGTH rule option.
+    max_line_length:
+      max_chars: 150

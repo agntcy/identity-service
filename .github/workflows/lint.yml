@@ -1,0 +1,51 @@
+# Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
+---
+name: lint
+
+on:
+  push:
+    # Run superlinter on pushes to default branch
+    branches:
+      - main
+  # Run superlinter on pull request events
+  pull_request:
+
+# Declare default permissions as read-only
+permissions: read-all
+
+jobs:
+  super-linter:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+      statuses: write
+    steps:
+      - uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2 # v4.1.7
+        with:
+          fetch-depth: 0
+      - name: 🧹 run superlinter
+        uses: super-linter/super-linter@12150456a73e248bdc94d0794898f94e23127c88 # v7.4.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LINTER_RULES_PATH: ".github/linters"
+          MARKDOWN_CONFIG_FILE: ".markdownlint.yml"
+          YAML_CONFIG_FILE: ".yamllint.yml"
+          GO_CONFIG_FILE: ".golangci.yaml"
+          PROTOBUF_CONFIG_FILE: ".protolintrc.yml"
+          VALIDATE_ALL_CODEBASE: false
+          VALIDATE_MARKDOWN_PRETTIER: false
+          VALIDATE_YAML_PRETTIER: false
+          VALIDATE_NATURAL_LANGUAGE: false
+          VALIDATE_JSCPD: false
+          VALIDATE_CHECKOV: false
+          VALIDATE_GO: false
+          VALIDATE_ENV: false
+          VALIDATE_SHELL_SHFMT: false
+          VALIDATE_PYTHON_BLACK: false
+          VALIDATE_PYTHON_PYINK: false
+          VALIDATE_PYTHON_ISORT: false
+          MULTI_STATUS: false
+          VALIDATE_JSON_PRETTIER: false

@@ -1,0 +1,15 @@
+# Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
+---
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    groups:
+      github:
+        patterns:
+          - "actions/*"
+          - "github/*"
+    schedule:
+      interval: "weekly"
