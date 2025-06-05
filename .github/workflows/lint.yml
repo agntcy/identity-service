@@ -49,3 +49,8 @@ jobs:
           VALIDATE_PYTHON_ISORT: false
           MULTI_STATUS: false
           VALIDATE_JSON_PRETTIER: false
+          VALIDATE_CSS: false
+          VALIDATE_CSS_PRETTIER: false
+          VALIDATE_TYPESCRIPT_STANDARD: false
+          VALIDATE_TYPESCRIPT_ES: false
+          VALIDATE_TSX: false
