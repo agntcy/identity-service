@@ -1,0 +1,70 @@
+.env
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+
+### VS Code ###
+.vscode/
+
+### OSX ###
+.DS_Store
+
+### VIM ###
+*.swp
+jdt.ls-java-project
+.metadata
+
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# Dependency directories (remove the comment below to include it)
+vendor/
+
+# Go workspace file
+go.work
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Pyre type checker
+.pyre/
+
+# Misc
+.DS_Store
+.venv
+.vscode
+
+.scratchpad
+
+# DB
+test_vc.json
+
+# Worflows
+*.swm
+
+# Other
+cmd/issuer/guides
+badge.json
+vcs.json
+identity
+!identity/
