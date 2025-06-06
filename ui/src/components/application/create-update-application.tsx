@@ -17,7 +17,6 @@ import {ApplicationType} from './steps/application-type';
 import {SourceInfo} from './steps/source-info';
 import {ApplicationTypeFormValues, ApplicationTypeSchema, SourceInformationFormValues, SourceInformationSchema} from '@/schemas/application-schema';
 import {SaveApplication} from './steps/save-application';
-import {text} from 'stream/consumers';
 
 interface CreateUpdateApplicationProps {
   mode?: 'create' | 'update';
