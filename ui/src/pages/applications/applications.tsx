@@ -7,8 +7,10 @@ import {BasePage} from '@/components/layout/base-page';
 import {EmptyProvider} from '@/components/shared/empty-provider';
 import {Button} from '@/components/ui/button';
 import PlaceholderPageContent from '@/components/ui/placeholder-page-content';
+import {PATHS} from '@/router/paths';
 import {useStore} from '@/store';
 import {PlusIcon} from 'lucide-react';
+import {Link} from 'react-router-dom';
 import {useShallow} from 'zustand/react/shallow';
 
 const Applications: React.FC = () => {
@@ -41,10 +43,12 @@ const Applications: React.FC = () => {
       }
       useBreadcrumbs={false}
       rightSideItems={
-        <Button className="flex gap-2 items-center">
-          Create Application
-          <PlusIcon />
-        </Button>
+        <Link to={PATHS.applicationsCreate}>
+          <Button className="flex gap-2 items-center">
+            Create Application
+            <PlusIcon />
+          </Button>
+        </Link>
       }
     >
       {identityProvider && passwordManagementProvider ? <PlaceholderPageContent /> : <EmptyProvider />}

@@ -12,6 +12,7 @@ const useAuth = () => {
   if (context === undefined) {
     throw new Error('AuthContext value is undefined. Make sure you use the <AuthProvider> before using the context.');
   }
+
   return context;
 };
 
