@@ -24,7 +24,7 @@ export const ApplicationType = ({isLoading = false}: {isLoading?: boolean}) => {
       type: ApplicationTypes.OASF,
       name: 'OASF',
       details: 'Open Agentic Schema Framework',
-      imgURI: <OASFLogo className="w-12 h-12" />,
+      imgURI: <OASFLogo className="w-10 h-10" />,
       isDisabled: isLoading
     },
     {

@@ -12,7 +12,7 @@ export const ApplicationTypeSchema = z.object({
 export type ApplicationTypeFormValues = z.infer<typeof ApplicationTypeSchema>;
 
 export const SourceInformationSchema = z.object({
-  type: z.nativeEnum(SourceTypes).optional(),
+  type: z.nativeEnum(SourceTypes),
   text: z.string().min(1, 'Source text is required')
 });
 export type SourceInformationFormValues = z.infer<typeof SourceInformationSchema>;

@@ -40,6 +40,16 @@ const FormStepperComponent: React.FC = () => {
     mode: 'all'
   });
 
+  const handleOnClear = useCallback(() => {
+    form.reset({
+      type: undefined,
+      text: undefined
+    });
+    methods.reset();
+    methods.resetMetadata();
+    methods.goTo('applicationType');
+  }, [form, methods]);
+
   const handleSelectType = useCallback(() => {
     const values = form.getValues() as ApplicationTypeFormValues;
     const validationResult = validateForm(ApplicationTypeSchema, values);
@@ -138,16 +148,25 @@ const FormStepperComponent: React.FC = () => {
                         ) : step.id === 'saveApplication' ? (
                           <SaveApplication isLoading={isLoading} />
                         ) : null}
-                        <StepperControls className="pt-4">
-                          {!methods.isFirst && (
-                            <Button variant="ghost" onClick={methods.prev} disabled={methods.isFirst || isLoading} className="cursor-pointer">
-                              Previous
+                        <div className="flex justify-between items-center">
+                          <div>
+                            {methods.isLast && (
+                              <Button variant="link" onClick={handleOnClear} className="cursor-pointer hover:no-underline">
+                                Clear
+                              </Button>
+                            )}
+                          </div>
+                          <StepperControls className="pt-4">
+                            {!methods.isFirst && (
+                              <Button variant="ghost" onClick={methods.prev} disabled={methods.isFirst || isLoading} className="cursor-pointer">
+                                Previous
+                              </Button>
+                            )}
+                            <Button type="submit" disabled={isLoading || !form.formState.isValid} className="cursor-pointer">
+                              {methods.isLast ? 'Save' : 'Next'}
                             </Button>
-                          )}
-                          <Button type="submit" disabled={isLoading || !form.formState.isValid} className="cursor-pointer">
-                            {methods.isLast ? 'Save' : 'Next'}
-                          </Button>
-                        </StepperControls>
+                          </StepperControls>
+                        </div>
                       </AccordionContent>
                     </AccordionItem>
                   </div>

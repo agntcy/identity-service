@@ -3,29 +3,28 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {Card, CardContent, CardHeader} from '@/components/ui/card';
+import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
 import {Link} from 'react-router-dom';
 import {ExternalLinkIcon} from 'lucide-react';
-import TextMd from '@/components/ui/text-md';
-import {CopyButton} from '@/components/ui/copy-button';
+import {useStepper} from '../stepper';
+import StatsCard from '@/components/ui/stats-card';
+import {labels} from '@/constants/labels';
 
 export const RegisterProvider = ({isLoading = false}: {isLoading?: boolean}) => {
-  const cmdShow = `
-  \`\`\`bash
-  identity issuer register -o "My Organization" \\
-      -c "$OKTA_OAUTH2_CLIENT_ID" -s "$OKTA_OAUTH2_CLIENT_SECRET" -u "$OKTA_OAUTH2_ISSUER"
-  \`\`\`
-  `;
+  const methods = useStepper();
+  const metaData = methods.getMetadata('providerInfo');
 
-  const cmdCopy = `identity issuer register -o "My Organization" \\
--c "$OKTA_OAUTH2_CLIENT_ID" -s "$OKTA_OAUTH2_CLIENT_SECRET" -u "$OKTA_OAUTH2_ISSUER"`;
+  const provider = metaData?.provider;
+  const issuer = metaData?.issuer;
+  const clientId = metaData?.clientId;
+  const clientSecret = metaData?.clientSecret as string | undefined;
 
   return (
     <Card className="text-start py-4" variant="secondary">
       <CardHeader className="flex justify-between items-center">
-        <p className="text-[#3C4551] font-[500]">Register Identity Provider using the CLI</p>
+        <CardTitle>Identity Provider Information</CardTitle>
         <Link
-          to={'https://github.com/agntcy/identity?tab=readme-ov-file#step-3-register-as-an-issuer'}
+          to="https://github.com/agntcy/identity?tab=readme-ov-file#step-3-register-as-an-issuer"
           className="button-link flex gap-2 items-center"
           target="_blank"
         >
@@ -34,10 +33,26 @@ export const RegisterProvider = ({isLoading = false}: {isLoading?: boolean}) => 
         </Link>
       </CardHeader>
       <CardContent className="px-6 pt-4 space-y-4">
-        <div className="code-block flex justify-between items-center">
-          <TextMd text={cmdShow} />
-          <CopyButton text={cmdCopy} />
-        </div>
+        <StatsCard
+          stats={[
+            {
+              title: 'Provider Type',
+              value: labels.providerTypes[provider as keyof typeof labels.providerTypes] || 'Not provided'
+            },
+            {
+              title: 'Client Issuer',
+              value: issuer || 'Not provided'
+            },
+            {
+              title: 'Client ID',
+              value: clientId || 'Not provided'
+            },
+            {
+              title: 'Client Secret',
+              value: clientSecret ? `${'*'.repeat(15)}${clientSecret.slice(-3)}` : 'Not provided'
+            }
+          ]}
+        />
       </CardContent>
     </Card>
   );

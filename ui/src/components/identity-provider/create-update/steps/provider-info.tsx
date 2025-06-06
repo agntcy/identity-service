@@ -20,6 +20,8 @@ export const ProviderInfo = ({isLoading = false}: {isLoading?: boolean}) => {
   const {control, reset} = useFormContext<IdentityProvidersFormValues>();
   const methods = useStepper();
 
+  const metaData = methods.getMetadata('providerInfo');
+
   const identityProviders: SharedProviderProps<IdentityProviders>[] = [
     {
       type: IdentityProviders.OKTA,
@@ -36,8 +38,6 @@ export const ProviderInfo = ({isLoading = false}: {isLoading?: boolean}) => {
       isDisabled: true
     }
   ];
-
-  const metaData = methods.getMetadata('providerInfo');
 
   useEffect(() => {
     if (metaData) {
@@ -97,7 +97,7 @@ export const ProviderInfo = ({isLoading = false}: {isLoading?: boolean}) => {
                 <FormItem>
                   <FormLabel className="form-label">Client ID</FormLabel>
                   <FormControl>
-                    <PasswordInput placeholder="Client ID..." {...field} disabled={isLoading} />
+                    <Input placeholder="Client ID..." {...field} disabled={isLoading} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

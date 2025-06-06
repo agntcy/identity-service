@@ -71,6 +71,16 @@ export const SourceInfo = ({isLoading = false}: {isLoading?: boolean}) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [metaDataSource]);
 
+  useEffect(() => {
+    if (applicationType === ApplicationTypes.OASF) {
+      reset({
+        type: SourceTypes.OASF_SPECS,
+        text: undefined
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [applicationType]);
+
   return (
     <Card className="text-start py-4" variant="secondary">
       <CardContent className="px-4 space-y-4">
