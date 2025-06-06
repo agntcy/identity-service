@@ -16,14 +16,15 @@ export const SharedProvider = <T,>({imgURI, name, details, isDisabled = false, i
         isSelected && 'opacity-100 outline border-solid',
         isDisabled && 'opacity-55 cursor-no-drop pointer-events-none',
         'min-w-[300px]',
-        'card-flex-group'
+        'card-flex-group',
+        'px-4'
       )}
     >
-      <CardHeader className="px-2 py-0">
+      <CardHeader className="p-0">
         <CardTitle>{name}</CardTitle>
         {details && <CardDescription>{details}</CardDescription>}
       </CardHeader>
-      {imgURI}
+      {imgURI && imgURI}
     </Card>
   );
 };

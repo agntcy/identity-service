@@ -9,6 +9,7 @@ export const PATHS = {
   callBackLoading: '/login/callback',
   // application paths
   applications: '/applications',
+  applicationsCreate: '/applications/create',
   // settings paths
   settings: '/settings',
   settingsIdentityProvider: '/settings/identity-provider'
