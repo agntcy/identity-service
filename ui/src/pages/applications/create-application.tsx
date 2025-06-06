@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {CreateUpdateApplication} from '@/components/application/create-update-application';
+import {CreateUpdateApplication} from '@/components/application/create-update/create-update-application';
 import {BasePage} from '@/components/layout/base-page';
 import {PATHS} from '@/router/paths';
 

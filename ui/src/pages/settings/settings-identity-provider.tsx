@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {CreateUpdateIdentityProvider} from '@/components/identity-provider/create-update-identity-provider';
+import {CreateUpdateIdentityProvider} from '@/components/identity-provider/create-update/create-update-identity-provider';
 import {BasePage} from '@/components/layout/base-page';
 import {PATHS} from '@/router/paths';
 import {Link} from 'react-router-dom';

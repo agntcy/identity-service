@@ -7,22 +7,17 @@ import {useCallback, useState} from 'react';
 import {StepperControls, StepperNavigation, StepperPanel, StepperProvider, StepperStep, useStepper} from './stepper';
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
-import {Card} from '../ui/card';
 import {z} from 'zod';
-import {Form} from '../ui/form';
-import {Button} from '../ui/button';
 import {validateForm} from '@/lib/utils';
-import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from '../ui/accordion';
-import {ApplicationType} from './steps/application-type';
-import {SourceInfo} from './steps/source-info';
-import {ApplicationTypeFormValues, ApplicationTypeSchema, SourceInformationFormValues, SourceInformationSchema} from '@/schemas/application-schema';
-import {SaveApplication} from './steps/save-application';
+import {IdentityProvidersFormValues, IdentityProvidersSchema} from '@/schemas/identity-provider-schema';
+import {ProviderInfo} from './steps/provider-info';
+import {RegisterProvider} from './steps/register-provider';
+import {Card} from '@/components/ui/card';
+import {Form} from '@/components/ui/form';
+import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from '@/components/ui/accordion';
+import {Button} from '@/components/ui/button';
 
-interface CreateUpdateApplicationProps {
-  mode?: 'create' | 'update';
-}
-
-export const CreateUpdateApplication: React.FC<CreateUpdateApplicationProps> = ({mode = 'create'}) => {
+export const CreateUpdateIdentityProvider: React.FC = () => {
   return (
     <StepperProvider variant="vertical" className="space-y-4">
       <FormStepperComponent />
@@ -40,37 +35,22 @@ const FormStepperComponent: React.FC = () => {
     mode: 'all'
   });
 
-  const handleSelectType = useCallback(() => {
-    const values = form.getValues() as ApplicationTypeFormValues;
-    const validationResult = validateForm(ApplicationTypeSchema, values);
+  const handleSelectProvider = useCallback(() => {
+    const values = form.getValues() as IdentityProvidersFormValues;
+    const validationResult = validateForm(IdentityProvidersSchema, values);
     if (!validationResult.success) {
       validationResult.errors?.forEach((error) => {
-        const fieldName = error.path[0] as keyof z.infer<typeof ApplicationTypeSchema>;
+        const fieldName = error.path[0] as keyof z.infer<typeof IdentityProvidersSchema>;
         form.setError(fieldName, {type: 'manual', ...error});
       });
       return;
     }
-    methods.setMetadata('applicationType', {
-      ...methods.getMetadata('applicationType'),
-      type: values.type
-    });
-    methods.next();
-  }, [form, methods]);
-
-  const handleSourceInfo = useCallback(() => {
-    const values = form.getValues() as SourceInformationFormValues;
-    const validationResult = validateForm(SourceInformationSchema, values);
-    if (!validationResult.success) {
-      validationResult.errors?.forEach((error) => {
-        const fieldName = error.path[0] as keyof z.infer<typeof SourceInformationSchema>;
-        form.setError(fieldName, {type: 'manual', ...error});
-      });
-      return;
-    }
-    methods.setMetadata('sourceInfo', {
-      ...methods.getMetadata('sourceInfo'),
-      type: values.type,
-      text: values.text
+    methods.setMetadata('providerInfo', {
+      ...methods.getMetadata('providerInfo'),
+      provider: values.provider,
+      issuer: values.issuer,
+      clientId: values.clientId,
+      clientSecret: values.clientSecret
     });
     methods.next();
   }, [form, methods]);
@@ -104,19 +84,17 @@ const FormStepperComponent: React.FC = () => {
   }, []);
 
   const onSubmit = useCallback(() => {
-    if (methods.current.id === 'applicationType') {
-      return handleSelectType();
-    } else if (methods.current.id === 'sourceInfo') {
-      return handleSourceInfo();
+    if (methods.current.id === 'providerInfo') {
+      return handleSelectProvider();
     }
-  }, [handleSelectType, handleSourceInfo, methods]);
+  }, [handleSelectProvider, methods]);
 
   return (
     <Card className="p-6">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <StepperPanel className="w-full">
-            <Accordion type="single" collapsible className="w-full" defaultValue={methods.get('applicationType').id} value={methods.current.id}>
+            <Accordion type="single" collapsible className="w-full" defaultValue={methods.get('providerInfo').id} value={methods.current.id}>
               {methods.all.map((step) => {
                 return (
                   <div className="flex gap-4 items-top -ml-1" key={step.id}>
@@ -131,12 +109,10 @@ const FormStepperComponent: React.FC = () => {
                         </div>
                       </AccordionTrigger>
                       <AccordionContent>
-                        {step.id === 'applicationType' ? (
-                          <ApplicationType isLoading={isLoading} />
-                        ) : step.id === 'sourceInfo' ? (
-                          <SourceInfo isLoading={isLoading} />
-                        ) : step.id === 'saveApplication' ? (
-                          <SaveApplication isLoading={isLoading} />
+                        {step.id === 'providerInfo' ? (
+                          <ProviderInfo isLoading={isLoading} />
+                        ) : step.id === 'registerProvider' ? (
+                          <RegisterProvider isLoading={isLoading} />
                         ) : null}
                         <StepperControls className="pt-4">
                           {!methods.isFirst && (
@@ -145,7 +121,7 @@ const FormStepperComponent: React.FC = () => {
                             </Button>
                           )}
                           <Button type="submit" disabled={isLoading || !form.formState.isValid} className="cursor-pointer">
-                            {methods.isLast ? 'Save' : 'Next'}
+                            {methods.isLast ? 'Register' : 'Next'}
                           </Button>
                         </StepperControls>
                       </AccordionContent>

@@ -4,7 +4,7 @@
  */
 
 import {z} from 'zod';
-import {IdentityProviders, PasswordManagmentProviders} from '@/types/providers';
+import {IdentityProviders} from '@/types/providers';
 
 export const IdentityProvidersSchema = z.object({
   provider: z.nativeEnum(IdentityProviders),
@@ -13,8 +13,3 @@ export const IdentityProvidersSchema = z.object({
   clientId: z.string().min(1, 'Client ID is required')
 });
 export type IdentityProvidersFormValues = z.infer<typeof IdentityProvidersSchema>;
-
-export const PasswordManagmentProviderSchema = z.object({
-  manager: z.nativeEnum(PasswordManagmentProviders)
-});
-export type PasswordManagmentProviderFormValues = z.infer<typeof PasswordManagmentProviderSchema>;
