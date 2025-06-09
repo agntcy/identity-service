@@ -9,6 +9,7 @@ import {PATHS} from '@/router/paths';
 import {Link} from 'react-router-dom';
 
 const SettingsIdentityProvider: React.FC = () => {
+  // TODO: Fetch the identity provider
   return (
     <BasePage
       title="Identity Provider"

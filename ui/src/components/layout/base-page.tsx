@@ -42,7 +42,7 @@ export const BasePage: React.FC<BasePageProps> = ({
             </div>
           </div>
         )}
-        <div className="md:px-5 py-3 bg-background">
+        <div className="md:px-5 py-2 bg-background">
           {subNav && (
             <Tabs
               className="-mt-2 mb-4"
