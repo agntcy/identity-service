@@ -12,5 +12,7 @@ export const PATHS = {
   applicationsCreate: '/applications/create',
   // settings paths
   settings: '/settings',
-  settingsIdentityProvider: '/settings/identity-provider'
+  settingsIdentityProvider: '/settings/identity-provider',
+  // internal paths
+  termsAndConditions: '/terms-and-conditions'
 };

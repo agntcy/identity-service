@@ -64,7 +64,7 @@ export const AppBar: React.FC = () => {
   ];
 
   return (
-    <header className="flex justify-between px-7 py-2 items-center max-w-screen overflow-hidden border-b sticky top-0 z-40 app-bar">
+    <header className="flex justify-between px-8 py-2 items-center max-w-screen overflow-hidden border-b sticky top-0 z-40 app-bar">
       <div className="flex gap-3 items-center">
         <Link to={PATHS.basePath}>
           <img src={Logo} alt="Identity" />

@@ -18,6 +18,7 @@ const Welcome = React.lazy(() => import('@/pages/welcome/welcome'));
 const Applications = React.lazy(() => import('@/pages/applications/applications'));
 const CreateApplication = React.lazy(() => import('@/pages/applications/create-application'));
 const SettingsIdentityProvider = React.lazy(() => import('@/pages/settings/settings-identity-provider'));
+const TermsAndConditions = React.lazy(() => import('@/pages/terms-and-conditions/terms-and-conditions'));
 
 export const generateRoutes = (routes: Route[]): Route[] => {
   return [
@@ -97,6 +98,10 @@ export const useRoutes = () => {
             element: <NotFound />
           }
         ]
+      },
+      {
+        path: PATHS.termsAndConditions,
+        element: <TermsAndConditions />
       }
     ];
   }, []);

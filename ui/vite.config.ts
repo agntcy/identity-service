@@ -14,12 +14,12 @@ export default defineConfig(({mode}) => {
   process.env = {...process.env, ...loadEnv(mode, process.cwd())};
   return {
     server: {
-      port: parseInt(process.env.VITE_APP_CLIENT_PORT || '55000'),
+      port: parseInt(process.env.VITE_APP_CLIENT_PORT || '5500'),
       strictPort: true,
       open: true
     },
     preview: {
-      port: parseInt(process.env.VITE_APP_CLIENT_PORT || '55000'),
+      port: parseInt(process.env.VITE_APP_CLIENT_PORT || '5500'),
       strictPort: true,
       open: true
     },

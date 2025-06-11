@@ -1,0 +1,22 @@
+.date-footer {
+  font-family: Inter;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.4px;
+  color: #3C4551;
+}
+
+.footer-container {
+  border-top: 1px solid #D5DFF7;
+  overflow: hidden;
+}
+
+.link-text {
+  font-family: Inter;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 125%;
+  letter-spacing: 0%;
+  color: #187ADC;
+}

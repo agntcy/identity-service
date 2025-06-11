@@ -107,9 +107,6 @@
     @apply bg-background text-foreground;
     /* word-break: break-all; */
   }
-  .inline-link {
-    @apply hover:text-primary cursor-pointer hover:decoration-primary font-semibold hover:underline;
-  }
 }
 
 .card-group {
@@ -246,6 +243,25 @@
   pointer-events: none;
   background: linear-gradient(90deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.075));
   animation: fadeIn 0.4s ease-in;
+}
+
+.scroll-container {
+  height: calc(100vh - 96px);
+}
+
+.inline-link {
+  font-family: Inter;
+  font-weight: 400;
+  line-height: 125%;
+  letter-spacing: 0%;
+  color: #187ADC;
+  cursor: pointer;
+}
+
+.inline-link:hover {
+  text-decoration: underline;
+  text-decoration-style: solid;
+  text-decoration-thickness: 0%;
 }
 
 @keyframes fadeIn {

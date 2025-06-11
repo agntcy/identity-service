@@ -9,6 +9,8 @@ import {cn} from '@/lib/utils';
 import {ResizablePanel, ResizablePanelGroup} from '@/components/ui/resizable';
 import {SideNav} from './side-nav';
 import {AppBar} from './app-bar';
+import {Footer} from './footer';
+import ScrollShadowWrapper from '../ui/scroll-shadow-wrapper';
 
 const Layout = () => {
   const defaultLayout = [15, 85];
@@ -74,12 +76,13 @@ const Layout = () => {
         >
           <SideNav isCollapsed={isCollapsed} onChangeCollapsed={(value) => setIsCollapsed(value as boolean)} />
         </ResizablePanel>
-        <ResizablePanel defaultSize={defaultLayout[1]} collapsible={false} minSize={30} className="!overflow-auto">
-          <main className="pb-10 h-full overflow-y-auto">
+        <ResizablePanel defaultSize={defaultLayout[1]} collapsible={false} minSize={30}>
+          <main>
             <Outlet />
           </main>
         </ResizablePanel>
       </ResizablePanelGroup>
+      <Footer />
     </ResizablePanelGroup>
   );
 };

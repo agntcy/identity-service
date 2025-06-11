@@ -74,3 +74,144 @@
   src: url("../fonts/SharpSans-BoldItalic.woff2") format("woff2"),
     url("../fonts/SharpSans-BoldItalic.woff") format("woff");
 }
+
+.custom-h1 {
+  font-family: "Sharp Sans", sans-serif;
+  font-weight: 700;
+  font-size: 60px;
+  line-height: 64px;
+}
+
+.custom-h2 {
+  font-family: "Sharp Sans", sans-serif;
+  font-weight: 700;
+  font-size: 48px;
+  line-height: 52px;
+}
+
+.custom-h3 {
+  font-family: "Sharp Sans", sans-serif;
+  font-weight: 700;
+  font-size: 36px;
+  line-height: 44px;
+}
+
+.custom-h4 {
+  font-family: "Sharp Sans", sans-serif;
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 36px;
+}
+
+.custom-h5 {
+  font-family: "Sharp Sans", sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 32px;
+}
+
+.custom-h6 {
+  font-family: "Sharp Sans", sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 28px;
+}
+
+.heading-subsection {
+  font-family: "Sharp Sans", sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 22px;
+}
+
+.subtitle1 {
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.15px;
+}
+
+.subtitle2 {
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.1px;
+}
+
+.body1 {
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.5px;
+}
+
+.body1-semibold {
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0px;
+}
+
+.body2 {
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.25px;
+}
+
+.body2-semibold {
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0px;
+}
+
+.caption {
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.4px;
+}
+
+.caption-medium {
+  font-family: "Inter", sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.4px;
+}
+
+.caption-semibold {
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0px;
+}
+
+.button {
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 16px;
+  text-transform: none;
+}
+
+.overline {
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  font-size: 10px;
+  line-height: 16px;
+  letter-spacing: 0.4px;
+}
+
+body {
+  color: #3c4551;
+}

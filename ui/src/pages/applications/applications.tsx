@@ -50,6 +50,7 @@ const Applications: React.FC = () => {
         </Link>
       }
     >
+      {/* <EmptyProvider /> */}
       <div className="space-y-4 w-full">
         <div className="flex justify-end">
           <ViewSwitch

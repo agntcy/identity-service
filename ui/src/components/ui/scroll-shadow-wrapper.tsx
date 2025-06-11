@@ -120,14 +120,14 @@ const ScrollShadowWrapper: React.FC<ScrollShadowWrapperProps> = ({children, clas
     <div
       className={cn(
         'relative',
-        isOverflowing && withBorder && 'border rounded',
+        isOverflowing && withBorder && 'border',
         top && 'scrollable-shadow-top',
         bottom && 'scrollable-shadow-bottom',
         left && 'scrollable-shadow-left',
         right && 'scrollable-shadow-right'
       )}
     >
-      <ScrollArea ref={ref} className={cn('relative', className)}>
+      <ScrollArea ref={ref} className={cn('relative scroll-container', className)}>
         <div className={cn(isOverflowing && 'p-0')}>{children}</div>
       </ScrollArea>
     </div>
