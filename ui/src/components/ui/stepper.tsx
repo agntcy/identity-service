@@ -369,7 +369,7 @@ const classForSeparator = cva(
     variants: {
       orientation: {
         horizontal: 'h-0.5 flex-1',
-        vertical: 'h-full w-0.5'
+        vertical: 'h-full w-[2px]'
       },
       labelOrientation: {
         vertical: 'absolute left-[calc(50%+30px)] right-[calc(-50%+20px)] top-5 block shrink-0'
