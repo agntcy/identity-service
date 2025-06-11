@@ -71,7 +71,7 @@ export const AppBar: React.FC = () => {
           <p className="product-name">Identity</p>
         </Link>
       </div>
-      <div className="flex items-center gap-4 flex-shrink-0">
+      <div className="flex items-center gap-2 flex-shrink-0">
         <Tooltip>
           <TooltipTrigger asChild>
             <Link to={'https://spec.identity.agntcy.org/'} target="_blank">
@@ -98,7 +98,7 @@ export const AppBar: React.FC = () => {
             GitHub
           </TooltipContent>
         </Tooltip>
-        <Separator orientation="vertical" className="min-h-[30px] w-[1px] bg-[#D5DFF7]" />
+        <Separator orientation="vertical" className="min-h-[30px] w-[1px] bg-[#D5DFF7] mr-1" />
         <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
           <DropdownMenuTrigger>
             <Button variant="link" className="flex gap-3 items-top hover:no-underline" style={{padding: '0px'}}>
