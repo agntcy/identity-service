@@ -11,29 +11,32 @@ import {cn} from '@/lib/utils';
 import {Loader2Icon} from 'lucide-react';
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive cursor-pointer",
+  // " aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[4px] transition-all disabled:cursor-not-allowed [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-[22px] shrink-0 [&_svg]:shrink-0 outline-none cursor-pointer focus-visible:border-ring focus-visible:ring-[#187ADC] focus-visible:ring-[3px]",
   {
     variants: {
       variant: {
-        default: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90',
-        destructive:
-          'bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60',
+        primary:
+          'button-text text-[16px] bg-[#187ADC] text-[#E8E9EA] shadow-xs text-[#E8E9EA] hover:bg-[#79B9FF] disabled:bg-[#0051AF66] disabled:text-[#E8F1FF]',
+        secondary: 'button-text text-[16px] bg-[#062242] text-[#E8E9EA] shadow-xs hover:bg-[#263B62] disabled:bg-[#00142B66] disabled:text-[#FBFCFE]',
         outline:
-          'border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50',
-        secondary: 'bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80',
-        ghost: 'hover:bg-accent hover:text-accent-foreground',
-        link: 'text-primary underline-offset-4 hover:underline'
+          'button-text text-[16px] border-2 border-[#FBAB2C] text-[#00142B] bg-transparent hover:border-[#FFD7A2] hover:text-[#0D274D] disabled:border-[#FBAF4566] disabled:text-[#777D85]',
+        tertariary: 'button-text text-[16px] bg-transparent text-[#187ADC] hover:text-[#79B9FF] disabled:text-[#0051AF66]',
+        destructive:
+          'button-text text-[16px] bg-[#C0244C] text-[#E8E9EA] shadow-xs hover:bg-[#CF496D] disabled:bg-[#C6295366] disabled:text-[#F8E5EA]',
+        ghost: 'button-text text-[16px] hover:bg-accent hover:text-accent-foreground',
+        link: 'button-text text-[16px] text-primary underline-offset-4 hover:underline'
       },
       size: {
-        default: 'h-9 px-4 py-2 has-[>svg]:px-3',
-        sm: 'h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5',
-        lg: 'h-10 rounded-md px-6 has-[>svg]:px-4',
-        icon: 'size-9'
+        lg: 'h-[40px] px-[16px] py-[10px]',
+        md: 'h-[32px] px-4 py-[7px]',
+        sm: 'h-[24px] px-[12px] py-[3px]',
+        icon: "[&_svg:not([class*='size-'])]:size-[18px] size-[24px] mt-[3px]"
       }
     },
     defaultVariants: {
-      variant: 'default',
-      size: 'default'
+      variant: 'primary',
+      size: 'lg'
     }
   }
 );
@@ -48,13 +51,8 @@ function Button({className, variant, size, asChild = false, isLoading = false, .
 
   return (
     <Comp data-slot="button" className={cn(buttonVariants({variant, size, className}))} {...props}>
-      {isLoading ? (
-        <span className="flex items-center gap-2 text-xs animate-pulse">
-          <Loader2Icon className="h-4 animate-spin" />
-        </span>
-      ) : (
-        <>{props.children}</>
-      )}
+      {isLoading && <Loader2Icon className="animate-spin stroke-[#E8E9EA]" />}
+      <>{props.children}</>
     </Comp>
   );
 }

@@ -212,6 +212,13 @@
   letter-spacing: 0.4px;
 }
 
+.button-text {
+  font-family: Inter;
+  font-weight: 600;
+  line-height: 125%;
+  letter-spacing: 0%;
+}
+
 body {
   color: #3c4551;
 }

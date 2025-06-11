@@ -8,7 +8,7 @@ import {Link} from 'react-router-dom';
 
 const TermsAndConditions: React.FC = () => {
   return (
-    <BasePage title="Terms and Conditions" useBreadcrumbs={false}>
+    <BasePage title="Terms and Conditions" useBreadcrumbs={true} breadcrumbs={[{text: 'Terms & Conditions'}]}>
       <p className="body1">
         This site is operated by Outshift by Cisco (“Outshift”). Outshift is Cisco&apos;s in-house incubation engine.{' '}
         <Link to="https://www.cisco.com/c/en/us/about/legal/terms-conditions.html" target="_blank" className="inline-link">

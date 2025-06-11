@@ -14,5 +14,6 @@ export const PATHS = {
   settings: '/settings',
   settingsIdentityProvider: '/settings/identity-provider',
   // internal paths
-  termsAndConditions: '/terms-and-conditions'
+  termsAndConditions: '/terms-and-conditions',
+  onBoarding: '/on-boarding'
 };

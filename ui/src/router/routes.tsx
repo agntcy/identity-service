@@ -19,6 +19,7 @@ const Applications = React.lazy(() => import('@/pages/applications/applications'
 const CreateApplication = React.lazy(() => import('@/pages/applications/create-application'));
 const SettingsIdentityProvider = React.lazy(() => import('@/pages/settings/settings-identity-provider'));
 const TermsAndConditions = React.lazy(() => import('@/pages/terms-and-conditions/terms-and-conditions'));
+const OnBoarding = React.lazy(() => import('@/pages/on-boarding/on-boarding'));
 
 export const generateRoutes = (routes: Route[]): Route[] => {
   return [
@@ -63,8 +64,13 @@ export const generateRoutes = (routes: Route[]): Route[] => {
 };
 
 export const useRoutes = () => {
+  // TODO: create router according to IAM entitlements and Identity Provider
   const routes = useMemo<Route[]>(() => {
     return [
+      {
+        path: PATHS.onBoarding,
+        element: <OnBoarding />
+      },
       {
         path: PATHS.applications,
         children: [

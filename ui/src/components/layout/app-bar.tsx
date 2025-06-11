@@ -64,14 +64,14 @@ export const AppBar: React.FC = () => {
   ];
 
   return (
-    <header className="flex justify-between px-8 py-2 items-center max-w-screen overflow-hidden border-b sticky top-0 z-40 app-bar">
+    <header className="flex justify-between px-8 py-2 items-center max-w-screen overflow-hidden border-b sticky top-0 z-40 app-bar h-[56px]">
       <div className="flex gap-3 items-center">
         <Link to={PATHS.basePath}>
           <img src={Logo} alt="Identity" />
         </Link>
         <p className="product-name">Identity</p>
       </div>
-      <div className="flex items-center gap-1 flex-shrink-0">
+      <div className="flex items-center gap-4 flex-shrink-0">
         <Tooltip>
           <TooltipTrigger asChild>
             <Link to={'https://spec.identity.agntcy.org/'} target="_blank">
@@ -88,7 +88,7 @@ export const AppBar: React.FC = () => {
         <Tooltip>
           <TooltipTrigger asChild>
             <Link to={'https://github.com/agntcy/identity'} target="_blank">
-              <Button variant={'link'} size="icon" className="px-2 relative">
+              <Button variant={'link'} size="icon">
                 <GitLogo className="w-6 h-6" />
               </Button>
             </Link>
@@ -98,7 +98,7 @@ export const AppBar: React.FC = () => {
             GitHub
           </TooltipContent>
         </Tooltip>
-        <Separator orientation="vertical" className="min-h-[30px] w-[1px] bg-[#D5DFF7] mr-3 ml-1" />
+        <Separator orientation="vertical" className="min-h-[30px] w-[1px] bg-[#D5DFF7]" />
         <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
           <DropdownMenuTrigger>
             <Button variant="link" className="flex gap-3 items-top hover:no-underline" style={{padding: '0px'}}>

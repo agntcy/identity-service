@@ -6,6 +6,7 @@
 import {BasePage} from '@/components/layout/base-page';
 import {EmptyProvider} from '@/components/shared/empty-provider';
 import {Button} from '@/components/ui/button';
+import {Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger} from '@/components/ui/dialog';
 import PlaceholderPageContent from '@/components/ui/placeholder-page-content';
 import ViewSwitch from '@/components/ui/view-switch';
 import {PATHS} from '@/router/paths';
@@ -68,6 +69,7 @@ const Applications: React.FC = () => {
           />
         </div>
       </div>
+
       {/* {identityProvider && passwordManagementProvider ? <PlaceholderPageContent /> : <EmptyProvider />} */}
     </BasePage>
   );
