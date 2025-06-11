@@ -12,7 +12,7 @@ import {Loader2Icon} from 'lucide-react';
 
 const buttonVariants = cva(
   // " aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[4px] transition-all disabled:cursor-not-allowed [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-[22px] shrink-0 [&_svg]:shrink-0 outline-none cursor-pointer focus-visible:border-ring focus-visible:ring-[#187ADC] focus-visible:ring-[3px]",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[4px] transition-all disabled:cursor-not-allowed [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-[24px] shrink-0 [&_svg]:shrink-0 outline-none cursor-pointer focus-visible:border-ring focus-visible:ring-[#187ADC] focus-visible:ring-[3px]",
   {
     variants: {
       variant: {
@@ -31,7 +31,7 @@ const buttonVariants = cva(
         lg: 'h-[40px] px-[16px] py-[10px]',
         md: 'h-[32px] px-4 py-[7px]',
         sm: 'h-[24px] px-[12px] py-[3px]',
-        icon: "[&_svg:not([class*='size-'])]:size-[18px] size-[24px] mt-[3px]"
+        icon: "h-[32px] [&_svg:not([class*='size-'])]:size-[18px]"
       }
     },
     defaultVariants: {

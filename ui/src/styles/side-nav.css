@@ -18,4 +18,6 @@
 
 .collapse-button {
   border: 2px solid #FBAF45;
+  height: 32px !important;
+  width: 32px !important;
 }

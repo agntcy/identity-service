@@ -52,7 +52,7 @@ export const SideNav: React.FC<{isCollapsed?: boolean; onChangeCollapsed?: (valu
       </div>
       <div className={cn('absolute bottom-15 left-[10px]')}>
         <Button variant="outline" className="collapse-button" onClick={() => onChangeCollapsed?.(!isCollapsed)} size="icon">
-          <ChevronLeftIcon className={cn('w-4 h-4 stroke-[#00142B]', isCollapsed && 'rotate-180')} />
+          <ChevronLeftIcon className={cn('!w-4 !h-4 stroke-[#00142B]', isCollapsed && 'rotate-180')} />
         </Button>
       </div>
     </nav>

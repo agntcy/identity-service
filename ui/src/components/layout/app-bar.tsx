@@ -65,17 +65,17 @@ export const AppBar: React.FC = () => {
 
   return (
     <header className="flex justify-between px-8 py-2 items-center max-w-screen overflow-hidden border-b sticky top-0 z-40 app-bar h-[56px]">
-      <div className="flex gap-3 items-center">
-        <Link to={PATHS.basePath}>
+      <div>
+        <Link to={PATHS.basePath} className="flex gap-3 items-center">
           <img src={Logo} alt="Identity" />
+          <p className="product-name">Identity</p>
         </Link>
-        <p className="product-name">Identity</p>
       </div>
       <div className="flex items-center gap-4 flex-shrink-0">
         <Tooltip>
           <TooltipTrigger asChild>
             <Link to={'https://spec.identity.agntcy.org/'} target="_blank">
-              <Button variant={'link'} size="icon" className="px-2 relative">
+              <Button variant={'link'} size="icon">
                 <UnionLogo className="w-6 h-6" />
               </Button>
             </Link>
