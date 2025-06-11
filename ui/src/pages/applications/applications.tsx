@@ -7,6 +7,7 @@ import {BasePage} from '@/components/layout/base-page';
 import {EmptyProvider} from '@/components/shared/empty-provider';
 import {Button} from '@/components/ui/button';
 import {Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger} from '@/components/ui/dialog';
+import {Loading} from '@/components/ui/loading';
 import PlaceholderPageContent from '@/components/ui/placeholder-page-content';
 import ViewSwitch from '@/components/ui/view-switch';
 import {PATHS} from '@/router/paths';
@@ -44,7 +45,7 @@ const Applications: React.FC = () => {
       useBreadcrumbs={false}
       rightSideItems={
         <Link to={PATHS.applicationsCreate}>
-          <Button className="flex gap-2 items-center">
+          <Button>
             Create Application
             <PlusIcon />
           </Button>

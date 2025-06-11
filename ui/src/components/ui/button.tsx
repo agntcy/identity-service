@@ -8,11 +8,11 @@ import {Slot} from '@radix-ui/react-slot';
 import {cva, type VariantProps} from 'class-variance-authority';
 
 import {cn} from '@/lib/utils';
-import {Loader2Icon} from 'lucide-react';
+import {Spinner} from './loading';
 
 const buttonVariants = cva(
   // " aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[4px] transition-all disabled:cursor-not-allowed [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-[24px] shrink-0 [&_svg]:shrink-0 outline-none cursor-pointer focus-visible:border-ring focus-visible:ring-[#187ADC] focus-visible:ring-[3px]",
+  "inline-flex items-center justify-center gap-3 whitespace-nowrap rounded-[4px] transition-all disabled:cursor-not-allowed [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-[24px] shrink-0 [&_svg]:shrink-0 outline-none cursor-pointer focus-visible:border-ring focus-visible:ring-[#187ADC] focus-visible:ring-[3px]",
   {
     variants: {
       variant: {
@@ -50,9 +50,20 @@ function Button({className, variant, size, asChild = false, isLoading = false, .
   const Comp = asChild ? Slot : 'button';
 
   return (
-    <Comp data-slot="button" className={cn(buttonVariants({variant, size, className}))} {...props}>
-      {isLoading && <Loader2Icon className="animate-spin stroke-[#E8E9EA]" />}
-      <>{props.children}</>
+    <Comp data-slot="button" className={cn(buttonVariants({variant, size, className}), isLoading && '')} {...props}>
+      {isLoading && (
+        <Spinner
+          className={cn(variant !== 'outline' && 'border-[#E8E9EA]', variant === 'tertariary' && 'border-[#187ADC]')}
+          size="md"
+          variant={variant === 'outline' ? 'secondary' : 'primary'}
+          style={
+            variant === 'primary' || variant === 'secondary' || variant === 'destructive'
+              ? {borderColor: '#E8E9EA transparent transparent transparent'}
+              : {}
+          }
+        />
+      )}
+      {!isLoading && <>{props.children}</>}
     </Comp>
   );
 }

@@ -11,6 +11,7 @@ const DateHover: React.FC<DateHoverProps> = ({className, date, ...props}) => {
   const dateObj = useMemo(() => {
     try {
       return safeGetDate(date);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
       return null;
     }
