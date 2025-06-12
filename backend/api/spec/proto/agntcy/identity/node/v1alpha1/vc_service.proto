@@ -1,0 +1,115 @@
+// Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package agntcy.identity.node.v1alpha1;
+
+import "agntcy/identity-saas/core/v1alpha1/vc.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+// Package-wide variables from generator "generated".
+option go_package = "github.com/agntcy/identity-saas/api/server/agntcy/identity-saas/node/v1alpha1;identity_node_sdk_go";
+
+// VC is the service that provides VC operations.
+service VcService {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_tag) = {name: "VcService"};
+
+  // Publish an issued Verifiable Credential
+  rpc Publish(PublishRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v1alpha1/vc/publish"
+      body: "*"
+    };
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "PublishVerifiableCredential";
+      summary: "Publish a Verifiable Credential";
+    };
+  }
+
+  // Verify an existing Verifiable Credential
+  rpc Verify(VerifyRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v1alpha1/vc/verify"
+      body: "*"
+    };
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "VerifyVerifiableCredential";
+      summary: "Verify a Verifiable Credential";
+    };
+  }
+
+  // Returns the well-known Verifiable Credentials for the specified Id
+  rpc GetWellKnown(GetVcWellKnownRequest) returns (GetVcWellKnownResponse) {
+    option (google.api.http) = {get: "/v1alpha1/vc/{id}/.well-known/vcs.json"};
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "GetVcWellKnown";
+      summary: "Returns the well-known Verifiable Credentials for the specified Id";
+    };
+  }
+
+  // Search for Verifiable Credentials based on the specified criteria
+  rpc Search(SearchRequest) returns (SearchResponse) {
+    option (google.api.http) = {
+      post: "/v1alpha1/vc/search"
+      body: "*"
+    };
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "SearchVerifiableCredentials";
+      summary: "Search for Verifiable Credentials based on the specified criteria";
+    };
+  }
+}
+
+// Request to publish an issued Verifiable Credential
+message PublishRequest {
+  // The Verifiable Credential to publish
+  agntcy.identity.core.v1alpha1.EnvelopedCredential vc = 1;
+
+  // Optional Proof of ownership of the Issuer's ResolverMetadata
+  // This should be provided when the Issuer is provided by an external IdP
+  // Example: a signed JWT
+  optional agntcy.identity.core.v1alpha1.Proof proof = 2;
+}
+
+//  Request to verify an existing Verifiable Credential
+message VerifyRequest {
+  // The Verifiable Credential to verify
+  agntcy.identity.core.v1alpha1.EnvelopedCredential vc = 1;
+}
+
+// Request to search for VCs based on the specified criteria
+message SearchRequest {
+  // ID is the identifier.
+  string id = 1;
+
+  // Schema is the schema of the credential contained in the VC
+  agntcy.identity.core.v1alpha1.CredentialSchema schema = 2;
+
+  // The credential content representation in JSON-LD format
+  string content = 3;
+}
+
+// Returns the VCs that match the search criteria
+message SearchResponse {
+  // The list of VCs that match the search criteria
+  repeated agntcy.identity.core.v1alpha1.EnvelopedCredential vcs = 1;
+}
+
+// Requests the well-known VCs for an Id
+message GetVcWellKnownRequest {
+  // The identifier.
+  string id = 1;
+}
+
+// Returns the well-known VCs for an Id
+message GetVcWellKnownResponse {
+  // The list of VCs for the specified Id
+  repeated agntcy.identity.core.v1alpha1.EnvelopedCredential vcs = 1;
+}

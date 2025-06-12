@@ -56,15 +56,5 @@ venv.bak/
 
 .scratchpad
 
-# DB
-test_vc.json
-
 # Worflows
 *.swm
-
-# Other
-cmd/issuer/guides
-badge.json
-vcs.json
-identity
-!identity/

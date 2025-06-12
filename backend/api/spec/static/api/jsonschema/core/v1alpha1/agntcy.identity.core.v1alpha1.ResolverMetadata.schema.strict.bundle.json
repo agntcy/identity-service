@@ -1,0 +1,143 @@
+{
+  "$defs": {
+    "agntcy.identity.core.v1alpha1.Jwk.schema.strict.json": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "description": "JWK represents:\n - a JSON Web Key (JWK) with the respective fields specific to RSA algorithms.\n - a Quantum JSON Web Key (QJWK) with the respective fields specific to AKP algorithms.",
+      "properties": {
+        "alg": {
+          "description": "ALG represents the algorithm intended for use with the key.\n Example algorithms for Post-Quantum ML-DSA family:\n \"ML-DSA-44\", \"ML-DSA-65\", \"ML-DSA-87\".\n Some example algorithms are \"RS256\", \"RS384\", \"RS512\" for RSA algorithms.",
+          "type": "string"
+        },
+        "d": {
+          "description": "The private exponent for the RSA kty.",
+          "type": "string"
+        },
+        "dp": {
+          "description": "The first factor CRT exponent for the RSA private key.",
+          "type": "string"
+        },
+        "dq": {
+          "description": "The second factor CRT exponent for the RSA private key.",
+          "type": "string"
+        },
+        "e": {
+          "description": "The exponent for the RSA public key.",
+          "type": "string"
+        },
+        "kid": {
+          "description": "KID represents the key ID.\n It is used to match a specific key.",
+          "type": "string"
+        },
+        "kty": {
+          "description": "KTY represents the key type parameter.\n It specifies the family of quantum algorithms used with the key,\n such as \"AKP\" for post quantum algorithms\n or \"RSA\" for non quantum algorithms.",
+          "type": "string"
+        },
+        "n": {
+          "description": "The modulus for the RSA public key.",
+          "type": "string"
+        },
+        "p": {
+          "description": "The first prime factor for the RSA private key.",
+          "type": "string"
+        },
+        "priv": {
+          "description": "The private key for the AKP kty.",
+          "type": "string"
+        },
+        "pub": {
+          "description": "The public key for the AKP kty.",
+          "type": "string"
+        },
+        "q": {
+          "description": "The second prime factor for the RSA private key.",
+          "type": "string"
+        },
+        "qi": {
+          "description": "The first CRT coefficient for the RSA private key.",
+          "type": "string"
+        },
+        "seed": {
+          "description": "Seed used to derive keys for ML-DSA alg.",
+          "type": "string"
+        },
+        "use": {
+          "description": "Use represents the intended use of the key.\n Some example values are \"enc\" and \"sig\".",
+          "type": "string"
+        }
+      },
+      "title": "Jwk",
+      "type": "object"
+    },
+    "agntcy.identity.core.v1alpha1.ResolverMetadata.schema.strict.json": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "description": "A ResolverMetadata can be retrieved by resolving an ID.",
+      "properties": {
+        "assertion_method": {
+          "description": "AssertionMethod is used to specify how the entity represented by the ID\n is expected to express claims, such as for the purposes of issuing a VCs.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "id": {
+          "description": "The ID\n The metadata below is related as claims to the ID",
+          "type": "string"
+        },
+        "service": {
+          "description": "Service is used in ResolverMetadatas to express ways of communicating with\n the node that published the document.",
+          "items": {
+            "$ref": "#/$defs/agntcy.identity.core.v1alpha1.Service.schema.strict.json"
+          },
+          "type": "array"
+        },
+        "verification_method": {
+          "description": "VerificationMethod is a list of cryptographic public keys, which can be used\n to authenticate or authorize interactions with the entities represented by the ID.",
+          "items": {
+            "$ref": "#/$defs/agntcy.identity.core.v1alpha1.VerificationMethod.schema.strict.json"
+          },
+          "type": "array"
+        }
+      },
+      "title": "ResolverMetadata represents a set of data describing the ID including mechanisms such as:\n   - cryptographic public keys - used to authenticate itself and prove\n     association with the ID\n   - service - ways of communicating with the node that published the document",
+      "type": "object"
+    },
+    "agntcy.identity.core.v1alpha1.Service.schema.strict.json": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "description": "Service is used in ResolverMetadata to express ways of communicating with\n the node that published the document.",
+      "properties": {
+        "service_endpoint": {
+          "description": "ServiceEndpoint is a network address, such as an HTTP URL, of the\n node.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "title": "Service",
+      "type": "object"
+    },
+    "agntcy.identity.core.v1alpha1.VerificationMethod.schema.strict.json": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "description": "VerificationMethod expresses verification methods, such as cryptographic\n public keys, which can be used to authenticate or authorize interactions\n with the entities represented by the ID. It is a part of the ResolverMetadata.",
+      "properties": {
+        "id": {
+          "description": "A unique id of the verification method.",
+          "type": "string"
+        },
+        "public_key_jwk": {
+          "$ref": "#/$defs/agntcy.identity.core.v1alpha1.Jwk.schema.strict.json",
+          "description": "The public key used for the verification method."
+        }
+      },
+      "title": "Verification Method",
+      "type": "object"
+    }
+  },
+  "$id": "agntcy.identity.core.v1alpha1.ResolverMetadata.schema.strict.bundle.json",
+  "$ref": "#/$defs/agntcy.identity.core.v1alpha1.ResolverMetadata.schema.strict.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

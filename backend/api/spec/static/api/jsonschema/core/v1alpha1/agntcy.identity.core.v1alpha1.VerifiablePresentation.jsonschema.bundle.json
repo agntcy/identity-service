@@ -1,0 +1,174 @@
+{
+  "$defs": {
+    "agntcy.identity.core.v1alpha1.CredentialSchema.jsonschema.json": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "description": "[here]: https://www.w3.org/TR/vc-data-model-2.0/#data-schemas",
+      "properties": {
+        "id": {
+          "description": "The URL identifying the schema file",
+          "type": "string"
+        },
+        "type": {
+          "description": "Type specifies the type of the file",
+          "type": "string"
+        }
+      },
+      "title": "CredentialSchema represents the credentialSchema property of a Verifiable Credential.\n more information can be found [here]",
+      "type": "object"
+    },
+    "agntcy.identity.core.v1alpha1.Proof.jsonschema.json": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "description": "A data integrity proof provides information about the proof mechanism,\n parameters required to verify that proof, and the proof value itself.",
+      "patternProperties": {
+        "^(proof_purpose)$": {
+          "description": "The proof purpose",
+          "type": "string"
+        },
+        "^(proof_value)$": {
+          "description": "The proof value",
+          "type": "string"
+        }
+      },
+      "properties": {
+        "proofPurpose": {
+          "description": "The proof purpose",
+          "type": "string"
+        },
+        "proofValue": {
+          "description": "The proof value",
+          "type": "string"
+        },
+        "type": {
+          "description": "The type of the proof",
+          "type": "string"
+        }
+      },
+      "title": "Proof",
+      "type": "object"
+    },
+    "agntcy.identity.core.v1alpha1.VerifiableCredential.jsonschema.json": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "description": "[here]: https://www.w3.org/TR/vc-data-model/",
+      "patternProperties": {
+        "^(credential_schema)$": {
+          "description": "https://www.w3.org/TR/vc-data-model-2.0/#data-schemas",
+          "items": {
+            "$ref": "#/$defs/agntcy.identity.core.v1alpha1.CredentialSchema.jsonschema.json"
+          },
+          "type": "array"
+        },
+        "^(expiration_date)$": {
+          "description": "https://www.w3.org/TR/vc-data-model/#expiration",
+          "type": "string"
+        },
+        "^(issuance_date)$": {
+          "description": "https://www.w3.org/TR/vc-data-model/#issuance-date",
+          "type": "string"
+        }
+      },
+      "properties": {
+        "content": {
+          "$ref": "#/$defs/google.protobuf.Struct.jsonschema.json",
+          "description": "https://www.w3.org/TR/vc-data-model/#credential-subject"
+        },
+        "context": {
+          "description": "https://www.w3.org/TR/vc-data-model/#contexts",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "credentialSchema": {
+          "description": "https://www.w3.org/TR/vc-data-model-2.0/#data-schemas",
+          "items": {
+            "$ref": "#/$defs/agntcy.identity.core.v1alpha1.CredentialSchema.jsonschema.json"
+          },
+          "type": "array"
+        },
+        "expirationDate": {
+          "description": "https://www.w3.org/TR/vc-data-model/#expiration",
+          "type": "string"
+        },
+        "id": {
+          "description": "https://www.w3.org/TR/vc-data-model/#identifiers",
+          "type": "string"
+        },
+        "issuanceDate": {
+          "description": "https://www.w3.org/TR/vc-data-model/#issuance-date",
+          "type": "string"
+        },
+        "issuer": {
+          "description": "https://www.w3.org/TR/vc-data-model/#issuer",
+          "type": "string"
+        },
+        "proof": {
+          "$ref": "#/$defs/agntcy.identity.core.v1alpha1.Proof.jsonschema.json",
+          "description": "https://w3id.org/security#proof"
+        },
+        "type": {
+          "description": "https://www.w3.org/TR/vc-data-model/#dfn-type",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "title": "DataModel represents the W3C Verifiable Credential Data Model defined [here]",
+      "type": "object"
+    },
+    "agntcy.identity.core.v1alpha1.VerifiablePresentation.jsonschema.json": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "description": "[here]: https://www.w3.org/TR/vc-data-model/",
+      "patternProperties": {
+        "^(verifiable_credential)$": {
+          "description": "https://www.w3.org/2018/credentials#verifiableCredential",
+          "items": {
+            "$ref": "#/$defs/agntcy.identity.core.v1alpha1.VerifiableCredential.jsonschema.json"
+          },
+          "type": "array"
+        }
+      },
+      "properties": {
+        "context": {
+          "description": "https://www.w3.org/TR/vc-data-model/#contexts",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "proof": {
+          "$ref": "#/$defs/agntcy.identity.core.v1alpha1.Proof.jsonschema.json",
+          "description": "https://w3id.org/security#proof"
+        },
+        "type": {
+          "description": "https://www.w3.org/TR/vc-data-model/#dfn-type",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "verifiableCredential": {
+          "description": "https://www.w3.org/2018/credentials#verifiableCredential",
+          "items": {
+            "$ref": "#/$defs/agntcy.identity.core.v1alpha1.VerifiableCredential.jsonschema.json"
+          },
+          "type": "array"
+        }
+      },
+      "title": "DataModel represents the W3C Verifiable Presentation Data Model defined [here]",
+      "type": "object"
+    },
+    "google.protobuf.Struct.jsonschema.json": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "title": "Struct",
+      "type": "object"
+    }
+  },
+  "$id": "agntcy.identity.core.v1alpha1.VerifiablePresentation.jsonschema.bundle.json",
+  "$ref": "#/$defs/agntcy.identity.core.v1alpha1.VerifiablePresentation.jsonschema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

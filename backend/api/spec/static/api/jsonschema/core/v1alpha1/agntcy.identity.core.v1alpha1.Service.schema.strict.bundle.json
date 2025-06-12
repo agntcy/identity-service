@@ -1,0 +1,23 @@
+{
+  "$defs": {
+    "agntcy.identity.core.v1alpha1.Service.schema.strict.json": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "description": "Service is used in ResolverMetadata to express ways of communicating with\n the node that published the document.",
+      "properties": {
+        "service_endpoint": {
+          "description": "ServiceEndpoint is a network address, such as an HTTP URL, of the\n node.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "title": "Service",
+      "type": "object"
+    }
+  },
+  "$id": "agntcy.identity.core.v1alpha1.Service.schema.strict.bundle.json",
+  "$ref": "#/$defs/agntcy.identity.core.v1alpha1.Service.schema.strict.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

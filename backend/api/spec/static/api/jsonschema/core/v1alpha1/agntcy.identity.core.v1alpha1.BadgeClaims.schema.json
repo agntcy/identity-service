@@ -1,0 +1,19 @@
+{
+  "$id": "agntcy.identity.core.v1alpha1.BadgeClaims.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "[here]: https://spec.identity.agntcy.org/docs/vc/intro/",
+  "properties": {
+    "badge": {
+      "description": "The content of the badge",
+      "type": "string"
+    },
+    "id": {
+      "description": "[here]: https://www.w3.org/TR/vc-data-model/#credential-subject",
+      "title": "The ID as defined [here]",
+      "type": "string"
+    }
+  },
+  "title": "BadgeClaims represents the content of a Badge VC defined [here]",
+  "type": "object"
+}

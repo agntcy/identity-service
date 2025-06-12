@@ -1,0 +1,42 @@
+// Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package agntcy.identity.node.v1alpha1;
+
+import "openapiv3/annotations.proto";
+
+// Package-wide variables from generator "generated".
+option go_package = "github.com/agntcy/identity-saas/api/server/agntcy/identity-saas/node/v1alpha1;identity_node_sdk_go";
+option (openapi.v3.document) = {
+  info: {
+    title: "Identity Node";
+    description: "Identity Node";
+    version: "v1alpha1";
+    contact: {
+      name: "Agntcy Team";
+      url: "https://github.com/agntcy/identity-saas";
+      email: "identity@agntcy.org";
+    }
+  }
+  servers: [
+    {
+      url: "http://0.0.0.0:4000";
+      description: "Local environment";
+    }
+  ]
+  security: {
+    additional_properties: []
+  }
+  components: {
+    headers: {
+      additional_properties: [
+{}
+      ]
+    },
+    security_schemes: {
+      additional_properties: []
+    }
+  }
+};

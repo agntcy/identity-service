@@ -1,0 +1,92 @@
+{
+  "$defs": {
+    "agntcy.identity.core.v1alpha1.Jwk.schema.strict.json": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "description": "JWK represents:\n - a JSON Web Key (JWK) with the respective fields specific to RSA algorithms.\n - a Quantum JSON Web Key (QJWK) with the respective fields specific to AKP algorithms.",
+      "properties": {
+        "alg": {
+          "description": "ALG represents the algorithm intended for use with the key.\n Example algorithms for Post-Quantum ML-DSA family:\n \"ML-DSA-44\", \"ML-DSA-65\", \"ML-DSA-87\".\n Some example algorithms are \"RS256\", \"RS384\", \"RS512\" for RSA algorithms.",
+          "type": "string"
+        },
+        "d": {
+          "description": "The private exponent for the RSA kty.",
+          "type": "string"
+        },
+        "dp": {
+          "description": "The first factor CRT exponent for the RSA private key.",
+          "type": "string"
+        },
+        "dq": {
+          "description": "The second factor CRT exponent for the RSA private key.",
+          "type": "string"
+        },
+        "e": {
+          "description": "The exponent for the RSA public key.",
+          "type": "string"
+        },
+        "kid": {
+          "description": "KID represents the key ID.\n It is used to match a specific key.",
+          "type": "string"
+        },
+        "kty": {
+          "description": "KTY represents the key type parameter.\n It specifies the family of quantum algorithms used with the key,\n such as \"AKP\" for post quantum algorithms\n or \"RSA\" for non quantum algorithms.",
+          "type": "string"
+        },
+        "n": {
+          "description": "The modulus for the RSA public key.",
+          "type": "string"
+        },
+        "p": {
+          "description": "The first prime factor for the RSA private key.",
+          "type": "string"
+        },
+        "priv": {
+          "description": "The private key for the AKP kty.",
+          "type": "string"
+        },
+        "pub": {
+          "description": "The public key for the AKP kty.",
+          "type": "string"
+        },
+        "q": {
+          "description": "The second prime factor for the RSA private key.",
+          "type": "string"
+        },
+        "qi": {
+          "description": "The first CRT coefficient for the RSA private key.",
+          "type": "string"
+        },
+        "seed": {
+          "description": "Seed used to derive keys for ML-DSA alg.",
+          "type": "string"
+        },
+        "use": {
+          "description": "Use represents the intended use of the key.\n Some example values are \"enc\" and \"sig\".",
+          "type": "string"
+        }
+      },
+      "title": "Jwk",
+      "type": "object"
+    },
+    "agntcy.identity.core.v1alpha1.Jwks.schema.strict.json": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "description": "JWKS represents a set of JSON Web Keys (JWKs).",
+      "properties": {
+        "keys": {
+          "description": "Keys represents the list of JSON Web Keys.",
+          "items": {
+            "$ref": "#/$defs/agntcy.identity.core.v1alpha1.Jwk.schema.strict.json"
+          },
+          "type": "array"
+        }
+      },
+      "title": "Jwks",
+      "type": "object"
+    }
+  },
+  "$id": "agntcy.identity.core.v1alpha1.Jwks.schema.strict.bundle.json",
+  "$ref": "#/$defs/agntcy.identity.core.v1alpha1.Jwks.schema.strict.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

@@ -1,0 +1,35 @@
+{
+  "$id": "agntcy.identity.core.v1alpha1.VerifiablePresentation.schema.strict.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "[here]: https://www.w3.org/TR/vc-data-model/",
+  "properties": {
+    "context": {
+      "description": "https://www.w3.org/TR/vc-data-model/#contexts",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "proof": {
+      "$ref": "agntcy.identity.core.v1alpha1.Proof.schema.strict.json",
+      "description": "https://w3id.org/security#proof"
+    },
+    "type": {
+      "description": "https://www.w3.org/TR/vc-data-model/#dfn-type",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "verifiable_credential": {
+      "description": "https://www.w3.org/2018/credentials#verifiableCredential",
+      "items": {
+        "$ref": "agntcy.identity.core.v1alpha1.VerifiableCredential.schema.strict.json"
+      },
+      "type": "array"
+    }
+  },
+  "title": "DataModel represents the W3C Verifiable Presentation Data Model defined [here]",
+  "type": "object"
+}

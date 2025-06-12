@@ -1,0 +1,18 @@
+{
+  "$id": "agntcy.identity.core.v1alpha1.VerificationMethod.jsonschema.strict.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "VerificationMethod expresses verification methods, such as cryptographic\n public keys, which can be used to authenticate or authorize interactions\n with the entities represented by the ID. It is a part of the ResolverMetadata.",
+  "properties": {
+    "id": {
+      "description": "A unique id of the verification method.",
+      "type": "string"
+    },
+    "publicKeyJwk": {
+      "$ref": "agntcy.identity.core.v1alpha1.Jwk.jsonschema.strict.json",
+      "description": "The public key used for the verification method."
+    }
+  },
+  "title": "Verification Method",
+  "type": "object"
+}

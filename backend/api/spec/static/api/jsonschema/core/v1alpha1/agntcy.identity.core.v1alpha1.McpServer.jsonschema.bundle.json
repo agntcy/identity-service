@@ -1,0 +1,141 @@
+{
+  "$defs": {
+    "agntcy.identity.core.v1alpha1.McpResource.jsonschema.json": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "description": "McpResource represents a resource available on the MCP server.\n This can be a file, a database, or any other type of resource.",
+      "properties": {
+        "description": {
+          "description": "Description of the resource.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the resource.",
+          "type": "string"
+        },
+        "uri": {
+          "description": "URI of the resource.",
+          "type": "string"
+        }
+      },
+      "title": "Mcp Resource",
+      "type": "object"
+    },
+    "agntcy.identity.core.v1alpha1.McpServer.jsonschema.json": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "description": "McpServer represents an MCP server that provides a set of tools and resources\n The server needs to be deployed at a specific URL",
+      "properties": {
+        "name": {
+          "description": "Name of the server.",
+          "type": "string"
+        },
+        "resources": {
+          "description": "The resources available on the server.",
+          "items": {
+            "$ref": "#/$defs/agntcy.identity.core.v1alpha1.McpResource.jsonschema.json"
+          },
+          "type": "array"
+        },
+        "tools": {
+          "description": "The tools available on the server.",
+          "items": {
+            "$ref": "#/$defs/agntcy.identity.core.v1alpha1.McpTool.jsonschema.json"
+          },
+          "type": "array"
+        },
+        "url": {
+          "description": "Url of the deployed server.",
+          "type": "string"
+        }
+      },
+      "title": "Mcp Server",
+      "type": "object"
+    },
+    "agntcy.identity.core.v1alpha1.McpTool.jsonschema.json": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "description": "McpTool represents a tool available on the MCP server.\n This can be a function with name, description, and parameters.",
+      "patternProperties": {
+        "^(oauth2_metadata)$": {
+          "$ref": "#/$defs/agntcy.identity.core.v1alpha1.Oauth2Metadata.jsonschema.json",
+          "description": "Oauth2 Protected Resource metadata.\n This will correspond to a resource on the server.\n Or can be specified or overridden by the auth policies.\n This complies with RFC 9728."
+        }
+      },
+      "properties": {
+        "description": {
+          "description": "Description of the tool.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the tool.",
+          "type": "string"
+        },
+        "oauth2Metadata": {
+          "$ref": "#/$defs/agntcy.identity.core.v1alpha1.Oauth2Metadata.jsonschema.json",
+          "description": "Oauth2 Protected Resource metadata.\n This will correspond to a resource on the server.\n Or can be specified or overridden by the auth policies.\n This complies with RFC 9728."
+        },
+        "parameters": {
+          "description": "Parameters of the tool.\n This is a JSON object that describes the parameters",
+          "type": "string"
+        }
+      },
+      "title": "Mcp Tool",
+      "type": "object"
+    },
+    "agntcy.identity.core.v1alpha1.Oauth2Metadata.jsonschema.json": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "description": "Oauth2Metadata represents the OAuth2 metadata for a protected resource.\n This complies with RFC 9728.",
+      "patternProperties": {
+        "^(authorization_servers)$": {
+          "description": "Authorization servers for the OAuth2 server.\n This is a list of strings, such as \"https://example.com/oauth2/authorize\".",
+          "type": "string"
+        },
+        "^(bearer_methods_supported)$": {
+          "description": "Bearer methods supported\n This is a list of strings, such as \"client_credentials\" or \"authorization_code\".",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "^(scopes_supported)$": {
+          "description": "Scopes supported\n This is a list of strings, such as \"openid\" or \"profile\".",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "properties": {
+        "authorizationServers": {
+          "description": "Authorization servers for the OAuth2 server.\n This is a list of strings, such as \"https://example.com/oauth2/authorize\".",
+          "type": "string"
+        },
+        "bearerMethodsSupported": {
+          "description": "Bearer methods supported\n This is a list of strings, such as \"client_credentials\" or \"authorization_code\".",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "resource": {
+          "description": "The resource identifier.",
+          "type": "string"
+        },
+        "scopesSupported": {
+          "description": "Scopes supported\n This is a list of strings, such as \"openid\" or \"profile\".",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "title": "Oauth2 Metadata",
+      "type": "object"
+    }
+  },
+  "$id": "agntcy.identity.core.v1alpha1.McpServer.jsonschema.bundle.json",
+  "$ref": "#/$defs/agntcy.identity.core.v1alpha1.McpServer.jsonschema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

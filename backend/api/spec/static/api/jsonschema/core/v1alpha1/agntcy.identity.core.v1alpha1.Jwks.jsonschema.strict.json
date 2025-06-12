@@ -1,0 +1,17 @@
+{
+  "$id": "agntcy.identity.core.v1alpha1.Jwks.jsonschema.strict.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "JWKS represents a set of JSON Web Keys (JWKs).",
+  "properties": {
+    "keys": {
+      "description": "Keys represents the list of JSON Web Keys.",
+      "items": {
+        "$ref": "agntcy.identity.core.v1alpha1.Jwk.jsonschema.strict.json"
+      },
+      "type": "array"
+    }
+  },
+  "title": "Jwks",
+  "type": "object"
+}

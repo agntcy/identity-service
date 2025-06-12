@@ -1,0 +1,32 @@
+{
+  "$id": "agntcy.identity.core.v1alpha1.McpServer.schema.strict.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "McpServer represents an MCP server that provides a set of tools and resources\n The server needs to be deployed at a specific URL",
+  "properties": {
+    "name": {
+      "description": "Name of the server.",
+      "type": "string"
+    },
+    "resources": {
+      "description": "The resources available on the server.",
+      "items": {
+        "$ref": "agntcy.identity.core.v1alpha1.McpResource.schema.strict.json"
+      },
+      "type": "array"
+    },
+    "tools": {
+      "description": "The tools available on the server.",
+      "items": {
+        "$ref": "agntcy.identity.core.v1alpha1.McpTool.schema.strict.json"
+      },
+      "type": "array"
+    },
+    "url": {
+      "description": "Url of the deployed server.",
+      "type": "string"
+    }
+  },
+  "title": "Mcp Server",
+  "type": "object"
+}

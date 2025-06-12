@@ -1,0 +1,72 @@
+// Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package agntcy.identity.node.v1alpha1;
+
+import "agntcy/identity-saas/core/v1alpha1/id.proto";
+import "agntcy/identity-saas/core/v1alpha1/issuer.proto";
+import "agntcy/identity-saas/core/v1alpha1/vc.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+// Package-wide variables from generator "generated".
+option go_package = "github.com/agntcy/identity-saas/api/server/agntcy/identity-saas/node/v1alpha1;identity_node_sdk_go";
+
+// IssuerService is the service that provides ISSUER node operations.
+service IssuerService {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_tag) = {name: "IssuerService"};
+
+  // Register an issuer by providing the issuer details
+  rpc Register(RegisterIssuerRequest) returns (RegisterIssuerResponse) {
+    option (google.api.http) = {
+      post: "/v1alpha1/issuer/register"
+      body: "*"
+    };
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "RegisterIssuer";
+      summary: "Register an issuer by providing the issuer details";
+    };
+  }
+
+  // Returns the well-known document content for an issuer in
+  // Json Web Key Set (JWKS) format
+  rpc GetWellKnown(GetIssuerWellKnownRequest) returns (GetIssuerWellKnownResponse) {
+    option (google.api.http) = {get: "/v1alpha1/issuer/{common_name}/.well-known/jwks.json"};
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "GetIssuerWellKnown";
+      summary: "Returns the well-known document for an issuer in Json Web Key Set (JWKS) format";
+    };
+  }
+}
+
+// Request to register an issuer
+message RegisterIssuerRequest {
+  // The Issuer to register.
+  agntcy.identity.core.v1alpha1.Issuer issuer = 1;
+
+  // Optional Proof of ownership of the Issuer's common_name
+  // This should be provided when the Issuer is provided by an external IdP
+  // Example: a signed JWT
+  optional agntcy.identity.core.v1alpha1.Proof proof = 2;
+}
+
+// Returns a registration response for the issuer
+message RegisterIssuerResponse {
+  // Empty response
+}
+
+// Request to get the well-known JWKS document of an issuer
+message GetIssuerWellKnownRequest {
+  // The common name of the issuer
+  string common_name = 1;
+}
+
+// Returns the content of the well-known JWKS document
+message GetIssuerWellKnownResponse {
+  // The well-known Json Web Key Set (JWKS) document
+  agntcy.identity.core.v1alpha1.Jwks jwks = 1;
+}

@@ -1,0 +1,82 @@
+{
+  "$defs": {
+    "agntcy.identity.core.v1alpha1.PagedResponse.schema.json": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "description": "Pagination response",
+      "patternProperties": {
+        "^(hasNextPage)$": {
+          "description": "Has next page",
+          "type": "boolean"
+        },
+        "^(nextPage)$": {
+          "anyOf": [
+            {
+              "maximum": 2147483647,
+              "minimum": -2147483648,
+              "type": "integer"
+            },
+            {
+              "pattern": "^-?[0-9]+$",
+              "type": "string"
+            }
+          ],
+          "description": "Next page"
+        }
+      },
+      "properties": {
+        "has_next_page": {
+          "description": "Has next page",
+          "type": "boolean"
+        },
+        "next_page": {
+          "anyOf": [
+            {
+              "maximum": 2147483647,
+              "minimum": -2147483648,
+              "type": "integer"
+            },
+            {
+              "pattern": "^-?[0-9]+$",
+              "type": "string"
+            }
+          ],
+          "description": "Next page"
+        },
+        "size": {
+          "anyOf": [
+            {
+              "maximum": 2147483647,
+              "minimum": -2147483648,
+              "type": "integer"
+            },
+            {
+              "pattern": "^-?[0-9]+$",
+              "type": "string"
+            }
+          ],
+          "default": 0,
+          "description": "The size of the current page"
+        },
+        "total": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "pattern": "^-?[0-9]+$",
+              "type": "string"
+            }
+          ],
+          "default": 0,
+          "description": "The total size of items"
+        }
+      },
+      "title": "Paged Response",
+      "type": "object"
+    }
+  },
+  "$id": "agntcy.identity.core.v1alpha1.PagedResponse.schema.bundle.json",
+  "$ref": "#/$defs/agntcy.identity.core.v1alpha1.PagedResponse.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

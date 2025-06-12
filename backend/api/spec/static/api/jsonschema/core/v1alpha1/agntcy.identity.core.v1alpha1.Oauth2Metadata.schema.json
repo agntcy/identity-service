@@ -1,0 +1,52 @@
+{
+  "$id": "agntcy.identity.core.v1alpha1.Oauth2Metadata.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Oauth2Metadata represents the OAuth2 metadata for a protected resource.\n This complies with RFC 9728.",
+  "patternProperties": {
+    "^(authorizationServers)$": {
+      "description": "Authorization servers for the OAuth2 server.\n This is a list of strings, such as \"https://example.com/oauth2/authorize\".",
+      "type": "string"
+    },
+    "^(bearerMethodsSupported)$": {
+      "description": "Bearer methods supported\n This is a list of strings, such as \"client_credentials\" or \"authorization_code\".",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "^(scopesSupported)$": {
+      "description": "Scopes supported\n This is a list of strings, such as \"openid\" or \"profile\".",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    }
+  },
+  "properties": {
+    "authorization_servers": {
+      "description": "Authorization servers for the OAuth2 server.\n This is a list of strings, such as \"https://example.com/oauth2/authorize\".",
+      "type": "string"
+    },
+    "bearer_methods_supported": {
+      "description": "Bearer methods supported\n This is a list of strings, such as \"client_credentials\" or \"authorization_code\".",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "resource": {
+      "description": "The resource identifier.",
+      "type": "string"
+    },
+    "scopes_supported": {
+      "description": "Scopes supported\n This is a list of strings, such as \"openid\" or \"profile\".",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    }
+  },
+  "title": "Oauth2 Metadata",
+  "type": "object"
+}
