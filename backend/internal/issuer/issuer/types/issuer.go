@@ -4,8 +4,8 @@
 package types
 
 import (
-	issuertypes "github.com/agntcy/identity-saas/internal/core/issuer/types"
-	idptypes "github.com/agntcy/identity-saas/internal/issuer/types"
+	issuertypes "github.com/agntcy/identity-platform/internal/core/issuer/types"
+	idptypes "github.com/agntcy/identity-platform/internal/issuer/types"
 )
 
 type Issuer struct {

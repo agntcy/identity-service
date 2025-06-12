@@ -6,7 +6,7 @@ package db
 import (
 	"fmt"
 
-	"github.com/agntcy/identity-saas/pkg/log"
+	"github.com/agntcy/identity-platform/pkg/log"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )

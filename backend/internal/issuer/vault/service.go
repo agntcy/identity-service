@@ -7,10 +7,10 @@ import (
 	"context"
 	"errors"
 
-	idtypes "github.com/agntcy/identity-saas/internal/core/id/types"
-	"github.com/agntcy/identity-saas/internal/core/keystore"
-	"github.com/agntcy/identity-saas/internal/issuer/vault/data"
-	"github.com/agntcy/identity-saas/internal/issuer/vault/types"
+	idtypes "github.com/agntcy/identity-platform/internal/core/id/types"
+	"github.com/agntcy/identity-platform/internal/core/keystore"
+	"github.com/agntcy/identity-platform/internal/issuer/vault/data"
+	"github.com/agntcy/identity-platform/internal/issuer/vault/types"
 )
 
 type VaultService interface {

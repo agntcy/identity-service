@@ -9,11 +9,11 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/agntcy/identity-saas/internal/issuer/metadata/data"
+	"github.com/agntcy/identity-platform/internal/issuer/metadata/data"
 
-	internalIssuerConstants "github.com/agntcy/identity-saas/internal/issuer/constants"
-	issuerFilesystemRepository "github.com/agntcy/identity-saas/internal/issuer/issuer/data/filesystem"
-	"github.com/agntcy/identity-saas/internal/issuer/metadata/types"
+	internalIssuerConstants "github.com/agntcy/identity-platform/internal/issuer/constants"
+	issuerFilesystemRepository "github.com/agntcy/identity-platform/internal/issuer/issuer/data/filesystem"
+	"github.com/agntcy/identity-platform/internal/issuer/metadata/types"
 )
 
 type metadataFilesystemRepository struct{}

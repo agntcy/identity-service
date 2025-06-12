@@ -4,9 +4,9 @@
 package postgres
 
 import (
-	id "github.com/agntcy/identity-saas/internal/core/id/postgres"
-	idtypes "github.com/agntcy/identity-saas/internal/core/id/types"
-	"github.com/agntcy/identity-saas/internal/core/issuer/types"
+	id "github.com/agntcy/identity-platform/internal/core/id/postgres"
+	idtypes "github.com/agntcy/identity-platform/internal/core/id/types"
+	"github.com/agntcy/identity-platform/internal/core/issuer/types"
 )
 
 type Issuer struct {

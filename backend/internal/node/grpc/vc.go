@@ -7,13 +7,13 @@ import (
 	"context"
 	"fmt"
 
-	coreapi "github.com/agntcy/identity-saas/api/server/agntcy/identity-saas/core/v1alpha1"
-	nodeapi "github.com/agntcy/identity-saas/api/server/agntcy/identity-saas/node/v1alpha1"
-	errtypes "github.com/agntcy/identity-saas/internal/core/errors/types"
-	"github.com/agntcy/identity-saas/internal/node"
-	"github.com/agntcy/identity-saas/internal/node/grpc/converters"
-	"github.com/agntcy/identity-saas/internal/pkg/grpcutil"
-	"github.com/agntcy/identity-saas/internal/pkg/ptrutil"
+	coreapi "github.com/agntcy/identity-platform/api/server/agntcy/identity-platform/core/v1alpha1"
+	nodeapi "github.com/agntcy/identity-platform/api/server/agntcy/identity-platform/node/v1alpha1"
+	errtypes "github.com/agntcy/identity-platform/internal/core/errors/types"
+	"github.com/agntcy/identity-platform/internal/node"
+	"github.com/agntcy/identity-platform/internal/node/grpc/converters"
+	"github.com/agntcy/identity-platform/internal/pkg/grpcutil"
+	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 

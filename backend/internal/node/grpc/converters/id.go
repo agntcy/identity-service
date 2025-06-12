@@ -4,10 +4,10 @@
 package converters
 
 import (
-	coreapi "github.com/agntcy/identity-saas/api/server/agntcy/identity-saas/core/v1alpha1"
-	idtypes "github.com/agntcy/identity-saas/internal/core/id/types"
-	"github.com/agntcy/identity-saas/internal/pkg/convertutil"
-	"github.com/agntcy/identity-saas/internal/pkg/ptrutil"
+	coreapi "github.com/agntcy/identity-platform/api/server/agntcy/identity-platform/core/v1alpha1"
+	idtypes "github.com/agntcy/identity-platform/internal/core/id/types"
+	"github.com/agntcy/identity-platform/internal/pkg/convertutil"
+	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
 )
 
 func FromResolverMetadata(src *idtypes.ResolverMetadata) *coreapi.ResolverMetadata {

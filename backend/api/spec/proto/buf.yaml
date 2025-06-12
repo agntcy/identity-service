@@ -14,12 +14,11 @@ lint:
     - STANDARD
   ignore_only:
     RPC_REQUEST_RESPONSE_UNIQUE:
-      - agntcy/identity-saas/node/v1alpha1/vc_service.proto
-      - agntcy/identity-saas/issuer/v1alpha1/local_service.proto
+      - agntcy/identity/bff/v1alpha1/vc_service.proto
     RPC_RESPONSE_STANDARD_NAME:
-      - agntcy/identity-saas/node/v1alpha1/vc_service.proto
-      - agntcy/identity-saas/node/v1alpha1/issuer_service.proto
+      - agntcy/identity-platform/node/v1alpha1/vc_service.proto
+      - agntcy/identity-platform/node/v1alpha1/issuer_service.proto
     RPC_REQUEST_STANDARD_NAME:
-      - agntcy/identity-saas/node/v1alpha1/vc_service.proto
-      - agntcy/identity-saas/node/v1alpha1/issuer_service.proto
-      - agntcy/identity-saas/issuer/v1alpha1/local_service.proto
+      - agntcy/identity-platform/node/v1alpha1/vc_service.proto
+      - agntcy/identity-platform/node/v1alpha1/issuer_service.proto
+      - agntcy/identity-platform/issuer/v1alpha1/local_service.proto

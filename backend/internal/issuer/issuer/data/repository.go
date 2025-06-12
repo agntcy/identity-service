@@ -4,7 +4,7 @@
 package data
 
 import (
-	"github.com/agntcy/identity-saas/internal/issuer/issuer/types"
+	"github.com/agntcy/identity-platform/internal/issuer/issuer/types"
 )
 
 type IssuerRepository interface {

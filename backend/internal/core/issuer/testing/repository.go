@@ -6,9 +6,9 @@ package testing
 import (
 	"context"
 
-	"github.com/agntcy/identity-saas/internal/core/errors"
-	issuercore "github.com/agntcy/identity-saas/internal/core/issuer"
-	issuertypes "github.com/agntcy/identity-saas/internal/core/issuer/types"
+	"github.com/agntcy/identity-platform/internal/core/errors"
+	issuercore "github.com/agntcy/identity-platform/internal/core/issuer"
+	issuertypes "github.com/agntcy/identity-platform/internal/core/issuer/types"
 )
 
 type FakeIssuerRepository struct {

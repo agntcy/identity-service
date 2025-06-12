@@ -10,7 +10,7 @@ info:
     description: Identity Node
     contact:
         name: Agntcy Team
-        url: https://github.com/agntcy/identity-saas
+        url: https://github.com/agntcy/identity-platform
         email: identity@agntcy.org
     version: v1alpha1
 servers:

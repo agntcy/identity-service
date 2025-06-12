@@ -9,10 +9,10 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/agntcy/identity-saas/internal/issuer/badge/data"
-	internalIssuerConstants "github.com/agntcy/identity-saas/internal/issuer/constants"
-	metadataFilesystemRepository "github.com/agntcy/identity-saas/internal/issuer/metadata/data/filesystem"
-	internalIssuerTypes "github.com/agntcy/identity-saas/internal/issuer/types"
+	"github.com/agntcy/identity-platform/internal/issuer/badge/data"
+	internalIssuerConstants "github.com/agntcy/identity-platform/internal/issuer/constants"
+	metadataFilesystemRepository "github.com/agntcy/identity-platform/internal/issuer/metadata/data/filesystem"
+	internalIssuerTypes "github.com/agntcy/identity-platform/internal/issuer/types"
 )
 
 type badgeFilesystemRepository struct{}

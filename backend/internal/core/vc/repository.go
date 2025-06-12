@@ -6,7 +6,7 @@ package vc
 import (
 	"context"
 
-	"github.com/agntcy/identity-saas/internal/core/vc/types"
+	"github.com/agntcy/identity-platform/internal/core/vc/types"
 )
 
 type Repository interface {

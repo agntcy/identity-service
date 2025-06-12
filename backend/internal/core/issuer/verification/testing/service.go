@@ -6,9 +6,9 @@ package testing
 import (
 	"context"
 
-	issuertypes "github.com/agntcy/identity-saas/internal/core/issuer/types"
-	"github.com/agntcy/identity-saas/internal/core/issuer/verification"
-	vctypes "github.com/agntcy/identity-saas/internal/core/vc/types"
+	issuertypes "github.com/agntcy/identity-platform/internal/core/issuer/types"
+	"github.com/agntcy/identity-platform/internal/core/issuer/verification"
+	vctypes "github.com/agntcy/identity-platform/internal/core/vc/types"
 )
 
 const (

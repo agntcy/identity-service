@@ -4,8 +4,8 @@
 package app_grpc_register
 
 import (
-	v1alpha1 "github.com/agntcy/identity-saas/api/server/agntcy/identity-saas/issuer/v1alpha1"
-	v1alpha11 "github.com/agntcy/identity-saas/api/server/agntcy/identity-saas/node/v1alpha1"
+	v1alpha1 "github.com/agntcy/identity-platform/api/server/agntcy/identity-platform/issuer/v1alpha1"
+	v1alpha11 "github.com/agntcy/identity-platform/api/server/agntcy/identity-platform/node/v1alpha1"
 )
 
 import (

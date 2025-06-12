@@ -4,9 +4,9 @@
 package converters
 
 import (
-	coreapi "github.com/agntcy/identity-saas/api/server/agntcy/identity-saas/core/v1alpha1"
-	issuertypes "github.com/agntcy/identity-saas/internal/core/issuer/types"
-	"github.com/agntcy/identity-saas/internal/pkg/ptrutil"
+	coreapi "github.com/agntcy/identity-platform/api/server/agntcy/identity-platform/core/v1alpha1"
+	issuertypes "github.com/agntcy/identity-platform/internal/core/issuer/types"
+	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
 )
 
 func FromIssuer(src *issuertypes.Issuer) *coreapi.Issuer {

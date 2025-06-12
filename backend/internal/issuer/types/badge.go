@@ -4,7 +4,7 @@
 package types
 
 import (
-	vctypes "github.com/agntcy/identity-saas/internal/core/vc/types"
+	vctypes "github.com/agntcy/identity-platform/internal/core/vc/types"
 )
 
 type Badge struct {

@@ -11,7 +11,7 @@ import (
 	"os"
 	"sync"
 
-	"github.com/agntcy/identity-saas/internal/core/id/types"
+	"github.com/agntcy/identity-platform/internal/core/id/types"
 )
 
 type LocalFileKeyService struct {

@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"testing"
 
-	mcptesting "github.com/agntcy/identity-saas/internal/issuer/badge/mcp/testing"
+	mcptesting "github.com/agntcy/identity-platform/internal/issuer/badge/mcp/testing"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -6,10 +6,10 @@ package jose
 import (
 	"encoding/json"
 
-	errtypes "github.com/agntcy/identity-saas/internal/core/errors/types"
-	idtypes "github.com/agntcy/identity-saas/internal/core/id/types"
-	vctypes "github.com/agntcy/identity-saas/internal/core/vc/types"
-	"github.com/agntcy/identity-saas/internal/pkg/errutil"
+	errtypes "github.com/agntcy/identity-platform/internal/core/errors/types"
+	idtypes "github.com/agntcy/identity-platform/internal/core/id/types"
+	vctypes "github.com/agntcy/identity-platform/internal/core/vc/types"
+	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 	"github.com/lestrrat-go/jwx/v3/jwk"
 	"github.com/lestrrat-go/jwx/v3/jws"
 )

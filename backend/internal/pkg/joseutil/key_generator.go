@@ -10,7 +10,7 @@ import (
 	"errors"
 	"math/big"
 
-	"github.com/agntcy/identity-saas/internal/core/id/types"
+	"github.com/agntcy/identity-platform/internal/core/id/types"
 	"github.com/google/uuid"
 )
 

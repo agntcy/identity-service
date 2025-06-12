@@ -8,14 +8,14 @@ import (
 	"errors"
 	"fmt"
 
-	errcore "github.com/agntcy/identity-saas/internal/core/errors"
-	errtypes "github.com/agntcy/identity-saas/internal/core/errors/types"
-	issuercore "github.com/agntcy/identity-saas/internal/core/issuer"
-	issuertypes "github.com/agntcy/identity-saas/internal/core/issuer/types"
-	vctypes "github.com/agntcy/identity-saas/internal/core/vc/types"
-	"github.com/agntcy/identity-saas/internal/pkg/errutil"
-	"github.com/agntcy/identity-saas/internal/pkg/oidc"
-	"github.com/agntcy/identity-saas/pkg/log"
+	errcore "github.com/agntcy/identity-platform/internal/core/errors"
+	errtypes "github.com/agntcy/identity-platform/internal/core/errors/types"
+	issuercore "github.com/agntcy/identity-platform/internal/core/issuer"
+	issuertypes "github.com/agntcy/identity-platform/internal/core/issuer/types"
+	vctypes "github.com/agntcy/identity-platform/internal/core/vc/types"
+	"github.com/agntcy/identity-platform/internal/pkg/errutil"
+	"github.com/agntcy/identity-platform/internal/pkg/oidc"
+	"github.com/agntcy/identity-platform/pkg/log"
 )
 
 // All IDP schemes supported by the ID generator.

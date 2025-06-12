@@ -6,11 +6,11 @@ package grpc
 import (
 	"context"
 
-	nodeapi "github.com/agntcy/identity-saas/api/server/agntcy/identity-saas/node/v1alpha1"
-	"github.com/agntcy/identity-saas/internal/node"
-	"github.com/agntcy/identity-saas/internal/node/grpc/converters"
-	grpcutil "github.com/agntcy/identity-saas/internal/pkg/grpcutil"
-	"github.com/agntcy/identity-saas/pkg/log"
+	nodeapi "github.com/agntcy/identity-platform/api/server/agntcy/identity-platform/node/v1alpha1"
+	"github.com/agntcy/identity-platform/internal/node"
+	"github.com/agntcy/identity-platform/internal/node/grpc/converters"
+	grpcutil "github.com/agntcy/identity-platform/internal/pkg/grpcutil"
+	"github.com/agntcy/identity-platform/pkg/log"
 )
 
 type issuerService struct {

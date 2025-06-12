@@ -6,11 +6,11 @@ package issuer
 import (
 	"context"
 
-	vctypes "github.com/agntcy/identity-saas/internal/core/vc/types"
-	"github.com/agntcy/identity-saas/internal/issuer/auth"
-	"github.com/agntcy/identity-saas/internal/issuer/issuer/data"
-	"github.com/agntcy/identity-saas/internal/issuer/issuer/types"
-	"github.com/agntcy/identity-saas/internal/pkg/nodeapi"
+	vctypes "github.com/agntcy/identity-platform/internal/core/vc/types"
+	"github.com/agntcy/identity-platform/internal/issuer/auth"
+	"github.com/agntcy/identity-platform/internal/issuer/issuer/data"
+	"github.com/agntcy/identity-platform/internal/issuer/issuer/types"
+	"github.com/agntcy/identity-platform/internal/pkg/nodeapi"
 )
 
 type IssuerService interface {

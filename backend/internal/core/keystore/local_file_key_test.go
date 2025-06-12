@@ -9,8 +9,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/agntcy/identity-saas/internal/core/keystore"
-	"github.com/agntcy/identity-saas/internal/pkg/joseutil"
+	"github.com/agntcy/identity-platform/internal/core/keystore"
+	"github.com/agntcy/identity-platform/internal/pkg/joseutil"
 	"github.com/stretchr/testify/assert"
 )
 

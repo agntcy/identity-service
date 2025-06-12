@@ -6,8 +6,8 @@ package testing
 import (
 	"context"
 
-	vccore "github.com/agntcy/identity-saas/internal/core/vc"
-	vctypes "github.com/agntcy/identity-saas/internal/core/vc/types"
+	vccore "github.com/agntcy/identity-platform/internal/core/vc"
+	vctypes "github.com/agntcy/identity-platform/internal/core/vc/types"
 )
 
 type FakeVCRepository struct {

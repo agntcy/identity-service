@@ -7,12 +7,12 @@ import (
 	"context"
 	"errors"
 
-	errcore "github.com/agntcy/identity-saas/internal/core/errors"
-	idcore "github.com/agntcy/identity-saas/internal/core/id"
-	idtypes "github.com/agntcy/identity-saas/internal/core/id/types"
-	issuertypes "github.com/agntcy/identity-saas/internal/core/issuer/types"
-	"github.com/agntcy/identity-saas/internal/pkg/errutil"
-	"github.com/agntcy/identity-saas/pkg/db"
+	errcore "github.com/agntcy/identity-platform/internal/core/errors"
+	idcore "github.com/agntcy/identity-platform/internal/core/id"
+	idtypes "github.com/agntcy/identity-platform/internal/core/id/types"
+	issuertypes "github.com/agntcy/identity-platform/internal/core/issuer/types"
+	"github.com/agntcy/identity-platform/internal/pkg/errutil"
+	"github.com/agntcy/identity-platform/pkg/db"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )

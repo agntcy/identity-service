@@ -6,8 +6,8 @@ package joseutil_test
 import (
 	"testing"
 
-	"github.com/agntcy/identity-saas/internal/core/id/types"
-	"github.com/agntcy/identity-saas/internal/pkg/joseutil"
+	"github.com/agntcy/identity-platform/internal/core/id/types"
+	"github.com/agntcy/identity-platform/internal/pkg/joseutil"
 	"github.com/stretchr/testify/assert"
 )
 

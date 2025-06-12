@@ -9,7 +9,7 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/agntcy/identity-saas/internal/pkg/httputil"
+	"github.com/agntcy/identity-platform/internal/pkg/httputil"
 )
 
 // The discoverClient interface defines the core methods for discovering a deployed A2A agent

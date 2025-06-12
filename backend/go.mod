@@ -1,4 +1,4 @@
-module github.com/agntcy/identity-saas
+module github.com/agntcy/identity-platform
 
 go 1.24.1
 
@@ -18,7 +18,7 @@ require (
 )
 
 require (
-	github.com/agntcy/identity-saas/api/client v0.0.0-20250604191627-48b6b8911127
+	github.com/agntcy/identity-platform/api/client v0.0.0-20250604191627-48b6b8911127
 	github.com/coocood/freecache v1.2.4
 	github.com/eko/gocache/store/freecache/v4 v4.2.2
 	github.com/go-openapi/runtime v0.28.0

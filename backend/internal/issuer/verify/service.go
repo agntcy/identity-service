@@ -8,10 +8,10 @@ import (
 	"encoding/json"
 	"fmt"
 
-	idtypes "github.com/agntcy/identity-saas/internal/core/id/types"
-	"github.com/agntcy/identity-saas/internal/core/vc/jose"
-	vctypes "github.com/agntcy/identity-saas/internal/core/vc/types"
-	"github.com/agntcy/identity-saas/internal/pkg/nodeapi"
+	idtypes "github.com/agntcy/identity-platform/internal/core/id/types"
+	"github.com/agntcy/identity-platform/internal/core/vc/jose"
+	vctypes "github.com/agntcy/identity-platform/internal/core/vc/types"
+	"github.com/agntcy/identity-platform/internal/pkg/nodeapi"
 	"github.com/lestrrat-go/jwx/v3/jws"
 )
 

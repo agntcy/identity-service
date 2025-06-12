@@ -6,10 +6,10 @@ package postgres
 import (
 	"context"
 
-	vccore "github.com/agntcy/identity-saas/internal/core/vc"
-	"github.com/agntcy/identity-saas/internal/core/vc/types"
-	"github.com/agntcy/identity-saas/internal/pkg/errutil"
-	"github.com/agntcy/identity-saas/pkg/db"
+	vccore "github.com/agntcy/identity-platform/internal/core/vc"
+	"github.com/agntcy/identity-platform/internal/core/vc/types"
+	"github.com/agntcy/identity-platform/internal/pkg/errutil"
+	"github.com/agntcy/identity-platform/pkg/db"
 )
 
 type vcPostgresRepository struct {

@@ -8,7 +8,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/agntcy/identity-saas/internal/core/id/types"
+	"github.com/agntcy/identity-platform/internal/core/id/types"
 	"github.com/lestrrat-go/jwx/v2/jwa"
 	"github.com/lestrrat-go/jwx/v2/jwk"
 	"github.com/lestrrat-go/jwx/v2/jws"

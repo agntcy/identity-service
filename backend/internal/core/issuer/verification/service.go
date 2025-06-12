@@ -7,12 +7,12 @@ import (
 	"context"
 	"fmt"
 
-	errtypes "github.com/agntcy/identity-saas/internal/core/errors/types"
-	issuertypes "github.com/agntcy/identity-saas/internal/core/issuer/types"
-	vctypes "github.com/agntcy/identity-saas/internal/core/vc/types"
-	"github.com/agntcy/identity-saas/internal/pkg/errutil"
-	"github.com/agntcy/identity-saas/internal/pkg/oidc"
-	"github.com/agntcy/identity-saas/pkg/log"
+	errtypes "github.com/agntcy/identity-platform/internal/core/errors/types"
+	issuertypes "github.com/agntcy/identity-platform/internal/core/issuer/types"
+	vctypes "github.com/agntcy/identity-platform/internal/core/vc/types"
+	"github.com/agntcy/identity-platform/internal/pkg/errutil"
+	"github.com/agntcy/identity-platform/internal/pkg/oidc"
+	"github.com/agntcy/identity-platform/pkg/log"
 )
 
 // The VerificationService interface defines the core methods for

@@ -1,0 +1,42 @@
+// Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package agntcy.identity.platform.v1alpha1;
+
+import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/agntcy/identity-platform/api/server/agntcy/identity/node/v1alpha1;identity_node_sdk_go";
+
+// A Prompt Intel Deployment
+message Deployment {
+  // A unique identifier for the Deployment.
+  string id = 1 [(google.api.field_behavior) = OUTPUT_ONLY];
+
+  // A human-readable name for the Deployment.
+  optional string name = 2;
+
+  // A human-readable description for the Deployment.
+  optional string description = 3;
+
+  // Type of the Document.
+  DeploymentType type = 4;
+
+  // Status of the Deployment.
+  DeploymentStatus status = 5 [(google.api.field_behavior) = OUTPUT_ONLY];
+
+  // The Instance info.
+  Instance instance = 6 [(google.api.field_behavior) = OUTPUT_ONLY];
+
+  // The deployment encryption scope
+  cisco.outshift.promptintel.shared.v1alpha1.DeploymentEncryptionScope encryption_scope = 7;
+}
+
+message DeploymentEncryptionMetadata {
+  string deployment_id = 1;
+  optional string application_id = 2;
+  bool encrypted = 3;
+  google.protobuf.Timestamp created_at = 4;
+}

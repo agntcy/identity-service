@@ -6,13 +6,13 @@ package metadata
 import (
 	"context"
 
-	vctypes "github.com/agntcy/identity-saas/internal/core/vc/types"
-	"github.com/agntcy/identity-saas/internal/issuer/auth"
-	issuerData "github.com/agntcy/identity-saas/internal/issuer/issuer/data"
-	"github.com/agntcy/identity-saas/internal/issuer/metadata/data"
-	"github.com/agntcy/identity-saas/internal/issuer/metadata/types"
-	idptypes "github.com/agntcy/identity-saas/internal/issuer/types"
-	"github.com/agntcy/identity-saas/internal/pkg/nodeapi"
+	vctypes "github.com/agntcy/identity-platform/internal/core/vc/types"
+	"github.com/agntcy/identity-platform/internal/issuer/auth"
+	issuerData "github.com/agntcy/identity-platform/internal/issuer/issuer/data"
+	"github.com/agntcy/identity-platform/internal/issuer/metadata/data"
+	"github.com/agntcy/identity-platform/internal/issuer/metadata/types"
+	idptypes "github.com/agntcy/identity-platform/internal/issuer/types"
+	"github.com/agntcy/identity-platform/internal/pkg/nodeapi"
 )
 
 type MetadataService interface {

@@ -8,9 +8,9 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/agntcy/identity-saas/internal/pkg/errutil"
-	"github.com/agntcy/identity-saas/internal/pkg/httputil"
-	"github.com/agntcy/identity-saas/pkg/log"
+	"github.com/agntcy/identity-platform/internal/pkg/errutil"
+	"github.com/agntcy/identity-platform/internal/pkg/httputil"
+	"github.com/agntcy/identity-platform/pkg/log"
 )
 
 func (p *parser) detectProviderName(

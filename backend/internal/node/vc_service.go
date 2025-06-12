@@ -8,15 +8,15 @@ import (
 	"errors"
 	"fmt"
 
-	errcore "github.com/agntcy/identity-saas/internal/core/errors"
-	errtypes "github.com/agntcy/identity-saas/internal/core/errors/types"
-	idcore "github.com/agntcy/identity-saas/internal/core/id"
-	issuercore "github.com/agntcy/identity-saas/internal/core/issuer"
-	vccore "github.com/agntcy/identity-saas/internal/core/vc"
-	"github.com/agntcy/identity-saas/internal/core/vc/jose"
-	vctypes "github.com/agntcy/identity-saas/internal/core/vc/types"
-	"github.com/agntcy/identity-saas/internal/pkg/errutil"
-	"github.com/agntcy/identity-saas/pkg/log"
+	errcore "github.com/agntcy/identity-platform/internal/core/errors"
+	errtypes "github.com/agntcy/identity-platform/internal/core/errors/types"
+	idcore "github.com/agntcy/identity-platform/internal/core/id"
+	issuercore "github.com/agntcy/identity-platform/internal/core/issuer"
+	vccore "github.com/agntcy/identity-platform/internal/core/vc"
+	"github.com/agntcy/identity-platform/internal/core/vc/jose"
+	vctypes "github.com/agntcy/identity-platform/internal/core/vc/types"
+	"github.com/agntcy/identity-platform/internal/pkg/errutil"
+	"github.com/agntcy/identity-platform/pkg/log"
 )
 
 type VerifiableCredentialService interface {

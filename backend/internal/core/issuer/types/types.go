@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"net/mail"
 
-	idtypes "github.com/agntcy/identity-saas/internal/core/id/types"
+	idtypes "github.com/agntcy/identity-platform/internal/core/id/types"
 )
 
 // A Identity Issuer

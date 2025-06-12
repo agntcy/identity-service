@@ -4,7 +4,7 @@
 package data
 
 import (
-	"github.com/agntcy/identity-saas/internal/issuer/metadata/types"
+	"github.com/agntcy/identity-platform/internal/issuer/metadata/types"
 )
 
 type MetadataRepository interface {

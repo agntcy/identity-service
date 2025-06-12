@@ -1,7 +1,7 @@
 {
   "files": [
     {
-      "name": "agntcy/identity-saas/core/v1alpha1/errors.proto",
+      "name": "agntcy/identity-platform/core/v1alpha1/errors.proto",
       "description": "",
       "package": "agntcy.identity.core.v1alpha1",
       "hasEnums": true,
@@ -125,7 +125,7 @@
       "services": []
     },
     {
-      "name": "agntcy/identity-saas/core/v1alpha1/id.proto",
+      "name": "agntcy/identity-platform/core/v1alpha1/id.proto",
       "description": "",
       "package": "agntcy.identity.core.v1alpha1",
       "hasEnums": false,
@@ -475,7 +475,7 @@
       "services": []
     },
     {
-      "name": "agntcy/identity-saas/core/v1alpha1/issuer.proto",
+      "name": "agntcy/identity-platform/core/v1alpha1/issuer.proto",
       "description": "",
       "package": "agntcy.identity.core.v1alpha1",
       "hasEnums": false,
@@ -573,7 +573,7 @@
       "services": []
     },
     {
-      "name": "agntcy/identity-saas/core/v1alpha1/mcp.proto",
+      "name": "agntcy/identity-platform/core/v1alpha1/mcp.proto",
       "description": "",
       "package": "agntcy.identity.core.v1alpha1",
       "hasEnums": false,
@@ -815,7 +815,7 @@
       "services": []
     },
     {
-      "name": "agntcy/identity-saas/core/v1alpha1/vc.proto",
+      "name": "agntcy/identity-platform/core/v1alpha1/vc.proto",
       "description": "",
       "package": "agntcy.identity.core.v1alpha1",
       "hasEnums": true,
@@ -1248,7 +1248,7 @@
       "services": []
     },
     {
-      "name": "agntcy/identity-saas/issuer/v1alpha1/local_service.proto",
+      "name": "agntcy/identity-platform/issuer/v1alpha1/local_service.proto",
       "description": "",
       "package": "agntcy.identity.issuer.v1alpha1",
       "hasEnums": false,
@@ -1391,7 +1391,7 @@
       ]
     },
     {
-      "name": "agntcy/identity-saas/node/v1alpha1/id_service.proto",
+      "name": "agntcy/identity-platform/node/v1alpha1/id_service.proto",
       "description": "",
       "package": "agntcy.identity.node.v1alpha1",
       "hasEnums": false,
@@ -1568,7 +1568,7 @@
       ]
     },
     {
-      "name": "agntcy/identity-saas/node/v1alpha1/issuer_service.proto",
+      "name": "agntcy/identity-platform/node/v1alpha1/issuer_service.proto",
       "description": "",
       "package": "agntcy.identity.node.v1alpha1",
       "hasEnums": false,
@@ -1731,7 +1731,7 @@
       ]
     },
     {
-      "name": "agntcy/identity-saas/node/v1alpha1/vc_service.proto",
+      "name": "agntcy/identity-platform/node/v1alpha1/vc_service.proto",
       "description": "",
       "package": "agntcy.identity.node.v1alpha1",
       "hasEnums": false,

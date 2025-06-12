@@ -12,8 +12,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/agntcy/identity-saas/internal/core/keystore"
-	"github.com/agntcy/identity-saas/internal/pkg/joseutil"
+	"github.com/agntcy/identity-platform/internal/core/keystore"
+	"github.com/agntcy/identity-platform/internal/pkg/joseutil"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

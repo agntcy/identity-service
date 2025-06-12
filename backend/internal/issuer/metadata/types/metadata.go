@@ -4,8 +4,8 @@
 package types
 
 import (
-	idtypes "github.com/agntcy/identity-saas/internal/core/id/types"
-	idptypes "github.com/agntcy/identity-saas/internal/issuer/types"
+	idtypes "github.com/agntcy/identity-platform/internal/core/id/types"
+	idptypes "github.com/agntcy/identity-platform/internal/issuer/types"
 )
 
 type Metadata struct {

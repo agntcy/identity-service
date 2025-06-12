@@ -6,8 +6,8 @@ package errutil
 import (
 	"errors"
 
-	errtypes "github.com/agntcy/identity-saas/internal/core/errors/types"
-	"github.com/agntcy/identity-saas/pkg/log"
+	errtypes "github.com/agntcy/identity-platform/internal/core/errors/types"
+	"github.com/agntcy/identity-platform/pkg/log"
 )
 
 func Err(err error, customMessage string) error {

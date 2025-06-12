@@ -6,7 +6,7 @@ package testing
 import (
 	"context"
 
-	"github.com/agntcy/identity-saas/internal/pkg/oidc"
+	"github.com/agntcy/identity-platform/internal/pkg/oidc"
 )
 
 type fakeParser struct {

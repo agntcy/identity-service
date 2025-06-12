@@ -7,15 +7,15 @@ import (
 	"context"
 	"errors"
 
-	errcore "github.com/agntcy/identity-saas/internal/core/errors"
-	errtypes "github.com/agntcy/identity-saas/internal/core/errors/types"
-	idtypes "github.com/agntcy/identity-saas/internal/core/id/types"
-	issuercore "github.com/agntcy/identity-saas/internal/core/issuer"
-	issuertypes "github.com/agntcy/identity-saas/internal/core/issuer/types"
-	"github.com/agntcy/identity-saas/internal/core/issuer/verification"
-	vctypes "github.com/agntcy/identity-saas/internal/core/vc/types"
-	"github.com/agntcy/identity-saas/internal/pkg/errutil"
-	"github.com/agntcy/identity-saas/internal/pkg/joseutil"
+	errcore "github.com/agntcy/identity-platform/internal/core/errors"
+	errtypes "github.com/agntcy/identity-platform/internal/core/errors/types"
+	idtypes "github.com/agntcy/identity-platform/internal/core/id/types"
+	issuercore "github.com/agntcy/identity-platform/internal/core/issuer"
+	issuertypes "github.com/agntcy/identity-platform/internal/core/issuer/types"
+	"github.com/agntcy/identity-platform/internal/core/issuer/verification"
+	vctypes "github.com/agntcy/identity-platform/internal/core/vc/types"
+	"github.com/agntcy/identity-platform/internal/pkg/errutil"
+	"github.com/agntcy/identity-platform/internal/pkg/joseutil"
 )
 
 // The IssuerService interface defines the Node methods for Issuers

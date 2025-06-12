@@ -8,12 +8,12 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/agntcy/identity-saas/internal/issuer/issuer/types"
-	idptypes "github.com/agntcy/identity-saas/internal/issuer/types"
-	"github.com/agntcy/identity-saas/internal/issuer/vault"
-	"github.com/agntcy/identity-saas/internal/node"
-	"github.com/agntcy/identity-saas/internal/pkg/jwtutil"
-	"github.com/agntcy/identity-saas/internal/pkg/oidc"
+	"github.com/agntcy/identity-platform/internal/issuer/issuer/types"
+	idptypes "github.com/agntcy/identity-platform/internal/issuer/types"
+	"github.com/agntcy/identity-platform/internal/issuer/vault"
+	"github.com/agntcy/identity-platform/internal/node"
+	"github.com/agntcy/identity-platform/internal/pkg/jwtutil"
+	"github.com/agntcy/identity-platform/internal/pkg/oidc"
 	"github.com/google/uuid"
 )
 

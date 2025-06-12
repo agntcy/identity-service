@@ -4,7 +4,7 @@
 package data
 
 import (
-	internalIssuerTypes "github.com/agntcy/identity-saas/internal/issuer/types"
+	internalIssuerTypes "github.com/agntcy/identity-platform/internal/issuer/types"
 )
 
 type BadgeRepository interface {

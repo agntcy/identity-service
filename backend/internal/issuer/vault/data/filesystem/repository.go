@@ -9,9 +9,9 @@ import (
 	"os"
 	"path/filepath"
 
-	internalIssuerConstants "github.com/agntcy/identity-saas/internal/issuer/constants"
-	"github.com/agntcy/identity-saas/internal/issuer/vault/data"
-	types "github.com/agntcy/identity-saas/internal/issuer/vault/types"
+	internalIssuerConstants "github.com/agntcy/identity-platform/internal/issuer/constants"
+	"github.com/agntcy/identity-platform/internal/issuer/vault/data"
+	types "github.com/agntcy/identity-platform/internal/issuer/vault/types"
 )
 
 type vaultFilesystemRepository struct{}

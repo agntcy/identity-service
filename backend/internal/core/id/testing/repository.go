@@ -6,10 +6,10 @@ package testing
 import (
 	"context"
 
-	errcore "github.com/agntcy/identity-saas/internal/core/errors"
-	idcore "github.com/agntcy/identity-saas/internal/core/id"
-	idtypes "github.com/agntcy/identity-saas/internal/core/id/types"
-	issuertypes "github.com/agntcy/identity-saas/internal/core/issuer/types"
+	errcore "github.com/agntcy/identity-platform/internal/core/errors"
+	idcore "github.com/agntcy/identity-platform/internal/core/id"
+	idtypes "github.com/agntcy/identity-platform/internal/core/id/types"
+	issuertypes "github.com/agntcy/identity-platform/internal/core/issuer/types"
 )
 
 type FakeIdRepository struct {

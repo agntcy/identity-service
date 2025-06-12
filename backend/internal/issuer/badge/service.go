@@ -7,19 +7,19 @@ import (
 	"context"
 	"encoding/json"
 
-	"github.com/agntcy/identity-saas/internal/issuer/auth"
-	"github.com/agntcy/identity-saas/internal/issuer/badge/data"
-	issdata "github.com/agntcy/identity-saas/internal/issuer/issuer/data"
-	mddata "github.com/agntcy/identity-saas/internal/issuer/metadata/data"
-	"github.com/agntcy/identity-saas/internal/pkg/errutil"
-	"github.com/agntcy/identity-saas/internal/pkg/joseutil"
-	"github.com/agntcy/identity-saas/internal/pkg/nodeapi"
+	"github.com/agntcy/identity-platform/internal/issuer/auth"
+	"github.com/agntcy/identity-platform/internal/issuer/badge/data"
+	issdata "github.com/agntcy/identity-platform/internal/issuer/issuer/data"
+	mddata "github.com/agntcy/identity-platform/internal/issuer/metadata/data"
+	"github.com/agntcy/identity-platform/internal/pkg/errutil"
+	"github.com/agntcy/identity-platform/internal/pkg/joseutil"
+	"github.com/agntcy/identity-platform/internal/pkg/nodeapi"
 	"github.com/google/uuid"
 
-	idtypes "github.com/agntcy/identity-saas/internal/core/id/types"
-	"github.com/agntcy/identity-saas/internal/core/vc"
-	vctypes "github.com/agntcy/identity-saas/internal/core/vc/types"
-	internalIssuerTypes "github.com/agntcy/identity-saas/internal/issuer/types"
+	idtypes "github.com/agntcy/identity-platform/internal/core/id/types"
+	"github.com/agntcy/identity-platform/internal/core/vc"
+	vctypes "github.com/agntcy/identity-platform/internal/core/vc/types"
+	internalIssuerTypes "github.com/agntcy/identity-platform/internal/issuer/types"
 )
 
 type BadgeService interface {

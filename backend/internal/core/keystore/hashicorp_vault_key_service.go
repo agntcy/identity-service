@@ -10,7 +10,7 @@ import (
 	"fmt"
 	"path"
 
-	"github.com/agntcy/identity-saas/internal/core/id/types"
+	"github.com/agntcy/identity-platform/internal/core/id/types"
 	"github.com/hashicorp/vault/api"
 )
 

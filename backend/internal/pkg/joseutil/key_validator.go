@@ -10,7 +10,7 @@ import (
 	"math/big"
 	"strings"
 
-	"github.com/agntcy/identity-saas/internal/core/id/types"
+	"github.com/agntcy/identity-platform/internal/core/id/types"
 )
 
 // ValidatePubKey validates the public key fields of the JWK according to its algorithm.

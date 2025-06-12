@@ -4,10 +4,10 @@
 package postgres
 
 import (
-	"github.com/agntcy/identity-saas/internal/core/id/types"
-	issuertypes "github.com/agntcy/identity-saas/internal/core/issuer/types"
-	vc "github.com/agntcy/identity-saas/internal/core/vc/postgres"
-	"github.com/agntcy/identity-saas/internal/pkg/convertutil"
+	"github.com/agntcy/identity-platform/internal/core/id/types"
+	issuertypes "github.com/agntcy/identity-platform/internal/core/issuer/types"
+	vc "github.com/agntcy/identity-platform/internal/core/vc/postgres"
+	"github.com/agntcy/identity-platform/internal/pkg/convertutil"
 	"github.com/google/uuid"
 	"github.com/lib/pq"
 )

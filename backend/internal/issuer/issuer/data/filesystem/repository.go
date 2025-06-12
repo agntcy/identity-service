@@ -9,10 +9,10 @@ import (
 	"os"
 	"path/filepath"
 
-	internalIssuerConstants "github.com/agntcy/identity-saas/internal/issuer/constants"
-	"github.com/agntcy/identity-saas/internal/issuer/issuer/data"
-	"github.com/agntcy/identity-saas/internal/issuer/issuer/types"
-	vaultFilesystemRepository "github.com/agntcy/identity-saas/internal/issuer/vault/data/filesystem"
+	internalIssuerConstants "github.com/agntcy/identity-platform/internal/issuer/constants"
+	"github.com/agntcy/identity-platform/internal/issuer/issuer/data"
+	"github.com/agntcy/identity-platform/internal/issuer/issuer/types"
+	vaultFilesystemRepository "github.com/agntcy/identity-platform/internal/issuer/vault/data/filesystem"
 )
 
 type issuerFilesystemRepository struct{}

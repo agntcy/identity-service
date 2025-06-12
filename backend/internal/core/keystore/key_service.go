@@ -6,7 +6,7 @@ package keystore
 import (
 	"context"
 
-	"github.com/agntcy/identity-saas/internal/core/id/types"
+	"github.com/agntcy/identity-platform/internal/core/id/types"
 )
 
 // KeyService defines methods for generating, saving, and retrieving JWKs.

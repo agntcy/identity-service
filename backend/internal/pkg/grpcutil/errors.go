@@ -6,10 +6,10 @@ package grpcutil
 import (
 	"errors"
 
-	coreapi "github.com/agntcy/identity-saas/api/server/agntcy/identity-saas/core/v1alpha1"
-	errtypes "github.com/agntcy/identity-saas/internal/core/errors/types"
-	"github.com/agntcy/identity-saas/internal/pkg/ptrutil"
-	"github.com/agntcy/identity-saas/pkg/log"
+	coreapi "github.com/agntcy/identity-platform/api/server/agntcy/identity-platform/core/v1alpha1"
+	errtypes "github.com/agntcy/identity-platform/internal/core/errors/types"
+	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
+	"github.com/agntcy/identity-platform/pkg/log"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

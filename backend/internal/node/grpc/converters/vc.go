@@ -4,11 +4,11 @@
 package converters
 
 import (
-	coreapi "github.com/agntcy/identity-saas/api/server/agntcy/identity-saas/core/v1alpha1"
-	vctypes "github.com/agntcy/identity-saas/internal/core/vc/types"
-	"github.com/agntcy/identity-saas/internal/pkg/convertutil"
-	"github.com/agntcy/identity-saas/internal/pkg/ptrutil"
-	"github.com/agntcy/identity-saas/pkg/log"
+	coreapi "github.com/agntcy/identity-platform/api/server/agntcy/identity-platform/core/v1alpha1"
+	vctypes "github.com/agntcy/identity-platform/internal/core/vc/types"
+	"github.com/agntcy/identity-platform/internal/pkg/convertutil"
+	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
+	"github.com/agntcy/identity-platform/pkg/log"
 	"google.golang.org/protobuf/types/known/structpb"
 )
 

@@ -6,8 +6,8 @@ package jwtutil
 import (
 	"encoding/json"
 
-	"github.com/agntcy/identity-saas/internal/core/id/types"
-	"github.com/agntcy/identity-saas/internal/pkg/joseutil"
+	"github.com/agntcy/identity-platform/internal/core/id/types"
+	"github.com/agntcy/identity-platform/internal/pkg/joseutil"
 )
 
 func Jwt(issuer, sub string, key *types.Jwk) (string, error) {

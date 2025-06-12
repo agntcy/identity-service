@@ -7,11 +7,11 @@ import (
 	"context"
 	"testing"
 
-	"github.com/agntcy/identity-saas/internal/issuer/auth"
-	"github.com/agntcy/identity-saas/internal/issuer/issuer/types"
-	idptypes "github.com/agntcy/identity-saas/internal/issuer/types"
-	vaulttesting "github.com/agntcy/identity-saas/internal/issuer/vault/testing"
-	"github.com/agntcy/identity-saas/internal/pkg/oidc"
+	"github.com/agntcy/identity-platform/internal/issuer/auth"
+	"github.com/agntcy/identity-platform/internal/issuer/issuer/types"
+	idptypes "github.com/agntcy/identity-platform/internal/issuer/types"
+	vaulttesting "github.com/agntcy/identity-platform/internal/issuer/vault/testing"
+	"github.com/agntcy/identity-platform/internal/pkg/oidc"
 	"github.com/stretchr/testify/assert"
 )
 

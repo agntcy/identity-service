@@ -7,7 +7,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/agntcy/identity-saas/internal/core/vc/types"
+	"github.com/agntcy/identity-platform/internal/core/vc/types"
 	"github.com/stretchr/testify/assert"
 )
 
