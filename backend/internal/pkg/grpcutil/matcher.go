@@ -8,5 +8,10 @@ import (
 )
 
 func CustomMatcher(key string) (string, bool) {
-	return runtime.DefaultHeaderMatcher(key)
+	switch key {
+	case "X-Id-Api-Key":
+		return key, true
+	default:
+		return runtime.DefaultHeaderMatcher(key)
+	}
 }

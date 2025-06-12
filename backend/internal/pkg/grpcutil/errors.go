@@ -4,53 +4,28 @@
 package grpcutil
 
 import (
-	"errors"
-
-	coreapi "github.com/agntcy/identity-platform/api/server/agntcy/identity-platform/core/v1alpha1"
-	errtypes "github.com/agntcy/identity-platform/internal/core/errors/types"
-	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
-	"github.com/agntcy/identity-platform/pkg/log"
-	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
+// TODO: better to define an interface for errors, and have services implementing this
+
 func NotFoundError(err error) error {
-	return newStatusWithDetails(codes.NotFound, err)
+	return status.Errorf(codes.NotFound, "%v", err)
 }
 
 func UnauthorizedError(err error) error {
-	return newStatusWithDetails(codes.Unauthenticated, err)
+	return status.Errorf(codes.Unauthenticated, "%v", err)
 }
 
 func UnimplementedError(err error) error {
-	return newStatusWithDetails(codes.Unimplemented, err)
+	return status.Errorf(codes.Unimplemented, "%v", err)
 }
 
 func BadRequestError(err error) error {
-	return newStatusWithDetails(codes.InvalidArgument, err)
+	return status.Errorf(codes.InvalidArgument, "%v", err)
 }
 
 func InternalError(err error) error {
-	return newStatusWithDetails(codes.Internal, err)
-}
-
-func newStatusWithDetails(c codes.Code, err error) error {
-	st := status.New(c, err.Error())
-	var errInfo errtypes.ErrorInfo
-
-	if errors.As(err, &errInfo) {
-		st, _ = st.WithDetails(&coreapi.ErrorInfo{
-			Reason: ptrutil.Ptr(coreapi.ErrorReason(errInfo.Reason)),
-		})
-
-		switch errInfo.Reason {
-		case errtypes.ERROR_REASON_UNSPECIFIED, errtypes.ERROR_REASON_INTERNAL:
-			log.WithFields(logrus.Fields{log.ErrorField: err}).Error(err.Error())
-		default:
-			log.WithFields(logrus.Fields{log.ErrorField: err}).Warn(err.Error())
-		}
-	}
-
-	return st.Err()
+	return status.Errorf(codes.Internal, "%v", err)
 }
