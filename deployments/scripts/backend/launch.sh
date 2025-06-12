@@ -7,10 +7,10 @@
 ./deployments/scripts/backend/env_setup.sh
 
 # Check if dev option is set
-compose_file="./deployments/docker-compose/backend/docker-compose.webapi.yml"
+compose_file="./deployments/docker-compose/backend/docker-compose.bff.yml"
 if [ "$1" == "true" ]; then
     echo "Running in dev mode"
-    compose_file="./deployments/docker-compose/backend/docker-compose.webapi.dev.yml"
+    compose_file="./deployments/docker-compose/backend/docker-compose.bff.dev.yml"
 fi
 
 docker compose -f "$compose_file" build --no-cache

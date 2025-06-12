@@ -4,7 +4,7 @@ FROM golang:1.24.1-alpine AS builder
 WORKDIR /build
 COPY . .
 RUN go mod download
-RUN cd ./cmd/backend && go build -o ../../identity-backend
+RUN cd ./cmd/bff && go build -o ../../identity-bff
 
 RUN apk update \
     &&  apk add ca-certificates wget \
@@ -18,12 +18,12 @@ RUN addgroup -S web && adduser -u 1999 -S -G web web
 # Set workdir
 WORKDIR /home/web
 
-COPY --from=builder /build/identity-backend .
+COPY --from=builder /build/identity-bff .
 
 # Give permissions
-RUN chmod +x identity-backend && \
+RUN chmod +x identity-bff && \
     chown -R web:web .
 
 USER web
 
-ENTRYPOINT ["./identity-backend"]
+ENTRYPOINT ["./identity-bff"]

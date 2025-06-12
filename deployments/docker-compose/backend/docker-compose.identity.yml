@@ -1,0 +1,15 @@
+# Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
+---
+name: identity-node
+services:
+  identity-node:
+    container_name: identity-node
+    image: ghcr.io/agntcy/identity/node:latest
+    restart: always
+    ports:
+      - "4003:4000"
+      - "4004:4001"
+    env_file:
+      - .env
