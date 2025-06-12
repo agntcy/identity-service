@@ -1,0 +1,209 @@
+[
+ {
+  "Enum": {
+   "Name": {
+    "Package": "go-enums-test/data",
+    "Name": "Enum3"
+   },
+   "Values": [
+    {
+     "Name": "Enum3_V1",
+     "Value": 0,
+     "Position": {
+      "Filename": "testdata/data/enum_copy.go",
+      "Offset": 191,
+      "Line": 19,
+      "Column": 2
+     },
+     "Comment": null
+    },
+    {
+     "Name": "Enum3_V2",
+     "Value": 1,
+     "Position": {
+      "Filename": "testdata/data/enum_copy.go",
+      "Offset": 214,
+      "Line": 20,
+      "Column": 2
+     },
+     "Comment": null
+    },
+    {
+     "Name": "Enum3_V3",
+     "Value": 2,
+     "Position": {
+      "Filename": "testdata/data/enum_copy.go",
+      "Offset": 224,
+      "Line": 21,
+      "Column": 2
+     },
+     "Comment": null
+    }
+   ],
+   "Path": "testdata/data/enum_copy.go",
+   "Position": {
+    "Filename": "testdata/data/enum_copy.go",
+    "Offset": 171,
+    "Line": 16,
+    "Column": 6
+   },
+   "Comment": null
+  },
+  "Proto": "enum Enum3 {\n  Enum3_V1 = 0;\n  Enum3_V2 = 1;\n  Enum3_V3 = 2;\n}\n"
+ },
+ {
+  "Enum": {
+   "Name": {
+    "Package": "go-enums-test/data",
+    "Name": "Enum4"
+   },
+   "Values": [
+    {
+     "Name": "Enum4_V1",
+     "Value": 0,
+     "Position": {
+      "Filename": "testdata/data/another_copy.go",
+      "Offset": 39,
+      "Line": 6,
+      "Column": 2
+     },
+     "Comment": null
+    },
+    {
+     "Name": "Enum4_V2",
+     "Value": 1,
+     "Position": {
+      "Filename": "testdata/data/another_copy.go",
+      "Offset": 62,
+      "Line": 7,
+      "Column": 2
+     },
+     "Comment": null
+    }
+   ],
+   "Path": "testdata/data/another_copy.go",
+   "Position": {
+    "Filename": "testdata/data/another_copy.go",
+    "Offset": 19,
+    "Line": 3,
+    "Column": 6
+   },
+   "Comment": null
+  },
+  "Proto": "enum Enum4 {\n  Enum4_V1 = 0;\n  Enum4_V2 = 1;\n}\n"
+ },
+ {
+  "Enum": {
+   "Name": {
+    "Package": "go-enums-test/data",
+    "Name": "Enum"
+   },
+   "Values": [
+    {
+     "Name": "Enum_VALUE_1",
+     "Value": 0,
+     "Position": {
+      "Filename": "testdata/data/enum_copy.go",
+      "Offset": 93,
+      "Line": 10,
+      "Column": 2
+     },
+     "Comment": {
+      "List": [
+       "// Const comment",
+       "//",
+       "// it ends here"
+      ],
+      "Position": {
+       "Filename": "testdata/data/enum_copy.go",
+       "Offset": 54,
+       "Line": 7,
+       "Column": 2
+      }
+     }
+    },
+    {
+     "Name": "Enum_VALUE_2",
+     "Value": 1,
+     "Position": {
+      "Filename": "testdata/data/enum_copy.go",
+      "Offset": 150,
+      "Line": 13,
+      "Column": 2
+     },
+     "Comment": {
+      "List": [
+       "// Const comment for value 2"
+      ],
+      "Position": {
+       "Filename": "testdata/data/enum_copy.go",
+       "Offset": 120,
+       "Line": 12,
+       "Column": 2
+      }
+     }
+    }
+   ],
+   "Path": "testdata/data/enum_copy.go",
+   "Position": {
+    "Filename": "testdata/data/enum_copy.go",
+    "Offset": 35,
+    "Line": 4,
+    "Column": 6
+   },
+   "Comment": {
+    "List": [
+     "// enum comment"
+    ],
+    "Position": {
+     "Filename": "testdata/data/enum_copy.go",
+     "Offset": 14,
+     "Line": 3,
+     "Column": 1
+    }
+   }
+  },
+  "Proto": "// enum comment\nenum Enum {\n  // Const comment\n  //\n  // it ends here\n  Enum_VALUE_1 = 0;\n  // Const comment for value 2\n  Enum_VALUE_2 = 1;\n}\n"
+ },
+ {
+  "Enum": {
+   "Name": {
+    "Package": "go-enums-test/data/data2",
+    "Name": "Enum2"
+   },
+   "Values": [
+    {
+     "Name": "EV1",
+     "Value": 0,
+     "Position": {
+      "Filename": "testdata/data/data2/enum_copy.go",
+      "Offset": 40,
+      "Line": 6,
+      "Column": 2
+     },
+     "Comment": null
+    },
+    {
+     "Name": "EV2",
+     "Value": 1,
+     "Position": {
+      "Filename": "testdata/data/data2/enum_copy.go",
+      "Offset": 58,
+      "Line": 7,
+      "Column": 2
+     },
+     "Comment": null
+    }
+   ],
+   "Path": "testdata/data/data2/enum_copy.go",
+   "Position": {
+    "Filename": "testdata/data/data2/enum_copy.go",
+    "Offset": 20,
+    "Line": 3,
+    "Column": 6
+   },
+   "Comment": null
+  },
+  "Proto": "enum Enum2 {\n  EV1 = 0;\n  EV2 = 1;\n}\n"
+ }
+]

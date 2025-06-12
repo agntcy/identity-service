@@ -11,7 +11,7 @@
     </picture>
   </a>
   <br />
-  <caption>Welcome to the <b>Identity SaaS</b> repository</caption>
+  <caption>Welcome to the <b>Identity Platform</b> repository</caption>
 </p>
 
 ---

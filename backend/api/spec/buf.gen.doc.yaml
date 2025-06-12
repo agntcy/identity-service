@@ -1,0 +1,11 @@
+# Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
+version: v1
+managed:
+  enabled: true
+plugins:
+  - name: doc
+    out: .
+    opt: json,proto_workspace.json:openapi*
+    strategy: all

@@ -1,0 +1,37 @@
+package app_grpc_register
+
+import (
+	"context"
+
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"google.golang.org/grpc"
+)
+
+type GrpcServiceRegister struct {
+{{ range $service := .Services }}
+    {{ $service.ServerName }} {{ $service.ServerType }}
+{{ end }}
+}
+
+func (r GrpcServiceRegister) RegisterGrpcHandlers(grpcServer *grpc.Server) {
+{{ range $service := .Services }}
+    if r.{{ $service.ServerName }} != nil {
+		{{ $service.RegisterGrpcServerFunc }}(grpcServer, r.{{ $service.ServerName }})
+	}
+{{ end }}
+}
+
+func (r GrpcServiceRegister) RegisterHttpHandlers(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
+{{ range $service := .Services }}
+	{{ if ne $service.RegisterHttpHandlerFunc "" }}
+    if r.{{ $service.ServerName }} != nil {
+        err := {{ $service.RegisterHttpHandlerFunc }}(ctx, mux, conn)
+		if err != nil {
+			return err
+		}
+	}
+	{{ end }}
+{{ end }}
+
+	return nil
+}

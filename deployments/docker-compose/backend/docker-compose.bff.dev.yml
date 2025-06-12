@@ -2,15 +2,19 @@
 # SPDX-License-Identifier: Apache-2.0
 
 ---
-name: identity-backend
+name: identity-bff
 include:
   - docker-compose.db.yml
+  - docker-compose.identity.yml
 services:
-  identity-backend:
-    container_name: identity-backend
-    image: ghcr.io/cisco-eti/pyramid/backend:latest
+  identity-bff:
+    container_name: identity-bff
+    build:
+      context: ../../../
+      dockerfile: deployments/docker/backend/Dockerfile.bff
     restart: always
     depends_on:
+      - identity-node
       - identity-postgres
     ports:
       - "4000:4000"

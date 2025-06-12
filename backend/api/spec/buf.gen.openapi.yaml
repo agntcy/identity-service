@@ -1,0 +1,12 @@
+# Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
+version: v1
+managed:
+  enabled: true
+plugins:
+  - name: openapi
+    out: .
+    opt:
+      - default_response=true
+      - enum_type=string

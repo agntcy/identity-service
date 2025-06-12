@@ -6,5 +6,5 @@
 # If not, create an env with defaults
 ./deployments/scripts/backend/env_setup.sh
 
-docker compose -f ./deployments/docker-compose/backend/docker-compose.webapi.yml down
-docker compose -f ./deployments/docker-compose/backend/docker-compose.webapi.dev.yml down
+docker compose -f ./deployments/docker-compose/backend/docker-compose.bff.yml down
+docker compose -f ./deployments/docker-compose/backend/docker-compose.bff.dev.yml down

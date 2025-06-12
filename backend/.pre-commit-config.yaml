@@ -1,0 +1,90 @@
+# Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
+---
+default_stages: [pre-commit, pre-push]
+repos:
+  - repo: https://github.com/google/addlicense
+    rev: 499ed7f28389eb4a08c2d7e40b1637cfd7f65381
+    hooks:
+      - id: addlicense # Add license header to files
+        args: ["-ignore", "**/node_modules/**", "-ignore", "**/vendor/**", "-c", "Copyright AGNTCY Contributors (https://github.com/agntcy)", "-l", "Apache-2.0", "-s=only", "."]
+
+  - repo: https://github.com/tekwizely/pre-commit-golang
+    rev: v1.0.0-rc.1
+    hooks:
+      - id: go-mod-tidy
+        files: |
+          (?x)(
+            ^internal/|
+            ^pkg/|
+            ^cmd/
+          )
+      - id: go-fmt
+        files: |
+          (?x)(
+            ^internal/|
+            ^pkg/|
+            ^cmd/
+          )
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-added-large-files # Prevent giant files from being committed
+        files: |
+          (?x)(
+            ^internal/|
+            ^pkg/|
+            ^cmd/
+          )
+      - id: detect-private-key      # Checks for the existence of private keys
+        files: |
+          (?x)(
+            ^internal/|
+            ^pkg/|
+            ^cmd/
+          )
+      - id: check-case-conflict     # Check for files with names that would conflict on a case-insensitive filesystem
+        files: |
+          (?x)(
+            ^internal/|
+            ^pkg/|
+            ^cmd/
+          )
+      - id: check-merge-conflict    # Check for files that contain merge conflict strings
+        files: |
+          (?x)(
+            ^internal/|
+            ^pkg/|
+            ^cmd/
+          )
+      - id: check-symlinks          # Checks for symlinks which do not point to anything
+        files: |
+          (?x)(
+            ^internal/|
+            ^pkg/|
+            ^cmd/
+          )
+      - id: end-of-file-fixer       # Makes sure files end in a newline and only a newline
+        files: |
+          (?x)(
+            ^internal/|
+            ^pkg/|
+            ^cmd/
+          )
+      - id: mixed-line-ending       # Replaces or checks mixed line ending
+        files: |
+          (?x)(
+            ^internal/|
+            ^pkg/|
+            ^cmd/
+          )
+      - id: trailing-whitespace     # Trims trailing whitespace
+        files: |
+          (?x)(
+            ^internal/|
+            ^pkg/|
+            ^cmd/
+          )
+        args: [--markdown-linebreak-ext=md]

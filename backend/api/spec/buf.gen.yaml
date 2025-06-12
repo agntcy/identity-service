@@ -1,0 +1,19 @@
+# Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
+---
+version: v1
+plugins:
+  - plugin: go
+    out: ../server
+    opt: paths=source_relative
+  - plugin: go-grpc
+    out: ../server
+    opt: paths=source_relative,require_unimplemented_servers=false
+  - plugin: grpc-gateway
+    out: ../server
+    opt: paths=source_relative,allow_delete_body=true
+  - plugin: go-srvreg
+    out: ../server
+    opt: logtostderr=true,paths=source_relative
+    strategy: all

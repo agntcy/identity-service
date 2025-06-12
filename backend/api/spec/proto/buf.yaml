@@ -1,0 +1,20 @@
+# Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
+version: v1
+deps:
+  - buf.build/googleapis/googleapis
+  - buf.build/grpc-ecosystem/grpc-gateway
+  - buf.build/sagikazarmark/gnostic-fork
+breaking:
+  use:
+    - FILE
+lint:
+  use:
+    - STANDARD
+  ignore_only:
+    RPC_REQUEST_RESPONSE_UNIQUE:
+      - agntcy/identity/platform/v1alpha1/app_service.proto
+    RPC_RESPONSE_STANDARD_NAME:
+      - agntcy/identity/platform/v1alpha1/app_service.proto
+    RPC_REQUEST_STANDARD_NAME:

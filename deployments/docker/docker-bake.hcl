@@ -12,7 +12,7 @@ function "get_tag" {
 
 group "default" {
   targets = [
-    "backend",
+    "bff",
   ]
 }
 
@@ -30,12 +30,12 @@ target "_common" {
   ]
 }
 
-target "backend" {
+target "bff" {
   context = "."
-  dockerfile = "./deployments/docker/backend/Dockerfile"
+  dockerfile = "./deployments/docker/backend/Dockerfile.bff"
   inherits = [
     "_common",
     "docker-metadata-action",
   ]
-  tags = get_tag(target.docker-metadata-action.tags, "${target.backend.name}")
+  tags = get_tag(target.docker-metadata-action.tags, "${target.bff.name}")
 }

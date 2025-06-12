@@ -1,0 +1,23 @@
+// Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package agntcy.identity.platform.shared.v1alpha1;
+
+option go_package = "github.com/agntcy/identity-platform/backend/api/server/agntcy/identity/platform/shared/v1alpha1;identity_platform_shared_sdk_go";
+
+// Pagination response
+message PagedResponse {
+  // Next page
+  optional int32 next_page = 1;
+
+  // Has next page
+  optional bool has_next_page = 2;
+
+  // The total size of items
+  int64 total = 3;
+
+  // The size of the current page
+  int32 size = 4;
+}
