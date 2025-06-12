@@ -6,9 +6,8 @@
 set -o errexit
 set -o nounset
 
-PROTO_PACKAGE_NAME="agntcy.identity.core.v1alpha1"
-PROTO_CORE_FILE_PATH="agntcy/identity/core/v1alpha1/"
-PROTO_NODE_FILE_PATH="agntcy/identity/node/v1alpha1/"
+PROTO_PACKAGE_NAME="agntcy.identity.platform.v1alpha1"
+PROTO_PLATFORM_FILE_PATH="agntcy/identity/platform"
 
 get_module_name_from_package() {
   dirname "$1" | xargs basename
@@ -106,7 +105,7 @@ if [ -n "${packages_comma_separated}" ]; then
 
   for m in $protos; do
     sed -i 's/syntax = "proto2";/syntax = "proto3";/g' "${m}"
-    sed -i 's|go_package = [^ ]\+|go_package = "github.com/agntcy/identity/api/server/agntcy/identity/core/v1alpha1;identity_core_sdk_go";|g' "${m}"
+    sed -i 's|go_package = [^ ]\+|go_package = "github.com/agntcy/identity-platform/backend/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_go";|g' "${m}"
   done
 
   for package in $packages; do
@@ -142,10 +141,7 @@ cd "${Identity_ROOT}/code/api/spec"
 /usr/local/bin/buf generate --debug -v
 
 # Openapi
-/usr/local/bin/buf generate --template buf.gen.openapi.yaml --output ../spec/static/api/openapi/node/v1alpha1 --path proto/$PROTO_NODE_FILE_PATH
+/usr/local/bin/buf generate --template buf.gen.openapi.yaml --output ../spec/static/api/openapi/platform --path proto/${PROTO_PLATFORM_FILE_PATH}
 
 # Proto
 /usr/local/bin/buf generate --template buf.gen.doc.yaml --output ../spec/static/api/proto/v1alpha1
-
-# Json Schema
-/usr/local/bin/buf generate --template buf.gen.jsonschema.yaml --output ../spec/static/api/jsonschema/core/v1alpha1 --path proto/$PROTO_CORE_FILE_PATH

@@ -6,7 +6,7 @@ ARG BUF_VERSION="1.28.1"
 RUN apk update && apk add curl git
 
 WORKDIR /identity/protoc-gen-go-identity
-COPY api/spec/plugins/protoc-gen-go-srvreg .
+COPY backend/api/spec/plugins/protoc-gen-go-srvreg .
 RUN go mod download
 RUN go build -o /identity/bin/protoc-gen-go-srvreg .
 
