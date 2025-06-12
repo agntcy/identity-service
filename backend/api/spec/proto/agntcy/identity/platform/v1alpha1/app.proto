@@ -1,0 +1,40 @@
+// Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package agntcy.identity.platform.v1alpha1;
+
+import "google/api/field_behavior.proto";
+
+option go_package = "github.com/agntcy/identity-platform/backend/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_go";
+
+// App Type
+enum AppType {
+  // Unspecified App Type.
+  APP_TYPE_UNSPECIFIED = 0;
+
+  // Agent A2A App Type.
+  APP_TYPE_AGENT_A2A = 1;
+
+  // Agent OASF App Type.
+  APP_TYPE_AGENT_OASF = 2;
+
+  // MCP Server App Type.
+  APP_TYPE_MCP_SERVER = 3;
+}
+
+// Identity Platform App.
+message App {
+  // A unique identifier for the App.
+  string id = 1 [(google.api.field_behavior) = OUTPUT_ONLY];
+
+  // A human-readable name for the App.
+  optional string name = 2;
+
+  // A human-readable description for the App.
+  optional string description = 3;
+
+  // The type of the App.
+  AppType type = 4;
+}

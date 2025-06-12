@@ -1,0 +1,158 @@
+// Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package agntcy.identity.platform.v1alpha1;
+
+import "agntcy/identity/platform/v1alpha1/app.proto";
+import "agntcy/identity/shared/v1alpha1/pagination.proto";
+import "google/api/annotations.proto";
+import "google/api/client.proto";
+import "google/protobuf/empty.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "github.com/agntcy/identity-platform/backend/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_go";
+
+// AppService manages apps.
+service AppService {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_tag) = {
+    name: "App";
+  };
+
+  // List Apps.
+  rpc ListApps(ListAppsRequest) returns (ListAppsResponse) {
+    option (google.api.http) = {
+            get: "/v1alpha1/apps"
+        };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "ListApps";
+      summary: "List Apps";
+    };
+  }
+
+  // Get apps count per type.
+  rpc GetAppsCount(GetAppsCountRequest) returns (GetAppsCountResponse) {
+    option (google.api.http) = {
+      get: "/v1alpha1/apps/all/count"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+    operation_id: "GetAppsCount";
+    summary: "Get apps count per type";
+    };
+  }
+
+  // Get App by id
+  rpc GetApp(GetAppRequest) returns (App) {
+    option (google.api.http) = {
+            get: "/v1alpha1/apps/{app_id}"
+        };
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "GetApp";
+      summary: "Get App by Id";
+    };
+  }
+
+
+  // Create a new App.
+  rpc CreateApp(CreateAppRequest) returns (App) {
+    option (google.api.http) = {
+            post: "/v1alpha1/apps"
+            body: "app"
+        };
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "CreateApp";
+      summary: "Create App";
+    };
+  }
+
+  // Update an App.
+  rpc UpdateApp(UpdateAppRequest) returns (App) {
+    option (google.api.http) = {
+        patch: "/v1alpha1/apps/{app_id}"
+        body: "app"
+    };
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "UpdateApp";
+      summary: "Update App";
+    };
+
+    option (google.api.method_signature) = "name,description";
+  }
+
+  // Delete an existing App.
+  rpc DeleteApp(DeleteAppRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+            delete: "/v1alpha1/apps/{app_id}"
+        };
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "DeleteApp";
+      summary: "Delete App";
+    };
+  }
+}
+
+message ListAppsResponse {
+  // A list of Apps.
+  repeated App apps = 1;
+
+  // Pagination response.
+  optional agntcy.identity.shared.v1alpha1.PagedResponse pagination = 2;
+}
+
+message ListAppsRequest {
+  // The current page of the pagination
+  optional int32 page = 1;
+
+  // The page size of the pagination
+  optional int32 size = 2;
+
+  // The search query
+  optional string query = 3;
+
+  // The app type filter
+  optional AppType type = 4;
+}
+
+message CreateAppRequest {
+  // The App to create.
+  App app = 1;
+}
+
+message GetAppsCountRequest {
+}
+
+message AppTypeCountEntry {
+  // The type of the App
+  agntcy.identity.platform.v1alpha1.AppType key = 1;
+
+  // The count of apps of the given type
+  int64 value = 2;
+}
+
+message GetAppsCountResponse {
+  // The apps count per app type
+  repeated AppTypeCountEntry counts = 1;
+}
+
+message GetAppRequest {
+  // App Id to get.
+  string app_id = 1;
+}
+
+message UpdateAppRequest {
+  // App Id to update.
+  string app_id = 1;
+
+  // App parameters to update.
+  App app = 2;
+}
+
+message DeleteAppRequest {
+  // App Id to delete.
+  string app_id = 1;
+}
