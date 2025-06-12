@@ -20,6 +20,25 @@ const (
 	APP_TYPE_AGENT_MCP_SERVER
 )
 
+func (t *AppType) UnmarshalText(text []byte) error {
+	switch string(text) {
+	case APP_TYPE_AGENT_A2A.String():
+		*t = APP_TYPE_AGENT_A2A
+	case APP_TYPE_AGENT_OASF.String():
+		*t = APP_TYPE_AGENT_OASF
+	case APP_TYPE_AGENT_MCP_SERVER.String():
+		*t = APP_TYPE_AGENT_MCP_SERVER
+	default:
+		*t = APP_TYPE_UNSPECIFIED
+	}
+
+	return nil
+}
+
+func (t AppType) MarshalText() ([]byte, error) {
+	return []byte(t.String()), nil
+}
+
 // Identity Platform App.
 type App struct {
 	// A unique identifier for the App.

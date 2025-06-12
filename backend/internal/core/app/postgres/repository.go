@@ -5,33 +5,63 @@ package postgres
 
 import (
 	"context"
+	"errors"
 
+	appcore "github.com/agntcy/identity-platform/internal/core/app"
 	"github.com/agntcy/identity-platform/internal/core/app/types"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 	"github.com/agntcy/identity-platform/pkg/db"
+	"gorm.io/gorm"
 )
 
-type idPostgresRepository struct {
+type repository struct {
 	dbContext db.Context
 }
 
-func NewIdRepository(dbContext db.Context) idcore.IdRepository {
-	return &idPostgresRepository{
-		dbContext: dbContext,
+// NewRepository creates a new instance of the Repository
+func NewRepository(dbContext db.Context) appcore.Repository {
+	return &repository{
+		dbContext,
 	}
 }
 
-func (r *idPostgresRepository) CreateApp(
+// CreateApp creates a new App
+func (r *repository) CreateApp(
 	ctx context.Context,
 	app *types.App,
 ) (*types.App, error) {
-	result := r.dbContext.Client().Create(app)
+	model := newAppModel(app)
 
-	if result.Error != nil {
+	// Create the app
+	inserted := r.dbContext.Client().Create(model)
+	if inserted.Error != nil {
 		return nil, errutil.Err(
-			result.Error, "there was an error creating the resolver metadata",
+			inserted.Error, "there was an error creating the app",
 		)
 	}
 
 	return app, nil
+}
+
+func (r *repository) GetApp(
+	ctx context.Context,
+	id string,
+) (*types.App, error) {
+	var app App
+
+	result := r.dbContext.Client().First(&app, map[string]interface{}{
+		"id": id,
+	})
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return nil, errutil.Err(
+				result.Error, "app not found")
+		}
+
+		return nil, errutil.Err(
+			result.Error, "there was an error fetching the app",
+		)
+	}
+
+	return app.ToCoreType(), nil
 }

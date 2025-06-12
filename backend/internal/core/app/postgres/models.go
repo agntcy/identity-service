@@ -8,21 +8,26 @@ import (
 )
 
 type App struct {
-	ID          string `gorm:"primaryKey"`
-	Name        string `gorm:"not null;type:varchar(256);"`
-	Description string `gorm:"not null;type:varchar(256);"`
-	Type        string `gorm:"not null;type:varchar(64);"`
+	ID          string        `gorm:"primaryKey"`
+	Name        *string       `gorm:"not null;type:varchar(256);"`
+	Description *string       `gorm:"not null;type:varchar(256);"`
+	Type        types.AppType `gorm:"embedded;embeddedPrefix:type_"`
 }
 
 func (i *App) ToCoreType() *types.App {
-	return &types.App{}
+	return &types.App{
+		ID:          i.ID,
+		Name:        i.Name,
+		Description: i.Description,
+		Type:        i.Type,
+	}
 }
 
 func newAppModel(src *types.App) *App {
 	return &App{
-		CommonName:      src.CommonName,
-		Organization:    src.Organization,
-		SubOrganization: src.SubOrganization,
-		PublicKey:       src.PublicKey,
+		ID:          src.ID,
+		Name:        src.Name,
+		Description: src.Description,
+		Type:        src.Type,
 	}
 }

@@ -4,33 +4,33 @@
 package converters
 
 import (
-	coreapi "github.com/agntcy/identity-platform/api/server/agntcy/identity-platform/core/v1alpha1"
-	issuertypes "github.com/agntcy/identity-platform/internal/core/issuer/types"
+	apptypes "github.com/agntcy/identity-platform/internal/core/app/types"
 	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
+	platform_sdk_go "github.com/agntcy/identity/platform/api/server/agntcy/identity/platform/v1alpha1"
 )
 
-func FromIssuer(src *issuertypes.Issuer) *coreapi.Issuer {
+func FromApp(src *apptypes.App) *platform_sdk_go.App {
 	if src == nil {
 		return nil
 	}
 
-	return &coreapi.Issuer{
-		Organization:    ptrutil.Ptr(src.Organization),
-		SubOrganization: ptrutil.Ptr(src.SubOrganization),
-		CommonName:      ptrutil.Ptr(src.CommonName),
-		PublicKey:       FromJwk(src.PublicKey),
+	return &platform_sdk_go.App{
+		ID:          ptrutil.Ptr(src.ID),
+		Name:        ptrutil.Ptr(src.Name),
+		Description: ptrutil.Ptr(src.Description),
+		Type:        platform_sdk_go.AppType(src.Type),
 	}
 }
 
-func ToIssuer(src *coreapi.Issuer) *issuertypes.Issuer {
+func ToApp(src *platform_sdk_go.App) *apptypes.App {
 	if src == nil {
 		return nil
 	}
 
-	return &issuertypes.Issuer{
-		Organization:    ptrutil.DerefStr(src.Organization),
-		SubOrganization: ptrutil.DerefStr(src.SubOrganization),
-		CommonName:      ptrutil.DerefStr(src.CommonName),
-		PublicKey:       ToJwk(src.PublicKey),
+	return &apptypes.App{
+		ID:          src.GetID(),
+		Name:        src.GetName(),
+		Description: src.GetDescription(),
+		Type:        apptypes.AppType(src.GetType()),
 	}
 }
