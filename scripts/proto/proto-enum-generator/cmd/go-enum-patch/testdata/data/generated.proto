@@ -1,0 +1,13 @@
+// Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package data;
+
+message Enum3 {}
+
+message Enum4 {}
+
+message Enum {
+}

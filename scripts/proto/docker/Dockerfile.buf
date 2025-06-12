@@ -1,0 +1,50 @@
+FROM golang:1.24.1-alpine3.20 AS builder
+
+ARG BIN="/usr/local/bin"
+ARG BUF_VERSION="1.28.1"
+
+RUN apk update && apk add curl git
+
+WORKDIR /identity/protoc-gen-go-identity
+COPY api/spec/plugins/protoc-gen-go-srvreg .
+RUN go mod download
+RUN go build -o /identity/bin/protoc-gen-go-srvreg .
+
+RUN curl -sSL \
+    "https://github.com/bufbuild/buf/releases/download/v${BUF_VERSION}/buf-$(uname -s)-$(uname -m)" \
+    -o "${BIN}/buf" && \
+    chmod +x "${BIN}/buf"
+
+RUN go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest
+RUN go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest
+RUN go install github.com/google/gnostic/cmd/protoc-gen-openapi@latest
+RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+RUN go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+RUN go install github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc@latest
+RUN go install github.com/bufbuild/protoschema-plugins/cmd/protoc-gen-jsonschema@latest
+
+# Go to Protobuf
+RUN go install k8s.io/code-generator/cmd/go-to-protobuf@latest
+RUN go install k8s.io/code-generator/cmd/go-to-protobuf/protoc-gen-gogo@latest
+RUN go install golang.org/x/tools/cmd/goimports@latest
+RUN go get k8s.io/apimachinery
+
+# Custom tools
+WORKDIR /identity/proto-enum-generator
+COPY scripts/proto/proto-enum-generator .
+RUN go mod download
+RUN cd /identity/proto-enum-generator/cmd/go-enum-to-proto && go install .
+RUN cd /identity/proto-enum-generator/cmd/go-enum-patch && go install .
+
+WORKDIR /identity
+
+ENV PATH="$PATH:/identity/bin"
+ENV Identity_ROOT="/identity"
+
+COPY scripts/proto/docker/run.sh .
+COPY scripts/proto/docker/protoc.sh .
+COPY . ./local/github.com/agntcy/identity
+COPY scripts/proto/docker/protos ./third_party/protos
+
+RUN chmod +x run.sh && \
+    mv run.sh /usr/local/bin
