@@ -15,9 +15,9 @@ func FromApp(src *apptypes.App) *identity_platform_sdk_go.App {
 	}
 
 	return &identity_platform_sdk_go.App{
-		ID:          ptrutil.Ptr(src.ID),
-		Name:        ptrutil.Ptr(src.Name),
-		Description: ptrutil.Ptr(src.Description),
+		Id:          src.ID,
+		Name:        src.Name,
+		Description: src.Description,
 		Type:        identity_platform_sdk_go.AppType(src.Type),
 	}
 }
@@ -28,9 +28,9 @@ func ToApp(src *identity_platform_sdk_go.App) *apptypes.App {
 	}
 
 	return &apptypes.App{
-		ID:          src.GetID(),
-		Name:        src.GetName(),
-		Description: src.GetDescription(),
+		ID:          src.GetId(),
+		Name:        ptrutil.Ptr(src.GetName()),
+		Description: ptrutil.Ptr(src.GetDescription()),
 		Type:        apptypes.AppType(src.GetType()),
 	}
 }
