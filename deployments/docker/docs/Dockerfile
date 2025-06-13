@@ -4,6 +4,7 @@ WORKDIR /build
 
 # Generate docs
 COPY docs .
+COPY backend/api/spec/static/api ./static/api
 RUN cd /build && npm install --legacy-peer-deps && npx docusaurus generate-proto-docs && npm run build
 
 # Build final image for running the APIs and docs
