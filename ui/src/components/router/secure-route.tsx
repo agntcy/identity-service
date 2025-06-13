@@ -1,3 +1,8 @@
+/**
+ * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import {SecureRouteProps} from '@/types/okta';
 import * as React from 'react';
 import * as ReactRouterDom from 'react-router-dom';

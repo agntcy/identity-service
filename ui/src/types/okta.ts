@@ -1,3 +1,8 @@
+/**
+ * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import {AccessToken, IDToken, RefreshToken, OktaAuth, SignoutOptions, OktaAuthOptions} from '@okta/okta-auth-js';
 
 export type OnAuthRequiredFunction = (oktaAuth: OktaAuth | undefined) => Promise<void> | void;

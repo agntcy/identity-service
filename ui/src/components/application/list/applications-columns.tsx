@@ -1,3 +1,8 @@
+/**
+ * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import {ColumnDef, Row} from '@tanstack/react-table';
 import {generatePath, Link} from 'react-router-dom';
 import {PATHS} from '@/router/paths';

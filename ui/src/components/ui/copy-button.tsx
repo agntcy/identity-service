@@ -1,3 +1,8 @@
+/**
+ * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import {useCallback, useEffect, useState} from 'react';
 import copy from 'copy-to-clipboard';
 import {Button} from './button';

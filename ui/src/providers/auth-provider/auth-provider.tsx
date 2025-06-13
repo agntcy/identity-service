@@ -1,3 +1,8 @@
+/**
+ * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import React, {useMemo} from 'react';
 import OktaAuth, {SignoutOptions, TokenResponse} from '@okta/okta-auth-js';
 import {createOktaInstance, getRelativeUrl, getSearchParams} from '@/utils/okta';

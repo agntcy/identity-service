@@ -1,3 +1,8 @@
+/**
+ * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import {ArrowDownIcon, ArrowUpIcon, CaretSortIcon, EyeNoneIcon} from '@radix-ui/react-icons';
 import {Column} from '@tanstack/react-table';
 import {cn} from '@/lib/utils';

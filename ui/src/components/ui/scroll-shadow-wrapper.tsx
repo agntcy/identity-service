@@ -1,3 +1,8 @@
+/**
+ * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 // Applies a :before to the ref element when the user scrolls through it
 import {ScrollArea} from '@/components/ui/scroll-area';
 import {cn} from '@/lib/utils';

@@ -1,3 +1,8 @@
+/**
+ * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import {useCallback, useMemo, useState} from 'react';
 import {ConditionalQueryRenderer} from '../../ui/conditional-query-renderer';
 import {Card, CardContent, CardHeader, CardTitle} from '../../ui/card';

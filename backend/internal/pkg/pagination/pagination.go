@@ -1,3 +1,6 @@
+// Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
 package pagination
 
 import identity_platform_shared_sdk_go "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/shared/v1alpha1"

@@ -1,3 +1,8 @@
+/**
+ * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import {Button} from '@/components/ui/button';
 import {Card} from '@/components/ui/card';
 import AgntcyLogo from '@/assets/agntcy-logo.svg';

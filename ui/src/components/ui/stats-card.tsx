@@ -1,3 +1,8 @@
+/**
+ * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import {ReactNode} from 'react';
 import {Card, CardContent, CardTitle} from './card';
 import {VariantProps, cva} from 'class-variance-authority';

@@ -1,3 +1,8 @@
+/**
+ * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import {Cross2Icon} from '@radix-ui/react-icons';
 import {Table} from '@tanstack/react-table';
 import {Button, ButtonProps} from './button';

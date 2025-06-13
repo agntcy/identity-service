@@ -15,10 +15,10 @@ func FromApp(src *apptypes.App) *identity_platform_sdk_go.App {
 	}
 
 	return &identity_platform_sdk_go.App{
-		Id:          src.ID,
+		Id:          ptrutil.Ptr(src.ID),
 		Name:        src.Name,
 		Description: src.Description,
-		Type:        identity_platform_sdk_go.AppType(src.Type),
+		Type:        ptrutil.Ptr(identity_platform_sdk_go.AppType(src.Type)),
 	}
 }
 

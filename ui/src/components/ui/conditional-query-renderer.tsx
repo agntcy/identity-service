@@ -1,3 +1,8 @@
+/**
+ * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import type {ReactNode} from 'react';
 import React from 'react';
 import {LoaderRelative, Loading} from './loading';

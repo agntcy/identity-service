@@ -1,3 +1,8 @@
+/**
+ * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import * as React from 'react';
 import {VariantProps, cva} from 'class-variance-authority';
 import {Button, ButtonProps} from './button';
