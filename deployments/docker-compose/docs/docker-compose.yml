@@ -1,0 +1,12 @@
+---
+name: identity-docs
+services:
+  identity-docs:
+    container_name: identity-docs
+    pull_policy: always
+    build:
+      context: ../../../
+      dockerfile: deployments/docker/docs/Dockerfile
+    restart: always
+    ports:
+      - 3010:80
