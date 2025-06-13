@@ -56,7 +56,7 @@ done
 
 packages=$(echo "$packages" | sed 's/\s$//' | sed 's/^\s//')
 
-cd "${Identity_ROOT}/local/github.com/agntcy/identity"
+cd "${Identity_ROOT}/local/github.com/agntcy/identity/backend"
 
 go get github.com/gogo/protobuf/proto
 go mod vendor
@@ -105,7 +105,7 @@ if [ -n "${packages_comma_separated}" ]; then
 
   for m in $protos; do
     sed -i 's/syntax = "proto2";/syntax = "proto3";/g' "${m}"
-    sed -i 's|go_package = [^ ]\+|go_package = "github.com/agntcy/identity-platform/backend/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_go";|g' "${m}"
+    sed -i 's|go_package = [^ ]\+|go_package = "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_go";|g' "${m}"
   done
 
   for package in $packages; do

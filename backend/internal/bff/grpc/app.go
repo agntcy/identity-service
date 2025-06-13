@@ -4,8 +4,8 @@
 package grpc
 
 import (
+	identity_platform_sdk_go "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1"
 	"github.com/agntcy/identity-platform/internal/bff"
-	identity_platform_sdk_go "github.com/agntcy/identity/platform/api/server/agntcy/identity/platform/v1alpha1"
 )
 
 type appService struct {

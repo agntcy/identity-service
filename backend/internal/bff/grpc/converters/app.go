@@ -4,9 +4,9 @@
 package converters
 
 import (
+	platform_sdk_go "github.com/agntcy/identity-platform/backend/api/server/agntcy/identity/platform/v1alpha1"
 	apptypes "github.com/agntcy/identity-platform/internal/core/app/types"
 	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
-	platform_sdk_go "github.com/agntcy/identity/platform/api/server/agntcy/identity/platform/v1alpha1"
 )
 
 func FromApp(src *apptypes.App) *platform_sdk_go.App {

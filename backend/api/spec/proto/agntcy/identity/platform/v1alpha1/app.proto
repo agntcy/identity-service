@@ -7,7 +7,7 @@ package agntcy.identity.platform.v1alpha1;
 
 import "google/api/field_behavior.proto";
 
-option go_package = "github.com/agntcy/identity-platform/backend/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_go";
+option go_package = "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_go";
 
 // App Type
 enum AppType {

@@ -4,7 +4,7 @@
 package bff
 
 import (
-	appcore "github.com/agntcy/identity/platform/internal/core/app"
+	appcore "github.com/agntcy/identity-platform/internal/core/app"
 )
 
 type AppService interface {
