@@ -101,7 +101,7 @@ message ListAppsResponse {
   repeated App apps = 1;
 
   // Pagination response.
-  optional agntcy.identity.shared.v1alpha1.PagedResponse pagination = 2;
+  optional agntcy.identity.platform.shared.v1alpha1.PagedResponse pagination = 2;
 }
 
 message ListAppsRequest {

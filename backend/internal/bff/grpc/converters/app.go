@@ -4,25 +4,25 @@
 package converters
 
 import (
-	platform_sdk_go "github.com/agntcy/identity-platform/backend/api/server/agntcy/identity/platform/v1alpha1"
+	identity_platform_sdk_go "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1"
 	apptypes "github.com/agntcy/identity-platform/internal/core/app/types"
 	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
 )
 
-func FromApp(src *apptypes.App) *platform_sdk_go.App {
+func FromApp(src *apptypes.App) *identity_platform_sdk_go.App {
 	if src == nil {
 		return nil
 	}
 
-	return &platform_sdk_go.App{
+	return &identity_platform_sdk_go.App{
 		ID:          ptrutil.Ptr(src.ID),
 		Name:        ptrutil.Ptr(src.Name),
 		Description: ptrutil.Ptr(src.Description),
-		Type:        platform_sdk_go.AppType(src.Type),
+		Type:        identity_platform_sdk_go.AppType(src.Type),
 	}
 }
 
-func ToApp(src *platform_sdk_go.App) *apptypes.App {
+func ToApp(src *identity_platform_sdk_go.App) *apptypes.App {
 	if src == nil {
 		return nil
 	}
