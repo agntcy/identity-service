@@ -1,0 +1,38 @@
+---
+title: mcp.proto
+hide_title: true
+---
+
+import { ProtoMessage, ProtoServiceMethod, ProtoEnum } from '@theme/ProtoFile';
+
+# `mcp.proto`
+_**path** agntcy/identity/core/v1alpha1/mcp.proto_
+
+_**package** agntcy.identity.core.v1alpha1_
+
+
+
+---
+
+## Messages
+
+
+### `McpResource`
+<ProtoMessage key={0} message={{"name":"McpResource","longName":"McpResource","fullName":"agntcy.identity.core.v1alpha1.McpResource","description":"McpResource represents a resource available on the MCP server.\nThis can be a file, a database, or any other type of resource.","hasExtensions":false,"hasFields":true,"hasOneofs":true,"extensions":[],"fields":[{"name":"name","description":"Name of the resource.","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_name","defaultValue":""},{"name":"description","description":"Description of the resource.","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_description","defaultValue":""},{"name":"uri","description":"URI of the resource.","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_uri","defaultValue":""}]}} />
+
+
+### `McpServer`
+<ProtoMessage key={1} message={{"name":"McpServer","longName":"McpServer","fullName":"agntcy.identity.core.v1alpha1.McpServer","description":"McpServer represents an MCP server that provides a set of tools and resources\nThe server needs to be deployed at a specific URL","hasExtensions":false,"hasFields":true,"hasOneofs":true,"extensions":[],"fields":[{"name":"name","description":"Name of the server.","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_name","defaultValue":""},{"name":"url","description":"Url of the deployed server.","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_url","defaultValue":""},{"name":"tools","description":"The tools available on the server.","label":"repeated","type":"McpTool","longType":"McpTool","fullType":"agntcy.identity.core.v1alpha1.McpTool","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":"","typeLink":"/protodocs/agntcy/identity/core/v1alpha1/mcp.proto#mcptool"},{"name":"resources","description":"The resources available on the server.","label":"repeated","type":"McpResource","longType":"McpResource","fullType":"agntcy.identity.core.v1alpha1.McpResource","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":"","typeLink":"/protodocs/agntcy/identity/core/v1alpha1/mcp.proto#mcpresource"}]}} />
+
+
+### `McpTool`
+<ProtoMessage key={2} message={{"name":"McpTool","longName":"McpTool","fullName":"agntcy.identity.core.v1alpha1.McpTool","description":"McpTool represents a tool available on the MCP server.\nThis can be a function with name, description, and parameters.","hasExtensions":false,"hasFields":true,"hasOneofs":true,"extensions":[],"fields":[{"name":"name","description":"Name of the tool.","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_name","defaultValue":""},{"name":"description","description":"Description of the tool.","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_description","defaultValue":""},{"name":"parameters","description":"Parameters of the tool.\nThis is a JSON object that describes the parameters","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_parameters","defaultValue":""},{"name":"oauth2_metadata","description":"Oauth2 Protected Resource metadata.\nThis will correspond to a resource on the server.\nOr can be specified or overridden by the auth policies.\nThis complies with RFC 9728.","label":"optional","type":"Oauth2Metadata","longType":"Oauth2Metadata","fullType":"agntcy.identity.core.v1alpha1.Oauth2Metadata","ismap":false,"isoneof":true,"oneofdecl":"_oauth2_metadata","defaultValue":"","typeLink":"/protodocs/agntcy/identity/core/v1alpha1/mcp.proto#oauth2metadata"}]}} />
+
+
+### `Oauth2Metadata`
+<ProtoMessage key={3} message={{"name":"Oauth2Metadata","longName":"Oauth2Metadata","fullName":"agntcy.identity.core.v1alpha1.Oauth2Metadata","description":"Oauth2Metadata represents the OAuth2 metadata for a protected resource.\nThis complies with RFC 9728.","hasExtensions":false,"hasFields":true,"hasOneofs":true,"extensions":[],"fields":[{"name":"resource","description":"The resource identifier.","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_resource","defaultValue":""},{"name":"authorization_servers","description":"Authorization servers for the OAuth2 server.\nThis is a list of strings, such as \"https://example.com/oauth2/authorize\".","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_authorization_servers","defaultValue":""},{"name":"bearer_methods_supported","description":"Bearer methods supported\nThis is a list of strings, such as \"client_credentials\" or \"authorization_code\".","label":"repeated","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":""},{"name":"scopes_supported","description":"Scopes supported\nThis is a list of strings, such as \"openid\" or \"profile\".","label":"repeated","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":""}]}} />
+
+---
+
+
+  

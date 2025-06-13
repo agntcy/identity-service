@@ -7,7 +7,7 @@ set -o errexit
 set -o nounset
 
 PROTO_PACKAGE_NAME="agntcy.identity.platform.v1alpha1"
-PROTO_PLATFORM_FILE_PATH="agntcy/identity/platform"
+PROTO_PLATFORM_FILE_PATH="agntcy/identity/platform/v1alpha1/"
 
 get_module_name_from_package() {
   dirname "$1" | xargs basename
@@ -110,11 +110,10 @@ if [ -n "${packages_comma_separated}" ]; then
 
   for package in $packages; do
     proto_file=$(get_module_name_from_package "${package}")
-    package=$(echo "$package" | sed 's|\.|\\.|g')
-    import=$(echo "$package" | sed 's|/|\\.|g')
+    import=$(echo "$package" | sed 's|\.|\\.|g')
     for m in $protos; do
-      sed -i "s|${import}|${PROTO_PACKAGE_NAME}|g" "${m}"
-      sed -i "s|${package}/generated.proto|${PROTO_PLATFORM_FILE_PATH}${proto_file}.proto|g" "${m}"
+      sed -i "s|^package.*|package ${PROTO_PACKAGE_NAME};|g" "${m}"
+      sed -i "s|${import}/generated.proto|${PROTO_PLATFORM_FILE_PATH}${proto_file}.proto|g" "${m}"
     done
   done
 
@@ -130,9 +129,9 @@ echo "| |_/ / |_| | |     | |_\ \  __/ | | |  __/ | | (_| | ||  __/"
 echo "\____/ \___/\_|      \____/\___|_| |_|\___|_|  \__,_|\__\___|"
 echo ""
 
-rm -rvf "${Identity_ROOT}/code/identity/api/server" 2>&1 || true
+rm -rvf "${Identity_ROOT}/code/backend/api/server" 2>&1 || true
 
-cd "${Identity_ROOT}/code/api/spec"
+cd "${Identity_ROOT}/code/backend/api/spec"
 
 # Format
 /usr/local/bin/buf format -w

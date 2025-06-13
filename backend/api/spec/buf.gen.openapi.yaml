@@ -6,7 +6,7 @@ managed:
   enabled: true
 plugins:
   - name: openapi
-    out: .
+    out: ./backend
     opt:
       - default_response=true
       - enum_type=string

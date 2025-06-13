@@ -1,0 +1,55 @@
+---
+title: issuer_service.proto
+hide_title: true
+---
+
+import { ProtoMessage, ProtoServiceMethod, ProtoEnum } from '@theme/ProtoFile';
+
+# `issuer_service.proto`
+_**path** agntcy/identity/node/v1alpha1/issuer_service.proto_
+
+_**package** agntcy.identity.node.v1alpha1_
+
+
+
+---
+
+## Messages
+
+
+### `GetIssuerWellKnownRequest`
+<ProtoMessage key={0} message={{"name":"GetIssuerWellKnownRequest","longName":"GetIssuerWellKnownRequest","fullName":"agntcy.identity.node.v1alpha1.GetIssuerWellKnownRequest","description":"Request to get the well-known JWKS document of an issuer","hasExtensions":false,"hasFields":true,"hasOneofs":false,"extensions":[],"fields":[{"name":"common_name","description":"The common name of the issuer","label":"","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":""}]}} />
+
+
+### `GetIssuerWellKnownResponse`
+<ProtoMessage key={1} message={{"name":"GetIssuerWellKnownResponse","longName":"GetIssuerWellKnownResponse","fullName":"agntcy.identity.node.v1alpha1.GetIssuerWellKnownResponse","description":"Returns the content of the well-known JWKS document","hasExtensions":false,"hasFields":true,"hasOneofs":false,"extensions":[],"fields":[{"name":"jwks","description":"The well-known Json Web Key Set (JWKS) document","label":"","type":"Jwks","longType":"agntcy.identity.core.v1alpha1.Jwks","fullType":"agntcy.identity.core.v1alpha1.Jwks","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":"","typeLink":"/protodocs/agntcy/identity/core/v1alpha1/id.proto#jwks"}]}} />
+
+
+### `RegisterIssuerRequest`
+<ProtoMessage key={2} message={{"name":"RegisterIssuerRequest","longName":"RegisterIssuerRequest","fullName":"agntcy.identity.node.v1alpha1.RegisterIssuerRequest","description":"Request to register an issuer","hasExtensions":false,"hasFields":true,"hasOneofs":true,"extensions":[],"fields":[{"name":"issuer","description":"The Issuer to register.","label":"","type":"Issuer","longType":"agntcy.identity.core.v1alpha1.Issuer","fullType":"agntcy.identity.core.v1alpha1.Issuer","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":"","typeLink":"/protodocs/agntcy/identity/core/v1alpha1/issuer.proto#issuer"},{"name":"proof","description":"Optional Proof of ownership of the Issuer's common_name\nThis should be provided when the Issuer is provided by an external IdP\nExample: a signed JWT","label":"optional","type":"Proof","longType":"agntcy.identity.core.v1alpha1.Proof","fullType":"agntcy.identity.core.v1alpha1.Proof","ismap":false,"isoneof":true,"oneofdecl":"_proof","defaultValue":"","typeLink":"/protodocs/agntcy/identity/core/v1alpha1/vc.proto#proof"}]}} />
+
+
+### `RegisterIssuerResponse`
+<ProtoMessage key={3} message={{"name":"RegisterIssuerResponse","longName":"RegisterIssuerResponse","fullName":"agntcy.identity.node.v1alpha1.RegisterIssuerResponse","description":"Returns a registration response for the issuer\n\nEmpty response","hasExtensions":false,"hasFields":false,"hasOneofs":false,"extensions":[],"fields":[]}} />
+
+---
+## Services
+
+
+### `IssuerService`
+
+IssuerService is the service that provides ISSUER node operations.
+
+
+#### `Register`
+<ProtoServiceMethod key={'Register-0'} method={{"name":"Register","description":"Register an issuer by providing the issuer details","requestType":"RegisterIssuerRequest","requestLongType":"RegisterIssuerRequest","requestFullType":"agntcy.identity.node.v1alpha1.RegisterIssuerRequest","requestStreaming":false,"responseType":"RegisterIssuerResponse","responseLongType":"RegisterIssuerResponse","responseFullType":"agntcy.identity.node.v1alpha1.RegisterIssuerResponse","responseStreaming":false,"options":{"google.api.http":{"rules":[{"method":"POST","pattern":"/v1alpha1/issuer/register","body":"*"}]}},"requestTypeLink":"/protodocs/agntcy/identity/node/v1alpha1/issuer_service.proto#registerissuerrequest","responseTypeLink":"/protodocs/agntcy/identity/node/v1alpha1/issuer_service.proto#registerissuerresponse"}} />
+
+
+#### `GetWellKnown`
+<ProtoServiceMethod key={'GetWellKnown-1'} method={{"name":"GetWellKnown","description":"Returns the well-known document content for an issuer in\nJson Web Key Set (JWKS) format","requestType":"GetIssuerWellKnownRequest","requestLongType":"GetIssuerWellKnownRequest","requestFullType":"agntcy.identity.node.v1alpha1.GetIssuerWellKnownRequest","requestStreaming":false,"responseType":"GetIssuerWellKnownResponse","responseLongType":"GetIssuerWellKnownResponse","responseFullType":"agntcy.identity.node.v1alpha1.GetIssuerWellKnownResponse","responseStreaming":false,"options":{"google.api.http":{"rules":[{"method":"GET","pattern":"/v1alpha1/issuer/{common_name}/.well-known/jwks.json"}]}},"requestTypeLink":"/protodocs/agntcy/identity/node/v1alpha1/issuer_service.proto#getissuerwellknownrequest","responseTypeLink":"/protodocs/agntcy/identity/node/v1alpha1/issuer_service.proto#getissuerwellknownresponse"}} />
+
+
+---
+
+
+  

@@ -1,0 +1,55 @@
+---
+title: id_service.proto
+hide_title: true
+---
+
+import { ProtoMessage, ProtoServiceMethod, ProtoEnum } from '@theme/ProtoFile';
+
+# `id_service.proto`
+_**path** agntcy/identity/node/v1alpha1/id_service.proto_
+
+_**package** agntcy.identity.node.v1alpha1_
+
+
+
+---
+
+## Messages
+
+
+### `GenerateRequest`
+<ProtoMessage key={0} message={{"name":"GenerateRequest","longName":"GenerateRequest","fullName":"agntcy.identity.node.v1alpha1.GenerateRequest","description":"Generate an Id and its corresponding ResolverMetadata for the specified Issuer\nFor external IdPs, the Issuer should be provided with a Proof of ownership\nof the Issuer's provided id","hasExtensions":false,"hasFields":true,"hasOneofs":true,"extensions":[],"fields":[{"name":"issuer","description":"The Issuer details","label":"","type":"Issuer","longType":"agntcy.identity.core.v1alpha1.Issuer","fullType":"agntcy.identity.core.v1alpha1.Issuer","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":"","typeLink":"/protodocs/agntcy/identity/core/v1alpha1/issuer.proto#issuer"},{"name":"proof","description":"Optional Proof of ownership of the Issuer's provided id\nThis should be provided when the Issuer is provided by an external IdP\nExample: a signed JWT","label":"optional","type":"Proof","longType":"agntcy.identity.core.v1alpha1.Proof","fullType":"agntcy.identity.core.v1alpha1.Proof","ismap":false,"isoneof":true,"oneofdecl":"_proof","defaultValue":"","typeLink":"/protodocs/agntcy/identity/core/v1alpha1/vc.proto#proof"}]}} />
+
+
+### `GenerateResponse`
+<ProtoMessage key={1} message={{"name":"GenerateResponse","longName":"GenerateResponse","fullName":"agntcy.identity.node.v1alpha1.GenerateResponse","description":"Returns the Generated Id and its corresponding ResolverMetadata","hasExtensions":false,"hasFields":true,"hasOneofs":false,"extensions":[],"fields":[{"name":"resolver_metadata","description":"The ResolverMetadata corresponding to the generated Id","label":"","type":"ResolverMetadata","longType":"agntcy.identity.core.v1alpha1.ResolverMetadata","fullType":"agntcy.identity.core.v1alpha1.ResolverMetadata","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":"","typeLink":"/protodocs/agntcy/identity/core/v1alpha1/id.proto#resolvermetadata"}]}} />
+
+
+### `ResolveRequest`
+<ProtoMessage key={2} message={{"name":"ResolveRequest","longName":"ResolveRequest","fullName":"agntcy.identity.node.v1alpha1.ResolveRequest","description":"Resolve a specified Id to its corresponding ResolverMetadata","hasExtensions":false,"hasFields":true,"hasOneofs":false,"extensions":[],"fields":[{"name":"id","description":"Id is the identifier.","label":"","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":""}]}} />
+
+
+### `ResolveResponse`
+<ProtoMessage key={3} message={{"name":"ResolveResponse","longName":"ResolveResponse","fullName":"agntcy.identity.node.v1alpha1.ResolveResponse","description":"Returns the ResolverMetadata corresponding to the specified Id","hasExtensions":false,"hasFields":true,"hasOneofs":false,"extensions":[],"fields":[{"name":"resolver_metadata","description":"The ResolverMetadata resolved from the Id","label":"","type":"ResolverMetadata","longType":"agntcy.identity.core.v1alpha1.ResolverMetadata","fullType":"agntcy.identity.core.v1alpha1.ResolverMetadata","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":"","typeLink":"/protodocs/agntcy/identity/core/v1alpha1/id.proto#resolvermetadata"}]}} />
+
+---
+## Services
+
+
+### `IdService`
+
+IdService is the service that provides ID operations.
+
+
+#### `Generate`
+<ProtoServiceMethod key={'Generate-0'} method={{"name":"Generate","description":"Generate an Id and its corresponding ResolverMetadata for the specified Issuer","requestType":"GenerateRequest","requestLongType":"GenerateRequest","requestFullType":"agntcy.identity.node.v1alpha1.GenerateRequest","requestStreaming":false,"responseType":"GenerateResponse","responseLongType":"GenerateResponse","responseFullType":"agntcy.identity.node.v1alpha1.GenerateResponse","responseStreaming":false,"options":{"google.api.http":{"rules":[{"method":"POST","pattern":"/v1alpha1/id/generate","body":"*"}]}},"requestTypeLink":"/protodocs/agntcy/identity/node/v1alpha1/id_service.proto#generaterequest","responseTypeLink":"/protodocs/agntcy/identity/node/v1alpha1/id_service.proto#generateresponse"}} />
+
+
+#### `Resolve`
+<ProtoServiceMethod key={'Resolve-1'} method={{"name":"Resolve","description":"Resolve a specified Id to its corresponding ResolverMetadata","requestType":"ResolveRequest","requestLongType":"ResolveRequest","requestFullType":"agntcy.identity.node.v1alpha1.ResolveRequest","requestStreaming":false,"responseType":"ResolveResponse","responseLongType":"ResolveResponse","responseFullType":"agntcy.identity.node.v1alpha1.ResolveResponse","responseStreaming":false,"options":{"google.api.http":{"rules":[{"method":"POST","pattern":"/v1alpha1/id/resolve","body":"*"}]}},"requestTypeLink":"/protodocs/agntcy/identity/node/v1alpha1/id_service.proto#resolverequest","responseTypeLink":"/protodocs/agntcy/identity/node/v1alpha1/id_service.proto#resolveresponse"}} />
+
+
+---
+
+
+  

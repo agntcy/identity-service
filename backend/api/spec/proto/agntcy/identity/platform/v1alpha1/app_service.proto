@@ -16,15 +16,11 @@ option go_package = "github.com/agntcy/identity-platform/api/server/agntcy/ident
 
 // AppService manages apps.
 service AppService {
-  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_tag) = {
-    name: "App";
-  };
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_tag) = {name: "App"};
 
   // List Apps.
   rpc ListApps(ListAppsRequest) returns (ListAppsResponse) {
-    option (google.api.http) = {
-            get: "/v1alpha1/apps"
-        };
+    option (google.api.http) = {get: "/v1alpha1/apps"};
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       operation_id: "ListApps";
       summary: "List Apps";
@@ -33,20 +29,16 @@ service AppService {
 
   // Get apps count per type.
   rpc GetAppsCount(GetAppsCountRequest) returns (GetAppsCountResponse) {
-    option (google.api.http) = {
-      get: "/v1alpha1/apps/all/count"
-    };
+    option (google.api.http) = {get: "/v1alpha1/apps/all/count"};
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-    operation_id: "GetAppsCount";
-    summary: "Get apps count per type";
+      operation_id: "GetAppsCount";
+      summary: "Get apps count per type";
     };
   }
 
   // Get App by id
   rpc GetApp(GetAppRequest) returns (App) {
-    option (google.api.http) = {
-            get: "/v1alpha1/apps/{app_id}"
-        };
+    option (google.api.http) = {get: "/v1alpha1/apps/{app_id}"};
 
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       operation_id: "GetApp";
@@ -54,13 +46,12 @@ service AppService {
     };
   }
 
-
   // Create a new App.
   rpc CreateApp(CreateAppRequest) returns (App) {
     option (google.api.http) = {
-            post: "/v1alpha1/apps"
-            body: "app"
-        };
+      post: "/v1alpha1/apps"
+      body: "app"
+    };
 
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       operation_id: "CreateApp";
@@ -71,8 +62,8 @@ service AppService {
   // Update an App.
   rpc UpdateApp(UpdateAppRequest) returns (App) {
     option (google.api.http) = {
-        patch: "/v1alpha1/apps/{app_id}"
-        body: "app"
+      patch: "/v1alpha1/apps/{app_id}"
+      body: "app"
     };
 
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -85,9 +76,7 @@ service AppService {
 
   // Delete an existing App.
   rpc DeleteApp(DeleteAppRequest) returns (google.protobuf.Empty) {
-    option (google.api.http) = {
-            delete: "/v1alpha1/apps/{app_id}"
-        };
+    option (google.api.http) = {delete: "/v1alpha1/apps/{app_id}"};
 
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       operation_id: "DeleteApp";
@@ -123,8 +112,7 @@ message CreateAppRequest {
   App app = 1;
 }
 
-message GetAppsCountRequest {
-}
+message GetAppsCountRequest {}
 
 message AppTypeCountEntry {
   // The type of the App

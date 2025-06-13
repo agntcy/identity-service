@@ -1,0 +1,51 @@
+---
+title: local_service.proto
+hide_title: true
+---
+
+import { ProtoMessage, ProtoServiceMethod, ProtoEnum } from '@theme/ProtoFile';
+
+# `local_service.proto`
+_**path** agntcy/identity/issuer/v1alpha1/local_service.proto_
+
+_**package** agntcy.identity.issuer.v1alpha1_
+
+
+
+---
+
+## Messages
+
+
+### `IssueVCRequest`
+<ProtoMessage key={0} message={{"name":"IssueVCRequest","longName":"IssueVCRequest","fullName":"agntcy.identity.issuer.v1alpha1.IssueVCRequest","description":"Issues a Verifiable Credential in a specific Envelope Type","hasExtensions":false,"hasFields":true,"hasOneofs":false,"extensions":[],"fields":[{"name":"id","description":"ID is the identifier.","label":"","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":""},{"name":"content","description":"Content of the VC","label":"","type":"CredentialContent","longType":"agntcy.identity.core.v1alpha1.CredentialContent","fullType":"agntcy.identity.core.v1alpha1.CredentialContent","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":"","typeLink":"/protodocs/agntcy/identity/core/v1alpha1/vc.proto#credentialcontent"},{"name":"envelope_type","description":"Envelope type","label":"","type":"CredentialEnvelopeType","longType":"agntcy.identity.core.v1alpha1.CredentialEnvelopeType","fullType":"agntcy.identity.core.v1alpha1.CredentialEnvelopeType","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":"","typeLink":"/protodocs/agntcy/identity/core/v1alpha1/vc.proto#credentialenvelopetype"}]}} />
+
+
+### `IssueVCResponse`
+<ProtoMessage key={1} message={{"name":"IssueVCResponse","longName":"IssueVCResponse","fullName":"agntcy.identity.issuer.v1alpha1.IssueVCResponse","description":"Returns the Verifiable Credential in the requested Envelope Type","hasExtensions":false,"hasFields":true,"hasOneofs":false,"extensions":[],"fields":[{"name":"vc","description":"The issued VC","label":"","type":"EnvelopedCredential","longType":"agntcy.identity.core.v1alpha1.EnvelopedCredential","fullType":"agntcy.identity.core.v1alpha1.EnvelopedCredential","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":"","typeLink":"/protodocs/agntcy/identity/core/v1alpha1/vc.proto#envelopedcredential"}]}} />
+
+
+### `KeyGenResponse`
+<ProtoMessage key={2} message={{"name":"KeyGenResponse","longName":"KeyGenResponse","fullName":"agntcy.identity.issuer.v1alpha1.KeyGenResponse","description":"Returns the generated keypair in Json Web Key (JWK) format","hasExtensions":false,"hasFields":true,"hasOneofs":false,"extensions":[],"fields":[{"name":"keypair","description":"The generated keypair","label":"","type":"Jwk","longType":"agntcy.identity.core.v1alpha1.Jwk","fullType":"agntcy.identity.core.v1alpha1.Jwk","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":"","typeLink":"/protodocs/agntcy/identity/core/v1alpha1/id.proto#jwk"}]}} />
+
+---
+## Services
+
+
+### `LocalService`
+
+LocalService is the service that provides LOCAL issuer operations.
+
+
+#### `KeyGen`
+<ProtoServiceMethod key={'KeyGen-0'} method={{"name":"KeyGen","description":"Generate a keypair in Json Web Key (JWK) format","requestType":"Empty","requestLongType":".google.protobuf.Empty","requestFullType":"google.protobuf.Empty","requestStreaming":false,"responseType":"KeyGenResponse","responseLongType":"KeyGenResponse","responseFullType":"agntcy.identity.issuer.v1alpha1.KeyGenResponse","responseStreaming":false,"responseTypeLink":"/protodocs/agntcy/identity/issuer/v1alpha1/local_service.proto#keygenresponse"}} />
+
+
+#### `IssueVC`
+<ProtoServiceMethod key={'IssueVC-1'} method={{"name":"IssueVC","description":"Issue a Verifiable Credential in a specific Envelope Type","requestType":"IssueVCRequest","requestLongType":"IssueVCRequest","requestFullType":"agntcy.identity.issuer.v1alpha1.IssueVCRequest","requestStreaming":false,"responseType":"IssueVCResponse","responseLongType":"IssueVCResponse","responseFullType":"agntcy.identity.issuer.v1alpha1.IssueVCResponse","responseStreaming":false,"requestTypeLink":"/protodocs/agntcy/identity/issuer/v1alpha1/local_service.proto#issuevcrequest","responseTypeLink":"/protodocs/agntcy/identity/issuer/v1alpha1/local_service.proto#issuevcresponse"}} />
+
+
+---
+
+
+  

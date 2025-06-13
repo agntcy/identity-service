@@ -2,7 +2,7 @@
 
 syntax = "proto3";
 
-package github.com.agntcy.identity_platform.internal.core.app.types;
+package agntcy.identity.platform.v1alpha1;
 
 // Package-wide variables from generator "generated".
 option go_package = "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_go";
@@ -22,7 +22,6 @@ message App {
   optional AppType type = 6;
 }
 
-
 // App Type
 enum AppType {
   // Unspecified Envelope Type.
@@ -34,4 +33,3 @@ enum AppType {
   // Agent MCP Server App Type.
   APP_TYPE_AGENT_MCP_SERVER = 3;
 }
-

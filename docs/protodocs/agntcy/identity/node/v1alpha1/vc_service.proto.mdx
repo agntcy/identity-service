@@ -1,0 +1,71 @@
+---
+title: vc_service.proto
+hide_title: true
+---
+
+import { ProtoMessage, ProtoServiceMethod, ProtoEnum } from '@theme/ProtoFile';
+
+# `vc_service.proto`
+_**path** agntcy/identity/node/v1alpha1/vc_service.proto_
+
+_**package** agntcy.identity.node.v1alpha1_
+
+
+
+---
+
+## Messages
+
+
+### `GetVcWellKnownRequest`
+<ProtoMessage key={0} message={{"name":"GetVcWellKnownRequest","longName":"GetVcWellKnownRequest","fullName":"agntcy.identity.node.v1alpha1.GetVcWellKnownRequest","description":"Requests the well-known VCs for an Id","hasExtensions":false,"hasFields":true,"hasOneofs":false,"extensions":[],"fields":[{"name":"id","description":"The identifier.","label":"","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":""}]}} />
+
+
+### `GetVcWellKnownResponse`
+<ProtoMessage key={1} message={{"name":"GetVcWellKnownResponse","longName":"GetVcWellKnownResponse","fullName":"agntcy.identity.node.v1alpha1.GetVcWellKnownResponse","description":"Returns the well-known VCs for an Id","hasExtensions":false,"hasFields":true,"hasOneofs":false,"extensions":[],"fields":[{"name":"vcs","description":"The list of VCs for the specified Id","label":"repeated","type":"EnvelopedCredential","longType":"agntcy.identity.core.v1alpha1.EnvelopedCredential","fullType":"agntcy.identity.core.v1alpha1.EnvelopedCredential","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":"","typeLink":"/protodocs/agntcy/identity/core/v1alpha1/vc.proto#envelopedcredential"}]}} />
+
+
+### `PublishRequest`
+<ProtoMessage key={2} message={{"name":"PublishRequest","longName":"PublishRequest","fullName":"agntcy.identity.node.v1alpha1.PublishRequest","description":"Request to publish an issued Verifiable Credential","hasExtensions":false,"hasFields":true,"hasOneofs":true,"extensions":[],"fields":[{"name":"vc","description":"The Verifiable Credential to publish","label":"","type":"EnvelopedCredential","longType":"agntcy.identity.core.v1alpha1.EnvelopedCredential","fullType":"agntcy.identity.core.v1alpha1.EnvelopedCredential","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":"","typeLink":"/protodocs/agntcy/identity/core/v1alpha1/vc.proto#envelopedcredential"},{"name":"proof","description":"Optional Proof of ownership of the Issuer's ResolverMetadata\nThis should be provided when the Issuer is provided by an external IdP\nExample: a signed JWT","label":"optional","type":"Proof","longType":"agntcy.identity.core.v1alpha1.Proof","fullType":"agntcy.identity.core.v1alpha1.Proof","ismap":false,"isoneof":true,"oneofdecl":"_proof","defaultValue":"","typeLink":"/protodocs/agntcy/identity/core/v1alpha1/vc.proto#proof"}]}} />
+
+
+### `SearchRequest`
+<ProtoMessage key={3} message={{"name":"SearchRequest","longName":"SearchRequest","fullName":"agntcy.identity.node.v1alpha1.SearchRequest","description":"Request to search for VCs based on the specified criteria","hasExtensions":false,"hasFields":true,"hasOneofs":false,"extensions":[],"fields":[{"name":"id","description":"ID is the identifier.","label":"","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":""},{"name":"schema","description":"Schema is the schema of the credential contained in the VC","label":"","type":"CredentialSchema","longType":"agntcy.identity.core.v1alpha1.CredentialSchema","fullType":"agntcy.identity.core.v1alpha1.CredentialSchema","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":"","typeLink":"/protodocs/agntcy/identity/core/v1alpha1/vc.proto#credentialschema"},{"name":"content","description":"The credential content representation in JSON-LD format","label":"","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":""}]}} />
+
+
+### `SearchResponse`
+<ProtoMessage key={4} message={{"name":"SearchResponse","longName":"SearchResponse","fullName":"agntcy.identity.node.v1alpha1.SearchResponse","description":"Returns the VCs that match the search criteria","hasExtensions":false,"hasFields":true,"hasOneofs":false,"extensions":[],"fields":[{"name":"vcs","description":"The list of VCs that match the search criteria","label":"repeated","type":"EnvelopedCredential","longType":"agntcy.identity.core.v1alpha1.EnvelopedCredential","fullType":"agntcy.identity.core.v1alpha1.EnvelopedCredential","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":"","typeLink":"/protodocs/agntcy/identity/core/v1alpha1/vc.proto#envelopedcredential"}]}} />
+
+
+### `VerifyRequest`
+<ProtoMessage key={5} message={{"name":"VerifyRequest","longName":"VerifyRequest","fullName":"agntcy.identity.node.v1alpha1.VerifyRequest","description":"Request to verify an existing Verifiable Credential","hasExtensions":false,"hasFields":true,"hasOneofs":false,"extensions":[],"fields":[{"name":"vc","description":"The Verifiable Credential to verify","label":"","type":"EnvelopedCredential","longType":"agntcy.identity.core.v1alpha1.EnvelopedCredential","fullType":"agntcy.identity.core.v1alpha1.EnvelopedCredential","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":"","typeLink":"/protodocs/agntcy/identity/core/v1alpha1/vc.proto#envelopedcredential"}]}} />
+
+---
+## Services
+
+
+### `VcService`
+
+VC is the service that provides VC operations.
+
+
+#### `Publish`
+<ProtoServiceMethod key={'Publish-0'} method={{"name":"Publish","description":"Publish an issued Verifiable Credential","requestType":"PublishRequest","requestLongType":"PublishRequest","requestFullType":"agntcy.identity.node.v1alpha1.PublishRequest","requestStreaming":false,"responseType":"Empty","responseLongType":".google.protobuf.Empty","responseFullType":"google.protobuf.Empty","responseStreaming":false,"options":{"google.api.http":{"rules":[{"method":"POST","pattern":"/v1alpha1/vc/publish","body":"*"}]}},"requestTypeLink":"/protodocs/agntcy/identity/node/v1alpha1/vc_service.proto#publishrequest"}} />
+
+
+#### `Verify`
+<ProtoServiceMethod key={'Verify-1'} method={{"name":"Verify","description":"Verify an existing Verifiable Credential","requestType":"VerifyRequest","requestLongType":"VerifyRequest","requestFullType":"agntcy.identity.node.v1alpha1.VerifyRequest","requestStreaming":false,"responseType":"Empty","responseLongType":".google.protobuf.Empty","responseFullType":"google.protobuf.Empty","responseStreaming":false,"options":{"google.api.http":{"rules":[{"method":"POST","pattern":"/v1alpha1/vc/verify","body":"*"}]}},"requestTypeLink":"/protodocs/agntcy/identity/node/v1alpha1/vc_service.proto#verifyrequest"}} />
+
+
+#### `GetWellKnown`
+<ProtoServiceMethod key={'GetWellKnown-2'} method={{"name":"GetWellKnown","description":"Returns the well-known Verifiable Credentials for the specified Id","requestType":"GetVcWellKnownRequest","requestLongType":"GetVcWellKnownRequest","requestFullType":"agntcy.identity.node.v1alpha1.GetVcWellKnownRequest","requestStreaming":false,"responseType":"GetVcWellKnownResponse","responseLongType":"GetVcWellKnownResponse","responseFullType":"agntcy.identity.node.v1alpha1.GetVcWellKnownResponse","responseStreaming":false,"options":{"google.api.http":{"rules":[{"method":"GET","pattern":"/v1alpha1/vc/{id}/.well-known/vcs.json"}]}},"requestTypeLink":"/protodocs/agntcy/identity/node/v1alpha1/vc_service.proto#getvcwellknownrequest","responseTypeLink":"/protodocs/agntcy/identity/node/v1alpha1/vc_service.proto#getvcwellknownresponse"}} />
+
+
+#### `Search`
+<ProtoServiceMethod key={'Search-3'} method={{"name":"Search","description":"Search for Verifiable Credentials based on the specified criteria","requestType":"SearchRequest","requestLongType":"SearchRequest","requestFullType":"agntcy.identity.node.v1alpha1.SearchRequest","requestStreaming":false,"responseType":"SearchResponse","responseLongType":"SearchResponse","responseFullType":"agntcy.identity.node.v1alpha1.SearchResponse","responseStreaming":false,"options":{"google.api.http":{"rules":[{"method":"POST","pattern":"/v1alpha1/vc/search","body":"*"}]}},"requestTypeLink":"/protodocs/agntcy/identity/node/v1alpha1/vc_service.proto#searchrequest","responseTypeLink":"/protodocs/agntcy/identity/node/v1alpha1/vc_service.proto#searchresponse"}} />
+
+
+---
+
+
+  
