@@ -9,6 +9,7 @@ import (
 
 type App struct {
 	ID          string        `gorm:"primaryKey"`
+	TenantID    string        `gorm:"not null;type:varchar(256);"`
 	Name        *string       `gorm:"not null;type:varchar(256);"`
 	Description *string       `gorm:"not null;type:varchar(256);"`
 	Type        types.AppType `gorm:"not null;type:varchar(256);default:'APP_TYPE_UNSPECIFIED';"`

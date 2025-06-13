@@ -9,6 +9,7 @@ import (
 
 	appcore "github.com/agntcy/identity-platform/internal/core/app"
 	"github.com/agntcy/identity-platform/internal/core/app/types"
+	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 	"github.com/agntcy/identity-platform/pkg/db"
 	"gorm.io/gorm"
@@ -31,6 +32,17 @@ func (r *repository) CreateApp(
 	app *types.App,
 ) (*types.App, error) {
 	model := newAppModel(app)
+
+	// Get the tenant ID from the context
+	tenantID, ok := identitycontext.GetTenantID(ctx)
+	if !ok {
+		return nil, errutil.Err(
+			nil, "failed to get tenant ID from context",
+		)
+	}
+
+	// Set the tenant ID in the model
+	model.TenantID = tenantID
 
 	// Create the app
 	inserted := r.dbContext.Client().Create(model)
