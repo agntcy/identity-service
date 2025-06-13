@@ -11,6 +11,10 @@ import (
 	"os/signal"
 	"time"
 
+	identity_platform_api "github.com/agntcy/identity-platform/api/server"
+	"github.com/agntcy/identity-platform/internal/bff"
+	bffgrpc "github.com/agntcy/identity-platform/internal/bff/grpc"
+	apppg "github.com/agntcy/identity-platform/internal/core/app/postgres"
 	"github.com/agntcy/identity-platform/internal/pkg/grpcutil"
 	"github.com/agntcy/identity-platform/pkg/cmd"
 	"github.com/agntcy/identity-platform/pkg/db"
@@ -115,11 +119,17 @@ func main() {
 		_ = grpcsrv.Shutdown(ctx)
 	}()
 
-	// Create OIDC parser
-
 	// Create repositories
+	appRepository := apppg.NewRepository(dbContext)
 
 	// Create internal services
+	appSrv := bff.NewAppService(
+		appRepository,
+	)
+
+	register := identity_platform_api.GrpcServiceRegister{
+		AppServiceServer: bffgrpc.NewAppService(appSrv),
+	}
 
 	register.RegisterGrpcHandlers(grpcsrv.Server)
 

@@ -6,7 +6,6 @@ package errutil
 import (
 	"errors"
 
-	errtypes "github.com/agntcy/identity-platform/internal/core/errors/types"
 	"github.com/agntcy/identity-platform/pkg/log"
 )
 
@@ -21,12 +20,4 @@ func Err(err error, customMessage string) error {
 
 	// Otherwise, return the error
 	return err
-}
-
-func ErrInfo(reason errtypes.ErrorReason, message string, err error) errtypes.ErrorInfo {
-	return errtypes.ErrorInfo{
-		Reason:  reason,
-		Message: message,
-		Err:     err,
-	}
 }

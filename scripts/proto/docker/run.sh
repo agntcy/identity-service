@@ -56,7 +56,7 @@ done
 
 packages=$(echo "$packages" | sed 's/\s$//' | sed 's/^\s//')
 
-cd "${Identity_ROOT}/local/github.com/agntcy/identity"
+cd "${Identity_ROOT}/local/github.com/agntcy/identity-platform"
 
 go get github.com/gogo/protobuf/proto
 go mod vendor
@@ -105,7 +105,7 @@ if [ -n "${packages_comma_separated}" ]; then
 
   for m in $protos; do
     sed -i 's/syntax = "proto2";/syntax = "proto3";/g' "${m}"
-    sed -i 's|go_package = [^ ]\+|go_package = "github.com/agntcy/identity-platform/backend/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_go";|g' "${m}"
+    sed -i 's|go_package = [^ ]\+|go_package = "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_go";|g' "${m}"
   done
 
   for package in $packages; do
@@ -114,11 +114,11 @@ if [ -n "${packages_comma_separated}" ]; then
     import=$(echo "$package" | sed 's|/|\\.|g')
     for m in $protos; do
       sed -i "s|${import}|${PROTO_PACKAGE_NAME}|g" "${m}"
-      sed -i "s|${package}/generated.proto|${PROTO_CORE_FILE_PATH}${proto_file}.proto|g" "${m}"
+      sed -i "s|${package}/generated.proto|${PROTO_PLATFORM_FILE_PATH}${proto_file}.proto|g" "${m}"
     done
   done
 
-  cp -r "${Identity_ROOT}/local/output/." "${Identity_ROOT}/code/api/spec/proto/agntcy/identity/core/v1alpha1"
+  cp -r "${Identity_ROOT}/local/output/." "${Identity_ROOT}/code/backend/api/spec/proto/agntcy/identity/platform/v1alpha1"
 fi
 
 echo ""

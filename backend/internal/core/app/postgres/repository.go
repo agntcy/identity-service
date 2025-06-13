@@ -49,7 +49,7 @@ func (r *repository) GetApp(
 ) (*types.App, error) {
 	var app App
 
-	result := r.dbContext.Client().First(&app, map[string]interface{}{
+	result := r.dbContext.Client().First(&app, map[string]any{
 		"id": id,
 	})
 	if result.Error != nil {

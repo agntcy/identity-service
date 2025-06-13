@@ -11,33 +11,34 @@ import (
 	"strings"
 	"time"
 
+	identitycache "github.com/agntcy/identity-platform/internal/pkg/cache"
+	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
+	"github.com/agntcy/identity-platform/internal/pkg/httputil"
+	"github.com/agntcy/identity-platform/pkg/log"
 	freecache "github.com/coocood/freecache"
 	"github.com/eko/gocache/lib/v4/cache"
 	"github.com/eko/gocache/lib/v4/store"
 	freecache_store "github.com/eko/gocache/store/freecache/v4"
 	jwtverifier "github.com/okta/okta-jwt-verifier-golang"
-	aircontext "outshift.com/air/backend/internal/pkg/context"
-	globalHelper "outshift.com/air/backend/internal/pkg/helper"
-	"outshift.com/air/backend/pkg/log"
 )
 
 // ------------------------ GLOBAL -------------------- //
 
-const airApplicationLabel = "MX-Application-"
-const airTenantLabel = "MX-Tenant-"
+const identityAppLabel = "Identity-App-"
+const identityTenantLabel = "Identity-Tenant-"
 
-var singleTenantApplicationID = "00000000-0000-0000-000000000000"
+var singleTenantAppID = "00000000-0000-0000-000000000000"
 
-type AirTags struct {
-	ApplicationID string `json:"applicationId,omitempty"`
+type IdentityTags struct {
+	AppID string `json:"appId,omitempty"`
 }
 
 type APIKey struct {
-	ID       string  `json:"id,omitempty"`
-	Name     string  `json:"name,omitempty"`
-	Secret   string  `json:"secret,omitempty"`
-	TenantID string  `json:"tenantId,omitempty"`
-	Tags     AirTags `json:"tags,omitempty"`
+	ID       string       `json:"id,omitempty"`
+	Name     string       `json:"name,omitempty"`
+	Secret   string       `json:"secret,omitempty"`
+	TenantID string       `json:"tenantId,omitempty"`
+	Tags     IdentityTags `json:"tags,omitempty"`
 }
 
 type APIKeyList struct {
@@ -49,8 +50,8 @@ const defaultAPIKeyV1ExpirationTime = 60        // In seconds
 const defaultAPIKeyCacheSize = 10 * 1024 * 1024 // 10MB
 
 type apiKeyV1Cache struct {
-	AirTags *AirTags
-	Tenant  *string
+	IdentityTags *IdentityTags
+	Tenant       *string
 }
 
 // Header keys
@@ -84,13 +85,13 @@ type IAM interface {
 		ctx context.Context,
 		productID string,
 		apiKey string,
-		forApplication bool,
+		forApp bool,
 	) (newCtx context.Context, err error)
 	GetTenantAPIKey(ctx context.Context) (apiKey APIKey, err error)
 	CreateTenantAPIKey(ctx context.Context) (apiKey APIKey, err error)
-	CreateApplicationAPIKey(ctx context.Context, applicationID string) (apiKey APIKey, err error)
+	CreateAppAPIKey(ctx context.Context, appID string) (apiKey APIKey, err error)
 	RevokeTenantAPIKey(ctx context.Context) (err error)
-	RevokeApplicationAPIKey(ctx context.Context, applicationID string) (err error)
+	RevokeAppAPIKey(ctx context.Context, appID string) (err error)
 }
 
 type Client struct {
@@ -175,14 +176,14 @@ func (c *Client) AuthJwt(
 		return newCtx, errors.New("JWT validation failed")
 	}
 
-	ctx = aircontext.InsertTenantID(ctx, *tenant)
+	ctx = identitycontext.InsertTenantID(ctx, *tenant)
 	log.Debug("Validated JWT for tenant ", *tenant)
 
 	// Add username if present
 	if username != nil {
-		ctx = aircontext.InsertUserID(ctx, *username)
+		ctx = identitycontext.InsertUserID(ctx, *username)
 	}
-	ctx = aircontext.InsertAuthType(ctx, AuthTypeJWTToken)
+	ctx = identitycontext.InsertAuthType(ctx, AuthTypeJWTToken)
 
 	return ctx, nil
 }
@@ -191,7 +192,7 @@ func (c *Client) AuthAPIKey(
 	ctx context.Context,
 	productID string,
 	apiKey string,
-	forApplication bool,
+	forApp bool,
 ) (newCtx context.Context, err error) {
 	if apiKey == "" {
 		return newCtx, errors.New("no API Key")
@@ -202,36 +203,36 @@ func (c *Client) AuthAPIKey(
 		return newCtx, errors.New("API Key validation failed")
 	}
 
-	ctx = aircontext.InsertTenantID(ctx, *tenant)
-	ctx = aircontext.InsertAuthType(ctx, AuthTypeAPIKey)
+	ctx = identitycontext.InsertTenantID(ctx, *tenant)
+	ctx = identitycontext.InsertAuthType(ctx, AuthTypeAPIKey)
 
 	if !c.multitenant {
-		ctx = aircontext.InsertApplicationID(ctx, singleTenantApplicationID)
+		ctx = identitycontext.InsertAppID(ctx, singleTenantAppID)
 
 		return ctx, nil
 	}
 
-	if !forApplication && tags.ApplicationID != "" {
-		// This is a application id
+	if !forApp && tags.AppID != "" {
+		// This is a app id
 		return newCtx, errors.New("API Key validation failed")
 	}
 
-	// Insert applicationID
-	ctx = aircontext.InsertApplicationID(ctx, tags.ApplicationID)
+	// Insert appID
+	ctx = identitycontext.InsertAppID(ctx, tags.AppID)
 
 	return ctx, nil
 }
 
 // GetTenantAPIKey returns the API Key for the tenant. If no API Key exists, an empty API Key is returned.
 func (c *Client) GetTenantAPIKey(ctx context.Context) (apiKey APIKey, err error) {
-	tenantID, ok := aircontext.GetTenantID(ctx)
+	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
 		return apiKey, errors.New("missing TenantID in context")
 	}
 
 	if !c.multitenant {
-		apiKey.Name = airTenantLabel + c.singleTenantID
-		apiKey.Tags.ApplicationID = singleTenantApplicationID
+		apiKey.Name = identityTenantLabel + c.singleTenantID
+		apiKey.Tags.AppID = singleTenantAppID
 		apiKey.Secret = c.adminApiKey
 
 		return apiKey, nil
@@ -249,7 +250,7 @@ func (c *Client) GetTenantAPIKey(ctx context.Context) (apiKey APIKey, err error)
 
 // CreateTenantAPIKey creates an API Key for a tenant. The API Key is unique per tenant.
 func (c *Client) CreateTenantAPIKey(ctx context.Context) (apiKey APIKey, err error) {
-	tenantID, ok := aircontext.GetTenantID(ctx)
+	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
 		return apiKey, errors.New("missing TenantID in context")
 	}
@@ -265,7 +266,7 @@ func (c *Client) CreateTenantAPIKey(ctx context.Context) (apiKey APIKey, err err
 		return c.GetTenantAPIKey(ctx)
 	}
 
-	apiKey.Name = airTenantLabel + tenantID
+	apiKey.Name = identityTenantLabel + tenantID
 
 	log.Debug("Creating API Key ", apiKey.ID)
 
@@ -279,13 +280,13 @@ func (c *Client) CreateTenantAPIKey(ctx context.Context) (apiKey APIKey, err err
 	return apiKey, nil
 }
 
-// CreateApplicationAPIKey creates an API Key for a application. The API Key is tagged with the applicationID.
-func (c *Client) CreateApplicationAPIKey(
+// CreateAppAPIKey creates an API Key for a app. The API Key is tagged with the appID.
+func (c *Client) CreateAppAPIKey(
 	ctx context.Context,
-	applicationID string,
+	appID string,
 ) (apiKey APIKey, err error) {
-	if applicationID == "" {
-		return apiKey, errors.New("missing applicationID")
+	if appID == "" {
+		return apiKey, errors.New("missing appID")
 
 	}
 
@@ -293,21 +294,21 @@ func (c *Client) CreateApplicationAPIKey(
 		return c.GetTenantAPIKey(ctx)
 	}
 
-	tenantID, ok := aircontext.GetTenantID(ctx)
+	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
 		return apiKey, errors.New("missing TenantID in context")
 	}
 
 	log.Debug(
 		fmt.Sprintf(
-			"Creating API Key for application %s (tenant: %s)",
-			applicationID,
+			"Creating API Key for app %s (tenant: %s)",
+			appID,
 			tenantID,
 		),
 	)
 
-	apiKey.Name = airApplicationLabel + applicationID
-	apiKey.Tags.ApplicationID = applicationID
+	apiKey.Name = identityAppLabel + appID
+	apiKey.Tags.AppID = appID
 
 	log.Debug("Creating API Key ", apiKey)
 
@@ -318,14 +319,14 @@ func (c *Client) CreateApplicationAPIKey(
 
 	log.Debug("Created API Key ", apiKey.ID)
 	// The response does not return Tags. Insert them here
-	apiKey.Tags.ApplicationID = applicationID
+	apiKey.Tags.AppID = appID
 
 	return apiKey, nil
 }
 
 // RevokeTenantAPIKey revokes the API Key for a tenant.
 func (c *Client) RevokeTenantAPIKey(ctx context.Context) (err error) {
-	tenantID, ok := aircontext.GetTenantID(ctx)
+	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
 		return errors.New("missing TenantID in context")
 	}
@@ -348,29 +349,29 @@ func (c *Client) RevokeTenantAPIKey(ctx context.Context) (err error) {
 	return c.revokeAPIKey(ctx, &apiKey)
 }
 
-// RevokeApplicationAPIKey revokes the API Key for a application.
-func (c *Client) RevokeApplicationAPIKey(ctx context.Context, applicationID string) error {
-	if applicationID == "" {
-		return errors.New("missing applicationID")
+// RevokeAppAPIKey revokes the API Key for a app.
+func (c *Client) RevokeAppAPIKey(ctx context.Context, appID string) error {
+	if appID == "" {
+		return errors.New("missing appID")
 	}
 
 	if !c.multitenant {
 		return errors.New("operation not supported in single tenant mode")
 	}
 
-	tenantID, ok := aircontext.GetTenantID(ctx)
+	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
 		return errors.New("missing TenantID in context")
 	}
 
-	apiKey, err := c.getAPIKeyByApplication(ctx, applicationID, tenantID)
+	apiKey, err := c.getAPIKeyByApp(ctx, appID, tenantID)
 	if err != nil {
-		log.Debug("API Key for application " + applicationID + "not found. Ignoring")
+		log.Debug("API Key for app " + appID + "not found. Ignoring")
 		return err
 	}
 
 	if apiKey == (APIKey{}) {
-		log.Debug("API Key for application " + applicationID + "not found. Ignoring")
+		log.Debug("API Key for app " + appID + "not found. Ignoring")
 		return nil
 	}
 
@@ -418,7 +419,7 @@ func (c *Client) createAPIKey(
 	ctx context.Context,
 	apiKey *APIKey,
 ) (err error) {
-	tenantID, ok := aircontext.GetTenantID(ctx)
+	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
 		return errors.New("missing TenantID in context")
 	}
@@ -459,7 +460,7 @@ func (c *Client) getAPIKeyByTenant(
 	}
 
 	for _, k := range apiKeys.APIKeys {
-		if k.Tags.ApplicationID == "" {
+		if k.Tags.AppID == "" {
 			apiKey = k
 			break
 		}
@@ -468,27 +469,27 @@ func (c *Client) getAPIKeyByTenant(
 	return apiKey, nil
 }
 
-func (c *Client) getAPIKeyByApplication(
+func (c *Client) getAPIKeyByApp(
 	ctx context.Context,
-	applicationID string,
+	appID string,
 	tenantID string,
 ) (apiKey APIKey, err error) {
 	uri := c.url + fmt.Sprintf(IAMAPIKeyEndpoint, tenantID)
 
 	body, _, err := c.apiKeyCall(ctx, http.MethodGet, uri, nil)
 	if err != nil {
-		return apiKey, errors.New("could not get API Key for application " + applicationID)
+		return apiKey, errors.New("could not get API Key for app " + appID)
 	}
 
 	apiKeys := APIKeyList{}
 
 	err = json.Unmarshal(body, &apiKeys)
 	if err != nil {
-		return apiKey, errors.New("could not get API Key for application " + applicationID)
+		return apiKey, errors.New("could not get API Key for app " + appID)
 	}
 
 	for _, k := range apiKeys.APIKeys {
-		if k.Tags.ApplicationID == applicationID {
+		if k.Tags.AppID == appID {
 			apiKey = k
 			break
 		}
@@ -501,7 +502,7 @@ func (c *Client) revokeAPIKey(
 	ctx context.Context,
 	apiKey *APIKey,
 ) error {
-	tenantID, ok := aircontext.GetTenantID(ctx)
+	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
 		return errors.New("missing TenantID in context")
 	}
@@ -534,7 +535,7 @@ func (c *Client) apiKeyCall(
 	uri string,
 	apiKey *APIKey,
 ) ([]byte, int, error) {
-	ctx, cancel := context.WithTimeout(ctx, globalHelper.Timeout*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, httputil.Timeout*time.Second)
 	defer cancel()
 
 	headers := make(map[string]string)
@@ -549,7 +550,7 @@ func (c *Client) apiKeyCall(
 		}
 
 		req, _ = http.NewRequestWithContext(ctx, method, uri, bytes.NewReader(payload))
-		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set("Content-Type", "app/json")
 	} else {
 		req, _ = http.NewRequestWithContext(ctx, method, uri, http.NoBody)
 	}
@@ -583,7 +584,7 @@ func (c *Client) validateAPIKeyV1(
 	ctx context.Context,
 	productID string,
 	apiKey string,
-) (*string, *AirTags) {
+) (*string, *IdentityTags) {
 	if !c.multitenant {
 		if apiKey == c.adminApiKey {
 			return &c.singleTenantID, nil
@@ -593,9 +594,9 @@ func (c *Client) validateAPIKeyV1(
 	}
 
 	// Check existing cache
-	if apiKeyCache, found := globalHelper.GetFromCache[apiKeyV1Cache](ctx, c.apiKeyV1Cache, apiKey); found {
+	if apiKeyCache, found := identitycache.GetFromCache[apiKeyV1Cache](ctx, c.apiKeyV1Cache, apiKey); found {
 		log.Debug("Using cached api key ", apiKeyCache)
-		return apiKeyCache.Tenant, apiKeyCache.AirTags
+		return apiKeyCache.Tenant, apiKeyCache.IdentityTags
 	}
 
 	headers := make(map[string]string)
@@ -613,17 +614,17 @@ func (c *Client) validateAPIKeyV1(
 	tenant := header.Get(APIKeyTenantKey)
 	tags := header.Get(APIKeyTagsKey)
 
-	var newTags AirTags
+	var newTags IdentityTags
 	_ = json.Unmarshal([]byte(tags), &newTags)
 
 	// Encode & cache the result
-	_ = globalHelper.AddToCache(
+	_ = identitycache.AddToCache(
 		ctx,
 		c.apiKeyV1Cache,
 		apiKey,
 		&apiKeyV1Cache{
-			Tenant:  &tenant,
-			AirTags: &newTags,
+			Tenant:       &tenant,
+			IdentityTags: &newTags,
 		},
 	)
 
@@ -636,7 +637,7 @@ func (c *Client) extAuth(
 	headers map[string]string,
 ) (*int, *http.Header) {
 	// Create context
-	ctx, cancel := context.WithTimeout(ctx, globalHelper.Timeout*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, httputil.Timeout*time.Second)
 	defer cancel()
 
 	// Create a new request using http
