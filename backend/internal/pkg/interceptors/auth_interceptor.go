@@ -20,16 +20,16 @@ var allowedServicesWithoutAuth = []string{
 	"/grpc.health.v1.Health/Check",
 }
 
-type TenantInterceptor struct {
+type AuthInterceptor struct {
 	iam          outshiftiam.IAM
 	iamProductID string
 }
 
-func NewTenantInterceptor(
+func NewAuthInterceptor(
 	iam outshiftiam.IAM,
 	iamProductID string,
-) *TenantInterceptor {
-	return &TenantInterceptor{
+) *AuthInterceptor {
+	return &AuthInterceptor{
 		iam:          iam,
 		iamProductID: iamProductID,
 	}
@@ -38,7 +38,7 @@ func NewTenantInterceptor(
 // ------------------------ GLOBAL -------------------- //
 
 // The unary interceptor is used for the REST and gRPC calls
-func (ti *TenantInterceptor) Unary(
+func (ti *AuthInterceptor) Unary(
 	ctx context.Context,
 	req interface{},
 	info *grpc.UnaryServerInfo,

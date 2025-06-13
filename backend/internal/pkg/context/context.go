@@ -3,8 +3,6 @@ package identitycontext
 import (
 	"context"
 	"errors"
-
-	identity_platform_sdk_go "github.com/agntcy/identity/platform/api/server/agntcy/identity/platform/v1alpha1"
 )
 
 // InsertTenantID inserts tenantID into the context.
@@ -64,24 +62,6 @@ func InsertAppID(ctx context.Context, appID string) context.Context {
 	return ctx
 }
 
-// Inserts the settings into the context.
-func InsertSettings(
-	ctx context.Context,
-	settings *identity_platform_sdk_go.Settings,
-) context.Context {
-	if settings != nil {
-		return withSettings(ctx, settings)
-	}
-
-	return ctx
-}
-
-func GetSettings(ctx context.Context) (*identity_platform_sdk_go.Settings, bool) {
-	settings, ok := ctx.Value(Settings).(*identity_platform_sdk_go.Settings)
-
-	return settings, ok
-}
-
 // WithTenantID injects a tenant ID to a context.
 func withTenantID(ctx context.Context, id string) context.Context {
 	return context.WithValue(ctx, TenantID, id)
@@ -100,12 +80,4 @@ func withAuthType(ctx context.Context, id string) context.Context {
 // Injects an app ID to a context.
 func withAppID(ctx context.Context, id string) context.Context {
 	return context.WithValue(ctx, AppID, id)
-}
-
-// Injects settings into a context.
-func withSettings(
-	ctx context.Context,
-	settings *identity_platform_sdk_go.Settings,
-) context.Context {
-	return context.WithValue(ctx, Settings, settings)
 }
