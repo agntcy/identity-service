@@ -80,10 +80,10 @@ const config: Config = {
       '@scalar/docusaurus',
       {
         label: 'Node OpenAPI',
-        route: '/openapi/node/v1alpha1',
+        route: '/openapi/platform/v1alpha1',
         showNavLink: true,
         configuration: {
-          url: '/api/openapi/node/v1alpha1/openapi.yaml',
+          url: '/api/openapi/platform/v1alpha1/openapi.yaml',
           hideDarkModeToggle: true,
           layout: 'modern',
           customCss: './src/css/custom.css'
@@ -125,13 +125,13 @@ const config: Config = {
           label: 'Docs',
         },
         {
-          to: 'protodocs/agntcy/identity/core/v1alpha1/id.proto',
+          to: 'protodocs/agntcy/identity/platform/v1alpha1/app.proto',
           activeBasePath: 'protodocs',
           label: 'Protodocs',
           position: 'left',
         },
         {
-          href: 'https://github.com/agntcy/identity-spec',
+          href: 'https://github.com/agntcy/identity-platform',
           label: 'GitHub',
           position: 'right',
         },

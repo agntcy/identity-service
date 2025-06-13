@@ -6,4 +6,4 @@ managed:
   enabled: true
 plugins:
   - name: openapiv2
-    out: ./generated/openapi/
+    out: .

@@ -6,6 +6,6 @@ managed:
   enabled: true
 plugins:
   - name: doc
-    out: ./backend
+    out: .
     opt: json,proto_workspace.json:openapi*
     strategy: all
