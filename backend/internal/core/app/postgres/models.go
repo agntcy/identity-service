@@ -12,7 +12,7 @@ type App struct {
 	TenantID    string        `gorm:"not null;type:varchar(256);"`
 	Name        *string       `gorm:"not null;type:varchar(256);"`
 	Description *string       `gorm:"not null;type:varchar(256);"`
-	Type        types.AppType `gorm:"not null;type:varchar(256);default:'APP_TYPE_UNSPECIFIED';"`
+	Type        types.AppType `gorm:"not null;type:int32;default:0;"`
 }
 
 func (i *App) ToCoreType() *types.App {

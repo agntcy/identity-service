@@ -191,6 +191,7 @@ func main() {
 			"Origin",
 			"Accept",
 			"Authorization",
+			"X-Id-Api-Key",
 		},
 		AllowCredentials: true,
 
