@@ -68,18 +68,9 @@ const config: Config = {
 
   plugins: [
     [
-      '@docusaurus/plugin-content-docs',
-      {
-        id: 'jsonschema',
-        path: 'jsonschema',
-        routeBasePath: 'jsonschema',
-        sidebarPath: './sidebars.ts',
-      },
-    ],
-    [
       '@scalar/docusaurus',
       {
-        label: 'Node OpenAPI',
+        label: 'OpenAPI',
         route: '/openapi/platform/v1alpha1',
         showNavLink: true,
         configuration: {

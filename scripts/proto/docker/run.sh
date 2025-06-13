@@ -140,7 +140,7 @@ cd "${Identity_ROOT}/code/backend/api/spec"
 /usr/local/bin/buf generate --debug -v
 
 # Openapi
-/usr/local/bin/buf generate --template buf.gen.openapi.yaml --output ../spec/static/api/openapi/platform --path proto/${PROTO_PLATFORM_FILE_PATH}
+/usr/local/bin/buf generate --template buf.gen.openapi.yaml --output ../spec/static/api/openapi/platform/v1alpha1 --path proto/${PROTO_PLATFORM_FILE_PATH}
 
 # Proto
 /usr/local/bin/buf generate --template buf.gen.doc.yaml --output ../spec/static/api/proto/v1alpha1

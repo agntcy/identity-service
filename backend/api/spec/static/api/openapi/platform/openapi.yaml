@@ -1,0 +1,309 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: Identity Platform API
+    description: Identity Platform API provides a set of endpoints for managing identity and access control within the AGNTCY ecosystem.
+    contact:
+        name: AGNTCY Team
+        url: https://github.com/agntcy/identity
+        email: identity@agntcy.org
+    version: v1alpha1
+servers:
+    - url: http://localhost:4000
+      description: Local environment
+    - url: https://api.identity.dev.agntcy.org
+      description: Development environment
+    - url: https://api.identity.agntcy.org
+      description: Preview environment
+paths:
+    /v1alpha1/apps:
+        get:
+            tags:
+                - AppService
+            description: List Apps.
+            operationId: AppService_ListApps
+            parameters:
+                - name: page
+                  in: query
+                  description: The current page of the pagination
+                  schema:
+                    type: integer
+                    format: int32
+                - name: size
+                  in: query
+                  description: The page size of the pagination
+                  schema:
+                    type: integer
+                    format: int32
+                - name: query
+                  in: query
+                  description: The search query
+                  schema:
+                    type: string
+                - name: type
+                  in: query
+                  description: The app type filter
+                  schema:
+                    enum:
+                        - APP_TYPE_UNSPECIFIED
+                        - APP_TYPE_AGENT_A2A
+                        - APP_TYPE_AGENT_OASF
+                        - APP_TYPE_AGENT_MCP_SERVER
+                    type: string
+                    format: enum
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListAppsResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - AppService
+            description: Create a new App.
+            operationId: AppService_CreateApp
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/App'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/App'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1alpha1/apps/all/count:
+        get:
+            tags:
+                - AppService
+            description: Get apps count per type.
+            operationId: AppService_GetAppsCount
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetAppsCountResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1alpha1/apps/{appId}:
+        get:
+            tags:
+                - AppService
+            description: Get App by id
+            operationId: AppService_GetApp
+            parameters:
+                - name: appId
+                  in: path
+                  description: App Id to get.
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/App'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - AppService
+            description: Delete an existing App.
+            operationId: AppService_DeleteApp
+            parameters:
+                - name: appId
+                  in: path
+                  description: App Id to delete.
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        patch:
+            tags:
+                - AppService
+            description: Update an App.
+            operationId: AppService_UpdateApp
+            parameters:
+                - name: appId
+                  in: path
+                  description: App Id to update.
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/App'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/App'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+components:
+    schemas:
+        App:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: A unique identifier for the App.
+                name:
+                    type: string
+                    description: A human-readable name for the App.
+                description:
+                    type: string
+                    description: A human-readable description for the App.
+                type:
+                    enum:
+                        - APP_TYPE_UNSPECIFIED
+                        - APP_TYPE_AGENT_A2A
+                        - APP_TYPE_AGENT_OASF
+                        - APP_TYPE_AGENT_MCP_SERVER
+                    type: string
+                    description: The type of the App.
+                    format: enum
+            description: Identity Platform App.
+        AppTypeCountEntry:
+            type: object
+            properties:
+                key:
+                    enum:
+                        - APP_TYPE_UNSPECIFIED
+                        - APP_TYPE_AGENT_A2A
+                        - APP_TYPE_AGENT_OASF
+                        - APP_TYPE_AGENT_MCP_SERVER
+                    type: string
+                    description: The type of the App
+                    format: enum
+                value:
+                    type: string
+                    description: The count of apps of the given type
+        GetAppsCountResponse:
+            type: object
+            properties:
+                counts:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/AppTypeCountEntry'
+                    description: The apps count per app type
+        GoogleProtobufAny:
+            type: object
+            properties:
+                '@type':
+                    type: string
+                    description: The type of the serialized message.
+            additionalProperties: true
+            description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        ListAppsResponse:
+            type: object
+            properties:
+                apps:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/App'
+                    description: A list of Apps.
+                pagination:
+                    allOf:
+                        - $ref: '#/components/schemas/PagedResponse'
+                    description: Pagination response.
+        PagedResponse:
+            type: object
+            properties:
+                nextPage:
+                    type: integer
+                    description: Next page
+                    format: int32
+                hasNextPage:
+                    type: boolean
+                    description: Has next page
+                total:
+                    type: string
+                    description: The total size of items
+                size:
+                    type: integer
+                    description: The size of the current page
+                    format: int32
+            description: Pagination response
+        Status:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+                    format: int32
+                message:
+                    type: string
+                    description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+                details:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GoogleProtobufAny'
+                    description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
+            description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+    headers:
+        "":
+    securitySchemes:
+        AccessToken:
+            type: http
+            description: An IAM JWT token issued to a user during an OIDC flow.
+            scheme: bearer
+            bearerFormat: JWT
+        ApiKey:
+            type: apiKey
+            description: An IAM Api key.
+            name: x-id-api-key
+            in: header
+security:
+    - AccessToken: []
+      ApiKey: []
+tags:
+    - name: AppService
