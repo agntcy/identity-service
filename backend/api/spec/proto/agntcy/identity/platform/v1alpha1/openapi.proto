@@ -5,80 +5,78 @@ package agntcy.identity.platform.v1alpha1;
 import "openapiv3/annotations.proto";
 
 option go_package = "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_go";
-
 option (openapi.v3.document) = {
-    info: {
-        title: "Identity Platform API";
-        description: "Identity Platform API provides a set of endpoints for managing identity and access control within the AGNTCY ecosystem.";
-        version: "v1alpha1";
-        contact: {
-            name: "AGNTCY Team";
-            url: "https://github.com/agntcy/identity";
-            email: "identity@agntcy.org";
-        }
+  info: {
+    title: "Identity Platform API";
+    description: "Identity Platform API provides a set of endpoints for managing identity and access control within the AGNTCY ecosystem.";
+    version: "v1alpha1";
+    contact: {
+      name: "AGNTCY Team";
+      url: "https://github.com/agntcy/identity";
+      email: "identity@agntcy.org";
     }
-    servers: [
-        {
-            url: "http://localhost:4000";
-            description: "Local environment";
-        },
-        {
-            url: "https://api.identity.dev.agntcy.org";
-            description: "Development environment";
-        },
-        {
-            url: "https://api.identity.agntcy.org";
-            description: "Preview environment";
+  }
+  servers: [
+    {
+      url: "http://localhost:4000";
+      description: "Local environment";
+    },
+    {
+      url: "https://api.identity.dev.agntcy.org";
+      description: "Development environment";
+    },
+    {
+      url: "https://api.identity.agntcy.org";
+      description: "Preview environment";
+    }
+  ]
+  security: {
+    additional_properties: [
+      {
+        name: "AccessToken";
+        value: {
+          value: []
         }
+      },
+      {
+        name: "ApiKey";
+        value: {
+          value: []
+        }
+      }
     ]
-    security: {
-        additional_properties: [
-            {
-                name: "AccessToken";
-                value: {
-                    value: []
-                }
-            },
-            {
-                name: "ApiKey";
-                value: {
-                    value: []
-                }
+  }
+  components: {
+    headers: {
+      additional_properties: [
+{}
+      ]
+    },
+    security_schemes: {
+      additional_properties: [
+        {
+          name: "AccessToken";
+          value: {
+            security_scheme: {
+              type: "http";
+              description: "An IAM JWT token issued to a user during an OIDC flow.";
+              scheme: "bearer";
+              bearer_format: "JWT";
             }
-        ]
-    }
-    components: {
-        headers: {
-            additional_properties: [
-                {}
-             ]
+          }
         },
-        security_schemes: {
-            additional_properties: [
-                {
-                    name: "AccessToken";
-                    value: {
-                        security_scheme: {
-                            type: "http";
-                            description: "An IAM JWT token issued to a user during an OIDC flow.";
-                            scheme: "bearer";
-                            bearer_format: "JWT";
-                        }
-                    }
-                },
-                {
-                    name: "ApiKey";
-                    value: {
-                        security_scheme: {
-                            type: "apiKey";
-                            description: "An IAM Api key.";
-                            in: "header",
-                            name: "x-id-api-key";
-                        }
-                    }
-                }
-            ]
+        {
+          name: "ApiKey";
+          value: {
+            security_scheme: {
+              type: "apiKey";
+              description: "An IAM Api key.";
+              in: "header",
+              name: "x-id-api-key";
+            }
+          }
         }
+      ]
     }
+  }
 };
-
