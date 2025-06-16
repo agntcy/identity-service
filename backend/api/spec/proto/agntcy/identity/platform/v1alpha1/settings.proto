@@ -1,0 +1,75 @@
+// Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package agntcy.identity.platform.v1alpha1;
+
+import "google/api/field_behavior.proto";
+
+option go_package = "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_go";
+
+enum IdpType {
+  // Unspecified IDP type.
+  IDP_TYPE_UNSPECIFIED = 0;
+
+  // Duo IDP type.
+  IDP_TYPE_DUO = 1;
+
+  // Okta IDP type.
+  IDP_TYPE_OKTA = 2;
+}
+
+// An Identity API Key.
+message ApiKey {
+  // The API Key secret
+  string api_key = 1;
+}
+
+// Okta IdP Settings.
+message OktaIdpSettings {
+  // The Okta issuer URL.
+  string issuer_url = 1;
+
+  // The Okta client ID.
+  string client_id = 2;
+
+  // The Okta client secret.
+  string client_secret = 3;
+}
+
+// Duo IdP Settings.
+message DuoIdpSettings {
+  // The Duo integration key.
+  string integration_key = 1;
+
+  // The Duo secret key.
+  string secret_key = 2;
+
+  // The Duo API hostname.
+  string api_hostname = 3;
+}
+
+// Issuer Settings.
+message IssuerSettings {
+  // The issuer ID.
+  string issuer_id = 1;
+
+  // Idp Type.
+  IdpType idp_type = 2;
+
+  // Duo Idp
+  DuoIdpSettings duo_idp_settings = 3;
+
+  // OKta Idp
+  OktaIdpSettings okta_idp_settings = 4;
+}
+
+// Identity Settings.
+message Settings {
+  // Api Key.
+  ApiKey api_key = 1 [(google.api.field_behavior) = OUTPUT_ONLY];
+
+  // Issuer Settings.
+  IssuerSettings issuer_settings = 2 [(google.api.field_behavior) = OUTPUT_ONLY];
+}
