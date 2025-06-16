@@ -8,6 +8,7 @@ import (
 	"errors"
 
 	"github.com/agntcy/identity-platform/internal/pkg/grpcutil"
+	outshiftiam "github.com/agntcy/identity-platform/internal/pkg/iam"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 )
@@ -76,7 +77,7 @@ func (ti *AuthInterceptor) Unary(
 			return nil, grpcutil.UnauthorizedError(err)
 		}
 	} else {
-		// This is an IAM v1 key without any deployment tag
+		// This is an IAM v1 key for a tenant
 		ctx, err = ti.iam.AuthAPIKey(ctx, ti.iamProductID, apiKeyHeader[0], false)
 		if err != nil {
 			return nil, grpcutil.UnauthorizedError(err)

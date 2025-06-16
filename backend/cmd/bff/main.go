@@ -16,6 +16,8 @@ import (
 	bffgrpc "github.com/agntcy/identity-platform/internal/bff/grpc"
 	apppg "github.com/agntcy/identity-platform/internal/core/app/postgres"
 	"github.com/agntcy/identity-platform/internal/pkg/grpcutil"
+	outshiftiam "github.com/agntcy/identity-platform/internal/pkg/iam"
+	"github.com/agntcy/identity-platform/internal/pkg/interceptors"
 	"github.com/agntcy/identity-platform/pkg/cmd"
 	"github.com/agntcy/identity-platform/pkg/db"
 	"github.com/agntcy/identity-platform/pkg/grpcserver"
@@ -103,10 +105,30 @@ func main() {
 		}
 	}()
 
+	// IAM
+	iam := outshiftiam.NewClient(
+		http.DefaultClient,
+		config.IamApiUrl,
+		config.IamAdminAPIKey,
+		config.IamMultiTenant,
+		config.IamSingleTenantID,
+		&config.IamIssuer,
+		&config.IamUserCid,
+		&config.IamApiKeyCid,
+	)
+
+	// Tenant interceptor
+	authInterceptor := interceptors.NewAuthInterceptor(
+		iam,
+		config.IamProductID,
+	)
+
 	// Create a GRPC server
 	grpcsrv, err := grpcserver.New(
 		config.ServerGrpcHost,
-		grpc.ChainUnaryInterceptor(),
+		grpc.ChainUnaryInterceptor(
+			authInterceptor.Unary, // Add the auth interceptor
+		),
 		grpc.StatsHandler(otelgrpc.NewServerHandler()),
 		grpc.MaxRecvMsgSize(maxMsgSize),
 		grpc.MaxSendMsgSize(maxMsgSize),
