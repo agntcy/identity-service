@@ -11,6 +11,7 @@ func ConvertToPagedResponse[T any](
 	items *Pageable[T],
 ) *identity_platform_shared_sdk_go.PagedResponse {
 	var nextPage *int32
+
 	hasNextPage := int64(
 		paginationFilter.GetPage(),
 	)*int64(

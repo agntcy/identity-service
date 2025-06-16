@@ -47,7 +47,7 @@ func (ti *AuthInterceptor) Unary(
 	req interface{},
 	info *grpc.UnaryServerInfo,
 	handler grpc.UnaryHandler,
-) (i interface{}, err error) {
+) (interface{}, error) {
 	// Check non-auth services
 	// Healthz, etc.
 	for _, service := range allowedServicesWithoutAuth {
@@ -71,17 +71,21 @@ func (ti *AuthInterceptor) Unary(
 		return nil, grpcutil.UnauthorizedError(errors.New("failed to extract authorization"))
 	}
 
+	var err error
+	var aCtx context.Context
+
 	if okAuth {
-		ctx, err = ti.iam.AuthJwt(ctx, authHeader[0])
+		aCtx, err = ti.iam.AuthJwt(ctx, authHeader[0])
 		if err != nil {
 			return nil, grpcutil.UnauthorizedError(err)
 		}
 	} else {
 		// This is an IAM v1 key for a tenant
-		ctx, err = ti.iam.AuthAPIKey(ctx, ti.iamProductID, apiKeyHeader[0], false)
+		aCtx, err = ti.iam.AuthAPIKey(ctx, ti.iamProductID, apiKeyHeader[0], false)
 		if err != nil {
 			return nil, grpcutil.UnauthorizedError(err)
 		}
 	}
-	return handler(ctx, req)
+
+	return handler(aCtx, req)
 }

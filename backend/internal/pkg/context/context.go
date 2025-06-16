@@ -13,6 +13,7 @@ func InsertTenantID(ctx context.Context, tenantID string) context.Context {
 	if tenantID != "" {
 		return withTenantID(ctx, tenantID)
 	}
+
 	return ctx
 }
 
@@ -21,7 +22,7 @@ func MustHaveTenantID(ctx context.Context) string {
 	id, keyExists := ctx.Value(TenantID).(string)
 
 	// make sure key exists and tenantID value is actually set to something
-	if keyExists && len(id) > 0 {
+	if keyExists && id != "" {
 		return id
 	}
 
@@ -45,6 +46,7 @@ func InsertUserID(ctx context.Context, userID string) context.Context {
 	if userID != "" {
 		return withUserID(ctx, userID)
 	}
+
 	return ctx
 }
 
@@ -53,6 +55,7 @@ func InsertAuthType(ctx context.Context, authType string) context.Context {
 	if authType != "" {
 		return withAuthType(ctx, authType)
 	}
+
 	return ctx
 }
 

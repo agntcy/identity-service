@@ -27,6 +27,7 @@ import (
 
 // ------------------------ GLOBAL -------------------- //
 
+const tokenLength = 2 // Bearer <token> => 2 parts
 const identityAppLabel = "Identity-App-"
 const identityTenantLabel = "Identity-Tenant-"
 
@@ -162,21 +163,21 @@ func NewClient(
 func (c *Client) AuthJwt(
 	ctx context.Context,
 	header string,
-) (newCtx context.Context, err error) {
+) (context.Context, error) {
 	if header == "" {
-		return newCtx, errors.New("no header")
+		return ctx, errors.New("no header")
 	}
 
 	splitToken := strings.Split(header, "Bearer ")
-	if len(splitToken) < 2 {
-		return newCtx, errors.New("no Bearer token")
+	if len(splitToken) < tokenLength {
+		return ctx, errors.New("no Bearer token")
 	}
 
 	accessToken := splitToken[1]
 
 	username, tenant, validateErr := c.validateAccessToken(ctx, accessToken)
 	if validateErr != nil {
-		return newCtx, errors.New("JWT validation failed")
+		return ctx, errors.New("JWT validation failed")
 	}
 
 	ctx = identitycontext.InsertTenantID(ctx, *tenant)
@@ -196,14 +197,14 @@ func (c *Client) AuthAPIKey(
 	productID string,
 	apiKey string,
 	forApp bool,
-) (newCtx context.Context, err error) {
+) (context.Context, error) {
 	if apiKey == "" {
-		return newCtx, errors.New("no API Key")
+		return ctx, errors.New("no API Key")
 	}
 
 	tenant, tags := c.validateAPIKeyV1(ctx, productID, apiKey)
 	if tenant == nil {
-		return newCtx, errors.New("API Key validation failed")
+		return ctx, errors.New("API Key validation failed")
 	}
 
 	ctx = identitycontext.InsertTenantID(ctx, *tenant)
@@ -217,7 +218,7 @@ func (c *Client) AuthAPIKey(
 
 	if !forApp && tags.AppID != "" {
 		// This is a app id
-		return newCtx, errors.New("API Key validation failed")
+		return ctx, errors.New("API Key validation failed")
 	}
 
 	// Insert appID
@@ -227,7 +228,9 @@ func (c *Client) AuthAPIKey(
 }
 
 // GetTenantAPIKey returns the API Key for the tenant. If no API Key exists, an empty API Key is returned.
-func (c *Client) GetTenantAPIKey(ctx context.Context) (apiKey APIKey, err error) {
+func (c *Client) GetTenantAPIKey(ctx context.Context) (APIKey, error) {
+	var apiKey APIKey
+
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
 		return apiKey, errors.New("missing TenantID in context")
@@ -241,7 +244,7 @@ func (c *Client) GetTenantAPIKey(ctx context.Context) (apiKey APIKey, err error)
 		return apiKey, nil
 	}
 
-	apiKey, err = c.getAPIKeyByTenant(ctx, tenantID)
+	apiKey, err := c.getAPIKeyByTenant(ctx, tenantID)
 	if err != nil {
 		return apiKey, err
 	}
@@ -252,7 +255,9 @@ func (c *Client) GetTenantAPIKey(ctx context.Context) (apiKey APIKey, err error)
 }
 
 // CreateTenantAPIKey creates an API Key for a tenant. The API Key is unique per tenant.
-func (c *Client) CreateTenantAPIKey(ctx context.Context) (apiKey APIKey, err error) {
+func (c *Client) CreateTenantAPIKey(ctx context.Context) (APIKey, error) {
+	var apiKey APIKey
+
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
 		return apiKey, errors.New("missing TenantID in context")
@@ -287,10 +292,11 @@ func (c *Client) CreateTenantAPIKey(ctx context.Context) (apiKey APIKey, err err
 func (c *Client) CreateAppAPIKey(
 	ctx context.Context,
 	appID string,
-) (apiKey APIKey, err error) {
+) (APIKey, error) {
+	var apiKey APIKey
+
 	if appID == "" {
 		return apiKey, errors.New("missing appID")
-
 	}
 
 	if !c.multitenant {
@@ -328,7 +334,7 @@ func (c *Client) CreateAppAPIKey(
 }
 
 // RevokeTenantAPIKey revokes the API Key for a tenant.
-func (c *Client) RevokeTenantAPIKey(ctx context.Context) (err error) {
+func (c *Client) RevokeTenantAPIKey(ctx context.Context) error {
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
 		return errors.New("missing TenantID in context")
@@ -407,6 +413,7 @@ func (c *Client) validateAccessToken(
 	}
 
 	var tenant *string
+
 	if c.multitenant {
 		if tenantRaw, ok := token.Claims[TenantClaimKey].(string); ok {
 			tenant = &tenantRaw
@@ -421,7 +428,7 @@ func (c *Client) validateAccessToken(
 func (c *Client) createAPIKey(
 	ctx context.Context,
 	apiKey *APIKey,
-) (err error) {
+) error {
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
 		return errors.New("missing TenantID in context")
@@ -447,7 +454,9 @@ func (c *Client) createAPIKey(
 func (c *Client) getAPIKeyByTenant(
 	ctx context.Context,
 	tenantID string,
-) (apiKey APIKey, err error) {
+) (APIKey, error) {
+	var apiKey APIKey
+
 	uri := c.url + fmt.Sprintf(IAMAPIKeyEndpoint, tenantID)
 
 	body, _, err := c.apiKeyCall(ctx, http.MethodGet, uri, nil)
@@ -476,7 +485,9 @@ func (c *Client) getAPIKeyByApp(
 	ctx context.Context,
 	appID string,
 	tenantID string,
-) (apiKey APIKey, err error) {
+) (APIKey, error) {
+	var apiKey APIKey
+
 	uri := c.url + fmt.Sprintf(IAMAPIKeyEndpoint, tenantID)
 
 	body, _, err := c.apiKeyCall(ctx, http.MethodGet, uri, nil)
@@ -525,7 +536,7 @@ func (c *Client) revokeAPIKey(
 	}
 
 	// Clear cache
-	c.apiKeyV1Cache.Delete(ctx, apiKey.Secret)
+	_ = c.apiKeyV1Cache.Delete(ctx, apiKey.Secret)
 
 	log.Debug("Revoked API Key ", apiKey.ID, " ", apiKey.Name)
 
@@ -605,6 +616,7 @@ func (c *Client) validateAPIKeyV1(
 	headers := make(map[string]string)
 	headers[SessionAPIKeyProductKey] = productID
 	headers[APIKeyKey] = apiKey
+
 	log.Debug("Checking IAM API Key Secret")
 
 	statusCode, header := c.extAuth(ctx,

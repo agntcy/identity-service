@@ -8,8 +8,6 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-// TODO: better to define an interface for errors, and have services implementing this
-
 func NotFoundError(err error) error {
 	return status.Errorf(codes.NotFound, "%v", err)
 }
