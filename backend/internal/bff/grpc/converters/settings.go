@@ -7,6 +7,7 @@ import (
 	identity_platform_sdk_go "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1"
 	settingstypes "github.com/agntcy/identity-platform/internal/core/settings/types"
 	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
+	"github.com/agntcy/identity-platform/internal/pkg/strutil"
 )
 
 func FromOktaIdpSettings(
@@ -19,7 +20,7 @@ func FromOktaIdpSettings(
 	return &identity_platform_sdk_go.OktaIdpSettings{
 		Domain:       ptrutil.Ptr(src.Domain),
 		ClientId:     ptrutil.Ptr(src.ClientID),
-		ClientSecret: ptrutil.Ptr(src.ClientSecret),
+		ClientSecret: ptrutil.Ptr(strutil.Mask(src.ClientSecret)),
 	}
 }
 
@@ -47,7 +48,7 @@ func FromDuoIdpSettings(
 	return &identity_platform_sdk_go.DuoIdpSettings{
 		Hostname:       ptrutil.Ptr(src.Hostname),
 		IntegrationKey: ptrutil.Ptr(src.IntegrationKey),
-		SecretKey:      ptrutil.Ptr(src.SecretKey),
+		SecretKey:      ptrutil.Ptr(strutil.Mask(src.SecretKey)),
 	}
 }
 

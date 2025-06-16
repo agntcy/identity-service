@@ -31,32 +31,53 @@ func (r *repository) UpdateIssuerSettings(
 	ctx context.Context,
 	issuerSettings *types.IssuerSettings,
 ) (*types.IssuerSettings, error) {
-	existingSettings, err := r.GetIssuerSettings(ctx)
+	existingSettings, err := r.getOrCreateIssuerSettings(ctx)
 	if err != nil {
 		return nil, errutil.Err(
-			err, "failed to get issuer settings",
+			err, "failed to get or create issuer settings",
 		)
 	}
 
 	// Update the existing settings with the new values
-	existingSettings.IdpType = issuerSettings.IdpType
-	existingSettings.OktaIdpSettings = issuerSettings.OktaIdpSettings
-	existingSettings.DuoIdpSettings = issuerSettings.DuoIdpSettings
-	model := newIssuerSettingsModel(existingSettings)
+	model := newIssuerSettingsModel(issuerSettings)
+	existingSettings.IdpType = model.IdpType
 
-	updated := r.dbContext.Client().Updates(model)
+	// Update based on the IDP type
+	switch model.IdpType {
+	case types.IDP_TYPE_DUO:
+		existingSettings.DuoIdpSettings = model.DuoIdpSettings
+	case types.IDP_TYPE_OKTA:
+		existingSettings.OktaIdpSettings = model.OktaIdpSettings
+	}
+
+	updated := r.dbContext.Client().
+		Where("tenant_id = ?", existingSettings.TenantID).
+		Updates(existingSettings)
 	if updated.Error != nil {
 		return nil, errutil.Err(
 			updated.Error, "there was an error updating the settings",
 		)
 	}
 
-	return existingSettings, nil
+	return model.ToCoreType(), nil
 }
 
 func (r *repository) GetIssuerSettings(
 	ctx context.Context,
 ) (*types.IssuerSettings, error) {
+	issuerSettings, err := r.getOrCreateIssuerSettings(ctx)
+	if err != nil {
+		return nil, errutil.Err(
+			err, "failed to get or create issuer settings",
+		)
+	}
+
+	return issuerSettings.ToCoreType(), nil
+}
+
+func (r *repository) getOrCreateIssuerSettings(
+	ctx context.Context,
+) (*IssuerSettings, error) {
 	var issuerSettings IssuerSettings
 
 	// Get the tenant ID from the context
@@ -84,7 +105,7 @@ func (r *repository) GetIssuerSettings(
 			}
 
 			// Return the newly created settings
-			return model.ToCoreType(), nil
+			return model, nil
 		}
 
 		return nil, errutil.Err(
@@ -92,5 +113,5 @@ func (r *repository) GetIssuerSettings(
 		)
 	}
 
-	return issuerSettings.ToCoreType(), nil
+	return &issuerSettings, nil
 }

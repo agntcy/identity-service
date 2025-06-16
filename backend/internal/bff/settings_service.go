@@ -45,10 +45,7 @@ func (s *settingsService) GetSettings(
 	}
 
 	// Get the API key from the IAM client.
-	apiKey, err := s.iamClient.GetTenantApiKey(ctx)
-	if err != nil {
-		return nil, errutil.Err(err, "failed to get API key")
-	}
+	apiKey, _ := s.iamClient.GetTenantApiKey(ctx)
 
 	return &settingstypes.Settings{
 		IssuerSettings: issuerSettings,
