@@ -14,15 +14,11 @@ option go_package = "github.com/agntcy/identity-platform/api/server/agntcy/ident
 
 // SettingsService manages settings.
 service SettingsService {
-  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_tag) = {
-    name: "Settings";
-  };
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_tag) = {name: "Settings"};
 
   // Get Settings
   rpc GetSettings(GetSettingsRequest) returns (Settings) {
-    option (google.api.http) = {
-            get: "/v1alpha1/settings"
-        };
+    option (google.api.http) = {get: "/v1alpha1/settings"};
 
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       operation_id: "Get Settings";
@@ -32,21 +28,17 @@ service SettingsService {
 
   // Set up API Key
   rpc SetApiKey(SetApiKeyRequest) returns (ApiKey) {
-    option (google.api.http) = {
-            post: "/v1alpha1/settings/api-key"
-        };
+    option (google.api.http) = {post: "/v1alpha1/settings/api-key"};
 
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-            summary: "Set up API Key"
-            description: "Create a new API Key for the Tenant. Revoke any previous API Key"
-        };
+      summary: "Set up API Key"
+      description: "Create a new API Key for the Tenant. Revoke any previous API Key"
+    };
   }
 
   // Set up Issuer
   rpc SetIssuer(SetIssuerRequest) returns (IssuerSettings) {
-    option (google.api.http) = {
-            post: "/v1alpha1/settings/issuer"
-        };
+    option (google.api.http) = {post: "/v1alpha1/settings/issuer"};
 
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       operation_id: "Set up Issuer";
@@ -55,14 +47,11 @@ service SettingsService {
   }
 }
 
-message GetSettingsRequest {
-}
+message GetSettingsRequest {}
 
-message SetApiKeyRequest {
-}
+message SetApiKeyRequest {}
 
 message SetIssuerRequest {
   // The Issuer Settings to set up.
   IssuerSettings issuer_settings = 1 [(google.api.field_behavior) = REQUIRED];
 }
-
