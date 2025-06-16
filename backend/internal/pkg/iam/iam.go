@@ -38,11 +38,11 @@ type IdentityTags struct {
 }
 
 type ApiKey struct {
-	ID       string       `json:"id,omitempty"`
-	Name     string       `json:"name,omitempty"`
-	Secret   string       `json:"secret,omitempty"`
-	TenantID string       `json:"tenantId,omitempty"`
-	Tags     IdentityTags `json:"tags,omitempty"`
+	ID       string        `json:"id,omitempty"`
+	Name     string        `json:"name,omitempty"`
+	Secret   string        `json:"secret,omitempty"`
+	TenantID string        `json:"tenantId,omitempty"`
+	Tags     *IdentityTags `json:"tags,omitempty"`
 }
 
 type ApiKeyList struct {
@@ -555,6 +555,10 @@ func (c *Client) apiKeyCall(
 	headers := make(map[string]string)
 	headers[ApiKeyAdminProductKey] = c.adminApiKey
 
+	log.Debug("Calling IAM Api Key Endpoint ", uri)
+	log.Debug("Method: ", method)
+	log.Debug("Headers: ", headers)
+
 	var req *http.Request
 
 	if apiKey != nil {
@@ -564,7 +568,8 @@ func (c *Client) apiKeyCall(
 		}
 
 		req, _ = http.NewRequestWithContext(ctx, method, uri, bytes.NewReader(payload))
-		req.Header.Set("Content-Type", "app/json")
+		log.Debug("Payload: ", string(payload))
+		req.Header.Set("Content-Type", "application/json")
 	} else {
 		req, _ = http.NewRequestWithContext(ctx, method, uri, http.NoBody)
 	}
