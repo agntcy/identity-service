@@ -24,15 +24,6 @@ message DuoIdpSettings {
   optional string secret_key = 3;
 }
 
-// Identity Settings
-message IdentitySettings {
-  // An API Key for the Identity Platform.
-  optional ApiKey api_key = 1;
-
-  // Settings for the Issuer.
-  optional IssuerSettings issuer_settings = 2;
-}
-
 // Issuer Settings
 message IssuerSettings {
   // A unique identifier for the Issuer.
@@ -56,6 +47,15 @@ message OktaIdpSettings {
   optional string api_key = 2;
 
   optional string api_secret = 3;
+}
+
+// Identity Settings
+message Settings {
+  // An API Key for the Identity Platform.
+  optional ApiKey api_key = 1;
+
+  // Settings for the Issuer.
+  optional IssuerSettings issuer_settings = 2;
 }
 
 // Type

@@ -608,6 +608,395 @@
           ]
         }
       ]
+    },
+    {
+      "name": "agntcy/identity/platform/v1alpha1/settings.proto",
+      "description": "",
+      "package": "agntcy.identity.platform.v1alpha1",
+      "hasEnums": true,
+      "hasExtensions": false,
+      "hasMessages": true,
+      "hasServices": false,
+      "enums": [
+        {
+          "name": "IdpType",
+          "longName": "IdpType",
+          "fullName": "agntcy.identity.platform.v1alpha1.IdpType",
+          "description": "Type",
+          "values": [
+            {
+              "name": "IDP_TYPE_UNSPECIFIED",
+              "number": "0",
+              "description": "Unspecified Envelope Type."
+            },
+            {
+              "name": "IDP_TYPE_DUO",
+              "number": "1",
+              "description": "Idp Type Duo."
+            },
+            {
+              "name": "IDP_TYPE_OKTA",
+              "number": "2",
+              "description": "Idp Type Okta."
+            }
+          ]
+        }
+      ],
+      "extensions": [],
+      "messages": [
+        {
+          "name": "ApiKey",
+          "longName": "ApiKey",
+          "fullName": "agntcy.identity.platform.v1alpha1.ApiKey",
+          "description": "An Identity API Key.",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "api_key",
+              "description": "",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_api_key",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "DuoIdpSettings",
+          "longName": "DuoIdpSettings",
+          "fullName": "agntcy.identity.platform.v1alpha1.DuoIdpSettings",
+          "description": "Duo IdP Settings",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "host",
+              "description": "",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_host",
+              "defaultValue": ""
+            },
+            {
+              "name": "integration_key",
+              "description": "",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_integration_key",
+              "defaultValue": ""
+            },
+            {
+              "name": "secret_key",
+              "description": "",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_secret_key",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "IssuerSettings",
+          "longName": "IssuerSettings",
+          "fullName": "agntcy.identity.platform.v1alpha1.IssuerSettings",
+          "description": "Issuer Settings",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "issuer_id",
+              "description": "A unique identifier for the Issuer.\nThis is typically the Issuer's ID in the Identity.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_issuer_id",
+              "defaultValue": ""
+            },
+            {
+              "name": "idp_type",
+              "description": "The type of the IdP.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_idp_type",
+              "defaultValue": ""
+            },
+            {
+              "name": "duo_idp_settings",
+              "description": "Settings for the Duo Identity Provider.",
+              "label": "optional",
+              "type": "DuoIdpSettings",
+              "longType": "DuoIdpSettings",
+              "fullType": "agntcy.identity.platform.v1alpha1.DuoIdpSettings",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_duo_idp_settings",
+              "defaultValue": ""
+            },
+            {
+              "name": "okta_idp_settings",
+              "description": "Settings for the Okta Identity Provider.",
+              "label": "optional",
+              "type": "OktaIdpSettings",
+              "longType": "OktaIdpSettings",
+              "fullType": "agntcy.identity.platform.v1alpha1.OktaIdpSettings",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_okta_idp_settings",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "OktaIdpSettings",
+          "longName": "OktaIdpSettings",
+          "fullName": "agntcy.identity.platform.v1alpha1.OktaIdpSettings",
+          "description": "Okta IdP Settings",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "domain",
+              "description": "",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_domain",
+              "defaultValue": ""
+            },
+            {
+              "name": "api_key",
+              "description": "",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_api_key",
+              "defaultValue": ""
+            },
+            {
+              "name": "api_secret",
+              "description": "",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_api_secret",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "Settings",
+          "longName": "Settings",
+          "fullName": "agntcy.identity.platform.v1alpha1.Settings",
+          "description": "Identity Settings",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "api_key",
+              "description": "An API Key for the Identity Platform.",
+              "label": "optional",
+              "type": "ApiKey",
+              "longType": "ApiKey",
+              "fullType": "agntcy.identity.platform.v1alpha1.ApiKey",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_api_key",
+              "defaultValue": ""
+            },
+            {
+              "name": "issuer_settings",
+              "description": "Settings for the Issuer.",
+              "label": "optional",
+              "type": "IssuerSettings",
+              "longType": "IssuerSettings",
+              "fullType": "agntcy.identity.platform.v1alpha1.IssuerSettings",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_issuer_settings",
+              "defaultValue": ""
+            }
+          ]
+        }
+      ],
+      "services": []
+    },
+    {
+      "name": "agntcy/identity/platform/v1alpha1/settings_service.proto",
+      "description": "",
+      "package": "agntcy.identity.platform.v1alpha1",
+      "hasEnums": false,
+      "hasExtensions": false,
+      "hasMessages": true,
+      "hasServices": true,
+      "enums": [],
+      "extensions": [],
+      "messages": [
+        {
+          "name": "GetSettingsRequest",
+          "longName": "GetSettingsRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.GetSettingsRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": false,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": []
+        },
+        {
+          "name": "SetApiKeyRequest",
+          "longName": "SetApiKeyRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.SetApiKeyRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": false,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": []
+        },
+        {
+          "name": "SetIssuerRequest",
+          "longName": "SetIssuerRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.SetIssuerRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "issuer_settings",
+              "description": "The Issuer Settings to set up.",
+              "label": "",
+              "type": "IssuerSettings",
+              "longType": "IssuerSettings",
+              "fullType": "agntcy.identity.platform.v1alpha1.IssuerSettings",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        }
+      ],
+      "services": [
+        {
+          "name": "SettingsService",
+          "longName": "SettingsService",
+          "fullName": "agntcy.identity.platform.v1alpha1.SettingsService",
+          "description": "SettingsService manages settings.",
+          "methods": [
+            {
+              "name": "GetSettings",
+              "description": "Get Settings",
+              "requestType": "GetSettingsRequest",
+              "requestLongType": "GetSettingsRequest",
+              "requestFullType": "agntcy.identity.platform.v1alpha1.GetSettingsRequest",
+              "requestStreaming": false,
+              "responseType": "Settings",
+              "responseLongType": "Settings",
+              "responseFullType": "agntcy.identity.platform.v1alpha1.Settings",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "GET",
+                      "pattern": "/v1alpha1/settings"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "SetApiKey",
+              "description": "Set up API Key",
+              "requestType": "SetApiKeyRequest",
+              "requestLongType": "SetApiKeyRequest",
+              "requestFullType": "agntcy.identity.platform.v1alpha1.SetApiKeyRequest",
+              "requestStreaming": false,
+              "responseType": "ApiKey",
+              "responseLongType": "ApiKey",
+              "responseFullType": "agntcy.identity.platform.v1alpha1.ApiKey",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "POST",
+                      "pattern": "/v1alpha1/settings/api-key"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "SetIssuer",
+              "description": "Set up Issuer",
+              "requestType": "SetIssuerRequest",
+              "requestLongType": "SetIssuerRequest",
+              "requestFullType": "agntcy.identity.platform.v1alpha1.SetIssuerRequest",
+              "requestStreaming": false,
+              "responseType": "IssuerSettings",
+              "responseLongType": "IssuerSettings",
+              "responseFullType": "agntcy.identity.platform.v1alpha1.IssuerSettings",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "POST",
+                      "pattern": "/v1alpha1/settings/issuer"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
     }
   ],
   "scalarValueTypes": [
