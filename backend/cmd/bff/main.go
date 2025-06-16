@@ -108,7 +108,7 @@ func main() {
 	}()
 
 	// IAM
-	iam := outshiftiam.NewClient(
+	iamClient := outshiftiam.NewClient(
 		http.DefaultClient,
 		config.IamApiUrl,
 		config.IamAdminAPIKey,
@@ -121,7 +121,7 @@ func main() {
 
 	// Tenant interceptor
 	authInterceptor := interceptors.NewAuthInterceptor(
-		iam,
+		iamClient,
 		config.IamProductID,
 	)
 
@@ -147,14 +147,20 @@ func main() {
 
 	// Create repositories
 	appRepository := apppg.NewRepository(dbContext)
+	settingsRepository := settingspg.NewRepository(dbContext)
 
 	// Create internal services
 	appSrv := bff.NewAppService(
 		appRepository,
 	)
+	settingsSrv := bff.NewSettingsService(
+		iamClient,
+		settingsRepository,
+	)
 
 	register := identity_platform_api.GrpcServiceRegister{
-		AppServiceServer: bffgrpc.NewAppService(appSrv),
+		AppServiceServer:      bffgrpc.NewAppService(appSrv),
+		SettingsServiceServer: bffgrpc.NewSettingsService(settingsSrv),
 	}
 
 	register.RegisterGrpcHandlers(grpcsrv.Server)

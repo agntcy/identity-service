@@ -44,14 +44,14 @@ type ApiKey struct {
 
 // Okta IdP Settings
 type OktaIdpSettings struct {
-	Domain    string `json:"domain,omitempty"     protobuf:"bytes,1,opt,name=domain"`
-	ApiKey    string `json:"api_key,omitempty"    protobuf:"bytes,2,opt,name=api_key"`
-	ApiSecret string `json:"api_secret,omitempty" protobuf:"bytes,3,opt,name=api_secret"`
+	Domain       string `json:"domain,omitempty"        protobuf:"bytes,1,opt,name=domain"`
+	ClientID     string `json:"client_id,omitempty"     protobuf:"bytes,2,opt,name=client_id"`
+	ClientSecret string `json:"client_secret,omitempty" protobuf:"bytes,3,opt,name=client_secret"`
 }
 
 // Duo IdP Settings
 type DuoIdpSettings struct {
-	Host           string `json:"host,omitempty"            protobuf:"bytes,1,opt,name=host"`
+	Hostname       string `json:"hostname,omitempty"        protobuf:"bytes,1,opt,name=hostname"`
 	IntegrationKey string `json:"integration_key,omitempty" protobuf:"bytes,2,opt,name=integration_key"`
 	SecretKey      string `json:"secret_key,omitempty"      protobuf:"bytes,3,opt,name=secret_key "`
 }

@@ -128,7 +128,7 @@ func (x *ApiKey) GetApiKey() string {
 // Duo IdP Settings
 type DuoIdpSettings struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
-	Host           *string                `protobuf:"bytes,1,opt,name=host,proto3,oneof" json:"host,omitempty"`
+	Hostname       *string                `protobuf:"bytes,1,opt,name=hostname,proto3,oneof" json:"hostname,omitempty"`
 	IntegrationKey *string                `protobuf:"bytes,2,opt,name=integration_key,json=integrationKey,proto3,oneof" json:"integration_key,omitempty"`
 	SecretKey      *string                `protobuf:"bytes,3,opt,name=secret_key,json=secretKey,proto3,oneof" json:"secret_key,omitempty"`
 	unknownFields  protoimpl.UnknownFields
@@ -165,9 +165,9 @@ func (*DuoIdpSettings) Descriptor() ([]byte, []int) {
 	return file_agntcy_identity_platform_v1alpha1_settings_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *DuoIdpSettings) GetHost() string {
-	if x != nil && x.Host != nil {
-		return *x.Host
+func (x *DuoIdpSettings) GetHostname() string {
+	if x != nil && x.Hostname != nil {
+		return *x.Hostname
 	}
 	return ""
 }
@@ -264,8 +264,8 @@ func (x *IssuerSettings) GetOktaIdpSettings() *OktaIdpSettings {
 type OktaIdpSettings struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Domain        *string                `protobuf:"bytes,1,opt,name=domain,proto3,oneof" json:"domain,omitempty"`
-	ApiKey        *string                `protobuf:"bytes,2,opt,name=api_key,json=apiKey,proto3,oneof" json:"api_key,omitempty"`
-	ApiSecret     *string                `protobuf:"bytes,3,opt,name=api_secret,json=apiSecret,proto3,oneof" json:"api_secret,omitempty"`
+	ClientId      *string                `protobuf:"bytes,2,opt,name=client_id,json=clientId,proto3,oneof" json:"client_id,omitempty"`
+	ClientSecret  *string                `protobuf:"bytes,3,opt,name=client_secret,json=clientSecret,proto3,oneof" json:"client_secret,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -307,16 +307,16 @@ func (x *OktaIdpSettings) GetDomain() string {
 	return ""
 }
 
-func (x *OktaIdpSettings) GetApiKey() string {
-	if x != nil && x.ApiKey != nil {
-		return *x.ApiKey
+func (x *OktaIdpSettings) GetClientId() string {
+	if x != nil && x.ClientId != nil {
+		return *x.ClientId
 	}
 	return ""
 }
 
-func (x *OktaIdpSettings) GetApiSecret() string {
-	if x != nil && x.ApiSecret != nil {
-		return *x.ApiSecret
+func (x *OktaIdpSettings) GetClientSecret() string {
+	if x != nil && x.ClientSecret != nil {
+		return *x.ClientSecret
 	}
 	return ""
 }
@@ -384,13 +384,13 @@ const file_agntcy_identity_platform_v1alpha1_settings_proto_rawDesc = "" +
 	"\x06ApiKey\x12\x1c\n" +
 	"\aapi_key\x18\x01 \x01(\tH\x00R\x06apiKey\x88\x01\x01B\n" +
 	"\n" +
-	"\b_api_key\"\xa7\x01\n" +
-	"\x0eDuoIdpSettings\x12\x17\n" +
-	"\x04host\x18\x01 \x01(\tH\x00R\x04host\x88\x01\x01\x12,\n" +
+	"\b_api_key\"\xb3\x01\n" +
+	"\x0eDuoIdpSettings\x12\x1f\n" +
+	"\bhostname\x18\x01 \x01(\tH\x00R\bhostname\x88\x01\x01\x12,\n" +
 	"\x0fintegration_key\x18\x02 \x01(\tH\x01R\x0eintegrationKey\x88\x01\x01\x12\"\n" +
 	"\n" +
-	"secret_key\x18\x03 \x01(\tH\x02R\tsecretKey\x88\x01\x01B\a\n" +
-	"\x05_hostB\x12\n" +
+	"secret_key\x18\x03 \x01(\tH\x02R\tsecretKey\x88\x01\x01B\v\n" +
+	"\t_hostnameB\x12\n" +
 	"\x10_integration_keyB\r\n" +
 	"\v_secret_key\"\x8b\x03\n" +
 	"\x0eIssuerSettings\x12 \n" +
@@ -402,16 +402,15 @@ const file_agntcy_identity_platform_v1alpha1_settings_proto_rawDesc = "" +
 	"_issuer_idB\v\n" +
 	"\t_idp_typeB\x13\n" +
 	"\x11_duo_idp_settingsB\x14\n" +
-	"\x12_okta_idp_settings\"\x96\x01\n" +
+	"\x12_okta_idp_settings\"\xa5\x01\n" +
 	"\x0fOktaIdpSettings\x12\x1b\n" +
-	"\x06domain\x18\x01 \x01(\tH\x00R\x06domain\x88\x01\x01\x12\x1c\n" +
-	"\aapi_key\x18\x02 \x01(\tH\x01R\x06apiKey\x88\x01\x01\x12\"\n" +
+	"\x06domain\x18\x01 \x01(\tH\x00R\x06domain\x88\x01\x01\x12 \n" +
+	"\tclient_id\x18\x02 \x01(\tH\x01R\bclientId\x88\x01\x01\x12(\n" +
+	"\rclient_secret\x18\x03 \x01(\tH\x02R\fclientSecret\x88\x01\x01B\t\n" +
+	"\a_domainB\f\n" +
 	"\n" +
-	"api_secret\x18\x03 \x01(\tH\x02R\tapiSecret\x88\x01\x01B\t\n" +
-	"\a_domainB\n" +
-	"\n" +
-	"\b_api_keyB\r\n" +
-	"\v_api_secret\"\xd4\x01\n" +
+	"_client_idB\x10\n" +
+	"\x0e_client_secret\"\xd4\x01\n" +
 	"\bSettings\x12G\n" +
 	"\aapi_key\x18\x01 \x01(\v2).agntcy.identity.platform.v1alpha1.ApiKeyH\x00R\x06apiKey\x88\x01\x01\x12_\n" +
 	"\x0fissuer_settings\x18\x02 \x01(\v21.agntcy.identity.platform.v1alpha1.IssuerSettingsH\x01R\x0eissuerSettings\x88\x01\x01B\n" +

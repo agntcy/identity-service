@@ -47,9 +47,13 @@ service SettingsService {
   }
 }
 
-message GetSettingsRequest {}
+message GetSettingsRequest {
+  // Empty request for getting settings.
+}
 
-message SetApiKeyRequest {}
+message SetApiKeyRequest {
+  // Empty request for setting up API Key.
+}
 
 message SetIssuerRequest {
   // The Issuer Settings to set up.

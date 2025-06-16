@@ -684,7 +684,7 @@
           "extensions": [],
           "fields": [
             {
-              "name": "host",
+              "name": "hostname",
               "description": "",
               "label": "optional",
               "type": "string",
@@ -692,7 +692,7 @@
               "fullType": "string",
               "ismap": false,
               "isoneof": true,
-              "oneofdecl": "_host",
+              "oneofdecl": "_hostname",
               "defaultValue": ""
             },
             {
@@ -804,7 +804,7 @@
               "defaultValue": ""
             },
             {
-              "name": "api_key",
+              "name": "client_id",
               "description": "",
               "label": "optional",
               "type": "string",
@@ -812,11 +812,11 @@
               "fullType": "string",
               "ismap": false,
               "isoneof": true,
-              "oneofdecl": "_api_key",
+              "oneofdecl": "_client_id",
               "defaultValue": ""
             },
             {
-              "name": "api_secret",
+              "name": "client_secret",
               "description": "",
               "label": "optional",
               "type": "string",
@@ -824,7 +824,7 @@
               "fullType": "string",
               "ismap": false,
               "isoneof": true,
-              "oneofdecl": "_api_secret",
+              "oneofdecl": "_client_secret",
               "defaultValue": ""
             }
           ]

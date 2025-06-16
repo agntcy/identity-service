@@ -17,7 +17,7 @@ message ApiKey {
 
 // Duo IdP Settings
 message DuoIdpSettings {
-  optional string host = 1;
+  optional string hostname = 1;
 
   optional string integration_key = 2;
 
@@ -44,9 +44,9 @@ message IssuerSettings {
 message OktaIdpSettings {
   optional string domain = 1;
 
-  optional string api_key = 2;
+  optional string client_id = 2;
 
-  optional string api_secret = 3;
+  optional string client_secret = 3;
 }
 
 // Identity Settings
@@ -63,13 +63,6 @@ enum IdpType {
   // Unspecified Envelope Type.
   IDP_TYPE_UNSPECIFIED = 0;
   // Idp Type Duo.
-  IDP_TYPE_DUO = 1;
-  // Idp Type Okta.
-  IDP_TYPE_OKTA = 2;
-  // Idp Type Self.
-  IDP_TYPE_SELF = 3;
-}
-p Type Duo.
   IDP_TYPE_DUO = 1;
   // Idp Type Okta.
   IDP_TYPE_OKTA = 2;

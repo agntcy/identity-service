@@ -10,32 +10,32 @@ import (
 )
 
 type OktaIdpSettings struct {
-	ID        string `gorm:"primaryKey"`
-	TenantID  string `gorm:"not null;type:varchar(256);"`
-	Domain    string `gorm:"not null;type:varchar(256);"`
-	ApiKey    string `gorm:"not null;type:varchar(256);"`
-	ApiSecret string `gorm:"not null;type:varchar(256);"`
+	ID           string `gorm:"primaryKey"`
+	TenantID     string `gorm:"not null;type:varchar(256);"`
+	Domain       string `gorm:"not null;type:varchar(256);"`
+	ClientID     string `gorm:"not null;type:varchar(256);"`
+	ClientSecret string `gorm:"not null;type:varchar(256);"`
 }
 
 func (o *OktaIdpSettings) ToCoreType() *types.OktaIdpSettings {
 	return &types.OktaIdpSettings{
-		Domain:    o.Domain,
-		ApiKey:    o.ApiKey,
-		ApiSecret: o.ApiSecret,
+		Domain:       o.Domain,
+		ClientID:     o.ClientID,
+		ClientSecret: o.ClientSecret,
 	}
 }
 
 type DuoIdpSettings struct {
 	ID             string `gorm:"primaryKey"`
 	TenantID       string `gorm:"not null;type:varchar(256);"`
-	Host           string `gorm:"not null;type:varchar(256);"`
+	Hostname       string `gorm:"not null;type:varchar(256);"`
 	IntegrationKey string `gorm:"not null;type:varchar(256);"`
 	SecretKey      string `gorm:"not null;type:varchar(256);"`
 }
 
 func (d *DuoIdpSettings) ToCoreType() *types.DuoIdpSettings {
 	return &types.DuoIdpSettings{
-		Host:           d.Host,
+		Hostname:       d.Hostname,
 		IntegrationKey: d.IntegrationKey,
 		SecretKey:      d.SecretKey,
 	}
