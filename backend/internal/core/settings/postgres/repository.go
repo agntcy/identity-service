@@ -7,8 +7,8 @@ import (
 	"context"
 	"errors"
 
-	appcore "github.com/agntcy/identity-platform/internal/core/app"
-	"github.com/agntcy/identity-platform/internal/core/app/types"
+	settingscore "github.com/agntcy/identity-platform/internal/core/settings"
+	"github.com/agntcy/identity-platform/internal/core/settings/types"
 	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 	"github.com/agntcy/identity-platform/pkg/db"
@@ -20,18 +20,44 @@ type repository struct {
 }
 
 // NewRepository creates a new instance of the Repository
-func NewRepository(dbContext db.Context) appcore.Repository {
+func NewRepository(dbContext db.Context) settingscore.Repository {
 	return &repository{
 		dbContext,
 	}
 }
 
-// CreateApp creates a new App
-func (r *repository) CreateApp(
+// UpdateIssuerSettings updates the issuer settings in the database.
+func (r *repository) UpdateIssuerSettings(
 	ctx context.Context,
-	app *types.App,
-) (*types.App, error) {
-	model := newAppModel(app)
+	issuerSettings *types.IssuerSettings,
+) (*types.IssuerSettings, error) {
+	existingSettings, err := r.GetIssuerSettings(ctx)
+	if err != nil {
+		return nil, errutil.Err(
+			err, "failed to get issuer settings",
+		)
+	}
+
+	// Update the existing settings with the new values
+	existingSettings.IdpType = issuerSettings.IdpType
+	existingSettings.OktaIdpSettings = issuerSettings.OktaIdpSettings
+	existingSettings.DuoIdpSettings = issuerSettings.DuoIdpSettings
+	model := newIssuerSettingsModel(existingSettings)
+
+	updated := r.dbContext.Client().Updates(model)
+	if updated.Error != nil {
+		return nil, errutil.Err(
+			updated.Error, "there was an error updating the settings",
+		)
+	}
+
+	return existingSettings, nil
+}
+
+func (r *repository) GetIssuerSettings(
+	ctx context.Context,
+) (*types.IssuerSettings, error) {
+	var issuerSettings IssuerSettings
 
 	// Get the tenant ID from the context
 	tenantID, ok := identitycontext.GetTenantID(ctx)
@@ -41,39 +67,30 @@ func (r *repository) CreateApp(
 		)
 	}
 
-	// Set the tenant ID in the model
-	model.TenantID = tenantID
-
-	// Create the app
-	inserted := r.dbContext.Client().Create(model)
-	if inserted.Error != nil {
-		return nil, errutil.Err(
-			inserted.Error, "there was an error creating the app",
-		)
-	}
-
-	return app, nil
-}
-
-func (r *repository) GetApp(
-	ctx context.Context,
-	id string,
-) (*types.App, error) {
-	var app App
-
-	result := r.dbContext.Client().First(&app, map[string]any{
-		"id": id,
+	result := r.dbContext.Client().First(&issuerSettings, map[string]any{
+		"tenant_id": tenantID,
 	})
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			return nil, errutil.Err(
-				result.Error, "app not found")
+			// Create a new IssuerSettings if not found
+			model := newIssuerSettingsModel(&types.IssuerSettings{})
+			model.TenantID = tenantID
+
+			inserted := r.dbContext.Client().Create(model)
+			if inserted.Error != nil {
+				return nil, errutil.Err(
+					inserted.Error, "there was an error creating the settings",
+				)
+			}
+
+			// Return the newly created settings
+			return model.ToCoreType(), nil
 		}
 
 		return nil, errutil.Err(
-			result.Error, "there was an error fetching the app",
+			result.Error, "there was an error fetching the settings",
 		)
 	}
 
-	return app.ToCoreType(), nil
+	return issuerSettings.ToCoreType(), nil
 }

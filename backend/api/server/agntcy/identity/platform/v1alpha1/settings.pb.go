@@ -33,6 +33,8 @@ const (
 	IdpType_IDP_TYPE_DUO IdpType = 1
 	// Idp Type Okta.
 	IdpType_IDP_TYPE_OKTA IdpType = 2
+	// Idp Type Self.
+	IdpType_IDP_TYPE_SELF IdpType = 3
 )
 
 // Enum value maps for IdpType.
@@ -41,11 +43,13 @@ var (
 		0: "IDP_TYPE_UNSPECIFIED",
 		1: "IDP_TYPE_DUO",
 		2: "IDP_TYPE_OKTA",
+		3: "IDP_TYPE_SELF",
 	}
 	IdpType_value = map[string]int32{
 		"IDP_TYPE_UNSPECIFIED": 0,
 		"IDP_TYPE_DUO":         1,
 		"IDP_TYPE_OKTA":        2,
+		"IDP_TYPE_SELF":        3,
 	}
 )
 
@@ -189,7 +193,7 @@ type IssuerSettings struct {
 	// This is typically the Issuer's ID in the Identity.
 	IssuerId *string `protobuf:"bytes,1,opt,name=issuer_id,json=issuerId,proto3,oneof" json:"issuer_id,omitempty"`
 	// The type of the IdP.
-	IdpType *string `protobuf:"bytes,2,opt,name=idp_type,json=idpType,proto3,oneof" json:"idp_type,omitempty"`
+	IdpType *IdpType `protobuf:"varint,2,opt,name=idp_type,json=idpType,proto3,enum=agntcy.identity.platform.v1alpha1.IdpType,oneof" json:"idp_type,omitempty"`
 	// Settings for the Duo Identity Provider.
 	DuoIdpSettings *DuoIdpSettings `protobuf:"bytes,3,opt,name=duo_idp_settings,json=duoIdpSettings,proto3,oneof" json:"duo_idp_settings,omitempty"`
 	// Settings for the Okta Identity Provider.
@@ -235,11 +239,11 @@ func (x *IssuerSettings) GetIssuerId() string {
 	return ""
 }
 
-func (x *IssuerSettings) GetIdpType() string {
+func (x *IssuerSettings) GetIdpType() IdpType {
 	if x != nil && x.IdpType != nil {
 		return *x.IdpType
 	}
-	return ""
+	return IdpType_IDP_TYPE_UNSPECIFIED
 }
 
 func (x *IssuerSettings) GetDuoIdpSettings() *DuoIdpSettings {
@@ -388,10 +392,10 @@ const file_agntcy_identity_platform_v1alpha1_settings_proto_rawDesc = "" +
 	"secret_key\x18\x03 \x01(\tH\x02R\tsecretKey\x88\x01\x01B\a\n" +
 	"\x05_hostB\x12\n" +
 	"\x10_integration_keyB\r\n" +
-	"\v_secret_key\"\xdf\x02\n" +
+	"\v_secret_key\"\x8b\x03\n" +
 	"\x0eIssuerSettings\x12 \n" +
-	"\tissuer_id\x18\x01 \x01(\tH\x00R\bissuerId\x88\x01\x01\x12\x1e\n" +
-	"\bidp_type\x18\x02 \x01(\tH\x01R\aidpType\x88\x01\x01\x12`\n" +
+	"\tissuer_id\x18\x01 \x01(\tH\x00R\bissuerId\x88\x01\x01\x12J\n" +
+	"\bidp_type\x18\x02 \x01(\x0e2*.agntcy.identity.platform.v1alpha1.IdpTypeH\x01R\aidpType\x88\x01\x01\x12`\n" +
 	"\x10duo_idp_settings\x18\x03 \x01(\v21.agntcy.identity.platform.v1alpha1.DuoIdpSettingsH\x02R\x0eduoIdpSettings\x88\x01\x01\x12c\n" +
 	"\x11okta_idp_settings\x18\x04 \x01(\v22.agntcy.identity.platform.v1alpha1.OktaIdpSettingsH\x03R\x0foktaIdpSettings\x88\x01\x01B\f\n" +
 	"\n" +
@@ -413,11 +417,12 @@ const file_agntcy_identity_platform_v1alpha1_settings_proto_rawDesc = "" +
 	"\x0fissuer_settings\x18\x02 \x01(\v21.agntcy.identity.platform.v1alpha1.IssuerSettingsH\x01R\x0eissuerSettings\x88\x01\x01B\n" +
 	"\n" +
 	"\b_api_keyB\x12\n" +
-	"\x10_issuer_settings*H\n" +
+	"\x10_issuer_settings*[\n" +
 	"\aIdpType\x12\x18\n" +
 	"\x14IDP_TYPE_UNSPECIFIED\x10\x00\x12\x10\n" +
 	"\fIDP_TYPE_DUO\x10\x01\x12\x11\n" +
-	"\rIDP_TYPE_OKTA\x10\x02BkZigithub.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_gob\x06proto3"
+	"\rIDP_TYPE_OKTA\x10\x02\x12\x11\n" +
+	"\rIDP_TYPE_SELF\x10\x03BkZigithub.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_gob\x06proto3"
 
 var (
 	file_agntcy_identity_platform_v1alpha1_settings_proto_rawDescOnce sync.Once
@@ -442,15 +447,16 @@ var file_agntcy_identity_platform_v1alpha1_settings_proto_goTypes = []any{
 	(*Settings)(nil),        // 5: agntcy.identity.platform.v1alpha1.Settings
 }
 var file_agntcy_identity_platform_v1alpha1_settings_proto_depIdxs = []int32{
-	2, // 0: agntcy.identity.platform.v1alpha1.IssuerSettings.duo_idp_settings:type_name -> agntcy.identity.platform.v1alpha1.DuoIdpSettings
-	4, // 1: agntcy.identity.platform.v1alpha1.IssuerSettings.okta_idp_settings:type_name -> agntcy.identity.platform.v1alpha1.OktaIdpSettings
-	1, // 2: agntcy.identity.platform.v1alpha1.Settings.api_key:type_name -> agntcy.identity.platform.v1alpha1.ApiKey
-	3, // 3: agntcy.identity.platform.v1alpha1.Settings.issuer_settings:type_name -> agntcy.identity.platform.v1alpha1.IssuerSettings
-	4, // [4:4] is the sub-list for method output_type
-	4, // [4:4] is the sub-list for method input_type
-	4, // [4:4] is the sub-list for extension type_name
-	4, // [4:4] is the sub-list for extension extendee
-	0, // [0:4] is the sub-list for field type_name
+	0, // 0: agntcy.identity.platform.v1alpha1.IssuerSettings.idp_type:type_name -> agntcy.identity.platform.v1alpha1.IdpType
+	2, // 1: agntcy.identity.platform.v1alpha1.IssuerSettings.duo_idp_settings:type_name -> agntcy.identity.platform.v1alpha1.DuoIdpSettings
+	4, // 2: agntcy.identity.platform.v1alpha1.IssuerSettings.okta_idp_settings:type_name -> agntcy.identity.platform.v1alpha1.OktaIdpSettings
+	1, // 3: agntcy.identity.platform.v1alpha1.Settings.api_key:type_name -> agntcy.identity.platform.v1alpha1.ApiKey
+	3, // 4: agntcy.identity.platform.v1alpha1.Settings.issuer_settings:type_name -> agntcy.identity.platform.v1alpha1.IssuerSettings
+	5, // [5:5] is the sub-list for method output_type
+	5, // [5:5] is the sub-list for method input_type
+	5, // [5:5] is the sub-list for extension type_name
+	5, // [5:5] is the sub-list for extension extendee
+	0, // [0:5] is the sub-list for field type_name
 }
 
 func init() { file_agntcy_identity_platform_v1alpha1_settings_proto_init() }

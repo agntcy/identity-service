@@ -15,6 +15,7 @@ import (
 	"github.com/agntcy/identity-platform/internal/bff"
 	bffgrpc "github.com/agntcy/identity-platform/internal/bff/grpc"
 	apppg "github.com/agntcy/identity-platform/internal/core/app/postgres"
+	settingspg "github.com/agntcy/identity-platform/internal/core/settings/postgres"
 	"github.com/agntcy/identity-platform/internal/pkg/grpcutil"
 	outshiftiam "github.com/agntcy/identity-platform/internal/pkg/iam"
 	"github.com/agntcy/identity-platform/internal/pkg/interceptors"
@@ -92,7 +93,8 @@ func main() {
 
 	// Migrate the database
 	err = dbContext.AutoMigrate(
-		&apppg.App{}, // App model
+		&apppg.App{},                 // App model
+		&settingspg.IssuerSettings{}, // Issuer settings model
 	)
 	if err != nil {
 		log.Fatal(err)

@@ -247,7 +247,13 @@ paths:
                   in: query
                   description: The type of the IdP.
                   schema:
+                    enum:
+                        - IDP_TYPE_UNSPECIFIED
+                        - IDP_TYPE_DUO
+                        - IDP_TYPE_OKTA
+                        - IDP_TYPE_SELF
                     type: string
+                    format: enum
                 - name: issuerSettings.duoIdpSettings.host
                   in: query
                   schema:
@@ -365,8 +371,14 @@ components:
                         A unique identifier for the Issuer.
                          This is typically the Issuer's ID in the Identity.
                 idpType:
+                    enum:
+                        - IDP_TYPE_UNSPECIFIED
+                        - IDP_TYPE_DUO
+                        - IDP_TYPE_OKTA
+                        - IDP_TYPE_SELF
                     type: string
                     description: The type of the IdP.
+                    format: enum
                 duoIdpSettings:
                     allOf:
                         - $ref: '#/components/schemas/DuoIdpSettings'

@@ -15,6 +15,9 @@ const (
 
 	// Idp Type Okta.
 	IDP_TYPE_OKTA
+
+	// Idp Type Self.
+	IDP_TYPE_SELF
 )
 
 func (t *IdpType) UnmarshalText(text []byte) error {
@@ -60,7 +63,7 @@ type IssuerSettings struct {
 	IssuerID string `json:"issuer_id,omitempty" protobuf:"bytes,1,opt,name=issuer_id"`
 
 	// The type of the IdP.
-	IdPType string `json:"idp_type,omitempty" protobuf:"bytes,2,opt,name=idp_type"`
+	IdpType IdpType `json:"idp_type,omitempty" protobuf:"bytes,2,opt,name=idp_type"`
 
 	// Settings for the Duo Identity Provider.
 	DuoIdpSettings *DuoIdpSettings `json:"duo_idp_settings,omitempty" protobuf:"bytes,3,opt,name=duo_idp_settings"`

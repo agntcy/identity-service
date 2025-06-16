@@ -10,12 +10,11 @@ import (
 )
 
 type Repository interface {
-	CreateSettings(
+	UpdateIssuerSettings(
 		ctx context.Context,
-		settings *types.Settings,
-	) (*types.Settings, error)
-	GetSettings(
+		issuerSettings *types.IssuerSettings,
+	) (*types.IssuerSettings, error)
+	GetIssuerSettings(
 		ctx context.Context,
-		id string,
-	) (*types.Settings, error)
+	) (*types.IssuerSettings, error)
 }

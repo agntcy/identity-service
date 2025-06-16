@@ -31,7 +31,7 @@ message IssuerSettings {
   optional string issuer_id = 1;
 
   // The type of the IdP.
-  optional string idp_type = 2;
+  optional IdpType idp_type = 2;
 
   // Settings for the Duo Identity Provider.
   optional DuoIdpSettings duo_idp_settings = 3;
@@ -66,4 +66,13 @@ enum IdpType {
   IDP_TYPE_DUO = 1;
   // Idp Type Okta.
   IDP_TYPE_OKTA = 2;
+  // Idp Type Self.
+  IDP_TYPE_SELF = 3;
+}
+p Type Duo.
+  IDP_TYPE_DUO = 1;
+  // Idp Type Okta.
+  IDP_TYPE_OKTA = 2;
+  // Idp Type Self.
+  IDP_TYPE_SELF = 3;
 }

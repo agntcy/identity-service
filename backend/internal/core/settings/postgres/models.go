@@ -4,31 +4,66 @@
 package postgres
 
 import (
-	"github.com/agntcy/identity-platform/internal/core/app/types"
+	"github.com/agntcy/identity-platform/internal/core/settings/types"
+	"github.com/agntcy/identity-platform/internal/pkg/convertutil"
+	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
 )
 
-type App struct {
-	ID          string        `gorm:"primaryKey"`
-	TenantID    string        `gorm:"not null;type:varchar(256);"`
-	Name        *string       `gorm:"not null;type:varchar(256);"`
-	Description *string       `gorm:"not null;type:varchar(256);"`
-	Type        types.AppType `gorm:"not null;type:uint;default:0;"`
+type OktaIdpSettings struct {
+	ID        string `gorm:"primaryKey"`
+	TenantID  string `gorm:"not null;type:varchar(256);"`
+	Domain    string `gorm:"not null;type:varchar(256);"`
+	ApiKey    string `gorm:"not null;type:varchar(256);"`
+	ApiSecret string `gorm:"not null;type:varchar(256);"`
 }
 
-func (i *App) ToCoreType() *types.App {
-	return &types.App{
-		ID:          i.ID,
-		Name:        i.Name,
-		Description: i.Description,
-		Type:        i.Type,
+func (o *OktaIdpSettings) ToCoreType() *types.OktaIdpSettings {
+	return &types.OktaIdpSettings{
+		Domain:    o.Domain,
+		ApiKey:    o.ApiKey,
+		ApiSecret: o.ApiSecret,
 	}
 }
 
-func newAppModel(src *types.App) *App {
-	return &App{
-		ID:          src.ID,
-		Name:        src.Name,
-		Description: src.Description,
-		Type:        src.Type,
+type DuoIdpSettings struct {
+	ID             string `gorm:"primaryKey"`
+	TenantID       string `gorm:"not null;type:varchar(256);"`
+	Host           string `gorm:"not null;type:varchar(256);"`
+	IntegrationKey string `gorm:"not null;type:varchar(256);"`
+	SecretKey      string `gorm:"not null;type:varchar(256);"`
+}
+
+func (d *DuoIdpSettings) ToCoreType() *types.DuoIdpSettings {
+	return &types.DuoIdpSettings{
+		Host:           d.Host,
+		IntegrationKey: d.IntegrationKey,
+		SecretKey:      d.SecretKey,
+	}
+}
+
+type IssuerSettings struct {
+	ID              string           `gorm:"primaryKey"`
+	TenantID        string           `gorm:"not null;type:varchar(256);"`
+	IssuerID        *string          `gorm:"type:varchar(256);"`
+	IdpType         types.IdpType    `gorm:"not null;type:uint;default:0;"`
+	DuoIdpSettings  *DuoIdpSettings  `gorm:"foreignKey:ID"`
+	OktaIdpSettings *OktaIdpSettings `gorm:"foreignKey:ID"`
+}
+
+func (i *IssuerSettings) ToCoreType() *types.IssuerSettings {
+	return &types.IssuerSettings{
+		IssuerID:        ptrutil.DerefStr(i.IssuerID),
+		IdpType:         i.IdpType,
+		DuoIdpSettings:  i.DuoIdpSettings.ToCoreType(),
+		OktaIdpSettings: i.OktaIdpSettings.ToCoreType(),
+	}
+}
+
+func newIssuerSettingsModel(src *types.IssuerSettings) *IssuerSettings {
+	return &IssuerSettings{
+		IssuerID:        ptrutil.Ptr(src.IssuerID),
+		IdpType:         src.IdpType,
+		DuoIdpSettings:  convertutil.Convert[DuoIdpSettings](src.DuoIdpSettings),
+		OktaIdpSettings: convertutil.Convert[OktaIdpSettings](src.OktaIdpSettings),
 	}
 }

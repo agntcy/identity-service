@@ -638,6 +638,11 @@
               "name": "IDP_TYPE_OKTA",
               "number": "2",
               "description": "Idp Type Okta."
+            },
+            {
+              "name": "IDP_TYPE_SELF",
+              "number": "3",
+              "description": "Idp Type Self."
             }
           ]
         }
@@ -742,9 +747,9 @@
               "name": "idp_type",
               "description": "The type of the IdP.",
               "label": "optional",
-              "type": "string",
-              "longType": "string",
-              "fullType": "string",
+              "type": "IdpType",
+              "longType": "IdpType",
+              "fullType": "agntcy.identity.platform.v1alpha1.IdpType",
               "ismap": false,
               "isoneof": true,
               "oneofdecl": "_idp_type",
