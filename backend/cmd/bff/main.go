@@ -89,7 +89,9 @@ func main() {
 	}
 
 	// Migrate the database
-	err = dbContext.AutoMigrate()
+	err = dbContext.AutoMigrate(
+		&apppg.App{}, // App model
+	)
 	if err != nil {
 		log.Fatal(err)
 	}
