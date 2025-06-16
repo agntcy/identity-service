@@ -11,7 +11,7 @@ export default function CustomLayout(props) {
   const location = useLocation();
   useEffect(() => {
     const footerElements = document.getElementsByClassName("footer");
-    if (location.pathname.startsWith("/openapi/node/v1alpha1")) {
+    if (location.pathname.startsWith("/openapi/platform/v1alpha1")) {
       Array.from(footerElements).forEach((element) => {
         (element as HTMLElement).style.display = "none";
       });
