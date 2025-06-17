@@ -6,7 +6,7 @@ package bff
 import (
 	"context"
 
-	"github.com/agntcy/identity-platform/internal/core/idp"
+	idpcore "github.com/agntcy/identity-platform/internal/core/idp"
 	settingscore "github.com/agntcy/identity-platform/internal/core/settings"
 	settingstypes "github.com/agntcy/identity-platform/internal/core/settings/types"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
@@ -88,7 +88,7 @@ func (s *settingsService) SetIssuerSettings(
 	}
 
 	// Instantiate the IdP based on the issuer settings.
-	idp, err := idp.NewIdp(
+	idp, err := idpcore.NewIdp(
 		issuerSettings)
 	if err != nil {
 		return nil, errutil.Err(err, "failed to create IdP instance")

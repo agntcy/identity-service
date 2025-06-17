@@ -45,6 +45,13 @@ func (d *DuoIdp) TestSettings(ctx context.Context) error {
 		duosdk.UseTimeout,
 	)
 
+	// Ensure the response body is closed after use to prevent resource leaks.
+	defer func() {
+		if response != nil {
+			_ = response.Body.Close()
+		}
+	}()
+
 	log.Debug("Got response from Duo IdP: ", response.StatusCode)
 
 	if err != nil || response.StatusCode != http.StatusOK {
