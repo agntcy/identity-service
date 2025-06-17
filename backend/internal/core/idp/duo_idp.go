@@ -5,10 +5,18 @@ package idp
 
 import (
 	"context"
+	"net/http"
+	"time"
 
 	"github.com/agntcy/identity-platform/internal/core/settings/types"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
+	"github.com/agntcy/identity-platform/pkg/log"
 	duosdk "github.com/duosecurity/duo_api_golang"
+)
+
+const (
+	duoTimeout    = 10 // seconds
+	duoClientName = "duo-client"
 )
 
 type DuoIdp struct {
@@ -24,17 +32,29 @@ func (d *DuoIdp) TestSettings(ctx context.Context) error {
 	}
 
 	duoapi := duosdk.NewDuoApi(
-		d.IdpSettings.SecretKey,
 		d.IdpSettings.IntegrationKey,
+		d.IdpSettings.SecretKey,
 		d.IdpSettings.Hostname,
-		"")
+		duoClientName,
+		duosdk.SetTimeout(duoTimeout*time.Second))
 
-	_, _, err := duoapi.SignedCall("GET", "/admin/v3/integrations", nil, nil)
-
-	return errutil.Err(
-		err,
-		"failed to test Duo IdP settings",
+	response, _, err := duoapi.JSONSignedCall(
+		"GET",
+		"/admin/v3/integrations",
+		nil,
+		duosdk.UseTimeout,
 	)
+
+	log.Debug("Got response from Duo IdP: ", response.StatusCode)
+
+	if err != nil || response.StatusCode != http.StatusOK {
+		return errutil.Err(
+			err,
+			"failed to test Duo IdP settings",
+		)
+	}
+
+	return nil
 }
 
 func (d *DuoIdp) CreateClientCredentialsPair(ctx context.Context) error {
