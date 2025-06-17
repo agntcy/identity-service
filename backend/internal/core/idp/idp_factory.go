@@ -4,16 +4,19 @@
 package idp
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/agntcy/identity-platform/internal/core/settings/types"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 )
 
-func NewIdp(issuerSettings *types.IssuerSettings) (Idp, error) {
+func NewIdp(ctx context.Context, issuerSettings *types.IssuerSettings) (Idp, error) {
+	var idp Idp
+
 	switch issuerSettings.IdpType {
 	case types.IDP_TYPE_DUO:
-		return &DuoIdp{issuerSettings.DuoIdpSettings}, nil
+		idp = &DuoIdp{issuerSettings.DuoIdpSettings, nil}
 	case types.IDP_TYPE_OKTA:
 		return nil, errutil.Err(
 			fmt.Errorf("IDP type %s is not supported yet", issuerSettings.IdpType),
@@ -25,4 +28,11 @@ func NewIdp(issuerSettings *types.IssuerSettings) (Idp, error) {
 			"unknown IDP type",
 		)
 	}
+
+	err := idp.TestSettings(ctx)
+	if err != nil {
+		return nil, errutil.Err(err, "failed to test IDP settings")
+	}
+
+	return idp, nil
 }

@@ -62,6 +62,10 @@ type IssuerSettings struct {
 	// This is typically the Issuer's ID in the Identity.
 	IssuerID string `json:"issuer_id,omitempty" protobuf:"bytes,1,opt,name=issuer_id"`
 
+	// A unique identifier for the Key.
+	// This is typically the Key's ID in the vault provider.
+	KeyID string `json:"key_id,omitempty" protobuf:"bytes,2,opt,name=key_id"`
+
 	// The type of the IdP.
 	IdpType IdpType `json:"idp_type,omitempty" protobuf:"bytes,2,opt,name=idp_type"`
 

@@ -63,6 +63,7 @@ const (
 	SessionAccessTokenKey   string = "Authorization"
 	TenantClaimKey          string = "tenant"
 	UsernameClaimKey        string = "sub"
+	OrganizationClaimKey    string = "organization"
 	ApiKeyKey               string = "x-id-api-key"     //nolint:gosec // This is a false positive
 	ApiKeyTenantKey         string = "x-api-key-tenant" //nolint:gosec // This is a false positive
 	ApiKeyTagsKey           string = "x-api-key-tags"   //nolint:gosec // This is a false positive
@@ -175,7 +176,7 @@ func (c *Client) AuthJwt(
 
 	accessToken := splitToken[1]
 
-	username, tenant, validateErr := c.validateAccessToken(ctx, accessToken)
+	username, tenant, organization, validateErr := c.validateAccessToken(ctx, accessToken)
 	if validateErr != nil {
 		return ctx, errors.New("JWT validation failed")
 	}
@@ -187,6 +188,12 @@ func (c *Client) AuthJwt(
 	if username != nil {
 		ctx = identitycontext.InsertUserID(ctx, *username)
 	}
+
+	// Add organization if present
+	if organization != nil {
+		ctx = identitycontext.InsertOrganizationID(ctx, *organization)
+	}
+
 	ctx = identitycontext.InsertAuthType(ctx, AuthTypeJWTToken)
 
 	return ctx, nil
@@ -391,7 +398,7 @@ func (c *Client) RevokeAppApiKey(ctx context.Context, appID string) error {
 func (c *Client) validateAccessToken(
 	_ context.Context,
 	accessToken string,
-) (*string, *string, error) {
+) (*string, *string, *string, error) {
 	var token *jwtverifier.Jwt
 	var verifyErr error
 
@@ -403,13 +410,18 @@ func (c *Client) validateAccessToken(
 		token, verifyErr = c.apiKeyV2JwtVerifier.VerifyAccessToken(accessToken)
 		if verifyErr != nil {
 			log.Debug("Got error validating api key", verifyErr)
-			return nil, nil, verifyErr
+			return nil, nil, nil, verifyErr
 		}
 	}
 
 	var username *string
 	if usernameRaw, ok := token.Claims[UsernameClaimKey].(string); ok {
 		username = &usernameRaw
+	}
+
+	var organization *string
+	if organizationRaw, ok := token.Claims[OrganizationClaimKey].(string); ok {
+		organization = &organizationRaw
 	}
 
 	var tenant *string
@@ -422,7 +434,7 @@ func (c *Client) validateAccessToken(
 		tenant = &c.singleTenantID
 	}
 
-	return username, tenant, nil
+	return username, tenant, organization, nil
 }
 
 func (c *Client) createApiKey(
