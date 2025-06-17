@@ -57,6 +57,21 @@ func InsertUserID(ctx context.Context, userID string) context.Context {
 	return ctx
 }
 
+func GetOrganizationID(ctx context.Context) (string, bool) {
+	organizationID, ok := ctx.Value(OrganizationID).(string)
+
+	return organizationID, ok
+}
+
+// InsertOrganizationID inserts organizationID into the context.
+func InsertOrganizationID(ctx context.Context, organizationID string) context.Context {
+	if organizationID != "" {
+		return withOrganizationID(ctx, organizationID)
+	}
+
+	return ctx
+}
+
 // InsertAuthType inserts authType into the context.
 func InsertAuthType(ctx context.Context, authType string) context.Context {
 	if authType != "" {
@@ -83,6 +98,11 @@ func withTenantID(ctx context.Context, id string) context.Context {
 // WithUserID injects a user ID to a context.
 func withUserID(ctx context.Context, id string) context.Context {
 	return context.WithValue(ctx, UserID, id)
+}
+
+// WithOrganizationID injects an organization ID to a context.
+func withOrganizationID(ctx context.Context, id string) context.Context {
+	return context.WithValue(ctx, OrganizationID, id)
 }
 
 // WithTypeAuth injects a type auth to a context.

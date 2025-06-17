@@ -22,8 +22,8 @@ type ClientCredentials struct {
 	// ClientSecret is the secret key for the client.
 	ClientSecret string `json:"client_secret"`
 
-	// IssuerURL is the URL of the issuer.
-	IssuerURL string `json:"issuer_url"`
+	// Issuer is the URL of the issuer.
+	Issuer string `json:"issuer"`
 }
 
 // Idp defines methods for interacting with identity providers (IdPs).

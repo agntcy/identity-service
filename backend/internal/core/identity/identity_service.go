@@ -11,27 +11,43 @@ import (
 	idpcore "github.com/agntcy/identity-platform/internal/core/idp"
 	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
+	"github.com/agntcy/identity-platform/internal/pkg/httputil"
 	"github.com/agntcy/identity-platform/internal/tmp/joseutil"
+	"github.com/agntcy/identity-platform/internal/tmp/jwtutil"
 	"github.com/agntcy/identity-platform/internal/tmp/keystore"
+	"github.com/agntcy/identity-platform/internal/tmp/oidc"
 	"github.com/agntcy/identity-platform/pkg/log"
+	issuersdk "github.com/agntcy/identity/api/client/client/issuer_service"
+	identitymodels "github.com/agntcy/identity/api/client/models"
+	httptransport "github.com/go-openapi/runtime/client"
+	"github.com/go-openapi/strfmt"
 	"github.com/google/uuid"
 )
 
-const keyBasePathPrefix = "key-"
+const (
+	keyBasePathPrefix = "key-"
+	proofTypeJWT      = "jwt"
+)
+
+type Issuer struct {
+	CommonName string
+	KeyID      string
+}
 
 type Service interface {
 	RegisterIssuer(
 		ctx context.Context,
 		clientCredentials *idpcore.ClientCredentials,
-		commonName *string,
-	) error
+		userID, organizationID string,
+	) (*Issuer, error)
 }
 
 // The verificationService struct implements the VerificationService interface
 type service struct {
-	vaultAddress    string
-	identityAddress string
-	goEnv           string
+	vaultAddress      string
+	issuerClient      issuersdk.ClientService
+	oidcAuthenticator oidc.Authenticator
+	goEnv             string
 }
 
 // NewVerificationService creates a new instance of the VerificationService
@@ -48,32 +64,138 @@ func NewService(
 	}
 
 	return &service{
-		vaultAddress:    fmt.Sprintf("%s//%s:%s", vaultProtocol, vaultHost, vaultPort),
-		identityAddress: fmt.Sprintf("http://%s:%s", identityHost, identityPort),
-		goEnv:           goEnv,
+		vaultAddress: fmt.Sprintf("%s//%s:%s", vaultProtocol, vaultHost, vaultPort),
+		issuerClient: issuersdk.New(
+			httptransport.New(fmt.Sprintf("http://%s:%s", identityHost, identityPort), "", nil),
+			strfmt.Default,
+		),
+		goEnv: goEnv,
 	}
 }
 
 func (s *service) RegisterIssuer(
 	ctx context.Context,
-	clientCredentials *idpcore.ClientCredentials, commonName *string,
-) error {
+	clientCredentials *idpcore.ClientCredentials, userID, organizationID string,
+) (*Issuer, error) {
 	// Generate a new key for the issuer
-	if err := s.generateAndSaveKey(ctx); err != nil {
-		return errutil.Err(
+	keyId, err := s.generateAndSaveKey(ctx)
+	if err != nil || keyId == nil {
+		return nil, errutil.Err(
 			err,
 			"error generating and saving key for issuer",
 		)
 	}
 
-	return nil
+	// Prepare the issuer registration parameters
+	issuer := &identitymodels.V1alpha1Issuer{
+		Organization: organizationID,
+	}
+
+	// Prepare the proof
+	proof, err := s.generateProof(ctx, clientCredentials, userID, *keyId)
+	if err != nil {
+		return nil, errutil.Err(
+			err,
+			"error generating proof for issuer registration",
+		)
+	}
+
+	// Perform the registration with the identity service
+	_, err = s.issuerClient.RegisterIssuer(&issuersdk.RegisterIssuerParams{
+		Body: &identitymodels.V1alpha1RegisterIssuerRequest{
+			Issuer: issuer,
+			Proof:  proof,
+		},
+	})
+	if err != nil {
+		return nil, errutil.Err(
+			err,
+			"error registering issuer with identity service",
+		)
+	}
+
+	return &Issuer{
+		CommonName: s.getCommonName(clientCredentials, userID),
+		KeyID:      *keyId,
+	}, nil
 }
 
-func (s *service) generateAndSaveKey(ctx context.Context) error {
+func (s *service) getCommonName(
+	clientCredentials *idpcore.ClientCredentials,
+	commonName string,
+) string {
+	if clientCredentials != nil {
+		return httputil.Hostname(clientCredentials.Issuer)
+	}
+
+	return commonName
+}
+
+func (s *service) generateProof(
+	ctx context.Context,
+	clientCredentials *idpcore.ClientCredentials,
+	commonName string,
+	keyId string,
+) (*identitymodels.V1alpha1Proof, error) {
+	proof := &identitymodels.V1alpha1Proof{
+		Type: proofTypeJWT,
+	}
+
+	var proofValue string
+	var err error
+
+	// If client credentials are provided, use them to generate the proof
+	if clientCredentials != nil {
+		proofValue, err = s.oidcAuthenticator.Token(
+			ctx,
+			clientCredentials.Issuer,
+			clientCredentials.ClientID,
+			clientCredentials.ClientSecret,
+		)
+	} else {
+		// Retrieve the private key from the vault
+		vaultService, vaultErr := s.connectVault(ctx)
+		if vaultErr != nil {
+			return nil, errutil.Err(
+				vaultErr,
+				"error connecting to vault for proof generation",
+			)
+		}
+
+		privKey, keyErr := vaultService.RetrievePrivKey(ctx, keyId)
+		if keyErr != nil {
+			return nil, errutil.Err(
+				keyErr,
+				"error retrieving private key from vault for proof generation",
+			)
+		}
+
+		// Issue a self-signed JWT proof
+		proofValue, err = jwtutil.Jwt(
+			commonName,
+			uuid.NewString(),
+			privKey,
+		)
+	}
+
+	if err != nil {
+		return nil, errutil.Err(
+			err,
+			"error generating proof for issuer registration",
+		)
+	}
+
+	// Set the proof value
+	proof.ProofValue = proofValue
+
+	return proof, nil
+}
+
+func (s *service) generateAndSaveKey(ctx context.Context) (*string, error) {
 	// Connect to the vault
 	vaultService, err := s.connectVault(ctx)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	// Generate a new key
@@ -81,17 +203,17 @@ func (s *service) generateAndSaveKey(ctx context.Context) error {
 
 	priv, err := joseutil.GenerateJWK("RS256", "sig", keyId)
 	if err != nil {
-		return fmt.Errorf("error generating JWK: %w", err)
+		return nil, fmt.Errorf("error generating JWK: %w", err)
 	}
 
 	err = vaultService.SaveKey(ctx, priv.KID, priv)
 	if err != nil {
-		return fmt.Errorf("error saving key: %w", err)
+		return nil, fmt.Errorf("error saving key: %w", err)
 	}
 
 	log.Debug("Saving new key for issuer: ", priv.KID)
 
-	return nil
+	return &keyId, nil
 }
 
 func (s *service) connectVault(ctx context.Context) (keystore.KeyService, error) {

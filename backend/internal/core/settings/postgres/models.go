@@ -13,6 +13,7 @@ type IssuerSettings struct {
 	ID              uuid.UUID              `gorm:"primaryKey;default:gen_random_uuid()"`
 	TenantID        string                 `gorm:"not null;type:varchar(256);"`
 	IssuerID        *string                `gorm:"type:varchar(256);"`
+	KeyID           *string                `gorm:"type:varchar(256);"`
 	IdpType         types.IdpType          `gorm:"not null;type:uint;default:0;"`
 	DuoIdpSettings  *types.DuoIdpSettings  `gorm:"embedded;embeddedPrefix:duo_"`
 	OktaIdpSettings *types.OktaIdpSettings `gorm:"embedded;embeddedPrefix:okta_"`
@@ -25,6 +26,7 @@ func (i *IssuerSettings) ToCoreType() *types.IssuerSettings {
 
 	return &types.IssuerSettings{
 		IssuerID:        ptrutil.DerefStr(i.IssuerID),
+		KeyID:           ptrutil.DerefStr(i.KeyID),
 		IdpType:         i.IdpType,
 		DuoIdpSettings:  i.DuoIdpSettings,
 		OktaIdpSettings: i.OktaIdpSettings,
@@ -34,6 +36,7 @@ func (i *IssuerSettings) ToCoreType() *types.IssuerSettings {
 func newIssuerSettingsModel(src *types.IssuerSettings) *IssuerSettings {
 	return &IssuerSettings{
 		IssuerID:        ptrutil.Ptr(src.IssuerID),
+		KeyID:           ptrutil.Ptr(src.KeyID),
 		IdpType:         src.IdpType,
 		DuoIdpSettings:  src.DuoIdpSettings,
 		OktaIdpSettings: src.OktaIdpSettings,

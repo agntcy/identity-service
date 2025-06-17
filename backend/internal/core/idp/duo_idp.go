@@ -126,7 +126,7 @@ func (d *DuoIdp) CreateClientCredentialsPair(
 	return &ClientCredentials{
 		ClientID:     integrationData.Response.Sso.OauthConfig.Clients[0].ClientId,
 		ClientSecret: integrationData.Response.Sso.OauthConfig.Clients[0].ClientSecret,
-		IssuerURL:    integrationData.Response.Sso.IdpMetadata.Issuer,
+		Issuer:       integrationData.Response.Sso.IdpMetadata.Issuer,
 	}, nil
 }
 

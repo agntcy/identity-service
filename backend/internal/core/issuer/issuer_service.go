@@ -47,18 +47,10 @@ func (s *service) SetIssuer(
 		)
 	}
 
-	var commonName *string
 	var clientCredentials *idpcore.ClientCredentials
 
-	// Self IDP type handling.
-	if issuerSettings.IdpType == settingstypes.IDP_TYPE_SELF {
-		cName, ok := identitycontext.GetUserID(ctx)
-		if !ok {
-			return fmt.Errorf("user id not found in context")
-		}
-
-		commonName = &cName
-	} else {
+	// For some IDP types, we need to create client credentials.
+	if issuerSettings.IdpType != settingstypes.IDP_TYPE_SELF {
 		// Create a new IDP instance based on the issuer settings.
 		idp, err := idpcore.NewIdp(ctx, issuerSettings)
 		if err != nil {
@@ -71,9 +63,32 @@ func (s *service) SetIssuer(
 		}
 	}
 
-	return s.identityService.RegisterIssuer(
+	// Get common name from the issuer settings if not set.
+	userID, ok := identitycontext.GetUserID(ctx)
+	if !ok {
+		return fmt.Errorf("user id not found in context")
+	}
+
+	// Get organization details
+	organizationID, ok := identitycontext.GetOrganizationID(ctx)
+	if !ok {
+		return fmt.Errorf("organization id not found in context")
+	}
+
+	// Register the issuer with the identity service.
+	issuer, err := s.identityService.RegisterIssuer(
 		ctx,
 		clientCredentials,
-		commonName,
+		userID,
+		organizationID,
 	)
+	if err != nil {
+		return errutil.Err(err, "failed to register issuer")
+	}
+
+	// Set the issuer ID and key ID in the issuer settings.
+	issuerSettings.IssuerID = issuer.CommonName
+	issuerSettings.KeyID = issuer.KeyID
+
+	return nil
 }

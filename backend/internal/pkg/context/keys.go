@@ -11,5 +11,6 @@ func (k key) String() string {
 
 var TenantID = key("tenant-id")
 var UserID = key("user-id")
+var OrganizationID = key("organization-id")
 var AuthType = key("auth-type")
 var AppID = key("app-id")
