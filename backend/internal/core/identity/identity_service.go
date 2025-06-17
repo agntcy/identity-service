@@ -17,6 +17,7 @@ import (
 	"github.com/agntcy/identity-platform/internal/tmp/jwtutil"
 	"github.com/agntcy/identity-platform/internal/tmp/keystore"
 	"github.com/agntcy/identity-platform/internal/tmp/oidc"
+	"github.com/agntcy/identity-platform/internal/tmp/types"
 	"github.com/agntcy/identity-platform/pkg/log"
 	issuersdk "github.com/agntcy/identity/api/client/client/issuer_service"
 	identitymodels "github.com/agntcy/identity/api/client/models"
@@ -27,7 +28,7 @@ import (
 
 const (
 	keyBasePathPrefix = "key-"
-	proofTypeJWT      = "jwt"
+	proofTypeJWT      = "JWT"
 )
 
 type Issuer struct {
@@ -74,7 +75,8 @@ func NewService(
 			),
 			strfmt.Default,
 		),
-		goEnv: goEnv,
+		oidcAuthenticator: oidc.NewAuthenticator(),
+		goEnv:             goEnv,
 	}
 }
 
@@ -83,27 +85,44 @@ func (s *service) RegisterIssuer(
 	clientCredentials *idpcore.ClientCredentials, userID, organizationID string,
 ) (*Issuer, error) {
 	// Generate a new key for the issuer
-	keyId, err := s.generateAndSaveKey(ctx)
-	if err != nil || keyId == nil {
+	key, err := s.generateAndSaveKey(ctx)
+	if err != nil || key == nil {
 		return nil, errutil.Err(
 			err,
 			"error generating and saving key for issuer",
 		)
 	}
 
+	// Get common name for the issuer
+	commonName := s.getCommonName(clientCredentials, userID)
+
 	// Prepare the issuer registration parameters
 	issuer := &identitymodels.V1alpha1Issuer{
 		Organization: organizationID,
+		CommonName:   commonName,
+		PublicKey: &identitymodels.V1alpha1Jwk{
+			Alg: key.ALG,
+			Kty: key.KTY,
+			Use: key.USE,
+			Kid: key.KID,
+			Pub: key.PUB,
+			E:   key.E,
+			N:   key.N,
+		},
 	}
 
 	// Prepare the proof
-	proof, err := s.generateProof(ctx, clientCredentials, userID, *keyId)
+	proof, err := s.generateProof(ctx, clientCredentials, userID, key.KID)
 	if err != nil {
 		return nil, errutil.Err(
 			err,
 			"error generating proof for issuer registration",
 		)
 	}
+
+	log.Debug("Registering issuer with common name: ", commonName)
+	log.Debug("Using issuer: ", issuer)
+	log.Debug("Using proof: ", proof)
 
 	// Perform the registration with the identity service
 	_, err = s.issuerClient.RegisterIssuer(&issuersdk.RegisterIssuerParams{
@@ -120,8 +139,8 @@ func (s *service) RegisterIssuer(
 	}
 
 	return &Issuer{
-		CommonName: s.getCommonName(clientCredentials, userID),
-		KeyID:      *keyId,
+		CommonName: commonName,
+		KeyID:      key.KID,
 	}, nil
 }
 
@@ -196,7 +215,7 @@ func (s *service) generateProof(
 	return proof, nil
 }
 
-func (s *service) generateAndSaveKey(ctx context.Context) (*string, error) {
+func (s *service) generateAndSaveKey(ctx context.Context) (*types.Jwk, error) {
 	// Connect to the vault
 	vaultService, err := s.connectVault(ctx)
 	if err != nil {
@@ -218,7 +237,7 @@ func (s *service) generateAndSaveKey(ctx context.Context) (*string, error) {
 
 	log.Debug("Saving new key for issuer: ", priv.KID)
 
-	return &keyId, nil
+	return priv.PublicKey(), nil
 }
 
 func (s *service) connectVault(ctx context.Context) (keystore.KeyService, error) {

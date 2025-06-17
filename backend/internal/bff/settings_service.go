@@ -86,8 +86,18 @@ func (s *settingsService) SetIssuerSettings(
 	ctx context.Context,
 	issuerSettings *settingstypes.IssuerSettings,
 ) (*settingstypes.IssuerSettings, error) {
+	existingSettings, err := s.settingsRepository.GetIssuerSettings(ctx)
+
+	// Check if the issuer ID is set. If it is, we cannot update existing settings.
+	if err == nil && existingSettings.IssuerID != "" {
+		return nil, errutil.Err(
+			nil,
+			"updating existing issuer settings is not supported",
+		)
+	}
+
 	// Set the issuer id based on the issuer settings.
-	err := s.issuerSrv.SetIssuer(ctx, issuerSettings)
+	err = s.issuerSrv.SetIssuer(ctx, issuerSettings)
 	if err != nil {
 		return nil, errutil.Err(err, "failed to set issuer settings")
 	}

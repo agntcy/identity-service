@@ -7,7 +7,7 @@ import (
 	"context"
 	"fmt"
 
-	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
+	"github.com/google/uuid"
 )
 
 const (
@@ -33,14 +33,11 @@ type Idp interface {
 
 	// Creates a new client credentials pair in the IdP.
 	CreateClientCredentialsPair(ctx context.Context) (*ClientCredentials, error)
+
+	// DeleteClientCredentialsPair deletes a client credentials pair in the IdP.
+	DeleteClientCredentialsPair(ctx context.Context, clientCredentials *ClientCredentials) error
 }
 
-func getName(ctx context.Context) string {
-	// Get the tenant ID from the context
-	tenantId, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return ""
-	}
-
-	return fmt.Sprintf("%s%s", integrationPrefix, tenantId)
+func getName() string {
+	return fmt.Sprintf("%s%s", integrationPrefix, uuid.NewString())
 }

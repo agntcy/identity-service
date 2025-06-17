@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"path"
 	"time"
 
 	"github.com/agntcy/identity-platform/internal/core/settings/types"
@@ -79,7 +80,7 @@ func (d *DuoIdp) CreateClientCredentialsPair(
 	clientId := uuid.NewString()
 
 	// Get client name
-	clientName := getName(ctx)
+	clientName := getName()
 
 	paylod := duosdk.JSONParams{
 		"name": clientName,
@@ -128,6 +129,38 @@ func (d *DuoIdp) CreateClientCredentialsPair(
 		ClientSecret: integrationData.Response.Sso.OauthConfig.Clients[0].ClientSecret,
 		Issuer:       integrationData.Response.Sso.IdpMetadata.Issuer,
 	}, nil
+}
+
+func (d *DuoIdp) DeleteClientCredentialsPair(
+	ctx context.Context,
+	clientCredentials *ClientCredentials,
+) error {
+	if clientCredentials == nil || clientCredentials.Issuer == "" {
+		return fmt.Errorf("client credentials are not provided or issuer is empty")
+	}
+
+	integrationKey := path.Base(clientCredentials.Issuer)
+
+	// Prepare the path for the DELETE request
+	path := fmt.Sprintf("/admin/v3/integrations/%s", integrationKey)
+
+	// Call the Duo API to delete the client credentials pair
+	_, err := d.duoCall(
+		"DELETE",
+		path,
+		duosdk.JSONParams{},
+	)
+	if err != nil {
+		return errutil.Err(
+			err,
+			fmt.Sprintf(
+				"failed to delete client credentials pair for issuer %s",
+				clientCredentials.Issuer,
+			),
+		)
+	}
+
+	return nil
 }
 
 func (d *DuoIdp) duoCall(

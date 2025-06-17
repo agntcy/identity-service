@@ -41,6 +41,8 @@ func (r *repository) UpdateIssuerSettings(
 	// Update the existing settings with the new values
 	model := newIssuerSettingsModel(issuerSettings)
 	existingSettings.IdpType = model.IdpType
+	existingSettings.IssuerID = model.IssuerID
+	existingSettings.KeyID = model.KeyID
 
 	// Update based on the IDP type
 	switch model.IdpType {

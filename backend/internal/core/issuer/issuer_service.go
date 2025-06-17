@@ -39,30 +39,6 @@ func (s *service) SetIssuer(
 		return errutil.Err(nil, "issuer settings cannot be nil")
 	}
 
-	// Check if the issuer ID is set. If it is, we cannot update existing settings.
-	if issuerSettings.IssuerID != "" {
-		return errutil.Err(
-			nil,
-			"updating existing issuer settings is not supported",
-		)
-	}
-
-	var clientCredentials *idpcore.ClientCredentials
-
-	// For some IDP types, we need to create client credentials.
-	if issuerSettings.IdpType != settingstypes.IDP_TYPE_SELF {
-		// Create a new IDP instance based on the issuer settings.
-		idp, err := idpcore.NewIdp(ctx, issuerSettings)
-		if err != nil {
-			return errutil.Err(err, "failed to create IDP instance")
-		}
-
-		clientCredentials, err = idp.CreateClientCredentialsPair(ctx)
-		if err != nil {
-			return errutil.Err(err, "failed to create client credentials pair")
-		}
-	}
-
 	// Get common name from the issuer settings if not set.
 	userID, ok := identitycontext.GetUserID(ctx)
 	if !ok {
@@ -75,6 +51,25 @@ func (s *service) SetIssuer(
 		return fmt.Errorf("organization id not found in context")
 	}
 
+	var clientCredentials *idpcore.ClientCredentials
+	var idp idpcore.Idp
+
+	// For some IDP types, we need to create client credentials.
+	if issuerSettings.IdpType != settingstypes.IDP_TYPE_SELF {
+		var err error
+
+		// Create a new IDP instance based on the issuer settings.
+		idp, err = idpcore.NewIdp(ctx, issuerSettings)
+		if err != nil {
+			return errutil.Err(err, "failed to create IDP instance")
+		}
+
+		clientCredentials, err = idp.CreateClientCredentialsPair(ctx)
+		if err != nil {
+			return errutil.Err(err, "failed to create client credentials pair")
+		}
+	}
+
 	// Register the issuer with the identity service.
 	issuer, err := s.identityService.RegisterIssuer(
 		ctx,
@@ -83,6 +78,10 @@ func (s *service) SetIssuer(
 		organizationID,
 	)
 	if err != nil {
+		// Clean up client credentials if they were created.
+		if clientCredentials != nil {
+			_ = idp.DeleteClientCredentialsPair(ctx, clientCredentials)
+		}
 		return errutil.Err(err, "failed to register issuer")
 	}
 
