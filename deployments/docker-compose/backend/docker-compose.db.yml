@@ -12,6 +12,3 @@ services:
       - ./postgres-data:/var/lib/postgresql
     env_file:
       - .env
-
-volumes:
-  couchdb-data:

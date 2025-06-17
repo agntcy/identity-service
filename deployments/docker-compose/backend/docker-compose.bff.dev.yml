@@ -5,6 +5,7 @@
 name: identity-bff
 include:
   - docker-compose.db.yml
+  - docker-compose.vault.yml
   - docker-compose.identity.yml
 services:
   identity-bff:
@@ -16,6 +17,7 @@ services:
     depends_on:
       - identity-node
       - identity-postgres
+      - identity-vault
     ports:
       - "4000:4000"
       - "4001:4001"
