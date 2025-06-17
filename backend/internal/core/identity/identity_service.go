@@ -68,7 +68,7 @@ func NewService(
 		vaultAddress: fmt.Sprintf("%s//%s", vaultProtocol, net.JoinHostPort(vaultHost, vaultPort)),
 		issuerClient: issuersdk.New(
 			httptransport.New(
-				fmt.Sprintf("http://%s", net.JoinHostPort(identityHost, identityPort)),
+				net.JoinHostPort(identityHost, identityPort),
 				"",
 				nil,
 			),
