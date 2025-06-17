@@ -5,6 +5,8 @@ package idp
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -12,6 +14,7 @@ import (
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 	"github.com/agntcy/identity-platform/pkg/log"
 	duosdk "github.com/duosecurity/duo_api_golang"
+	"github.com/google/uuid"
 )
 
 const (
@@ -19,8 +22,25 @@ const (
 	duoClientName = "duo-client"
 )
 
+type integration struct {
+	Response struct {
+		Sso struct {
+			IdpMetadata struct {
+				Issuer string `json:"issuer"`
+			} `json:"idp_metadata"`
+			OauthConfig struct {
+				Clients []struct {
+					ClientId     string `json:"client_id"`
+					ClientSecret string `json:"client_secret"`
+				} `json:"clients"`
+			} `json:"oauth_config"`
+		} `json:"sso"`
+	} `json:"response"`
+}
+
 type DuoIdp struct {
 	IdpSettings *types.DuoIdpSettings
+	api         *duosdk.DuoApi
 }
 
 func (d *DuoIdp) TestSettings(ctx context.Context) error {
@@ -31,17 +51,91 @@ func (d *DuoIdp) TestSettings(ctx context.Context) error {
 		)
 	}
 
-	duoapi := duosdk.NewDuoApi(
+	d.api = duosdk.NewDuoApi(
 		d.IdpSettings.IntegrationKey,
 		d.IdpSettings.SecretKey,
 		d.IdpSettings.Hostname,
 		duoClientName,
 		duosdk.SetTimeout(duoTimeout*time.Second))
 
-	response, _, err := duoapi.JSONSignedCall(
+	_, err := d.duoCall(
 		"GET",
 		"/admin/v3/integrations",
-		nil,
+		duosdk.JSONParams{},
+	)
+
+	return err
+}
+
+func (d *DuoIdp) CreateClientCredentialsPair(
+	ctx context.Context,
+) (*ClientCredentials, error) {
+	log.Debug("Creating client credentials pair for Duo IdP")
+
+	// Create a custom scope
+	scopeId := uuid.NewString()
+
+	// Create a custom client id
+	clientId := uuid.NewString()
+
+	// Get client name
+	clientName := getName(ctx)
+
+	paylod := duosdk.JSONParams{
+		"name": clientName,
+		"type": "sso-oauth-client-credentials",
+		"sso": duosdk.JSONParams{
+			"oauth_config": duosdk.JSONParams{
+				"scopes": []duosdk.JSONParams{
+					{
+						"id":   scopeId,
+						"name": customScope,
+					},
+				},
+				"clients": []duosdk.JSONParams{
+					{
+						"name":                clientName,
+						"client_id":           clientId,
+						"assigned_scopes_ids": []string{scopeId},
+					},
+				},
+			},
+		},
+	}
+
+	data, err := d.duoCall(
+		"POST",
+		"/admin/v3/integrations",
+		paylod,
+	)
+	if err != nil {
+		return nil, errutil.Err(
+			err,
+			"failed to create client credentials pair in Duo IdP",
+		)
+	}
+
+	var integrationData integration
+	if err := json.Unmarshal(data, &integrationData); err != nil {
+		return nil, errutil.Err(
+			err,
+			"failed to unmarshal Duo IdP integration data",
+		)
+	}
+
+	return &ClientCredentials{
+		ClientID:     integrationData.Response.Sso.OauthConfig.Clients[0].ClientId,
+		ClientSecret: integrationData.Response.Sso.OauthConfig.Clients[0].ClientSecret,
+		IssuerURL:    integrationData.Response.Sso.IdpMetadata.Issuer,
+	}, nil
+}
+
+func (d *DuoIdp) duoCall(
+	method, path string, params duosdk.JSONParams) ([]byte, error) {
+	response, data, err := d.api.JSONSignedCall(
+		method,
+		path,
+		params,
 		duosdk.UseTimeout,
 	)
 
@@ -52,22 +146,13 @@ func (d *DuoIdp) TestSettings(ctx context.Context) error {
 		}
 	}()
 
-	log.Debug("Got response from Duo IdP: ", response.StatusCode)
-
 	if err != nil || response.StatusCode != http.StatusOK {
-		return errutil.Err(
+		return nil, errutil.Err(
 			err,
-			"failed to test Duo IdP settings",
+			fmt.Sprintf("duo API call failed: %s, status code: %d",
+				string(data), response.StatusCode),
 		)
 	}
 
-	return nil
-}
-
-func (d *DuoIdp) CreateClientCredentialsPair(
-	ctx context.Context,
-) (*ClientCredentials, error) {
-	// Implement the logic to create a client credentials pair in Duo IdP.
-	// This could involve making a request to the Duo API to create the credentials.
-	return nil, nil
+	return data, nil
 }

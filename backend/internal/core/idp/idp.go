@@ -5,6 +5,14 @@ package idp
 
 import (
 	"context"
+	"fmt"
+
+	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
+)
+
+const (
+	integrationPrefix = "identity-"
+	customScope       = "customscope"
 )
 
 type ClientCredentials struct {
@@ -25,4 +33,14 @@ type Idp interface {
 
 	// Creates a new client credentials pair in the IdP.
 	CreateClientCredentialsPair(ctx context.Context) (*ClientCredentials, error)
+}
+
+func getName(ctx context.Context) string {
+	// Get the tenant ID from the context
+	tenantId, ok := identitycontext.GetTenantID(ctx)
+	if !ok {
+		return ""
+	}
+
+	return fmt.Sprintf("%s%s", integrationPrefix, tenantId)
 }

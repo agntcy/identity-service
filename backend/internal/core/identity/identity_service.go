@@ -13,10 +13,11 @@ import (
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 	"github.com/agntcy/identity-platform/internal/tmp/joseutil"
 	"github.com/agntcy/identity-platform/internal/tmp/keystore"
+	"github.com/agntcy/identity-platform/pkg/log"
 	"github.com/google/uuid"
 )
 
-const keyBasePath = "key"
+const keyBasePathPrefix = "key-"
 
 type Service interface {
 	RegisterIssuer(
@@ -88,6 +89,8 @@ func (s *service) generateAndSaveKey(ctx context.Context) error {
 		return fmt.Errorf("error saving key: %w", err)
 	}
 
+	log.Debug("Saving new key for issuer: ", priv.KID)
+
 	return nil
 }
 
@@ -105,11 +108,14 @@ func (s *service) connectVault(ctx context.Context) (keystore.KeyService, error)
 		return nil, fmt.Errorf("tenant ID not found in context")
 	}
 
+	// Create key base path
+	keyBasePath := fmt.Sprintf("%s/%s", keyBasePathPrefix, tenantId)
+
 	// Create config
 	config := keystore.VaultStorageConfig{
 		Address:     s.vaultAddress,
 		Token:       token, // This should be set in dev mode only
-		MountPath:   tenantId,
+		MountPath:   "secret",
 		KeyBasePath: keyBasePath,
 	}
 

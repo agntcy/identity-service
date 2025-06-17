@@ -16,7 +16,7 @@ func NewIdp(ctx context.Context, issuerSettings *types.IssuerSettings) (Idp, err
 
 	switch issuerSettings.IdpType {
 	case types.IDP_TYPE_DUO:
-		idp = &DuoIdp{issuerSettings.DuoIdpSettings}
+		idp = &DuoIdp{issuerSettings.DuoIdpSettings, nil}
 	case types.IDP_TYPE_OKTA:
 		return nil, errutil.Err(
 			fmt.Errorf("IDP type %s is not supported yet", issuerSettings.IdpType),
