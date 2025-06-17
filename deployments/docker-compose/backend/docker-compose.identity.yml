@@ -3,11 +3,15 @@
 
 ---
 name: identity-node
+include:
+  - docker-compose.db.yml
 services:
   identity-node:
     container_name: identity-node
     image: ghcr.io/agntcy/identity/node:latest
     restart: always
+    depends_on:
+      - identity-postgres
     ports:
       - "4003:4000"
       - "4004:4001"
