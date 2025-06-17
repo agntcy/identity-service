@@ -8,17 +8,22 @@ import (
 	"fmt"
 	"os"
 
+	idpcore "github.com/agntcy/identity-platform/internal/core/idp"
 	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
-	"github.com/agntcy/identity/internal/core/keystore"
-	"github.com/agntcy/identity/internal/pkg/joseutil"
+	"github.com/agntcy/identity-platform/internal/tmp/joseutil"
+	"github.com/agntcy/identity-platform/internal/tmp/keystore"
 	"github.com/google/uuid"
 )
 
 const keyBasePath = "key"
 
 type Service interface {
-	RegisterIssuer(ctx context.Context, clientId, clientSecret, issuer, commonName *string) error
+	RegisterIssuer(
+		ctx context.Context,
+		clientCredentials *idpcore.ClientCredentials,
+		commonName *string,
+	) error
 }
 
 // The verificationService struct implements the VerificationService interface
@@ -50,7 +55,7 @@ func NewService(
 
 func (s *service) RegisterIssuer(
 	ctx context.Context,
-	clientId, clientSecret, issuer, commonName *string,
+	clientCredentials *idpcore.ClientCredentials, commonName *string,
 ) error {
 	// Generate a new key for the issuer
 	if err := s.generateAndSaveKey(ctx); err != nil {
@@ -97,11 +102,7 @@ func (s *service) connectVault(ctx context.Context) (keystore.KeyService, error)
 	// Get the tenant ID from the context
 	tenantId, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
-		return nil, errutil.Err(
-			nil,
-			"tenant ID not found in context",
-		)
-
+		return nil, fmt.Errorf("tenant ID not found in context")
 	}
 
 	// Create config

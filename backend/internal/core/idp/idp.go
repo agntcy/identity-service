@@ -7,11 +7,22 @@ import (
 	"context"
 )
 
+type ClientCredentials struct {
+	// ClientID is the identifier for the client.
+	ClientID string `json:"client_id"`
+
+	// ClientSecret is the secret key for the client.
+	ClientSecret string `json:"client_secret"`
+
+	// IssuerURL is the URL of the issuer.
+	IssuerURL string `json:"issuer_url"`
+}
+
 // Idp defines methods for interacting with identity providers (IdPs).
 type Idp interface {
 	// TestSettings checks the connection and configuration of the IdP.
 	TestSettings(ctx context.Context) error
 
 	// Creates a new client credentials pair in the IdP.
-	CreateClientCredentialsPair(ctx context.Context) error
+	CreateClientCredentialsPair(ctx context.Context) (*ClientCredentials, error)
 }

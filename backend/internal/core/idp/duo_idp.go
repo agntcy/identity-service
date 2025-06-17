@@ -64,8 +64,10 @@ func (d *DuoIdp) TestSettings(ctx context.Context) error {
 	return nil
 }
 
-func (d *DuoIdp) CreateClientCredentialsPair(ctx context.Context) error {
+func (d *DuoIdp) CreateClientCredentialsPair(
+	ctx context.Context,
+) (*ClientCredentials, error) {
 	// Implement the logic to create a client credentials pair in Duo IdP.
 	// This could involve making a request to the Duo API to create the credentials.
-	return nil
+	return nil, nil
 }

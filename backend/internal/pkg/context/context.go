@@ -41,6 +41,13 @@ func GetTenantID(ctx context.Context) (string, bool) {
 	return tenantID, ok
 }
 
+// UserID fetches the user ID from a context (if any).
+func GetUserID(ctx context.Context) (string, bool) {
+	userID, ok := ctx.Value(UserID).(string)
+
+	return userID, ok
+}
+
 // InsertUserID inserts userID into the context.
 func InsertUserID(ctx context.Context, userID string) context.Context {
 	if userID != "" {
