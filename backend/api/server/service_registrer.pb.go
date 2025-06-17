@@ -16,6 +16,8 @@ import (
 
 type GrpcServiceRegister struct {
 	AppServiceServer v1alpha1.AppServiceServer
+
+	SettingsServiceServer v1alpha1.SettingsServiceServer
 }
 
 func (r GrpcServiceRegister) RegisterGrpcHandlers(grpcServer *grpc.Server) {
@@ -24,12 +26,23 @@ func (r GrpcServiceRegister) RegisterGrpcHandlers(grpcServer *grpc.Server) {
 		v1alpha1.RegisterAppServiceServer(grpcServer, r.AppServiceServer)
 	}
 
+	if r.SettingsServiceServer != nil {
+		v1alpha1.RegisterSettingsServiceServer(grpcServer, r.SettingsServiceServer)
+	}
+
 }
 
 func (r GrpcServiceRegister) RegisterHttpHandlers(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
 
 	if r.AppServiceServer != nil {
 		err := v1alpha1.RegisterAppServiceHandler(ctx, mux, conn)
+		if err != nil {
+			return err
+		}
+	}
+
+	if r.SettingsServiceServer != nil {
+		err := v1alpha1.RegisterSettingsServiceHandler(ctx, mux, conn)
 		if err != nil {
 			return err
 		}

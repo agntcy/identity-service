@@ -15,6 +15,7 @@ import (
 	"github.com/agntcy/identity-platform/internal/bff"
 	bffgrpc "github.com/agntcy/identity-platform/internal/bff/grpc"
 	apppg "github.com/agntcy/identity-platform/internal/core/app/postgres"
+	settingspg "github.com/agntcy/identity-platform/internal/core/settings/postgres"
 	"github.com/agntcy/identity-platform/internal/pkg/grpcutil"
 	outshiftiam "github.com/agntcy/identity-platform/internal/pkg/iam"
 	"github.com/agntcy/identity-platform/internal/pkg/interceptors"
@@ -92,7 +93,8 @@ func main() {
 
 	// Migrate the database
 	err = dbContext.AutoMigrate(
-		&apppg.App{}, // App model
+		&apppg.App{},                 // App model
+		&settingspg.IssuerSettings{}, // Issuer settings model
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -106,7 +108,7 @@ func main() {
 	}()
 
 	// IAM
-	iam := outshiftiam.NewClient(
+	iamClient := outshiftiam.NewClient(
 		http.DefaultClient,
 		config.IamApiUrl,
 		config.IamAdminAPIKey,
@@ -119,7 +121,7 @@ func main() {
 
 	// Tenant interceptor
 	authInterceptor := interceptors.NewAuthInterceptor(
-		iam,
+		iamClient,
 		config.IamProductID,
 	)
 
@@ -145,14 +147,20 @@ func main() {
 
 	// Create repositories
 	appRepository := apppg.NewRepository(dbContext)
+	settingsRepository := settingspg.NewRepository(dbContext)
 
 	// Create internal services
 	appSrv := bff.NewAppService(
 		appRepository,
 	)
+	settingsSrv := bff.NewSettingsService(
+		iamClient,
+		settingsRepository,
+	)
 
 	register := identity_platform_api.GrpcServiceRegister{
-		AppServiceServer: bffgrpc.NewAppService(appSrv),
+		AppServiceServer:      bffgrpc.NewAppService(appSrv),
+		SettingsServiceServer: bffgrpc.NewSettingsService(settingsSrv),
 	}
 
 	register.RegisterGrpcHandlers(grpcsrv.Server)

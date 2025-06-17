@@ -17,7 +17,7 @@ import (
 
 const (
 	AuthorizationHeaderKey string = "authorization"
-	APIKeyHeaderKey        string = "x-id-api-key" //nolint:gosec // This is a false positive
+	ApiKeyHeaderKey        string = "x-id-api-key" //nolint:gosec // This is a false positive
 )
 
 var allowedServicesWithoutAuth = []string{
@@ -61,11 +61,11 @@ func (ti *AuthInterceptor) Unary(
 		return nil, errors.New("failed to extract metadata from context")
 	}
 
-	// This header will come for both IAM API Keys v2 and User JWT
+	// This header will come for both IAM Api Keys v2 and User JWT
 	authHeader, okAuth := md[AuthorizationHeaderKey]
 
-	// This header will come for IAM API Keys v1
-	apiKeyHeader, okApiKeyV1 := md[APIKeyHeaderKey]
+	// This header will come for IAM Api Keys v1
+	apiKeyHeader, okApiKeyV1 := md[ApiKeyHeaderKey]
 
 	if !okAuth && !okApiKeyV1 {
 		return nil, grpcutil.UnauthorizedError(errors.New("failed to extract authorization"))
@@ -81,7 +81,7 @@ func (ti *AuthInterceptor) Unary(
 		}
 	} else {
 		// This is an IAM v1 key for a tenant
-		aCtx, err = ti.iam.AuthAPIKey(ctx, ti.iamProductID, apiKeyHeader[0], false)
+		aCtx, err = ti.iam.AuthApiKey(ctx, ti.iamProductID, apiKeyHeader[0], false)
 		if err != nil {
 			return nil, grpcutil.UnauthorizedError(err)
 		}
