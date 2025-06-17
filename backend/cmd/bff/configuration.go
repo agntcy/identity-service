@@ -20,6 +20,11 @@ type Configuration struct {
 	DbUsername                                              string        `split_words:"true"                                              required:"true"`
 	DbPassword                                              string        `split_words:"true"                                              required:"true"`
 	DbUseSsl                                                bool          `split_words:"true" default:"false"`
+	VaultHost                                               string        `split_words:"true" default:"0.0.0.0"`
+	VaultPort                                               string        `split_words:"true" default:"8200"`
+	VaultUseSsl                                             bool          `split_words:"true" default:"false"`
+	IdentityHost                                            string        `split_words:"true" default:"0.0.0.0"`
+	IdentityPort                                            string        `split_words:"true" default:"4003"`
 	IamProductID                                            string        `split_words:"true"                                              required:"true"`
 	IamApiUrl                                               string        `split_words:"true"                                              required:"true"`
 	IamAdminAPIKey                                          string        `split_words:"true"`

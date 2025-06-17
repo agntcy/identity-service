@@ -15,6 +15,8 @@ import (
 	"github.com/agntcy/identity-platform/internal/bff"
 	bffgrpc "github.com/agntcy/identity-platform/internal/bff/grpc"
 	apppg "github.com/agntcy/identity-platform/internal/core/app/postgres"
+	identitycore "github.com/agntcy/identity-platform/internal/core/identity"
+	"github.com/agntcy/identity-platform/internal/core/issuer"
 	settingspg "github.com/agntcy/identity-platform/internal/core/settings/postgres"
 	"github.com/agntcy/identity-platform/internal/pkg/grpcutil"
 	outshiftiam "github.com/agntcy/identity-platform/internal/pkg/iam"
@@ -149,11 +151,25 @@ func main() {
 	appRepository := apppg.NewRepository(dbContext)
 	settingsRepository := settingspg.NewRepository(dbContext)
 
+	// Identity service
+	identityService := identitycore.NewService(
+		config.VaultHost,
+		config.VaultPort,
+		config.VaultUseSsl,
+		config.IdentityHost,
+		config.IdentityPort,
+		config.GoEnv,
+	)
+
 	// Create internal services
 	appSrv := bff.NewAppService(
 		appRepository,
 	)
+	issuerSrv := issuer.NewService(
+		identityService,
+	)
 	settingsSrv := bff.NewSettingsService(
+		issuerSrv,
 		iamClient,
 		settingsRepository,
 	)
