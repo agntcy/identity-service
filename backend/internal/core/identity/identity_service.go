@@ -6,6 +6,7 @@ package identity
 import (
 	"context"
 	"fmt"
+	"net"
 	"os"
 
 	idpcore "github.com/agntcy/identity-platform/internal/core/idp"
@@ -64,9 +65,13 @@ func NewService(
 	}
 
 	return &service{
-		vaultAddress: fmt.Sprintf("%s//%s:%s", vaultProtocol, vaultHost, vaultPort),
+		vaultAddress: fmt.Sprintf("%s//%s", vaultProtocol, net.JoinHostPort(vaultHost, vaultPort)),
 		issuerClient: issuersdk.New(
-			httptransport.New(fmt.Sprintf("http://%s:%s", identityHost, identityPort), "", nil),
+			httptransport.New(
+				fmt.Sprintf("http://%s", net.JoinHostPort(identityHost, identityPort)),
+				"",
+				nil,
+			),
 			strfmt.Default,
 		),
 		goEnv: goEnv,
