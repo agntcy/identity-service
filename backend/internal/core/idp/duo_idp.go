@@ -142,12 +142,12 @@ func (d *DuoIdp) DeleteClientCredentialsPair(
 	integrationKey := path.Base(clientCredentials.Issuer)
 
 	// Prepare the path for the DELETE request
-	path := fmt.Sprintf("/admin/v3/integrations/%s", integrationKey)
+	deletePath := fmt.Sprintf("/admin/v3/integrations/%s", integrationKey)
 
 	// Call the Duo API to delete the client credentials pair
 	_, err := d.duoCall(
 		"DELETE",
-		path,
+		deletePath,
 		duosdk.JSONParams{},
 	)
 	if err != nil {
@@ -164,10 +164,10 @@ func (d *DuoIdp) DeleteClientCredentialsPair(
 }
 
 func (d *DuoIdp) duoCall(
-	method, path string, params duosdk.JSONParams) ([]byte, error) {
+	method, callPath string, params duosdk.JSONParams) ([]byte, error) {
 	response, data, err := d.api.JSONSignedCall(
 		method,
-		path,
+		callPath,
 		params,
 		duosdk.UseTimeout,
 	)

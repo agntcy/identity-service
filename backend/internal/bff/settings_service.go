@@ -87,8 +87,6 @@ func (s *settingsService) SetIssuerSettings(
 	issuerSettings *settingstypes.IssuerSettings,
 ) (*settingstypes.IssuerSettings, error) {
 	existingSettings, err := s.settingsRepository.GetIssuerSettings(ctx)
-
-	// Check if the issuer ID is set. If it is, we cannot update existing settings.
 	if err == nil && existingSettings.IssuerID != "" {
 		return nil, errutil.Err(
 			nil,

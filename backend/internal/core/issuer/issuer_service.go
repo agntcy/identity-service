@@ -82,6 +82,7 @@ func (s *service) SetIssuer(
 		if clientCredentials != nil {
 			_ = idp.DeleteClientCredentialsPair(ctx, clientCredentials)
 		}
+
 		return errutil.Err(err, "failed to register issuer")
 	}
 
