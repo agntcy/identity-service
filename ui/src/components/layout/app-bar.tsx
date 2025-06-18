@@ -3,39 +3,26 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, {ReactNode} from 'react';
-import {Link, useNavigate} from 'react-router-dom';
-import {Tooltip, TooltipContent, TooltipTrigger} from '../ui/tooltip';
-import {Button} from '../ui/button';
-import {TooltipArrow} from '@radix-ui/react-tooltip';
-import Logo from '@/assets/logo-app-bar.svg';
-import UnionLogo from '@/assets/union.svg?react';
-import GitLogo from '@/assets/git.svg?react';
+import React, {useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
-import {Separator} from '../ui/separator';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuTrigger
-} from '../ui/dropdown-menu';
 import useAuth from '@/providers/auth-provider/use-auth';
-import {Avatar, AvatarFallback, AvatarImage} from '../ui/avatar';
+import {ChevronDownIcon, ChevronUpIcon, LogOutIcon} from 'lucide-react';
+import {Avatar, Button, Divider, Header, Menu, MenuItem, Typography} from '@outshift/spark-design';
+import Logo from '@/assets/logo-app-bar.svg';
+import BookLogo from '@/assets/union.svg?react';
+import GitLogo from '@/assets/git.svg?react';
 import UserIcon from '@/assets/user.svg';
-import '@/styles/app-bar.css';
-import {ChevronDownIcon, LogOutIcon} from 'lucide-react';
-import {cn} from '@/lib/utils';
-import MaxWHover from '../ui/max-w-hover';
 
-export const AppBar: React.FC = () => {
-  const [menuOpen, setMenuOpen] = React.useState(false);
-  const {authInfo, logout} = useAuth();
+const UserSection = () => {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
 
   const navigate = useNavigate();
+  const {authInfo, logout} = useAuth();
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => setAnchorEl(event.currentTarget);
+  const handleClose = () => setAnchorEl(null);
 
   const handleLogout = () => {
     void logout?.({
@@ -44,100 +31,87 @@ export const AppBar: React.FC = () => {
       clearTokensBeforeRedirect: true
     });
     void navigate(`${PATHS.callBackLoading}`);
+    handleClose();
   };
 
-  const items: {
-    element: ReactNode;
-    show: boolean;
-  }[] = [
-    {
-      element: (
-        <DropdownMenuItem onClick={handleLogout} className="cursor-pointer group">
-          <p>Logout</p>
-          <DropdownMenuShortcut className="invisible group-hover:visible">
+  return (
+    <>
+      <Button
+        onClick={handleClick}
+        startIcon={<Avatar sx={{width: '20px', height: '20px'}} src={UserIcon} />}
+        variant="tertariary"
+        sx={{
+          paddingLeft: '4px',
+          '&.MuiButton-tertariary': {
+            '&:focus': {
+              border: 'none !important'
+            }
+          }
+        }}
+        endIcon={open ? <ChevronUpIcon width={16} height={16} /> : <ChevronDownIcon width={16} height={16} />}
+        disableRipple
+        disableFocusRipple
+        focusRipple={false}
+      >
+        <Typography variant="subtitle2" sx={(theme) => ({color: theme.palette.vars.baseTextStrong})}>
+          {authInfo?.user?.name || 'User'}
+        </Typography>
+      </Button>
+      <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+        <MenuItem>
+          <Typography variant="caption">
+            <b>Email:</b> {authInfo?.user?.username}
+          </Typography>
+        </MenuItem>
+        <Divider />
+        <MenuItem disableRipple onClick={handleLogout}>
+          <div className="flex items-center justify-between w-full">
+            <Typography variant="body2Semibold">Logout</Typography>
             <LogOutIcon className="w-4 h-4" />
-          </DropdownMenuShortcut>
-        </DropdownMenuItem>
-      ),
-      show: true
-    }
-  ];
+          </div>
+        </MenuItem>
+      </Menu>
+    </>
+  );
+};
+
+export const AppBar = () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [searchValue, setSearchValue] = React.useState('');
 
   return (
-    <header className="flex justify-between px-8 py-2 items-center max-w-screen overflow-hidden border-b sticky top-0 z-40 app-bar h-[56px]">
-      <div>
-        <Link to={PATHS.basePath} className="flex gap-3 items-center">
-          <img src={Logo} alt="Identity" />
-          <p className="product-name">Identity</p>
-        </Link>
-      </div>
-      <div className="flex items-center gap-2 flex-shrink-0">
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Link to={'https://spec.identity.agntcy.org/'} target="_blank">
-              <Button variant={'link'} size="icon">
-                <UnionLogo className="w-6 h-6" />
-              </Button>
-            </Link>
-          </TooltipTrigger>
-          <TooltipContent side="bottom">
-            <TooltipArrow />
-            Documentation
-          </TooltipContent>
-        </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Link to={'https://github.com/agntcy/identity'} target="_blank">
-              <Button variant={'link'} size="icon">
-                <GitLogo className="w-6 h-6" />
-              </Button>
-            </Link>
-          </TooltipTrigger>
-          <TooltipContent side="bottom">
-            <TooltipArrow />
-            GitHub
-          </TooltipContent>
-        </Tooltip>
-        <Separator orientation="vertical" className="min-h-[30px] w-[1px] bg-[#D5DFF7] mr-1" />
-        <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
-          <DropdownMenuTrigger>
-            <Button variant="link" className="flex gap-3 items-top hover:no-underline" style={{padding: '0px'}}>
-              <Avatar className="h-[18px] w-[18px]">
-                <AvatarImage src={UserIcon} />
-                <AvatarFallback>{authInfo?.user?.username?.substring(0, 2)}</AvatarFallback>
-              </Avatar>
-              <div className="text-left no-underline">
-                <div className="flex items-center gap-2">
-                  <p className="app-bar-name">{authInfo?.user?.name}</p>
-                  <ChevronDownIcon className={cn('w-3 h-3 stroke-[#187ADC]', menuOpen && 'rotate-180')} />
-                </div>
-                <p className="app-bar-desc">
-                  {authInfo?.user?.tenant?.name && authInfo?.user?.tenant?.name.length > 15
-                    ? `${authInfo?.user?.tenant?.name.substring(0, 15)}...`
-                    : authInfo?.user?.tenant?.name}
-                </p>
-              </div>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="z-50 rounded-md shadow-md">
-            <DropdownMenuLabel className="menu-label">User Information</DropdownMenuLabel>
-            <DropdownMenuLabel className="flex flex-col gap-1">
-              <span className="text-xs">
-                <b>Email:</b> {authInfo?.user?.username}
-              </span>
-              <MaxWHover className="text-xs text-left">
-                <b>Tenant:</b> {authInfo?.user?.tenant?.name}
-              </MaxWHover>
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              {items.map((item, i) => {
-                return <React.Fragment key={`dropdown-${i}`}>{item.show ? item.element : null}</React.Fragment>;
-              })}
-            </DropdownMenuGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-    </header>
+    <Header
+      title={
+        <Typography variant="h1" fontWeight={700} fontSize="18px" lineHeight="18px" sx={(theme) => ({color: theme.palette.vars.brandTextSecondary})}>
+          Identity
+        </Typography>
+      }
+      logo={<img src={Logo} alt="Identity" />}
+      position="fixed"
+      searchProps={{
+        onChangeCallback: (value: string) => {
+          setSearchValue(value);
+        }
+      }}
+      actions={[
+        {
+          id: 'docs',
+          icon: <BookLogo />,
+          tooltip: 'View Documentation',
+          href: 'https://spec.identity.agntcy.org/',
+          'aria-label': 'documentation',
+          target: '_blank'
+        },
+        {
+          id: 'github',
+          icon: <GitLogo />,
+          tooltip: 'View GitHub',
+          href: 'https://github.com/agntcy/identity',
+          'aria-label': 'github',
+          target: '_blank'
+        }
+      ]}
+      userSection={<UserSection />}
+    />
   );
 };

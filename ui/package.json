@@ -40,11 +40,15 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
     "@eslint/compat": "^1.2.7",
     "@eslint/eslintrc": "^3.3.0",
     "@eslint/js": "^9.22.0",
     "@hookform/resolvers": "^4.1.3",
+    "@mui/material": "^7.1.1",
     "@okta/okta-auth-js": "^7.12.1",
+    "@outshift/spark-design": "0.1.0",
     "@radix-ui/react-icons": "^1.3.2",
     "@stepperize/react": "^5.1.5",
     "@tanstack/react-table": "^8.21.3",
@@ -81,5 +85,9 @@
   },
   "engines": {
     "node": ">=20"
+  },
+  "packageManager": "yarn@4.9.2",
+  "resolutions": {
+    "@outshift/spark-design": "portal:/Users/rafaelsi/cisco/packages/outshift-spark-design/packages/outshift-spark-design"
   }
 }

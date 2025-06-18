@@ -4,3 +4,4 @@
  */
 
 export * from './useStore';
+export * from './useThemeStore';
