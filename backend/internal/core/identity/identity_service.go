@@ -13,14 +13,13 @@ import (
 	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 	"github.com/agntcy/identity-platform/internal/pkg/httputil"
-	"github.com/agntcy/identity-platform/internal/tmp/joseutil"
-	"github.com/agntcy/identity-platform/internal/tmp/jwtutil"
-	"github.com/agntcy/identity-platform/internal/tmp/keystore"
-	"github.com/agntcy/identity-platform/internal/tmp/oidc"
-	"github.com/agntcy/identity-platform/internal/tmp/types"
 	"github.com/agntcy/identity-platform/pkg/log"
 	issuersdk "github.com/agntcy/identity/api/client/client/issuer_service"
 	identitymodels "github.com/agntcy/identity/api/client/models"
+	"github.com/agntcy/identity/pkg/joseutil"
+	"github.com/agntcy/identity/pkg/jwk"
+	"github.com/agntcy/identity/pkg/keystore"
+	"github.com/agntcy/identity/pkg/oidc"
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 	"github.com/google/uuid"
@@ -195,7 +194,7 @@ func (s *service) generateProof(
 		}
 
 		// Issue a self-signed JWT proof
-		proofValue, err = jwtutil.Jwt(
+		proofValue, err = oidc.SelfIssueJWT(
 			commonName,
 			uuid.NewString(),
 			privKey,
@@ -215,7 +214,7 @@ func (s *service) generateProof(
 	return proof, nil
 }
 
-func (s *service) generateAndSaveKey(ctx context.Context) (*types.Jwk, error) {
+func (s *service) generateAndSaveKey(ctx context.Context) (*jwk.Jwk, error) {
 	// Connect to the vault
 	vaultService, err := s.connectVault(ctx)
 	if err != nil {
