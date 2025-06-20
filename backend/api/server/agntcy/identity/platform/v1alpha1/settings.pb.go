@@ -9,11 +9,12 @@
 package identity_platform_sdk_go
 
 import (
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
+
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -263,9 +264,9 @@ func (x *IssuerSettings) GetOktaIdpSettings() *OktaIdpSettings {
 // Okta IdP Settings
 type OktaIdpSettings struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Domain        *string                `protobuf:"bytes,1,opt,name=domain,proto3,oneof" json:"domain,omitempty"`
+	OrgUrl        *string                `protobuf:"bytes,1,opt,name=org_url,proto3,oneof" json:"org_url,omitempty"`
 	ClientId      *string                `protobuf:"bytes,2,opt,name=client_id,json=clientId,proto3,oneof" json:"client_id,omitempty"`
-	ClientSecret  *string                `protobuf:"bytes,3,opt,name=client_secret,json=clientSecret,proto3,oneof" json:"client_secret,omitempty"`
+	PrivateKey    *string                `protobuf:"bytes,3,opt,name=private_key,json=clientSecret,proto3,oneof" json:"private_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
