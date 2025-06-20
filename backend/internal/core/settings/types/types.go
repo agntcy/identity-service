@@ -44,9 +44,9 @@ type ApiKey struct {
 
 // Okta IdP Settings
 type OktaIdpSettings struct {
-	Domain       string `json:"domain,omitempty"        protobuf:"bytes,1,opt,name=domain"`
-	ClientID     string `json:"client_id,omitempty"     protobuf:"bytes,2,opt,name=client_id"`
-	ClientSecret string `json:"client_secret,omitempty" protobuf:"bytes,3,opt,name=client_secret"`
+	OrgUrl     string `json:"org_url,omitempty"     protobuf:"bytes,1,opt,name=org_url"`
+	ClientID   string `json:"client_id,omitempty"   protobuf:"bytes,2,opt,name=client_id"`
+	PrivateKey string `json:"private_key,omitempty" protobuf:"bytes,3,opt,name=private_key"`
 }
 
 // Duo IdP Settings
@@ -67,13 +67,13 @@ type IssuerSettings struct {
 	KeyID string `json:"key_id,omitempty" protobuf:"bytes,2,opt,name=key_id"`
 
 	// The type of the IdP.
-	IdpType IdpType `json:"idp_type,omitempty" protobuf:"bytes,2,opt,name=idp_type"`
+	IdpType IdpType `json:"idp_type,omitempty" protobuf:"bytes,3,opt,name=idp_type"`
 
 	// Settings for the Duo Identity Provider.
-	DuoIdpSettings *DuoIdpSettings `json:"duo_idp_settings,omitempty" protobuf:"bytes,3,opt,name=duo_idp_settings"`
+	DuoIdpSettings *DuoIdpSettings `json:"duo_idp_settings,omitempty" protobuf:"bytes,4,opt,name=duo_idp_settings"`
 
 	// Settings for the Okta Identity Provider.
-	OktaIdpSettings *OktaIdpSettings `json:"okta_idp_settings,omitempty" protobuf:"bytes,4,opt,name=okta_idp_settings"`
+	OktaIdpSettings *OktaIdpSettings `json:"okta_idp_settings,omitempty" protobuf:"bytes,5,opt,name=okta_idp_settings"`
 }
 
 // Identity Settings
