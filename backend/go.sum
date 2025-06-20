@@ -598,8 +598,6 @@ github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
 github.com/JohnCGriffin/overflow v0.0.0-20211019200055-46fa312c352c/go.mod h1:X0CRv0ky0k6m906ixxpzmDRLvX58TFUKS2eePweuyxk=
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
-github.com/agntcy/identity v0.0.2 h1:H31cxZG774XLLH5/fLa+gGf3VwKX/CDgUicxUhnJHC0=
-github.com/agntcy/identity v0.0.2/go.mod h1:/4m4pa2WhJ4dQVAK2UvjyelLW3acnTtaXSUIf3uRK1Q=
 github.com/agntcy/identity v0.0.3 h1:hn4RIEcx8BAnwtpB5Wuevok+43p/z/RPRq1llR8feN8=
 github.com/agntcy/identity v0.0.3/go.mod h1:/4m4pa2WhJ4dQVAK2UvjyelLW3acnTtaXSUIf3uRK1Q=
 github.com/agntcy/identity/api/client v0.0.0-20250613144334-993fee3a5da0 h1:FfeZ9/mZots9aEEJA+BdBQcxl04AbG/WWfsLsUFdaSs=

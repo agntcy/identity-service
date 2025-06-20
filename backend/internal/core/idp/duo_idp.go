@@ -44,6 +44,12 @@ type DuoIdp struct {
 	api         *duosdk.DuoApi
 }
 
+func NewDuoIdp(idpSettings *types.DuoIdpSettings) Idp {
+	return &DuoIdp{
+		IdpSettings: idpSettings,
+	}
+}
+
 func (d *DuoIdp) TestSettings(ctx context.Context) error {
 	if d.IdpSettings == nil {
 		return errutil.Err(
@@ -179,7 +185,15 @@ func (d *DuoIdp) duoCall(
 		}
 	}()
 
-	if err != nil || response.StatusCode != http.StatusOK {
+	if err != nil {
+		return nil, errutil.Err(
+			err,
+			fmt.Sprintf("duo API call failed: %s",
+				string(data)),
+		)
+	}
+
+	if response.StatusCode != http.StatusOK {
 		return nil, errutil.Err(
 			err,
 			fmt.Sprintf("duo API call failed: %s, status code: %d",

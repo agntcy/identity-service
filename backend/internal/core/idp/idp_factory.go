@@ -16,7 +16,7 @@ func NewIdp(ctx context.Context, issuerSettings *types.IssuerSettings) (Idp, err
 
 	switch issuerSettings.IdpType {
 	case types.IDP_TYPE_DUO:
-		idp = &DuoIdp{issuerSettings.DuoIdpSettings, nil}
+		idp = NewDuoIdp(issuerSettings.DuoIdpSettings)
 	case types.IDP_TYPE_OKTA:
 		idp = &OktaIdp{issuerSettings.OktaIdpSettings, nil}
 	default:

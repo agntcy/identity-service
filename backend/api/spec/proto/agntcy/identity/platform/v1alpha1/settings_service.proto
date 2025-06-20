@@ -38,7 +38,10 @@ service SettingsService {
 
   // Set up Issuer
   rpc SetIssuer(SetIssuerRequest) returns (IssuerSettings) {
-    option (google.api.http) = {post: "/v1alpha1/settings/issuer"};
+    option (google.api.http) = {
+      post: "/v1alpha1/settings/issuer",
+      body: "*"
+    };
 
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       operation_id: "Set up Issuer";

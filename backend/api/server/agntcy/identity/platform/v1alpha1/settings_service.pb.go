@@ -151,11 +151,11 @@ const file_agntcy_identity_platform_v1alpha1_settings_service_proto_rawDesc = ""
 	"\x12GetSettingsRequest\"\x12\n" +
 	"\x10SetApiKeyRequest\"s\n" +
 	"\x10SetIssuerRequest\x12_\n" +
-	"\x0fissuer_settings\x18\x01 \x01(\v21.agntcy.identity.platform.v1alpha1.IssuerSettingsB\x03\xe0A\x02R\x0eissuerSettings2\xb8\x05\n" +
+	"\x0fissuer_settings\x18\x01 \x01(\v21.agntcy.identity.platform.v1alpha1.IssuerSettingsB\x03\xe0A\x02R\x0eissuerSettings2\xbb\x05\n" +
 	"\x0fSettingsService\x12\xbb\x01\n" +
 	"\vGetSettings\x125.agntcy.identity.platform.v1alpha1.GetSettingsRequest\x1a+.agntcy.identity.platform.v1alpha1.Settings\"H\x92A+\x12\x1bGet Settings for the Tenant*\fGet Settings\x82\xd3\xe4\x93\x02\x14\x12\x12/v1alpha1/settings\x12\xe4\x01\n" +
-	"\tSetApiKey\x123.agntcy.identity.platform.v1alpha1.SetApiKeyRequest\x1a).agntcy.identity.platform.v1alpha1.ApiKey\"w\x92AR\x12\x0eSet up API Key\x1a@Create a new API Key for the Tenant. Revoke any previous API Key\x82\xd3\xe4\x93\x02\x1c\"\x1a/v1alpha1/settings/api-key\x12\xf0\x01\n" +
-	"\tSetIssuer\x123.agntcy.identity.platform.v1alpha1.SetIssuerRequest\x1a1.agntcy.identity.platform.v1alpha1.IssuerSettings\"{\x92AW\x12FCreate and register Issuer for the Tenant. Revoke any previous Issuer.*\rSet up Issuer\x82\xd3\xe4\x93\x02\x1b\"\x19/v1alpha1/settings/issuer\x1a\r\x92A\n" +
+	"\tSetApiKey\x123.agntcy.identity.platform.v1alpha1.SetApiKeyRequest\x1a).agntcy.identity.platform.v1alpha1.ApiKey\"w\x92AR\x12\x0eSet up API Key\x1a@Create a new API Key for the Tenant. Revoke any previous API Key\x82\xd3\xe4\x93\x02\x1c\"\x1a/v1alpha1/settings/api-key\x12\xf3\x01\n" +
+	"\tSetIssuer\x123.agntcy.identity.platform.v1alpha1.SetIssuerRequest\x1a1.agntcy.identity.platform.v1alpha1.IssuerSettings\"~\x92AW\x12FCreate and register Issuer for the Tenant. Revoke any previous Issuer.*\rSet up Issuer\x82\xd3\xe4\x93\x02\x1e:\x01*\"\x19/v1alpha1/settings/issuer\x1a\r\x92A\n" +
 	"\n" +
 	"\bSettingsBkZigithub.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_gob\x06proto3"
 

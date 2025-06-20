@@ -5,6 +5,7 @@ package identity
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net"
 	"os"
@@ -14,6 +15,7 @@ import (
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 	"github.com/agntcy/identity-platform/internal/pkg/httputil"
 	"github.com/agntcy/identity-platform/pkg/log"
+	idsdk "github.com/agntcy/identity/api/client/client/id_service"
 	issuersdk "github.com/agntcy/identity/api/client/client/issuer_service"
 	identitymodels "github.com/agntcy/identity/api/client/models"
 	"github.com/agntcy/identity/pkg/joseutil"
@@ -41,12 +43,19 @@ type Service interface {
 		clientCredentials *idpcore.ClientCredentials,
 		userID, organizationID string,
 	) (*Issuer, error)
+	GenerateID(
+		ctx context.Context,
+		clientCredentials *idpcore.ClientCredentials,
+		issuer *Issuer,
+		userID string,
+	) (string, error)
 }
 
 // The verificationService struct implements the VerificationService interface
 type service struct {
 	vaultAddress      string
 	issuerClient      issuersdk.ClientService
+	idClient          idsdk.ClientService
 	oidcAuthenticator oidc.Authenticator
 	goEnv             string
 }
@@ -67,6 +76,14 @@ func NewService(
 	return &service{
 		vaultAddress: fmt.Sprintf("%s//%s", vaultProtocol, net.JoinHostPort(vaultHost, vaultPort)),
 		issuerClient: issuersdk.New(
+			httptransport.New(
+				net.JoinHostPort(identityHost, identityPort),
+				"",
+				nil,
+			),
+			strfmt.Default,
+		),
+		idClient: idsdk.New(
 			httptransport.New(
 				net.JoinHostPort(identityHost, identityPort),
 				"",
@@ -143,6 +160,39 @@ func (s *service) RegisterIssuer(
 	}, nil
 }
 
+func (s *service) GenerateID(
+	ctx context.Context,
+	clientCredentials *idpcore.ClientCredentials,
+	issuer *Issuer,
+	userID string,
+) (string, error) {
+	proof, err := s.generateProof(ctx, clientCredentials, userID, issuer.KeyID)
+	if err != nil {
+		return "", errutil.Err(
+			err,
+			"error generating proof for ID generation",
+		)
+	}
+
+	resp, err := s.idClient.GenerateID(&idsdk.GenerateIDParams{
+		Body: &identitymodels.V1alpha1GenerateRequest{
+			Issuer: &identitymodels.V1alpha1Issuer{
+				CommonName: issuer.CommonName,
+			},
+			Proof: proof,
+		},
+	})
+	if err != nil {
+		return "", err
+	}
+
+	if resp == nil || resp.Payload == nil || resp.Payload.ResolverMetadata == nil {
+		return "", errors.New("empty response payload")
+	}
+
+	return resp.Payload.ResolverMetadata.ID, nil
+}
+
 func (s *service) getCommonName(
 	clientCredentials *idpcore.ClientCredentials,
 	commonName string,
@@ -196,7 +246,7 @@ func (s *service) generateProof(
 		// Issue a self-signed JWT proof
 		proofValue, err = oidc.SelfIssueJWT(
 			commonName,
-			uuid.NewString(),
+			uuid.NewString(), // TODO: This needs to be configurable when creating VCs
 			privKey,
 		)
 	}

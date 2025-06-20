@@ -1129,7 +1129,8 @@
                   "rules": [
                     {
                       "method": "POST",
-                      "pattern": "/v1alpha1/settings/issuer"
+                      "pattern": "/v1alpha1/settings/issuer",
+                      "body": "*"
                     }
                   ]
                 }

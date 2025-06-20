@@ -164,6 +164,8 @@ func main() {
 	// Create internal services
 	appSrv := bff.NewAppService(
 		appRepository,
+		settingsRepository,
+		identityService,
 	)
 	issuerSrv := issuer.NewService(
 		identityService,
