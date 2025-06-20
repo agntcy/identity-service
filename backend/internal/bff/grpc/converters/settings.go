@@ -18,9 +18,9 @@ func FromOktaIdpSettings(
 	}
 
 	return &identity_platform_sdk_go.OktaIdpSettings{
-		Domain:       ptrutil.Ptr(src.Domain),
-		ClientId:     ptrutil.Ptr(src.ClientID),
-		ClientSecret: ptrutil.Ptr(strutil.Mask(src.ClientSecret)),
+		OrgUrl:     ptrutil.Ptr(src.OrgUrl),
+		ClientId:   ptrutil.Ptr(src.ClientID),
+		PrivateKey: ptrutil.Ptr(strutil.Mask(src.PrivateKey)),
 	}
 }
 
@@ -32,9 +32,9 @@ func ToOktaIdpSettings(
 	}
 
 	return &settingstypes.OktaIdpSettings{
-		Domain:       src.GetDomain(),
-		ClientID:     src.GetClientId(),
-		ClientSecret: src.GetClientSecret(),
+		OrgUrl:     src.GetOrgUrl(),
+		ClientID:   src.GetClientId(),
+		PrivateKey: src.GetPrivateKey(),
 	}
 }
 
