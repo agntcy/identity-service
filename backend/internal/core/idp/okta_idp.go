@@ -5,23 +5,20 @@ package idp
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
-	"net/http"
-	"path"
 	"strings"
 
 	"github.com/agntcy/identity-platform/internal/core/settings/types"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 	"github.com/agntcy/identity-platform/pkg/log"
-	"github.com/google/uuid"
 	oktasdk "github.com/okta/okta-sdk-golang/v5/okta"
 )
 
 const (
-	oktaScopes        = "okta.apps.read,okta.apps.manage"
-	oktaTimeout       = 10 // seconds
-	oktaAuthorization = "PrivateKey"
+	oktaScopes             = "okta.apps.read,okta.apps.manage"
+	oktaTimeout            = 10 // seconds
+	oktaAuthorization      = "PrivateKey"
+	oktaPrivateKeyLineSize = 64 // Number of characters per line in the private key
 )
 
 type OktaIdp struct {
@@ -39,7 +36,7 @@ func (d *OktaIdp) TestSettings(ctx context.Context) error {
 
 	// Attempt to create a new Okta API client configuration
 	config, err := oktasdk.NewConfiguration(
-		oktasdk.WithOrgUrl(d.IdpSettings.Domain),
+		oktasdk.WithOrgUrl(d.IdpSettings.OrgUrl),
 		oktasdk.WithAuthorizationMode(oktaAuthorization),
 		oktasdk.WithPrivateKey(d.getPrivateKey()),
 		oktasdk.WithScopes(strings.Split(oktaScopes, ",")),
@@ -55,27 +52,16 @@ func (d *OktaIdp) TestSettings(ctx context.Context) error {
 	// Create a new Okta API client with the provided configuration
 	d.api = oktasdk.NewAPIClient(config)
 
-	return err
-}
-
-func (d *OktaIdp) getPrivateKey() (string, err) {
-	if d.IdpSettings == nil || d.IdpSettings.PrivateKey == "" {
-		return "", errutil.Err(
-			fmt.Errorf("private key is not configured"),
-			"okta idp private key is not set",
+	// Test the connection by making a simple API call
+	_, _, applicationErr := d.api.ApplicationAPI.ListApplications(ctx).Execute()
+	if applicationErr != nil {
+		return errutil.Err(
+			applicationErr,
+			"failed to connect to Okta IdP",
 		)
 	}
 
-	// Create api key
-	rawKey := *p.directory.ApiSecret
-	size := len(rawKey) / privateKeyLineSize
-
-	privateKey := "-----BEGIN PRIVATE KEY-----\n"
-	for i := 0; i < size-1; i++ {
-		privateKey += rawKey[i*privateKeyLineSize:(i+1)*privateKeyLineSize] + "\n"
-	}
-
-	privateKey += rawKey[(size-1)*privateKeyLineSize:] + "\n-----END PRIVATE KEY-----"
+	return err
 }
 
 func (d *OktaIdp) CreateClientCredentialsPair(
@@ -83,62 +69,28 @@ func (d *OktaIdp) CreateClientCredentialsPair(
 ) (*ClientCredentials, error) {
 	log.Debug("Creating client credentials pair for Okta IdP")
 
-	// Create a custom scope
-	scopeId := uuid.NewString()
+	application, _, err := d.api.ApplicationAPI.CreateApplication(ctx).Execute()
 
-	// Create a custom client id
-	clientId := uuid.NewString()
+	log.Debug("Created Okta application with ID:", application)
 
-	// Get client name
-	clientName := getName()
-
-	paylod := oktasdk.JSONParams{
-		"name": clientName,
-		"type": "sso-oauth-client-credentials",
-		"sso": oktasdk.JSONParams{
-			"oauth_config": oktasdk.JSONParams{
-				"scopes": []oktasdk.JSONParams{
-					{
-						"id":   scopeId,
-						"name": customScope,
-					},
-				},
-				"clients": []oktasdk.JSONParams{
-					{
-						"name":                clientName,
-						"client_id":           clientId,
-						"assigned_scopes_ids": []string{scopeId},
-					},
-				},
-			},
-		},
-	}
-
-	data, err := d.oktaCall(
-		"POST",
-		"/admin/v3/integrations",
-		paylod,
+	return nil, errutil.Err(
+		err,
+		"failed to create Okta application",
 	)
-	if err != nil {
-		return nil, errutil.Err(
-			err,
-			"failed to create client credentials pair in Okta IdP",
-		)
-	}
 
-	var integrationData integration
-	if err := json.Unmarshal(data, &integrationData); err != nil {
-		return nil, errutil.Err(
-			err,
-			"failed to unmarshal Okta IdP integration data",
-		)
-	}
-
-	return &ClientCredentials{
-		ClientID:     integrationData.Response.Sso.OauthConfig.Clients[0].ClientId,
-		ClientSecret: integrationData.Response.Sso.OauthConfig.Clients[0].ClientSecret,
-		Issuer:       integrationData.Response.Sso.IdpMetadata.Issuer,
-	}, nil
+	// var integrationData integration
+	// if err := json.Unmarshal(data, &integrationData); err != nil {
+	// 	return nil, errutil.Err(
+	// 		err,
+	// 		"failed to unmarshal Okta IdP integration data",
+	// 	)
+	// }
+	//
+	// return &ClientCredentials{
+	// 	ClientID:     integrationData.Response.Sso.OauthConfig.Clients[0].ClientId,
+	// 	ClientSecret: integrationData.Response.Sso.OauthConfig.Clients[0].ClientSecret,
+	// 	Issuer:       integrationData.Response.Sso.IdpMetadata.Issuer,
+	// }, nil
 }
 
 func (d *OktaIdp) DeleteClientCredentialsPair(
@@ -149,53 +101,36 @@ func (d *OktaIdp) DeleteClientCredentialsPair(
 		return fmt.Errorf("client credentials are not provided or issuer is empty")
 	}
 
-	integrationKey := path.Base(clientCredentials.Issuer)
-
-	// Prepare the path for the DELETE request
-	deletePath := fmt.Sprintf("/admin/v3/integrations/%s", integrationKey)
-
-	// Call the Okta API to delete the client credentials pair
-	_, err := d.oktaCall(
-		"DELETE",
-		deletePath,
-		oktasdk.JSONParams{},
-	)
+	_, err := d.api.ApplicationAPI.DeleteApplication(ctx, clientCredentials.ClientID).Execute()
 	if err != nil {
 		return errutil.Err(
 			err,
-			fmt.Sprintf(
-				"failed to delete client credentials pair for issuer %s",
-				clientCredentials.Issuer,
-			),
+			"failed to delete client credentials pair for issuer %s",
 		)
 	}
 
 	return nil
 }
 
-func (d *OktaIdp) oktaCall(
-	method, callPath string, params oktasdk.JSONParams) ([]byte, error) {
-	response, data, err := d.api.JSONSignedCall(
-		method,
-		callPath,
-		params,
-		oktasdk.UseTimeout,
-	)
-
-	// Ensure the response body is closed after use to prevent resource leaks.
-	defer func() {
-		if response != nil {
-			_ = response.Body.Close()
-		}
-	}()
-
-	if err != nil || response.StatusCode != http.StatusOK {
-		return nil, errutil.Err(
-			err,
-			fmt.Sprintf("okta API call failed: %s, status code: %d",
-				string(data), response.StatusCode),
-		)
+func (d *OktaIdp) getPrivateKey() string {
+	if d.IdpSettings == nil || d.IdpSettings.PrivateKey == "" {
+		return ""
 	}
 
-	return data, nil
+	// Create api key
+	rawKey := d.IdpSettings.PrivateKey
+	size := len(rawKey) / oktaPrivateKeyLineSize
+
+	if size < oktaPrivateKeyLineSize {
+		return ""
+	}
+
+	privateKey := "-----BEGIN PRIVATE KEY-----\n"
+	for index := range size {
+		privateKey += rawKey[index*oktaPrivateKeyLineSize:(index+1)*oktaPrivateKeyLineSize] + "\n"
+	}
+
+	privateKey += rawKey[(size-1)*oktaPrivateKeyLineSize:] + "\n-----END PRIVATE KEY-----"
+
+	return privateKey
 }
