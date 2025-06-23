@@ -191,7 +191,7 @@ func (s *badgeService) createBadgeClaims(
 		claims.Badge = card
 		badgeType = badgetypes.CREDENTIAL_CONTENT_TYPE_AGENT_BADGE
 	case apptypes.APP_TYPE_AGENT_OASF:
-		badgeType = badgetypes.CREDENTIAL_CONTENT_TYPE_AGENT_BADGE
+		// Add implementation for OASF
 		return nil, 0, nil
 	case apptypes.APP_TYPE_AGENT_MCP_SERVER:
 		err := s.validator.Struct(&in.mcp)

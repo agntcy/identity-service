@@ -38,7 +38,9 @@ func (d *discoveryClient) Discover(
 	if err != nil {
 		return "", err
 	}
-	defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 
 	if resp.StatusCode != http.StatusOK {
 		return "", errors.New("failed to get agent card with status code: " + resp.Status)

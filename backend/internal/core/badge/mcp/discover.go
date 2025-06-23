@@ -51,7 +51,9 @@ func (d *discoveryClient) Discover(
 		)
 	}
 
-	defer mcpClient.Close()
+	defer func() {
+		_ = mcpClient.Close()
+	}()
 
 	// Discover MCP server
 	// First the tools
