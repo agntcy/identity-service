@@ -106,11 +106,9 @@ type Rule struct {
 	// A human-readable description for the App.
 	Description *string `protobuf:"bytes,5,opt,name=description,proto3,oneof" json:"description,omitempty"`
 	// The requester application that this Rule applies to.
-	RequesterId *string `protobuf:"bytes,2,opt,name=requester_id,json=requesterId,proto3,oneof" json:"requester_id,omitempty"`
-	// The target application that this Rule applies to.
-	TargetIds []string `protobuf:"bytes,3,rep,name=target_ids,json=targetIds,proto3" json:"target_ids,omitempty"`
-	// The allowed tools for this Rule.
-	AllowedToolNames []string `protobuf:"bytes,7,rep,name=allowed_tool_names,json=allowedToolNames,proto3" json:"allowed_tool_names,omitempty"`
+	AssignedTo *string `protobuf:"bytes,2,opt,name=assigned_to,json=assignedTo,proto3,oneof" json:"assigned_to,omitempty"`
+	// The tasks that this Rule applies to.
+	Tasks []*Task `protobuf:"bytes,3,rep,name=tasks,proto3" json:"tasks,omitempty"`
 	// Need User Approval for this Rule.
 	NeedsApproval *bool `protobuf:"varint,8,opt,name=needs_approval,json=needsApproval,proto3,oneof" json:"needs_approval,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -168,23 +166,16 @@ func (x *Rule) GetDescription() string {
 	return ""
 }
 
-func (x *Rule) GetRequesterId() string {
-	if x != nil && x.RequesterId != nil {
-		return *x.RequesterId
+func (x *Rule) GetAssignedTo() string {
+	if x != nil && x.AssignedTo != nil {
+		return *x.AssignedTo
 	}
 	return ""
 }
 
-func (x *Rule) GetTargetIds() []string {
+func (x *Rule) GetTasks() []*Task {
 	if x != nil {
-		return x.TargetIds
-	}
-	return nil
-}
-
-func (x *Rule) GetAllowedToolNames() []string {
-	if x != nil {
-		return x.AllowedToolNames
+		return x.Tasks
 	}
 	return nil
 }
@@ -194,6 +185,79 @@ func (x *Rule) GetNeedsApproval() bool {
 		return *x.NeedsApproval
 	}
 	return false
+}
+
+// Identity Platform Policy Task
+type Task struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// A unique identifier for the Task.
+	Id *string `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
+	// A human-readable name for the Task.
+	Name *string `protobuf:"bytes,4,opt,name=name,proto3,oneof" json:"name,omitempty"`
+	// An application ID for the Task.
+	AppId *string `protobuf:"bytes,3,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
+	// A tool name for the Task.
+	ToolName      *string `protobuf:"bytes,2,opt,name=tool_name,json=toolName,proto3,oneof" json:"tool_name,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Task) Reset() {
+	*x = Task{}
+	mi := &file_agntcy_identity_platform_v1alpha1_policy_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Task) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Task) ProtoMessage() {}
+
+func (x *Task) ProtoReflect() protoreflect.Message {
+	mi := &file_agntcy_identity_platform_v1alpha1_policy_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Task.ProtoReflect.Descriptor instead.
+func (*Task) Descriptor() ([]byte, []int) {
+	return file_agntcy_identity_platform_v1alpha1_policy_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *Task) GetId() string {
+	if x != nil && x.Id != nil {
+		return *x.Id
+	}
+	return ""
+}
+
+func (x *Task) GetName() string {
+	if x != nil && x.Name != nil {
+		return *x.Name
+	}
+	return ""
+}
+
+func (x *Task) GetAppId() string {
+	if x != nil && x.AppId != nil {
+		return *x.AppId
+	}
+	return ""
+}
+
+func (x *Task) GetToolName() string {
+	if x != nil && x.ToolName != nil {
+		return *x.ToolName
+	}
+	return ""
 }
 
 var File_agntcy_identity_platform_v1alpha1_policy_proto protoreflect.FileDescriptor
@@ -208,21 +272,30 @@ const file_agntcy_identity_platform_v1alpha1_policy_proto_rawDesc = "" +
 	"\x05rules\x18\x06 \x03(\v2'.agntcy.identity.platform.v1alpha1.RuleR\x05rulesB\x05\n" +
 	"\x03_idB\a\n" +
 	"\x05_nameB\x0e\n" +
-	"\f_description\"\xc0\x02\n" +
+	"\f_description\"\xaf\x02\n" +
 	"\x04Rule\x12\x13\n" +
 	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x17\n" +
 	"\x04name\x18\x04 \x01(\tH\x01R\x04name\x88\x01\x01\x12%\n" +
-	"\vdescription\x18\x05 \x01(\tH\x02R\vdescription\x88\x01\x01\x12&\n" +
-	"\frequester_id\x18\x02 \x01(\tH\x03R\vrequesterId\x88\x01\x01\x12\x1d\n" +
-	"\n" +
-	"target_ids\x18\x03 \x03(\tR\ttargetIds\x12,\n" +
-	"\x12allowed_tool_names\x18\a \x03(\tR\x10allowedToolNames\x12*\n" +
+	"\vdescription\x18\x05 \x01(\tH\x02R\vdescription\x88\x01\x01\x12$\n" +
+	"\vassigned_to\x18\x02 \x01(\tH\x03R\n" +
+	"assignedTo\x88\x01\x01\x12=\n" +
+	"\x05tasks\x18\x03 \x03(\v2'.agntcy.identity.platform.v1alpha1.TaskR\x05tasks\x12*\n" +
 	"\x0eneeds_approval\x18\b \x01(\bH\x04R\rneedsApproval\x88\x01\x01B\x05\n" +
 	"\x03_idB\a\n" +
 	"\x05_nameB\x0e\n" +
-	"\f_descriptionB\x0f\n" +
-	"\r_requester_idB\x11\n" +
-	"\x0f_needs_approvalBkZigithub.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_gob\x06proto3"
+	"\f_descriptionB\x0e\n" +
+	"\f_assigned_toB\x11\n" +
+	"\x0f_needs_approval\"\x9b\x01\n" +
+	"\x04Task\x12\x13\n" +
+	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x17\n" +
+	"\x04name\x18\x04 \x01(\tH\x01R\x04name\x88\x01\x01\x12\x1a\n" +
+	"\x06app_id\x18\x03 \x01(\tH\x02R\x05appId\x88\x01\x01\x12 \n" +
+	"\ttool_name\x18\x02 \x01(\tH\x03R\btoolName\x88\x01\x01B\x05\n" +
+	"\x03_idB\a\n" +
+	"\x05_nameB\t\n" +
+	"\a_app_idB\f\n" +
+	"\n" +
+	"_tool_nameBkZigithub.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_gob\x06proto3"
 
 var (
 	file_agntcy_identity_platform_v1alpha1_policy_proto_rawDescOnce sync.Once
@@ -236,18 +309,20 @@ func file_agntcy_identity_platform_v1alpha1_policy_proto_rawDescGZIP() []byte {
 	return file_agntcy_identity_platform_v1alpha1_policy_proto_rawDescData
 }
 
-var file_agntcy_identity_platform_v1alpha1_policy_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_agntcy_identity_platform_v1alpha1_policy_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_agntcy_identity_platform_v1alpha1_policy_proto_goTypes = []any{
 	(*Policy)(nil), // 0: agntcy.identity.platform.v1alpha1.Policy
 	(*Rule)(nil),   // 1: agntcy.identity.platform.v1alpha1.Rule
+	(*Task)(nil),   // 2: agntcy.identity.platform.v1alpha1.Task
 }
 var file_agntcy_identity_platform_v1alpha1_policy_proto_depIdxs = []int32{
 	1, // 0: agntcy.identity.platform.v1alpha1.Policy.rules:type_name -> agntcy.identity.platform.v1alpha1.Rule
-	1, // [1:1] is the sub-list for method output_type
-	1, // [1:1] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	2, // 1: agntcy.identity.platform.v1alpha1.Rule.tasks:type_name -> agntcy.identity.platform.v1alpha1.Task
+	2, // [2:2] is the sub-list for method output_type
+	2, // [2:2] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_agntcy_identity_platform_v1alpha1_policy_proto_init() }
@@ -257,13 +332,14 @@ func file_agntcy_identity_platform_v1alpha1_policy_proto_init() {
 	}
 	file_agntcy_identity_platform_v1alpha1_policy_proto_msgTypes[0].OneofWrappers = []any{}
 	file_agntcy_identity_platform_v1alpha1_policy_proto_msgTypes[1].OneofWrappers = []any{}
+	file_agntcy_identity_platform_v1alpha1_policy_proto_msgTypes[2].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_agntcy_identity_platform_v1alpha1_policy_proto_rawDesc), len(file_agntcy_identity_platform_v1alpha1_policy_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
