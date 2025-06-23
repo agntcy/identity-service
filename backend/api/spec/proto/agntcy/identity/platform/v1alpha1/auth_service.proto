@@ -55,6 +55,16 @@ service AuthService {
       summary: "Handle external authorization requests";
     };
   }
+
+  // Register new user device for approval flow
+  rpc RegisterDevice(RegisterDeviceRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {post: "/v1alpha1/auth/register_device"};
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "RegisterDevice";
+      summary: "Register new user device for approval flow";
+    };
+  }
 }
 
 message AppInfoResponse {
@@ -88,4 +98,13 @@ message TokenRequest {
 message TokenResponse {
   // The token issued to the Agent or MCP Server.
   Token token = 1;
+}
+
+message RegisterDeviceRequest {
+  // The User context in the form of an id or access token.
+  // Mandatory for User Approval Flows.
+  string user_token = 1;
+
+  // The device information to register.
+  Device device = 2;
 }
