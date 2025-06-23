@@ -1,10 +1,15 @@
+// Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Settingsentifier: Apache-2.0
+
 package idp
 
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 
+	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
 	"github.com/agntcy/identity-platform/internal/pkg/vault"
 )
 
@@ -15,17 +20,15 @@ const (
 type CredentialStore interface {
 	Get(
 		ctx context.Context,
-		tenantID string,
 		subject string,
 	) (*ClientCredentials, error)
 	Put(
 		ctx context.Context,
 		cred *ClientCredentials,
-		tenantID string,
 		subject string,
 	) error
-	Delete(ctx context.Context,
-		tenantID string,
+	Delete(
+		ctx context.Context,
 		subject string,
 	) error
 }
@@ -42,9 +45,13 @@ func NewCredentialStore(vaultClient vault.VaultClient) CredentialStore {
 
 func (s *VaultCredentialStore) Get(
 	ctx context.Context,
-	tenantID string,
 	subject string,
 ) (*ClientCredentials, error) {
+	tenantID, ok := identitycontext.GetTenantID(ctx)
+	if !ok {
+		return nil, errors.New("tenant id not found in context")
+	}
+
 	data, err := s.vaultClient.Get(ctx, s.getSecretPath(tenantID, subject))
 	if err != nil {
 		return nil, fmt.Errorf("unable to get client credentials from vault: %w", err)
@@ -68,9 +75,13 @@ func (s *VaultCredentialStore) Get(
 func (s *VaultCredentialStore) Put(
 	ctx context.Context,
 	cred *ClientCredentials,
-	tenantID string,
 	subject string,
 ) error {
+	tenantID, ok := identitycontext.GetTenantID(ctx)
+	if !ok {
+		return errors.New("tenant id not found in context")
+	}
+
 	raw, err := json.Marshal(cred)
 	if err != nil {
 		return fmt.Errorf("unable to marshal credentials: %w", err)
@@ -91,7 +102,15 @@ func (s *VaultCredentialStore) Put(
 	return nil
 }
 
-func (s *VaultCredentialStore) Delete(ctx context.Context, tenantID string, subject string) error {
+func (s *VaultCredentialStore) Delete(
+	ctx context.Context,
+	subject string,
+) error {
+	tenantID, ok := identitycontext.GetTenantID(ctx)
+	if !ok {
+		return errors.New("tenant id not found in context")
+	}
+
 	err := s.vaultClient.Delete(ctx, s.getSecretPath(tenantID, subject))
 	if err != nil {
 		return fmt.Errorf("unable to delete client credentials: %w", err)

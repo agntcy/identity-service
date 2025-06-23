@@ -171,6 +171,18 @@
               "isoneof": true,
               "oneofdecl": "_type",
               "defaultValue": ""
+            },
+            {
+              "name": "resolverMetadataID",
+              "description": "The DID value",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_resolverMetadataID",
+              "defaultValue": ""
             }
           ]
         }
@@ -600,6 +612,474 @@
                     {
                       "method": "DELETE",
                       "pattern": "/v1alpha1/apps/{app_id}"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "agntcy/identity/platform/v1alpha1/badge.proto",
+      "description": "",
+      "package": "agntcy.identity.platform.v1alpha1",
+      "hasEnums": true,
+      "hasExtensions": false,
+      "hasMessages": true,
+      "hasServices": false,
+      "enums": [
+        {
+          "name": "BadgeType",
+          "longName": "BadgeType",
+          "fullName": "agntcy.identity.platform.v1alpha1.BadgeType",
+          "description": "The content of the Credential.\nMultiple content types can be supported: AgentBadge, etc.",
+          "values": [
+            {
+              "name": "CREDENTIAL_CONTENT_TYPE_UNSPECIFIED",
+              "number": "0",
+              "description": "Unspecified Content Type."
+            },
+            {
+              "name": "CREDENTIAL_CONTENT_TYPE_AGENT_BADGE",
+              "number": "1",
+              "description": "AgentBadge Content Type.\nThe Agent content representation following a defined schema\nOASF: https://schema.oasf.agntcy.org/schema/objects/agent\nGoogle A2A: https://github.com/google/A2A/blob/main/specification/json/a2a.json"
+            },
+            {
+              "name": "CREDENTIAL_CONTENT_TYPE_MCP_BADGE",
+              "number": "2",
+              "description": "McpBadge Content Type.\nThe MCP content representation following a defined schema\nThe schema is defined in the MCP specification as the MCPServer type"
+            }
+          ]
+        }
+      ],
+      "extensions": [],
+      "messages": [
+        {
+          "name": "Badge",
+          "longName": "Badge",
+          "fullName": "agntcy.identity.platform.v1alpha1.Badge",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "verifiableCredential",
+              "description": "",
+              "label": "optional",
+              "type": "VerifiableCredential",
+              "longType": "VerifiableCredential",
+              "fullType": "agntcy.identity.platform.v1alpha1.VerifiableCredential",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_verifiableCredential",
+              "defaultValue": ""
+            },
+            {
+              "name": "appID",
+              "description": "",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_appID",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "BadgeClaims",
+          "longName": "BadgeClaims",
+          "fullName": "agntcy.identity.platform.v1alpha1.BadgeClaims",
+          "description": "BadgeClaims represents the content of a Badge VC defined [here]\n\n[here]: https://spec.identity.agntcy.org/docs/vc/intro/",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "id",
+              "description": "The ID as defined [here]\n\n[here]: https://www.w3.org/TR/vc-data-model/#credential-subject",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_id",
+              "defaultValue": ""
+            },
+            {
+              "name": "badge",
+              "description": "The content of the badge",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_badge",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "CredentialSchema",
+          "longName": "CredentialSchema",
+          "fullName": "agntcy.identity.platform.v1alpha1.CredentialSchema",
+          "description": "CredentialSchema represents the credentialSchema property of a Verifiable Credential.\nmore information can be found [here]\n\n[here]: https://www.w3.org/TR/vc-data-model-2.0/#data-schemas",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "type",
+              "description": "Type specifies the type of the file",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_type",
+              "defaultValue": ""
+            },
+            {
+              "name": "id",
+              "description": "The URL identifying the schema file",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_id",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "Proof",
+          "longName": "Proof",
+          "fullName": "agntcy.identity.platform.v1alpha1.Proof",
+          "description": "A data integrity proof provides information about the proof mechanism,\nparameters required to verify that proof, and the proof value itself.",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "type",
+              "description": "The type of the proof",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_type",
+              "defaultValue": ""
+            },
+            {
+              "name": "proofPurpose",
+              "description": "The proof purpose",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_proofPurpose",
+              "defaultValue": ""
+            },
+            {
+              "name": "proofValue",
+              "description": "The proof value",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_proofValue",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "VerifiableCredential",
+          "longName": "VerifiableCredential",
+          "fullName": "agntcy.identity.platform.v1alpha1.VerifiableCredential",
+          "description": "DataModel represents the W3C Verifiable Credential Data Model defined [here]\n\n[here]: https://www.w3.org/TR/vc-data-model/",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "context",
+              "description": "https://www.w3.org/TR/vc-data-model/#contexts",
+              "label": "repeated",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            },
+            {
+              "name": "type",
+              "description": "https://www.w3.org/TR/vc-data-model/#dfn-type",
+              "label": "repeated",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            },
+            {
+              "name": "issuer",
+              "description": "https://www.w3.org/TR/vc-data-model/#issuer",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_issuer",
+              "defaultValue": ""
+            },
+            {
+              "name": "credentialSubject",
+              "description": "https://www.w3.org/TR/vc-data-model/#credential-subject",
+              "label": "optional",
+              "type": "BadgeClaims",
+              "longType": "BadgeClaims",
+              "fullType": "agntcy.identity.platform.v1alpha1.BadgeClaims",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_credentialSubject",
+              "defaultValue": ""
+            },
+            {
+              "name": "id",
+              "description": "https://www.w3.org/TR/vc-data-model/#identifiers",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_id",
+              "defaultValue": ""
+            },
+            {
+              "name": "issuanceDate",
+              "description": "https://www.w3.org/TR/vc-data-model/#issuance-date",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_issuanceDate",
+              "defaultValue": ""
+            },
+            {
+              "name": "expirationDate",
+              "description": "https://www.w3.org/TR/vc-data-model/#expiration",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_expirationDate",
+              "defaultValue": ""
+            },
+            {
+              "name": "credentialSchema",
+              "description": "https://www.w3.org/TR/vc-data-model-2.0/#data-schemas",
+              "label": "repeated",
+              "type": "CredentialSchema",
+              "longType": "CredentialSchema",
+              "fullType": "agntcy.identity.platform.v1alpha1.CredentialSchema",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            },
+            {
+              "name": "proof",
+              "description": "https://w3id.org/security#proof",
+              "label": "optional",
+              "type": "Proof",
+              "longType": "Proof",
+              "fullType": "agntcy.identity.platform.v1alpha1.Proof",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_proof",
+              "defaultValue": ""
+            }
+          ]
+        }
+      ],
+      "services": []
+    },
+    {
+      "name": "agntcy/identity/platform/v1alpha1/badge_service.proto",
+      "description": "",
+      "package": "agntcy.identity.platform.v1alpha1",
+      "hasEnums": false,
+      "hasExtensions": false,
+      "hasMessages": true,
+      "hasServices": true,
+      "enums": [],
+      "extensions": [],
+      "messages": [
+        {
+          "name": "IssueA2ABadgeRequest",
+          "longName": "IssueA2ABadgeRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.IssueA2ABadgeRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "well_known_url",
+              "description": "",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "IssueBadgeRequest",
+          "longName": "IssueBadgeRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.IssueBadgeRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "app_id",
+              "description": "App Id.",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            },
+            {
+              "name": "a2a",
+              "description": "",
+              "label": "",
+              "type": "IssueA2ABadgeRequest",
+              "longType": "IssueA2ABadgeRequest",
+              "fullType": "agntcy.identity.platform.v1alpha1.IssueA2ABadgeRequest",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            },
+            {
+              "name": "mcp",
+              "description": "",
+              "label": "",
+              "type": "IssueMcpBadgeRequest",
+              "longType": "IssueMcpBadgeRequest",
+              "fullType": "agntcy.identity.platform.v1alpha1.IssueMcpBadgeRequest",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "IssueMcpBadgeRequest",
+          "longName": "IssueMcpBadgeRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.IssueMcpBadgeRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "name",
+              "description": "",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            },
+            {
+              "name": "url",
+              "description": "",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        }
+      ],
+      "services": [
+        {
+          "name": "BadgeService",
+          "longName": "BadgeService",
+          "fullName": "agntcy.identity.platform.v1alpha1.BadgeService",
+          "description": "BadgeService manages badges.",
+          "methods": [
+            {
+              "name": "IssueBadge",
+              "description": "Create a new App.",
+              "requestType": "IssueBadgeRequest",
+              "requestLongType": "IssueBadgeRequest",
+              "requestFullType": "agntcy.identity.platform.v1alpha1.IssueBadgeRequest",
+              "requestStreaming": false,
+              "responseType": "Badge",
+              "responseLongType": "Badge",
+              "responseFullType": "agntcy.identity.platform.v1alpha1.Badge",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "POST",
+                      "pattern": "/v1alpha1/apps/{app_id}/badges",
+                      "body": "*"
                     }
                   ]
                 }

@@ -15,6 +15,9 @@ import (
 	"github.com/agntcy/identity-platform/internal/bff"
 	bffgrpc "github.com/agntcy/identity-platform/internal/bff/grpc"
 	apppg "github.com/agntcy/identity-platform/internal/core/app/postgres"
+	badgea2a "github.com/agntcy/identity-platform/internal/core/badge/a2a"
+	badgemcp "github.com/agntcy/identity-platform/internal/core/badge/mcp"
+	badgepg "github.com/agntcy/identity-platform/internal/core/badge/postgres"
 	identitycore "github.com/agntcy/identity-platform/internal/core/identity"
 	idpcore "github.com/agntcy/identity-platform/internal/core/idp"
 	"github.com/agntcy/identity-platform/internal/core/issuer"
@@ -99,6 +102,7 @@ func main() {
 	err = dbContext.AutoMigrate(
 		&apppg.App{},                 // App model
 		&settingspg.IssuerSettings{}, // Issuer settings model
+		&badgepg.Badge{},
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -152,6 +156,7 @@ func main() {
 	// Create repositories
 	appRepository := apppg.NewRepository(dbContext)
 	settingsRepository := settingspg.NewRepository(dbContext)
+	badgeRepository := badgepg.NewRepository(dbContext)
 
 	// Get the token depending on the environment
 	token := ""
@@ -172,16 +177,25 @@ func main() {
 
 	idpFactory := idpcore.NewFactory()
 	credentialStore := idpcore.NewCredentialStore(vaultClient)
-
-	// Identity service
-	identityService := identitycore.NewService(
+	keyStore, err := identitycore.NewVaultKeyStore(
 		config.VaultHost,
 		config.VaultPort,
 		config.VaultUseSsl,
+		token, // This should be set in dev mode only
+	)
+	if err != nil {
+		log.Fatal("unable to create vault key store ", err)
+	}
+
+	// Identity service
+	identityService := identitycore.NewService(
 		config.IdentityHost,
 		config.IdentityPort,
-		config.GoEnv,
+		keyStore,
 	)
+
+	a2aClient := badgea2a.NewDiscoveryClient()
+	mcpClient := badgemcp.NewDiscoveryClient()
 
 	// Create internal services
 	appSrv := bff.NewAppService(
@@ -201,10 +215,21 @@ func main() {
 		iamClient,
 		settingsRepository,
 	)
+	badgeSrv := bff.NewBadgeService(
+		settingsRepository,
+		appRepository,
+		badgeRepository,
+		a2aClient,
+		mcpClient,
+		keyStore,
+		identityService,
+		credentialStore,
+	)
 
 	register := identity_platform_api.GrpcServiceRegister{
 		AppServiceServer:      bffgrpc.NewAppService(appSrv),
 		SettingsServiceServer: bffgrpc.NewSettingsService(settingsSrv),
+		BadgeServiceServer:    bffgrpc.NewBadgeService(badgeSrv),
 	}
 
 	register.RegisterGrpcHandlers(grpcsrv.Server)

@@ -1,3 +1,6 @@
+# Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
 # Generated with protoc-gen-openapi
 # https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
 
@@ -188,6 +191,38 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /v1alpha1/apps/{appId}/badges:
+        post:
+            tags:
+                - BadgeService
+            description: Create a new App.
+            operationId: BadgeService_IssueBadge
+            parameters:
+                - name: appId
+                  in: path
+                  description: App Id.
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/IssueBadgeRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Badge'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /v1alpha1/settings:
         get:
             tags:
@@ -232,56 +267,12 @@ paths:
                 - SettingsService
             description: Set up Issuer
             operationId: SettingsService_SetIssuer
-            parameters:
-                - name: issuerSettings.issuerId
-                  in: query
-                  description: |-
-                    A unique identifier for the Issuer.
-                     This is typically the Issuer's ID in the Identity.
-                  schema:
-                    type: string
-                - name: issuerSettings.keyId
-                  in: query
-                  description: |-
-                    A unique identifier for the Key.
-                     This is typically the Key's ID in the vault provider.
-                  schema:
-                    type: string
-                - name: issuerSettings.idpType
-                  in: query
-                  description: The type of the IdP.
-                  schema:
-                    enum:
-                        - IDP_TYPE_UNSPECIFIED
-                        - IDP_TYPE_DUO
-                        - IDP_TYPE_OKTA
-                        - IDP_TYPE_SELF
-                    type: string
-                    format: enum
-                - name: issuerSettings.duoIdpSettings.hostname
-                  in: query
-                  schema:
-                    type: string
-                - name: issuerSettings.duoIdpSettings.integrationKey
-                  in: query
-                  schema:
-                    type: string
-                - name: issuerSettings.duoIdpSettings.secretKey
-                  in: query
-                  schema:
-                    type: string
-                - name: issuerSettings.oktaIdpSettings.orgUrl
-                  in: query
-                  schema:
-                    type: string
-                - name: issuerSettings.oktaIdpSettings.clientId
-                  in: query
-                  schema:
-                    type: string
-                - name: issuerSettings.oktaIdpSettings.privateKey
-                  in: query
-                  schema:
-                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/SetIssuerRequest'
+                required: true
             responses:
                 "200":
                     description: OK
@@ -324,6 +315,9 @@ components:
                     type: string
                     description: The type of the App.
                     format: enum
+                resolverMetadataID:
+                    type: string
+                    description: The DID value
             description: Identity Platform App.
         AppTypeCountEntry:
             type: object
@@ -340,6 +334,43 @@ components:
                 value:
                     type: string
                     description: The count of apps of the given type
+        Badge:
+            type: object
+            properties:
+                verifiableCredential:
+                    $ref: '#/components/schemas/VerifiableCredential'
+                appID:
+                    type: string
+        BadgeClaims:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: |-
+                        The ID as defined [here]
+
+                         [here]: https://www.w3.org/TR/vc-data-model/#credential-subject
+                badge:
+                    type: string
+                    description: The content of the badge
+            description: |-
+                BadgeClaims represents the content of a Badge VC defined [here]
+
+                 [here]: https://spec.identity.agntcy.org/docs/vc/intro/
+        CredentialSchema:
+            type: object
+            properties:
+                type:
+                    type: string
+                    description: Type specifies the type of the file
+                id:
+                    type: string
+                    description: The URL identifying the schema file
+            description: |-
+                CredentialSchema represents the credentialSchema property of a Verifiable Credential.
+                 more information can be found [here]
+
+                 [here]: https://www.w3.org/TR/vc-data-model-2.0/#data-schemas
         DuoIdpSettings:
             type: object
             properties:
@@ -366,6 +397,28 @@ components:
                     description: The type of the serialized message.
             additionalProperties: true
             description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        IssueA2ABadgeRequest:
+            type: object
+            properties:
+                wellKnownUrl:
+                    type: string
+        IssueBadgeRequest:
+            type: object
+            properties:
+                appId:
+                    type: string
+                    description: App Id.
+                a2a:
+                    $ref: '#/components/schemas/IssueA2ABadgeRequest'
+                mcp:
+                    $ref: '#/components/schemas/IssueMcpBadgeRequest'
+        IssueMcpBadgeRequest:
+            type: object
+            properties:
+                name:
+                    type: string
+                url:
+                    type: string
         IssuerSettings:
             type: object
             properties:
@@ -437,6 +490,21 @@ components:
                     description: The size of the current page
                     format: int32
             description: Pagination response
+        Proof:
+            type: object
+            properties:
+                type:
+                    type: string
+                    description: The type of the proof
+                proofPurpose:
+                    type: string
+                    description: The proof purpose
+                proofValue:
+                    type: string
+                    description: The proof value
+            description: |-
+                A data integrity proof provides information about the proof mechanism,
+                 parameters required to verify that proof, and the proof value itself.
         SetIssuerRequest:
             required:
                 - issuerSettings
@@ -474,6 +542,48 @@ components:
                         $ref: '#/components/schemas/GoogleProtobufAny'
                     description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
             description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        VerifiableCredential:
+            type: object
+            properties:
+                context:
+                    type: array
+                    items:
+                        type: string
+                    description: https://www.w3.org/TR/vc-data-model/#contexts
+                type:
+                    type: array
+                    items:
+                        type: string
+                    description: https://www.w3.org/TR/vc-data-model/#dfn-type
+                issuer:
+                    type: string
+                    description: https://www.w3.org/TR/vc-data-model/#issuer
+                credentialSubject:
+                    allOf:
+                        - $ref: '#/components/schemas/BadgeClaims'
+                    description: https://www.w3.org/TR/vc-data-model/#credential-subject
+                id:
+                    type: string
+                    description: https://www.w3.org/TR/vc-data-model/#identifiers
+                issuanceDate:
+                    type: string
+                    description: https://www.w3.org/TR/vc-data-model/#issuance-date
+                expirationDate:
+                    type: string
+                    description: https://www.w3.org/TR/vc-data-model/#expiration
+                credentialSchema:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/CredentialSchema'
+                    description: https://www.w3.org/TR/vc-data-model-2.0/#data-schemas
+                proof:
+                    allOf:
+                        - $ref: '#/components/schemas/Proof'
+                    description: https://w3id.org/security#proof
+            description: |-
+                DataModel represents the W3C Verifiable Credential Data Model defined [here]
+
+                 [here]: https://www.w3.org/TR/vc-data-model/
     headers:
         "":
     securitySchemes:
@@ -493,5 +603,7 @@ security:
 tags:
     - name: AppService
       description: AppService manages apps.
+    - name: BadgeService
+      description: BadgeService manages badges.
     - name: SettingsService
       description: SettingsService manages settings.

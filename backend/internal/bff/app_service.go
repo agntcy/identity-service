@@ -14,6 +14,7 @@ import (
 	settingscore "github.com/agntcy/identity-platform/internal/core/settings"
 	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
+	"github.com/google/uuid"
 )
 
 type AppService interface {
@@ -57,11 +58,6 @@ func (s *appService) CreateApp(
 		return nil, errutil.Err(nil, "app type is required")
 	}
 
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return nil, errutil.Err(nil, "tenant id not found in context")
-	}
-
 	issSettings, err := s.settingsRepository.GetIssuerSettings(ctx)
 	if err != nil {
 		return nil, errutil.Err(err, "unable to fetch settings")
@@ -87,17 +83,12 @@ func (s *appService) CreateApp(
 		}
 	}()
 
-	err = s.credentialStore.Put(ctx, clientCredentials, tenantID, clientCredentials.ClientID)
-	if err != nil {
-		return nil, errutil.Err(err, "unable to store client credentials")
-	}
-
 	userID, ok := identitycontext.GetUserID(ctx)
 	if !ok {
 		return nil, errors.New("user id not found in context")
 	}
 
-	appID, err := s.identityService.GenerateID(ctx, clientCredentials, &identitycore.Issuer{
+	resolverMetadataID, err := s.identityService.GenerateID(ctx, clientCredentials, &identitycore.Issuer{
 		CommonName: issSettings.IssuerID,
 		KeyID:      issSettings.KeyID,
 	}, userID)
@@ -105,7 +96,13 @@ func (s *appService) CreateApp(
 		return nil, err
 	}
 
-	app.ID = appID
+	app.ID = uuid.NewString()
+	app.ResolverMetadataID = resolverMetadataID
+
+	err = s.credentialStore.Put(ctx, clientCredentials, app.ID)
+	if err != nil {
+		return nil, errutil.Err(err, "unable to store client credentials")
+	}
 
 	createdApp, err = s.appRepository.CreateApp(ctx, app)
 	if err != nil {

@@ -1,11 +1,18 @@
 // Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
 // SPDX-License-Identifier: Apache-2.0
 
+//go:generate stringer -type=BadgeType
+
 package types
 
 import (
 	"strings"
 )
+
+type Badge struct {
+	VerifiableCredential
+	AppID string
+}
 
 // DataModel represents the W3C Verifiable Credential Data Model defined [here]
 //
@@ -77,6 +84,28 @@ type Proof struct {
 	ProofValue string `json:"proofValue"`
 }
 
+const JoseProof = "jwt"
+
 func (p *Proof) IsJOSE() bool {
-	return strings.EqualFold(p.Type, "jwt")
+	return strings.EqualFold(p.Type, JoseProof)
 }
+
+// The content of the Credential.
+// Multiple content types can be supported: AgentBadge, etc.
+type BadgeType int
+
+const (
+	// Unspecified Content Type.
+	CREDENTIAL_CONTENT_TYPE_UNSPECIFIED BadgeType = iota
+
+	// AgentBadge Content Type.
+	// The Agent content representation following a defined schema
+	// OASF: https://schema.oasf.agntcy.org/schema/objects/agent
+	// Google A2A: https://github.com/google/A2A/blob/main/specification/json/a2a.json
+	CREDENTIAL_CONTENT_TYPE_AGENT_BADGE
+
+	// McpBadge Content Type.
+	// The MCP content representation following a defined schema
+	// The schema is defined in the MCP specification as the MCPServer type
+	CREDENTIAL_CONTENT_TYPE_MCP_BADGE
+)

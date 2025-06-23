@@ -5,22 +5,20 @@ package identity
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net"
-	"os"
 
+	badgetypes "github.com/agntcy/identity-platform/internal/core/badge/types"
 	idpcore "github.com/agntcy/identity-platform/internal/core/idp"
-	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 	"github.com/agntcy/identity-platform/internal/pkg/httputil"
 	"github.com/agntcy/identity-platform/pkg/log"
 	idsdk "github.com/agntcy/identity/api/client/client/id_service"
 	issuersdk "github.com/agntcy/identity/api/client/client/issuer_service"
+	vcsdk "github.com/agntcy/identity/api/client/client/vc_service"
 	identitymodels "github.com/agntcy/identity/api/client/models"
-	"github.com/agntcy/identity/pkg/joseutil"
-	"github.com/agntcy/identity/pkg/jwk"
-	"github.com/agntcy/identity/pkg/keystore"
 	"github.com/agntcy/identity/pkg/oidc"
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
@@ -28,8 +26,7 @@ import (
 )
 
 const (
-	keyBasePathPrefix = "key-"
-	proofTypeJWT      = "JWT"
+	proofTypeJWT = "JWT"
 )
 
 type Issuer struct {
@@ -49,50 +46,41 @@ type Service interface {
 		issuer *Issuer,
 		userID string,
 	) (string, error)
+	PublishVerifiableCredential(
+		ctx context.Context,
+		clientCredentials *idpcore.ClientCredentials,
+		vc *badgetypes.VerifiableCredential,
+		issuer *Issuer,
+		userID string,
+	) error
 }
 
 // The verificationService struct implements the VerificationService interface
 type service struct {
-	vaultAddress      string
 	issuerClient      issuersdk.ClientService
 	idClient          idsdk.ClientService
+	vcClient          vcsdk.ClientService
 	oidcAuthenticator oidc.Authenticator
-	goEnv             string
+	keyStore          KeyStore
 }
 
 // NewVerificationService creates a new instance of the VerificationService
 func NewService(
-	vaultHost, vaultPort string,
-	vaultUseSSL bool,
 	identityHost, identityPort string,
-	goEnv string,
+	keyStore KeyStore,
 ) Service {
-	// Get protocol
-	vaultProtocol := "http:"
-	if vaultUseSSL {
-		vaultProtocol = "https:"
-	}
+	transport := httptransport.New(
+		net.JoinHostPort(identityHost, identityPort),
+		"",
+		nil,
+	)
 
 	return &service{
-		vaultAddress: fmt.Sprintf("%s//%s", vaultProtocol, net.JoinHostPort(vaultHost, vaultPort)),
-		issuerClient: issuersdk.New(
-			httptransport.New(
-				net.JoinHostPort(identityHost, identityPort),
-				"",
-				nil,
-			),
-			strfmt.Default,
-		),
-		idClient: idsdk.New(
-			httptransport.New(
-				net.JoinHostPort(identityHost, identityPort),
-				"",
-				nil,
-			),
-			strfmt.Default,
-		),
+		issuerClient:      issuersdk.New(transport, strfmt.Default),
+		idClient:          idsdk.New(transport, strfmt.Default),
+		vcClient:          vcsdk.New(transport, strfmt.Default),
 		oidcAuthenticator: oidc.NewAuthenticator(),
-		goEnv:             goEnv,
+		keyStore:          keyStore,
 	}
 }
 
@@ -101,7 +89,7 @@ func (s *service) RegisterIssuer(
 	clientCredentials *idpcore.ClientCredentials, userID, organizationID string,
 ) (*Issuer, error) {
 	// Generate a new key for the issuer
-	key, err := s.generateAndSaveKey(ctx)
+	key, err := s.keyStore.GenerateAndSaveKey(ctx)
 	if err != nil || key == nil {
 		return nil, errutil.Err(
 			err,
@@ -193,6 +181,64 @@ func (s *service) GenerateID(
 	return resp.Payload.ResolverMetadata.ID, nil
 }
 
+func (s *service) PublishVerifiableCredential(
+	ctx context.Context,
+	clientCredentials *idpcore.ClientCredentials,
+	vc *badgetypes.VerifiableCredential,
+	issuer *Issuer,
+	userID string,
+) error {
+	proof, err := s.generateProof(ctx, clientCredentials, userID, issuer.KeyID)
+	if err != nil {
+		return fmt.Errorf(
+			"error generating proof for verifiable credential publishing: %w",
+			err,
+		)
+	}
+
+	var envelope *identitymodels.V1alpha1EnvelopedCredential
+
+	if vc.Proof.IsJOSE() {
+		envelope = &identitymodels.V1alpha1EnvelopedCredential{
+			EnvelopeType: identitymodels.NewV1alpha1CredentialEnvelopeType(
+				identitymodels.V1alpha1CredentialEnvelopeTypeCREDENTIALENVELOPETYPEJOSE,
+			),
+			Value: vc.Proof.ProofValue,
+		}
+	} else {
+		data, err := json.Marshal(vc)
+		if err != nil {
+			return fmt.Errorf("unable to marshal verifiable credential: %w", err)
+		}
+
+		envelope = &identitymodels.V1alpha1EnvelopedCredential{
+			EnvelopeType: identitymodels.NewV1alpha1CredentialEnvelopeType(
+				identitymodels.V1alpha1CredentialEnvelopeTypeCREDENTIALENVELOPETYPEEMBEDDEDPROOF,
+			),
+			Value: string(data),
+		}
+	}
+
+	resp, err := s.vcClient.PublishVerifiableCredential(&vcsdk.PublishVerifiableCredentialParams{
+		Body: &identitymodels.V1alpha1PublishRequest{
+			Vc: envelope,
+			Proof: &identitymodels.V1alpha1Proof{
+				Type:       proof.Type,
+				ProofValue: proof.ProofValue,
+			},
+		},
+	})
+	if err != nil {
+		return err
+	}
+
+	if resp == nil {
+		return errors.New("empty response payload")
+	}
+
+	return nil
+}
+
 func (s *service) getCommonName(
 	clientCredentials *idpcore.ClientCredentials,
 	commonName string,
@@ -226,16 +272,7 @@ func (s *service) generateProof(
 			clientCredentials.ClientSecret,
 		)
 	} else {
-		// Retrieve the private key from the vault
-		vaultService, vaultErr := s.connectVault(ctx)
-		if vaultErr != nil {
-			return nil, errutil.Err(
-				vaultErr,
-				"error connecting to vault for proof generation",
-			)
-		}
-
-		privKey, keyErr := vaultService.RetrievePrivKey(ctx, keyId)
+		privKey, keyErr := s.keyStore.RetrievePrivKey(ctx, keyId)
 		if keyErr != nil {
 			return nil, errutil.Err(
 				keyErr,
@@ -262,57 +299,4 @@ func (s *service) generateProof(
 	proof.ProofValue = proofValue
 
 	return proof, nil
-}
-
-func (s *service) generateAndSaveKey(ctx context.Context) (*jwk.Jwk, error) {
-	// Connect to the vault
-	vaultService, err := s.connectVault(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	// Generate a new key
-	keyId := uuid.NewString()
-
-	priv, err := joseutil.GenerateJWK("RS256", "sig", keyId)
-	if err != nil {
-		return nil, fmt.Errorf("error generating JWK: %w", err)
-	}
-
-	err = vaultService.SaveKey(ctx, priv.KID, priv)
-	if err != nil {
-		return nil, fmt.Errorf("error saving key: %w", err)
-	}
-
-	log.Debug("Saving new key for issuer: ", priv.KID)
-
-	return priv.PublicKey(), nil
-}
-
-func (s *service) connectVault(ctx context.Context) (keystore.KeyService, error) {
-	// Get the token depending on the environment
-	token := ""
-	if s.goEnv != "production" {
-		// In dev mode, we use the root token
-		token = os.Getenv("VAULT_DEV_ROOT_TOKEN")
-	}
-
-	// Get the tenant ID from the context
-	tenantId, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return nil, fmt.Errorf("tenant ID not found in context")
-	}
-
-	// Create key base path
-	keyBasePath := fmt.Sprintf("%s/%s", keyBasePathPrefix, tenantId)
-
-	// Create config
-	config := keystore.VaultStorageConfig{
-		Address:     s.vaultAddress,
-		Token:       token, // This should be set in dev mode only
-		MountPath:   "secret",
-		KeyBasePath: keyBasePath,
-	}
-
-	return keystore.NewKeyService(keystore.VaultStorage, config)
 }

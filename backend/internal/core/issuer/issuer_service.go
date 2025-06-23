@@ -57,11 +57,6 @@ func (s *service) SetIssuer(
 		return fmt.Errorf("organization id not found in context")
 	}
 
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return errutil.Err(nil, "tenant id not found in context")
-	}
-
 	var clientCredentials *idpcore.ClientCredentials
 	var idp idpcore.Idp
 
@@ -82,7 +77,7 @@ func (s *service) SetIssuer(
 		}
 	}()
 
-	err = s.credentialStore.Put(ctx, clientCredentials, tenantID, clientCredentials.ClientID)
+	err = s.credentialStore.Put(ctx, clientCredentials, clientCredentials.ClientID)
 	if err != nil {
 		return errutil.Err(err, "unable to store client credentials")
 	}

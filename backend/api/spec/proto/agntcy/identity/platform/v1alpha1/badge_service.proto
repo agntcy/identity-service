@@ -6,7 +6,7 @@ syntax = "proto3";
 package agntcy.identity.platform.v1alpha1;
 
 // import "agntcy/identity/platform/shared/v1alpha1/pagination.proto";
-import "agntcy/identity/platform/v1alpha1/app.proto";
+import "agntcy/identity/platform/v1alpha1/badge.proto";
 import "google/api/annotations.proto";
 import "google/api/client.proto";
 import "google/protobuf/empty.proto";
@@ -19,10 +19,10 @@ service BadgeService {
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_tag) = {name: "Badge"};
 
   // Create a new App.
-  rpc IssueBadge(IssueBadgeRequest) returns (App) {
+  rpc IssueBadge(IssueBadgeRequest) returns (Badge) {
     option (google.api.http) = {
       post: "/v1alpha1/apps/{app_id}/badges"
-      body: "badge"
+      body: "*"
     };
 
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -36,6 +36,16 @@ message IssueBadgeRequest {
   // App Id.
   string app_id = 1;
 
-  // Badge parameters to issue.
-  App badge = 2;
+  IssueA2ABadgeRequest a2a = 2;
+
+  IssueMcpBadgeRequest mcp = 3;
+}
+
+message IssueMcpBadgeRequest {
+  string name = 1;
+  string url = 2;
+}
+
+message IssueA2ABadgeRequest {
+  string well_known_url = 1;
 }

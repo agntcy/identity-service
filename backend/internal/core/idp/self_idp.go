@@ -1,3 +1,6 @@
+// Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Settingsentifier: Apache-2.0
+
 package idp
 
 import (
