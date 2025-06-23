@@ -8,7 +8,6 @@ import {Slot} from '@radix-ui/react-slot';
 import {cva, type VariantProps} from 'class-variance-authority';
 
 import {cn} from '@/lib/utils';
-import {Spinner} from './loading';
 
 const buttonVariants = cva(
   // " aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
@@ -51,7 +50,7 @@ function Button({className, variant, size, asChild = false, isLoading = false, .
 
   return (
     <Comp data-slot="button" className={cn(buttonVariants({variant, size, className}), isLoading && '')} {...props}>
-      {isLoading && (
+      {/* {isLoading && (
         <Spinner
           className={cn(variant !== 'outline' && 'border-[#E8E9EA]', variant === 'tertariary' && 'border-[#187ADC]')}
           size="md"
@@ -62,7 +61,7 @@ function Button({className, variant, size, asChild = false, isLoading = false, .
               : {}
           }
         />
-      )}
+      )} */}
       {!isLoading && <>{props.children}</>}
     </Comp>
   );

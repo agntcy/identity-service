@@ -9,8 +9,8 @@ import {cn} from '@/lib/utils';
 import {ResizablePanel, ResizablePanelGroup} from '@/components/ui/resizable';
 import {SideNav} from './side-nav';
 import {AppBar} from './app-bar';
-import {Footer} from './footer';
 import {PATHS} from '@/router/paths';
+import {Footer} from '@outshift/spark-design';
 
 const Layout = () => {
   const defaultLayout = [15, 85];
@@ -77,16 +77,38 @@ const Layout = () => {
               !isCollapsed && 'min-w-[264px] max-w-[264px]'
             )}
           >
-            <SideNav isCollapsed={isCollapsed} onChangeCollapsed={(value) => setIsCollapsed(value as boolean)} />
+            {/* <SideNav isCollapsed={isCollapsed} onChangeCollapsed={(value) => setIsCollapsed(value as boolean)} /> */}
           </ResizablePanel>
         )}
         <ResizablePanel defaultSize={defaultLayout[1]} collapsible={false} minSize={30}>
-          <main>
+          {/* <main>
             <Outlet />
-          </main>
+          </main> */}
         </ResizablePanel>
       </ResizablePanelGroup>
-      <Footer />
+      <Footer
+        productName="Agentcy Inc."
+        links={[
+          {
+            children: 'support@agntcy.com',
+            href: 'mailto:support@agntcy.com',
+            openInNewTab: true
+          },
+          {
+            children: 'Terms & Conditions',
+            href: PATHS.termsAndConditions
+          },
+          {
+            children: 'Privacy Policy',
+            href: 'https://www.cisco.com/c/en/us/about/legal/privacy-full.html',
+            openInNewTab: true
+          },
+          {
+            children: 'Cookies',
+            href: '#'
+          }
+        ]}
+      />
     </ResizablePanelGroup>
   );
 };
