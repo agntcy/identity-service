@@ -13,6 +13,7 @@ import (
 
 func Err(err error, customMessage string) error {
 	message := customMessage
+
 	if err != nil {
 		// Get last message if there is an error chain
 		allErrs := strings.Split(err.Error(), ":")
@@ -25,7 +26,6 @@ func Err(err error, customMessage string) error {
 		} else {
 			message = fmt.Sprintf("%s: %s", customMessage, err.Error())
 		}
-
 	}
 
 	// Log the full error message
