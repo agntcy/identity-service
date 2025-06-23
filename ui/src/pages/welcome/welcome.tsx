@@ -3,63 +3,135 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import AgntcyLogo from '@/assets/agntcy-logo.svg';
 import useAuth from '@/providers/auth-provider/use-auth';
-import {Button, Divider, Typography} from '@outshift/spark-design';
+import {Button, Divider, Header, Link, Typography} from '@outshift/spark-design';
+import Logo from '@/assets/logo-app-bar.svg';
+import OutshiftLogo from '@/assets/outshift-logo.svg';
+import {CheckIcon} from 'lucide-react';
 import '@/styles/welcome.css';
 
 const Welcome = () => {
   const {login, register} = useAuth();
   return (
-    <div className="flex h-screen">
-      <div className="hidden bg-[#00142B] lg:flex flex-col w-1/2 basis-1/2 relative overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 space-y-2 w-[80%]">
-          <img src={AgntcyLogo} alt="Agntcy Logo" />
-          <Typography variant="h2" paddingTop={2} color="#FBFCFE">
+    <div className="h-screen w-screen fixed top-0 left-0 z-50 no-doc-scroll h-screen welcome-bg">
+      <Header
+        title={
+          <Typography
+            variant="h1"
+            fontWeight={700}
+            fontSize="18px"
+            lineHeight="18px"
+            sx={(theme) => ({color: theme.palette.vars.brandTextSecondary})}
+          >
             Identity
           </Typography>
-          <Typography variant="h4" paddingTop={6} color="#FBAB2C">
-            Create, verify, and manage A2A, agents, and MCP servers with secure access control policies
+        }
+        logo={
+          <Link href="https://agntcy.org/" openInNewTab>
+            <img src={Logo} alt="Identity" />
+          </Link>
+        }
+        position="fixed"
+        userSection={
+          <div className="flex items-center gap-4">
+            <Button variant="secondary" onClick={() => login?.()} sx={{fontWeight: '600 !important'}}>
+              Log In
+            </Button>
+            <Button onClick={() => register?.()} sx={{fontWeight: '600 !important'}}>
+              Sign Up
+            </Button>
+          </div>
+        }
+        useDivider={false}
+      />
+      <div className="h-[56px]" />
+      <div className="flex justify-center items-center ">
+        <div className="mt-[50px]">
+          <Typography
+            fontSize={40}
+            fontWeight={400}
+            fontFamily={'Inter'}
+            letterSpacing={'-2.49px'}
+            lineHeight={'64px'}
+            className="text-center mb-4"
+            color="#161616"
+          >
+            Get started with
+          </Typography>
+          <Typography
+            fontFamily={'Inter'}
+            fontSize={66}
+            fontWeight={700}
+            letterSpacing={'-2.49px'}
+            lineHeight={'66px'}
+            className="text-center mb-4"
+            color="#161616"
+          >
+            Agntcy Identity
           </Typography>
         </div>
-        <div className="relative z-20 flex flex-col justify-between	text-lg font-medium h-full">
-          <div />
-          <div className="relative z-20 bg-red-500 h-[26px] w-full striped-bar" />
-        </div>
       </div>
-      <div className="flex flex-col items-center justify-between w-full lg:w-1/2 md:basis-1/2 relative">
-        <div className="h-fit flex items-center justify-center min-w-[600px] p-10 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 space-y-2">
-          <div className="max-w-[30rem] flex flex-col gap-8">
-            <div className="min-w-[350px]">
-              <Typography variant="h3" component="h1" paddingTop={2} textAlign="center" sx={(theme) => ({color: theme.palette.vars.baseTextStrong})}>
-                Identity
+      <div className="flex justify-center items-center mt-[50px]">
+        <div className="welcome-card text-center flex flex-col items-center justify-center">
+          <div>
+            <Typography textAlign="center" variant="body1" paddingTop={2}>
+              Start using Agntcy Identity&apos;s features by verifying existing identity badges or registering your agents (A2A, MCP servers, agents).
+            </Typography>
+            <Link
+              href="https://spec.identity.agntcy.org/"
+              openInNewTab
+              fontStyle={{
+                fontWeight: 400,
+                fontSize: '16px',
+                lineHeight: '24px',
+                letterSpacing: '0.01em'
+              }}
+            >
+              Learn more in our documentation.
+            </Link>
+          </div>
+          <div className="w-full flex justify-center gap-6 mt-8">
+            <div className="w-[50%] py-6 relative">
+              <Typography variant="h6">Verify identities</Typography>
+              <Typography variant="body1" marginTop={2}>
+                Begin verifying your MCP servers, agents, and A2A identities.
               </Typography>
-              <div className="text-center">
-                <Typography variant="headingSubSection">Secure and Verifiable Agent Identification</Typography>
-                <Typography variant="body2" paddingTop={2}>
-                  AGNTCY Identity provides a secure and verifiable method to uniquely identify agents using open and decentralized techniques.
-                </Typography>
-              </div>
-              <div className="my-4">
-                <Divider />
-              </div>
-              <div className="w-full">
-                <Button size="large" onClick={() => login?.()} sx={() => ({fontWeight: '600 !important'})} className="w-full">
-                  Sign In
+              <div className="absolute bottom-10 transform translate-y-1/2 left-1/2 -translate-x-1/2 w-full">
+                <Button variant="outlined" onClick={() => {}} sx={{fontWeight: '600 !important'}} startIcon={<CheckIcon className="w-4 h-4" />}>
+                  Verify identity
                 </Button>
-                <div className="text-center">
-                  <Typography variant="captionMedium">
-                    {"Don't have an account? "}
-                    <span className="hover:underline font-bold italic hover:cursor-pointer" onClick={() => register?.()}>
-                      {'Sign Up'}
-                    </span>
-                  </Typography>
+              </div>
+              <div className="h-[50px]"></div>
+            </div>
+            <div>
+              <Divider orientation="vertical" sx={{height: '37%', margin: '0 auto'}} />
+              <Typography padding={'16px 0'} variant="subtitle1" color="#1A1F27">
+                or
+              </Typography>
+              <Divider orientation="vertical" sx={{height: '37%', margin: '0 auto'}} />
+            </div>
+            <div className="w-[50%] py-6 relative">
+              <Typography variant="h6">Create identities</Typography>
+              <Typography variant="body1" marginTop={2}>
+                Add agents (MCP servers, agents, and A2A) to create and manage identities & RBAC policies
+              </Typography>
+              <div className="absolute bottom-10 transform translate-y-1/2 left-1/2 -translate-x-1/2 w-full">
+                <div className="flex justify-center items-center gap-4">
+                  <Button variant="secondary" onClick={() => login?.()} sx={{fontWeight: '600 !important'}}>
+                    Log In
+                  </Button>
+                  <Button onClick={() => register?.()} sx={{fontWeight: '600 !important'}}>
+                    Sign Up
+                  </Button>
                 </div>
               </div>
+              <div className="h-[50px]"></div>
             </div>
           </div>
         </div>
-        <div />
+      </div>
+      <div className="absolute bottom-0 right-0">
+        <img src={OutshiftLogo} alt="Outshift Logo" className="w-[355px] h-[320px]" />
       </div>
     </div>
   );

@@ -38,7 +38,7 @@ const UserSection = () => {
     <>
       <Button
         onClick={handleClick}
-        startIcon={<Avatar sx={{width: '20px', height: '20px'}} src={UserIcon} />}
+        startIcon={<Avatar sx={{width: '20px', height: '20px', '&:hover': {backgroundColor: 'inherit'}}} src={UserIcon} />}
         variant="tertariary"
         sx={{
           paddingLeft: '4px',
@@ -88,11 +88,11 @@ export const AppBar = () => {
       }
       logo={<img src={Logo} alt="Identity" />}
       position="fixed"
-      searchProps={{
-        onChangeCallback: (value: string) => {
-          setSearchValue(value);
-        }
-      }}
+      // searchProps={{
+      //   onChangeCallback: (value: string) => {
+      //     setSearchValue(value);
+      //   }
+      // }}
       actions={[
         {
           id: 'docs',
