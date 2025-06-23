@@ -22,6 +22,9 @@ type Rule struct {
 
 	// The allowed tools for this Rule.
 	AllowedToolNames []string `json:"allowed_tool_names,omitempty" protobuf:"bytes,7,rep,name=allowed_tool_names"`
+
+	// Need User Approval for this Rule.
+	NeedsApproval bool `json:"needs_approval,omitempty" protobuf:"varint,8,opt,name=needs_approval"`
 }
 
 // Identity Platform Policy.

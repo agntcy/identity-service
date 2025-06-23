@@ -67,10 +67,11 @@ message AuthorizeRequest {
   string app = 1;
 
   // The MCP Server tool name.
-  string tool_name = 2;
+  optional string tool_name = 2;
 
   // The User context in the form of an id or access token.
-  string user_token = 3;
+  // Mandatory for User Approval Flows.
+  optional string user_token = 3;
 }
 
 message AuthorizeResponse {
