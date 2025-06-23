@@ -1,0 +1,228 @@
+// Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package agntcy.identity.platform.v1alpha1;
+
+import "agntcy/identity/platform/shared/v1alpha1/pagination.proto";
+import "agntcy/identity/platform/v1alpha1/policy.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_go";
+
+// PolicyService manages policy.
+service PolicyService {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_tag) = {name: "Policy"};
+
+  // List Policies.
+  rpc ListPolicies(ListPoliciesRequest) returns (ListPoliciesResponse) {
+    option (google.api.http) = {get: "/v1alpha1/policies"};
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "ListPolicies";
+      summary: "List Policies";
+    };
+  }
+
+  // Get Policy by id
+  rpc GetPolicy(GetPolicyRequest) returns (Policy) {
+    option (google.api.http) = {get: "/v1alpha1/policies/{policy_id}"};
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "GetPolicy";
+      summary: "Get Policy by Id";
+    };
+  }
+
+  // Create a new Policy.
+  rpc CreatePolicy(CreatePolicyRequest) returns (Policy) {
+    option (google.api.http) = {
+      post: "/v1alpha1/policies"
+      body: "policy"
+    };
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "CreatePolicy";
+      summary: "Create Policy";
+    };
+  }
+
+  // Update a Policy.
+  rpc UpdatePolicy(UpdatePolicyRequest) returns (Policy) {
+    option (google.api.http) = {
+      patch: "/v1alpha1/policies/{policy_id}"
+      body: "policy"
+    };
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "UpdatePolicy";
+      summary: "Update Policy";
+    };
+  }
+
+  // Delete an existing Policy.
+  rpc DeletePolicy(DeletePolicyRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/v1alpha1/policies/{policy_id}"};
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "DeletePolicy";
+      summary: "Delete Policy";
+    };
+  }
+
+  // List Rules.
+  rpc ListRules(ListRulesRequest) returns (ListRulesResponse) {
+    option (google.api.http) = {get: "/v1alpha1/policies/{policy_id}/rules"};
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "ListRules";
+      summary: "List Rules";
+    };
+  }
+
+  // Get Rule by id
+  rpc GetRule(GetRuleRequest) returns (Rule) {
+    option (google.api.http) = {get: "/v1alpha1/policies/{policy_id}/rules/{rule_id}"};
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "GetRule";
+      summary: "Get Rule by Id";
+    };
+  }
+
+  // Create a new Rule.
+  rpc CreateRule(CreateRuleRequest) returns (Rule) {
+    option (google.api.http) = {
+      post: "/v1alpha1/policies/{policy_id}/rules"
+      body: "rule"
+    };
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "CreateRule";
+      summary: "Create Rule";
+    };
+  }
+
+  // Update a Rule.
+  rpc UpdateRule(UpdateRuleRequest) returns (Rule) {
+    option (google.api.http) = {
+      patch: "/v1alpha1/policies/{policy_id}/rules/{rule_id}"
+      body: "rule"
+    };
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "UpdateRule";
+      summary: "Update Rule";
+    };
+  }
+
+  // Delete an existing Rule.
+  rpc DeleteRule(DeleteRuleRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/v1alpha1/policies/{policy_id}/rules/{rule_id}"};
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "DeleteRule";
+      summary: "Delete Rule";
+    };
+  }
+}
+
+message ListPoliciesResponse {
+  // A list of Policies.
+  repeated Policy policies = 1;
+
+  // Pagination response.
+  optional agntcy.identity.platform.shared.v1alpha1.PagedResponse pagination = 2;
+}
+
+message ListPoliciesRequest {
+  // The current page of the pagination
+  optional int32 page = 1;
+
+  // The page size of the pagination
+  optional int32 size = 2;
+
+  // The search query
+  optional string query = 3;
+}
+
+message CreatePolicyRequest {
+  // The Policy to create.
+  Policy policy = 1;
+}
+
+message GetPolicyRequest {
+  // Policy Id to get.
+  string policy_id = 1;
+}
+
+message UpdatePolicyRequest {
+  // Policy Id to update.
+  string policy_id = 1;
+
+  // Policy parameters to update.
+  Policy policy = 2;
+}
+
+message DeletePolicyRequest {
+  // Policy Id to delete.
+  string policy_id = 1;
+}
+
+message ListRulesResponse {
+  // A list of Rules.
+  repeated Rule rules = 1;
+
+  // Pagination response.
+  optional agntcy.identity.platform.shared.v1alpha1.PagedResponse pagination = 2;
+}
+
+message ListRulesRequest {
+  // The Policy Id to which these Rules belong.
+  string policy_id = 1;
+
+  // The current page of the pagination
+  optional int32 page = 2;
+
+  // The page size of the pagination
+  optional int32 size = 3;
+
+  // The search query
+  optional string query = 4;
+}
+
+message CreateRuleRequest {
+  // The Policy Id to which these Rules belong.
+  string policy_id = 1;
+
+  // The Rule to create.
+  Rule rule = 2;
+}
+
+message GetRuleRequest {
+  // The Policy Id to which these Rules belong.
+  string policy_id = 1;
+
+  // Rule Id to get.
+  string rule_id = 2;
+}
+
+message UpdateRuleRequest {
+  // The Policy Id to which these Rules belong.
+  string policy_id = 1;
+
+  // Rule Id to update.
+  string rule_id = 2;
+
+  // Rule parameters to update.
+  Rule rule = 3;
+}
+
+message DeleteRuleRequest {
+  // The Policy Id to which these Rules belong.
+  string policy_id = 1;
+
+  // Rule Id to delete.
+  string rule_id = 2;
+}
