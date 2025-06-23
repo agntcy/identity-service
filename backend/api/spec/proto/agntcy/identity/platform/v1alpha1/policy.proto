@@ -44,4 +44,7 @@ message Rule {
 
   // The allowed tools for this Rule.
   repeated string allowed_tool_names = 7;
+
+  // Need User Approval for this Rule.
+  optional bool needs_approval = 8;
 }

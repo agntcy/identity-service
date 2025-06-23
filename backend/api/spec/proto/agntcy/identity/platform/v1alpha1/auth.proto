@@ -10,6 +10,18 @@ package agntcy.identity.platform.v1alpha1;
 // Package-wide variables from generator "generated".
 option go_package = "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_go";
 
+// Devices used for user approval
+message Device {
+  // A unique identifier for the Device.
+  optional string id = 1;
+
+  // User ID associated with the Device.
+  optional string user_id = 2;
+
+  // Subscription Token for the Device.
+  optional string subscription_token = 3;
+}
+
 // Identity Platform Token
 message Token {
   // A unique identifier for the Token.
