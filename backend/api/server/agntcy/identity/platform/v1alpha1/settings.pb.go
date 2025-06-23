@@ -192,12 +192,15 @@ type IssuerSettings struct {
 	// A unique identifier for the Issuer.
 	// This is typically the Issuer's ID in the Identity.
 	IssuerId *string `protobuf:"bytes,1,opt,name=issuer_id,json=issuerId,proto3,oneof" json:"issuer_id,omitempty"`
+	// A unique identifier for the Key.
+	// This is typically the Key's ID in the vault provider.
+	KeyId *string `protobuf:"bytes,2,opt,name=key_id,json=keyId,proto3,oneof" json:"key_id,omitempty"`
 	// The type of the IdP.
-	IdpType *IdpType `protobuf:"varint,2,opt,name=idp_type,json=idpType,proto3,enum=agntcy.identity.platform.v1alpha1.IdpType,oneof" json:"idp_type,omitempty"`
+	IdpType *IdpType `protobuf:"varint,3,opt,name=idp_type,json=idpType,proto3,enum=agntcy.identity.platform.v1alpha1.IdpType,oneof" json:"idp_type,omitempty"`
 	// Settings for the Duo Identity Provider.
-	DuoIdpSettings *DuoIdpSettings `protobuf:"bytes,3,opt,name=duo_idp_settings,json=duoIdpSettings,proto3,oneof" json:"duo_idp_settings,omitempty"`
+	DuoIdpSettings *DuoIdpSettings `protobuf:"bytes,4,opt,name=duo_idp_settings,json=duoIdpSettings,proto3,oneof" json:"duo_idp_settings,omitempty"`
 	// Settings for the Okta Identity Provider.
-	OktaIdpSettings *OktaIdpSettings `protobuf:"bytes,4,opt,name=okta_idp_settings,json=oktaIdpSettings,proto3,oneof" json:"okta_idp_settings,omitempty"`
+	OktaIdpSettings *OktaIdpSettings `protobuf:"bytes,5,opt,name=okta_idp_settings,json=oktaIdpSettings,proto3,oneof" json:"okta_idp_settings,omitempty"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -239,6 +242,13 @@ func (x *IssuerSettings) GetIssuerId() string {
 	return ""
 }
 
+func (x *IssuerSettings) GetKeyId() string {
+	if x != nil && x.KeyId != nil {
+		return *x.KeyId
+	}
+	return ""
+}
+
 func (x *IssuerSettings) GetIdpType() IdpType {
 	if x != nil && x.IdpType != nil {
 		return *x.IdpType
@@ -263,9 +273,9 @@ func (x *IssuerSettings) GetOktaIdpSettings() *OktaIdpSettings {
 // Okta IdP Settings
 type OktaIdpSettings struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Domain        *string                `protobuf:"bytes,1,opt,name=domain,proto3,oneof" json:"domain,omitempty"`
+	OrgUrl        *string                `protobuf:"bytes,1,opt,name=org_url,json=orgUrl,proto3,oneof" json:"org_url,omitempty"`
 	ClientId      *string                `protobuf:"bytes,2,opt,name=client_id,json=clientId,proto3,oneof" json:"client_id,omitempty"`
-	ClientSecret  *string                `protobuf:"bytes,3,opt,name=client_secret,json=clientSecret,proto3,oneof" json:"client_secret,omitempty"`
+	PrivateKey    *string                `protobuf:"bytes,3,opt,name=private_key,json=privateKey,proto3,oneof" json:"private_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -300,9 +310,9 @@ func (*OktaIdpSettings) Descriptor() ([]byte, []int) {
 	return file_agntcy_identity_platform_v1alpha1_settings_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *OktaIdpSettings) GetDomain() string {
-	if x != nil && x.Domain != nil {
-		return *x.Domain
+func (x *OktaIdpSettings) GetOrgUrl() string {
+	if x != nil && x.OrgUrl != nil {
+		return *x.OrgUrl
 	}
 	return ""
 }
@@ -314,9 +324,9 @@ func (x *OktaIdpSettings) GetClientId() string {
 	return ""
 }
 
-func (x *OktaIdpSettings) GetClientSecret() string {
-	if x != nil && x.ClientSecret != nil {
-		return *x.ClientSecret
+func (x *OktaIdpSettings) GetPrivateKey() string {
+	if x != nil && x.PrivateKey != nil {
+		return *x.PrivateKey
 	}
 	return ""
 }
@@ -392,25 +402,29 @@ const file_agntcy_identity_platform_v1alpha1_settings_proto_rawDesc = "" +
 	"secret_key\x18\x03 \x01(\tH\x02R\tsecretKey\x88\x01\x01B\v\n" +
 	"\t_hostnameB\x12\n" +
 	"\x10_integration_keyB\r\n" +
-	"\v_secret_key\"\x8b\x03\n" +
+	"\v_secret_key\"\xb2\x03\n" +
 	"\x0eIssuerSettings\x12 \n" +
-	"\tissuer_id\x18\x01 \x01(\tH\x00R\bissuerId\x88\x01\x01\x12J\n" +
-	"\bidp_type\x18\x02 \x01(\x0e2*.agntcy.identity.platform.v1alpha1.IdpTypeH\x01R\aidpType\x88\x01\x01\x12`\n" +
-	"\x10duo_idp_settings\x18\x03 \x01(\v21.agntcy.identity.platform.v1alpha1.DuoIdpSettingsH\x02R\x0eduoIdpSettings\x88\x01\x01\x12c\n" +
-	"\x11okta_idp_settings\x18\x04 \x01(\v22.agntcy.identity.platform.v1alpha1.OktaIdpSettingsH\x03R\x0foktaIdpSettings\x88\x01\x01B\f\n" +
+	"\tissuer_id\x18\x01 \x01(\tH\x00R\bissuerId\x88\x01\x01\x12\x1a\n" +
+	"\x06key_id\x18\x02 \x01(\tH\x01R\x05keyId\x88\x01\x01\x12J\n" +
+	"\bidp_type\x18\x03 \x01(\x0e2*.agntcy.identity.platform.v1alpha1.IdpTypeH\x02R\aidpType\x88\x01\x01\x12`\n" +
+	"\x10duo_idp_settings\x18\x04 \x01(\v21.agntcy.identity.platform.v1alpha1.DuoIdpSettingsH\x03R\x0eduoIdpSettings\x88\x01\x01\x12c\n" +
+	"\x11okta_idp_settings\x18\x05 \x01(\v22.agntcy.identity.platform.v1alpha1.OktaIdpSettingsH\x04R\x0foktaIdpSettings\x88\x01\x01B\f\n" +
 	"\n" +
-	"_issuer_idB\v\n" +
+	"_issuer_idB\t\n" +
+	"\a_key_idB\v\n" +
 	"\t_idp_typeB\x13\n" +
 	"\x11_duo_idp_settingsB\x14\n" +
-	"\x12_okta_idp_settings\"\xa5\x01\n" +
-	"\x0fOktaIdpSettings\x12\x1b\n" +
-	"\x06domain\x18\x01 \x01(\tH\x00R\x06domain\x88\x01\x01\x12 \n" +
-	"\tclient_id\x18\x02 \x01(\tH\x01R\bclientId\x88\x01\x01\x12(\n" +
-	"\rclient_secret\x18\x03 \x01(\tH\x02R\fclientSecret\x88\x01\x01B\t\n" +
-	"\a_domainB\f\n" +
+	"\x12_okta_idp_settings\"\xa1\x01\n" +
+	"\x0fOktaIdpSettings\x12\x1c\n" +
+	"\aorg_url\x18\x01 \x01(\tH\x00R\x06orgUrl\x88\x01\x01\x12 \n" +
+	"\tclient_id\x18\x02 \x01(\tH\x01R\bclientId\x88\x01\x01\x12$\n" +
+	"\vprivate_key\x18\x03 \x01(\tH\x02R\n" +
+	"privateKey\x88\x01\x01B\n" +
 	"\n" +
-	"_client_idB\x10\n" +
-	"\x0e_client_secret\"\xd4\x01\n" +
+	"\b_org_urlB\f\n" +
+	"\n" +
+	"_client_idB\x0e\n" +
+	"\f_private_key\"\xd4\x01\n" +
 	"\bSettings\x12G\n" +
 	"\aapi_key\x18\x01 \x01(\v2).agntcy.identity.platform.v1alpha1.ApiKeyH\x00R\x06apiKey\x88\x01\x01\x12_\n" +
 	"\x0fissuer_settings\x18\x02 \x01(\v21.agntcy.identity.platform.v1alpha1.IssuerSettingsH\x01R\x0eissuerSettings\x88\x01\x01B\n" +

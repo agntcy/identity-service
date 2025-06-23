@@ -243,6 +243,13 @@ paths:
                      This is typically the Issuer's ID in the Identity.
                   schema:
                     type: string
+                - name: issuerSettings.keyId
+                  in: query
+                  description: |-
+                    A unique identifier for the Key.
+                     This is typically the Key's ID in the vault provider.
+                  schema:
+                    type: string
                 - name: issuerSettings.idpType
                   in: query
                   description: The type of the IdP.
@@ -266,7 +273,7 @@ paths:
                   in: query
                   schema:
                     type: string
-                - name: issuerSettings.oktaIdpSettings.domain
+                - name: issuerSettings.oktaIdpSettings.orgUrl
                   in: query
                   schema:
                     type: string
@@ -274,7 +281,7 @@ paths:
                   in: query
                   schema:
                     type: string
-                - name: issuerSettings.oktaIdpSettings.clientSecret
+                - name: issuerSettings.oktaIdpSettings.privateKey
                   in: query
                   schema:
                     type: string
@@ -370,6 +377,11 @@ components:
                     description: |-
                         A unique identifier for the Issuer.
                          This is typically the Issuer's ID in the Identity.
+                keyId:
+                    type: string
+                    description: |-
+                        A unique identifier for the Key.
+                         This is typically the Key's ID in the vault provider.
                 idpType:
                     enum:
                         - IDP_TYPE_UNSPECIFIED
@@ -403,11 +415,11 @@ components:
         OktaIdpSettings:
             type: object
             properties:
-                domain:
+                orgUrl:
                     type: string
                 clientId:
                     type: string
-                clientSecret:
+                privateKey:
                     type: string
             description: Okta IdP Settings
         PagedResponse:

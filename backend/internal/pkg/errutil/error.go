@@ -5,19 +5,32 @@ package errutil
 
 import (
 	"errors"
+	"fmt"
+	"strings"
 
 	"github.com/agntcy/identity-platform/pkg/log"
 )
 
 func Err(err error, customMessage string) error {
-	// Print en error to the log
-	log.Error(customMessage, ": ", err)
+	message := customMessage
 
-	// If there is a custom message, return it
-	if customMessage != "" {
-		return errors.New(customMessage)
+	if err != nil {
+		// Get last message if there is an error chain
+		allErrs := strings.Split(err.Error(), ":")
+		if len(allErrs) > 0 {
+			message = fmt.Sprintf(
+				"%s: %s",
+				customMessage,
+				strings.TrimSpace(allErrs[len(allErrs)-1]),
+			)
+		} else {
+			message = fmt.Sprintf("%s: %s", customMessage, err.Error())
+		}
 	}
 
-	// Otherwise, return the error
-	return err
+	// Log the full error message
+	log.Error(customMessage, ": ", err)
+
+	// Return a new error with the custom message
+	return errors.New(message)
 }
