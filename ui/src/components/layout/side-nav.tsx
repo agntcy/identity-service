@@ -9,7 +9,7 @@ import {Tooltip, TooltipContent, TooltipTrigger} from '@/components/ui/tooltip';
 import {cn} from '@/lib/utils';
 import {PATHS} from '@/router/paths';
 import {Button} from '../ui/button';
-import {BoxesIcon, ChevronLeftIcon, SettingsIcon} from 'lucide-react';
+import {BoxesIcon, ChevronLeftIcon, LayoutDashboardIcon, SettingsIcon, SlidersHorizontalIcon} from 'lucide-react';
 import '@/styles/side-nav.css';
 
 export const SideNav: React.FC<{isCollapsed?: boolean; onChangeCollapsed?: (value?: boolean) => void}> = ({isCollapsed, onChangeCollapsed}) => {
@@ -22,6 +22,11 @@ export const SideNav: React.FC<{isCollapsed?: boolean; onChangeCollapsed?: (valu
   }[] = useMemo(() => {
     return [
       {
+        href: PATHS.dashboard,
+        label: 'Dahboard',
+        icon: <LayoutDashboardIcon className="w-4 h-4" />
+      },
+      {
         href: PATHS.applications,
         label: 'Applications',
         icon: <BoxesIcon className="w-4 h-4" />
@@ -29,7 +34,7 @@ export const SideNav: React.FC<{isCollapsed?: boolean; onChangeCollapsed?: (valu
       {
         href: PATHS.settings,
         label: 'Settings',
-        icon: <SettingsIcon className="w-4 h-4" />
+        icon: <SlidersHorizontalIcon className="w-4 h-4" />
       }
     ];
   }, []);
@@ -42,7 +47,7 @@ export const SideNav: React.FC<{isCollapsed?: boolean; onChangeCollapsed?: (valu
   });
 
   return (
-    <nav className="flex relative flex-col justify-between gap-1 px-2 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2 bg-side-nav-background h-full text-white side-bar">
+    <nav className="flex relative flex-col justify-between gap-1 px-2 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2 bg-side-nav-background h-full text-white side-bar mt-[56px]">
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-1">
           {sideNavLinks.map((link) => {
@@ -50,7 +55,7 @@ export const SideNav: React.FC<{isCollapsed?: boolean; onChangeCollapsed?: (valu
           })}
         </div>
       </div>
-      <div className={cn('absolute bottom-15 left-[10px]')}>
+      <div className={cn('absolute bottom-34 left-[10px]')}>
         <Button variant="outline" className="collapse-button" onClick={() => onChangeCollapsed?.(!isCollapsed)} size="icon">
           <ChevronLeftIcon className={cn('!w-4 !h-4 stroke-[#00142B]', isCollapsed && 'rotate-180')} />
         </Button>
@@ -74,7 +79,7 @@ const SideNavLink: React.FC<{
       <button
         className={cn(
           'flex items-center px-3 py-3 gap-4 hover:bg-side-nav-hover w-full rounded-md text-[#00142B] overflow-hidden text-sm cursor-pointer font-medium transition-colors hover:text-[#0051AF]',
-          isActive && 'bg-side-nav-selected hover:bg-side-nav-selected-hover',
+          isActive && 'bg-[#DEE6F9] hover:bg-[#DEE6F9]',
           isCollapsed && 'justify-center',
           !isCollapsed && 'pl-4'
         )}
@@ -86,7 +91,7 @@ const SideNavLink: React.FC<{
             isCollapsed
               ? '[&>svg]:min-w-5 [&>svg]:min-h-5 [&>svg]:max-w-5 [&>svg]:max-h-5 stroke-[1.4]'
               : '[&>svg]:min-w-5 [&>svg]:min-h-5 [&>svg]:max-w-5 [&>svg]:max-h-5 stroke-[1.4]',
-            isActive && '[&>svg]:text-[#0051AF]'
+            isActive && '[&>svg]:text-[#002786]'
           )}
         >
           {icon}
@@ -94,8 +99,8 @@ const SideNavLink: React.FC<{
         {!isCollapsed && (
           <span
             className={cn(
-              'text-[#00142B] text-left whitespace-nowrap overflow-ellipsis overflow-hidden text-[0.9rem] font-semibold',
-              isActive && 'text-[#0051AF]'
+              'text-[#1A1F27] text-left whitespace-nowrap overflow-ellipsis overflow-hidden text-[0.9rem] font-semibold',
+              isActive && 'text-[#002786]'
             )}
           >
             {label}

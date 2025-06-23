@@ -20,6 +20,7 @@ const CreateApplication = React.lazy(() => import('@/pages/applications/create-a
 const SettingsIdentityProvider = React.lazy(() => import('@/pages/settings/settings-identity-provider'));
 const TermsAndConditions = React.lazy(() => import('@/pages/terms-and-conditions/terms-and-conditions'));
 const OnBoarding = React.lazy(() => import('@/pages/on-boarding/on-boarding'));
+const Dashboard = React.lazy(() => import('@/pages/dashboard/dashboard'));
 
 export const generateRoutes = (routes: Route[]): Route[] => {
   return [
@@ -51,7 +52,7 @@ export const generateRoutes = (routes: Route[]): Route[] => {
       children: [
         {
           index: true,
-          element: <Navigate to={PATHS.applications} replace />
+          element: <Navigate to={PATHS.dashboard} replace />
         },
         ...routes,
         {
@@ -68,8 +69,17 @@ export const useRoutes = () => {
   const routes = useMemo<Route[]>(() => {
     return [
       {
-        path: PATHS.onBoarding,
-        element: <OnBoarding />
+        path: PATHS.dashboard,
+        children: [
+          {
+            index: true,
+            element: <Dashboard />
+          },
+          {
+            path: '*',
+            element: <NotFound />
+          }
+        ]
       },
       {
         path: PATHS.applications,

@@ -1,0 +1,14 @@
+.dashboard-card {
+  background: #0D274D0D;
+  backdrop-filter: blur(4px);
+  height: 100%;
+  gap: 10px;
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.dashboard-card-content {
+  background: #F5F8FD;
+  border: 1px solid #D5DFF7;
+  border-radius: 8px;
+}

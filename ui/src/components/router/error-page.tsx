@@ -5,7 +5,6 @@
 
 import {FallbackProps} from 'react-error-boundary';
 import {useRouteError, isRouteErrorResponse} from 'react-router-dom';
-import {BasePage} from '../layout/base-page';
 import {Card} from '../ui/card';
 import {cn} from '@/lib/utils';
 import {ExclamationTriangleIcon} from '@radix-ui/react-icons';
@@ -32,7 +31,7 @@ export const ErrorPage = ({error, className, resetErrorBoundary}: ErrorPageProps
   }
 
   return (
-    <BasePage useBreadcrumbs={false}>
+    <div className="p-4">
       <Card className={cn('p-6', className)}>
         <div className="mb-6">
           <div className="p-3 inline-flex items-center align-center rounded-full bg-primary">
@@ -59,6 +58,6 @@ export const ErrorPage = ({error, className, resetErrorBoundary}: ErrorPageProps
           </Button>
         </div>
       </Card>
-    </BasePage>
+    </div>
   );
 };

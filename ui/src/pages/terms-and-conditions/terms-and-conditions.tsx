@@ -3,12 +3,19 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {BasePage} from '@/components/layout/base-page';
+import {PATHS} from '@/router/paths';
+import {BasePage} from '@outshift/spark-design';
 import {Link} from 'react-router-dom';
 
 const TermsAndConditions: React.FC = () => {
   return (
-    <BasePage title="Terms and Conditions" useBreadcrumbs={true} breadcrumbs={[{text: 'Terms & Conditions'}]}>
+    <BasePage
+      title="Terms and Conditions"
+      breadcrumbs={[
+        {text: 'Dashboard', link: PATHS.dashboard},
+        {text: 'Terms and Conditions', link: PATHS.termsAndConditions}
+      ]}
+    >
       <p className="body1">
         This site is operated by Outshift by Cisco (“Outshift”). Outshift is Cisco&apos;s in-house incubation engine.{' '}
         <Link to="https://www.cisco.com/c/en/us/about/legal/terms-conditions.html" target="_blank" className="inline-link">

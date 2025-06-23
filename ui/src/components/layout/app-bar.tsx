@@ -13,6 +13,7 @@ import Logo from '@/assets/logo-app-bar.svg';
 import BookLogo from '@/assets/union.svg?react';
 import GitLogo from '@/assets/git.svg?react';
 import UserIcon from '@/assets/user.svg';
+import {Link} from 'react-router-dom';
 
 const UserSection = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -76,9 +77,6 @@ const UserSection = () => {
 };
 
 export const AppBar = () => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [searchValue, setSearchValue] = React.useState('');
-
   return (
     <Header
       title={
@@ -86,13 +84,12 @@ export const AppBar = () => {
           Identity
         </Typography>
       }
-      logo={<img src={Logo} alt="Identity" />}
+      logo={
+        <Link to={PATHS.dashboard}>
+          <img src={Logo} alt="Identity" />
+        </Link>
+      }
       position="fixed"
-      // searchProps={{
-      //   onChangeCallback: (value: string) => {
-      //     setSearchValue(value);
-      //   }
-      // }}
       actions={[
         {
           id: 'docs',
