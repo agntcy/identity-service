@@ -7,6 +7,8 @@ export const PATHS = {
   basePath: '/',
   welcome: '/welcome',
   callBackLoading: '/login/callback',
+  // dashboard paths
+  dashboard: '/dashboard',
   // application paths
   applications: '/applications',
   applicationsCreate: '/applications/create',

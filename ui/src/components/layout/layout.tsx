@@ -7,10 +7,10 @@ import {Outlet, useLocation} from 'react-router-dom';
 import {useEffect, useState} from 'react';
 import {cn} from '@/lib/utils';
 import {ResizablePanel, ResizablePanelGroup} from '@/components/ui/resizable';
-import {SideNav} from './side-nav';
 import {AppBar} from './app-bar';
 import {PATHS} from '@/router/paths';
 import {Footer} from '@outshift/spark-design';
+import {SideNav} from './side-nav';
 
 const Layout = () => {
   const defaultLayout = [15, 85];
@@ -77,17 +77,17 @@ const Layout = () => {
               !isCollapsed && 'min-w-[264px] max-w-[264px]'
             )}
           >
-            {/* <SideNav isCollapsed={isCollapsed} onChangeCollapsed={(value) => setIsCollapsed(value as boolean)} /> */}
+            <SideNav isCollapsed={isCollapsed} onChangeCollapsed={(value) => setIsCollapsed(value as boolean)} />
           </ResizablePanel>
         )}
         <ResizablePanel defaultSize={defaultLayout[1]} collapsible={false} minSize={30}>
-          {/* <main>
+          <main className="pt-[56px] h-full">
             <Outlet />
-          </main> */}
+          </main>
         </ResizablePanel>
       </ResizablePanelGroup>
       <Footer
-        productName="Agentcy Inc."
+        productName="Agntcy Inc."
         links={[
           {
             children: 'support@agntcy.com',

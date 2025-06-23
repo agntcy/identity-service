@@ -6,7 +6,7 @@
 @import "tailwindcss";
 @plugin "tailwindcss-animate";
 
-/* :root {
+:root {
   font-family: Inter, Sharp Sans, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -52,9 +52,9 @@
   --border: oklch(0.922 0 0);
   --input: #FBFCFE;
   --ring: #D5DFF7;
-} */
+}
 
-/* @theme inline {
+@theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -97,18 +97,18 @@
   --color-side-nav-hover: var(--side-nav-hover);
   --color-side-nav-selected: var(--side-nav-selected);
   --color-side-nav-selected-hover: var(--side-nav-selected-hover);
-} */
+}
 
-/* @layer base {
+@layer base {
   * {
     @apply border-border;
   }
   body {
     @apply bg-background text-foreground;
   }
-} */
+}
 
-/* .card-group {
+.card-group {
   align-items: stretch;
   display: flex;
   flex: 0 1 auto;
@@ -270,7 +270,7 @@
   100% {
     opacity: 1;
   }
-} */
+}
 
 
 .striped-bar {
