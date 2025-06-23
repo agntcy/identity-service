@@ -12,7 +12,6 @@ import (
 	identitycore "github.com/agntcy/identity-platform/internal/core/identity"
 	idpcore "github.com/agntcy/identity-platform/internal/core/idp"
 	settingscore "github.com/agntcy/identity-platform/internal/core/settings"
-	settingstypes "github.com/agntcy/identity-platform/internal/core/settings/types"
 	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 )
@@ -26,17 +25,23 @@ type appService struct {
 	appRepository      appcore.Repository
 	settingsRepository settingscore.Repository
 	identityService    identitycore.Service
+	idpFactory         idpcore.IdpFactory
+	credentialStore    idpcore.CredentialStore
 }
 
 func NewAppService(
 	appRepository appcore.Repository,
 	settingsRepository settingscore.Repository,
 	identityService identitycore.Service,
+	idpFactory idpcore.IdpFactory,
+	credentialStore idpcore.CredentialStore,
 ) AppService {
 	return &appService{
 		appRepository:      appRepository,
 		settingsRepository: settingsRepository,
 		identityService:    identityService,
+		idpFactory:         idpFactory,
+		credentialStore:    credentialStore,
 	}
 }
 
@@ -48,6 +53,15 @@ func (s *appService) CreateApp(
 		return nil, errutil.Err(nil, "app cannot be nil")
 	}
 
+	if app.Type == apptypes.APP_TYPE_UNSPECIFIED {
+		return nil, errutil.Err(nil, "app type is required")
+	}
+
+	tenantID, ok := identitycontext.GetTenantID(ctx)
+	if !ok {
+		return nil, errutil.Err(nil, "tenant id not found in context")
+	}
+
 	issSettings, err := s.settingsRepository.GetIssuerSettings(ctx)
 	if err != nil {
 		return nil, errutil.Err(err, "unable to fetch settings")
@@ -56,24 +70,26 @@ func (s *appService) CreateApp(
 	var clientCredentials *idpcore.ClientCredentials
 	var idp idpcore.Idp
 
-	if issSettings.IdpType != settingstypes.IDP_TYPE_SELF {
-		// Create a new IDP instance based on the issuer settings.
-		idp, err = idpcore.NewIdp(ctx, issSettings)
-		if err != nil {
-			return nil, errutil.Err(err, "failed to create IDP instance")
-		}
+	idp, err = s.idpFactory.Create(ctx, issSettings)
+	if err != nil {
+		return nil, errutil.Err(err, "failed to create IDP instance")
+	}
 
-		clientCredentials, err = idp.CreateClientCredentialsPair(ctx)
-		if err != nil {
-			return nil, errutil.Err(err, "failed to create client credentials pair")
-		}
+	clientCredentials, err = idp.CreateClientCredentialsPair(ctx)
+	if err != nil {
+		return nil, errutil.Err(err, "failed to create client credentials pair")
+	}
 
-		defer func() {
-			// Clean up client credentials if they were created.
-			if err != nil && clientCredentials != nil {
-				_ = idp.DeleteClientCredentialsPair(ctx, clientCredentials)
-			}
-		}()
+	defer func() {
+		// Clean up client credentials if they were created.
+		if err != nil && clientCredentials != nil {
+			_ = idp.DeleteClientCredentialsPair(ctx, clientCredentials)
+		}
+	}()
+
+	err = s.credentialStore.Put(ctx, clientCredentials, tenantID, clientCredentials.ClientID)
+	if err != nil {
+		return nil, errutil.Err(err, "unable to store client credentials")
 	}
 
 	userID, ok := identitycontext.GetUserID(ctx)

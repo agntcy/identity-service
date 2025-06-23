@@ -16,11 +16,13 @@ import (
 	bffgrpc "github.com/agntcy/identity-platform/internal/bff/grpc"
 	apppg "github.com/agntcy/identity-platform/internal/core/app/postgres"
 	identitycore "github.com/agntcy/identity-platform/internal/core/identity"
+	idpcore "github.com/agntcy/identity-platform/internal/core/idp"
 	"github.com/agntcy/identity-platform/internal/core/issuer"
 	settingspg "github.com/agntcy/identity-platform/internal/core/settings/postgres"
 	"github.com/agntcy/identity-platform/internal/pkg/grpcutil"
 	outshiftiam "github.com/agntcy/identity-platform/internal/pkg/iam"
 	"github.com/agntcy/identity-platform/internal/pkg/interceptors"
+	"github.com/agntcy/identity-platform/internal/pkg/vault"
 	"github.com/agntcy/identity-platform/pkg/cmd"
 	"github.com/agntcy/identity-platform/pkg/db"
 	"github.com/agntcy/identity-platform/pkg/grpcserver"
@@ -151,6 +153,26 @@ func main() {
 	appRepository := apppg.NewRepository(dbContext)
 	settingsRepository := settingspg.NewRepository(dbContext)
 
+	// Get the token depending on the environment
+	token := ""
+	if config.GoEnv != "production" {
+		// In dev mode, we use the root token
+		token = os.Getenv("VAULT_DEV_ROOT_TOKEN")
+	}
+
+	vaultClient, err := vault.NewHashicorpVaultService(
+		config.VaultHost,
+		config.VaultPort,
+		config.VaultUseSsl,
+		token, // This should be set in dev mode only
+	)
+	if err != nil {
+		log.Fatal("unable to create vault client ", err)
+	}
+
+	idpFactory := idpcore.NewFactory()
+	credentialStore := idpcore.NewCredentialStore(vaultClient)
+
 	// Identity service
 	identityService := identitycore.NewService(
 		config.VaultHost,
@@ -166,9 +188,13 @@ func main() {
 		appRepository,
 		settingsRepository,
 		identityService,
+		idpFactory,
+		credentialStore,
 	)
 	issuerSrv := issuer.NewService(
 		identityService,
+		idpFactory,
+		credentialStore,
 	)
 	settingsSrv := bff.NewSettingsService(
 		issuerSrv,

@@ -27,6 +27,7 @@ require (
 	github.com/go-openapi/strfmt v0.23.0
 	github.com/google/gnostic v0.7.0
 	github.com/google/uuid v1.6.0
+	github.com/hashicorp/vault/api v1.20.0
 	github.com/okta/okta-jwt-verifier-golang v1.3.1
 	github.com/okta/okta-sdk-golang/v5 v5.0.6
 	gorm.io/driver/postgres v1.6.0
@@ -63,7 +64,6 @@ require (
 	github.com/hashicorp/go-secure-stdlib/strutil v0.1.2 // indirect
 	github.com/hashicorp/go-sockaddr v1.0.7 // indirect
 	github.com/hashicorp/hcl v1.0.1-vault-7 // indirect
-	github.com/hashicorp/vault/api v1.20.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20240606120523-5a60cdf6a761 // indirect
 	github.com/jackc/pgx/v5 v5.7.5 // indirect

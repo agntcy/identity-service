@@ -1,0 +1,41 @@
+// Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package agntcy.identity.platform.v1alpha1;
+
+// import "agntcy/identity/platform/shared/v1alpha1/pagination.proto";
+import "agntcy/identity/platform/v1alpha1/app.proto";
+import "google/api/annotations.proto";
+import "google/api/client.proto";
+import "google/protobuf/empty.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_go";
+
+// BadgeService manages badges.
+service BadgeService {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_tag) = {name: "Badge"};
+
+  // Create a new App.
+  rpc IssueBadge(IssueBadgeRequest) returns (App) {
+    option (google.api.http) = {
+      post: "/v1alpha1/apps/{app_id}/badges"
+      body: "badge"
+    };
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "IssueBadge";
+      summary: "Issue a badge";
+    };
+  }
+}
+
+message IssueBadgeRequest {
+  // App Id.
+  string app_id = 1;
+
+  // Badge parameters to issue.
+  App badge = 2;
+}

@@ -20,20 +20,26 @@ type Service interface {
 
 type service struct {
 	identityService identity.Service
+	idpFactory      idpcore.IdpFactory
+	credentialStore idpcore.CredentialStore
 }
 
 func NewService(
 	identityService identity.Service,
+	idpFactory idpcore.IdpFactory,
+	credentialStore idpcore.CredentialStore,
 ) Service {
 	return &service{
 		identityService: identityService,
+		idpFactory:      idpFactory,
+		credentialStore: credentialStore,
 	}
 }
 
 func (s *service) SetIssuer(
 	ctx context.Context,
 	issuerSettings *settingstypes.IssuerSettings,
-) error {
+) (err error) {
 	// Validate the issuer settings.
 	if issuerSettings == nil {
 		return errutil.Err(nil, "issuer settings cannot be nil")
@@ -51,23 +57,34 @@ func (s *service) SetIssuer(
 		return fmt.Errorf("organization id not found in context")
 	}
 
+	tenantID, ok := identitycontext.GetTenantID(ctx)
+	if !ok {
+		return errutil.Err(nil, "tenant id not found in context")
+	}
+
 	var clientCredentials *idpcore.ClientCredentials
 	var idp idpcore.Idp
 
-	// For some IDP types, we need to create client credentials.
-	if issuerSettings.IdpType != settingstypes.IDP_TYPE_SELF {
-		var err error
+	idp, err = s.idpFactory.Create(ctx, issuerSettings)
+	if err != nil {
+		return errutil.Err(err, "failed to create IDP instance")
+	}
 
-		// Create a new IDP instance based on the issuer settings.
-		idp, err = idpcore.NewIdp(ctx, issuerSettings)
-		if err != nil {
-			return errutil.Err(err, "failed to create IDP instance")
-		}
+	clientCredentials, err = idp.CreateClientCredentialsPair(ctx)
+	if err != nil {
+		return errutil.Err(err, "failed to create client credentials pair")
+	}
 
-		clientCredentials, err = idp.CreateClientCredentialsPair(ctx)
-		if err != nil {
-			return errutil.Err(err, "failed to create client credentials pair")
+	defer func() {
+		// Clean up client credentials if they were created.
+		if err != nil && clientCredentials != nil {
+			_ = idp.DeleteClientCredentialsPair(ctx, clientCredentials)
 		}
+	}()
+
+	err = s.credentialStore.Put(ctx, clientCredentials, tenantID, clientCredentials.ClientID)
+	if err != nil {
+		return errutil.Err(err, "unable to store client credentials")
 	}
 
 	// Register the issuer with the identity service.

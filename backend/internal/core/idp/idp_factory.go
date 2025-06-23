@@ -11,7 +11,17 @@ import (
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 )
 
-func NewIdp(ctx context.Context, issuerSettings *types.IssuerSettings) (Idp, error) {
+type IdpFactory interface {
+	Create(ctx context.Context, issuerSettings *types.IssuerSettings) (Idp, error)
+}
+
+type idpFactory struct{}
+
+func NewFactory() IdpFactory {
+	return &idpFactory{}
+}
+
+func (f *idpFactory) Create(ctx context.Context, issuerSettings *types.IssuerSettings) (Idp, error) {
 	var idp Idp
 
 	switch issuerSettings.IdpType {
@@ -19,6 +29,8 @@ func NewIdp(ctx context.Context, issuerSettings *types.IssuerSettings) (Idp, err
 		idp = NewDuoIdp(issuerSettings.DuoIdpSettings)
 	case types.IDP_TYPE_OKTA:
 		idp = &OktaIdp{issuerSettings.OktaIdpSettings, nil}
+	case types.IDP_TYPE_SELF:
+		idp = NewSelfIdp()
 	default:
 		return nil, errutil.Err(
 			fmt.Errorf("unknown IDP type %s", issuerSettings.IdpType),

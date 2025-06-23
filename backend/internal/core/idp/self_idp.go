@@ -10,7 +10,7 @@ import (
 
 type SelfIdp struct{}
 
-func NewSlefIdp() Idp {
+func NewSelfIdp() Idp {
 	return &SelfIdp{}
 }
 
