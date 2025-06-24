@@ -14,7 +14,6 @@ import (
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	_ "google.golang.org/protobuf/types/known/emptypb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -188,7 +187,7 @@ var File_agntcy_identity_platform_v1alpha1_badge_service_proto protoreflect.File
 
 const file_agntcy_identity_platform_v1alpha1_badge_service_proto_rawDesc = "" +
 	"\n" +
-	"5agntcy/identity/platform/v1alpha1/badge_service.proto\x12!agntcy.identity.platform.v1alpha1\x1a-agntcy/identity/platform/v1alpha1/badge.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x17google/api/client.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\"\xc0\x01\n" +
+	"5agntcy/identity/platform/v1alpha1/badge_service.proto\x12!agntcy.identity.platform.v1alpha1\x1a-agntcy/identity/platform/v1alpha1/badge.proto\x1a\x1cgoogle/api/annotations.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\"\xc0\x01\n" +
 	"\x11IssueBadgeRequest\x12\x15\n" +
 	"\x06app_id\x18\x01 \x01(\tR\x05appId\x12I\n" +
 	"\x03a2a\x18\x02 \x01(\v27.agntcy.identity.platform.v1alpha1.IssueA2ABadgeRequestR\x03a2a\x12I\n" +

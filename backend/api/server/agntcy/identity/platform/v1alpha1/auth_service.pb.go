@@ -74,8 +74,8 @@ func (x *AppInfoResponse) GetApp() *App {
 
 type AuthorizeRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The app for which authorization is requested.
-	App string `protobuf:"bytes,1,opt,name=app,proto3" json:"app,omitempty"`
+	// The app id for which authorization is requested.
+	AppId string `protobuf:"bytes,1,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
 	// The MCP Server tool name.
 	ToolName *string `protobuf:"bytes,2,opt,name=tool_name,json=toolName,proto3,oneof" json:"tool_name,omitempty"`
 	// The User context in the form of an id or access token.
@@ -115,9 +115,9 @@ func (*AuthorizeRequest) Descriptor() ([]byte, []int) {
 	return file_agntcy_identity_platform_v1alpha1_auth_service_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *AuthorizeRequest) GetApp() string {
+func (x *AuthorizeRequest) GetAppId() string {
 	if x != nil {
-		return x.App
+		return x.AppId
 	}
 	return ""
 }
@@ -333,9 +333,9 @@ const file_agntcy_identity_platform_v1alpha1_auth_service_proto_rawDesc = "" +
 	"\n" +
 	"4agntcy/identity/platform/v1alpha1/auth_service.proto\x12!agntcy.identity.platform.v1alpha1\x1a+agntcy/identity/platform/v1alpha1/app.proto\x1a,agntcy/identity/platform/v1alpha1/auth.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\"K\n" +
 	"\x0fAppInfoResponse\x128\n" +
-	"\x03app\x18\x01 \x01(\v2&.agntcy.identity.platform.v1alpha1.AppR\x03app\"\x87\x01\n" +
-	"\x10AuthorizeRequest\x12\x10\n" +
-	"\x03app\x18\x01 \x01(\tR\x03app\x12 \n" +
+	"\x03app\x18\x01 \x01(\v2&.agntcy.identity.platform.v1alpha1.AppR\x03app\"\x8c\x01\n" +
+	"\x10AuthorizeRequest\x12\x15\n" +
+	"\x06app_id\x18\x01 \x01(\tR\x05appId\x12 \n" +
 	"\ttool_name\x18\x02 \x01(\tH\x00R\btoolName\x88\x01\x01\x12\"\n" +
 	"\n" +
 	"user_token\x18\x03 \x01(\tH\x01R\tuserToken\x88\x01\x01B\f\n" +

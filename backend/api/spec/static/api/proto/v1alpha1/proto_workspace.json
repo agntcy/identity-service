@@ -622,6 +622,417 @@
       ]
     },
     {
+      "name": "agntcy/identity/platform/v1alpha1/auth.proto",
+      "description": "",
+      "package": "agntcy.identity.platform.v1alpha1",
+      "hasEnums": false,
+      "hasExtensions": false,
+      "hasMessages": true,
+      "hasServices": false,
+      "enums": [],
+      "extensions": [],
+      "messages": [
+        {
+          "name": "Device",
+          "longName": "Device",
+          "fullName": "agntcy.identity.platform.v1alpha1.Device",
+          "description": "Devices used for user approval",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "id",
+              "description": "A unique identifier for the Device.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_id",
+              "defaultValue": ""
+            },
+            {
+              "name": "user_id",
+              "description": "User ID associated with the Device.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_user_id",
+              "defaultValue": ""
+            },
+            {
+              "name": "subscription_token",
+              "description": "Subscription Token for the Device.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_subscription_token",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "Token",
+          "longName": "Token",
+          "fullName": "agntcy.identity.platform.v1alpha1.Token",
+          "description": "Identity Platform Token",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "id",
+              "description": "A unique identifier for the Token.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_id",
+              "defaultValue": ""
+            },
+            {
+              "name": "value",
+              "description": "Token value.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_value",
+              "defaultValue": ""
+            }
+          ]
+        }
+      ],
+      "services": []
+    },
+    {
+      "name": "agntcy/identity/platform/v1alpha1/auth_service.proto",
+      "description": "",
+      "package": "agntcy.identity.platform.v1alpha1",
+      "hasEnums": false,
+      "hasExtensions": false,
+      "hasMessages": true,
+      "hasServices": true,
+      "enums": [],
+      "extensions": [],
+      "messages": [
+        {
+          "name": "AppInfoResponse",
+          "longName": "AppInfoResponse",
+          "fullName": "agntcy.identity.platform.v1alpha1.AppInfoResponse",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "app",
+              "description": "The App information.",
+              "label": "",
+              "type": "App",
+              "longType": "App",
+              "fullType": "agntcy.identity.platform.v1alpha1.App",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "AuthorizeRequest",
+          "longName": "AuthorizeRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.AuthorizeRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "app_id",
+              "description": "The app id for which authorization is requested.",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            },
+            {
+              "name": "tool_name",
+              "description": "The MCP Server tool name.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_tool_name",
+              "defaultValue": ""
+            },
+            {
+              "name": "user_token",
+              "description": "The User context in the form of an id or access token.\nMandatory for User Approval Flows.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_user_token",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "AuthorizeResponse",
+          "longName": "AuthorizeResponse",
+          "fullName": "agntcy.identity.platform.v1alpha1.AuthorizeResponse",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "code",
+              "description": "If authorization is successful, return a code to be used for\nthe token endpoint.",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "RegisterDeviceRequest",
+          "longName": "RegisterDeviceRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.RegisterDeviceRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "user_token",
+              "description": "The User context in the form of an id or access token.\nMandatory for User Approval Flows.",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            },
+            {
+              "name": "device",
+              "description": "The device information to register.",
+              "label": "",
+              "type": "Device",
+              "longType": "Device",
+              "fullType": "agntcy.identity.platform.v1alpha1.Device",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "TokenRequest",
+          "longName": "TokenRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.TokenRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "code",
+              "description": "Pass the code received from the authorization endpoint.",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "TokenResponse",
+          "longName": "TokenResponse",
+          "fullName": "agntcy.identity.platform.v1alpha1.TokenResponse",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "token",
+              "description": "The token issued to the Agent or MCP Server.",
+              "label": "",
+              "type": "Token",
+              "longType": "Token",
+              "fullType": "agntcy.identity.platform.v1alpha1.Token",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        }
+      ],
+      "services": [
+        {
+          "name": "AuthService",
+          "longName": "AuthService",
+          "fullName": "agntcy.identity.platform.v1alpha1.AuthService",
+          "description": "AuthService manages auth.",
+          "methods": [
+            {
+              "name": "AppInfo",
+              "description": "App info endpoint",
+              "requestType": "Empty",
+              "requestLongType": ".google.protobuf.Empty",
+              "requestFullType": "google.protobuf.Empty",
+              "requestStreaming": false,
+              "responseType": "AppInfoResponse",
+              "responseLongType": "AppInfoResponse",
+              "responseFullType": "agntcy.identity.platform.v1alpha1.AppInfoResponse",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "GET",
+                      "pattern": "/v1alpha1/auth/app_info"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Authorize",
+              "description": "Authorize a request from an Agent or MCP Server",
+              "requestType": "AuthorizeRequest",
+              "requestLongType": "AuthorizeRequest",
+              "requestFullType": "agntcy.identity.platform.v1alpha1.AuthorizeRequest",
+              "requestStreaming": false,
+              "responseType": "AuthorizeResponse",
+              "responseLongType": "AuthorizeResponse",
+              "responseFullType": "agntcy.identity.platform.v1alpha1.AuthorizeResponse",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "GET",
+                      "pattern": "/v1alpha1/auth/authorize"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Token",
+              "description": "Request token for an Agent or MCP Server",
+              "requestType": "TokenRequest",
+              "requestLongType": "TokenRequest",
+              "requestFullType": "agntcy.identity.platform.v1alpha1.TokenRequest",
+              "requestStreaming": false,
+              "responseType": "TokenResponse",
+              "responseLongType": "TokenResponse",
+              "responseFullType": "agntcy.identity.platform.v1alpha1.TokenResponse",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "POST",
+                      "pattern": "/v1alpha1/auth/token"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "ExtAuthz",
+              "description": "Handle external authorization requests",
+              "requestType": "Empty",
+              "requestLongType": ".google.protobuf.Empty",
+              "requestFullType": "google.protobuf.Empty",
+              "requestStreaming": false,
+              "responseType": "Empty",
+              "responseLongType": ".google.protobuf.Empty",
+              "responseFullType": "google.protobuf.Empty",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "POST",
+                      "pattern": "/v1alpha1/auth/ext_authz"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "RegisterDevice",
+              "description": "Register new user device for approval flow",
+              "requestType": "RegisterDeviceRequest",
+              "requestLongType": "RegisterDeviceRequest",
+              "requestFullType": "agntcy.identity.platform.v1alpha1.RegisterDeviceRequest",
+              "requestStreaming": false,
+              "responseType": "Empty",
+              "responseLongType": ".google.protobuf.Empty",
+              "responseFullType": "google.protobuf.Empty",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "POST",
+                      "pattern": "/v1alpha1/auth/register_device"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "agntcy/identity/platform/v1alpha1/badge.proto",
       "description": "",
       "package": "agntcy.identity.platform.v1alpha1",
@@ -1212,6 +1623,915 @@
         }
       ],
       "services": []
+    },
+    {
+      "name": "agntcy/identity/platform/v1alpha1/policy.proto",
+      "description": "",
+      "package": "agntcy.identity.platform.v1alpha1",
+      "hasEnums": false,
+      "hasExtensions": false,
+      "hasMessages": true,
+      "hasServices": false,
+      "enums": [],
+      "extensions": [],
+      "messages": [
+        {
+          "name": "Policy",
+          "longName": "Policy",
+          "fullName": "agntcy.identity.platform.v1alpha1.Policy",
+          "description": "Identity Platform Policy.",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "id",
+              "description": "A unique identifier for the App.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_id",
+              "defaultValue": ""
+            },
+            {
+              "name": "name",
+              "description": "A human-readable name for the App.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_name",
+              "defaultValue": ""
+            },
+            {
+              "name": "description",
+              "description": "A human-readable description for the App.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_description",
+              "defaultValue": ""
+            },
+            {
+              "name": "rules",
+              "description": "All the rules that apply to this Policy.",
+              "label": "repeated",
+              "type": "Rule",
+              "longType": "Rule",
+              "fullType": "agntcy.identity.platform.v1alpha1.Rule",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "Rule",
+          "longName": "Rule",
+          "fullName": "agntcy.identity.platform.v1alpha1.Rule",
+          "description": "Identity Platform Policy Rule",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "id",
+              "description": "A unique identifier for the App.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_id",
+              "defaultValue": ""
+            },
+            {
+              "name": "name",
+              "description": "A human-readable name for the App.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_name",
+              "defaultValue": ""
+            },
+            {
+              "name": "description",
+              "description": "A human-readable description for the App.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_description",
+              "defaultValue": ""
+            },
+            {
+              "name": "assigned_to",
+              "description": "The requester application that this Rule applies to.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_assigned_to",
+              "defaultValue": ""
+            },
+            {
+              "name": "tasks",
+              "description": "The tasks that this Rule applies to.",
+              "label": "repeated",
+              "type": "Task",
+              "longType": "Task",
+              "fullType": "agntcy.identity.platform.v1alpha1.Task",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            },
+            {
+              "name": "needs_approval",
+              "description": "Need User Approval for this Rule.",
+              "label": "optional",
+              "type": "bool",
+              "longType": "bool",
+              "fullType": "bool",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_needs_approval",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "Task",
+          "longName": "Task",
+          "fullName": "agntcy.identity.platform.v1alpha1.Task",
+          "description": "Identity Platform Policy Task",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "id",
+              "description": "A unique identifier for the Task.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_id",
+              "defaultValue": ""
+            },
+            {
+              "name": "name",
+              "description": "A human-readable name for the Task.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_name",
+              "defaultValue": ""
+            },
+            {
+              "name": "app_id",
+              "description": "An application ID for the Task.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_app_id",
+              "defaultValue": ""
+            },
+            {
+              "name": "tool_name",
+              "description": "A tool name for the Task.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_tool_name",
+              "defaultValue": ""
+            }
+          ]
+        }
+      ],
+      "services": []
+    },
+    {
+      "name": "agntcy/identity/platform/v1alpha1/policy_service.proto",
+      "description": "",
+      "package": "agntcy.identity.platform.v1alpha1",
+      "hasEnums": false,
+      "hasExtensions": false,
+      "hasMessages": true,
+      "hasServices": true,
+      "enums": [],
+      "extensions": [],
+      "messages": [
+        {
+          "name": "CreatePolicyRequest",
+          "longName": "CreatePolicyRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.CreatePolicyRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "policy",
+              "description": "The Policy to create.",
+              "label": "",
+              "type": "Policy",
+              "longType": "Policy",
+              "fullType": "agntcy.identity.platform.v1alpha1.Policy",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "CreateRuleRequest",
+          "longName": "CreateRuleRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.CreateRuleRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "policy_id",
+              "description": "The Policy Id to which these Rules belong.",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            },
+            {
+              "name": "rule",
+              "description": "The Rule to create.",
+              "label": "",
+              "type": "Rule",
+              "longType": "Rule",
+              "fullType": "agntcy.identity.platform.v1alpha1.Rule",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "DeletePolicyRequest",
+          "longName": "DeletePolicyRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.DeletePolicyRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "policy_id",
+              "description": "Policy Id to delete.",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "DeleteRuleRequest",
+          "longName": "DeleteRuleRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.DeleteRuleRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "policy_id",
+              "description": "The Policy Id to which these Rules belong.",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            },
+            {
+              "name": "rule_id",
+              "description": "Rule Id to delete.",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "GetPolicyRequest",
+          "longName": "GetPolicyRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.GetPolicyRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "policy_id",
+              "description": "Policy Id to get.",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "GetRuleRequest",
+          "longName": "GetRuleRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.GetRuleRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "policy_id",
+              "description": "The Policy Id to which these Rules belong.",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            },
+            {
+              "name": "rule_id",
+              "description": "Rule Id to get.",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "ListPoliciesRequest",
+          "longName": "ListPoliciesRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.ListPoliciesRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "page",
+              "description": "The current page of the pagination",
+              "label": "optional",
+              "type": "int32",
+              "longType": "int32",
+              "fullType": "int32",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_page",
+              "defaultValue": ""
+            },
+            {
+              "name": "size",
+              "description": "The page size of the pagination",
+              "label": "optional",
+              "type": "int32",
+              "longType": "int32",
+              "fullType": "int32",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_size",
+              "defaultValue": ""
+            },
+            {
+              "name": "query",
+              "description": "The search query",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_query",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "ListPoliciesResponse",
+          "longName": "ListPoliciesResponse",
+          "fullName": "agntcy.identity.platform.v1alpha1.ListPoliciesResponse",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "policies",
+              "description": "A list of Policies.",
+              "label": "repeated",
+              "type": "Policy",
+              "longType": "Policy",
+              "fullType": "agntcy.identity.platform.v1alpha1.Policy",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            },
+            {
+              "name": "pagination",
+              "description": "Pagination response.",
+              "label": "optional",
+              "type": "PagedResponse",
+              "longType": "agntcy.identity.platform.shared.v1alpha1.PagedResponse",
+              "fullType": "agntcy.identity.platform.shared.v1alpha1.PagedResponse",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_pagination",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "ListRulesRequest",
+          "longName": "ListRulesRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.ListRulesRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "policy_id",
+              "description": "The Policy Id to which these Rules belong.",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            },
+            {
+              "name": "page",
+              "description": "The current page of the pagination",
+              "label": "optional",
+              "type": "int32",
+              "longType": "int32",
+              "fullType": "int32",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_page",
+              "defaultValue": ""
+            },
+            {
+              "name": "size",
+              "description": "The page size of the pagination",
+              "label": "optional",
+              "type": "int32",
+              "longType": "int32",
+              "fullType": "int32",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_size",
+              "defaultValue": ""
+            },
+            {
+              "name": "query",
+              "description": "The search query",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_query",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "ListRulesResponse",
+          "longName": "ListRulesResponse",
+          "fullName": "agntcy.identity.platform.v1alpha1.ListRulesResponse",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "rules",
+              "description": "A list of Rules.",
+              "label": "repeated",
+              "type": "Rule",
+              "longType": "Rule",
+              "fullType": "agntcy.identity.platform.v1alpha1.Rule",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            },
+            {
+              "name": "pagination",
+              "description": "Pagination response.",
+              "label": "optional",
+              "type": "PagedResponse",
+              "longType": "agntcy.identity.platform.shared.v1alpha1.PagedResponse",
+              "fullType": "agntcy.identity.platform.shared.v1alpha1.PagedResponse",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_pagination",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "UpdatePolicyRequest",
+          "longName": "UpdatePolicyRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.UpdatePolicyRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "policy_id",
+              "description": "Policy Id to update.",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            },
+            {
+              "name": "policy",
+              "description": "Policy parameters to update.",
+              "label": "",
+              "type": "Policy",
+              "longType": "Policy",
+              "fullType": "agntcy.identity.platform.v1alpha1.Policy",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "UpdateRuleRequest",
+          "longName": "UpdateRuleRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.UpdateRuleRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "policy_id",
+              "description": "The Policy Id to which these Rules belong.",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            },
+            {
+              "name": "rule_id",
+              "description": "Rule Id to update.",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            },
+            {
+              "name": "rule",
+              "description": "Rule parameters to update.",
+              "label": "",
+              "type": "Rule",
+              "longType": "Rule",
+              "fullType": "agntcy.identity.platform.v1alpha1.Rule",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        }
+      ],
+      "services": [
+        {
+          "name": "PolicyService",
+          "longName": "PolicyService",
+          "fullName": "agntcy.identity.platform.v1alpha1.PolicyService",
+          "description": "PolicyService manages policy.",
+          "methods": [
+            {
+              "name": "ListPolicies",
+              "description": "List Policies.",
+              "requestType": "ListPoliciesRequest",
+              "requestLongType": "ListPoliciesRequest",
+              "requestFullType": "agntcy.identity.platform.v1alpha1.ListPoliciesRequest",
+              "requestStreaming": false,
+              "responseType": "ListPoliciesResponse",
+              "responseLongType": "ListPoliciesResponse",
+              "responseFullType": "agntcy.identity.platform.v1alpha1.ListPoliciesResponse",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "GET",
+                      "pattern": "/v1alpha1/policies"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "GetPolicy",
+              "description": "Get Policy by id",
+              "requestType": "GetPolicyRequest",
+              "requestLongType": "GetPolicyRequest",
+              "requestFullType": "agntcy.identity.platform.v1alpha1.GetPolicyRequest",
+              "requestStreaming": false,
+              "responseType": "Policy",
+              "responseLongType": "Policy",
+              "responseFullType": "agntcy.identity.platform.v1alpha1.Policy",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "GET",
+                      "pattern": "/v1alpha1/policies/{policy_id}"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "CreatePolicy",
+              "description": "Create a new Policy.",
+              "requestType": "CreatePolicyRequest",
+              "requestLongType": "CreatePolicyRequest",
+              "requestFullType": "agntcy.identity.platform.v1alpha1.CreatePolicyRequest",
+              "requestStreaming": false,
+              "responseType": "Policy",
+              "responseLongType": "Policy",
+              "responseFullType": "agntcy.identity.platform.v1alpha1.Policy",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "POST",
+                      "pattern": "/v1alpha1/policies",
+                      "body": "policy"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "UpdatePolicy",
+              "description": "Update a Policy.",
+              "requestType": "UpdatePolicyRequest",
+              "requestLongType": "UpdatePolicyRequest",
+              "requestFullType": "agntcy.identity.platform.v1alpha1.UpdatePolicyRequest",
+              "requestStreaming": false,
+              "responseType": "Policy",
+              "responseLongType": "Policy",
+              "responseFullType": "agntcy.identity.platform.v1alpha1.Policy",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "PATCH",
+                      "pattern": "/v1alpha1/policies/{policy_id}",
+                      "body": "policy"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "DeletePolicy",
+              "description": "Delete an existing Policy.",
+              "requestType": "DeletePolicyRequest",
+              "requestLongType": "DeletePolicyRequest",
+              "requestFullType": "agntcy.identity.platform.v1alpha1.DeletePolicyRequest",
+              "requestStreaming": false,
+              "responseType": "Empty",
+              "responseLongType": ".google.protobuf.Empty",
+              "responseFullType": "google.protobuf.Empty",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "DELETE",
+                      "pattern": "/v1alpha1/policies/{policy_id}"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "ListRules",
+              "description": "List Rules.",
+              "requestType": "ListRulesRequest",
+              "requestLongType": "ListRulesRequest",
+              "requestFullType": "agntcy.identity.platform.v1alpha1.ListRulesRequest",
+              "requestStreaming": false,
+              "responseType": "ListRulesResponse",
+              "responseLongType": "ListRulesResponse",
+              "responseFullType": "agntcy.identity.platform.v1alpha1.ListRulesResponse",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "GET",
+                      "pattern": "/v1alpha1/policies/{policy_id}/rules"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "GetRule",
+              "description": "Get Rule by id",
+              "requestType": "GetRuleRequest",
+              "requestLongType": "GetRuleRequest",
+              "requestFullType": "agntcy.identity.platform.v1alpha1.GetRuleRequest",
+              "requestStreaming": false,
+              "responseType": "Rule",
+              "responseLongType": "Rule",
+              "responseFullType": "agntcy.identity.platform.v1alpha1.Rule",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "GET",
+                      "pattern": "/v1alpha1/policies/{policy_id}/rules/{rule_id}"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "CreateRule",
+              "description": "Create a new Rule.",
+              "requestType": "CreateRuleRequest",
+              "requestLongType": "CreateRuleRequest",
+              "requestFullType": "agntcy.identity.platform.v1alpha1.CreateRuleRequest",
+              "requestStreaming": false,
+              "responseType": "Rule",
+              "responseLongType": "Rule",
+              "responseFullType": "agntcy.identity.platform.v1alpha1.Rule",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "POST",
+                      "pattern": "/v1alpha1/policies/{policy_id}/rules",
+                      "body": "rule"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "UpdateRule",
+              "description": "Update a Rule.",
+              "requestType": "UpdateRuleRequest",
+              "requestLongType": "UpdateRuleRequest",
+              "requestFullType": "agntcy.identity.platform.v1alpha1.UpdateRuleRequest",
+              "requestStreaming": false,
+              "responseType": "Rule",
+              "responseLongType": "Rule",
+              "responseFullType": "agntcy.identity.platform.v1alpha1.Rule",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "PATCH",
+                      "pattern": "/v1alpha1/policies/{policy_id}/rules/{rule_id}",
+                      "body": "rule"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "DeleteRule",
+              "description": "Delete an existing Rule.",
+              "requestType": "DeleteRuleRequest",
+              "requestLongType": "DeleteRuleRequest",
+              "requestFullType": "agntcy.identity.platform.v1alpha1.DeleteRuleRequest",
+              "requestStreaming": false,
+              "responseType": "Empty",
+              "responseLongType": ".google.protobuf.Empty",
+              "responseFullType": "google.protobuf.Empty",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "DELETE",
+                      "pattern": "/v1alpha1/policies/{policy_id}/rules/{rule_id}"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
     },
     {
       "name": "agntcy/identity/platform/v1alpha1/settings.proto",
