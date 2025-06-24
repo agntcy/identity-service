@@ -73,8 +73,8 @@ message AppInfoResponse {
 }
 
 message AuthorizeRequest {
-  // The app for which authorization is requested.
-  string app = 1;
+  // The app id for which authorization is requested.
+  string app_id = 1;
 
   // The MCP Server tool name.
   optional string tool_name = 2;

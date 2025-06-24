@@ -1,3 +1,6 @@
+// Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
 ui = true
 disable_mlock = "true"
 cluster_addr  = "http://127.0.0.1:8201"
