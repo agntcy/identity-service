@@ -20,6 +20,7 @@ const CreateApplication = React.lazy(() => import('@/pages/applications/create-a
 const SettingsIdentityProvider = React.lazy(() => import('@/pages/settings/settings-identity-provider'));
 const TermsAndConditions = React.lazy(() => import('@/pages/terms-and-conditions/terms-and-conditions'));
 const Dashboard = React.lazy(() => import('@/pages/dashboard/dashboard'));
+const SettingsApiKey = React.lazy(() => import('@/pages/settings/settings-api-key'));
 
 export const generateRoutes = (routes: Route[]): Route[] => {
   return [
@@ -107,6 +108,10 @@ export const useRoutes = () => {
           {
             path: PATHS.settingsIdentityProvider,
             element: <SettingsIdentityProvider />
+          },
+          {
+            path: PATHS.settingsApiKey,
+            element: <SettingsApiKey />
           },
           {
             path: '*',

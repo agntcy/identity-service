@@ -1,7 +1,7 @@
 import React from 'react';
 import {useAuth} from '@/hooks';
 import {Loading} from '@/components/ui/loading';
-import {IamAPI} from '@/api/services';
+import {IamAPI, SettingsAPI} from '@/api/services';
 
 export const ApiProvider = ({children}: React.PropsWithChildren) => {
   const [isSet, setIsSet] = React.useState<boolean>(false);
@@ -9,11 +9,13 @@ export const ApiProvider = ({children}: React.PropsWithChildren) => {
 
   React.useEffect(() => {
     IamAPI.setTokenExpiredHandlers({tokenExpiredHttpHandler, logout});
+    SettingsAPI.setTokenExpiredHandlers({tokenExpiredHttpHandler, logout});
   }, [tokenExpiredHttpHandler, logout]);
 
   React.useEffect(() => {
     if (authInfo && authInfo.isAuthenticated) {
       IamAPI.setAuthInfo(authInfo);
+      SettingsAPI.setAuthInfo(authInfo);
       setIsSet(true);
     } else {
       setIsSet(true);
