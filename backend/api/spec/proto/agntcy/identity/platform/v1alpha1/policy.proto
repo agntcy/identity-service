@@ -12,13 +12,13 @@ option go_package = "github.com/agntcy/identity-platform/api/server/agntcy/ident
 
 // Identity Platform Policy.
 message Policy {
-  // A unique identifier for the App.
+  // A unique identifier for the Policy.
   optional string id = 1;
 
-  // A human-readable name for the App.
+  // A human-readable name for the Policy.
   optional string name = 4;
 
-  // A human-readable description for the App.
+  // A human-readable description for the Policy.
   optional string description = 5;
 
   // All the rules that apply to this Policy.
@@ -27,13 +27,13 @@ message Policy {
 
 // Identity Platform Policy Rule
 message Rule {
-  // A unique identifier for the App.
+  // A unique identifier for the Rule.
   optional string id = 1;
 
-  // A human-readable name for the App.
+  // A human-readable name for the Rule.
   optional string name = 4;
 
-  // A human-readable description for the App.
+  // A human-readable description for the Rule.
   optional string description = 5;
 
   // The requester application that this Rule applies to.

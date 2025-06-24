@@ -1814,7 +1814,7 @@
           "fields": [
             {
               "name": "id",
-              "description": "A unique identifier for the App.",
+              "description": "A unique identifier for the Policy.",
               "label": "optional",
               "type": "string",
               "longType": "string",
@@ -1826,7 +1826,7 @@
             },
             {
               "name": "name",
-              "description": "A human-readable name for the App.",
+              "description": "A human-readable name for the Policy.",
               "label": "optional",
               "type": "string",
               "longType": "string",
@@ -1838,7 +1838,7 @@
             },
             {
               "name": "description",
-              "description": "A human-readable description for the App.",
+              "description": "A human-readable description for the Policy.",
               "label": "optional",
               "type": "string",
               "longType": "string",
@@ -1874,7 +1874,7 @@
           "fields": [
             {
               "name": "id",
-              "description": "A unique identifier for the App.",
+              "description": "A unique identifier for the Rule.",
               "label": "optional",
               "type": "string",
               "longType": "string",
@@ -1886,7 +1886,7 @@
             },
             {
               "name": "name",
-              "description": "A human-readable name for the App.",
+              "description": "A human-readable name for the Rule.",
               "label": "optional",
               "type": "string",
               "longType": "string",
@@ -1898,7 +1898,7 @@
             },
             {
               "name": "description",
-              "description": "A human-readable description for the App.",
+              "description": "A human-readable description for the Rule.",
               "label": "optional",
               "type": "string",
               "longType": "string",

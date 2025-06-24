@@ -1018,13 +1018,13 @@ components:
             properties:
                 id:
                     type: string
-                    description: A unique identifier for the App.
+                    description: A unique identifier for the Policy.
                 name:
                     type: string
-                    description: A human-readable name for the App.
+                    description: A human-readable name for the Policy.
                 description:
                     type: string
-                    description: A human-readable description for the App.
+                    description: A human-readable description for the Policy.
                 rules:
                     type: array
                     items:
@@ -1051,13 +1051,13 @@ components:
             properties:
                 id:
                     type: string
-                    description: A unique identifier for the App.
+                    description: A unique identifier for the Rule.
                 name:
                     type: string
-                    description: A human-readable name for the App.
+                    description: A human-readable name for the Rule.
                 description:
                     type: string
-                    description: A human-readable description for the App.
+                    description: A human-readable description for the Rule.
                 assignedTo:
                     type: string
                     description: The requester application that this Rule applies to.

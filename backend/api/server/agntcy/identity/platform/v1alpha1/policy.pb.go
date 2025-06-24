@@ -26,11 +26,11 @@ const (
 // Identity Platform Policy.
 type Policy struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// A unique identifier for the App.
+	// A unique identifier for the Policy.
 	Id *string `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// A human-readable name for the App.
+	// A human-readable name for the Policy.
 	Name *string `protobuf:"bytes,4,opt,name=name,proto3,oneof" json:"name,omitempty"`
-	// A human-readable description for the App.
+	// A human-readable description for the Policy.
 	Description *string `protobuf:"bytes,5,opt,name=description,proto3,oneof" json:"description,omitempty"`
 	// All the rules that apply to this Policy.
 	Rules         []*Rule `protobuf:"bytes,6,rep,name=rules,proto3" json:"rules,omitempty"`
@@ -99,11 +99,11 @@ func (x *Policy) GetRules() []*Rule {
 // Identity Platform Policy Rule
 type Rule struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// A unique identifier for the App.
+	// A unique identifier for the Rule.
 	Id *string `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// A human-readable name for the App.
+	// A human-readable name for the Rule.
 	Name *string `protobuf:"bytes,4,opt,name=name,proto3,oneof" json:"name,omitempty"`
-	// A human-readable description for the App.
+	// A human-readable description for the Rule.
 	Description *string `protobuf:"bytes,5,opt,name=description,proto3,oneof" json:"description,omitempty"`
 	// The requester application that this Rule applies to.
 	AssignedTo *string `protobuf:"bytes,2,opt,name=assigned_to,json=assignedTo,proto3,oneof" json:"assigned_to,omitempty"`

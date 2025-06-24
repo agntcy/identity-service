@@ -25,4 +25,5 @@ type Repository interface {
 		query *string,
 		appType *types.AppType,
 	) (*pagination.Pageable[types.App], error)
+	GetApps(ctx context.Context, ids []string) ([]*types.App, error)
 }
