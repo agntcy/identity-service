@@ -6,10 +6,9 @@
 import type {ReactNode} from 'react';
 import React from 'react';
 import {LoaderRelative, Loading} from './loading';
-import {ExclamationTriangleIcon} from '@radix-ui/react-icons';
 import {Card} from './card';
 import {parseError} from '@/utils/api';
-import EmptyOrErrorListState, {EmptyOrErrorListStateProps} from './empty-or-error-list-state';
+import {EmptyState, EmptyStateProps} from '@outshift/spark-design';
 import {cn} from '@/lib/utils';
 
 interface UnreadyStateType {
@@ -42,14 +41,16 @@ export const ConditionalQueryRenderer: React.FC<React.PropsWithChildren<Conditio
   if (!enable) {
     return <>{children}</>;
   }
-  const defaultErrorListStateProps: EmptyOrErrorListStateProps = {
-    title: <>Could not load {itemName}</>,
-    description: <>{parseError(error) || error}</>,
-    icon: <ExclamationTriangleIcon className="w-12 h-12 aspect-square" />
+  const defaultErrorListStateProps: EmptyStateProps = {
+    title: `Could not load ${itemName}`,
+    description: parseError(error) || error,
+    variant: 'negative'
   };
 
-  const defaultEmptyListStateProps: EmptyOrErrorListStateProps = {
-    title: <>No {itemName} found.</>
+  const defaultEmptyListStateProps: EmptyStateProps = {
+    title: `No ${itemName} found.`,
+    description: `There are no ${itemName} available at the moment.`,
+    variant: 'info'
   };
 
   const empty = !data || (Array.isArray(data) && data.length === 0) || isEmpty;
@@ -72,7 +73,7 @@ export const ConditionalQueryRenderer: React.FC<React.PropsWithChildren<Conditio
       if (customError) {
         return customError;
       }
-      return <EmptyOrErrorListState {...{...defaultErrorListStateProps, ...errorListStateProps}} />;
+      return <EmptyState {...{...defaultErrorListStateProps, ...errorListStateProps}} />;
     } else if (unreadyStates.fetching && useLoading) {
       // We are fetching
       return customLoader ? customLoader : useRelativeLoader ? <LoaderRelative /> : <Loading />;
@@ -80,7 +81,7 @@ export const ConditionalQueryRenderer: React.FC<React.PropsWithChildren<Conditio
       if (customEmpty) {
         return customEmpty;
       }
-      return <EmptyOrErrorListState {...{...defaultEmptyListStateProps, ...emptyListStateProps}} />;
+      return <EmptyState {...{...defaultEmptyListStateProps, ...emptyListStateProps}} />;
     }
     return null;
   };
@@ -92,8 +93,9 @@ export const ConditionalQueryRenderer: React.FC<React.PropsWithChildren<Conditio
   }
 
   if (unreadyResult) {
-    return <div className={cn('flex flex-col gap-2 items-center my-12 px-4', classNameContainer, useSkeleton && 'block p-0')}>{unreadyResult}</div>;
+    return <div className={cn('flex flex-col gap-2 items-center', classNameContainer, useSkeleton && 'block p-0')}>{unreadyResult}</div>;
   }
+
   return <>{children}</>;
 };
 
@@ -107,8 +109,8 @@ interface ConditionalQueryRendererProps {
   customEmpty?: ReactNode;
   customError?: ReactNode;
   classNameContainer?: string;
-  emptyListStateProps?: Partial<EmptyOrErrorListStateProps>;
-  errorListStateProps?: Partial<EmptyOrErrorListStateProps>;
+  emptyListStateProps?: Partial<EmptyStateProps>;
+  errorListStateProps?: Partial<EmptyStateProps>;
   isEmpty?: boolean;
   useRelativeLoader?: boolean;
   useSkeleton?: boolean;
