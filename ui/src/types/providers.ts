@@ -11,5 +11,6 @@ export enum PasswordManagmentProviders {
 
 export enum IdentityProviders {
   OKTA = 'OKTA',
-  DUO = 'DUO'
+  DUO = 'DUO',
+  OASF = 'OASF'
 }

@@ -6,15 +6,19 @@
 import {Card, CardContent} from '@/components/ui/card';
 import {useStepper} from '../stepper';
 import {useFormContext} from 'react-hook-form';
-import {FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage} from '@/components/ui/form';
+import {FormControl, FormField, FormItem, FormLabel} from '@/components/ui/form';
 import {useEffect} from 'react';
 import {IdentityProvidersFormValues} from '@/schemas/identity-provider-schema';
 import {SharedProvider, SharedProviderProps} from '@/components/shared/shared-provider';
-import OktaLogo from '@/assets/okta.svg?react';
-import DuoLogo from '@/assets/duo.png';
 import {Input} from '@/components/ui/input';
 import {PasswordInput} from '@/components/ui/password-input';
 import {IdentityProviders} from '@/types/providers';
+import {IconButton} from '@mui/material';
+import {Link, Tooltip, Typography} from '@outshift/spark-design';
+import {ExternalLinkIcon, InfoIcon} from 'lucide-react';
+import DuoLogo from '@/assets/duo.svg?react';
+import OktaLogo from '@/assets/okta.svg?react';
+import OasfLogo from '@/assets/oasf.svg?react';
 
 export const ProviderInfo = ({isLoading = false}: {isLoading?: boolean}) => {
   const {control, reset} = useFormContext<IdentityProvidersFormValues>();
@@ -24,18 +28,39 @@ export const ProviderInfo = ({isLoading = false}: {isLoading?: boolean}) => {
 
   const identityProviders: SharedProviderProps<IdentityProviders>[] = [
     {
-      type: IdentityProviders.OKTA,
-      name: 'Okta',
-      details: 'Identity and access management',
-      imgURI: <OktaLogo className="w-12 h-12" />,
+      type: IdentityProviders.DUO,
+      title: 'Duo',
+      imgURI: <DuoLogo />,
       isDisabled: isLoading
     },
     {
-      type: IdentityProviders.DUO,
-      name: 'DUO',
-      details: 'Multi-factor authentication',
-      imgURI: <img src={DuoLogo} className="w-12 h-12" />,
-      isDisabled: true
+      type: IdentityProviders.OKTA,
+      title: 'Okta',
+      imgURI: <OktaLogo />,
+      isDisabled: isLoading
+    },
+    {
+      type: IdentityProviders.OASF,
+      title: 'Agntcy',
+      imgURI: <OasfLogo />,
+      isDisabled: isLoading,
+      infoAction: (
+        <Tooltip
+          title="Agntcy is an open-source identity provider that allows you to manage your own identity and access management system."
+          placement="bottom"
+          arrow
+        >
+          <IconButton
+            sx={(theme) => ({
+              color: theme.palette.vars.baseTextDefault,
+              width: '24px',
+              height: '24px'
+            })}
+          >
+            <InfoIcon className="w-4 h-4" />
+          </IconButton>
+        </Tooltip>
+      )
     }
   ];
 
@@ -52,10 +77,18 @@ export const ProviderInfo = ({isLoading = false}: {isLoading?: boolean}) => {
   }, [metaData]);
 
   return (
-    <Card className="text-start py-4" variant="secondary">
-      <CardContent className="px-4 space-y-4">
+    <Card className="text-start py-4 bg-[#F5F8FD] rounded-[8px] p-[24px] space-y-4" variant="secondary">
+      <div className="flex justify-between items-center">
+        <Typography variant="subtitle1">Select identity provider</Typography>
+        <Link href="https://github.com/agntcy/identity?tab=readme-ov-file#step-3-register-as-an-issuer" openInNewTab>
+          <div className="flex items-center gap-1">
+            View documentation
+            <ExternalLinkIcon className="w-4 h-4 ml-1" />
+          </div>
+        </Link>
+      </div>
+      <CardContent className="space-y-4 p-0">
         <div className="space-y-2">
-          <FormLabel className="text-start font-semibold text-[14px]">1. Identity Provider</FormLabel>
           <FormField
             control={control}
             name="provider"
@@ -68,54 +101,51 @@ export const ProviderInfo = ({isLoading = false}: {isLoading?: boolean}) => {
                     ))}
                   </div>
                 </FormControl>
-                <FormDescription className="text-[12px]">Select your identity provider.</FormDescription>
-                <FormMessage />
               </FormItem>
             )}
           />
         </div>
-        <div className="space-y-2">
-          <FormLabel className="text-start font-semibold text-[14px]">2. Provider Details</FormLabel>
-          <div className="space-y-2">
+        <div className="space-y-2 pt-2">
+          <Typography variant="subtitle1">Provider details</Typography>
+          <div className="space-y-2 mt-4">
             <FormField
               control={control}
               name="issuer"
               render={({field}) => (
-                <FormItem>
+                <FormItem className="w-[50%]">
                   <FormLabel className="form-label">Issuer</FormLabel>
                   <FormControl>
-                    <Input placeholder="Issuer..." {...field} disabled={isLoading} />
+                    <Input placeholder="Type issuer name..." {...field} disabled={isLoading} />
                   </FormControl>
-                  <FormMessage />
                 </FormItem>
               )}
             />
-            <FormField
-              control={control}
-              name="clientId"
-              render={({field}) => (
-                <FormItem>
-                  <FormLabel className="form-label">Client ID</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Client ID..." {...field} disabled={isLoading} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={control}
-              name="clientSecret"
-              render={({field}) => (
-                <FormItem>
-                  <FormLabel className="form-label">Client Secret</FormLabel>
-                  <FormControl>
-                    <PasswordInput placeholder="Client Secret..." {...field} disabled={isLoading} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="flex gap-4 items-start pt-2">
+              <FormField
+                control={control}
+                name="clientId"
+                render={({field}) => (
+                  <FormItem className="w-[50%]">
+                    <FormLabel className="form-label">Client ID</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Type client ID..." {...field} disabled={isLoading} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={control}
+                name="clientSecret"
+                render={({field}) => (
+                  <FormItem className="w-[50%]">
+                    <FormLabel className="form-label">Client Secret</FormLabel>
+                    <FormControl>
+                      <PasswordInput placeholder="Type client Secret..." {...field} disabled={isLoading} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </div>
           </div>
         </div>
       </CardContent>

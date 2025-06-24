@@ -9,7 +9,7 @@ import {Tooltip, TooltipContent, TooltipTrigger} from '@/components/ui/tooltip';
 import {cn} from '@/lib/utils';
 import {PATHS} from '@/router/paths';
 import {Button} from '../ui/button';
-import {BoxesIcon, ChevronLeftIcon, LayoutDashboardIcon, SettingsIcon, SlidersHorizontalIcon} from 'lucide-react';
+import {BoxesIcon, ChevronLeftIcon, LayoutDashboardIcon, SlidersHorizontalIcon} from 'lucide-react';
 import '@/styles/side-nav.css';
 
 export const SideNav: React.FC<{isCollapsed?: boolean; onChangeCollapsed?: (value?: boolean) => void}> = ({isCollapsed, onChangeCollapsed}) => {

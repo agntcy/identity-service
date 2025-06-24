@@ -284,6 +284,7 @@ const AuthProvider: React.FC<React.PropsWithChildren> = ({children}) => {
       if (!isAutoRenew) {
         void updateAuthState();
       }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       try {
         if (!isAutoRenew) {

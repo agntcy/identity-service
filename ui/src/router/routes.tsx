@@ -19,7 +19,6 @@ const Applications = React.lazy(() => import('@/pages/applications/applications'
 const CreateApplication = React.lazy(() => import('@/pages/applications/create-application'));
 const SettingsIdentityProvider = React.lazy(() => import('@/pages/settings/settings-identity-provider'));
 const TermsAndConditions = React.lazy(() => import('@/pages/terms-and-conditions/terms-and-conditions'));
-const OnBoarding = React.lazy(() => import('@/pages/on-boarding/on-boarding'));
 const Dashboard = React.lazy(() => import('@/pages/dashboard/dashboard'));
 
 export const generateRoutes = (routes: Route[]): Route[] => {

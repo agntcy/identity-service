@@ -6,14 +6,51 @@
 import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
-import useAuth from '@/providers/auth-provider/use-auth';
 import {ChevronDownIcon, ChevronUpIcon, LogOutIcon} from 'lucide-react';
-import {Avatar, Button, Divider, Header, Menu, MenuItem, Typography} from '@outshift/spark-design';
+import {Avatar, Button, Divider, Header as SparkHeader, Menu, MenuItem, Typography} from '@outshift/spark-design';
 import Logo from '@/assets/logo-app-bar.svg';
 import BookLogo from '@/assets/union.svg?react';
 import GitLogo from '@/assets/git.svg?react';
 import UserIcon from '@/assets/user.svg';
 import {Link} from 'react-router-dom';
+import {useAuth} from '@/hooks';
+
+export const Header = () => {
+  return (
+    <SparkHeader
+      title={
+        <Typography variant="h1" fontWeight={700} fontSize="18px" lineHeight="18px" sx={(theme) => ({color: theme.palette.vars.brandTextSecondary})}>
+          Identity
+        </Typography>
+      }
+      logo={
+        <Link to={PATHS.dashboard}>
+          <img src={Logo} alt="Identity" />
+        </Link>
+      }
+      position="fixed"
+      actions={[
+        {
+          id: 'docs',
+          icon: <BookLogo />,
+          tooltip: 'View Documentation',
+          href: 'https://spec.identity.agntcy.org/',
+          'aria-label': 'documentation',
+          target: '_blank'
+        },
+        {
+          id: 'github',
+          icon: <GitLogo />,
+          tooltip: 'View GitHub',
+          href: 'https://github.com/agntcy/identity',
+          'aria-label': 'github',
+          target: '_blank'
+        }
+      ]}
+      userSection={<UserSection />}
+    />
+  );
+};
 
 const UserSection = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -73,42 +110,5 @@ const UserSection = () => {
         </MenuItem>
       </Menu>
     </>
-  );
-};
-
-export const AppBar = () => {
-  return (
-    <Header
-      title={
-        <Typography variant="h1" fontWeight={700} fontSize="18px" lineHeight="18px" sx={(theme) => ({color: theme.palette.vars.brandTextSecondary})}>
-          Identity
-        </Typography>
-      }
-      logo={
-        <Link to={PATHS.dashboard}>
-          <img src={Logo} alt="Identity" />
-        </Link>
-      }
-      position="fixed"
-      actions={[
-        {
-          id: 'docs',
-          icon: <BookLogo />,
-          tooltip: 'View Documentation',
-          href: 'https://spec.identity.agntcy.org/',
-          'aria-label': 'documentation',
-          target: '_blank'
-        },
-        {
-          id: 'github',
-          icon: <GitLogo />,
-          tooltip: 'View GitHub',
-          href: 'https://github.com/agntcy/identity',
-          'aria-label': 'github',
-          target: '_blank'
-        }
-      ]}
-      userSection={<UserSection />}
-    />
   );
 };

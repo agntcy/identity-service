@@ -3,10 +3,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import AuthContext from '@/providers/auth-provider/auth-context';
 import * as React from 'react';
-import AuthContext from './auth-context';
 
-const useAuth = () => {
+export const useAuth = () => {
   const context = React.useContext(AuthContext);
 
   if (process.env.NODE_ENV !== 'production') {
@@ -20,5 +20,3 @@ const useAuth = () => {
 
   return context;
 };
-
-export default useAuth;

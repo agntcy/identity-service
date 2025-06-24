@@ -12,12 +12,11 @@ import {validateForm} from '@/lib/utils';
 import {IdentityProvidersFormValues, IdentityProvidersSchema} from '@/schemas/identity-provider-schema';
 import {ProviderInfo} from './steps/provider-info';
 import {RegisterProvider} from './steps/register-provider';
-import {Card} from '@/components/ui/card';
 import {Form} from '@/components/ui/form';
 import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from '@/components/ui/accordion';
-import {Button} from '@/components/ui/button';
+import {ActivityTimeline, Button, Typography} from '@outshift/spark-design';
 
-export const CreateUpdateIdentityProvider: React.FC = () => {
+export const CreateUpdateIdentityProvider = () => {
   return (
     <StepperProvider variant="vertical" className="space-y-4">
       <FormStepperComponent />
@@ -103,58 +102,54 @@ const FormStepperComponent: React.FC = () => {
   }, [handleSelectProvider, methods]);
 
   return (
-    <Card className="p-6">
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <StepperPanel className="w-full">
-            <Accordion type="single" collapsible className="w-full" defaultValue={methods.get('providerInfo').id} value={methods.current.id}>
-              {methods.all.map((step) => {
-                return (
-                  <div className="flex gap-4 items-top -ml-1" key={step.id}>
-                    <StepperNavigation>
-                      <StepperStep of={step.id} onlyIcon />
-                    </StepperNavigation>
-                    <AccordionItem value={step.id} className="border-b-0 w-full">
-                      <AccordionTrigger className="pt-0 w-full cursor-default" useArrow={false}>
-                        <div className="w-full -mt-1">
-                          <p className="text-[#00142B] text-[18px] font-bold">{step.title}</p>
-                          <p className="text-muted-foreground text-[12px]">{step.description}</p>
-                        </div>
-                      </AccordionTrigger>
-                      <AccordionContent>
-                        {step.id === 'providerInfo' ? (
-                          <ProviderInfo isLoading={isLoading} />
-                        ) : step.id === 'registerProvider' ? (
-                          <RegisterProvider isLoading={isLoading} />
-                        ) : null}
-                        <div className="flex justify-between items-center">
-                          <div>
-                            {methods.isLast && (
-                              <Button variant="link" onClick={handleOnClear} className="cursor-pointer hover:no-underline">
-                                Clear
-                              </Button>
-                            )}
-                          </div>
-                          <StepperControls className="pt-4">
-                            {!methods.isFirst && (
-                              <Button variant="ghost" onClick={methods.prev} disabled={methods.isFirst || isLoading} className="cursor-pointer">
-                                Previous
-                              </Button>
-                            )}
-                            <Button type="submit" disabled={isLoading || !form.formState.isValid} className="cursor-pointer">
-                              {methods.isLast ? 'Register' : 'Next'}
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <StepperPanel className="w-full">
+          <Accordion type="single" collapsible className="w-full" defaultValue={methods.get('providerInfo').id} value={methods.current.id}>
+            {methods.all.map((step) => {
+              return (
+                <div className="flex gap-2 items-top -ml-1" key={step.id}>
+                  <StepperNavigation>
+                    <StepperStep of={step.id} onlyIcon />
+                  </StepperNavigation>
+                  <AccordionItem value={step.id} className="border-b-0 w-full">
+                    <AccordionTrigger className="pt-0 w-full cursor-default" useArrow={false}>
+                      <div className="w-full -mt-1">
+                        <Typography variant="h6" fontSize={18} sx={(theme) => ({color: theme.palette.vars.baseTextStrong})}>
+                          {step.title}
+                        </Typography>
+                        <Typography variant="body2">{step.description}</Typography>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      {step.id === 'providerInfo' ? (
+                        <ProviderInfo isLoading={isLoading} />
+                      ) : step.id === 'registerProvider' ? (
+                        <RegisterProvider isLoading={isLoading} />
+                      ) : null}
+                      <div className="flex justify-between items-center mt-2">
+                        <Button variant="tertariary" onClick={handleOnClear}>
+                          Cancel
+                        </Button>
+                        <StepperControls className="pt-4">
+                          {!methods.isFirst && (
+                            <Button variant="outlined" onClick={methods.prev} disabled={methods.isFirst || isLoading} className="cursor-pointer">
+                              Previous
                             </Button>
-                          </StepperControls>
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
-                  </div>
-                );
-              })}
-            </Accordion>
-          </StepperPanel>
-        </form>
-      </Form>
-    </Card>
+                          )}
+                          <Button type="submit" disabled={isLoading || !form.formState.isValid} className="cursor-pointer">
+                            {methods.isLast ? 'Register' : 'Next'}
+                          </Button>
+                        </StepperControls>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </div>
+              );
+            })}
+          </Accordion>
+        </StepperPanel>
+      </form>
+    </Form>
   );
 };
