@@ -32,7 +32,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@83b7061638ee4956cf7545a6f7efe594e5ad0247 # v3.5.1
+        uses: actions/checkout@production # v3.5.1
         with:
           # The branch, tag or SHA to checkout, otherwise, uses the default branch.
           ref: ${{ github.ref }}
@@ -59,7 +59,7 @@ jobs:
   call-docker-build-push:
     name: Call Docker Build
     needs: [ checkout-unit-tests ]
-    uses: cisco-eti/gh-reusable-workflows/.github/workflows/build-push-docker.yaml@main
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/build-push-docker.yaml@production
 
     secrets:
       # Only needed if with:ecr-enabled or with:gar-enabled is true below
@@ -72,7 +72,7 @@ jobs:
     with:
       ### REQUIRED 
       ### Docker image name
-      image-name: ${{ github.event.repository.name }}-bff
+      image-name: "eti-sre/${{ github.event.repository.name }}-bff"
           
       ### path to where docker should copy files into image
       ### defaults to root of repository (.)
@@ -83,6 +83,8 @@ jobs:
       ### REQUIRED
       ### ENABLE ONE OR BOTH REGISTRIES
       ### tell docker where to push.
+      ecr-enabled: true
+      artifactory-devhub-enabled: false
       ghcr-enabled: true
       ghcr-org-registry: ${{ vars.GHCR_REGISTRY }}
 
@@ -91,7 +93,7 @@ jobs:
   call-corona-blackduck-scan:
     name: Call Corona & Blackduck scan
     needs: [ call-docker-build-push ]
-    uses: cisco-eti/gh-reusable-workflows/.github/workflows/corona-blackduck-scan.yaml@main
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/corona-blackduck-scan.yaml@production
 
     secrets:
       vault-approle-role-id: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
@@ -116,5 +118,5 @@ jobs:
       corona-image-admins: ${{ vars.CORONA_IMAGE_ADMINS }}
       ghcr-org-registry: ${{ vars.GHCR_REGISTRY }}
       # optional
-      image-name: ${{ github.event.repository.name }}-bff
-      #image-tag: "" 
+      image-name: "eti-sre/${{ github.event.repository.name }}-bff"
+      image-tag: "dev-${{ github.sha }}"
