@@ -50,6 +50,7 @@ export const ContentApiKey: React.FC = () => {
       error={error}
       isLoading={isLoading || isFetching}
       useRelativeLoader
+      useContainer
       emptyListStateProps={{
         actionCallback: () => {
           setApiKeyMutation.mutate();
@@ -65,7 +66,14 @@ export const ContentApiKey: React.FC = () => {
     >
       <Card className="flex justify-between items-center w-full">
         <div className="flex gap-4 items-center">
-          <Typography variant="body2">{data?.apiKey?.apiKey ? `${data.apiKey.apiKey.slice(0, -5)}*****` : 'No API Key available'}</Typography>
+          <div className="flex gap-2 items-center">
+            <Typography variant="body2" fontWeight={600}>
+              API Key:
+            </Typography>
+            <Typography variant="body2">
+              {data?.apiKey?.apiKey ? `${'*'.repeat(55)}${data.apiKey.apiKey.slice(-3)}` : 'No API Key available'}
+            </Typography>
+          </div>
           <CopyButton
             text={data?.apiKey?.apiKey || ''}
             onCopy={() => {

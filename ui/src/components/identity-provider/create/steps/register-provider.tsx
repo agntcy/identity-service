@@ -29,7 +29,7 @@ export const RegisterProvider = ({isLoading = false}: {isLoading?: boolean}) => 
   const stats: Stat[] = useMemo(() => {
     const temp: Stat[] = [];
     temp.push({
-      title: 'Type',
+      title: 'Provider Type',
       value: labels.providerTypes[provider as keyof typeof labels.providerTypes] || 'Not provided'
     });
     if (provider === IdpType.IDP_TYPE_DUO) {

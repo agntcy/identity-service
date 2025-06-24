@@ -86,7 +86,7 @@ const Dashboard: React.FC = () => {
               <div className="bg-[#FBFCFE] rounded-[8px] pt-[40px] pb-[24px] flex justify-center items-center px-4  w-[50%]">
                 <div>
                   <Typography variant="h6" textAlign="center">
-                    Configure Identity Provider
+                    Configure identity provider
                   </Typography>
                   <Typography variant="body1" marginTop={2} textAlign="center">
                     Start by setting up your identity provider to manage identities effectively. This is essential for applying tool-based access

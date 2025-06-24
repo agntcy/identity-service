@@ -6,9 +6,8 @@
 import type {ReactNode} from 'react';
 import React from 'react';
 import {LoaderRelative, Loading} from './loading';
-import {Card} from './card';
 import {parseError} from '@/utils/api';
-import {EmptyState, EmptyStateProps} from '@outshift/spark-design';
+import {Card, EmptyState, EmptyStateProps} from '@outshift/spark-design';
 import {cn} from '@/lib/utils';
 
 interface UnreadyStateType {
@@ -89,7 +88,7 @@ export const ConditionalQueryRenderer: React.FC<React.PropsWithChildren<Conditio
   const unreadyResult = getUnreadyStateUI();
 
   if (useContainer && unreadyResult) {
-    return <Card className={cn('flex flex-col gap-2 items-center my-12 px-4', classNameContainer, useSkeleton && 'block p-0')}>{unreadyResult}</Card>;
+    return <Card className={cn('flex flex-col gap-2 items-center px-4', classNameContainer, useSkeleton && 'block p-0')}>{unreadyResult}</Card>;
   }
 
   if (unreadyResult) {

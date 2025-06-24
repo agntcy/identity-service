@@ -60,7 +60,8 @@ export const StatDisplay: React.FC<Stat> = ({icon, title, value, description, ba
         ) : (
           <>
             <div className="flex flex-wrap items-center gap-2">
-              {value && <div className="font-sans font-bold text-sm leading-5 tracking-normal text-left text-[#3C4551]">{value}</div>}
+              {value}
+              {/* {value && <div className="font-sans font-bold text-sm leading-5 tracking-normal text-left text-[#3C4551]">{value}</div>} */}
               {badge}
             </div>
             {description && (

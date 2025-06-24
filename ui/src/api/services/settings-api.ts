@@ -61,6 +61,7 @@ class SettingsAPIClass extends SettingsApi.Api<Settings> {
   };
 
   public setAuthInfo = (authInfo?: AuthInfo) => {
+    this.instance.defaults.timeout = 15000; // Set a default timeout of 15 seconds
     this.authInfo = authInfo;
     this.instance.interceptors.request.use(this.reqResInterceptor, this.reqErrInterceptor);
     this.instance.interceptors.response.use(this.resResInterceptor, this.resErrInterceptor);
