@@ -1,0 +1,110 @@
+// Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package agntcy.identity.platform.v1alpha1;
+
+import "agntcy/identity/platform/v1alpha1/app.proto";
+import "agntcy/identity/platform/v1alpha1/auth.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_go";
+
+// AuthService manages auth.
+service AuthService {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_tag) = {name: "Auth"};
+  // App info endpoint
+  rpc AppInfo(google.protobuf.Empty) returns (AppInfoResponse) {
+    option (google.api.http) = {get: "/v1alpha1/auth/app_info"};
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "AppInfo";
+      summary: "Get App Info";
+    };
+  }
+
+  // Authorize a request from an Agent or MCP Server
+  rpc Authorize(AuthorizeRequest) returns (AuthorizeResponse) {
+    option (google.api.http) = {get: "/v1alpha1/auth/authorize"};
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "Authorize";
+      summary: "Authorize a request from an Agent or MCP Server";
+    };
+  }
+
+  // Request token for an Agent or MCP Server
+  rpc Token(TokenRequest) returns (TokenResponse) {
+    option (google.api.http) = {post: "/v1alpha1/auth/token"};
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "RequestToken";
+      summary: "Request token for an Agent or MCP Server";
+    };
+  }
+
+  // Handle external authorization requests
+  rpc ExtAuthz(google.protobuf.Empty) returns (google.protobuf.Empty) {
+    option (google.api.http) = {post: "/v1alpha1/auth/ext_authz"};
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "ExtAuthz";
+      summary: "Handle external authorization requests";
+    };
+  }
+
+  // Register new user device for approval flow
+  rpc RegisterDevice(RegisterDeviceRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {post: "/v1alpha1/auth/register_device"};
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "RegisterDevice";
+      summary: "Register new user device for approval flow";
+    };
+  }
+}
+
+message AppInfoResponse {
+  // The App information.
+  App app = 1;
+}
+
+message AuthorizeRequest {
+  // The app id for which authorization is requested.
+  string app_id = 1;
+
+  // The MCP Server tool name.
+  optional string tool_name = 2;
+
+  // The User context in the form of an id or access token.
+  // Mandatory for User Approval Flows.
+  optional string user_token = 3;
+}
+
+message AuthorizeResponse {
+  // If authorization is successful, return a code to be used for
+  // the token endpoint.
+  string code = 1;
+}
+
+message TokenRequest {
+  // Pass the code received from the authorization endpoint.
+  string code = 1;
+}
+
+message TokenResponse {
+  // The token issued to the Agent or MCP Server.
+  Token token = 1;
+}
+
+message RegisterDeviceRequest {
+  // The User context in the form of an id or access token.
+  // Mandatory for User Approval Flows.
+  string user_token = 1;
+
+  // The device information to register.
+  Device device = 2;
+}

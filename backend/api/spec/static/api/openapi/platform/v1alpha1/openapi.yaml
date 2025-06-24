@@ -191,6 +191,485 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /v1alpha1/apps/{appId}/badges:
+        post:
+            tags:
+                - BadgeService
+            description: Create a new App.
+            operationId: BadgeService_IssueBadge
+            parameters:
+                - name: appId
+                  in: path
+                  description: App Id.
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/IssueBadgeRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Badge'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1alpha1/auth/app_info:
+        get:
+            tags:
+                - AuthService
+            description: App info endpoint
+            operationId: AuthService_AppInfo
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/AppInfoResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1alpha1/auth/authorize:
+        get:
+            tags:
+                - AuthService
+            description: Authorize a request from an Agent or MCP Server
+            operationId: AuthService_Authorize
+            parameters:
+                - name: appId
+                  in: query
+                  description: The app id for which authorization is requested.
+                  schema:
+                    type: string
+                - name: toolName
+                  in: query
+                  description: The MCP Server tool name.
+                  schema:
+                    type: string
+                - name: userToken
+                  in: query
+                  description: |-
+                    The User context in the form of an id or access token.
+                     Mandatory for User Approval Flows.
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/AuthorizeResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1alpha1/auth/ext_authz:
+        post:
+            tags:
+                - AuthService
+            description: Handle external authorization requests
+            operationId: AuthService_ExtAuthz
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1alpha1/auth/register_device:
+        post:
+            tags:
+                - AuthService
+            description: Register new user device for approval flow
+            operationId: AuthService_RegisterDevice
+            parameters:
+                - name: userToken
+                  in: query
+                  description: |-
+                    The User context in the form of an id or access token.
+                     Mandatory for User Approval Flows.
+                  schema:
+                    type: string
+                - name: device.id
+                  in: query
+                  description: A unique identifier for the Device.
+                  schema:
+                    type: string
+                - name: device.userId
+                  in: query
+                  description: User ID associated with the Device.
+                  schema:
+                    type: string
+                - name: device.subscriptionToken
+                  in: query
+                  description: Subscription Token for the Device.
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1alpha1/auth/token:
+        post:
+            tags:
+                - AuthService
+            description: Request token for an Agent or MCP Server
+            operationId: AuthService_Token
+            parameters:
+                - name: code
+                  in: query
+                  description: Pass the code received from the authorization endpoint.
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/TokenResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1alpha1/policies:
+        get:
+            tags:
+                - PolicyService
+            description: List Policies.
+            operationId: PolicyService_ListPolicies
+            parameters:
+                - name: page
+                  in: query
+                  description: The current page of the pagination
+                  schema:
+                    type: integer
+                    format: int32
+                - name: size
+                  in: query
+                  description: The page size of the pagination
+                  schema:
+                    type: integer
+                    format: int32
+                - name: query
+                  in: query
+                  description: The search query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListPoliciesResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - PolicyService
+            description: Create a new Policy.
+            operationId: PolicyService_CreatePolicy
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Policy'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Policy'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1alpha1/policies/{policyId}:
+        get:
+            tags:
+                - PolicyService
+            description: Get Policy by id
+            operationId: PolicyService_GetPolicy
+            parameters:
+                - name: policyId
+                  in: path
+                  description: Policy Id to get.
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Policy'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - PolicyService
+            description: Delete an existing Policy.
+            operationId: PolicyService_DeletePolicy
+            parameters:
+                - name: policyId
+                  in: path
+                  description: Policy Id to delete.
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        patch:
+            tags:
+                - PolicyService
+            description: Update a Policy.
+            operationId: PolicyService_UpdatePolicy
+            parameters:
+                - name: policyId
+                  in: path
+                  description: Policy Id to update.
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Policy'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Policy'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1alpha1/policies/{policyId}/rules:
+        get:
+            tags:
+                - PolicyService
+            description: List Rules.
+            operationId: PolicyService_ListRules
+            parameters:
+                - name: policyId
+                  in: path
+                  description: The Policy Id to which these Rules belong.
+                  required: true
+                  schema:
+                    type: string
+                - name: page
+                  in: query
+                  description: The current page of the pagination
+                  schema:
+                    type: integer
+                    format: int32
+                - name: size
+                  in: query
+                  description: The page size of the pagination
+                  schema:
+                    type: integer
+                    format: int32
+                - name: query
+                  in: query
+                  description: The search query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListRulesResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - PolicyService
+            description: Create a new Rule.
+            operationId: PolicyService_CreateRule
+            parameters:
+                - name: policyId
+                  in: path
+                  description: The Policy Id to which these Rules belong.
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Rule'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Rule'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1alpha1/policies/{policyId}/rules/{ruleId}:
+        get:
+            tags:
+                - PolicyService
+            description: Get Rule by id
+            operationId: PolicyService_GetRule
+            parameters:
+                - name: policyId
+                  in: path
+                  description: The Policy Id to which these Rules belong.
+                  required: true
+                  schema:
+                    type: string
+                - name: ruleId
+                  in: path
+                  description: Rule Id to get.
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Rule'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - PolicyService
+            description: Delete an existing Rule.
+            operationId: PolicyService_DeleteRule
+            parameters:
+                - name: policyId
+                  in: path
+                  description: The Policy Id to which these Rules belong.
+                  required: true
+                  schema:
+                    type: string
+                - name: ruleId
+                  in: path
+                  description: Rule Id to delete.
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        patch:
+            tags:
+                - PolicyService
+            description: Update a Rule.
+            operationId: PolicyService_UpdateRule
+            parameters:
+                - name: policyId
+                  in: path
+                  description: The Policy Id to which these Rules belong.
+                  required: true
+                  schema:
+                    type: string
+                - name: ruleId
+                  in: path
+                  description: Rule Id to update.
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Rule'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Rule'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /v1alpha1/settings:
         get:
             tags:
@@ -235,56 +714,12 @@ paths:
                 - SettingsService
             description: Set up Issuer
             operationId: SettingsService_SetIssuer
-            parameters:
-                - name: issuerSettings.issuerId
-                  in: query
-                  description: |-
-                    A unique identifier for the Issuer.
-                     This is typically the Issuer's ID in the Identity.
-                  schema:
-                    type: string
-                - name: issuerSettings.keyId
-                  in: query
-                  description: |-
-                    A unique identifier for the Key.
-                     This is typically the Key's ID in the vault provider.
-                  schema:
-                    type: string
-                - name: issuerSettings.idpType
-                  in: query
-                  description: The type of the IdP.
-                  schema:
-                    enum:
-                        - IDP_TYPE_UNSPECIFIED
-                        - IDP_TYPE_DUO
-                        - IDP_TYPE_OKTA
-                        - IDP_TYPE_SELF
-                    type: string
-                    format: enum
-                - name: issuerSettings.duoIdpSettings.hostname
-                  in: query
-                  schema:
-                    type: string
-                - name: issuerSettings.duoIdpSettings.integrationKey
-                  in: query
-                  schema:
-                    type: string
-                - name: issuerSettings.duoIdpSettings.secretKey
-                  in: query
-                  schema:
-                    type: string
-                - name: issuerSettings.oktaIdpSettings.orgUrl
-                  in: query
-                  schema:
-                    type: string
-                - name: issuerSettings.oktaIdpSettings.clientId
-                  in: query
-                  schema:
-                    type: string
-                - name: issuerSettings.oktaIdpSettings.privateKey
-                  in: query
-                  schema:
-                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/SetIssuerRequest'
+                required: true
             responses:
                 "200":
                     description: OK
@@ -327,7 +762,17 @@ components:
                     type: string
                     description: The type of the App.
                     format: enum
+                resolverMetadataID:
+                    type: string
+                    description: The DID value
             description: Identity Platform App.
+        AppInfoResponse:
+            type: object
+            properties:
+                app:
+                    allOf:
+                        - $ref: '#/components/schemas/App'
+                    description: The App information.
         AppTypeCountEntry:
             type: object
             properties:
@@ -343,6 +788,51 @@ components:
                 value:
                     type: string
                     description: The count of apps of the given type
+        AuthorizeResponse:
+            type: object
+            properties:
+                code:
+                    type: string
+                    description: |-
+                        If authorization is successful, return a code to be used for
+                         the token endpoint.
+        Badge:
+            type: object
+            properties:
+                verifiableCredential:
+                    $ref: '#/components/schemas/VerifiableCredential'
+                appID:
+                    type: string
+        BadgeClaims:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: |-
+                        The ID as defined [here]
+
+                         [here]: https://www.w3.org/TR/vc-data-model/#credential-subject
+                badge:
+                    type: string
+                    description: The content of the badge
+            description: |-
+                BadgeClaims represents the content of a Badge VC defined [here]
+
+                 [here]: https://spec.identity.agntcy.org/docs/vc/intro/
+        CredentialSchema:
+            type: object
+            properties:
+                type:
+                    type: string
+                    description: Type specifies the type of the file
+                id:
+                    type: string
+                    description: The URL identifying the schema file
+            description: |-
+                CredentialSchema represents the credentialSchema property of a Verifiable Credential.
+                 more information can be found [here]
+
+                 [here]: https://www.w3.org/TR/vc-data-model-2.0/#data-schemas
         DuoIdpSettings:
             type: object
             properties:
@@ -369,6 +859,28 @@ components:
                     description: The type of the serialized message.
             additionalProperties: true
             description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        IssueA2ABadgeRequest:
+            type: object
+            properties:
+                wellKnownUrl:
+                    type: string
+        IssueBadgeRequest:
+            type: object
+            properties:
+                appId:
+                    type: string
+                    description: App Id.
+                a2a:
+                    $ref: '#/components/schemas/IssueA2ABadgeRequest'
+                mcp:
+                    $ref: '#/components/schemas/IssueMcpBadgeRequest'
+        IssueMcpBadgeRequest:
+            type: object
+            properties:
+                name:
+                    type: string
+                url:
+                    type: string
         IssuerSettings:
             type: object
             properties:
@@ -412,6 +924,30 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/PagedResponse'
                     description: Pagination response.
+        ListPoliciesResponse:
+            type: object
+            properties:
+                policies:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Policy'
+                    description: A list of Policies.
+                pagination:
+                    allOf:
+                        - $ref: '#/components/schemas/PagedResponse'
+                    description: Pagination response.
+        ListRulesResponse:
+            type: object
+            properties:
+                rules:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Rule'
+                    description: A list of Rules.
+                pagination:
+                    allOf:
+                        - $ref: '#/components/schemas/PagedResponse'
+                    description: Pagination response.
         OktaIdpSettings:
             type: object
             properties:
@@ -440,6 +976,72 @@ components:
                     description: The size of the current page
                     format: int32
             description: Pagination response
+        Policy:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: A unique identifier for the App.
+                name:
+                    type: string
+                    description: A human-readable name for the App.
+                description:
+                    type: string
+                    description: A human-readable description for the App.
+                rules:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Rule'
+                    description: All the rules that apply to this Policy.
+            description: Identity Platform Policy.
+        Proof:
+            type: object
+            properties:
+                type:
+                    type: string
+                    description: The type of the proof
+                proofPurpose:
+                    type: string
+                    description: The proof purpose
+                proofValue:
+                    type: string
+                    description: The proof value
+            description: |-
+                A data integrity proof provides information about the proof mechanism,
+                 parameters required to verify that proof, and the proof value itself.
+        Rule:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: A unique identifier for the App.
+                name:
+                    type: string
+                    description: A human-readable name for the App.
+                description:
+                    type: string
+                    description: A human-readable description for the App.
+                assignedTo:
+                    type: string
+                    description: The requester application that this Rule applies to.
+                tasks:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Task'
+                    description: The tasks that this Rule applies to.
+                needsApproval:
+                    type: boolean
+                    description: Need User Approval for this Rule.
+            description: Identity Platform Policy Rule
+        SetIssuerRequest:
+            required:
+                - issuerSettings
+            type: object
+            properties:
+                issuerSettings:
+                    allOf:
+                        - $ref: '#/components/schemas/IssuerSettings'
+                    description: The Issuer Settings to set up.
         Settings:
             type: object
             properties:
@@ -468,6 +1070,81 @@ components:
                         $ref: '#/components/schemas/GoogleProtobufAny'
                     description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
             description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        Task:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: A unique identifier for the Task.
+                name:
+                    type: string
+                    description: A human-readable name for the Task.
+                appId:
+                    type: string
+                    description: An application ID for the Task.
+                toolName:
+                    type: string
+                    description: A tool name for the Task.
+            description: Identity Platform Policy Task
+        Token:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: A unique identifier for the Token.
+                value:
+                    type: string
+                    description: Token value.
+            description: Identity Platform Token
+        TokenResponse:
+            type: object
+            properties:
+                token:
+                    allOf:
+                        - $ref: '#/components/schemas/Token'
+                    description: The token issued to the Agent or MCP Server.
+        VerifiableCredential:
+            type: object
+            properties:
+                context:
+                    type: array
+                    items:
+                        type: string
+                    description: https://www.w3.org/TR/vc-data-model/#contexts
+                type:
+                    type: array
+                    items:
+                        type: string
+                    description: https://www.w3.org/TR/vc-data-model/#dfn-type
+                issuer:
+                    type: string
+                    description: https://www.w3.org/TR/vc-data-model/#issuer
+                credentialSubject:
+                    allOf:
+                        - $ref: '#/components/schemas/BadgeClaims'
+                    description: https://www.w3.org/TR/vc-data-model/#credential-subject
+                id:
+                    type: string
+                    description: https://www.w3.org/TR/vc-data-model/#identifiers
+                issuanceDate:
+                    type: string
+                    description: https://www.w3.org/TR/vc-data-model/#issuance-date
+                expirationDate:
+                    type: string
+                    description: https://www.w3.org/TR/vc-data-model/#expiration
+                credentialSchema:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/CredentialSchema'
+                    description: https://www.w3.org/TR/vc-data-model-2.0/#data-schemas
+                proof:
+                    allOf:
+                        - $ref: '#/components/schemas/Proof'
+                    description: https://w3id.org/security#proof
+            description: |-
+                DataModel represents the W3C Verifiable Credential Data Model defined [here]
+
+                 [here]: https://www.w3.org/TR/vc-data-model/
     headers:
         "":
     securitySchemes:
@@ -487,5 +1164,11 @@ security:
 tags:
     - name: AppService
       description: AppService manages apps.
+    - name: AuthService
+      description: AuthService manages auth.
+    - name: BadgeService
+      description: BadgeService manages badges.
+    - name: PolicyService
+      description: PolicyService manages policy.
     - name: SettingsService
       description: SettingsService manages settings.

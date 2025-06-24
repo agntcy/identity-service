@@ -86,13 +86,15 @@ type App struct {
 	// A unique identifier for the App.
 	Id *string `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
 	// A human-readable name for the App.
-	Name *string `protobuf:"bytes,4,opt,name=name,proto3,oneof" json:"name,omitempty"`
+	Name *string `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
 	// A human-readable description for the App.
-	Description *string `protobuf:"bytes,5,opt,name=description,proto3,oneof" json:"description,omitempty"`
+	Description *string `protobuf:"bytes,3,opt,name=description,proto3,oneof" json:"description,omitempty"`
 	// The type of the App.
-	Type          *AppType `protobuf:"varint,6,opt,name=type,proto3,enum=agntcy.identity.platform.v1alpha1.AppType,oneof" json:"type,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	Type *AppType `protobuf:"varint,4,opt,name=type,proto3,enum=agntcy.identity.platform.v1alpha1.AppType,oneof" json:"type,omitempty"`
+	// The DID value
+	ResolverMetadataID *string `protobuf:"bytes,5,opt,name=resolverMetadataID,proto3,oneof" json:"resolverMetadataID,omitempty"`
+	unknownFields      protoimpl.UnknownFields
+	sizeCache          protoimpl.SizeCache
 }
 
 func (x *App) Reset() {
@@ -153,20 +155,29 @@ func (x *App) GetType() AppType {
 	return AppType_APP_TYPE_UNSPECIFIED
 }
 
+func (x *App) GetResolverMetadataID() string {
+	if x != nil && x.ResolverMetadataID != nil {
+		return *x.ResolverMetadataID
+	}
+	return ""
+}
+
 var File_agntcy_identity_platform_v1alpha1_app_proto protoreflect.FileDescriptor
 
 const file_agntcy_identity_platform_v1alpha1_app_proto_rawDesc = "" +
 	"\n" +
-	"+agntcy/identity/platform/v1alpha1/app.proto\x12!agntcy.identity.platform.v1alpha1\"\xc8\x01\n" +
+	"+agntcy/identity/platform/v1alpha1/app.proto\x12!agntcy.identity.platform.v1alpha1\"\x94\x02\n" +
 	"\x03App\x12\x13\n" +
 	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x17\n" +
-	"\x04name\x18\x04 \x01(\tH\x01R\x04name\x88\x01\x01\x12%\n" +
-	"\vdescription\x18\x05 \x01(\tH\x02R\vdescription\x88\x01\x01\x12C\n" +
-	"\x04type\x18\x06 \x01(\x0e2*.agntcy.identity.platform.v1alpha1.AppTypeH\x03R\x04type\x88\x01\x01B\x05\n" +
+	"\x04name\x18\x02 \x01(\tH\x01R\x04name\x88\x01\x01\x12%\n" +
+	"\vdescription\x18\x03 \x01(\tH\x02R\vdescription\x88\x01\x01\x12C\n" +
+	"\x04type\x18\x04 \x01(\x0e2*.agntcy.identity.platform.v1alpha1.AppTypeH\x03R\x04type\x88\x01\x01\x123\n" +
+	"\x12resolverMetadataID\x18\x05 \x01(\tH\x04R\x12resolverMetadataID\x88\x01\x01B\x05\n" +
 	"\x03_idB\a\n" +
 	"\x05_nameB\x0e\n" +
 	"\f_descriptionB\a\n" +
-	"\x05_type*s\n" +
+	"\x05_typeB\x15\n" +
+	"\x13_resolverMetadataID*s\n" +
 	"\aAppType\x12\x18\n" +
 	"\x14APP_TYPE_UNSPECIFIED\x10\x00\x12\x16\n" +
 	"\x12APP_TYPE_AGENT_A2A\x10\x01\x12\x17\n" +

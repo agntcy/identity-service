@@ -32,12 +32,16 @@ const (
 )
 
 type OktaIdp struct {
-	IdpSettings *types.OktaIdpSettings
-	api         *oktasdk.APIClient
+	settings *types.OktaIdpSettings
+	api      *oktasdk.APIClient
+}
+
+func NewOktaIdp(settings *types.OktaIdpSettings) Idp {
+	return &OktaIdp{settings: settings}
 }
 
 func (d *OktaIdp) TestSettings(ctx context.Context) error {
-	if d.IdpSettings == nil {
+	if d.settings == nil {
 		return errutil.Err(
 			nil,
 			"okta idp settings are not configured",
@@ -47,8 +51,8 @@ func (d *OktaIdp) TestSettings(ctx context.Context) error {
 	// Attempt to create a new Okta API client configuration
 	config, err := oktasdk.NewConfiguration(
 		oktasdk.WithAuthorizationMode(oktaAuthorization),
-		oktasdk.WithOrgUrl(d.IdpSettings.OrgUrl),
-		oktasdk.WithClientId(d.IdpSettings.ClientID),
+		oktasdk.WithOrgUrl(d.settings.OrgUrl),
+		oktasdk.WithClientId(d.settings.ClientID),
 		oktasdk.WithScopes(strings.Split(oktaScopes, ",")),
 		oktasdk.WithPrivateKey(d.getPrivateKey()),
 		oktasdk.WithRequestTimeout(oktaTimeout),
@@ -120,7 +124,7 @@ func (d *OktaIdp) CreateClientCredentialsPair(
 
 	return &ClientCredentials{
 		ClientID:     *application.OpenIdConnectApplication.GetCredentials().OauthClient.ClientId,
-		Issuer:       fmt.Sprintf("%s/oauth2/default", d.IdpSettings.OrgUrl),
+		Issuer:       fmt.Sprintf("%s/oauth2/default", d.settings.OrgUrl),
 		ClientSecret: *application.OpenIdConnectApplication.GetCredentials().OauthClient.ClientSecret,
 	}, nil
 }
@@ -145,12 +149,12 @@ func (d *OktaIdp) DeleteClientCredentialsPair(
 }
 
 func (d *OktaIdp) getPrivateKey() string {
-	if d.IdpSettings == nil || d.IdpSettings.PrivateKey == "" {
+	if d.settings == nil || d.settings.PrivateKey == "" {
 		return ""
 	}
 
 	// Create api key
-	rawKey := strutil.TrimSpaceAndNewline(d.IdpSettings.PrivateKey)
+	rawKey := strutil.TrimSpaceAndNewline(d.settings.PrivateKey)
 	size := len(rawKey) / oktaPrivateKeyLineSize
 
 	if size < oktaMinKeyLines {

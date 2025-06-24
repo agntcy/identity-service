@@ -15,12 +15,17 @@ import (
 	"github.com/agntcy/identity-platform/internal/bff"
 	bffgrpc "github.com/agntcy/identity-platform/internal/bff/grpc"
 	apppg "github.com/agntcy/identity-platform/internal/core/app/postgres"
+	badgea2a "github.com/agntcy/identity-platform/internal/core/badge/a2a"
+	badgemcp "github.com/agntcy/identity-platform/internal/core/badge/mcp"
+	badgepg "github.com/agntcy/identity-platform/internal/core/badge/postgres"
 	identitycore "github.com/agntcy/identity-platform/internal/core/identity"
+	idpcore "github.com/agntcy/identity-platform/internal/core/idp"
 	"github.com/agntcy/identity-platform/internal/core/issuer"
 	settingspg "github.com/agntcy/identity-platform/internal/core/settings/postgres"
 	"github.com/agntcy/identity-platform/internal/pkg/grpcutil"
 	outshiftiam "github.com/agntcy/identity-platform/internal/pkg/iam"
 	"github.com/agntcy/identity-platform/internal/pkg/interceptors"
+	"github.com/agntcy/identity-platform/internal/pkg/vault"
 	"github.com/agntcy/identity-platform/pkg/cmd"
 	"github.com/agntcy/identity-platform/pkg/db"
 	"github.com/agntcy/identity-platform/pkg/grpcserver"
@@ -97,6 +102,7 @@ func main() {
 	err = dbContext.AutoMigrate(
 		&apppg.App{},                 // App model
 		&settingspg.IssuerSettings{}, // Issuer settings model
+		&badgepg.Badge{},
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -150,33 +156,80 @@ func main() {
 	// Create repositories
 	appRepository := apppg.NewRepository(dbContext)
 	settingsRepository := settingspg.NewRepository(dbContext)
+	badgeRepository := badgepg.NewRepository(dbContext)
 
-	// Identity service
-	identityService := identitycore.NewService(
+	// Get the token depending on the environment
+	token := ""
+	if config.GoEnv != "production" {
+		// In dev mode, we use the root token
+		token = os.Getenv("VAULT_DEV_ROOT_TOKEN")
+	}
+
+	vaultClient, err := vault.NewHashicorpVaultService(
 		config.VaultHost,
 		config.VaultPort,
 		config.VaultUseSsl,
+		token, // This should be set in dev mode only
+	)
+	if err != nil {
+		log.Fatal("unable to create vault client ", err)
+	}
+
+	idpFactory := idpcore.NewFactory()
+	credentialStore := idpcore.NewCredentialStore(vaultClient)
+	keyStore, err := identitycore.NewVaultKeyStore(
+		config.VaultHost,
+		config.VaultPort,
+		config.VaultUseSsl,
+		token, // This should be set in dev mode only
+	)
+	if err != nil {
+		log.Fatal("unable to create vault key store ", err)
+	}
+
+	// Identity service
+	identityService := identitycore.NewService(
 		config.IdentityHost,
 		config.IdentityPort,
-		config.GoEnv,
+		keyStore,
 	)
+
+	a2aClient := badgea2a.NewDiscoveryClient()
+	mcpClient := badgemcp.NewDiscoveryClient()
 
 	// Create internal services
 	appSrv := bff.NewAppService(
 		appRepository,
+		settingsRepository,
+		identityService,
+		idpFactory,
+		credentialStore,
 	)
 	issuerSrv := issuer.NewService(
 		identityService,
+		idpFactory,
+		credentialStore,
 	)
 	settingsSrv := bff.NewSettingsService(
 		issuerSrv,
 		iamClient,
 		settingsRepository,
 	)
+	badgeSrv := bff.NewBadgeService(
+		settingsRepository,
+		appRepository,
+		badgeRepository,
+		a2aClient,
+		mcpClient,
+		keyStore,
+		identityService,
+		credentialStore,
+	)
 
 	register := identity_platform_api.GrpcServiceRegister{
 		AppServiceServer:      bffgrpc.NewAppService(appSrv),
 		SettingsServiceServer: bffgrpc.NewSettingsService(settingsSrv),
+		BadgeServiceServer:    bffgrpc.NewBadgeService(badgeSrv),
 	}
 
 	register.RegisterGrpcHandlers(grpcsrv.Server)

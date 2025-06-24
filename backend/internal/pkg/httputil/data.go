@@ -34,7 +34,9 @@ func GetWithRawBody(
 		return err
 	}
 
-	defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close()
+	}()
 
 	// Read and parse data
 	body, _ := io.ReadAll(resp.Body)
