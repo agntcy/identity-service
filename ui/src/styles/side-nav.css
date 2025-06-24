@@ -5,8 +5,8 @@
 
 .side-bar {
   border-right: 1px solid #D5DFF7;
-  padding-top: 32px;
-  padding-right: 12px;
+  padding-top: 24px;
+  /* padding-right: 12px; */
   padding-bottom: 64px;
   padding-left: 12px;
 }
@@ -25,4 +25,24 @@
   border: 2px solid #FBAF45;
   height: 32px !important;
   width: 32px !important;
+}
+
+.organization-drawer {
+  box-shadow: 4px 0px 4px 0px #C8D5F51A;
+  box-shadow: 8px 0px 12px 0px #C8D5F51A;
+  border-right: 1px solid #D5DFF7;
+}
+
+.custom-border-org {
+  border-width: 1px, 0px, 1px, 1px;
+  border-style: solid;
+  border-color: #D5DFF7;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+  border-top-width: 1px;
+  border-bottom-width: 1px;
+  border-left-width: 1px;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+  border-right: 0px;
 }

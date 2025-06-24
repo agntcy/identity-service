@@ -10,6 +10,8 @@ import {Toaster} from '@outshift/spark-design';
 import {ErrorPage} from './components/router/error-page';
 import AuthProvider from './providers/auth-provider/auth-provider';
 import {ThemeProvider} from './providers/theme-provider/theme-provider';
+import {ApiProvider} from './providers/api-provider/api-provider';
+import {QueryProvider} from './providers/query-provider/query-provider';
 
 const App = () => {
   return (
@@ -17,8 +19,12 @@ const App = () => {
       <ErrorBoundary fallbackRender={(props) => <ErrorPage {...props} />}>
         <HelmetProvider>
           <AuthProvider>
-            <Toaster />
-            <Router />
+            <ApiProvider>
+              <QueryProvider>
+                <Toaster />
+                <Router />
+              </QueryProvider>
+            </ApiProvider>
           </AuthProvider>
         </HelmetProvider>
       </ErrorBoundary>
