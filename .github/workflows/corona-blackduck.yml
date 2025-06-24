@@ -16,7 +16,7 @@ permissions: read-all
 jobs:
   security-scan:
     name: Run Security Scans
-    uses: ./.github/workflows/corona-blackduck-scan.yaml
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/corona-blackduck-scan.yaml@production
     permissions:
       contents: read
       pull-requests: write
