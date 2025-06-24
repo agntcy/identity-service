@@ -72,7 +72,7 @@ jobs:
     with:
       ### REQUIRED 
       ### Docker image name
-      image-name: ${{ github.event.repository.name }}
+      image-name: ${{ github.event.repository.name }}-bff
           
       ### path to where docker should copy files into image
       ### defaults to root of repository (.)
@@ -116,5 +116,5 @@ jobs:
       corona-image-admins: ${{ vars.CORONA_IMAGE_ADMINS }}
       ghcr-org-registry: ${{ vars.GHCR_REGISTRY }}
       # optional
-      #image-name: ""
+      image-name: ${{ github.event.repository.name }}-bff
       #image-tag: "" 
