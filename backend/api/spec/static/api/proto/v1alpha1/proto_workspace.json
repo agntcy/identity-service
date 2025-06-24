@@ -183,6 +183,18 @@
               "isoneof": true,
               "oneofdecl": "_resolverMetadataID",
               "defaultValue": ""
+            },
+            {
+              "name": "api_key",
+              "description": "",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_api_key",
+              "defaultValue": ""
             }
           ]
         }

@@ -1,3 +1,8 @@
+/**
+ * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import React from 'react';
 import {useAuth} from '@/hooks';
 import {Loading} from '@/components/ui/loading';

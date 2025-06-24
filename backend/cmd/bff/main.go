@@ -204,6 +204,7 @@ func main() {
 		identityService,
 		idpFactory,
 		credentialStore,
+		iamClient,
 	)
 	issuerSrv := issuer.NewService(
 		identityService,

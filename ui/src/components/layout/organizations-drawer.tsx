@@ -1,3 +1,8 @@
+/**
+ * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import {Sheet, SheetContent, SheetHeader, SheetTitle} from '../ui/sheet';
 import {Divider, OverflowTooltip, toast, Typography} from '@outshift/spark-design';
 import {cn} from '@/lib/utils';

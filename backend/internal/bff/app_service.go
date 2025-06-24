@@ -14,6 +14,8 @@ import (
 	settingscore "github.com/agntcy/identity-platform/internal/core/settings"
 	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
+	outshiftiam "github.com/agntcy/identity-platform/internal/pkg/iam"
+	"github.com/agntcy/identity-platform/pkg/log"
 	"github.com/google/uuid"
 )
 
@@ -28,6 +30,7 @@ type appService struct {
 	identityService    identitycore.Service
 	idpFactory         idpcore.IdpFactory
 	credentialStore    idpcore.CredentialStore
+	iamClient          outshiftiam.Client
 }
 
 func NewAppService(
@@ -36,6 +39,7 @@ func NewAppService(
 	identityService identitycore.Service,
 	idpFactory idpcore.IdpFactory,
 	credentialStore idpcore.CredentialStore,
+	iamClient outshiftiam.Client,
 ) AppService {
 	return &appService{
 		appRepository:      appRepository,
@@ -43,6 +47,7 @@ func NewAppService(
 		identityService:    identityService,
 		idpFactory:         idpFactory,
 		credentialStore:    credentialStore,
+		iamClient:          iamClient,
 	}
 }
 
@@ -104,10 +109,17 @@ func (s *appService) CreateApp(
 		return nil, errutil.Err(err, "unable to store client credentials")
 	}
 
+	apiKey, err := s.iamClient.CreateAppApiKey(ctx, app.ID)
+	if err != nil {
+		return nil, errutil.Err(err, "failed to generate an api key")
+	}
+
 	createdApp, err = s.appRepository.CreateApp(ctx, app)
 	if err != nil {
 		return nil, err
 	}
+
+	app.ApiKey = apiKey.Secret
 
 	return createdApp, nil
 }
@@ -124,6 +136,13 @@ func (s *appService) GetApp(
 	if err != nil {
 		return nil, err
 	}
+
+	apiKey, err := s.iamClient.GetAppApiKey(ctx, app.ID)
+	if err != nil {
+		log.Warn(err)
+	}
+
+	app.ApiKey = apiKey.Secret
 
 	return app, nil
 }

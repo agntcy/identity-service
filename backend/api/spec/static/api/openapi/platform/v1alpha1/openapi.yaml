@@ -765,6 +765,8 @@ components:
                 resolverMetadataID:
                     type: string
                     description: The DID value
+                apiKey:
+                    type: string
             description: Identity Platform App.
         AppInfoResponse:
             type: object

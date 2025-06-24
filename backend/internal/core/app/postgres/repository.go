@@ -61,8 +61,17 @@ func (r *repository) GetApp(
 ) (*types.App, error) {
 	var app App
 
+	// Get the tenant ID from the context
+	tenantID, ok := identitycontext.GetTenantID(ctx)
+	if !ok {
+		return nil, errutil.Err(
+			nil, "failed to get tenant ID from context",
+		)
+	}
+
 	result := r.dbContext.Client().First(&app, map[string]any{
-		"id": id,
+		"id":        id,
+		"tenant_id": tenantID,
 	})
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
