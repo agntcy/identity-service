@@ -16,13 +16,16 @@ message App {
   optional string id = 1;
 
   // A human-readable name for the App.
-  optional string name = 4;
+  optional string name = 2;
 
   // A human-readable description for the App.
-  optional string description = 5;
+  optional string description = 3;
 
   // The type of the App.
-  optional AppType type = 6;
+  optional AppType type = 4;
+
+  // The DID value
+  optional string resolverMetadataID = 5;
 }
 
 // App Type

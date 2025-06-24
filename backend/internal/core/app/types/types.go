@@ -42,14 +42,17 @@ func (t AppType) MarshalText() ([]byte, error) {
 // Identity Platform App.
 type App struct {
 	// A unique identifier for the App.
-	ID string `json:"id,omitempty" protobuf:"bytes,1,opt,name=id"`
+	ID string `json:"id,omitempty"`
 
 	// A human-readable name for the App.
-	Name *string `json:"name,omitempty" protobuf:"bytes,4,opt,name=name"`
+	Name *string `json:"name,omitempty"`
 
 	// A human-readable description for the App.
-	Description *string `json:"description,omitempty" protobuf:"bytes,5,opt,name=description"`
+	Description *string `json:"description,omitempty"`
 
 	// The type of the App.
-	Type AppType `json:"type,omitempty" protobuf:"bytes,6,opt,name=type"`
+	Type AppType `json:"type,omitempty"`
+
+	// The DID value
+	ResolverMetadataID string `json:"resolverMetadataID,omitempty"`
 }
