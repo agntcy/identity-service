@@ -14,7 +14,7 @@ import {ProviderInfo} from './steps/provider-info';
 import {RegisterProvider} from './steps/register-provider';
 import {Form} from '@/components/ui/form';
 import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from '@/components/ui/accordion';
-import {ActivityTimeline, Button, Typography} from '@outshift/spark-design';
+import {Button, Typography} from '@outshift/spark-design';
 
 export const CreateUpdateIdentityProvider = () => {
   return (

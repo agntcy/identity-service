@@ -6,7 +6,7 @@
 import {CreateUpdateIdentityProvider} from '@/components/identity-provider/create-update/create-update-identity-provider';
 import {BasePage} from '@/components/layout/base-page';
 import {PATHS} from '@/router/paths';
-import {Link} from '@outshift/spark-design';
+import {Link, Typography} from '@outshift/spark-design';
 
 const SettingsIdentityProvider: React.FC = () => {
   // TODO: Fetch the identity provider
@@ -14,20 +14,14 @@ const SettingsIdentityProvider: React.FC = () => {
     <BasePage
       title="Identity Provider"
       description={
-        <div className="space-y-2">
-          <p>
-            The <b>AGNTCY</b> supports various types of identities, referred to as IDs, which serve as universally unique identifiers for the main
-            entities or subjects operated by the <b>AGNTCY</b>, including Agents and Multi-Agent Systems (MAS).
-          </p>
-          <p>
-            Each ID is associated 1:1 with <b>ResolverMetadata</b>, which contains the necessary information to establish trust while trying to use or
-            interact with an Agent or a MAS <b>ID</b>. You can check more info{' '}
-            <Link href="https://spec.identity.agntcy.org/docs/category/identifiers" openInNewTab>
-              here
-            </Link>
-            .
-          </p>
-        </div>
+        <Typography variant="body2">
+          Use an Identity Provider (IdP) to assign identities to Agents and MCP Servers, centralize and secure identity management by enabling
+          cryptographically verifiable, trusted authentication{' '}
+          <Link href="https://spec.identity.agntcy.org/docs/category/identifiers" openInNewTab>
+            here
+          </Link>
+          .
+        </Typography>
       }
       subNav={[
         {
