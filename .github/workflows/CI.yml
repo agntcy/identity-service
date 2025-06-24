@@ -83,9 +83,6 @@ jobs:
       ### REQUIRED
       ### ENABLE ONE OR BOTH REGISTRIES
       ### tell docker where to push.
-      ecr-enabled: true
-      gar-enabled: true
-      gcr-enabled: false
       ghcr-enabled: true
       ghcr-org-registry: ${{ vars.GHCR_REGISTRY }}
 
