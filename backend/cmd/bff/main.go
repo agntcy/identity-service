@@ -15,6 +15,7 @@ import (
 	"github.com/agntcy/identity-platform/internal/bff"
 	bffgrpc "github.com/agntcy/identity-platform/internal/bff/grpc"
 	apppg "github.com/agntcy/identity-platform/internal/core/app/postgres"
+	authpg "github.com/agntcy/identity-platform/internal/core/auth/postgres"
 	badgea2a "github.com/agntcy/identity-platform/internal/core/badge/a2a"
 	badgemcp "github.com/agntcy/identity-platform/internal/core/badge/mcp"
 	badgepg "github.com/agntcy/identity-platform/internal/core/badge/postgres"
@@ -157,6 +158,7 @@ func main() {
 	appRepository := apppg.NewRepository(dbContext)
 	settingsRepository := settingspg.NewRepository(dbContext)
 	badgeRepository := badgepg.NewRepository(dbContext)
+	authRepository := authpg.NewRepository(dbContext)
 
 	// Get the token depending on the environment
 	token := ""
@@ -225,11 +227,15 @@ func main() {
 		identityService,
 		credentialStore,
 	)
+	authSrv := bff.NewAuthService(
+		authRepository,
+	)
 
 	register := identity_platform_api.GrpcServiceRegister{
 		AppServiceServer:      bffgrpc.NewAppService(appSrv),
 		SettingsServiceServer: bffgrpc.NewSettingsService(settingsSrv),
 		BadgeServiceServer:    bffgrpc.NewBadgeService(badgeSrv),
+		AuthServiceServer:     bffgrpc.NewAuthService(authSrv, appSrv),
 	}
 
 	register.RegisterGrpcHandlers(grpcsrv.Server)
