@@ -19,6 +19,7 @@ func FromApp(src *apptypes.App) *identity_platform_sdk_go.App {
 		Name:        src.Name,
 		Description: src.Description,
 		Type:        ptrutil.Ptr(identity_platform_sdk_go.AppType(src.Type)),
+		ApiKey:      ptrutil.Ptr(src.ApiKey),
 	}
 }
 

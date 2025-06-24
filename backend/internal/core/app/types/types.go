@@ -55,4 +55,6 @@ type App struct {
 
 	// The DID value
 	ResolverMetadataID string `json:"resolverMetadataID,omitempty"`
+
+	ApiKey string `json:"api_key"`
 }

@@ -25,12 +25,12 @@ var allowedServicesWithoutAuth = []string{
 }
 
 type AuthInterceptor struct {
-	iam          outshiftiam.IAM
+	iam          outshiftiam.Client
 	iamProductID string
 }
 
 func NewAuthInterceptor(
-	iam outshiftiam.IAM,
+	iam outshiftiam.Client,
 	iamProductID string,
 ) *AuthInterceptor {
 	return &AuthInterceptor{

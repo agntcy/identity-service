@@ -26,6 +26,8 @@ message App {
 
   // The DID value
   optional string resolverMetadataID = 5;
+
+  optional string api_key = 6;
 }
 
 // App Type

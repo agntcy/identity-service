@@ -24,13 +24,13 @@ type SettingsService interface {
 
 type settingsService struct {
 	issuerSrv          issuercore.Service
-	iamClient          *outshiftiam.Client
+	iamClient          outshiftiam.Client
 	settingsRepository settingscore.Repository
 }
 
 func NewSettingsService(
 	issuerSrv issuercore.Service,
-	iamClient *outshiftiam.Client,
+	iamClient outshiftiam.Client,
 	settingsRepository settingscore.Repository,
 ) SettingsService {
 	return &settingsService{
