@@ -105,7 +105,7 @@ jobs:
     
     with:
       runner-group: ${{ vars.DEFAULT_RUNNER_GROUP }}
-      enable-corona: false
+      enable-corona: true
       enable-blackduck: false
       corona-product-name: ${{ vars.CORONA_PRODUCT_NAME }}
       corona-product-id: ${{ vars.CORONA_PRODUCT_ID }}
