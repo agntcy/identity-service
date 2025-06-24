@@ -3,23 +3,20 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {CreateUpdateIdentityProvider} from '@/components/identity-provider/create-update/create-update-identity-provider';
+import {ContentApiKey} from '@/components/api-key/content-api-key';
 import {BasePage} from '@/components/layout/base-page';
 import {PATHS} from '@/router/paths';
-import {Link, Typography} from '@outshift/spark-design';
+import {Typography} from '@outshift/spark-design';
+import React from 'react';
 
 const SettingsIdentityProvider: React.FC = () => {
   return (
     <BasePage
-      title="Identity Provider"
+      title="Api Key"
       description={
         <Typography variant="body2">
-          Use an Identity Provider (IdP) to assign identities to Agents and MCP Servers, centralize and secure identity management by enabling
-          cryptographically verifiable, trusted authentication{' '}
-          <Link href="https://spec.identity.agntcy.org/docs/category/identifiers" openInNewTab>
-            here
-          </Link>
-          .
+          Use an API Key to authenticate and authorize access to the AGNTCY platform. API Keys are used to securely connect your applications and
+          services with AGNTCY, enabling seamless integration and interaction.
         </Typography>
       }
       subNav={[
@@ -38,11 +35,11 @@ const SettingsIdentityProvider: React.FC = () => {
           href: PATHS.settings
         },
         {
-          text: 'Identity Provider'
+          text: 'Api Key'
         }
       ]}
     >
-      <CreateUpdateIdentityProvider />
+      <ContentApiKey />
     </BasePage>
   );
 };
