@@ -76,7 +76,7 @@ jobs:
           
       ### path to where docker should copy files into image
       ### defaults to root of repository (.)
-      # context: .
+      context: ./backend
       
       ### Dockerfile alternate name. Default is Dockerfile (relative to context path)
       dockerfile: deployments/docker/backend/Dockerfile.bff
