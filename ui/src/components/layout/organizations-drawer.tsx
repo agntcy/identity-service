@@ -8,7 +8,7 @@ import {Divider, OverflowTooltip, toast, Typography} from '@outshift/spark-desig
 import {cn} from '@/lib/utils';
 import {useGetTenants} from '@/queries';
 import {LoaderRelative} from '../ui/loading';
-import {useEffect} from 'react';
+import {useEffect, useMemo} from 'react';
 import {useAuth} from '@/hooks';
 
 export const OrganizationsDrawer: React.FC<{
@@ -30,6 +30,8 @@ export const OrganizationsDrawer: React.FC<{
     }
   }, [isError]);
 
+  const sortedTenants = useMemo(() => data?.tenants.sort((a, b) => a.name.localeCompare(b.name)), [data?.tenants]);
+
   return (
     <Sheet open={isOpen} onOpenChange={onChange}>
       <SheetContent
@@ -48,8 +50,8 @@ export const OrganizationsDrawer: React.FC<{
         {isLoading ? (
           <LoaderRelative />
         ) : (
-          <div className="flex flex-col gap-2 px-4">
-            {data?.tenants.map((tenant) => (
+          <div className="flex flex-col gap-2 px-4 overflow-y-auto">
+            {sortedTenants?.map((tenant) => (
               <div
                 key={tenant.id}
                 className={cn(
