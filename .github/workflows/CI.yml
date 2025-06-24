@@ -32,7 +32,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@production # v3.5.1
+        uses: actions/checkout@83b7061638ee4956cf7545a6f7efe594e5ad0247 # v3.5.1
         with:
           # The branch, tag or SHA to checkout, otherwise, uses the default branch.
           ref: ${{ github.ref }}
