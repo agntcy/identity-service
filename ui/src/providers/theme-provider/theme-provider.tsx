@@ -13,6 +13,5 @@ export const ThemeProvider = ({children}: {children: React.ReactNode}) => {
       isDarkMode: store.isDarkMode
     }))
   );
-
   return <SparkThemeProvider isDarkMode={isDarkMode}>{children}</SparkThemeProvider>;
 };

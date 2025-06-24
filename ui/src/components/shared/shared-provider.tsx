@@ -4,27 +4,36 @@
  */
 
 import {ReactNode} from 'react';
-import {Card, CardDescription, CardHeader, CardTitle} from '../ui/card';
+import {Card} from '../ui/card';
 import {cn} from '@/lib/utils';
+import {Typography} from '@outshift/spark-design';
 
-export const SharedProvider = <T,>({imgURI, name, details, isDisabled = false, isSelected, type, onSelect}: SharedProviderProps<T>) => {
+export const SharedProvider = <T,>({
+  imgURI,
+  title,
+  isDisabled = false,
+  flexGroup = false,
+  className,
+  infoAction,
+  isSelected,
+  type,
+  onSelect
+}: SharedProviderProps<T>) => {
   return (
     <Card
       onClick={() => (!isDisabled ? onSelect?.(type) : undefined)}
       className={cn(
-        'bg-[#FBFCFE] opacity-85 text-[0.875rem] flex justify-between max-w-[225px] w-full flex-row items-center rounded-lg gap-[0.625rem] cursor-pointer hover:outline-1 hover:outline hover:opacity-100',
-        isSelected && 'opacity-100 outline border-solid',
+        'border-[#D5DFF7] border-solid border-[2px] py-[8px] px-[16px] rounded-[4px] bg-[#FBFCFE] h-[48px]',
+        'flex justify-center w-fit flex-row gap-[12px] items-center cursor-pointer hover:border-[#187ADC] hover:border-[2px] hover:opacity-100',
+        isSelected && 'border-[#187ADC] border-[2px]',
         isDisabled && 'opacity-55 cursor-no-drop pointer-events-none',
-        'min-w-[300px]',
-        'card-flex-group',
-        'p-3'
+        flexGroup && 'card-flex-group',
+        className
       )}
     >
-      <CardHeader className="p-0">
-        <CardTitle>{name}</CardTitle>
-        {details && <CardDescription>{details}</CardDescription>}
-      </CardHeader>
       {imgURI && imgURI}
+      <Typography variant="body1">{title}</Typography>
+      {infoAction && <div>{infoAction}</div>}
     </Card>
   );
 };
@@ -32,9 +41,11 @@ export const SharedProvider = <T,>({imgURI, name, details, isDisabled = false, i
 export interface SharedProviderProps<T> {
   type: T;
   imgURI?: ReactNode;
-  name: string;
-  details?: string;
+  title: string;
+  flexGroup?: boolean;
   isDisabled?: boolean;
   isSelected?: boolean;
+  className?: string;
+  infoAction?: ReactNode;
   onSelect?: (provider: T) => void;
 }

@@ -6,7 +6,7 @@
 import {CreateUpdateIdentityProvider} from '@/components/identity-provider/create-update/create-update-identity-provider';
 import {BasePage} from '@/components/layout/base-page';
 import {PATHS} from '@/router/paths';
-import {Link} from 'react-router-dom';
+import {Link} from '@outshift/spark-design';
 
 const SettingsIdentityProvider: React.FC = () => {
   // TODO: Fetch the identity provider
@@ -22,14 +22,13 @@ const SettingsIdentityProvider: React.FC = () => {
           <p>
             Each ID is associated 1:1 with <b>ResolverMetadata</b>, which contains the necessary information to establish trust while trying to use or
             interact with an Agent or a MAS <b>ID</b>. You can check more info{' '}
-            <Link to="https://spec.identity.agntcy.org/docs/category/identifiers" className="inline-link" target="_blank">
+            <Link href="https://spec.identity.agntcy.org/docs/category/identifiers" openInNewTab>
               here
             </Link>
             .
           </p>
         </div>
       }
-      useBreadcrumbs={true}
       subNav={[
         {
           label: 'Identity Provider',

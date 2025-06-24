@@ -3,15 +3,15 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import useAuth from '@/providers/auth-provider/use-auth';
 import {Button, Link, Typography} from '@outshift/spark-design';
 import EmptyState from '@/assets/empty-state.svg';
-import '@/styles/dashboard.css';
 import {CheckIcon, PlusIcon} from 'lucide-react';
 import ScrollShadowWrapper from '@/components/ui/scroll-shadow-wrapper';
 import {useNavigate} from 'react-router-dom';
 import {useCallback} from 'react';
 import {PATHS} from '@/router/paths';
+import {useAuth} from '@/hooks';
+import '@/styles/dashboard.css';
 
 const Dashboard: React.FC = () => {
   const {authInfo} = useAuth();

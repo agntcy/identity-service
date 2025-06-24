@@ -7,10 +7,10 @@ import {Outlet, useLocation} from 'react-router-dom';
 import {useEffect, useState} from 'react';
 import {cn} from '@/lib/utils';
 import {ResizablePanel, ResizablePanelGroup} from '@/components/ui/resizable';
-import {AppBar} from './app-bar';
 import {PATHS} from '@/router/paths';
-import {Footer} from '@outshift/spark-design';
 import {SideNav} from './side-nav';
+import {Header} from './header';
+import {Footer} from './footer';
 
 const Layout = () => {
   const defaultLayout = [15, 85];
@@ -56,7 +56,7 @@ const Layout = () => {
       }}
       className="fixed"
     >
-      <AppBar />
+      <Header />
       <ResizablePanelGroup direction="horizontal" onLayout={onLayout}>
         {!location.pathname.includes(PATHS.onBoarding) && (
           <ResizablePanel
@@ -86,29 +86,7 @@ const Layout = () => {
           </main>
         </ResizablePanel>
       </ResizablePanelGroup>
-      <Footer
-        productName="Agntcy Inc."
-        links={[
-          {
-            children: 'support@agntcy.com',
-            href: 'mailto:support@agntcy.com',
-            openInNewTab: true
-          },
-          {
-            children: 'Terms & Conditions',
-            href: PATHS.termsAndConditions
-          },
-          {
-            children: 'Privacy Policy',
-            href: 'https://www.cisco.com/c/en/us/about/legal/privacy-full.html',
-            openInNewTab: true
-          },
-          {
-            children: 'Cookies',
-            href: '#'
-          }
-        ]}
-      />
+      <Footer />
     </ResizablePanelGroup>
   );
 };

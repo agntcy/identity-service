@@ -7,7 +7,7 @@ import {SecureRouteProps} from '@/types/okta';
 import * as React from 'react';
 import * as ReactRouterDom from 'react-router-dom';
 import {AuthError} from './auth-error';
-import useAuth from '@/providers/auth-provider/use-auth';
+import {useAuth} from '@/hooks';
 
 let useRouteNavigate: any;
 if ('useNavigate' in ReactRouterDom) {

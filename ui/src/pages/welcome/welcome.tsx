@@ -3,11 +3,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import useAuth from '@/providers/auth-provider/use-auth';
 import {Button, Divider, Header, Link, Typography} from '@outshift/spark-design';
 import Logo from '@/assets/logo-app-bar.svg';
 import OutshiftLogo from '@/assets/outshift-logo.svg';
 import {CheckIcon} from 'lucide-react';
+import {useAuth} from '@/hooks';
 import '@/styles/welcome.css';
 
 const Welcome = () => {

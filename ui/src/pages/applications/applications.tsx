@@ -11,7 +11,6 @@ import {Loading} from '@/components/ui/loading';
 import PlaceholderPageContent from '@/components/ui/placeholder-page-content';
 import ViewSwitch from '@/components/ui/view-switch';
 import {PATHS} from '@/router/paths';
-import {useStore} from '@/store';
 import {PlusIcon} from 'lucide-react';
 import {useMemo, useState} from 'react';
 import {Link} from 'react-router-dom';
@@ -21,13 +20,6 @@ import {useShallow} from 'zustand/react/shallow';
 
 const Applications: React.FC = () => {
   const [viewSwitch, setValueSwitch] = useState<'grid' | 'table'>('grid');
-
-  const {identityProvider, passwordManagementProvider} = useStore(
-    useShallow((store) => ({
-      identityProvider: store.identityProvider,
-      passwordManagementProvider: store.passwordManagementProvider
-    }))
-  );
 
   const calculateActiveIdx = useMemo(() => {
     if (viewSwitch === 'grid') {

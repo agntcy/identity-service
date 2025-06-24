@@ -14,7 +14,7 @@ export interface NodeRouteProps {
 }
 
 export const NodeRoute = ({children, disableErrorBoundary}: NodeRouteProps) => {
-  const getWrappedChildren = () => <Suspense fallback={<Loading style={{background: 'none'}} />}>{children}</Suspense>;
+  const getWrappedChildren = () => <Suspense fallback={<Loading />}>{children}</Suspense>;
   return disableErrorBoundary ? (
     getWrappedChildren()
   ) : (
