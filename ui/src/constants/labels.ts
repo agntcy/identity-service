@@ -3,23 +3,23 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {ApplicationTypes, SourceTypes} from '@/types/applications';
-import {IdentityProviders} from '@/types/providers';
+import {IdpType} from '@/types/api/settings';
 
 export const labels = {
-  appTypes: {
-    [ApplicationTypes.OASF]: 'Open Agentic Schema Framework (OASF)',
-    [ApplicationTypes.A2A]: 'Application to Application (A2A)',
-    [ApplicationTypes.MCP]: 'Model Context Protocol (MCP)'
-  },
-  sourceAppTypes: {
-    [SourceTypes.URL]: 'URL',
-    [SourceTypes.DOCKER]: 'Docker',
-    [SourceTypes.GIT]: 'Git',
-    [SourceTypes.OASF_SPECS]: 'Open Agentic Schema Framework (OASF)'
-  },
+  // appTypes: {
+  //   [ApplicationTypes.OASF]: 'Open Agentic Schema Framework (OASF)',
+  //   [ApplicationTypes.A2A]: 'Application to Application (A2A)',
+  //   [ApplicationTypes.MCP]: 'Model Context Protocol (MCP)'
+  // },
+  // sourceAppTypes: {
+  //   [SourceTypes.URL]: 'URL',
+  //   [SourceTypes.DOCKER]: 'Docker',
+  //   [SourceTypes.GIT]: 'Git',
+  //   [SourceTypes.OASF_SPECS]: 'Open Agentic Schema Framework (OASF)'
+  // },
   providerTypes: {
-    [IdentityProviders.OKTA]: 'Okta',
-    [IdentityProviders.DUO]: 'Duo'
+    [IdpType.IDP_TYPE_OKTA]: 'Okta',
+    [IdpType.IDP_TYPE_DUO]: 'Duo',
+    [IdpType.IDP_TYPE_SELF]: 'OASF (Agntcy)'
   }
 };

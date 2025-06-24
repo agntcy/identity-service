@@ -39,7 +39,8 @@ const CreateApplication: React.FC = () => {
         }
       ]}
     >
-      <CreateUpdateApplication mode="create" />
+      <div></div>
+      {/* <CreateUpdateApplication mode="create" /> */}
     </BasePage>
   );
 };
