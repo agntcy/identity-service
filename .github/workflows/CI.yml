@@ -104,7 +104,7 @@ jobs:
       ghcr-org-token: ${{ secrets.GHCR_TOKEN }}
     
     with:
-      runner: ${{ vars.DEFAULT_RUNNER_GROUP }}
+      runner-group: ${{ vars.DEFAULT_RUNNER_GROUP }}
       enable-corona: false
       enable-blackduck: false
       corona-product-name: ${{ vars.CORONA_PRODUCT_NAME }}
