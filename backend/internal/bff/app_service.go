@@ -93,10 +93,15 @@ func (s *appService) CreateApp(
 		return nil, errors.New("user id not found in context")
 	}
 
-	resolverMetadataID, err := s.identityService.GenerateID(ctx, clientCredentials, &identitycore.Issuer{
-		CommonName: issSettings.IssuerID,
-		KeyID:      issSettings.KeyID,
-	}, userID)
+	resolverMetadataID, err := s.identityService.GenerateID(
+		ctx,
+		clientCredentials,
+		&identitycore.Issuer{
+			CommonName: issSettings.IssuerID,
+			KeyID:      issSettings.KeyID,
+		},
+		userID,
+	)
 	if err != nil {
 		return nil, err
 	}
