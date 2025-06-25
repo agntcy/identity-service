@@ -5,3 +5,4 @@
 
 export * from './iam';
 export * from './settings';
+export * from './agentic-services';

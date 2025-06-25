@@ -21,7 +21,7 @@ const App = () => {
           <AuthProvider>
             <ApiProvider>
               <QueryProvider>
-                <Toaster />
+                <Toaster offset={{top: '64px', right: '16px'}} />
                 <Router />
               </QueryProvider>
             </ApiProvider>

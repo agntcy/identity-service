@@ -8,11 +8,14 @@ import {IconButton, Typography} from '@mui/material';
 import {Link, useLocation} from 'react-router-dom';
 import {cn} from '@/lib/utils';
 import {PATHS} from '@/router/paths';
-import {BoxesIcon, ChevronLeftIcon, ChevronRightIcon, LayoutDashboardIcon, SlidersHorizontalIcon} from 'lucide-react';
+import {ChevronLeftIcon, ChevronRightIcon, LayoutDashboardIcon} from 'lucide-react';
 import OrganizationLogo from '@/assets/organization.svg?react';
 import {useAuth} from '@/hooks';
 import {OrganizationsDrawer} from './organizations-drawer';
 import {OverflowTooltip, Tooltip, TooltipProps} from '@outshift/spark-design';
+import SettingsIcon from '@/assets/sidebar/settings.svg?react';
+import AgenticServicesLogo from '@/assets/sidebar/agentic-services.svg?react';
+import AccessPoliciesLogo from '@/assets/sidebar/access-policies.svg?react';
 import '@/styles/side-nav.css';
 
 export const SideNav: React.FC<{isCollapsed?: boolean; onChangeCollapsed?: (value?: boolean) => void}> = ({isCollapsed, onChangeCollapsed}) => {
@@ -30,18 +33,23 @@ export const SideNav: React.FC<{isCollapsed?: boolean; onChangeCollapsed?: (valu
     return [
       {
         href: PATHS.dashboard,
-        label: 'Dahboard',
+        label: 'Dashboard',
         icon: <LayoutDashboardIcon className="w-4 h-4" />
       },
       {
-        href: PATHS.applications,
-        label: 'Applications',
-        icon: <BoxesIcon className="w-4 h-4" />
+        href: PATHS.agenticServices,
+        label: 'Agentic Services',
+        icon: <AgenticServicesLogo className="w-4 h-4" />
+      },
+      {
+        href: PATHS.accessPolicies,
+        label: 'Access Policies',
+        icon: <AccessPoliciesLogo className="w-4 h-4" />
       },
       {
         href: PATHS.settings,
         label: 'Settings',
-        icon: <SlidersHorizontalIcon className="w-4 h-4" />
+        icon: <SettingsIcon className="w-4 h-4" />
       }
     ];
   }, []);
@@ -130,7 +138,7 @@ const SideNavLink: React.FC<{
     >
       <div
         className={cn(
-          'object-cover flex-shrink-0 flex-grow-0 [&>svg]:transition-all',
+          'object-cover flex-shrink-0 flex-grow-0 [&>svg]:transition-all [&>svg]:text-[#59616B]',
           isCollapsed
             ? '[&>svg]:min-w-5 [&>svg]:min-h-6 [&>svg]:max-w-6 [&>svg]:max-h-6'
             : '[&>svg]:min-w-5 [&>svg]:min-h-5 [&>svg]:max-w-5 [&>svg]:max-h-5',

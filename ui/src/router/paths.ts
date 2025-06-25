@@ -9,9 +9,12 @@ export const PATHS = {
   callBackLoading: '/login/callback',
   // dashboard paths
   dashboard: '/dashboard',
-  // application paths
-  applications: '/applications',
-  applicationsCreate: '/applications/create',
+  // agentic services paths
+  agenticServices: '/agentic-services',
+  agenticServicesCreate: '/agentic-services/create',
+  agenticServicesVerifyIdentity: '/agentic-services/verify-identity',
+  // access policies paths
+  accessPolicies: '/access-policies',
   // settings paths
   settings: '/settings',
   settingsIdentityProvider: '/settings/identity-provider',

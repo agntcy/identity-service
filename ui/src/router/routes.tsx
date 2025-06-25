@@ -15,8 +15,6 @@ import {SecureRoute} from '@/components/router/secure-route';
 import {Loading} from '@/components/ui/loading';
 
 const Welcome = React.lazy(() => import('@/pages/welcome/welcome'));
-const Applications = React.lazy(() => import('@/pages/applications/applications'));
-const CreateApplication = React.lazy(() => import('@/pages/applications/create-application'));
 const SettingsIdentityProvider = React.lazy(() => import('@/pages/settings/identity-provider/settings-identity-provider'));
 const TermsAndConditions = React.lazy(() => import('@/pages/terms-and-conditions/terms-and-conditions'));
 const Dashboard = React.lazy(() => import('@/pages/dashboard/dashboard'));
@@ -24,6 +22,8 @@ const SettingsApiKey = React.lazy(() => import('@/pages/settings/api-key/setting
 const SettingsOrganizations = React.lazy(() => import('@/pages/settings/organizations/settings-organizations'));
 const CreateOrganization = React.lazy(() => import('@/pages/settings/organizations/create-organization'));
 const OrganizationInfo = React.lazy(() => import('@/pages/settings/organizations/info-organization'));
+const AgenticServices = React.lazy(() => import('@/pages/agentic-services/agentic-services'));
+const CreateAgenticService = React.lazy(() => import('@/pages/agentic-services/create-agentic-service'));
 
 export const generateRoutes = (routes: Route[]): Route[] => {
   return [
@@ -85,16 +85,33 @@ export const useRoutes = () => {
         ]
       },
       {
-        path: PATHS.applications,
+        path: PATHS.agenticServices,
         children: [
           {
             index: true,
-            element: <Applications />
+            element: <AgenticServices />
           },
           {
-            path: PATHS.applicationsCreate,
-            element: <CreateApplication />
+            path: PATHS.agenticServicesCreate,
+            element: <CreateAgenticService />
           },
+          {
+            path: '*',
+            element: <NotFound />
+          }
+        ]
+      },
+      {
+        path: PATHS.accessPolicies,
+        children: [
+          // {
+          //   index: true,
+          //   element: <Applications />
+          // },
+          // {
+          //   path: PATHS.applicationsCreate,
+          //   element: <CreateApplication />
+          // },
           {
             path: '*',
             element: <NotFound />

@@ -4,3 +4,4 @@
  */
 
 export * from './settings';
+export * from './agentic-services';

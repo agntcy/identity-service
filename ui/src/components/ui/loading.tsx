@@ -26,8 +26,8 @@ export const Loading = ({classNameContainer, spinnerProps}: LoadingProps) => {
 
 export const LoaderRelative = ({classNameContainer, spinnerProps}: LoadingProps) => {
   return (
-    <div className={cn('flex justify-center items-center w-full', classNameContainer)}>
-      <Spinner {...spinnerProps} />
+    <div className={cn('flex items-center w-full flex-col justify-center', classNameContainer)}>
+      <Spinner boxProps={{style: {display: 'flex'}}} {...spinnerProps} />
     </div>
   );
 };

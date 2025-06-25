@@ -5,3 +5,4 @@
 
 export * from './iam-api';
 export * from './settings-api';
+export * from './agentic-services-api';
