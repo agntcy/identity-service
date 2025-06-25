@@ -120,4 +120,4 @@ jobs:
       ghcr-org-registry: ${{ vars.GHCR_REGISTRY }}
       # optional
       image-name: "${{ github.event.repository.name }}"
-      image-tag: ""
+      image-tag: "dev-${{ github.sha | slice: 0, 7 }}"
