@@ -26,7 +26,7 @@ func (i *Session) ToCoreType() *types.Session {
 		AppID:             i.AppID,
 		ToolName:          i.ToolName,
 		UserID:            i.UserID,
-		TokenID:           i.TokenID,
+		AccessToken:       i.AccessToken,
 		AuthorizationCode: i.AuthorizationCode,
 		CreatedAt:         i.CreatedAt,
 		ExpiresAt:         i.ExpiresAt,
@@ -40,7 +40,7 @@ func newSessionModel(src *types.Session) *Session {
 		AppID:             src.AppID,
 		ToolName:          src.ToolName,
 		UserID:            src.UserID,
-		TokenID:           src.TokenID,
+		AccessToken:       src.AccessToken,
 		AuthorizationCode: src.AuthorizationCode,
 		ExpiresAt:         src.ExpiresAt,
 	}

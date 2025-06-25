@@ -97,8 +97,8 @@ func (s *authService) Token(
 		)
 	}
 
-	// Get the token
-	token, err := s.authSrv.Token(
+	// Get the session with token
+	session, err := s.authSrv.Token(
 		ctx,
 		req.AuthorizationCode,
 	)
@@ -110,7 +110,7 @@ func (s *authService) Token(
 	}
 
 	return &identity_platform_sdk_go.TokenResponse{
-		Token: converters.FromToken(token),
+		Token: session.AccessToken,
 	}, nil
 }
 

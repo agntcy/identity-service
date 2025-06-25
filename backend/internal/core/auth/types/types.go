@@ -20,8 +20,8 @@ type Session struct {
 	// The user ID associated with the Session.
 	UserID *string `json:"user_id,omitempty" protobuf:"bytes,5,opt,name=user_id"`
 
-	// The token ID associated with the Session.
-	TokenID *string `json:"token_id,omitempty" protobuf:"bytes,6,opt,name=token_id"`
+	// The access token associated with the Session.
+	AccessToken *string `json:"access_token,omitempty" protobuf:"bytes,6,opt,name=access_token"`
 
 	// The authorization code associated with the Session.
 	AuthorizationCode *string `json:"authorization_code,omitempty" protobuf:"bytes,7,opt,name=code"`
@@ -31,15 +31,6 @@ type Session struct {
 
 	// The expiration time of the Session.
 	ExpiresAt *int64 `json:"expires_at,omitempty" protobuf:"bytes,9,opt,name=expires_at"`
-}
-
-// Identity Platform Token
-type Token struct {
-	// A unique identifier for the Token.
-	ID string `json:"id,omitempty" protobuf:"bytes,1,opt,name=id"`
-
-	// Token value.
-	Value string `json:"value,omitempty" protobuf:"bytes,2,opt,name=value"`
 }
 
 // Devices used for user approval

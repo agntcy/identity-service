@@ -96,8 +96,8 @@ message TokenRequest {
 }
 
 message TokenResponse {
-  // The token issued to the Agent or MCP Server.
-  Token token = 1;
+  // The access token issued to the Agent or MCP Server.
+  string access_token = 1;
 }
 
 message RegisterDeviceRequest {

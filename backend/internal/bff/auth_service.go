@@ -7,11 +7,11 @@ import (
 	"context"
 
 	authcore "github.com/agntcy/identity-platform/internal/core/auth"
+	"github.com/agntcy/identity-platform/internal/core/auth/types"
 	authtypes "github.com/agntcy/identity-platform/internal/core/auth/types"
 	idpcore "github.com/agntcy/identity-platform/internal/core/idp"
 	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
-	"github.com/agntcy/identity-platform/internal/pkg/jwtutil"
 	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
 	"github.com/agntcy/identity/pkg/oidc"
 )
@@ -25,7 +25,7 @@ type AuthService interface {
 	Token(
 		ctx context.Context,
 		authorizationCode string,
-	) (*authtypes.Token, error)
+	) (*authtypes.Session, error)
 }
 
 type authService struct {
@@ -86,7 +86,7 @@ func (s *authService) Authorize(
 func (s *authService) Token(
 	ctx context.Context,
 	authorizationCode string,
-) (*authtypes.Token, error) {
+) (*types.Session, error) {
 	if authorizationCode == "" {
 		return nil, errutil.Err(
 			nil,
@@ -113,7 +113,7 @@ func (s *authService) Token(
 	}
 
 	// Issue a token
-	jwt, err := s.oidcAuthenticator.Token(
+	accessToken, err := s.oidcAuthenticator.Token(
 		ctx,
 		clientCredentials.Issuer,
 		clientCredentials.ClientID,
@@ -126,21 +126,9 @@ func (s *authService) Token(
 		)
 	}
 
-	// Get the token ID
-	tokenID, ok := jwtutil.GetID(jwt)
-	if !ok || tokenID == "" {
-		return nil, errutil.Err(
-			nil,
-			"JWT ID not found in token",
-		)
-	}
-
 	// Update session with token ID
-	session.TokenID = ptrutil.Ptr(tokenID)
+	session.AccessToken = ptrutil.Ptr(accessToken)
 	s.authRepository.Update(ctx, session)
 
-	return &authtypes.Token{
-		ID:    tokenID,
-		Value: jwt,
-	}, nil
+	return session, nil
 }
