@@ -29,6 +29,7 @@ var allowedServicesWithoutAuth = []string{
 var allowedServicesWithAppAuth = []string{
 	"/agntcy.identity.platform.v1alpha1.AuthService/AppInfo",
 	"/agntcy.identity.platform.v1alpha1.AuthService/Authorize",
+	"/agntcy.identity.platform.v1alpha1.AuthService/Token",
 }
 
 type AuthInterceptor struct {
