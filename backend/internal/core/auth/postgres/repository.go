@@ -9,6 +9,7 @@ import (
 
 	sessioncore "github.com/agntcy/identity-platform/internal/core/auth"
 	"github.com/agntcy/identity-platform/internal/core/auth/types"
+	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
 	"github.com/agntcy/identity-platform/internal/pkg/strutil"
@@ -60,7 +61,17 @@ func (r *postgresRepository) GetByAuthorizationCode(
 ) (*types.Session, error) {
 	model := &Session{}
 
+	// Get app id from context
+	appID, ok := identitycontext.GetAppID(ctx)
+	if !ok || appID == "" {
+		return nil, errutil.Err(
+			nil,
+			"app ID not found in context",
+		)
+	}
+
 	result := r.dbContext.Client().
+		Where("owner_app_id = ?", appID).
 		Where("authorization_code = ?", code).
 		Where("access_token IS NULL").
 		Where("expires_at > ?", time.Now().Unix()).
@@ -80,7 +91,17 @@ func (r *postgresRepository) GetByToken(
 ) (*types.Session, error) {
 	model := &Session{}
 
+	// Get app id from context
+	appID, ok := identitycontext.GetAppID(ctx)
+	if !ok || appID == "" {
+		return nil, errutil.Err(
+			nil,
+			"app ID not found in context",
+		)
+	}
+
 	result := r.dbContext.Client().
+		Where("app_id = ?", appID).
 		Where("token = ?", token).
 		Where("expires_at > ?", time.Now().Unix()).
 		First(model)
