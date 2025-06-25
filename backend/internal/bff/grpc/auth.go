@@ -90,10 +90,28 @@ func (s *authService) Token(
 	ctx context.Context,
 	req *identity_platform_sdk_go.TokenRequest,
 ) (*identity_platform_sdk_go.TokenResponse, error) {
-	return nil, errutil.Err(
-		nil,
-		"TokenInfo method is not implemented",
+	if req.AuthorizationCode == "" {
+		return nil, errutil.Err(
+			nil,
+			"authorization code cannot be empty",
+		)
+	}
+
+	// Get the token
+	token, err := s.authSrv.Token(
+		ctx,
+		req.AuthorizationCode,
 	)
+	if err != nil {
+		return nil, errutil.Err(
+			err,
+			"failed to get token",
+		)
+	}
+
+	return &identity_platform_sdk_go.TokenResponse{
+		Token: converters.FromToken(token),
+	}, nil
 }
 
 func (s *authService) ExtAuthz(
