@@ -1,0 +1,53 @@
+/**
+ * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import {BasePage} from '@/components/layout/base-page';
+import {ListOrganizations} from '@/components/organizations/list/list-organizations';
+import {PATHS} from '@/router/paths';
+import {Button} from '@outshift/spark-design';
+import {PlusIcon} from 'lucide-react';
+import {Link} from 'react-router-dom';
+
+const SettingsOrganizations: React.FC = () => {
+  return (
+    <BasePage
+      title="Organizations"
+      subNav={[
+        {
+          label: 'Identity Provider',
+          href: PATHS.settingsIdentityProvider
+        },
+        {
+          label: 'Api Key',
+          href: PATHS.settingsApiKey
+        },
+        {
+          label: 'Organizations',
+          href: PATHS.settingsOrganizations
+        }
+      ]}
+      breadcrumbs={[
+        {
+          text: 'Settings',
+          link: PATHS.settings
+        },
+        {
+          text: 'Organizations'
+        }
+      ]}
+      rightSideItems={
+        <Link to={PATHS.settingsOrganizationsCreate}>
+          <Button variant="outlined" endIcon={<PlusIcon className="w-4 h-4" />} fullWidth sx={{fontWeight: '600 !important'}}>
+            New organization
+          </Button>
+        </Link>
+      }
+    >
+      <ListOrganizations />
+    </BasePage>
+  );
+};
+
+export default SettingsOrganizations;

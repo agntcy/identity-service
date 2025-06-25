@@ -11,10 +11,10 @@ import {PATHS} from '@/router/paths';
 import {Button} from '../ui/button';
 import {BoxesIcon, ChevronLeftIcon, ChevronRightIcon, LayoutDashboardIcon, SlidersHorizontalIcon} from 'lucide-react';
 import OrganizationLogo from '@/assets/organization.svg?react';
-import '@/styles/side-nav.css';
 import {useAuth} from '@/hooks';
 import {OrganizationsDrawer} from './organizations-drawer';
 import {OverflowTooltip} from '@outshift/spark-design';
+import '@/styles/side-nav.css';
 
 export const SideNav: React.FC<{isCollapsed?: boolean; onChangeCollapsed?: (value?: boolean) => void}> = ({isCollapsed, onChangeCollapsed}) => {
   const [isOrgOpen, setIsOrgOpen] = useState(false);

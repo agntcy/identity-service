@@ -28,7 +28,7 @@ const IdentityCell = ({row}: {row: Row<any>}) => {
   // );
 };
 
-export const ConfigurationsColumns = ({handleOnDelete}: {handleOnDelete?: (application?: any) => void}): ColumnDef<any>[] => {
+export const OrganizationsColumns = ({handleOnDelete}: {handleOnDelete?: (application?: any) => void}): ColumnDef<any>[] => {
   const columns: ColumnDef<any>[] = [
     {
       accessorKey: 'id',

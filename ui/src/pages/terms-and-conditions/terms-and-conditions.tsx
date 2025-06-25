@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import {BasePage} from '@/components/layout/base-page';
 import {PATHS} from '@/router/paths';
-import {BasePage} from '@outshift/spark-design';
 import {Link} from 'react-router-dom';
 
 const TermsAndConditions: React.FC = () => {

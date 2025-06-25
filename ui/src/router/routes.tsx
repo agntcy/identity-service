@@ -17,10 +17,12 @@ import {Loading} from '@/components/ui/loading';
 const Welcome = React.lazy(() => import('@/pages/welcome/welcome'));
 const Applications = React.lazy(() => import('@/pages/applications/applications'));
 const CreateApplication = React.lazy(() => import('@/pages/applications/create-application'));
-const SettingsIdentityProvider = React.lazy(() => import('@/pages/settings/settings-identity-provider'));
+const SettingsIdentityProvider = React.lazy(() => import('@/pages/settings/identity-provider/settings-identity-provider'));
 const TermsAndConditions = React.lazy(() => import('@/pages/terms-and-conditions/terms-and-conditions'));
 const Dashboard = React.lazy(() => import('@/pages/dashboard/dashboard'));
-const SettingsApiKey = React.lazy(() => import('@/pages/settings/settings-api-key'));
+const SettingsApiKey = React.lazy(() => import('@/pages/settings/api-key/settings-api-key'));
+const SettingsOrganizations = React.lazy(() => import('@/pages/settings/organizations/settings-organizations'));
+const CreateOrganization = React.lazy(() => import('@/pages/settings/organizations/create-organization'));
 
 export const generateRoutes = (routes: Route[]): Route[] => {
   return [
@@ -112,6 +114,23 @@ export const useRoutes = () => {
           {
             path: PATHS.settingsApiKey,
             element: <SettingsApiKey />
+          },
+          {
+            path: PATHS.settingsOrganizations,
+            children: [
+              {
+                index: true,
+                element: <SettingsOrganizations />
+              },
+              {
+                path: PATHS.settingsOrganizationsCreate,
+                element: <CreateOrganization />
+              },
+              {
+                path: '*',
+                element: <NotFound />
+              }
+            ]
           },
           {
             path: '*',

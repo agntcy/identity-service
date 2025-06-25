@@ -4,21 +4,38 @@
  */
 
 import {Sheet, SheetContent, SheetHeader, SheetTitle} from '../ui/sheet';
-import {Divider, OverflowTooltip, toast, Typography} from '@outshift/spark-design';
+import {Button, Divider, OverflowTooltip, toast, Typography} from '@outshift/spark-design';
 import {cn} from '@/lib/utils';
 import {useGetTenants} from '@/queries';
 import {LoaderRelative} from '../ui/loading';
-import {useEffect, useMemo} from 'react';
+import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useAuth} from '@/hooks';
+import {ConfirmModal} from '../ui/confirm-modal';
+import {PlusIcon} from 'lucide-react';
+import {Link} from 'react-router-dom';
+import {PATHS} from '@/router/paths';
 
 export const OrganizationsDrawer: React.FC<{
   isOpen: boolean;
   isCollapsed?: boolean;
   onChange: (value: boolean) => void;
 }> = ({isOpen, isCollapsed, onChange}) => {
+  const [tenant, setTenant] = useState<undefined | {id: string; name: string}>();
+  const openConfirmation = Boolean(tenant?.id);
+
   const {authInfo, switchTenant} = useAuth();
 
   const {data, isLoading, isError} = useGetTenants();
+
+  const handleConfirmationChange = useCallback(
+    (value?: {id: string; name: string}) => {
+      setTenant(value);
+      if (value) {
+        onChange(false);
+      }
+    },
+    [onChange]
+  );
 
   useEffect(() => {
     if (isError) {
@@ -33,43 +50,77 @@ export const OrganizationsDrawer: React.FC<{
   const sortedTenants = useMemo(() => data?.tenants.sort((a, b) => a.name.localeCompare(b.name)), [data?.tenants]);
 
   return (
-    <Sheet open={isOpen} onOpenChange={onChange}>
-      <SheetContent
-        usePortal={false}
-        side="left"
-        className={cn(
-          'left-[264px] top-[56px] bg-[#E8F1FF] w-[224px] organization-drawer data-[state=closed]:slide-out-to-left-custom data-[state=open]:slide-in-from-left-custom',
-          isCollapsed && 'left-[54px]'
-        )}
-        useOverlay={false}
-      >
-        <SheetHeader>
-          <SheetTitle>Organizations</SheetTitle>
-        </SheetHeader>
-        <Divider sx={{marginTop: '-16px'}} />
-        {isLoading ? (
-          <LoaderRelative />
-        ) : (
-          <div className="flex flex-col gap-2 px-4 overflow-y-auto">
-            {sortedTenants?.map((tenant) => (
-              <div
-                key={tenant.id}
-                className={cn(
-                  'justify-start text-left w-full hover:bg-[#9BCAFF] p-[8px] rounded-[8px] hover:cursor-pointer',
-                  tenant.id === authInfo?.user?.tenant?.id ? 'bg-[#9BCAFF]' : 'bg-transparent'
-                )}
-                onClick={() => {
-                  switchTenant?.(tenant.id);
-                }}
-              >
-                <Typography variant="captionMedium" sx={{color: tenant.id === authInfo?.user?.tenant?.id ? '#0051AF' : '#00142B'}}>
-                  <OverflowTooltip value={tenant.name} someLongText={tenant.name} />
-                </Typography>
+    <>
+      <Sheet open={isOpen} onOpenChange={onChange}>
+        <SheetContent
+          usePortal={false}
+          side="left"
+          className={cn(
+            'left-[264px] top-[56px] bg-[#E8F1FF] w-[224px] organization-drawer data-[state=closed]:slide-out-to-left-custom data-[state=open]:slide-in-from-left-custom',
+            isCollapsed && 'left-[54px]'
+          )}
+          useOverlay={false}
+        >
+          <SheetHeader>
+            <SheetTitle>Organizations</SheetTitle>
+          </SheetHeader>
+          <Divider sx={{marginTop: '-16px'}} />
+          {isLoading ? (
+            <LoaderRelative />
+          ) : (
+            <div className="flex flex-col gap-4 px-4">
+              <Link to={PATHS.settingsOrganizationsCreate}>
+                <Button
+                  variant="outlined"
+                  endIcon={<PlusIcon className="w-4 h-4" />}
+                  fullWidth
+                  sx={{
+                    fontWeight: '600 !important',
+                    '&.MuiButton-outlined': {
+                      '&:focus': {
+                        outline: 'none !important'
+                      }
+                    }
+                  }}
+                >
+                  New organization
+                </Button>
+              </Link>
+              <div className="flex flex-col gap-2 overflow-y-auto">
+                {sortedTenants?.map((tenant) => (
+                  <div
+                    key={tenant.id}
+                    className={cn(
+                      'justify-start text-left w-full hover:bg-[#9BCAFF] p-[8px] rounded-[8px] hover:cursor-pointer',
+                      tenant.id === authInfo?.user?.tenant?.id ? 'bg-[#9BCAFF]' : 'bg-transparent'
+                    )}
+                    onClick={() => {
+                      handleConfirmationChange(tenant);
+                    }}
+                  >
+                    <Typography variant="captionMedium" sx={{color: tenant.id === authInfo?.user?.tenant?.id ? '#0051AF' : '#00142B'}}>
+                      <OverflowTooltip value={tenant.name} someLongText={tenant.name} />
+                    </Typography>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        )}
-      </SheetContent>
-    </Sheet>
+            </div>
+          )}
+        </SheetContent>
+      </Sheet>
+      <ConfirmModal
+        open={openConfirmation}
+        title="Change organization"
+        description={`This will log you out of your current organization so that you can log into Organization ${tenant?.name}. Do you still want to continue?`}
+        confirmButtonText="Continue"
+        onCancel={() => handleConfirmationChange(undefined)}
+        onConfirm={() => {
+          if (tenant?.id) {
+            switchTenant?.(tenant.id);
+          }
+          handleConfirmationChange(undefined);
+        }}
+      />
+    </>
   );
 };

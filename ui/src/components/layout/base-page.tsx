@@ -9,7 +9,9 @@ import ScrollShadowWrapper from '../ui/scroll-shadow-wrapper';
 export const BasePage: React.FC<SparkBasePageProps> = (props) => {
   return (
     <ScrollShadowWrapper>
-      <SparkBasePage {...props} />
+      <div className="pr-4">
+        <SparkBasePage {...props} />
+      </div>
     </ScrollShadowWrapper>
   );
 };

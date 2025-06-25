@@ -6,9 +6,10 @@
 import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-renderer';
 import {useSetApiKey} from '@/mutations';
 import {useGetSettings} from '@/queries';
-import {Button, Card, CopyButton, ActionsModal, toast, Tooltip, Typography} from '@outshift/spark-design';
+import {Button, Card, CopyButton, toast, Tooltip, Typography} from '@outshift/spark-design';
 import {RefreshCcwIcon} from 'lucide-react';
 import React, {useCallback} from 'react';
+import {ConfirmModal} from '../ui/confirm-modal';
 
 export const ContentApiKey: React.FC = () => {
   const [openActionsModal, setOpenActionsModal] = React.useState(false);
@@ -97,23 +98,13 @@ export const ContentApiKey: React.FC = () => {
           </Button>
         </Tooltip>
       </Card>
-      <ActionsModal
-        footerProps={{
-          sx: {
-            display: 'flex',
-            alignContent: 'space-between',
-            justifyContent: 'flex-end',
-            gap: '16px',
-            padding: '0',
-            paddingTop: '16px'
-          }
-        }}
-        title="Confirm Action"
-        hideModal={() => handleChangeActionsModal(false)}
+      <ConfirmModal
         open={openActionsModal}
-        confirmClicked={() => handleConfirmAction()}
-        mutationLoading={false}
-        bodyText="Are you sure you want to refresh your API Key? This action will invalidate your current API Key and generate a new one. Please ensure that you update your applications accordingly."
+        title="Confirm Action"
+        description="Are you sure you want to refresh your API Key? This action will invalidate your current API Key and generate a new one. Please ensure that you update your applications accordingly."
+        confirmButtonText="Refresh API Key"
+        onCancel={() => handleChangeActionsModal(false)}
+        onConfirm={handleConfirmAction}
       />
     </ConditionalQueryRenderer>
   );

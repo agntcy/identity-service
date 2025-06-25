@@ -3,20 +3,20 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {useCallback, useMemo, useState} from 'react';
+import {useState} from 'react';
 import {ConditionalQueryRenderer} from '../../ui/conditional-query-renderer';
-import {toast} from 'sonner';
-import CustomLoaderTable from '../../ui/custom-loader-table';
-import {createPortal} from 'react-dom';
-import {DataTable} from '../../ui/data-table';
-import {Card, Table} from '@outshift/spark-design';
+import {MenuItem, Table} from '@outshift/spark-design';
 import {useGetTenants} from '@/queries';
 import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
+import {OrganizationsColumns} from './organizations-columns';
+import {Card} from '@/components/ui/card';
+import {Typography} from '@mui/material';
+import {Trash2Icon, UserRoundPlusIcon} from 'lucide-react';
+import {cn} from '@/lib/utils';
+import {useAuth} from '@/hooks';
 
 export const ListOrganizations = () => {
   const [confirmOpen, setConfirmOpen] = useState(false);
-  // const [tempAirConfig, setTempAirConfig] = useState<Air | undefined>(undefined);
-  const [searchKeyword, setSearchKeyword] = useState<string>();
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: 0,
     pageSize: 15
@@ -24,6 +24,7 @@ export const ListOrganizations = () => {
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
 
   const {data, isLoading, isFetching, refetch, error} = useGetTenants();
+  const {authInfo} = useAuth();
 
   // const deleteAirMutation = useDeleteAir({
   //   callbacks: {
@@ -72,7 +73,7 @@ export const ListOrganizations = () => {
 
   return (
     <>
-      <Card sx={{p: 0}}>
+      <Card className={cn('bg-[#F5F8FD]', isFetching || isLoading ? 'p-4' : 'p-0')}>
         <ConditionalQueryRenderer
           itemName="organizations"
           data={data?.tenants}
@@ -93,19 +94,44 @@ export const ListOrganizations = () => {
           }}
         >
           <Table
-            columns={[]}
+            columns={OrganizationsColumns()}
             data={data?.tenants || []}
             densityCompact
             state={{pagination, sorting}}
+            manualPagination
             onSortingChange={setSorting}
             onPaginationChange={setPagination}
-            title={{label: 'organizations', count: 12}}
-            enableRowActions={false}
+            title={{label: 'organizations', count: data?.tenants?.length || 0}}
+            enableRowActions
             enableColumnPinning={false}
             isLoading={isLoading || isFetching}
             topToolbarProps={{
               enableArrangeColumns: false,
               enableActions: false
+            }}
+            muiTableContainerProps={{
+              style: {
+                border: '1px solid #D5DFF7'
+              }
+            }}
+            renderRowActionMenuItems={({row}) => {
+              if (authInfo?.user?.tenant?.id !== row.original.id) {
+                return [];
+              }
+              return [
+                <MenuItem key="edit" onClick={() => console.info('Edit', row)} sx={{display: 'flex', alignItems: 'center', gap: '8px'}}>
+                  <UserRoundPlusIcon className="w-4 h-4" color="#062242" />
+                  <Typography variant="body2" color="#1A1F27">
+                    Add user
+                  </Typography>
+                </MenuItem>,
+                <MenuItem key="delete" onClick={() => console.info('Delete', row)} sx={{display: 'flex', alignItems: 'center', gap: '8px'}}>
+                  <Trash2Icon className="w-4 h-4" color="#C62953" />
+                  <Typography variant="body2" color="#C0244C">
+                    Delete organization
+                  </Typography>
+                </MenuItem>
+              ];
             }}
           />
           {/* <Card className="flex justify-between items-center w-full">

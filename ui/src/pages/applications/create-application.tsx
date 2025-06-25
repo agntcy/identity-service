@@ -32,7 +32,7 @@ const CreateApplication: React.FC = () => {
       breadcrumbs={[
         {
           text: 'Applications',
-          href: PATHS.applications
+          link: PATHS.applications
         },
         {
           text: 'Create Application'

@@ -16,6 +16,8 @@ export const PATHS = {
   settings: '/settings',
   settingsIdentityProvider: '/settings/identity-provider',
   settingsApiKey: '/settings/api-key',
+  settingsOrganizations: '/settings/organizations',
+  settingsOrganizationsCreate: '/settings/organizations/create',
   // internal paths
   termsAndConditions: '/terms-and-conditions',
   onBoarding: '/on-boarding'

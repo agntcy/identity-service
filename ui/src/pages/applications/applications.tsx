@@ -6,7 +6,7 @@
 import {BasePage} from '@/components/layout/base-page';
 import {PATHS} from '@/router/paths';
 import {Button} from '@outshift/spark-design';
-import {PlusIcon} from 'lucide-react';
+import {CheckIcon, PlusIcon} from 'lucide-react';
 import {Link} from 'react-router-dom';
 
 const Applications: React.FC = () => {
@@ -15,11 +15,18 @@ const Applications: React.FC = () => {
       title="Applications"
       useBreadcrumbs={false}
       rightSideItems={
-        <Link to={PATHS.applicationsCreate}>
-          <Button startIcon={<PlusIcon className="w-4 h-4" />} variant="primary">
-            Create Application
-          </Button>
-        </Link>
+        <div className="flex gap-4 items-center">
+          <Link to={PATHS.applicationsCreate}>
+            <Button startIcon={<CheckIcon className="w-4 h-4" />} variant="secondary" sx={{fontWeight: '600 !important'}}>
+              Verify identity
+            </Button>
+          </Link>
+          <Link to={PATHS.applicationsCreate}>
+            <Button startIcon={<PlusIcon className="w-4 h-4" />} variant="primary" sx={{fontWeight: '600 !important'}}>
+              Add Application
+            </Button>
+          </Link>
+        </div>
       }
     >
       <div></div>

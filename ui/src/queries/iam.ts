@@ -15,3 +15,13 @@ export const useGetTenants = () => {
     }
   });
 };
+
+export const useGetSession = () => {
+  return useQuery({
+    queryKey: ['get-session'],
+    queryFn: async () => {
+      const {data} = await IamAPI.getSession();
+      return data;
+    }
+  });
+};

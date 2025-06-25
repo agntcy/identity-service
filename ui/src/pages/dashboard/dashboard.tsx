@@ -86,11 +86,11 @@ const Dashboard: React.FC = () => {
               <div className="bg-[#FBFCFE] rounded-[8px] pt-[40px] pb-[24px] flex justify-center items-center px-4  w-[50%]">
                 <div>
                   <Typography variant="h6" textAlign="center">
-                    Configure identity provider
+                    Create identities
                   </Typography>
                   <Typography variant="body1" marginTop={2} textAlign="center">
-                    Start by setting up your identity provider to manage identities effectively. This is essential for applying tool-based access
-                    control and policies across your agents and MCP servers.
+                    Start adding agents (MCP servers, agents, and A2A) to create and manage identities, apply tool-based access control and policies
+                    effectively.
                   </Typography>
                   <div className="flex justify-center items-center mt-4">
                     <Button
@@ -99,7 +99,7 @@ const Dashboard: React.FC = () => {
                       startIcon={<PlusIcon className="w-4 h-4" />}
                       onClick={goToIdentity}
                     >
-                      Configure
+                      Create
                     </Button>
                   </div>
                 </div>

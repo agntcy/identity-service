@@ -7,7 +7,7 @@ import axios, {AxiosError, AxiosHeaders, AxiosInstance, AxiosResponse, InternalA
 import {AuthInfo} from '@/types/okta';
 import {getAuthConfig} from '@/utils/get-auth-config';
 import {httpErrorsAuth} from '@/constants/http-errors';
-import {GetTenantsResponse} from '@/types/api/iam';
+import {GetSessionResponse, GetTenantsResponse} from '@/types/api/iam';
 
 class IamAPIClass {
   protected authInfo: AuthInfo | null | undefined;
@@ -27,6 +27,10 @@ class IamAPIClass {
 
   public getTenants = () => {
     return this.instance.get<GetTenantsResponse>(`/tenant?product=${getAuthConfig().productId}`);
+  };
+
+  public getSession = () => {
+    return this.instance.get<GetSessionResponse>('/session');
   };
 
   protected handleLogout = () => {

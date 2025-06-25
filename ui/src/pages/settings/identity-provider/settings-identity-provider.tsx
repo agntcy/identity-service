@@ -5,11 +5,11 @@
 
 import {CreateIdentityProvider} from '@/components/identity-provider/create/create-identity-provider';
 import {InformationProvider} from '@/components/identity-provider/information/information-provider';
+import {BasePage} from '@/components/layout/base-page';
 import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-renderer';
 import {useGetSettings} from '@/queries';
 import {PATHS} from '@/router/paths';
 import {IdpType} from '@/types/api/settings';
-import {BasePage, Link, Typography} from '@outshift/spark-design';
 import {useMemo} from 'react';
 
 const SettingsIdentityProvider: React.FC = () => {
@@ -22,16 +22,6 @@ const SettingsIdentityProvider: React.FC = () => {
   return (
     <BasePage
       title="Identity Provider"
-      description={
-        <Typography variant="body2">
-          Use an Identity Provider (IdP) to assign identities to Agents and MCP Servers, centralize and secure identity management by enabling
-          cryptographically verifiable, trusted authentication{' '}
-          <Link href="https://spec.identity.agntcy.org/docs/category/identifiers" openInNewTab>
-            here
-          </Link>
-          .
-        </Typography>
-      }
       subNav={[
         {
           label: 'Identity Provider',
@@ -40,12 +30,16 @@ const SettingsIdentityProvider: React.FC = () => {
         {
           label: 'Api Key',
           href: PATHS.settingsApiKey
+        },
+        {
+          label: 'Organizations',
+          href: PATHS.settingsOrganizations
         }
       ]}
       breadcrumbs={[
         {
           text: 'Settings',
-          href: PATHS.settings
+          link: PATHS.settings
         },
         {
           text: 'Identity Provider'
