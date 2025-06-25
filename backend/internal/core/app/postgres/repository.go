@@ -11,6 +11,7 @@ import (
 	appcore "github.com/agntcy/identity-platform/internal/core/app"
 	"github.com/agntcy/identity-platform/internal/core/app/types"
 	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
+	"github.com/agntcy/identity-platform/internal/pkg/convertutil"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 	"github.com/agntcy/identity-platform/internal/pkg/gormutil"
 	"github.com/agntcy/identity-platform/internal/pkg/pagination"
@@ -142,4 +143,30 @@ func (r *repository) GetAllApps(
 		Page:  paginationFilter.GetPage(),
 		Size:  int32(len(apps)),
 	}, nil
+}
+
+func (r *repository) GetApps(ctx context.Context, ids []string) ([]*types.App, error) {
+	var apps []*App
+
+	tenantID, ok := identitycontext.GetTenantID(ctx)
+	if !ok {
+		return nil, errutil.Err(
+			nil, "failed to get tenant ID from context",
+		)
+	}
+
+	result := r.dbContext.Client().
+		Where("id IN ? AND tenant_id = ?", ids, tenantID).
+		Find(&apps)
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return nil, errutil.Err(result.Error, "apps not found")
+		}
+
+		return nil, errutil.Err(result.Error, "there was an error fetching the apps")
+	}
+
+	return convertutil.ConvertSlice(apps, func(app *App) *types.App {
+		return app.ToCoreType()
+	}), nil
 }

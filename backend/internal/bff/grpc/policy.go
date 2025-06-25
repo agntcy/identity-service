@@ -5,23 +5,41 @@ package grpc
 
 import (
 	"context"
+	"errors"
 
 	identity_platform_sdk_go "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1"
+	"github.com/agntcy/identity-platform/internal/bff"
+	"github.com/agntcy/identity-platform/internal/bff/grpc/converters"
+	"github.com/agntcy/identity-platform/internal/pkg/grpcutil"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 type PolicyService struct {
+	policyService bff.PolicyService
 }
 
-func NewPolicyService() identity_platform_sdk_go.PolicyServiceServer {
-	return &PolicyService{}
+func NewPolicyService(policyService bff.PolicyService) identity_platform_sdk_go.PolicyServiceServer {
+	return &PolicyService{
+		policyService: policyService,
+	}
 }
 
-func (p *PolicyService) CreatePolicy(
-	context.Context,
-	*identity_platform_sdk_go.CreatePolicyRequest,
+func (s *PolicyService) CreatePolicy(
+	ctx context.Context,
+	in *identity_platform_sdk_go.CreatePolicyRequest,
 ) (*identity_platform_sdk_go.Policy, error) {
-	panic("unimplemented")
+	if in == nil {
+		return nil, grpcutil.BadRequestError(errors.New("request is empty"))
+	}
+
+	policy := converters.ToPolicy(in.Policy)
+
+	p, err := s.policyService.CreatePolicy(ctx, policy)
+	if err != nil {
+		return nil, grpcutil.BadRequestError(err)
+	}
+
+	return converters.FromPolicy(p), nil
 }
 
 func (p *PolicyService) CreateRule(

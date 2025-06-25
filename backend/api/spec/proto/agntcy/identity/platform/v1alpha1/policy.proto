@@ -21,6 +21,9 @@ message Policy {
   // A human-readable description for the Policy.
   optional string description = 5;
 
+  // The requester application that this Rule applies to.
+  optional string assigned_to = 2;
+
   // All the rules that apply to this Policy.
   repeated Rule rules = 6;
 }
@@ -35,9 +38,6 @@ message Rule {
 
   // A human-readable description for the Rule.
   optional string description = 5;
-
-  // The requester application that this Rule applies to.
-  optional string assigned_to = 2;
 
   // The tasks that this Rule applies to.
   repeated Task tasks = 3;

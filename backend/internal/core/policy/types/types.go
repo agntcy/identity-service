@@ -29,9 +29,6 @@ type Rule struct {
 	// A human-readable description for the Rule.
 	Description string `json:"description,omitempty" protobuf:"bytes,5,opt,name=description"`
 
-	// The requester application that this Rule applies to.
-	AssignedTo string `json:"assigned_to,omitempty" protobuf:"bytes,2,opt,name=assigned_to"`
-
 	// The tasks that this Rule applies to.
 	Tasks []*Task `json:"tasks,omitempty" protobuf:"bytes,3,rep,name=tasks"`
 
@@ -49,6 +46,9 @@ type Policy struct {
 
 	// A human-readable description for the Policy.
 	Description string `json:"description,omitempty" protobuf:"bytes,5,opt,name=description"`
+
+	// The requester application that this Rule applies to.
+	AssignedTo string `json:"assigned_to,omitempty" protobuf:"bytes,2,opt,name=assigned_to"`
 
 	// All the rules that apply to this Policy.
 	Rules []*Rule `json:"rules,omitempty" protobuf:"bytes,6,rep,name=rules"`

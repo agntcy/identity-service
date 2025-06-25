@@ -12,6 +12,7 @@ import (
 
 	appcore "github.com/agntcy/identity-platform/internal/core/app"
 	apptypes "github.com/agntcy/identity-platform/internal/core/app/types"
+	policycore "github.com/agntcy/identity-platform/internal/core/policy"
 	policytypes "github.com/agntcy/identity-platform/internal/core/policy/types"
 	"github.com/google/uuid"
 )
@@ -21,12 +22,17 @@ type PolicyService interface {
 }
 
 type policyService struct {
-	appRepository appcore.Repository
+	appRepository    appcore.Repository
+	policyRepository policycore.Repository
 }
 
-func NewPolicyService(appRepository appcore.Repository) PolicyService {
+func NewPolicyService(
+	appRepository appcore.Repository,
+	policyRepository policycore.Repository,
+) PolicyService {
 	return &policyService{
-		appRepository: appRepository,
+		appRepository:    appRepository,
+		policyRepository: policyRepository,
 	}
 }
 
@@ -40,7 +46,10 @@ func (s *policyService) CreatePolicy(
 
 	policy.ID = uuid.NewString()
 
-	s.validateRules(ctx, policy.Rules)
+	err := s.validatePolicy(ctx, policy)
+	if err != nil {
+		return nil, err
+	}
 
 	for _, rule := range policy.Rules {
 		rule.ID = uuid.NewString()
@@ -50,22 +59,29 @@ func (s *policyService) CreatePolicy(
 		}
 	}
 
+	err = s.policyRepository.Create(ctx, policy)
+	if err != nil {
+		return nil, err
+	}
+
+	return policy, nil
+}
+
+func (s *policyService) validatePolicy(ctx context.Context, policy *policytypes.Policy) error {
+	err := s.validateAppIDs(ctx, policy.AssignedTo)
+	if err != nil {
+		return fmt.Errorf("policy is linked to an invalid app %s", policy.AssignedTo)
+	}
+
+	return s.validateRules(ctx, policy.Rules)
 }
 
 func (s *policyService) validateRules(ctx context.Context, rules []*policytypes.Rule) error {
-	appIDs := make([]string, len(rules))
 	for _, rule := range rules {
-		appIDs = append(appIDs, rule.AssignedTo)
-
 		err := s.validateTasks(ctx, rule.Tasks)
 		if err != nil {
 			return err
 		}
-	}
-
-	err := s.validateAppIDs(ctx, appIDs)
-	if err != nil {
-		return fmt.Errorf("invalid rules: %w")
 	}
 
 	return nil
@@ -73,11 +89,11 @@ func (s *policyService) validateRules(ctx context.Context, rules []*policytypes.
 
 func (s *policyService) validateTasks(ctx context.Context, tasks []*policytypes.Task) error {
 	appIDs := make([]string, len(tasks))
-	for _, task := range tasks {
-		appIDs = append(appIDs, task.AppID)
+	for idx, task := range tasks {
+		appIDs[idx] = task.AppID
 	}
 
-	err := s.validateAppIDs(ctx, appIDs)
+	err := s.validateAppIDs(ctx, appIDs...)
 	if err != nil {
 		return fmt.Errorf("invalid tasks: %w", err)
 	}
@@ -85,7 +101,7 @@ func (s *policyService) validateTasks(ctx context.Context, tasks []*policytypes.
 	return nil
 }
 
-func (s *policyService) validateAppIDs(ctx context.Context, ids []string) error {
+func (s *policyService) validateAppIDs(ctx context.Context, ids ...string) error {
 	apps, err := s.appRepository.GetApps(ctx, ids)
 	if err != nil {
 		return fmt.Errorf("unable to validate the applications: %w", err)

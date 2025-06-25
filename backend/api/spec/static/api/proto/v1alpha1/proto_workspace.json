@@ -1849,6 +1849,18 @@
               "defaultValue": ""
             },
             {
+              "name": "assigned_to",
+              "description": "The requester application that this Rule applies to.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_assigned_to",
+              "defaultValue": ""
+            },
+            {
               "name": "rules",
               "description": "All the rules that apply to this Policy.",
               "label": "repeated",
@@ -1906,18 +1918,6 @@
               "ismap": false,
               "isoneof": true,
               "oneofdecl": "_description",
-              "defaultValue": ""
-            },
-            {
-              "name": "assigned_to",
-              "description": "The requester application that this Rule applies to.",
-              "label": "optional",
-              "type": "string",
-              "longType": "string",
-              "fullType": "string",
-              "ismap": false,
-              "isoneof": true,
-              "oneofdecl": "_assigned_to",
               "defaultValue": ""
             },
             {

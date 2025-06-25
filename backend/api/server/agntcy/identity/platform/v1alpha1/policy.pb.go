@@ -32,6 +32,8 @@ type Policy struct {
 	Name *string `protobuf:"bytes,4,opt,name=name,proto3,oneof" json:"name,omitempty"`
 	// A human-readable description for the Policy.
 	Description *string `protobuf:"bytes,5,opt,name=description,proto3,oneof" json:"description,omitempty"`
+	// The requester application that this Rule applies to.
+	AssignedTo *string `protobuf:"bytes,2,opt,name=assigned_to,json=assignedTo,proto3,oneof" json:"assigned_to,omitempty"`
 	// All the rules that apply to this Policy.
 	Rules         []*Rule `protobuf:"bytes,6,rep,name=rules,proto3" json:"rules,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -89,6 +91,13 @@ func (x *Policy) GetDescription() string {
 	return ""
 }
 
+func (x *Policy) GetAssignedTo() string {
+	if x != nil && x.AssignedTo != nil {
+		return *x.AssignedTo
+	}
+	return ""
+}
+
 func (x *Policy) GetRules() []*Rule {
 	if x != nil {
 		return x.Rules
@@ -105,8 +114,6 @@ type Rule struct {
 	Name *string `protobuf:"bytes,4,opt,name=name,proto3,oneof" json:"name,omitempty"`
 	// A human-readable description for the Rule.
 	Description *string `protobuf:"bytes,5,opt,name=description,proto3,oneof" json:"description,omitempty"`
-	// The requester application that this Rule applies to.
-	AssignedTo *string `protobuf:"bytes,2,opt,name=assigned_to,json=assignedTo,proto3,oneof" json:"assigned_to,omitempty"`
 	// The tasks that this Rule applies to.
 	Tasks []*Task `protobuf:"bytes,3,rep,name=tasks,proto3" json:"tasks,omitempty"`
 	// Need User Approval for this Rule.
@@ -162,13 +169,6 @@ func (x *Rule) GetName() string {
 func (x *Rule) GetDescription() string {
 	if x != nil && x.Description != nil {
 		return *x.Description
-	}
-	return ""
-}
-
-func (x *Rule) GetAssignedTo() string {
-	if x != nil && x.AssignedTo != nil {
-		return *x.AssignedTo
 	}
 	return ""
 }
@@ -264,27 +264,27 @@ var File_agntcy_identity_platform_v1alpha1_policy_proto protoreflect.FileDescrip
 
 const file_agntcy_identity_platform_v1alpha1_policy_proto_rawDesc = "" +
 	"\n" +
-	".agntcy/identity/platform/v1alpha1/policy.proto\x12!agntcy.identity.platform.v1alpha1\"\xbc\x01\n" +
+	".agntcy/identity/platform/v1alpha1/policy.proto\x12!agntcy.identity.platform.v1alpha1\"\xf2\x01\n" +
 	"\x06Policy\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x17\n" +
-	"\x04name\x18\x04 \x01(\tH\x01R\x04name\x88\x01\x01\x12%\n" +
-	"\vdescription\x18\x05 \x01(\tH\x02R\vdescription\x88\x01\x01\x12=\n" +
-	"\x05rules\x18\x06 \x03(\v2'.agntcy.identity.platform.v1alpha1.RuleR\x05rulesB\x05\n" +
-	"\x03_idB\a\n" +
-	"\x05_nameB\x0e\n" +
-	"\f_description\"\xaf\x02\n" +
-	"\x04Rule\x12\x13\n" +
 	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x17\n" +
 	"\x04name\x18\x04 \x01(\tH\x01R\x04name\x88\x01\x01\x12%\n" +
 	"\vdescription\x18\x05 \x01(\tH\x02R\vdescription\x88\x01\x01\x12$\n" +
 	"\vassigned_to\x18\x02 \x01(\tH\x03R\n" +
 	"assignedTo\x88\x01\x01\x12=\n" +
-	"\x05tasks\x18\x03 \x03(\v2'.agntcy.identity.platform.v1alpha1.TaskR\x05tasks\x12*\n" +
-	"\x0eneeds_approval\x18\b \x01(\bH\x04R\rneedsApproval\x88\x01\x01B\x05\n" +
+	"\x05rules\x18\x06 \x03(\v2'.agntcy.identity.platform.v1alpha1.RuleR\x05rulesB\x05\n" +
 	"\x03_idB\a\n" +
 	"\x05_nameB\x0e\n" +
 	"\f_descriptionB\x0e\n" +
-	"\f_assigned_toB\x11\n" +
+	"\f_assigned_to\"\xf9\x01\n" +
+	"\x04Rule\x12\x13\n" +
+	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x17\n" +
+	"\x04name\x18\x04 \x01(\tH\x01R\x04name\x88\x01\x01\x12%\n" +
+	"\vdescription\x18\x05 \x01(\tH\x02R\vdescription\x88\x01\x01\x12=\n" +
+	"\x05tasks\x18\x03 \x03(\v2'.agntcy.identity.platform.v1alpha1.TaskR\x05tasks\x12*\n" +
+	"\x0eneeds_approval\x18\b \x01(\bH\x03R\rneedsApproval\x88\x01\x01B\x05\n" +
+	"\x03_idB\a\n" +
+	"\x05_nameB\x0e\n" +
+	"\f_descriptionB\x11\n" +
 	"\x0f_needs_approval\"\x9b\x01\n" +
 	"\x04Task\x12\x13\n" +
 	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x17\n" +

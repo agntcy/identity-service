@@ -1025,6 +1025,9 @@ components:
                 description:
                     type: string
                     description: A human-readable description for the Policy.
+                assignedTo:
+                    type: string
+                    description: The requester application that this Rule applies to.
                 rules:
                     type: array
                     items:
@@ -1058,9 +1061,6 @@ components:
                 description:
                     type: string
                     description: A human-readable description for the Rule.
-                assignedTo:
-                    type: string
-                    description: The requester application that this Rule applies to.
                 tasks:
                     type: array
                     items:
