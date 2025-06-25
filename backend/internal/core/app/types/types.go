@@ -17,7 +17,7 @@ const (
 	APP_TYPE_AGENT_OASF
 
 	// Agent MCP Server App Type.
-	APP_TYPE_AGENT_MCP_SERVER
+	APP_TYPE_MCP_SERVER
 )
 
 func (t *AppType) UnmarshalText(text []byte) error {
@@ -26,8 +26,8 @@ func (t *AppType) UnmarshalText(text []byte) error {
 		*t = APP_TYPE_AGENT_A2A
 	case APP_TYPE_AGENT_OASF.String():
 		*t = APP_TYPE_AGENT_OASF
-	case APP_TYPE_AGENT_MCP_SERVER.String():
-		*t = APP_TYPE_AGENT_MCP_SERVER
+	case APP_TYPE_MCP_SERVER.String():
+		*t = APP_TYPE_MCP_SERVER
 	default:
 		*t = APP_TYPE_UNSPECIFIED
 	}

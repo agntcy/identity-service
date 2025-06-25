@@ -11,12 +11,12 @@ func _() {
 	_ = x[APP_TYPE_UNSPECIFIED-0]
 	_ = x[APP_TYPE_AGENT_A2A-1]
 	_ = x[APP_TYPE_AGENT_OASF-2]
-	_ = x[APP_TYPE_AGENT_MCP_SERVER-3]
+	_ = x[APP_TYPE_MCP_SERVER-3]
 }
 
-const _AppType_name = "APP_TYPE_UNSPECIFIEDAPP_TYPE_AGENT_A2AAPP_TYPE_AGENT_OASFAPP_TYPE_AGENT_MCP_SERVER"
+const _AppType_name = "APP_TYPE_UNSPECIFIEDAPP_TYPE_AGENT_A2AAPP_TYPE_AGENT_OASFAPP_TYPE_MCP_SERVER"
 
-var _AppType_index = [...]uint8{0, 20, 38, 57, 82}
+var _AppType_index = [...]uint8{0, 20, 38, 57, 76}
 
 func (i AppType) String() string {
 	if i < 0 || i >= AppType(len(_AppType_index)-1) {
