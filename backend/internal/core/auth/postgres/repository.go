@@ -35,7 +35,7 @@ func (r *postgresRepository) Create(
 	model := newSessionModel(session)
 
 	// Generate a new code
-	model.Code = ptrutil.Ptr(strutil.Random(codeLength))
+	model.AuthorizationCode = ptrutil.Ptr(strutil.Random(codeLength))
 
 	result := r.dbContext.Client().Create(model)
 	if result.Error != nil {
@@ -47,10 +47,13 @@ func (r *postgresRepository) Create(
 	return model.ToCoreType(), nil
 }
 
-func (r *postgresRepository) GetByCode(ctx context.Context, code string) (*types.Session, error) {
+func (r *postgresRepository) GetByAuthorizationCode(
+	ctx context.Context,
+	code string,
+) (*types.Session, error) {
 	model := &Session{}
 
-	result := r.dbContext.Client().Where("code = ?", code).First(model)
+	result := r.dbContext.Client().Where("authorization_code = ?", code).First(model)
 	if result.Error != nil {
 		return nil, errutil.Err(
 			result.Error, "there was an error retrieving the session by code",

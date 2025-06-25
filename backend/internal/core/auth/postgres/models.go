@@ -21,27 +21,27 @@ type Session struct {
 
 func (i *Session) ToCoreType() *types.Session {
 	return &types.Session{
-		ID:         i.ID,
-		OwnerAppID: i.OwnerAppID,
-		AppID:      i.AppID,
-		ToolName:   i.ToolName,
-		UserID:     i.UserID,
-		TokenID:    i.TokenID,
-		Code:       i.Code,
-		CreatedAt:  i.CreatedAt,
-		ExpiresAt:  i.ExpiresAt,
+		ID:                i.ID,
+		OwnerAppID:        i.OwnerAppID,
+		AppID:             i.AppID,
+		ToolName:          i.ToolName,
+		UserID:            i.UserID,
+		TokenID:           i.TokenID,
+		AuthorizationCode: i.AuthorizationCode,
+		CreatedAt:         i.CreatedAt,
+		ExpiresAt:         i.ExpiresAt,
 	}
 }
 
 func newSessionModel(src *types.Session) *Session {
 	return &Session{
-		ID:         src.ID,
-		OwnerAppID: src.OwnerAppID,
-		AppID:      src.AppID,
-		ToolName:   src.ToolName,
-		UserID:     src.UserID,
-		TokenID:    src.TokenID,
-		Code:       src.Code,
-		ExpiresAt:  src.ExpiresAt,
+		ID:                src.ID,
+		OwnerAppID:        src.OwnerAppID,
+		AppID:             src.AppID,
+		ToolName:          src.ToolName,
+		UserID:            src.UserID,
+		TokenID:           src.TokenID,
+		AuthorizationCode: src.AuthorizationCode,
+		ExpiresAt:         src.ExpiresAt,
 	}
 }
