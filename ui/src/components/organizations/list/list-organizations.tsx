@@ -91,6 +91,11 @@ export const ListOrganizations = () => {
                 </MenuItem>
               ];
             }}
+            muiBottomToolbarProps={{
+              style: {
+                boxShadow: 'none'
+              }
+            }}
           />
         </ConditionalQueryRenderer>
       </Card>
