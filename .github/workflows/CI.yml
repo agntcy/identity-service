@@ -94,7 +94,7 @@ jobs:
   call-corona-blackduck-scan:
     name: Call Corona & Blackduck scan
     needs: [ call-docker-build-push ]
-    uses: cisco-eti/gh-reusable-workflows/.github/workflows/corona-blackduck-scan.yaml@v1.11.1
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/corona-blackduck-scan.yaml@v1.14.0
 
     secrets:
       vault-approle-role-id: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
