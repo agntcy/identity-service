@@ -178,37 +178,37 @@ func (s *badgeService) createBadgeClaims(
 	case apptypes.APP_TYPE_AGENT_A2A:
 		err := s.validator.Struct(&in.a2a)
 		if err != nil {
-			return nil, badgetypes.CREDENTIAL_CONTENT_TYPE_UNSPECIFIED, err
+			return nil, badgetypes.BADGE_TYPE_UNSPECIFIED, err
 		}
 
 		card, err := s.a2aClient.Discover(ctx, in.a2a.WellKnownUrl)
 		if err != nil {
 			return nil,
-				badgetypes.CREDENTIAL_CONTENT_TYPE_UNSPECIFIED,
+				badgetypes.BADGE_TYPE_UNSPECIFIED,
 				fmt.Errorf("unable to discover A2A agent card: %w", err)
 		}
 
 		claims.Badge = card
-		badgeType = badgetypes.CREDENTIAL_CONTENT_TYPE_AGENT_BADGE
+		badgeType = badgetypes.BADGE_TYPE_AGENT_BADGE
 	case apptypes.APP_TYPE_AGENT_OASF:
 		// Add implementation for OASF
 		return nil, 0, nil
 	case apptypes.APP_TYPE_AGENT_MCP_SERVER:
 		err := s.validator.Struct(&in.mcp)
 		if err != nil {
-			return nil, badgetypes.CREDENTIAL_CONTENT_TYPE_UNSPECIFIED, err
+			return nil, badgetypes.BADGE_TYPE_UNSPECIFIED, err
 		}
 
 		mcpServer, err := s.mcpClient.Discover(ctx, in.mcp.Name, in.mcp.Url)
 		if err != nil {
 			return nil,
-				badgetypes.CREDENTIAL_CONTENT_TYPE_UNSPECIFIED,
+				badgetypes.BADGE_TYPE_UNSPECIFIED,
 				fmt.Errorf("unable to discover MCP server: %w", err)
 		}
 
 		if mcpServer == nil {
 			return nil,
-				badgetypes.CREDENTIAL_CONTENT_TYPE_UNSPECIFIED,
+				badgetypes.BADGE_TYPE_UNSPECIFIED,
 				fmt.Errorf("no MCP server found")
 		}
 
@@ -216,15 +216,15 @@ func (s *badgeService) createBadgeClaims(
 		mcpServerData, err := json.Marshal(mcpServer)
 		if err != nil {
 			return nil,
-				badgetypes.CREDENTIAL_CONTENT_TYPE_UNSPECIFIED,
+				badgetypes.BADGE_TYPE_UNSPECIFIED,
 				fmt.Errorf("error marshalling MCP server: %w", err)
 		}
 
 		claims.Badge = string(mcpServerData)
-		badgeType = badgetypes.CREDENTIAL_CONTENT_TYPE_MCP_BADGE
+		badgeType = badgetypes.BADGE_TYPE_MCP_BADGE
 	default:
 		return nil,
-			badgetypes.CREDENTIAL_CONTENT_TYPE_UNSPECIFIED,
+			badgetypes.BADGE_TYPE_UNSPECIFIED,
 			errors.New("unsupported app type")
 	}
 

@@ -22,7 +22,7 @@ func Issue(
 	claims *types.BadgeClaims,
 	privateKey *jwk.Jwk,
 ) (*types.Badge, error) {
-	if typ == types.CREDENTIAL_CONTENT_TYPE_UNSPECIFIED {
+	if typ == types.BADGE_TYPE_UNSPECIFIED {
 		return nil, errors.New("unsupported badge type")
 	}
 
