@@ -1,8 +1,3 @@
-/**
- * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
- * SPDX-License-Identifier: Apache-2.0
- */
-
 /* eslint-disable */
 /* tslint:disable */
 // @ts-nocheck
@@ -20,14 +15,14 @@
  * - APP_TYPE_UNSPECIFIED: Unspecified Envelope Type.
  *  - APP_TYPE_AGENT_A2A: Agent A2A App Type.
  *  - APP_TYPE_AGENT_OASF: Agent OASF App Type.
- *  - APP_TYPE_AGENT_MCP_SERVER: Agent MCP Server App Type.
+ *  - APP_TYPE_MCP_SERVER: Agent MCP Server App Type.
  * @default "APP_TYPE_UNSPECIFIED"
  */
 export enum V1Alpha1AppType {
   APP_TYPE_UNSPECIFIED = 'APP_TYPE_UNSPECIFIED',
   APP_TYPE_AGENT_A2A = 'APP_TYPE_AGENT_A2A',
   APP_TYPE_AGENT_OASF = 'APP_TYPE_AGENT_OASF',
-  APP_TYPE_AGENT_MCP_SERVER = 'APP_TYPE_AGENT_MCP_SERVER'
+  APP_TYPE_MCP_SERVER = 'APP_TYPE_MCP_SERVER'
 }
 
 /**
@@ -152,14 +147,6 @@ export interface GoogleprotobufAny {
   [key: string]: any;
 }
 
-/** Identity Platform Token */
-export interface Platformv1Alpha1Token {
-  /** A unique identifier for the Token. */
-  id?: string;
-  /** Token value. */
-  value?: string;
-}
-
 export interface RpcStatus {
   /** @format int32 */
   code?: number;
@@ -178,7 +165,8 @@ export interface V1Alpha1App {
   /** The type of the App. */
   type?: V1Alpha1AppType;
   /** The DID value */
-  resolverMetadataID?: string;
+  resolverMetadataId?: string;
+  apiKey?: string;
 }
 
 export interface V1Alpha1AppInfoResponse {
@@ -191,7 +179,7 @@ export interface V1Alpha1AuthorizeResponse {
    * If authorization is successful, return a code to be used for
    * the token endpoint.
    */
-  code?: string;
+  authorizationCode?: string;
 }
 
 /** Devices used for user approval */
@@ -205,8 +193,8 @@ export interface V1Alpha1Device {
 }
 
 export interface V1Alpha1TokenResponse {
-  /** The token issued to the Agent or MCP Server. */
-  token?: Platformv1Alpha1Token;
+  /** The access token issued to the Agent or MCP Server. */
+  accessToken?: string;
 }
 
 import type {AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType} from 'axios';
@@ -394,10 +382,17 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @summary Handle external authorization requests
      * @request POST:/v1alpha1/auth/ext_authz
      */
-    extAuthz: (params: RequestParams = {}) =>
+    extAuthz: (
+      query?: {
+        /** The access token to be authorized. */
+        accessToken?: string;
+      },
+      params: RequestParams = {}
+    ) =>
       this.request<object, RpcStatus>({
         path: `/v1alpha1/auth/ext_authz`,
         method: 'POST',
+        query: query,
         format: 'json',
         ...params
       }),
@@ -445,7 +440,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     requestToken: (
       query?: {
         /** Pass the code received from the authorization endpoint. */
-        code?: string;
+        authorizationCode?: string;
       },
       params: RequestParams = {}
     ) =>

@@ -41,13 +41,14 @@ const FormStepperComponent = () => {
 
   const mutationCreate = useCreateAgenticService({
     callbacks: {
-      onSuccess: (resp) => {
+      onSuccess: () => {
         setIsLoading(false);
         toast({
           title: 'Success',
           description: 'Agentic service created successfully.',
           type: 'success'
         });
+        // TODO: Go to info page of the created agentic service
         void navigate(PATHS.agenticServices);
       },
       onError: () => {

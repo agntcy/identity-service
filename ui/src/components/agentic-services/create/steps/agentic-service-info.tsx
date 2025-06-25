@@ -32,7 +32,7 @@ export const AgenticServiceInfo = ({isLoading = false}: {isLoading?: boolean}) =
       isDisabled: isLoading
     },
     {
-      type: AppType.APP_TYPE_AGENT_MCP_SERVER,
+      type: AppType.APP_TYPE_MCP_SERVER,
       title: 'MCP Server',
       imgURI: <McpLogo className="w-5 h-5" />,
       isDisabled: isLoading
@@ -142,7 +142,7 @@ export const AgenticServiceInfo = ({isLoading = false}: {isLoading?: boolean}) =
             />
           </div>
         )}
-        {appType === AppType.APP_TYPE_AGENT_MCP_SERVER && (
+        {appType === AppType.APP_TYPE_MCP_SERVER && (
           <div className="space-y-2 pt-2">
             <FormField
               control={control}

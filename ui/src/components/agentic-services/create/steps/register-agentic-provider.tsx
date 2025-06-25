@@ -38,7 +38,7 @@ export const RegisterAgenticProvider = ({isLoading = false}: {isLoading?: boolea
         value: labels.appTypes[type as keyof typeof labels.appTypes] || 'Not provided'
       }
     ];
-    if (type === AppType.APP_TYPE_AGENT_MCP_SERVER) {
+    if (type === AppType.APP_TYPE_MCP_SERVER) {
       temp.push({
         title: 'MCP Server',
         value: mcpServer || 'Not provided'

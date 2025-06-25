@@ -41,28 +41,30 @@ const AgentServices: React.FC = () => {
         </div>
       }
     >
-      <ConditionalQueryRenderer
-        itemName="Identity Provider"
-        data={isEmptyIdp ? undefined : data?.issuerSettings}
-        error={error}
-        isLoading={isLoading || isFetching}
-        useRelativeLoader
-        useContainer
-        errorListStateProps={{
-          actionCallback: () => {
-            void refetch();
-          },
-          actionTitle: 'Retry'
-        }}
-        emptyListStateProps={{
-          actionCallback: () => {
-            void navigate(PATHS.settingsIdentityProvider);
-          },
-          actionTitle: 'Add Identity Provider'
-        }}
-      >
-        <ListAgenticServices />
-      </ConditionalQueryRenderer>
+      <div className="mt-2">
+        <ConditionalQueryRenderer
+          itemName="Identity Provider"
+          data={isEmptyIdp ? undefined : data?.issuerSettings}
+          error={error}
+          isLoading={isLoading || isFetching}
+          useRelativeLoader
+          useContainer
+          errorListStateProps={{
+            actionCallback: () => {
+              void refetch();
+            },
+            actionTitle: 'Retry'
+          }}
+          emptyListStateProps={{
+            actionCallback: () => {
+              void navigate(PATHS.settingsIdentityProvider);
+            },
+            actionTitle: 'Add Identity Provider'
+          }}
+        >
+          <ListAgenticServices />
+        </ConditionalQueryRenderer>
+      </div>
     </BasePage>
   );
 };

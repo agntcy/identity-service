@@ -60,7 +60,7 @@
           },
           {
             "name": "type",
-            "description": "The app type filter\n\n - APP_TYPE_UNSPECIFIED: Unspecified Envelope Type.\n - APP_TYPE_AGENT_A2A: Agent A2A App Type.\n - APP_TYPE_AGENT_OASF: Agent OASF App Type.\n - APP_TYPE_AGENT_MCP_SERVER: Agent MCP Server App Type.",
+            "description": "The app type filter\n\n - APP_TYPE_UNSPECIFIED: Unspecified Envelope Type.\n - APP_TYPE_AGENT_A2A: Agent A2A App Type.\n - APP_TYPE_AGENT_OASF: Agent OASF App Type.\n - APP_TYPE_MCP_SERVER: Agent MCP Server App Type.",
             "in": "query",
             "required": false,
             "type": "string",
@@ -68,7 +68,7 @@
               "APP_TYPE_UNSPECIFIED",
               "APP_TYPE_AGENT_A2A",
               "APP_TYPE_AGENT_OASF",
-              "APP_TYPE_AGENT_MCP_SERVER"
+              "APP_TYPE_MCP_SERVER"
             ],
             "default": "APP_TYPE_UNSPECIFIED"
           }
@@ -286,9 +286,12 @@
           "$ref": "#/definitions/v1alpha1AppType",
           "description": "The type of the App."
         },
-        "resolverMetadataID": {
+        "resolverMetadataId": {
           "type": "string",
           "title": "The DID value"
+        },
+        "apiKey": {
+          "type": "string"
         }
       },
       "description": "Identity Platform App."
@@ -299,10 +302,10 @@
         "APP_TYPE_UNSPECIFIED",
         "APP_TYPE_AGENT_A2A",
         "APP_TYPE_AGENT_OASF",
-        "APP_TYPE_AGENT_MCP_SERVER"
+        "APP_TYPE_MCP_SERVER"
       ],
       "default": "APP_TYPE_UNSPECIFIED",
-      "description": "- APP_TYPE_UNSPECIFIED: Unspecified Envelope Type.\n - APP_TYPE_AGENT_A2A: Agent A2A App Type.\n - APP_TYPE_AGENT_OASF: Agent OASF App Type.\n - APP_TYPE_AGENT_MCP_SERVER: Agent MCP Server App Type.",
+      "description": "- APP_TYPE_UNSPECIFIED: Unspecified Envelope Type.\n - APP_TYPE_AGENT_A2A: Agent A2A App Type.\n - APP_TYPE_AGENT_OASF: Agent OASF App Type.\n - APP_TYPE_MCP_SERVER: Agent MCP Server App Type.",
       "title": "App Type"
     },
     "v1alpha1AppTypeCountEntry": {

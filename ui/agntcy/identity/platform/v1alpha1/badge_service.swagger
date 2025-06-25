@@ -105,7 +105,7 @@
         "verifiableCredential": {
           "$ref": "#/definitions/v1alpha1VerifiableCredential"
         },
-        "appID": {
+        "appId": {
           "type": "string"
         }
       }

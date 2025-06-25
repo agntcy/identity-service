@@ -1,8 +1,3 @@
-/**
- * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
- * SPDX-License-Identifier: Apache-2.0
- */
-
 /* eslint-disable */
 /* tslint:disable */
 // @ts-nocheck
@@ -20,14 +15,14 @@
  * - APP_TYPE_UNSPECIFIED: Unspecified Envelope Type.
  *  - APP_TYPE_AGENT_A2A: Agent A2A App Type.
  *  - APP_TYPE_AGENT_OASF: Agent OASF App Type.
- *  - APP_TYPE_AGENT_MCP_SERVER: Agent MCP Server App Type.
+ *  - APP_TYPE_MCP_SERVER: Agent MCP Server App Type.
  * @default "APP_TYPE_UNSPECIFIED"
  */
 export enum V1Alpha1AppType {
   APP_TYPE_UNSPECIFIED = 'APP_TYPE_UNSPECIFIED',
   APP_TYPE_AGENT_A2A = 'APP_TYPE_AGENT_A2A',
   APP_TYPE_AGENT_OASF = 'APP_TYPE_AGENT_OASF',
-  APP_TYPE_AGENT_MCP_SERVER = 'APP_TYPE_AGENT_MCP_SERVER'
+  APP_TYPE_MCP_SERVER = 'APP_TYPE_MCP_SERVER'
 }
 
 /**
@@ -170,7 +165,8 @@ export interface V1Alpha1App {
   /** The type of the App. */
   type?: V1Alpha1AppType;
   /** The DID value */
-  resolverMetadataID?: string;
+  resolverMetadataId?: string;
+  apiKey?: string;
 }
 
 export interface V1Alpha1AppTypeCountEntry {
@@ -179,7 +175,7 @@ export interface V1Alpha1AppTypeCountEntry {
    * - APP_TYPE_UNSPECIFIED: Unspecified Envelope Type.
    *  - APP_TYPE_AGENT_A2A: Agent A2A App Type.
    *  - APP_TYPE_AGENT_OASF: Agent OASF App Type.
-   *  - APP_TYPE_AGENT_MCP_SERVER: Agent MCP Server App Type.
+   *  - APP_TYPE_MCP_SERVER: Agent MCP Server App Type.
    */
   key?: V1Alpha1AppType;
   /**
@@ -381,10 +377,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
          *  - APP_TYPE_UNSPECIFIED: Unspecified Envelope Type.
          *  - APP_TYPE_AGENT_A2A: Agent A2A App Type.
          *  - APP_TYPE_AGENT_OASF: Agent OASF App Type.
-         *  - APP_TYPE_AGENT_MCP_SERVER: Agent MCP Server App Type.
+         *  - APP_TYPE_MCP_SERVER: Agent MCP Server App Type.
          * @default "APP_TYPE_UNSPECIFIED"
          */
-        type?: 'APP_TYPE_UNSPECIFIED' | 'APP_TYPE_AGENT_A2A' | 'APP_TYPE_AGENT_OASF' | 'APP_TYPE_AGENT_MCP_SERVER';
+        type?: 'APP_TYPE_UNSPECIFIED' | 'APP_TYPE_AGENT_A2A' | 'APP_TYPE_AGENT_OASF' | 'APP_TYPE_MCP_SERVER';
       },
       params: RequestParams = {}
     ) =>

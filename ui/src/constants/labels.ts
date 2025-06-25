@@ -10,7 +10,7 @@ export const labels = {
   appTypes: {
     [AppType.APP_TYPE_AGENT_OASF]: 'Open Agentic Schema Framework (OASF)',
     [AppType.APP_TYPE_AGENT_A2A]: 'Application to Application (A2A)',
-    [AppType.APP_TYPE_AGENT_MCP_SERVER]: 'Model Context Protocol (MCP)'
+    [AppType.APP_TYPE_MCP_SERVER]: 'Model Context Protocol (MCP)'
   },
   providerTypes: {
     [IdpType.IDP_TYPE_OKTA]: 'Okta',

@@ -1,8 +1,3 @@
-/**
- * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
- * SPDX-License-Identifier: Apache-2.0
- */
-
 /* eslint-disable */
 /* tslint:disable */
 // @ts-nocheck
@@ -152,7 +147,7 @@ export interface RpcStatus {
 export interface V1Alpha1Badge {
   /** [here]: https://www.w3.org/TR/vc-data-model/ */
   verifiableCredential?: V1Alpha1VerifiableCredential;
-  appID?: string;
+  appId?: string;
 }
 
 /**

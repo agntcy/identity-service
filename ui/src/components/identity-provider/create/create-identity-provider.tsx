@@ -38,8 +38,7 @@ const FormStepperComponent = () => {
 
   const mutationSetIdentityProvider = useSetIdentityProvider({
     callbacks: {
-      onSuccess: (resp) => {
-        console.log('Identity Provider saved successfully:', resp.data);
+      onSuccess: () => {
         setIsLoading(false);
         toast({
           title: 'Success',
