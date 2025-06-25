@@ -280,6 +280,13 @@ func (s *service) generateProof(
 			)
 		}
 
+		if commonName == "" {
+			return nil, errutil.Err(
+				nil,
+				"common name cannot be empty for self-issued JWT proof",
+			)
+		}
+
 		// Issue a self-signed JWT proof
 		proofValue, err = oidc.SelfIssueJWT(
 			commonName,

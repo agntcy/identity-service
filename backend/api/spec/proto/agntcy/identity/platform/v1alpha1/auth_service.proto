@@ -87,12 +87,12 @@ message AuthorizeRequest {
 message AuthorizeResponse {
   // If authorization is successful, return a code to be used for
   // the token endpoint.
-  string code = 1;
+  string authorization_code = 1;
 }
 
 message TokenRequest {
   // Pass the code received from the authorization endpoint.
-  string code = 1;
+  string authorization_code = 1;
 }
 
 message TokenResponse {

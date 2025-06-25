@@ -82,7 +82,7 @@ func (s *authService) Authorize(
 	}
 
 	return &identity_platform_sdk_go.AuthorizeResponse{
-		Code: ptrutil.DerefStr(session.Code),
+		AuthorizationCode: ptrutil.DerefStr(session.AuthorizationCode),
 	}, nil
 }
 
