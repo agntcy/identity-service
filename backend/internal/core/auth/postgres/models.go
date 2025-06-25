@@ -15,7 +15,7 @@ type Session struct {
 	AppID             string `gorm:"references:AppID"`
 	ToolName          *string
 	UserID            *string
-	AccessToken       *string `gorm:"type:varchar(256);index:at_idx,unique;"`
+	AccessToken       *string `gorm:"type:varchar(2048);index:at_idx,unique;"`
 	AuthorizationCode *string `gorm:"type:varchar(256);index:ac_idx,unique;"`
 }
 

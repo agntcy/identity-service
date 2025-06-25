@@ -11,6 +11,7 @@ import (
 	"github.com/agntcy/identity-platform/internal/bff/grpc/converters"
 	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
+	"github.com/agntcy/identity-platform/internal/pkg/grpcutil"
 	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
@@ -91,9 +92,11 @@ func (s *authService) Token(
 	req *identity_platform_sdk_go.TokenRequest,
 ) (*identity_platform_sdk_go.TokenResponse, error) {
 	if req.AuthorizationCode == "" {
-		return nil, errutil.Err(
-			nil,
-			"authorization code cannot be empty",
+		return nil, grpcutil.BadRequestError(
+			errutil.Err(
+				nil,
+				"authorization code cannot be empty",
+			),
 		)
 	}
 
@@ -103,9 +106,11 @@ func (s *authService) Token(
 		req.AuthorizationCode,
 	)
 	if err != nil {
-		return nil, errutil.Err(
-			err,
-			"failed to get token",
+		return nil, grpcutil.UnauthorizedError(
+			errutil.Err(
+				err,
+				"failed to issue token",
+			),
 		)
 	}
 
