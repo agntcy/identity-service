@@ -12,6 +12,7 @@ import (
 	idpcore "github.com/agntcy/identity-platform/internal/core/idp"
 	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
+	"github.com/agntcy/identity-platform/internal/pkg/grpcutil"
 	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
 	"github.com/agntcy/identity/pkg/oidc"
 )
@@ -97,10 +98,18 @@ func (s *authService) Token(
 	// Get session by authorization code
 	session, err := s.authRepository.GetByAuthorizationCode(ctx, authorizationCode)
 	if err != nil {
-		return nil, errutil.Err(
+		return nil, grpcutil.BadRequestError(errutil.Err(
 			err,
-			"failed to get session by authorization code",
-		)
+			"invalid session",
+		))
+	}
+
+	// Check if session already has an access token
+	if session.AccessToken != nil {
+		return nil, grpcutil.BadRequestError(errutil.Err(
+			nil,
+			"a token has already been issued",
+		))
 	}
 
 	// Get client credentials from the session
@@ -120,15 +129,21 @@ func (s *authService) Token(
 		clientCredentials.ClientSecret,
 	)
 	if err != nil {
-		return nil, errutil.Err(
+		return nil, grpcutil.UnauthorizedError(errutil.Err(
 			err,
 			"failed to issue token",
-		)
+		))
 	}
 
 	// Update session with token ID
 	session.AccessToken = ptrutil.Ptr(accessToken)
-	s.authRepository.Update(ctx, session)
+	err = s.authRepository.Update(ctx, session)
+	if err != nil {
+		return nil, errutil.Err(
+			err,
+			"failed to update the session",
+		)
+	}
 
 	return session, nil
 }
