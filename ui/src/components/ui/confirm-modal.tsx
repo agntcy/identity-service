@@ -1,10 +1,10 @@
-import React from 'react';
+import React, {ReactNode} from 'react';
 import {Modal, ModalTitle, ModalContent, ModalActions, Button, Typography} from '@outshift/spark-design';
 
 interface ConfirmModalProps {
   open: boolean;
-  title: string;
-  description: string;
+  title: ReactNode;
+  description: ReactNode;
   confirmButtonText?: string;
   onCancel: () => void;
   onConfirm: () => void;

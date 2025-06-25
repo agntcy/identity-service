@@ -111,7 +111,11 @@ export const OrganizationsDrawer: React.FC<{
       <ConfirmModal
         open={openConfirmation}
         title="Change organization"
-        description={`This will log you out of your current organization so that you can log into Organization ${tenant?.name}. Do you still want to continue?`}
+        description={
+          <>
+            This will log you out of your current organization so that you can log into <b>{tenant?.name}</b>. Do you still want to continue?
+          </>
+        }
         confirmButtonText="Continue"
         onCancel={() => handleConfirmationChange(undefined)}
         onConfirm={() => {

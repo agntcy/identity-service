@@ -13,6 +13,7 @@ import {Navigate} from 'react-router-dom';
 import React from 'react';
 import {SecureRoute} from '@/components/router/secure-route';
 import {Loading} from '@/components/ui/loading';
+import {BannerProvider} from '@/providers/banner-provider/banner-provider';
 
 const Welcome = React.lazy(() => import('@/pages/welcome/welcome'));
 const SettingsIdentityProvider = React.lazy(() => import('@/pages/settings/identity-provider/settings-identity-provider'));
@@ -48,7 +49,9 @@ export const generateRoutes = (routes: Route[]): Route[] => {
       element: (
         <SecureRoute redirectPath={PATHS.welcome}>
           <NodeRoute>
-            <Layout />
+            <BannerProvider>
+              <Layout />
+            </BannerProvider>
           </NodeRoute>
         </SecureRoute>
       ),
