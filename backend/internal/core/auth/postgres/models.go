@@ -6,14 +6,15 @@ package postgres
 import (
 	types "github.com/agntcy/identity-platform/internal/core/auth/types"
 	"github.com/agntcy/identity-platform/internal/pkg/secrets"
+	"github.com/google/uuid"
 )
 
 type Session struct {
-	ID                string `gorm:"primarykey"`
-	CreatedAt         int64  `gorm:"autoCreateTime"`
+	ID                uuid.UUID `gorm:"primaryKey;default:gen_random_uuid()"`
+	CreatedAt         int64     `gorm:"autoCreateTime"`
 	ExpiresAt         *int64
-	OwnerAppID        string `gorm:"references:OwnerAppID"`
-	AppID             string `gorm:"references:AppID"`
+	OwnerAppID        string `gorm:"references:App"`
+	AppID             string `gorm:"references:App"`
 	ToolName          *string
 	UserID            *string
 	AccessToken       *secrets.EncryptedString `gorm:"type:varchar(16384);index:at_idx,unique;"`
@@ -22,7 +23,7 @@ type Session struct {
 
 func (i *Session) ToCoreType() *types.Session {
 	return &types.Session{
-		ID:                i.ID,
+		ID:                i.ID.String(),
 		OwnerAppID:        i.OwnerAppID,
 		AppID:             i.AppID,
 		ToolName:          i.ToolName,
@@ -36,7 +37,7 @@ func (i *Session) ToCoreType() *types.Session {
 
 func newSessionModel(src *types.Session) *Session {
 	return &Session{
-		ID:                src.ID,
+		ID:                uuid.MustParse(src.ID),
 		OwnerAppID:        src.OwnerAppID,
 		AppID:             src.AppID,
 		ToolName:          src.ToolName,

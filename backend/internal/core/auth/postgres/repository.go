@@ -15,7 +15,6 @@ import (
 	"github.com/agntcy/identity-platform/internal/pkg/secrets"
 	"github.com/agntcy/identity-platform/internal/pkg/strutil"
 	"github.com/agntcy/identity-platform/pkg/db"
-	"github.com/google/uuid"
 )
 
 const (
@@ -39,8 +38,7 @@ func (r *postgresRepository) Create(
 ) (*types.Session, error) {
 	model := newSessionModel(session)
 
-	// Generate and id and a new auth code
-	model.ID = uuid.NewString()
+	// Generate a new auth code
 	model.AuthorizationCode = ptrutil.Ptr(strutil.Random(codeLength))
 
 	// Add expiration time
