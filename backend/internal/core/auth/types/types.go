@@ -18,19 +18,19 @@ type Session struct {
 	ToolName *string `json:"tool_name,omitempty" protobuf:"bytes,4,opt,name=tool_name"`
 
 	// The user ID associated with the Session.
-	UserID *string `json:"user_id,omitempty" protobuf:"bytes,4,opt,name=user_id"`
+	UserID *string `json:"user_id,omitempty" protobuf:"bytes,5,opt,name=user_id"`
 
 	// The token ID associated with the Session.
-	TokenID *string `json:"token_id,omitempty" protobuf:"bytes,5,opt,name=token_id"`
+	TokenID *string `json:"token_id,omitempty" protobuf:"bytes,6,opt,name=token_id"`
 
 	// The code associated with the Session.
-	Code *string `json:"code,omitempty" protobuf:"bytes,6,opt,name=code"`
+	Code *string `json:"code,omitempty" protobuf:"bytes,7,opt,name=code"`
 
 	// The creation time of the Session.
 	CreatedAt int64 `json:"created_at,omitempty" protobuf:"bytes,8,opt,name=created_at"`
 
 	// The expiration time of the Session.
-	ExpiresAt *int64 `json:"expires_at,omitempty" protobuf:"bytes,7,opt,name=expires_at"`
+	ExpiresAt *int64 `json:"expires_at,omitempty" protobuf:"bytes,9,opt,name=expires_at"`
 }
 
 // Identity Platform Token
