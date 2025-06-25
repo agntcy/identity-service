@@ -43,7 +43,7 @@ type AuthServiceClient interface {
 	// Request token for an Agent or MCP Server
 	Token(ctx context.Context, in *TokenRequest, opts ...grpc.CallOption) (*TokenResponse, error)
 	// Handle external authorization requests
-	ExtAuthz(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ExtAuthz(ctx context.Context, in *ExtAuthzRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// Register new user device for approval flow
 	RegisterDevice(ctx context.Context, in *RegisterDeviceRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
@@ -86,7 +86,7 @@ func (c *authServiceClient) Token(ctx context.Context, in *TokenRequest, opts ..
 	return out, nil
 }
 
-func (c *authServiceClient) ExtAuthz(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *authServiceClient) ExtAuthz(ctx context.Context, in *ExtAuthzRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, AuthService_ExtAuthz_FullMethodName, in, out, cOpts...)
@@ -119,7 +119,7 @@ type AuthServiceServer interface {
 	// Request token for an Agent or MCP Server
 	Token(context.Context, *TokenRequest) (*TokenResponse, error)
 	// Handle external authorization requests
-	ExtAuthz(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	ExtAuthz(context.Context, *ExtAuthzRequest) (*emptypb.Empty, error)
 	// Register new user device for approval flow
 	RegisterDevice(context.Context, *RegisterDeviceRequest) (*emptypb.Empty, error)
 }
@@ -140,7 +140,7 @@ func (UnimplementedAuthServiceServer) Authorize(context.Context, *AuthorizeReque
 func (UnimplementedAuthServiceServer) Token(context.Context, *TokenRequest) (*TokenResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Token not implemented")
 }
-func (UnimplementedAuthServiceServer) ExtAuthz(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
+func (UnimplementedAuthServiceServer) ExtAuthz(context.Context, *ExtAuthzRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ExtAuthz not implemented")
 }
 func (UnimplementedAuthServiceServer) RegisterDevice(context.Context, *RegisterDeviceRequest) (*emptypb.Empty, error) {
@@ -221,7 +221,7 @@ func _AuthService_Token_Handler(srv interface{}, ctx context.Context, dec func(i
 }
 
 func _AuthService_ExtAuthz_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(ExtAuthzRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -233,7 +233,7 @@ func _AuthService_ExtAuthz_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: AuthService_ExtAuthz_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).ExtAuthz(ctx, req.(*emptypb.Empty))
+		return srv.(AuthServiceServer).ExtAuthz(ctx, req.(*ExtAuthzRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

@@ -7,7 +7,6 @@ import (
 	"context"
 
 	authcore "github.com/agntcy/identity-platform/internal/core/auth"
-	"github.com/agntcy/identity-platform/internal/core/auth/types"
 	authtypes "github.com/agntcy/identity-platform/internal/core/auth/types"
 	idpcore "github.com/agntcy/identity-platform/internal/core/idp"
 	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
@@ -27,6 +26,10 @@ type AuthService interface {
 		ctx context.Context,
 		authorizationCode string,
 	) (*authtypes.Session, error)
+	ExtAuthZ(
+		ctx context.Context,
+		accessToken string,
+	) error
 }
 
 type authService struct {
@@ -68,6 +71,9 @@ func (s *authService) Authorize(
 		)
 	}
 
+	// Evaluate the session based on existing policies
+	// TODO: Implement policy evaluation logic here
+
 	// Create new session
 	session, err := s.authRepository.Create(ctx, &authtypes.Session{
 		OwnerAppID: ownerAppID,
@@ -87,7 +93,7 @@ func (s *authService) Authorize(
 func (s *authService) Token(
 	ctx context.Context,
 	authorizationCode string,
-) (*types.Session, error) {
+) (*authtypes.Session, error) {
 	if authorizationCode == "" {
 		return nil, errutil.Err(
 			nil,
@@ -146,4 +152,23 @@ func (s *authService) Token(
 	}
 
 	return session, nil
+}
+
+func (s *authService) ExtAuthZ(
+	ctx context.Context,
+	accessToken string,
+) error {
+	if accessToken == "" {
+		return errutil.Err(
+			nil,
+			"access token cannot be empty",
+		)
+	}
+
+	_, err := s.authRepository.GetByAccessToken(ctx, accessToken)
+
+	// Evaluate the session based on existing policies
+	// TODO: Implement policy evaluation logic here
+
+	return err
 }
