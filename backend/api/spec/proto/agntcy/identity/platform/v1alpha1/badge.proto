@@ -11,9 +11,9 @@ package agntcy.identity.platform.v1alpha1;
 option go_package = "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_go";
 
 message Badge {
-  optional VerifiableCredential verifiableCredential = 1;
+  optional VerifiableCredential verifiable_credential = 1;
 
-  optional string appID = 2;
+  optional string app_id = 2;
 }
 
 // BadgeClaims represents the content of a Badge VC defined [here]
@@ -48,10 +48,10 @@ message Proof {
   optional string type = 1;
 
   // The proof purpose
-  optional string proofPurpose = 2;
+  optional string proof_purpose = 2;
 
   // The proof value
-  optional string proofValue = 3;
+  optional string proof_value = 3;
 }
 
 // DataModel represents the W3C Verifiable Credential Data Model defined [here]
@@ -68,19 +68,19 @@ message VerifiableCredential {
   optional string issuer = 3;
 
   // https://www.w3.org/TR/vc-data-model/#credential-subject
-  optional BadgeClaims credentialSubject = 4;
+  optional BadgeClaims credential_subject = 4;
 
   // https://www.w3.org/TR/vc-data-model/#identifiers
   optional string id = 5;
 
   // https://www.w3.org/TR/vc-data-model/#issuance-date
-  optional string issuanceDate = 6;
+  optional string issuance_date = 6;
 
   // https://www.w3.org/TR/vc-data-model/#expiration
-  optional string expirationDate = 7;
+  optional string expiration_date = 7;
 
   // https://www.w3.org/TR/vc-data-model-2.0/#data-schemas
-  repeated CredentialSchema credentialSchema = 8;
+  repeated CredentialSchema credential_schema = 8;
 
   // https://w3id.org/security#proof
   optional Proof proof = 9;
@@ -90,14 +90,14 @@ message VerifiableCredential {
 // Multiple content types can be supported: AgentBadge, etc.
 enum BadgeType {
   // Unspecified Content Type.
-  CREDENTIAL_CONTENT_TYPE_UNSPECIFIED = 0;
+  BADGE_TYPE_UNSPECIFIED = 0;
   // AgentBadge Content Type.
   // The Agent content representation following a defined schema
   // OASF: https://schema.oasf.agntcy.org/schema/objects/agent
   // Google A2A: https://github.com/google/A2A/blob/main/specification/json/a2a.json
-  CREDENTIAL_CONTENT_TYPE_AGENT_BADGE = 1;
+  BADGE_TYPE_AGENT_BADGE = 1;
   // McpBadge Content Type.
   // The MCP content representation following a defined schema
   // The schema is defined in the MCP specification as the MCPServer type
-  CREDENTIAL_CONTENT_TYPE_MCP_BADGE = 2;
+  BADGE_TYPE_MCP_BADGE = 2;
 }

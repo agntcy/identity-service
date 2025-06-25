@@ -29,29 +29,29 @@ type BadgeType int32
 
 const (
 	// Unspecified Content Type.
-	BadgeType_CREDENTIAL_CONTENT_TYPE_UNSPECIFIED BadgeType = 0
+	BadgeType_BADGE_TYPE_UNSPECIFIED BadgeType = 0
 	// AgentBadge Content Type.
 	// The Agent content representation following a defined schema
 	// OASF: https://schema.oasf.agntcy.org/schema/objects/agent
 	// Google A2A: https://github.com/google/A2A/blob/main/specification/json/a2a.json
-	BadgeType_CREDENTIAL_CONTENT_TYPE_AGENT_BADGE BadgeType = 1
+	BadgeType_BADGE_TYPE_AGENT_BADGE BadgeType = 1
 	// McpBadge Content Type.
 	// The MCP content representation following a defined schema
 	// The schema is defined in the MCP specification as the MCPServer type
-	BadgeType_CREDENTIAL_CONTENT_TYPE_MCP_BADGE BadgeType = 2
+	BadgeType_BADGE_TYPE_MCP_BADGE BadgeType = 2
 )
 
 // Enum value maps for BadgeType.
 var (
 	BadgeType_name = map[int32]string{
-		0: "CREDENTIAL_CONTENT_TYPE_UNSPECIFIED",
-		1: "CREDENTIAL_CONTENT_TYPE_AGENT_BADGE",
-		2: "CREDENTIAL_CONTENT_TYPE_MCP_BADGE",
+		0: "BADGE_TYPE_UNSPECIFIED",
+		1: "BADGE_TYPE_AGENT_BADGE",
+		2: "BADGE_TYPE_MCP_BADGE",
 	}
 	BadgeType_value = map[string]int32{
-		"CREDENTIAL_CONTENT_TYPE_UNSPECIFIED": 0,
-		"CREDENTIAL_CONTENT_TYPE_AGENT_BADGE": 1,
-		"CREDENTIAL_CONTENT_TYPE_MCP_BADGE":   2,
+		"BADGE_TYPE_UNSPECIFIED": 0,
+		"BADGE_TYPE_AGENT_BADGE": 1,
+		"BADGE_TYPE_MCP_BADGE":   2,
 	}
 )
 
@@ -84,8 +84,8 @@ func (BadgeType) EnumDescriptor() ([]byte, []int) {
 
 type Badge struct {
 	state                protoimpl.MessageState `protogen:"open.v1"`
-	VerifiableCredential *VerifiableCredential  `protobuf:"bytes,1,opt,name=verifiableCredential,proto3,oneof" json:"verifiableCredential,omitempty"`
-	AppID                *string                `protobuf:"bytes,2,opt,name=appID,proto3,oneof" json:"appID,omitempty"`
+	VerifiableCredential *VerifiableCredential  `protobuf:"bytes,1,opt,name=verifiable_credential,json=verifiableCredential,proto3,oneof" json:"verifiable_credential,omitempty"`
+	AppId                *string                `protobuf:"bytes,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
 	unknownFields        protoimpl.UnknownFields
 	sizeCache            protoimpl.SizeCache
 }
@@ -127,9 +127,9 @@ func (x *Badge) GetVerifiableCredential() *VerifiableCredential {
 	return nil
 }
 
-func (x *Badge) GetAppID() string {
-	if x != nil && x.AppID != nil {
-		return *x.AppID
+func (x *Badge) GetAppId() string {
+	if x != nil && x.AppId != nil {
+		return *x.AppId
 	}
 	return ""
 }
@@ -258,9 +258,9 @@ type Proof struct {
 	// The type of the proof
 	Type *string `protobuf:"bytes,1,opt,name=type,proto3,oneof" json:"type,omitempty"`
 	// The proof purpose
-	ProofPurpose *string `protobuf:"bytes,2,opt,name=proofPurpose,proto3,oneof" json:"proofPurpose,omitempty"`
+	ProofPurpose *string `protobuf:"bytes,2,opt,name=proof_purpose,json=proofPurpose,proto3,oneof" json:"proof_purpose,omitempty"`
 	// The proof value
-	ProofValue    *string `protobuf:"bytes,3,opt,name=proofValue,proto3,oneof" json:"proofValue,omitempty"`
+	ProofValue    *string `protobuf:"bytes,3,opt,name=proof_value,json=proofValue,proto3,oneof" json:"proof_value,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -328,15 +328,15 @@ type VerifiableCredential struct {
 	// https://www.w3.org/TR/vc-data-model/#issuer
 	Issuer *string `protobuf:"bytes,3,opt,name=issuer,proto3,oneof" json:"issuer,omitempty"`
 	// https://www.w3.org/TR/vc-data-model/#credential-subject
-	CredentialSubject *BadgeClaims `protobuf:"bytes,4,opt,name=credentialSubject,proto3,oneof" json:"credentialSubject,omitempty"`
+	CredentialSubject *BadgeClaims `protobuf:"bytes,4,opt,name=credential_subject,json=credentialSubject,proto3,oneof" json:"credential_subject,omitempty"`
 	// https://www.w3.org/TR/vc-data-model/#identifiers
 	Id *string `protobuf:"bytes,5,opt,name=id,proto3,oneof" json:"id,omitempty"`
 	// https://www.w3.org/TR/vc-data-model/#issuance-date
-	IssuanceDate *string `protobuf:"bytes,6,opt,name=issuanceDate,proto3,oneof" json:"issuanceDate,omitempty"`
+	IssuanceDate *string `protobuf:"bytes,6,opt,name=issuance_date,json=issuanceDate,proto3,oneof" json:"issuance_date,omitempty"`
 	// https://www.w3.org/TR/vc-data-model/#expiration
-	ExpirationDate *string `protobuf:"bytes,7,opt,name=expirationDate,proto3,oneof" json:"expirationDate,omitempty"`
+	ExpirationDate *string `protobuf:"bytes,7,opt,name=expiration_date,json=expirationDate,proto3,oneof" json:"expiration_date,omitempty"`
 	// https://www.w3.org/TR/vc-data-model-2.0/#data-schemas
-	CredentialSchema []*CredentialSchema `protobuf:"bytes,8,rep,name=credentialSchema,proto3" json:"credentialSchema,omitempty"`
+	CredentialSchema []*CredentialSchema `protobuf:"bytes,8,rep,name=credential_schema,json=credentialSchema,proto3" json:"credential_schema,omitempty"`
 	// https://w3id.org/security#proof
 	Proof         *Proof `protobuf:"bytes,9,opt,name=proof,proto3,oneof" json:"proof,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -440,12 +440,12 @@ var File_agntcy_identity_platform_v1alpha1_badge_proto protoreflect.FileDescript
 
 const file_agntcy_identity_platform_v1alpha1_badge_proto_rawDesc = "" +
 	"\n" +
-	"-agntcy/identity/platform/v1alpha1/badge.proto\x12!agntcy.identity.platform.v1alpha1\"\xb7\x01\n" +
-	"\x05Badge\x12p\n" +
-	"\x14verifiableCredential\x18\x01 \x01(\v27.agntcy.identity.platform.v1alpha1.VerifiableCredentialH\x00R\x14verifiableCredential\x88\x01\x01\x12\x19\n" +
-	"\x05appID\x18\x02 \x01(\tH\x01R\x05appID\x88\x01\x01B\x17\n" +
-	"\x15_verifiableCredentialB\b\n" +
-	"\x06_appID\"N\n" +
+	"-agntcy/identity/platform/v1alpha1/badge.proto\x12!agntcy.identity.platform.v1alpha1\"\xbb\x01\n" +
+	"\x05Badge\x12q\n" +
+	"\x15verifiable_credential\x18\x01 \x01(\v27.agntcy.identity.platform.v1alpha1.VerifiableCredentialH\x00R\x14verifiableCredential\x88\x01\x01\x12\x1a\n" +
+	"\x06app_id\x18\x02 \x01(\tH\x01R\x05appId\x88\x01\x01B\x18\n" +
+	"\x16_verifiable_credentialB\t\n" +
+	"\a_app_id\"N\n" +
 	"\vBadgeClaims\x12\x13\n" +
 	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x19\n" +
 	"\x05badge\x18\x02 \x01(\tH\x01R\x05badge\x88\x01\x01B\x05\n" +
@@ -455,36 +455,35 @@ const file_agntcy_identity_platform_v1alpha1_badge_proto_rawDesc = "" +
 	"\x04type\x18\x01 \x01(\tH\x00R\x04type\x88\x01\x01\x12\x13\n" +
 	"\x02id\x18\x02 \x01(\tH\x01R\x02id\x88\x01\x01B\a\n" +
 	"\x05_typeB\x05\n" +
-	"\x03_id\"\x97\x01\n" +
+	"\x03_id\"\x9b\x01\n" +
 	"\x05Proof\x12\x17\n" +
-	"\x04type\x18\x01 \x01(\tH\x00R\x04type\x88\x01\x01\x12'\n" +
-	"\fproofPurpose\x18\x02 \x01(\tH\x01R\fproofPurpose\x88\x01\x01\x12#\n" +
-	"\n" +
-	"proofValue\x18\x03 \x01(\tH\x02R\n" +
+	"\x04type\x18\x01 \x01(\tH\x00R\x04type\x88\x01\x01\x12(\n" +
+	"\rproof_purpose\x18\x02 \x01(\tH\x01R\fproofPurpose\x88\x01\x01\x12$\n" +
+	"\vproof_value\x18\x03 \x01(\tH\x02R\n" +
 	"proofValue\x88\x01\x01B\a\n" +
-	"\x05_typeB\x0f\n" +
-	"\r_proofPurposeB\r\n" +
-	"\v_proofValue\"\xab\x04\n" +
+	"\x05_typeB\x10\n" +
+	"\x0e_proof_purposeB\x0e\n" +
+	"\f_proof_value\"\xb2\x04\n" +
 	"\x14VerifiableCredential\x12\x18\n" +
 	"\acontext\x18\x01 \x03(\tR\acontext\x12\x12\n" +
 	"\x04type\x18\x02 \x03(\tR\x04type\x12\x1b\n" +
-	"\x06issuer\x18\x03 \x01(\tH\x00R\x06issuer\x88\x01\x01\x12a\n" +
-	"\x11credentialSubject\x18\x04 \x01(\v2..agntcy.identity.platform.v1alpha1.BadgeClaimsH\x01R\x11credentialSubject\x88\x01\x01\x12\x13\n" +
-	"\x02id\x18\x05 \x01(\tH\x02R\x02id\x88\x01\x01\x12'\n" +
-	"\fissuanceDate\x18\x06 \x01(\tH\x03R\fissuanceDate\x88\x01\x01\x12+\n" +
-	"\x0eexpirationDate\x18\a \x01(\tH\x04R\x0eexpirationDate\x88\x01\x01\x12_\n" +
-	"\x10credentialSchema\x18\b \x03(\v23.agntcy.identity.platform.v1alpha1.CredentialSchemaR\x10credentialSchema\x12C\n" +
+	"\x06issuer\x18\x03 \x01(\tH\x00R\x06issuer\x88\x01\x01\x12b\n" +
+	"\x12credential_subject\x18\x04 \x01(\v2..agntcy.identity.platform.v1alpha1.BadgeClaimsH\x01R\x11credentialSubject\x88\x01\x01\x12\x13\n" +
+	"\x02id\x18\x05 \x01(\tH\x02R\x02id\x88\x01\x01\x12(\n" +
+	"\rissuance_date\x18\x06 \x01(\tH\x03R\fissuanceDate\x88\x01\x01\x12,\n" +
+	"\x0fexpiration_date\x18\a \x01(\tH\x04R\x0eexpirationDate\x88\x01\x01\x12`\n" +
+	"\x11credential_schema\x18\b \x03(\v23.agntcy.identity.platform.v1alpha1.CredentialSchemaR\x10credentialSchema\x12C\n" +
 	"\x05proof\x18\t \x01(\v2(.agntcy.identity.platform.v1alpha1.ProofH\x05R\x05proof\x88\x01\x01B\t\n" +
-	"\a_issuerB\x14\n" +
-	"\x12_credentialSubjectB\x05\n" +
-	"\x03_idB\x0f\n" +
-	"\r_issuanceDateB\x11\n" +
-	"\x0f_expirationDateB\b\n" +
-	"\x06_proof*\x84\x01\n" +
-	"\tBadgeType\x12'\n" +
-	"#CREDENTIAL_CONTENT_TYPE_UNSPECIFIED\x10\x00\x12'\n" +
-	"#CREDENTIAL_CONTENT_TYPE_AGENT_BADGE\x10\x01\x12%\n" +
-	"!CREDENTIAL_CONTENT_TYPE_MCP_BADGE\x10\x02BkZigithub.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_gob\x06proto3"
+	"\a_issuerB\x15\n" +
+	"\x13_credential_subjectB\x05\n" +
+	"\x03_idB\x10\n" +
+	"\x0e_issuance_dateB\x12\n" +
+	"\x10_expiration_dateB\b\n" +
+	"\x06_proof*]\n" +
+	"\tBadgeType\x12\x1a\n" +
+	"\x16BADGE_TYPE_UNSPECIFIED\x10\x00\x12\x1a\n" +
+	"\x16BADGE_TYPE_AGENT_BADGE\x10\x01\x12\x18\n" +
+	"\x14BADGE_TYPE_MCP_BADGE\x10\x02BkZigithub.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_gob\x06proto3"
 
 var (
 	file_agntcy_identity_platform_v1alpha1_badge_proto_rawDescOnce sync.Once
@@ -509,9 +508,9 @@ var file_agntcy_identity_platform_v1alpha1_badge_proto_goTypes = []any{
 	(*VerifiableCredential)(nil), // 5: agntcy.identity.platform.v1alpha1.VerifiableCredential
 }
 var file_agntcy_identity_platform_v1alpha1_badge_proto_depIdxs = []int32{
-	5, // 0: agntcy.identity.platform.v1alpha1.Badge.verifiableCredential:type_name -> agntcy.identity.platform.v1alpha1.VerifiableCredential
-	2, // 1: agntcy.identity.platform.v1alpha1.VerifiableCredential.credentialSubject:type_name -> agntcy.identity.platform.v1alpha1.BadgeClaims
-	3, // 2: agntcy.identity.platform.v1alpha1.VerifiableCredential.credentialSchema:type_name -> agntcy.identity.platform.v1alpha1.CredentialSchema
+	5, // 0: agntcy.identity.platform.v1alpha1.Badge.verifiable_credential:type_name -> agntcy.identity.platform.v1alpha1.VerifiableCredential
+	2, // 1: agntcy.identity.platform.v1alpha1.VerifiableCredential.credential_subject:type_name -> agntcy.identity.platform.v1alpha1.BadgeClaims
+	3, // 2: agntcy.identity.platform.v1alpha1.VerifiableCredential.credential_schema:type_name -> agntcy.identity.platform.v1alpha1.CredentialSchema
 	4, // 3: agntcy.identity.platform.v1alpha1.VerifiableCredential.proof:type_name -> agntcy.identity.platform.v1alpha1.Proof
 	4, // [4:4] is the sub-list for method output_type
 	4, // [4:4] is the sub-list for method input_type

@@ -693,6 +693,126 @@
           ]
         },
         {
+          "name": "Session",
+          "longName": "Session",
+          "fullName": "agntcy.identity.platform.v1alpha1.Session",
+          "description": "Identity Platform Session",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "id",
+              "description": "A unique identifier for the Session.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_id",
+              "defaultValue": ""
+            },
+            {
+              "name": "owner_app_id",
+              "description": "The owner application ID for which the Session is created.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_owner_app_id",
+              "defaultValue": ""
+            },
+            {
+              "name": "app_id",
+              "description": "The application ID associated with the Session.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_app_id",
+              "defaultValue": ""
+            },
+            {
+              "name": "tool_name",
+              "description": "The tool name associated with the Session.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_tool_name",
+              "defaultValue": ""
+            },
+            {
+              "name": "user_id",
+              "description": "The user ID associated with the Session.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_user_id",
+              "defaultValue": ""
+            },
+            {
+              "name": "token_id",
+              "description": "The token ID associated with the Session.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_token_id",
+              "defaultValue": ""
+            },
+            {
+              "name": "code",
+              "description": "The code associated with the Session.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_code",
+              "defaultValue": ""
+            },
+            {
+              "name": "created_at",
+              "description": "The creation time of the Session.",
+              "label": "optional",
+              "type": "int64",
+              "longType": "int64",
+              "fullType": "int64",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_created_at",
+              "defaultValue": ""
+            },
+            {
+              "name": "expires_at",
+              "description": "The expiration time of the Session.",
+              "label": "optional",
+              "type": "int64",
+              "longType": "int64",
+              "fullType": "int64",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_expires_at",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
           "name": "Token",
           "longName": "Token",
           "fullName": "agntcy.identity.platform.v1alpha1.Token",
@@ -1060,17 +1180,17 @@
           "description": "The content of the Credential.\nMultiple content types can be supported: AgentBadge, etc.",
           "values": [
             {
-              "name": "CREDENTIAL_CONTENT_TYPE_UNSPECIFIED",
+              "name": "BADGE_TYPE_UNSPECIFIED",
               "number": "0",
               "description": "Unspecified Content Type."
             },
             {
-              "name": "CREDENTIAL_CONTENT_TYPE_AGENT_BADGE",
+              "name": "BADGE_TYPE_AGENT_BADGE",
               "number": "1",
               "description": "AgentBadge Content Type.\nThe Agent content representation following a defined schema\nOASF: https://schema.oasf.agntcy.org/schema/objects/agent\nGoogle A2A: https://github.com/google/A2A/blob/main/specification/json/a2a.json"
             },
             {
-              "name": "CREDENTIAL_CONTENT_TYPE_MCP_BADGE",
+              "name": "BADGE_TYPE_MCP_BADGE",
               "number": "2",
               "description": "McpBadge Content Type.\nThe MCP content representation following a defined schema\nThe schema is defined in the MCP specification as the MCPServer type"
             }
@@ -1090,7 +1210,7 @@
           "extensions": [],
           "fields": [
             {
-              "name": "verifiableCredential",
+              "name": "verifiable_credential",
               "description": "",
               "label": "optional",
               "type": "VerifiableCredential",
@@ -1098,11 +1218,11 @@
               "fullType": "agntcy.identity.platform.v1alpha1.VerifiableCredential",
               "ismap": false,
               "isoneof": true,
-              "oneofdecl": "_verifiableCredential",
+              "oneofdecl": "_verifiable_credential",
               "defaultValue": ""
             },
             {
-              "name": "appID",
+              "name": "app_id",
               "description": "",
               "label": "optional",
               "type": "string",
@@ -1110,7 +1230,7 @@
               "fullType": "string",
               "ismap": false,
               "isoneof": true,
-              "oneofdecl": "_appID",
+              "oneofdecl": "_app_id",
               "defaultValue": ""
             }
           ]
@@ -1210,7 +1330,7 @@
               "defaultValue": ""
             },
             {
-              "name": "proofPurpose",
+              "name": "proof_purpose",
               "description": "The proof purpose",
               "label": "optional",
               "type": "string",
@@ -1218,11 +1338,11 @@
               "fullType": "string",
               "ismap": false,
               "isoneof": true,
-              "oneofdecl": "_proofPurpose",
+              "oneofdecl": "_proof_purpose",
               "defaultValue": ""
             },
             {
-              "name": "proofValue",
+              "name": "proof_value",
               "description": "The proof value",
               "label": "optional",
               "type": "string",
@@ -1230,7 +1350,7 @@
               "fullType": "string",
               "ismap": false,
               "isoneof": true,
-              "oneofdecl": "_proofValue",
+              "oneofdecl": "_proof_value",
               "defaultValue": ""
             }
           ]
@@ -1282,7 +1402,7 @@
               "defaultValue": ""
             },
             {
-              "name": "credentialSubject",
+              "name": "credential_subject",
               "description": "https://www.w3.org/TR/vc-data-model/#credential-subject",
               "label": "optional",
               "type": "BadgeClaims",
@@ -1290,7 +1410,7 @@
               "fullType": "agntcy.identity.platform.v1alpha1.BadgeClaims",
               "ismap": false,
               "isoneof": true,
-              "oneofdecl": "_credentialSubject",
+              "oneofdecl": "_credential_subject",
               "defaultValue": ""
             },
             {
@@ -1306,7 +1426,7 @@
               "defaultValue": ""
             },
             {
-              "name": "issuanceDate",
+              "name": "issuance_date",
               "description": "https://www.w3.org/TR/vc-data-model/#issuance-date",
               "label": "optional",
               "type": "string",
@@ -1314,11 +1434,11 @@
               "fullType": "string",
               "ismap": false,
               "isoneof": true,
-              "oneofdecl": "_issuanceDate",
+              "oneofdecl": "_issuance_date",
               "defaultValue": ""
             },
             {
-              "name": "expirationDate",
+              "name": "expiration_date",
               "description": "https://www.w3.org/TR/vc-data-model/#expiration",
               "label": "optional",
               "type": "string",
@@ -1326,11 +1446,11 @@
               "fullType": "string",
               "ismap": false,
               "isoneof": true,
-              "oneofdecl": "_expirationDate",
+              "oneofdecl": "_expiration_date",
               "defaultValue": ""
             },
             {
-              "name": "credentialSchema",
+              "name": "credential_schema",
               "description": "https://www.w3.org/TR/vc-data-model-2.0/#data-schemas",
               "label": "repeated",
               "type": "CredentialSchema",

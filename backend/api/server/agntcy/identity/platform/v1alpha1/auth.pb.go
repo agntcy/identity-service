@@ -87,6 +87,124 @@ func (x *Device) GetSubscriptionToken() string {
 	return ""
 }
 
+// Identity Platform Session
+type Session struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// A unique identifier for the Session.
+	Id *string `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
+	// The owner application ID for which the Session is created.
+	OwnerAppId *string `protobuf:"bytes,2,opt,name=owner_app_id,json=ownerAppId,proto3,oneof" json:"owner_app_id,omitempty"`
+	// The application ID associated with the Session.
+	AppId *string `protobuf:"bytes,3,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
+	// The tool name associated with the Session.
+	ToolName *string `protobuf:"bytes,4,opt,name=tool_name,json=toolName,proto3,oneof" json:"tool_name,omitempty"`
+	// The user ID associated with the Session.
+	UserId *string `protobuf:"bytes,5,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
+	// The token ID associated with the Session.
+	TokenId *string `protobuf:"bytes,6,opt,name=token_id,json=tokenId,proto3,oneof" json:"token_id,omitempty"`
+	// The code associated with the Session.
+	Code *string `protobuf:"bytes,7,opt,name=code,proto3,oneof" json:"code,omitempty"`
+	// The creation time of the Session.
+	CreatedAt *int64 `protobuf:"varint,8,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
+	// The expiration time of the Session.
+	ExpiresAt     *int64 `protobuf:"varint,9,opt,name=expires_at,json=expiresAt,proto3,oneof" json:"expires_at,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Session) Reset() {
+	*x = Session{}
+	mi := &file_agntcy_identity_platform_v1alpha1_auth_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Session) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Session) ProtoMessage() {}
+
+func (x *Session) ProtoReflect() protoreflect.Message {
+	mi := &file_agntcy_identity_platform_v1alpha1_auth_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Session.ProtoReflect.Descriptor instead.
+func (*Session) Descriptor() ([]byte, []int) {
+	return file_agntcy_identity_platform_v1alpha1_auth_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *Session) GetId() string {
+	if x != nil && x.Id != nil {
+		return *x.Id
+	}
+	return ""
+}
+
+func (x *Session) GetOwnerAppId() string {
+	if x != nil && x.OwnerAppId != nil {
+		return *x.OwnerAppId
+	}
+	return ""
+}
+
+func (x *Session) GetAppId() string {
+	if x != nil && x.AppId != nil {
+		return *x.AppId
+	}
+	return ""
+}
+
+func (x *Session) GetToolName() string {
+	if x != nil && x.ToolName != nil {
+		return *x.ToolName
+	}
+	return ""
+}
+
+func (x *Session) GetUserId() string {
+	if x != nil && x.UserId != nil {
+		return *x.UserId
+	}
+	return ""
+}
+
+func (x *Session) GetTokenId() string {
+	if x != nil && x.TokenId != nil {
+		return *x.TokenId
+	}
+	return ""
+}
+
+func (x *Session) GetCode() string {
+	if x != nil && x.Code != nil {
+		return *x.Code
+	}
+	return ""
+}
+
+func (x *Session) GetCreatedAt() int64 {
+	if x != nil && x.CreatedAt != nil {
+		return *x.CreatedAt
+	}
+	return 0
+}
+
+func (x *Session) GetExpiresAt() int64 {
+	if x != nil && x.ExpiresAt != nil {
+		return *x.ExpiresAt
+	}
+	return 0
+}
+
 // Identity Platform Token
 type Token struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -100,7 +218,7 @@ type Token struct {
 
 func (x *Token) Reset() {
 	*x = Token{}
-	mi := &file_agntcy_identity_platform_v1alpha1_auth_proto_msgTypes[1]
+	mi := &file_agntcy_identity_platform_v1alpha1_auth_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -112,7 +230,7 @@ func (x *Token) String() string {
 func (*Token) ProtoMessage() {}
 
 func (x *Token) ProtoReflect() protoreflect.Message {
-	mi := &file_agntcy_identity_platform_v1alpha1_auth_proto_msgTypes[1]
+	mi := &file_agntcy_identity_platform_v1alpha1_auth_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -125,7 +243,7 @@ func (x *Token) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Token.ProtoReflect.Descriptor instead.
 func (*Token) Descriptor() ([]byte, []int) {
-	return file_agntcy_identity_platform_v1alpha1_auth_proto_rawDescGZIP(), []int{1}
+	return file_agntcy_identity_platform_v1alpha1_auth_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *Token) GetId() string {
@@ -154,7 +272,31 @@ const file_agntcy_identity_platform_v1alpha1_auth_proto_rawDesc = "" +
 	"\x03_idB\n" +
 	"\n" +
 	"\b_user_idB\x15\n" +
-	"\x13_subscription_token\"H\n" +
+	"\x13_subscription_token\"\x93\x03\n" +
+	"\aSession\x12\x13\n" +
+	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12%\n" +
+	"\fowner_app_id\x18\x02 \x01(\tH\x01R\n" +
+	"ownerAppId\x88\x01\x01\x12\x1a\n" +
+	"\x06app_id\x18\x03 \x01(\tH\x02R\x05appId\x88\x01\x01\x12 \n" +
+	"\ttool_name\x18\x04 \x01(\tH\x03R\btoolName\x88\x01\x01\x12\x1c\n" +
+	"\auser_id\x18\x05 \x01(\tH\x04R\x06userId\x88\x01\x01\x12\x1e\n" +
+	"\btoken_id\x18\x06 \x01(\tH\x05R\atokenId\x88\x01\x01\x12\x17\n" +
+	"\x04code\x18\a \x01(\tH\x06R\x04code\x88\x01\x01\x12\"\n" +
+	"\n" +
+	"created_at\x18\b \x01(\x03H\aR\tcreatedAt\x88\x01\x01\x12\"\n" +
+	"\n" +
+	"expires_at\x18\t \x01(\x03H\bR\texpiresAt\x88\x01\x01B\x05\n" +
+	"\x03_idB\x0f\n" +
+	"\r_owner_app_idB\t\n" +
+	"\a_app_idB\f\n" +
+	"\n" +
+	"_tool_nameB\n" +
+	"\n" +
+	"\b_user_idB\v\n" +
+	"\t_token_idB\a\n" +
+	"\x05_codeB\r\n" +
+	"\v_created_atB\r\n" +
+	"\v_expires_at\"H\n" +
 	"\x05Token\x12\x13\n" +
 	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x19\n" +
 	"\x05value\x18\x02 \x01(\tH\x01R\x05value\x88\x01\x01B\x05\n" +
@@ -173,10 +315,11 @@ func file_agntcy_identity_platform_v1alpha1_auth_proto_rawDescGZIP() []byte {
 	return file_agntcy_identity_platform_v1alpha1_auth_proto_rawDescData
 }
 
-var file_agntcy_identity_platform_v1alpha1_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_agntcy_identity_platform_v1alpha1_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_agntcy_identity_platform_v1alpha1_auth_proto_goTypes = []any{
-	(*Device)(nil), // 0: agntcy.identity.platform.v1alpha1.Device
-	(*Token)(nil),  // 1: agntcy.identity.platform.v1alpha1.Token
+	(*Device)(nil),  // 0: agntcy.identity.platform.v1alpha1.Device
+	(*Session)(nil), // 1: agntcy.identity.platform.v1alpha1.Session
+	(*Token)(nil),   // 2: agntcy.identity.platform.v1alpha1.Token
 }
 var file_agntcy_identity_platform_v1alpha1_auth_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -193,13 +336,14 @@ func file_agntcy_identity_platform_v1alpha1_auth_proto_init() {
 	}
 	file_agntcy_identity_platform_v1alpha1_auth_proto_msgTypes[0].OneofWrappers = []any{}
 	file_agntcy_identity_platform_v1alpha1_auth_proto_msgTypes[1].OneofWrappers = []any{}
+	file_agntcy_identity_platform_v1alpha1_auth_proto_msgTypes[2].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_agntcy_identity_platform_v1alpha1_auth_proto_rawDesc), len(file_agntcy_identity_platform_v1alpha1_auth_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

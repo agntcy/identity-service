@@ -22,6 +22,36 @@ message Device {
   optional string subscription_token = 3;
 }
 
+// Identity Platform Session
+message Session {
+  // A unique identifier for the Session.
+  optional string id = 1;
+
+  // The owner application ID for which the Session is created.
+  optional string owner_app_id = 2;
+
+  // The application ID associated with the Session.
+  optional string app_id = 3;
+
+  // The tool name associated with the Session.
+  optional string tool_name = 4;
+
+  // The user ID associated with the Session.
+  optional string user_id = 5;
+
+  // The token ID associated with the Session.
+  optional string token_id = 6;
+
+  // The code associated with the Session.
+  optional string code = 7;
+
+  // The creation time of the Session.
+  optional int64 created_at = 8;
+
+  // The expiration time of the Session.
+  optional int64 expires_at = 9;
+}
+
 // Identity Platform Token
 message Token {
   // A unique identifier for the Token.

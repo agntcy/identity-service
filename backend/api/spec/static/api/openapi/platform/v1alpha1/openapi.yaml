@@ -803,7 +803,7 @@ components:
             properties:
                 verifiableCredential:
                     $ref: '#/components/schemas/VerifiableCredential'
-                appID:
+                appId:
                     type: string
         BadgeClaims:
             type: object
