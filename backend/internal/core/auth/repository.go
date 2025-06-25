@@ -12,6 +12,6 @@ import (
 type Repository interface {
 	Create(ctx context.Context, session *types.Session) (*types.Session, error)
 	GetByAuthorizationCode(ctx context.Context, code string) (*types.Session, error)
-	GetByTokenID(ctx context.Context, tokenID string) (*types.Session, error)
+	GetByToken(ctx context.Context, token string) (*types.Session, error)
 	Update(ctx context.Context, session *types.Session) error
 }

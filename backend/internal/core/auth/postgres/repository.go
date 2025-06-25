@@ -62,6 +62,7 @@ func (r *postgresRepository) GetByAuthorizationCode(
 
 	result := r.dbContext.Client().
 		Where("authorization_code = ?", code).
+		Where("access_token IS NULL").
 		Where("expires_at > ?", time.Now().Unix()).
 		First(model)
 	if result.Error != nil {
@@ -73,14 +74,14 @@ func (r *postgresRepository) GetByAuthorizationCode(
 	return model.ToCoreType(), nil
 }
 
-func (r *postgresRepository) GetByTokenID(
+func (r *postgresRepository) GetByToken(
 	ctx context.Context,
-	tokenID string,
+	token string,
 ) (*types.Session, error) {
 	model := &Session{}
 
 	result := r.dbContext.Client().
-		Where("token_id = ?", tokenID).
+		Where("token = ?", token).
 		Where("expires_at > ?", time.Now().Unix()).
 		First(model)
 	if result.Error != nil {
