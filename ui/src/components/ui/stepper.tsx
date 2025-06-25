@@ -181,7 +181,7 @@ const defineStepper = <const Steps extends Stepperize.Step[]>(...steps: Steps): 
               onKeyDown={(e) => onStepKeyDown(e, utils.getNext(props.of), utils.getPrev(props.of))}
               {...props}
             >
-              {!onlyIcon ? (icon ?? stepIndex + 1) : dataState === 'completed' ? <CheckIcon /> : null}
+              {!onlyIcon ? (icon ?? stepIndex + 1) : dataState === 'completed' ? <CheckIcon className="text-[#0051AF]" /> : null}
             </Button>
             {variant === 'horizontal' && labelOrientation === 'vertical' && (
               <StepperSeparator
@@ -364,7 +364,7 @@ const listVariants = cva('stepper-navigation-list flex gap-1 w-[38px]', {
 });
 
 const classForSeparator = cva(
-  ['bg-[#FBAB2C]', 'data-[state=completed]:bg-primary data-[disabled]:opacity-50', 'transition-all duration-300 ease-in-out'],
+  ['bg-[#FBAB2C]', 'data-[state=completed]:bg-[#187ADC] data-[disabled]:opacity-50', 'transition-all duration-300 ease-in-out'],
   {
     variants: {
       orientation: {

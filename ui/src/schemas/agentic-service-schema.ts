@@ -12,7 +12,7 @@ export const AgenticServiceSchema = z
     description: z.string().optional(),
     type: z.nativeEnum(AppType),
     oasfSpecs: z.string().optional(),
-    mcpServcer: z.string().optional()
+    mcpServer: z.string().optional()
   })
   .superRefine((data, ctx) => {
     if (data.type === AppType.APP_TYPE_AGENT_OASF) {

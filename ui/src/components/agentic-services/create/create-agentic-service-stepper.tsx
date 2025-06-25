@@ -8,15 +8,16 @@ import {StepperControls, StepperNavigation, StepperPanel, StepperProvider, Stepp
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {z} from 'zod';
-import {RegisterProvider} from './steps/register-provider';
 import {Form} from '@/components/ui/form';
 import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from '@/components/ui/accordion';
 import {Button, Card, toast, Typography} from '@outshift/spark-design';
-import {IdpType, IssuerSettings} from '@/types/api/settings';
-import {IdentityProvidersFormValues, IdentityProvidersSchema} from '@/schemas/identity-provider-schema';
-import {validateForm} from '@/lib/utils';
-import {useSetIdentityProvider} from '@/mutations';
 import {AgenticServiceInfo} from './steps/agentic-service-info';
+import {RegisterAgenticProvider} from './steps/register-agentic-provider';
+import {AgenticServiceFormValues, AgenticServiceSchema} from '@/schemas/agentic-service-schema';
+import {validateForm} from '@/lib/utils';
+import {useCreateAgenticService} from '@/mutations';
+import {useNavigate} from 'react-router-dom';
+import {PATHS} from '@/router/paths';
 
 export const CreateAgenticServiceStepper = () => {
   return (
@@ -36,100 +37,82 @@ const FormStepperComponent = () => {
     mode: 'all'
   });
 
-  // const mutationSetIdentityProvider = useSetIdentityProvider({
-  //   callbacks: {
-  //     onSuccess: (resp) => {
-  //       console.log('Identity Provider saved successfully:', resp.data);
-  //       setIsLoading(false);
-  //       toast({
-  //         title: 'Success',
-  //         description: 'Identity provider saved successfully.',
-  //         type: 'success'
-  //       });
-  //     },
-  //     onError: () => {
-  //       setIsLoading(false);
-  //       toast({
-  //         title: 'Error',
-  //         description: 'An error occurred while saving the identity provider. Please try again.',
-  //         type: 'error'
-  //       });
-  //     }
-  //   }
-  // });
+  const navigate = useNavigate();
+
+  const mutationCreate = useCreateAgenticService({
+    callbacks: {
+      onSuccess: (resp) => {
+        setIsLoading(false);
+        toast({
+          title: 'Success',
+          description: 'Agentic service created successfully.',
+          type: 'success'
+        });
+        void navigate(PATHS.agenticServices);
+      },
+      onError: () => {
+        setIsLoading(false);
+        toast({
+          title: 'Error',
+          description: 'Failed to create agentic service. Please check the details and try again.',
+          type: 'error'
+        });
+      }
+    }
+  });
 
   const handleOnClear = useCallback(() => {
-    // form.reset({
-    //   provider: undefined,
-    //   orgUrl: undefined,
-    //   clientId: undefined,
-    //   privateKey: undefined,
-    //   hostname: undefined,
-    //   integrationKey: undefined,
-    //   secretKey: undefined
-    // });
-    // methods.reset();
-    // methods.resetMetadata();
-    // methods.goTo('providerInfo');
+    form.reset({
+      type: undefined,
+      name: undefined,
+      description: undefined,
+      oasfSpecs: undefined,
+      mcpServer: undefined
+    });
+    methods.reset();
+    methods.resetMetadata();
+    methods.goTo('agenticServiceInfo');
   }, [form, methods]);
 
-  // const handleSelectProvider = useCallback(() => {
-  //   const values = form.getValues() as IdentityProvidersFormValues;
-  //   const validationResult = validateForm(IdentityProvidersSchema, values);
-  //   if (!validationResult.success) {
-  //     validationResult.errors?.forEach((error) => {
-  //       const fieldName = error.path[0] as keyof z.infer<typeof IdentityProvidersSchema>;
-  //       form.setError(fieldName, {type: 'manual', ...error});
-  //     });
-  //     return;
-  //   }
-  //   methods.setMetadata('providerInfo', {
-  //     ...methods.getMetadata('providerInfo'),
-  //     provider: values.provider,
-  //     orgUrl: values.orgUrl,
-  //     clientId: values.clientId,
-  //     privateKey: values.privateKey,
-  //     hostname: values.hostname,
-  //     integrationKey: values.integrationKey,
-  //     secretKey: values.secretKey
-  //   });
-  //   methods.next();
-  // }, [form, methods]);
+  const handleSelectAgenticService = useCallback(() => {
+    const values = form.getValues() as AgenticServiceFormValues;
+    const validationResult = validateForm(AgenticServiceSchema, values);
+    if (!validationResult.success) {
+      validationResult.errors?.forEach((error) => {
+        const fieldName = error.path[0] as keyof z.infer<typeof AgenticServiceSchema>;
+        form.setError(fieldName, {type: 'manual', ...error});
+      });
+      return;
+    }
+    methods.setMetadata('agenticServiceInfo', {
+      ...methods.getMetadata('agenticServiceInfo'),
+      type: values.type,
+      name: values.name,
+      description: values.description,
+      oasfSpecs: values.oasfSpecs,
+      mcpServer: values.mcpServer
+    });
+    methods.next();
+  }, [form, methods]);
 
-  // const handleSave = useCallback(() => {
-  //   setIsLoading(true);
-  //   const values = form.getValues() as IdentityProvidersFormValues;
-  //   const data: IssuerSettings = {
-  //     idpType: values.provider
-  //   };
-  //   if (values.provider === IdpType.IDP_TYPE_DUO) {
-  //     data.duoIdpSettings = {
-  //       hostname: values.hostname,
-  //       integrationKey: values.integrationKey,
-  //       secretKey: values.secretKey
-  //     };
-  //   } else if (values.provider === IdpType.IDP_TYPE_OKTA) {
-  //     data.oktaIdpSettings = {
-  //       orgUrl: values.orgUrl,
-  //       clientId: values.clientId,
-  //       privateKey: values.privateKey
-  //     };
-  //   }
-  //   mutationSetIdentityProvider.mutate({
-  //     issuerSettings: {
-  //       ...data
-  //     }
-  //   });
-  // }, [form, mutationSetIdentityProvider]);
+  const handleSave = useCallback(() => {
+    setIsLoading(true);
+    const values = form.getValues() as AgenticServiceFormValues;
+    mutationCreate.mutate({
+      type: values.type,
+      name: values.name,
+      description: values.description
+    });
+  }, [form, mutationCreate]);
 
   const onSubmit = useCallback(() => {
-    //   if (methods.current.id === 'providerInfo') {
-    //     return handleSelectProvider();
-    //   }
-    //   if (methods.current.id === 'registerProvider') {
-    //     return handleSave();
-    //   }
-  }, []);
+    if (methods.current.id === 'agenticServiceInfo') {
+      return handleSelectAgenticService();
+    }
+    if (methods.current.id === 'registerAgenticService') {
+      return handleSave();
+    }
+  }, [handleSave, handleSelectAgenticService, methods]);
 
   return (
     <Card>
@@ -153,7 +136,11 @@ const FormStepperComponent = () => {
                         </div>
                       </AccordionTrigger>
                       <AccordionContent>
-                        {step.id === 'agenticServiceInfo' ? <AgenticServiceInfo isLoading={isLoading} /> : null}
+                        {step.id === 'agenticServiceInfo' ? (
+                          <AgenticServiceInfo isLoading={isLoading} />
+                        ) : (
+                          step.id === 'registerAgenticService' && <RegisterAgenticProvider isLoading={isLoading} />
+                        )}
                         <div className="flex justify-between items-center">
                           <Button variant="tertariary" onClick={handleOnClear}>
                             Cancel
@@ -165,7 +152,7 @@ const FormStepperComponent = () => {
                               </Button>
                             )}
                             <Button type="submit" disabled={isLoading || !form.formState.isValid} className="cursor-pointer">
-                              {methods.isLast ? 'Register' : 'Next'}
+                              {methods.isLast ? 'Save' : 'Next'}
                             </Button>
                           </StepperControls>
                         </div>

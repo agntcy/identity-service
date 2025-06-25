@@ -14,11 +14,11 @@ export const {StepperProvider, StepperControls, StepperNavigation, StepperStep, 
       title: 'Agentic service type & source',
       description: 'Select the agentic service type you want to use and enter the service information',
       schema: AgenticServiceSchema
+    },
+    {
+      id: 'registerAgenticService',
+      title: 'Register Agentic Service',
+      description: 'Confirm the registration of the agentic service',
+      schema: z.object({})
     }
-    // {
-    //   id: 'registerProvider',
-    //   title: 'Register Provider',
-    //   description: 'Register the identity provider with the necessary details',
-    //   schema: z.object({})
-    // }
   );

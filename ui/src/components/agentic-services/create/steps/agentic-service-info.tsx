@@ -54,7 +54,7 @@ export const AgenticServiceInfo = ({isLoading = false}: {isLoading?: boolean}) =
         name: metaData.name ?? undefined,
         description: metaData.description ?? undefined,
         oasfSpecs: metaData.oasfSpecs ?? undefined,
-        mcpServcer: metaData.mcpServcer ?? undefined
+        mcpServer: metaData.mcpServer ?? undefined
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -146,7 +146,7 @@ export const AgenticServiceInfo = ({isLoading = false}: {isLoading?: boolean}) =
           <div className="space-y-2 pt-2">
             <FormField
               control={control}
-              name="mcpServcer"
+              name="mcpServer"
               render={({field}) => (
                 <FormItem className="w-[50%] pr-2">
                   <FormLabel className="form-label">URL</FormLabel>
