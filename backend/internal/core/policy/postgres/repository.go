@@ -5,7 +5,6 @@ package postgres
 
 import (
 	"context"
-	"errors"
 
 	policycore "github.com/agntcy/identity-platform/internal/core/policy"
 	"github.com/agntcy/identity-platform/internal/core/policy/types"
@@ -27,7 +26,7 @@ func NewRepository(dbContext db.Context) policycore.Repository {
 func (r *repository) Create(ctx context.Context, policy *types.Policy) error {
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
-		return errors.New("failed to get tenant ID from context")
+		return identitycontext.ErrTenantNotFound
 	}
 
 	model := newPolicyModel(policy, tenantID)
@@ -36,6 +35,24 @@ func (r *repository) Create(ctx context.Context, policy *types.Policy) error {
 	if result.Error != nil {
 		return errutil.Err(
 			result.Error, "there was an error creating the policy",
+		)
+	}
+
+	return nil
+}
+
+func (r *repository) CreateRule(ctx context.Context, rule *types.Rule) error {
+	tenantID, ok := identitycontext.GetTenantID(ctx)
+	if !ok {
+		return identitycontext.ErrTenantNotFound
+	}
+
+	model := NewRuleModel(rule, tenantID)
+
+	result := r.dbContext.Client().Create(model)
+	if result.Error != nil {
+		return errutil.Err(
+			result.Error, "there was an error creating the rule",
 		)
 	}
 

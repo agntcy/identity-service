@@ -11,4 +11,5 @@ import (
 
 type Repository interface {
 	Create(ctx context.Context, policy *types.Policy) error
+	CreateRule(ctx context.Context, rule *types.Rule) error
 }

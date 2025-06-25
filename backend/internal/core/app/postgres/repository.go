@@ -40,9 +40,7 @@ func (r *repository) CreateApp(
 	// Get the tenant ID from the context
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
-		return nil, errutil.Err(
-			nil, "failed to get tenant ID from context",
-		)
+		return nil, identitycontext.ErrTenantNotFound
 	}
 
 	// Set the tenant ID in the model
@@ -68,9 +66,7 @@ func (r *repository) GetApp(
 	// Get the tenant ID from the context
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
-		return nil, errutil.Err(
-			nil, "failed to get tenant ID from context",
-		)
+		return nil, identitycontext.ErrTenantNotFound
 	}
 
 	result := r.dbContext.Client().First(&app, map[string]any{
@@ -150,9 +146,7 @@ func (r *repository) GetApps(ctx context.Context, ids []string) ([]*types.App, e
 
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
-		return nil, errutil.Err(
-			nil, "failed to get tenant ID from context",
-		)
+		return nil, identitycontext.ErrTenantNotFound
 	}
 
 	result := r.dbContext.Client().

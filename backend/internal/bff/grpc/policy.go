@@ -34,19 +34,30 @@ func (s *PolicyService) CreatePolicy(
 
 	policy := converters.ToPolicy(in.Policy)
 
-	p, err := s.policyService.CreatePolicy(ctx, policy)
+	result, err := s.policyService.CreatePolicy(ctx, policy)
 	if err != nil {
 		return nil, grpcutil.BadRequestError(err)
 	}
 
-	return converters.FromPolicy(p), nil
+	return converters.FromPolicy(result), nil
 }
 
-func (p *PolicyService) CreateRule(
-	context.Context,
-	*identity_platform_sdk_go.CreateRuleRequest,
+func (s *PolicyService) CreateRule(
+	ctx context.Context,
+	in *identity_platform_sdk_go.CreateRuleRequest,
 ) (*identity_platform_sdk_go.Rule, error) {
-	panic("unimplemented")
+	if in == nil {
+		return nil, grpcutil.BadRequestError(errors.New("request is empty"))
+	}
+
+	rule := converters.ToRule(in.Rule)
+
+	result, err := s.policyService.CreateRule(ctx, rule)
+	if err != nil {
+		return nil, grpcutil.BadRequestError(err)
+	}
+
+	return converters.FromRule(result), nil
 }
 
 func (p *PolicyService) DeletePolicy(

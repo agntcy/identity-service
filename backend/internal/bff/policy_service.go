@@ -19,6 +19,7 @@ import (
 
 type PolicyService interface {
 	CreatePolicy(ctx context.Context, policy *policytypes.Policy) (*policytypes.Policy, error)
+	CreateRule(ctx context.Context, rule *policytypes.Rule) (*policytypes.Rule, error)
 }
 
 type policyService struct {
@@ -65,6 +66,33 @@ func (s *policyService) CreatePolicy(
 	}
 
 	return policy, nil
+}
+
+func (s *policyService) CreateRule(
+	ctx context.Context,
+	rule *policytypes.Rule,
+) (*policytypes.Rule, error) {
+	if rule == nil {
+		return nil, errors.New("rule cannot be empty")
+	}
+
+	rule.ID = uuid.NewString()
+
+	err := s.validateRules(ctx, []*policytypes.Rule{rule})
+	if err != nil {
+		return nil, err
+	}
+
+	for _, task := range rule.Tasks {
+		task.ID = uuid.NewString()
+	}
+
+	err = s.policyRepository.CreateRule(ctx, rule)
+	if err != nil {
+		return nil, err
+	}
+
+	return rule, nil
 }
 
 func (s *policyService) validatePolicy(ctx context.Context, policy *policytypes.Policy) error {
