@@ -18,6 +18,10 @@ type AuthService interface {
 		appID string,
 		toolName, userToken *string,
 	) (*authtypes.Session, error)
+	Token(
+		ctx context.Context,
+		code string,
+	)
 }
 
 type authService struct {

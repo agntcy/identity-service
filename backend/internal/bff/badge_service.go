@@ -132,10 +132,7 @@ func (s *badgeService) IssueBadge(
 		return nil, fmt.Errorf("unable to issue badge: %w", err)
 	}
 
-	userID, ok := identitycontext.GetUserID(ctx)
-	if !ok {
-		return nil, errors.New("user id not found in context")
-	}
+	userID, _ := identitycontext.GetUserID(ctx)
 
 	clientCredentials, err := s.credentialStore.Get(ctx, app.ID)
 	if err != nil {
@@ -193,7 +190,7 @@ func (s *badgeService) createBadgeClaims(
 	case apptypes.APP_TYPE_AGENT_OASF:
 		// Add implementation for OASF
 		return nil, 0, nil
-	case apptypes.APP_TYPE_AGENT_MCP_SERVER:
+	case apptypes.APP_TYPE_MCP_SERVER:
 		err := s.validator.Struct(&in.mcp)
 		if err != nil {
 			return nil, badgetypes.BADGE_TYPE_UNSPECIFIED, err

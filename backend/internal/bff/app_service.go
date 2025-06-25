@@ -5,7 +5,6 @@ package bff
 
 import (
 	"context"
-	"errors"
 
 	appcore "github.com/agntcy/identity-platform/internal/core/app"
 	apptypes "github.com/agntcy/identity-platform/internal/core/app/types"
@@ -88,10 +87,7 @@ func (s *appService) CreateApp(
 		}
 	}()
 
-	userID, ok := identitycontext.GetUserID(ctx)
-	if !ok {
-		return nil, errors.New("user id not found in context")
-	}
+	userID, _ := identitycontext.GetUserID(ctx)
 
 	resolverMetadataID, err := s.identityService.GenerateID(
 		ctx,
