@@ -14,62 +14,20 @@ import {Typography} from '@mui/material';
 import {Trash2Icon, UserRoundPlusIcon} from 'lucide-react';
 import {cn} from '@/lib/utils';
 import {useAuth} from '@/hooks';
+import {generatePath, useNavigate} from 'react-router-dom';
+import {PATHS} from '@/router/paths';
 
 export const ListOrganizations = () => {
-  const [confirmOpen, setConfirmOpen] = useState(false);
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: 0,
-    pageSize: 15
+    pageSize: 10
   });
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
 
   const {data, isLoading, isFetching, refetch, error} = useGetTenants();
   const {authInfo} = useAuth();
 
-  // const deleteAirMutation = useDeleteAir({
-  //   callbacks: {
-  //     onSuccess: () => {
-  //       toast.success('AIR Engine Configuration deleted.');
-  //       setTempAirConfig(undefined);
-  //     },
-  //     onError: () => {
-  //       toast.error('Failed to delete AIR Engine configuration.');
-  //       setTempAirConfig(undefined);
-  //     }
-  //   }
-  // });
-
-  // const deleteCatalogMutation = useDeleteCatalog({});
-
-  // const handleRefresh = useCallback(() => {
-  //   void refetch();
-  //   toast.success('AIR Engine Configurations refreshed.');
-  // }, [refetch]);
-
-  // const onSearch = useCallback((keyword?: string) => {
-  //   setSearchKeyword(keyword);
-  // }, []);
-
-  // const filteredData = useMemo(() => {
-  //   return data?.airs?.filter((f) => f.id?.toLowerCase().includes(searchKeyword?.toLowerCase() || ''));
-  // }, [data?.airs, searchKeyword]);
-
-  // const handleOnConfirmDelete = useCallback(() => {
-  //   if (tempAirConfig?.id) {
-  //     setConfirmOpen(false);
-  //     deleteAirMutation.mutate({id: tempAirConfig.id});
-  //     if (tempAirConfig?.catalogId) {
-  //       deleteCatalogMutation.mutate({id: tempAirConfig.catalogId});
-  //     }
-  //   }
-  // }, [deleteAirMutation, deleteCatalogMutation, tempAirConfig?.catalogId, tempAirConfig?.id]);
-
-  // const handleOnDelete = useCallback((air?: Air) => {
-  //   if (air) {
-  //     setTempAirConfig(air);
-  //     setConfirmOpen(true);
-  //   }
-  // }, []);
+  const navigate = useNavigate();
 
   return (
     <>
@@ -80,12 +38,6 @@ export const ListOrganizations = () => {
           error={error}
           isLoading={isLoading || isFetching}
           useRelativeLoader
-          emptyListStateProps={{
-            actionCallback: () => {
-              // setApiKeyMutation.mutate();
-            },
-            actionTitle: 'New organization'
-          }}
           errorListStateProps={{
             actionCallback: () => {
               void refetch();
@@ -96,17 +48,17 @@ export const ListOrganizations = () => {
           <Table
             columns={OrganizationsColumns()}
             data={data?.tenants || []}
-            densityCompact
-            state={{pagination, sorting}}
-            manualPagination
-            onSortingChange={setSorting}
-            onPaginationChange={setPagination}
-            title={{label: 'organizations', count: data?.tenants?.length || 0}}
-            enableRowActions
-            enableColumnPinning={false}
             isLoading={isLoading || isFetching}
+            densityCompact
+            muiTableBodyRowProps={({row}) => ({
+              sx: {cursor: 'pointer', '& .MuiIconButton-root': {color: (theme) => theme.palette.vars.interactiveSecondaryDefaultDefault}},
+              onClick: () => {
+                const path = generatePath(PATHS.settingsOrganizationInfo, {id: row.original?.id});
+                void navigate(path, {replace: true});
+              }
+            })}
+            enableRowActions
             topToolbarProps={{
-              enableArrangeColumns: false,
               enableActions: false
             }}
             muiTableContainerProps={{
@@ -114,6 +66,12 @@ export const ListOrganizations = () => {
                 border: '1px solid #D5DFF7'
               }
             }}
+            onPaginationChange={setPagination}
+            rowCount={data?.tenants.length ?? 0}
+            rowsPerPageOptions={[1, 10, 25, 50, 100]}
+            title={{label: 'organizations', count: data?.tenants?.length || 0}}
+            state={{pagination, sorting}}
+            onSortingChange={setSorting}
             renderRowActionMenuItems={({row}) => {
               if (authInfo?.user?.tenant?.id !== row.original.id) {
                 return [];
@@ -134,90 +92,8 @@ export const ListOrganizations = () => {
               ];
             }}
           />
-          {/* <Card className="flex justify-between items-center w-full">
-        <div className="flex gap-4 items-center">
-          <div className="flex gap-2 items-center">
-            <Typography variant="body2" fontWeight={600}>
-              API Key:
-            </Typography>
-            <Typography variant="body2">
-              {data?.apiKey?.apiKey ? `${'*'.repeat(55)}${data.apiKey.apiKey.slice(-3)}` : 'No API Key available'}
-            </Typography>
-          </div>
-          <CopyButton
-            text={data?.apiKey?.apiKey || ''}
-            onCopy={() => {
-              toast({
-                title: 'API Key copied to clipboard',
-                description: 'You can now use this API Key in your applications.',
-                type: 'success'
-              });
-            }}
-          />
-        </div>
-
-        <Tooltip title="Refresh API Key" placement="top">
-          <Button
-            onClick={() => handleChangeActionsModal(true)}
-            variant="primary"
-            color="negative"
-            startIcon={<RefreshCcwIcon className="w-4 h-4" />}
-          >
-            Refresh
-          </Button>
-        </Tooltip>
-      </Card>
-      <ConfirmModal
-        open={openActionsModal}
-        title="Confirm Action"
-        description="Are you sure you want to refresh your API Key? This action will invalidate your current API Key and generate a new one. Please ensure that you update your applications accordingly."
-        confirmButtonText="Refresh API Key"
-        onCancel={() => handleChangeActionsModal(false)}
-        onConfirm={handleConfirmAction}
-      /> */}
         </ConditionalQueryRenderer>
-        {/* <CardContent>
-          <ConditionalQueryRenderer
-            data={undefined}
-            isLoading={true}
-            error={''}
-            itemName="AIR Configurations"
-            customLoader={<CustomLoaderTable />}
-            // customEmpty={<Empty />}
-            classNameContainer="p-0 my-8"
-          >
-            <DataTable
-              showToolbar
-              filterBarProps={{
-                count: filteredData?.length || 0,
-                placeholder: 'Search configurations...',
-                onRefreshClick: handleRefresh,
-                onChangeSearch: onSearch
-              }}
-              columns={ConfigurationsColumns({handleOnDelete})}
-              data={filteredData ?? []}
-              usePagination
-              rowCount={filteredData?.length || 0}
-            />
-          </ConditionalQueryRenderer>
-        </CardContent> */}
       </Card>
-      {/* {tempAirConfig &&
-        createPortal(
-          <ConfirmDialog
-            title="Are you sure you want to delete AIR configuration?"
-            description={`Deleting a AIR configuration is irreversible. (${tempAirConfig.id})`}
-            open={confirmOpen}
-            onCancel={() => {
-              setTempAirConfig(undefined);
-              setConfirmOpen(false);
-            }}
-            onConfirm={() => {
-              handleOnConfirmDelete();
-            }}
-          />,
-          document.body
-        )} */}
     </>
   );
 };

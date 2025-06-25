@@ -15,7 +15,7 @@ const NotFound: React.FC = () => {
   };
 
   return (
-    <Card className="mt-4 mx-4 p-4">
+    <Card className="mt-4 mx-8 ml-4 p-4">
       <EmptyState
         variant="warning"
         title="404: Page Not Found"

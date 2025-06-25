@@ -23,6 +23,7 @@ const Dashboard = React.lazy(() => import('@/pages/dashboard/dashboard'));
 const SettingsApiKey = React.lazy(() => import('@/pages/settings/api-key/settings-api-key'));
 const SettingsOrganizations = React.lazy(() => import('@/pages/settings/organizations/settings-organizations'));
 const CreateOrganization = React.lazy(() => import('@/pages/settings/organizations/create-organization'));
+const OrganizationInfo = React.lazy(() => import('@/pages/settings/organizations/info-organization'));
 
 export const generateRoutes = (routes: Route[]): Route[] => {
   return [
@@ -125,6 +126,10 @@ export const useRoutes = () => {
               {
                 path: PATHS.settingsOrganizationsCreate,
                 element: <CreateOrganization />
+              },
+              {
+                path: PATHS.settingsOrganizationInfo,
+                element: <OrganizationInfo />
               },
               {
                 path: '*',
