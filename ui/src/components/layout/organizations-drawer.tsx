@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /**
  * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
  * SPDX-License-Identifier: Apache-2.0
@@ -99,7 +100,8 @@ export const OrganizationsDrawer: React.FC<{
                     }}
                   >
                     <Typography variant="captionMedium" sx={{color: tenant.id === authInfo?.user?.tenant?.id ? '#0051AF' : '#00142B'}}>
-                      <OverflowTooltip value={tenant.name} someLongText={tenant.name} />
+                      {/* @ts-expect-error */}
+                      <OverflowTooltip value={tenant.name} someLongText={tenant.name} placement="right" />
                     </Typography>
                   </div>
                 ))}
