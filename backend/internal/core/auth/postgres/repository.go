@@ -85,9 +85,9 @@ func (r *postgresRepository) GetByAuthorizationCode(
 	return model.ToCoreType(), nil
 }
 
-func (r *postgresRepository) GetByToken(
+func (r *postgresRepository) GetByAccessToken(
 	ctx context.Context,
-	token string,
+	accessToken string,
 ) (*types.Session, error) {
 	model := &Session{}
 
@@ -102,7 +102,7 @@ func (r *postgresRepository) GetByToken(
 
 	result := r.dbContext.Client().
 		Where("app_id = ?", appID).
-		Where("token = ?", token).
+		Where("access_token = ?", accessToken).
 		Where("expires_at > ?", time.Now().Unix()).
 		First(model)
 	if result.Error != nil {

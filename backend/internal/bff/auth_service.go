@@ -28,6 +28,7 @@ type AuthService interface {
 	) (*authtypes.Session, error)
 	ExtAuthZ(
 		ctx context.Context,
+		accessToken string,
 	) error
 }
 
@@ -155,15 +156,19 @@ func (s *authService) Token(
 
 func (s *authService) ExtAuthZ(
 	ctx context.Context,
+	accessToken string,
 ) error {
-	// Get the calling identity from context
-	appID, ok := identitycontext.GetAppID(ctx)
-	if !ok || appID == "" {
+	if accessToken == "" {
 		return errutil.Err(
 			nil,
-			"app ID not found in context",
+			"access token cannot be empty",
 		)
 	}
 
-	return nil
+	_, err := s.authRepository.GetByAccessToken(ctx, accessToken)
+
+	// Evaluate the session based on existing policies
+	// TODO: Implement policy evaluation logic here
+
+	return err
 }

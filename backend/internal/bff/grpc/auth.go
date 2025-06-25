@@ -125,12 +125,13 @@ func (s *authService) ExtAuthz(
 ) (*emptypb.Empty, error) {
 	err := s.authSrv.ExtAuthZ(
 		ctx,
+		req.AccessToken,
 	)
 	if err != nil {
-		return nil, errutil.Err(
-			err,
+		return nil, grpcutil.UnauthorizedError(errutil.Err(
+			nil,
 			"failed to authorize",
-		)
+		))
 	}
 
 	return &emptypb.Empty{}, nil
