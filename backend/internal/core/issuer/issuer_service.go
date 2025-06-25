@@ -39,7 +39,7 @@ func NewService(
 func (s *service) SetIssuer(
 	ctx context.Context,
 	issuerSettings *settingstypes.IssuerSettings,
-) (err error) {
+) error {
 	// Validate the issuer settings.
 	if issuerSettings == nil {
 		return errutil.Err(nil, "issuer settings cannot be nil")
@@ -60,7 +60,7 @@ func (s *service) SetIssuer(
 	var clientCredentials *idpcore.ClientCredentials
 	var idp idpcore.Idp
 
-	idp, err = s.idpFactory.Create(ctx, issuerSettings)
+	idp, err := s.idpFactory.Create(ctx, issuerSettings)
 	if err != nil {
 		return errutil.Err(err, "failed to create IDP instance")
 	}

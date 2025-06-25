@@ -53,7 +53,7 @@ func NewAppService(
 func (s *appService) CreateApp(
 	ctx context.Context,
 	app *apptypes.App,
-) (createdApp *apptypes.App, err error) {
+) (*apptypes.App, error) {
 	if app == nil {
 		return nil, errutil.Err(nil, "app cannot be nil")
 	}
@@ -115,7 +115,7 @@ func (s *appService) CreateApp(
 		return nil, errutil.Err(err, "failed to generate an api key")
 	}
 
-	createdApp, err = s.appRepository.CreateApp(ctx, app)
+	createdApp, err := s.appRepository.CreateApp(ctx, app)
 	if err != nil {
 		return nil, err
 	}

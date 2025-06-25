@@ -176,11 +176,12 @@ func main() {
 		token, // This should be set in dev mode only
 	)
 	if err != nil {
-		log.Fatal("unable to create vault client ", err)
+		log.Error("unable to create vault client ", err)
 	}
 
 	idpFactory := idpcore.NewFactory()
 	credentialStore := idpcore.NewCredentialStore(vaultClient)
+
 	keyStore, err := identitycore.NewVaultKeyStore(
 		config.VaultHost,
 		config.VaultPort,

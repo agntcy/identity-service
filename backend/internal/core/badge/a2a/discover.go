@@ -38,6 +38,7 @@ func (d *discoveryClient) Discover(
 	if err != nil {
 		return "", err
 	}
+
 	defer func() {
 		_ = resp.Body.Close()
 	}()

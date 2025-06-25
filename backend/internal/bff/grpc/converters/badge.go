@@ -77,6 +77,7 @@ func FromVerifiableCredential(
 	if src == nil {
 		return nil
 	}
+
 	return &identity_platform_sdk_go.VerifiableCredential{
 		Context:           src.Context,
 		Type:              src.Type,
