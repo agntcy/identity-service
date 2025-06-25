@@ -73,7 +73,7 @@ jobs:
       runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
       ### REQUIRED 
       ### Docker image name
-      image-name: "eti-sre/${{ github.event.repository.name }}-bff"
+      image-name: "eti-sre/${{ github.event.repository.name }}"
 
       ### path to where docker should copy files into image
       ### defaults to root of repository (.)
@@ -119,5 +119,5 @@ jobs:
       corona-image-admins: ${{ vars.CORONA_IMAGE_ADMINS }}
       ghcr-org-registry: ${{ vars.GHCR_REGISTRY }}
       # optional
-      image-name: "eti-sre/${{ github.event.repository.name }}-bff"
+      image-name: "eti-sre/${{ github.event.repository.name }}"
       image-tag: ""
