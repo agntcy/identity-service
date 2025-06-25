@@ -119,4 +119,4 @@ jobs:
       ghcr-org-registry: ${{ vars.GHCR_REGISTRY }}
       # optional
       image-name: "eti-sre/${{ github.event.repository.name }}-bff"
-      image-tag: "dev-${{ github.sha }}"
+      image-tag: ""
