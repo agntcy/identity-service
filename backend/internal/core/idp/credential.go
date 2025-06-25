@@ -119,6 +119,6 @@ func (s *VaultCredentialStore) Delete(
 	return nil
 }
 
-func (*VaultCredentialStore) getSecretPath(tenantID string, subject string) string {
+func (*VaultCredentialStore) getSecretPath(tenantID, subject string) string {
 	return fmt.Sprintf("%s/%s/%s", mountPath, tenantID, subject)
 }

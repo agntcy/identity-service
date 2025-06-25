@@ -9,10 +9,13 @@ import (
 	"time"
 )
 
+const extraLength = 2 // for hex encoding
+
 func Random(length int) string {
 	source := rand.NewSource(time.Now().UnixNano())
 	rng := rand.New(source)
-	b := make([]byte, length+2)
+	b := make([]byte, length+extraLength)
 	rng.Read(b)
-	return fmt.Sprintf("%x", b)[2 : length+2]
+
+	return fmt.Sprintf("%x", b)[2 : length+extraLength]
 }

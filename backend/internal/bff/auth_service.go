@@ -143,6 +143,7 @@ func (s *authService) Token(
 
 	// Update session with token ID
 	session.AccessToken = ptrutil.Ptr(accessToken)
+
 	err = s.authRepository.Update(ctx, session)
 	if err != nil {
 		return nil, errutil.Err(

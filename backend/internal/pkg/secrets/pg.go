@@ -46,7 +46,7 @@ func (es *EncryptedString) Scan(
 	field *schema.Field,
 	dst reflect.Value,
 	dbValue interface{},
-) (err error) {
+) error {
 	log.Debug("Using EncryptedString Scan method")
 
 	if dbValue == nil {
@@ -56,12 +56,8 @@ func (es *EncryptedString) Scan(
 	switch value := dbValue.(type) {
 	case []byte:
 		*es = EncryptedString(Decrypt(string(value)))
-
-		print(es)
 	case string:
 		*es = EncryptedString(Decrypt(value))
-
-		print(es)
 	default:
 		return errutil.Err(
 			fmt.Errorf("unsupported data type %T: %v", dbValue, dbValue),
@@ -83,6 +79,7 @@ func (es *EncryptedString) Value(
 	fieldValue interface{},
 ) (interface{}, error) {
 	if es == nil {
+		//nolint: nilnil // If the EncryptedString is nil, return nil to avoid storing an empty string
 		return nil, nil
 	}
 
