@@ -123,10 +123,17 @@ func (s *authService) ExtAuthz(
 	ctx context.Context,
 	req *emptypb.Empty,
 ) (*emptypb.Empty, error) {
-	return nil, errutil.Err(
-		nil,
-		"ExtAuthz method is not implemented",
+	err := s.authSrv.ExtAuthZ(
+		ctx,
 	)
+	if err != nil {
+		return nil, errutil.Err(
+			err,
+			"failed to authorize",
+		)
+	}
+
+	return &emptypb.Empty{}, nil
 }
 
 func (s *authService) RegisterDevice(

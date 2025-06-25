@@ -47,7 +47,7 @@ service AuthService {
   }
 
   // Handle external authorization requests
-  rpc ExtAuthz(google.protobuf.Empty) returns (google.protobuf.Empty) {
+  rpc ExtAuthz(ExtAuthzRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {post: "/v1alpha1/auth/ext_authz"};
 
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -107,4 +107,9 @@ message RegisterDeviceRequest {
 
   // The device information to register.
   Device device = 2;
+}
+
+message ExtAuthzRequest {
+  // The access token to be authorized.
+  string access_token = 1;
 }
