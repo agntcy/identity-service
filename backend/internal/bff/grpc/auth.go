@@ -121,7 +121,7 @@ func (s *authService) Token(
 
 func (s *authService) ExtAuthz(
 	ctx context.Context,
-	req *emptypb.Empty,
+	req *identity_platform_sdk_go.ExtAuthzRequest,
 ) (*emptypb.Empty, error) {
 	err := s.authSrv.ExtAuthZ(
 		ctx,

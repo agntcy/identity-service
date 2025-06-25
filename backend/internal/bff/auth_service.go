@@ -164,4 +164,6 @@ func (s *authService) ExtAuthZ(
 			"app ID not found in context",
 		)
 	}
+
+	return nil
 }
