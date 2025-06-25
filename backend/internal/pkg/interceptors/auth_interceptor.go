@@ -30,7 +30,7 @@ var allowedServicesWithAppAuth = []string{
 	"/agntcy.identity.platform.v1alpha1.AuthService/AppInfo",
 	"/agntcy.identity.platform.v1alpha1.AuthService/Authorize",
 	"/agntcy.identity.platform.v1alpha1.AuthService/Token",
-	"/agntcy.identity.platform.v1alpha1.AuthService/ExtAuthZ",
+	"/agntcy.identity.platform.v1alpha1.AuthService/ExtAuthz",
 }
 
 type AuthInterceptor struct {
@@ -91,7 +91,7 @@ func (ti *AuthInterceptor) Unary(
 	} else {
 		// Check the app auth services
 		for _, allowed := range allowedServicesWithAppAuth {
-			log.Debug("Checking if : ", info.FullMethod, " is in allowed services with app auth")
+			log.Debug("Checking if : ", info.FullMethod, " is in allowed services with app auth", allowed)
 
 			if strings.Contains(info.FullMethod, allowed) {
 				// Authenticate an app against IAM Api Keys v1
