@@ -923,6 +923,30 @@
           ]
         },
         {
+          "name": "ExtAuthzRequest",
+          "longName": "ExtAuthzRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.ExtAuthzRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "access_token",
+              "description": "The access token to be authorized.",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
           "name": "RegisterDeviceRequest",
           "longName": "RegisterDeviceRequest",
           "fullName": "agntcy.identity.platform.v1alpha1.RegisterDeviceRequest",
@@ -1083,9 +1107,9 @@
             {
               "name": "ExtAuthz",
               "description": "Handle external authorization requests",
-              "requestType": "Empty",
-              "requestLongType": ".google.protobuf.Empty",
-              "requestFullType": "google.protobuf.Empty",
+              "requestType": "ExtAuthzRequest",
+              "requestLongType": "ExtAuthzRequest",
+              "requestFullType": "agntcy.identity.platform.v1alpha1.ExtAuthzRequest",
               "requestStreaming": false,
               "responseType": "Empty",
               "responseLongType": ".google.protobuf.Empty",
