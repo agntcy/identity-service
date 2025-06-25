@@ -53,7 +53,7 @@ paths:
                         - APP_TYPE_UNSPECIFIED
                         - APP_TYPE_AGENT_A2A
                         - APP_TYPE_AGENT_OASF
-                        - APP_TYPE_AGENT_MCP_SERVER
+                        - APP_TYPE_MCP_SERVER
                     type: string
                     format: enum
             responses:
@@ -341,7 +341,7 @@ paths:
             description: Request token for an Agent or MCP Server
             operationId: AuthService_Token
             parameters:
-                - name: code
+                - name: authorizationCode
                   in: query
                   description: Pass the code received from the authorization endpoint.
                   schema:
@@ -758,7 +758,7 @@ components:
                         - APP_TYPE_UNSPECIFIED
                         - APP_TYPE_AGENT_A2A
                         - APP_TYPE_AGENT_OASF
-                        - APP_TYPE_AGENT_MCP_SERVER
+                        - APP_TYPE_MCP_SERVER
                     type: string
                     description: The type of the App.
                     format: enum
@@ -783,7 +783,7 @@ components:
                         - APP_TYPE_UNSPECIFIED
                         - APP_TYPE_AGENT_A2A
                         - APP_TYPE_AGENT_OASF
-                        - APP_TYPE_AGENT_MCP_SERVER
+                        - APP_TYPE_MCP_SERVER
                     type: string
                     description: The type of the App
                     format: enum
@@ -793,7 +793,7 @@ components:
         AuthorizeResponse:
             type: object
             properties:
-                code:
+                authorizationCode:
                     type: string
                     description: |-
                         If authorization is successful, return a code to be used for
@@ -1088,23 +1088,12 @@ components:
                     type: string
                     description: A tool name for the Task.
             description: Identity Platform Policy Task
-        Token:
-            type: object
-            properties:
-                id:
-                    type: string
-                    description: A unique identifier for the Token.
-                value:
-                    type: string
-                    description: Token value.
-            description: Identity Platform Token
         TokenResponse:
             type: object
             properties:
-                token:
-                    allOf:
-                        - $ref: '#/components/schemas/Token'
-                    description: The token issued to the Agent or MCP Server.
+                accessToken:
+                    type: string
+                    description: The access token issued to the Agent or MCP Server.
         VerifiableCredential:
             type: object
             properties:

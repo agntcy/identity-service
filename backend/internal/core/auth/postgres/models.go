@@ -8,40 +8,40 @@ import (
 )
 
 type Session struct {
-	ID         string `gorm:"primarykey"`
-	CreatedAt  int64  `gorm:"autoCreateTime"`
-	ExpiresAt  *int64
-	OwnerAppID string `gorm:"references:OwnerAppID"`
-	AppID      string `gorm:"references:AppID"`
-	ToolName   *string
-	UserID     *string
-	TokenID    *string
-	Code       *string
+	ID                string `gorm:"primarykey"`
+	CreatedAt         int64  `gorm:"autoCreateTime"`
+	ExpiresAt         *int64
+	OwnerAppID        string `gorm:"references:OwnerAppID"`
+	AppID             string `gorm:"references:AppID"`
+	ToolName          *string
+	UserID            *string
+	AccessToken       *string `gorm:"type:varchar(2048);index:at_idx,unique;"`
+	AuthorizationCode *string `gorm:"type:varchar(256);index:ac_idx,unique;"`
 }
 
 func (i *Session) ToCoreType() *types.Session {
 	return &types.Session{
-		ID:         i.ID,
-		OwnerAppID: i.OwnerAppID,
-		AppID:      i.AppID,
-		ToolName:   i.ToolName,
-		UserID:     i.UserID,
-		TokenID:    i.TokenID,
-		Code:       i.Code,
-		CreatedAt:  i.CreatedAt,
-		ExpiresAt:  i.ExpiresAt,
+		ID:                i.ID,
+		OwnerAppID:        i.OwnerAppID,
+		AppID:             i.AppID,
+		ToolName:          i.ToolName,
+		UserID:            i.UserID,
+		AccessToken:       i.AccessToken,
+		AuthorizationCode: i.AuthorizationCode,
+		CreatedAt:         i.CreatedAt,
+		ExpiresAt:         i.ExpiresAt,
 	}
 }
 
 func newSessionModel(src *types.Session) *Session {
 	return &Session{
-		ID:         src.ID,
-		OwnerAppID: src.OwnerAppID,
-		AppID:      src.AppID,
-		ToolName:   src.ToolName,
-		UserID:     src.UserID,
-		TokenID:    src.TokenID,
-		Code:       src.Code,
-		ExpiresAt:  src.ExpiresAt,
+		ID:                src.ID,
+		OwnerAppID:        src.OwnerAppID,
+		AppID:             src.AppID,
+		ToolName:          src.ToolName,
+		UserID:            src.UserID,
+		AccessToken:       src.AccessToken,
+		AuthorizationCode: src.AuthorizationCode,
+		ExpiresAt:         src.ExpiresAt,
 	}
 }

@@ -17,11 +17,13 @@ func FromBadge(src *badgetypes.Badge) *identity_platform_sdk_go.Badge {
 
 	return &identity_platform_sdk_go.Badge{
 		VerifiableCredential: FromVerifiableCredential(&src.VerifiableCredential),
-		AppID:                ptrutil.Ptr(src.AppID),
+		AppId:                ptrutil.Ptr(src.AppID),
 	}
 }
 
-func FromCredentialSchema(src *badgetypes.CredentialSchema) *identity_platform_sdk_go.CredentialSchema {
+func FromCredentialSchema(
+	src *badgetypes.CredentialSchema,
+) *identity_platform_sdk_go.CredentialSchema {
 	if src == nil {
 		return nil
 	}
@@ -32,7 +34,9 @@ func FromCredentialSchema(src *badgetypes.CredentialSchema) *identity_platform_s
 	}
 }
 
-func ToCredentialSchema(src *identity_platform_sdk_go.CredentialSchema) *badgetypes.CredentialSchema {
+func ToCredentialSchema(
+	src *identity_platform_sdk_go.CredentialSchema,
+) *badgetypes.CredentialSchema {
 	if src == nil {
 		return nil
 	}
@@ -67,7 +71,9 @@ func ToProof(src *identity_platform_sdk_go.Proof) *badgetypes.Proof {
 	}
 }
 
-func FromVerifiableCredential(src *badgetypes.VerifiableCredential) *identity_platform_sdk_go.VerifiableCredential {
+func FromVerifiableCredential(
+	src *badgetypes.VerifiableCredential,
+) *identity_platform_sdk_go.VerifiableCredential {
 	if src == nil {
 		return nil
 	}
@@ -87,7 +93,9 @@ func FromVerifiableCredential(src *badgetypes.VerifiableCredential) *identity_pl
 	}
 }
 
-func ToVerifiableCredential(src *identity_platform_sdk_go.VerifiableCredential) *badgetypes.VerifiableCredential {
+func ToVerifiableCredential(
+	src *identity_platform_sdk_go.VerifiableCredential,
+) *badgetypes.VerifiableCredential {
 	if src == nil {
 		return nil
 	}

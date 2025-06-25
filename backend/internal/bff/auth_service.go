@@ -7,9 +7,13 @@ import (
 	"context"
 
 	authcore "github.com/agntcy/identity-platform/internal/core/auth"
+	"github.com/agntcy/identity-platform/internal/core/auth/types"
 	authtypes "github.com/agntcy/identity-platform/internal/core/auth/types"
+	idpcore "github.com/agntcy/identity-platform/internal/core/idp"
 	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
+	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
+	"github.com/agntcy/identity/pkg/oidc"
 )
 
 type AuthService interface {
@@ -18,17 +22,27 @@ type AuthService interface {
 		appID string,
 		toolName, userToken *string,
 	) (*authtypes.Session, error)
+	Token(
+		ctx context.Context,
+		authorizationCode string,
+	) (*authtypes.Session, error)
 }
 
 type authService struct {
-	authRepository authcore.Repository
+	authRepository    authcore.Repository
+	credentialStore   idpcore.CredentialStore
+	oidcAuthenticator oidc.Authenticator
 }
 
 func NewAuthService(
 	authRepository authcore.Repository,
+	credentialStore idpcore.CredentialStore,
+	oidcAuthenticator oidc.Authenticator,
 ) AuthService {
 	return &authService{
-		authRepository: authRepository,
+		authRepository:    authRepository,
+		credentialStore:   credentialStore,
+		oidcAuthenticator: oidcAuthenticator,
 	}
 }
 
@@ -65,6 +79,56 @@ func (s *authService) Authorize(
 			"failed to create session",
 		)
 	}
+
+	return session, nil
+}
+
+func (s *authService) Token(
+	ctx context.Context,
+	authorizationCode string,
+) (*types.Session, error) {
+	if authorizationCode == "" {
+		return nil, errutil.Err(
+			nil,
+			"authorization code cannot be empty",
+		)
+	}
+
+	// Get session by authorization code
+	session, err := s.authRepository.GetByAuthorizationCode(ctx, authorizationCode)
+	if err != nil {
+		return nil, errutil.Err(
+			err,
+			"failed to get session by authorization code",
+		)
+	}
+
+	// Get client credentials from the session
+	clientCredentials, err := s.credentialStore.Get(ctx, session.OwnerAppID)
+	if err != nil || clientCredentials == nil {
+		return nil, errutil.Err(
+			err,
+			"failed to get client credentials",
+		)
+	}
+
+	// Issue a token
+	accessToken, err := s.oidcAuthenticator.Token(
+		ctx,
+		clientCredentials.Issuer,
+		clientCredentials.ClientID,
+		clientCredentials.ClientSecret,
+	)
+	if err != nil {
+		return nil, errutil.Err(
+			err,
+			"failed to issue token",
+		)
+	}
+
+	// Update session with token ID
+	session.AccessToken = ptrutil.Ptr(accessToken)
+	s.authRepository.Update(ctx, session)
 
 	return session, nil
 }

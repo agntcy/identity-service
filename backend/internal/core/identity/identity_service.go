@@ -68,6 +68,7 @@ type service struct {
 func NewService(
 	identityHost, identityPort string,
 	keyStore KeyStore,
+	oidcAuthenticator oidc.Authenticator,
 ) Service {
 	transport := httptransport.New(
 		net.JoinHostPort(identityHost, identityPort),
@@ -79,7 +80,7 @@ func NewService(
 		issuerClient:      issuersdk.New(transport, strfmt.Default),
 		idClient:          idsdk.New(transport, strfmt.Default),
 		vcClient:          vcsdk.New(transport, strfmt.Default),
-		oidcAuthenticator: oidc.NewAuthenticator(),
+		oidcAuthenticator: oidcAuthenticator,
 		keyStore:          keyStore,
 	}
 }
@@ -277,6 +278,13 @@ func (s *service) generateProof(
 			return nil, errutil.Err(
 				keyErr,
 				"error retrieving private key from vault for proof generation",
+			)
+		}
+
+		if commonName == "" {
+			return nil, errutil.Err(
+				nil,
+				"common name cannot be empty for self-issued JWT proof",
 			)
 		}
 

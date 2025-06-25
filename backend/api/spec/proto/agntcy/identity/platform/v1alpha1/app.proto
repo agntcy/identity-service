@@ -39,5 +39,5 @@ enum AppType {
   // Agent OASF App Type.
   APP_TYPE_AGENT_OASF = 2;
   // Agent MCP Server App Type.
-  APP_TYPE_AGENT_MCP_SERVER = 3;
+  APP_TYPE_MCP_SERVER = 3;
 }

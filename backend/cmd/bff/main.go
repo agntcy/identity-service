@@ -31,6 +31,7 @@ import (
 	"github.com/agntcy/identity-platform/pkg/db"
 	"github.com/agntcy/identity-platform/pkg/grpcserver"
 	"github.com/agntcy/identity-platform/pkg/log"
+	"github.com/agntcy/identity/pkg/oidc"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/rs/cors"
 	"github.com/sirupsen/logrus"
@@ -103,7 +104,8 @@ func main() {
 	err = dbContext.AutoMigrate(
 		&apppg.App{},                 // App model
 		&settingspg.IssuerSettings{}, // Issuer settings model
-		&badgepg.Badge{},
+		&badgepg.Badge{},             // Badge model
+		&authpg.Session{},            // Session model
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -189,11 +191,15 @@ func main() {
 		log.Fatal("unable to create vault key store ", err)
 	}
 
+	// OIDC Authenticator
+	oidcAuthenticator := oidc.NewAuthenticator()
+
 	// Identity service
 	identityService := identitycore.NewService(
 		config.IdentityHost,
 		config.IdentityPort,
 		keyStore,
+		oidcAuthenticator,
 	)
 
 	a2aClient := badgea2a.NewDiscoveryClient()
@@ -230,6 +236,8 @@ func main() {
 	)
 	authSrv := bff.NewAuthService(
 		authRepository,
+		credentialStore,
+		oidcAuthenticator,
 	)
 
 	register := identity_platform_api.GrpcServiceRegister{

@@ -39,10 +39,10 @@ message Session {
   // The user ID associated with the Session.
   optional string user_id = 5;
 
-  // The token ID associated with the Session.
-  optional string token_id = 6;
+  // The access token associated with the Session.
+  optional string access_token = 6;
 
-  // The code associated with the Session.
+  // The authorization code associated with the Session.
   optional string code = 7;
 
   // The creation time of the Session.
@@ -50,13 +50,4 @@ message Session {
 
   // The expiration time of the Session.
   optional int64 expires_at = 9;
-}
-
-// Identity Platform Token
-message Token {
-  // A unique identifier for the Token.
-  optional string id = 1;
-
-  // Token value.
-  optional string value = 2;
 }

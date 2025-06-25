@@ -34,7 +34,7 @@ const (
 	// Agent OASF App Type.
 	AppType_APP_TYPE_AGENT_OASF AppType = 2
 	// Agent MCP Server App Type.
-	AppType_APP_TYPE_AGENT_MCP_SERVER AppType = 3
+	AppType_APP_TYPE_MCP_SERVER AppType = 3
 )
 
 // Enum value maps for AppType.
@@ -43,13 +43,13 @@ var (
 		0: "APP_TYPE_UNSPECIFIED",
 		1: "APP_TYPE_AGENT_A2A",
 		2: "APP_TYPE_AGENT_OASF",
-		3: "APP_TYPE_AGENT_MCP_SERVER",
+		3: "APP_TYPE_MCP_SERVER",
 	}
 	AppType_value = map[string]int32{
-		"APP_TYPE_UNSPECIFIED":      0,
-		"APP_TYPE_AGENT_A2A":        1,
-		"APP_TYPE_AGENT_OASF":       2,
-		"APP_TYPE_AGENT_MCP_SERVER": 3,
+		"APP_TYPE_UNSPECIFIED": 0,
+		"APP_TYPE_AGENT_A2A":   1,
+		"APP_TYPE_AGENT_OASF":  2,
+		"APP_TYPE_MCP_SERVER":  3,
 	}
 )
 
@@ -188,12 +188,12 @@ const file_agntcy_identity_platform_v1alpha1_app_proto_rawDesc = "" +
 	"\x05_typeB\x17\n" +
 	"\x15_resolver_metadata_idB\n" +
 	"\n" +
-	"\b_api_key*s\n" +
+	"\b_api_key*m\n" +
 	"\aAppType\x12\x18\n" +
 	"\x14APP_TYPE_UNSPECIFIED\x10\x00\x12\x16\n" +
 	"\x12APP_TYPE_AGENT_A2A\x10\x01\x12\x17\n" +
-	"\x13APP_TYPE_AGENT_OASF\x10\x02\x12\x1d\n" +
-	"\x19APP_TYPE_AGENT_MCP_SERVER\x10\x03BkZigithub.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_gob\x06proto3"
+	"\x13APP_TYPE_AGENT_OASF\x10\x02\x12\x17\n" +
+	"\x13APP_TYPE_MCP_SERVER\x10\x03BkZigithub.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_gob\x06proto3"
 
 var (
 	file_agntcy_identity_platform_v1alpha1_app_proto_rawDescOnce sync.Once

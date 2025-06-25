@@ -5,6 +5,7 @@ package postgres
 
 import (
 	"context"
+	"time"
 
 	sessioncore "github.com/agntcy/identity-platform/internal/core/auth"
 	"github.com/agntcy/identity-platform/internal/core/auth/types"
@@ -12,10 +13,12 @@ import (
 	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
 	"github.com/agntcy/identity-platform/internal/pkg/strutil"
 	"github.com/agntcy/identity-platform/pkg/db"
+	"github.com/google/uuid"
 )
 
 const (
-	codeLength = 128
+	codeLength      = 128
+	sessionDuration = 5 * time.Minute // Default session duration for authorization codes
 )
 
 type postgresRepository struct {
@@ -34,8 +37,12 @@ func (r *postgresRepository) Create(
 ) (*types.Session, error) {
 	model := newSessionModel(session)
 
-	// Generate a new code
-	model.Code = ptrutil.Ptr(strutil.Random(codeLength))
+	// Generate and id and a new auth code
+	model.ID = uuid.NewString()
+	model.AuthorizationCode = ptrutil.Ptr(strutil.Random(codeLength))
+
+	// Add expiration time
+	model.ExpiresAt = ptrutil.Ptr(time.Now().Add(sessionDuration).Unix())
 
 	result := r.dbContext.Client().Create(model)
 	if result.Error != nil {
@@ -47,10 +54,16 @@ func (r *postgresRepository) Create(
 	return model.ToCoreType(), nil
 }
 
-func (r *postgresRepository) GetByCode(ctx context.Context, code string) (*types.Session, error) {
+func (r *postgresRepository) GetByAuthorizationCode(
+	ctx context.Context,
+	code string,
+) (*types.Session, error) {
 	model := &Session{}
 
-	result := r.dbContext.Client().Where("code = ?", code).First(model)
+	result := r.dbContext.Client().
+		Where("authorization_code = ?", code).
+		Where("expires_at > ?", time.Now().Unix()).
+		First(model)
 	if result.Error != nil {
 		return nil, errutil.Err(
 			result.Error, "there was an error retrieving the session by code",
@@ -66,7 +79,10 @@ func (r *postgresRepository) GetByTokenID(
 ) (*types.Session, error) {
 	model := &Session{}
 
-	result := r.dbContext.Client().Where("token_id = ?", tokenID).First(model)
+	result := r.dbContext.Client().
+		Where("token_id = ?", tokenID).
+		Where("expires_at > ?", time.Now().Unix()).
+		First(model)
 	if result.Error != nil {
 		return nil, errutil.Err(
 			result.Error, "there was an error retrieving the session by token ID",

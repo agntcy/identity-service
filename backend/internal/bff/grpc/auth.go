@@ -11,6 +11,7 @@ import (
 	"github.com/agntcy/identity-platform/internal/bff/grpc/converters"
 	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
+	"github.com/agntcy/identity-platform/internal/pkg/grpcutil"
 	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
@@ -82,7 +83,7 @@ func (s *authService) Authorize(
 	}
 
 	return &identity_platform_sdk_go.AuthorizeResponse{
-		Code: ptrutil.DerefStr(session.Code),
+		AuthorizationCode: ptrutil.DerefStr(session.AuthorizationCode),
 	}, nil
 }
 
@@ -90,10 +91,32 @@ func (s *authService) Token(
 	ctx context.Context,
 	req *identity_platform_sdk_go.TokenRequest,
 ) (*identity_platform_sdk_go.TokenResponse, error) {
-	return nil, errutil.Err(
-		nil,
-		"TokenInfo method is not implemented",
+	if req.AuthorizationCode == "" {
+		return nil, grpcutil.BadRequestError(
+			errutil.Err(
+				nil,
+				"authorization code cannot be empty",
+			),
+		)
+	}
+
+	// Get the session with token
+	session, err := s.authSrv.Token(
+		ctx,
+		req.AuthorizationCode,
 	)
+	if err != nil {
+		return nil, grpcutil.UnauthorizedError(
+			errutil.Err(
+				err,
+				"failed to issue token",
+			),
+		)
+	}
+
+	return &identity_platform_sdk_go.TokenResponse{
+		AccessToken: ptrutil.DerefStr(session.AccessToken),
+	}, nil
 }
 
 func (s *authService) ExtAuthz(
