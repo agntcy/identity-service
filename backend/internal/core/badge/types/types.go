@@ -10,8 +10,8 @@ import (
 )
 
 type Badge struct {
-	VerifiableCredential
-	AppID string
+	VerifiableCredential `json:"verifiable_credential"`
+	AppID                string `json:"app_id,omitempty"`
 }
 
 // DataModel represents the W3C Verifiable Credential Data Model defined [here]
@@ -28,19 +28,19 @@ type VerifiableCredential struct {
 	Issuer string `json:"issuer"`
 
 	// https://www.w3.org/TR/vc-data-model/#credential-subject
-	CredentialSubject *BadgeClaims `json:"credentialSubject"`
+	CredentialSubject *BadgeClaims `json:"credential_subject"`
 
 	// https://www.w3.org/TR/vc-data-model/#identifiers
 	ID string `json:"id,omitempty"`
 
 	// https://www.w3.org/TR/vc-data-model/#issuance-date
-	IssuanceDate string `json:"issuanceDate"`
+	IssuanceDate string `json:"issuance_date"`
 
 	// https://www.w3.org/TR/vc-data-model/#expiration
-	ExpirationDate string `json:"expirationDate,omitempty"`
+	ExpirationDate string `json:"expiration_date,omitempty"`
 
 	// https://www.w3.org/TR/vc-data-model-2.0/#data-schemas
-	CredentialSchema []*CredentialSchema `json:"credentialSchema,omitempty"`
+	CredentialSchema []*CredentialSchema `json:"credential_schema,omitempty"`
 
 	// https://w3id.org/security#proof
 	Proof *Proof `json:"proof,omitempty"`
@@ -78,10 +78,10 @@ type Proof struct {
 	Type string `json:"type"`
 
 	// The proof purpose
-	ProofPurpose string `json:"proofPurpose"`
+	ProofPurpose string `json:"proof_purpose"`
 
 	// The proof value
-	ProofValue string `json:"proofValue"`
+	ProofValue string `json:"proof_value"`
 }
 
 const JoseProof = "jwt"
@@ -96,16 +96,16 @@ type BadgeType int
 
 const (
 	// Unspecified Content Type.
-	CREDENTIAL_CONTENT_TYPE_UNSPECIFIED BadgeType = iota
+	BADGE_TYPE_UNSPECIFIED BadgeType = iota
 
 	// AgentBadge Content Type.
 	// The Agent content representation following a defined schema
 	// OASF: https://schema.oasf.agntcy.org/schema/objects/agent
 	// Google A2A: https://github.com/google/A2A/blob/main/specification/json/a2a.json
-	CREDENTIAL_CONTENT_TYPE_AGENT_BADGE
+	BADGE_TYPE_AGENT_BADGE
 
 	// McpBadge Content Type.
 	// The MCP content representation following a defined schema
 	// The schema is defined in the MCP specification as the MCPServer type
-	CREDENTIAL_CONTENT_TYPE_MCP_BADGE
+	BADGE_TYPE_MCP_BADGE
 )
