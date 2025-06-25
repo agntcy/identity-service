@@ -12,6 +12,7 @@ import (
 	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
+	"github.com/agntcy/identity-platform/internal/pkg/secrets"
 	"github.com/agntcy/identity-platform/internal/pkg/strutil"
 	"github.com/agntcy/identity-platform/pkg/db"
 	"github.com/google/uuid"
@@ -102,7 +103,7 @@ func (r *postgresRepository) GetByAccessToken(
 
 	result := r.dbContext.Client().
 		Where("app_id = ?", appID).
-		Where("access_token = ?", accessToken).
+		Where("access_token = ?", secrets.Encrypt(accessToken)).
 		First(model)
 	if result.Error != nil {
 		return nil, errutil.Err(

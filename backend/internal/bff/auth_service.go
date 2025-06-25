@@ -71,6 +71,13 @@ func (s *authService) Authorize(
 		)
 	}
 
+	if appID == ownerAppID {
+		return nil, errutil.Err(
+			nil,
+			"cannot authorize the same app",
+		)
+	}
+
 	// Evaluate the session based on existing policies
 	// TODO: Implement policy evaluation logic here
 
