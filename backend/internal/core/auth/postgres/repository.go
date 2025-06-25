@@ -103,7 +103,6 @@ func (r *postgresRepository) GetByAccessToken(
 	result := r.dbContext.Client().
 		Where("app_id = ?", appID).
 		Where("access_token = ?", accessToken).
-		Where("expires_at > ?", time.Now().Unix()).
 		First(model)
 	if result.Error != nil {
 		return nil, errutil.Err(

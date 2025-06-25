@@ -11,7 +11,7 @@ import (
 	idpcore "github.com/agntcy/identity-platform/internal/core/idp"
 	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
-	"github.com/agntcy/identity-platform/internal/pkg/grpcutil"
+	"github.com/agntcy/identity-platform/internal/pkg/jwtutil"
 	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
 	"github.com/agntcy/identity/pkg/oidc"
 )
@@ -104,18 +104,18 @@ func (s *authService) Token(
 	// Get session by authorization code
 	session, err := s.authRepository.GetByAuthorizationCode(ctx, authorizationCode)
 	if err != nil {
-		return nil, grpcutil.BadRequestError(errutil.Err(
+		return nil, errutil.Err(
 			err,
 			"invalid session",
-		))
+		)
 	}
 
 	// Check if session already has an access token
 	if session.AccessToken != nil {
-		return nil, grpcutil.BadRequestError(errutil.Err(
+		return nil, errutil.Err(
 			nil,
 			"a token has already been issued",
-		))
+		)
 	}
 
 	// Get client credentials from the session
@@ -135,10 +135,10 @@ func (s *authService) Token(
 		clientCredentials.ClientSecret,
 	)
 	if err != nil {
-		return nil, grpcutil.UnauthorizedError(errutil.Err(
+		return nil, errutil.Err(
 			err,
 			"failed to issue token",
-		))
+		)
 	}
 
 	// Update session with token ID
@@ -167,6 +167,15 @@ func (s *authService) ExtAuthZ(
 	}
 
 	_, err := s.authRepository.GetByAccessToken(ctx, accessToken)
+	if err != nil {
+		return errutil.Err(
+			err,
+			"invalid session",
+		)
+	}
+
+	// Validate expiration of the access token
+	err = jwtutil.Verify(accessToken)
 
 	// Evaluate the session based on existing policies
 	// TODO: Implement policy evaluation logic here
