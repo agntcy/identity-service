@@ -173,7 +173,7 @@
               "defaultValue": ""
             },
             {
-              "name": "resolverMetadataID",
+              "name": "resolver_metadata_id",
               "description": "The DID value",
               "label": "optional",
               "type": "string",
@@ -181,7 +181,7 @@
               "fullType": "string",
               "ismap": false,
               "isoneof": true,
-              "oneofdecl": "_resolverMetadataID",
+              "oneofdecl": "_resolver_metadata_id",
               "defaultValue": ""
             },
             {

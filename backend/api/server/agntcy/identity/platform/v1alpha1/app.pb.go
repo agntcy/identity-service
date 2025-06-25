@@ -92,7 +92,7 @@ type App struct {
 	// The type of the App.
 	Type *AppType `protobuf:"varint,4,opt,name=type,proto3,enum=agntcy.identity.platform.v1alpha1.AppType,oneof" json:"type,omitempty"`
 	// The DID value
-	ResolverMetadataID *string `protobuf:"bytes,5,opt,name=resolverMetadataID,proto3,oneof" json:"resolverMetadataID,omitempty"`
+	ResolverMetadataId *string `protobuf:"bytes,5,opt,name=resolver_metadata_id,json=resolverMetadataId,proto3,oneof" json:"resolver_metadata_id,omitempty"`
 	ApiKey             *string `protobuf:"bytes,6,opt,name=api_key,json=apiKey,proto3,oneof" json:"api_key,omitempty"`
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
@@ -156,9 +156,9 @@ func (x *App) GetType() AppType {
 	return AppType_APP_TYPE_UNSPECIFIED
 }
 
-func (x *App) GetResolverMetadataID() string {
-	if x != nil && x.ResolverMetadataID != nil {
-		return *x.ResolverMetadataID
+func (x *App) GetResolverMetadataId() string {
+	if x != nil && x.ResolverMetadataId != nil {
+		return *x.ResolverMetadataId
 	}
 	return ""
 }
@@ -174,19 +174,19 @@ var File_agntcy_identity_platform_v1alpha1_app_proto protoreflect.FileDescriptor
 
 const file_agntcy_identity_platform_v1alpha1_app_proto_rawDesc = "" +
 	"\n" +
-	"+agntcy/identity/platform/v1alpha1/app.proto\x12!agntcy.identity.platform.v1alpha1\"\xbe\x02\n" +
+	"+agntcy/identity/platform/v1alpha1/app.proto\x12!agntcy.identity.platform.v1alpha1\"\xc2\x02\n" +
 	"\x03App\x12\x13\n" +
 	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x17\n" +
 	"\x04name\x18\x02 \x01(\tH\x01R\x04name\x88\x01\x01\x12%\n" +
 	"\vdescription\x18\x03 \x01(\tH\x02R\vdescription\x88\x01\x01\x12C\n" +
-	"\x04type\x18\x04 \x01(\x0e2*.agntcy.identity.platform.v1alpha1.AppTypeH\x03R\x04type\x88\x01\x01\x123\n" +
-	"\x12resolverMetadataID\x18\x05 \x01(\tH\x04R\x12resolverMetadataID\x88\x01\x01\x12\x1c\n" +
+	"\x04type\x18\x04 \x01(\x0e2*.agntcy.identity.platform.v1alpha1.AppTypeH\x03R\x04type\x88\x01\x01\x125\n" +
+	"\x14resolver_metadata_id\x18\x05 \x01(\tH\x04R\x12resolverMetadataId\x88\x01\x01\x12\x1c\n" +
 	"\aapi_key\x18\x06 \x01(\tH\x05R\x06apiKey\x88\x01\x01B\x05\n" +
 	"\x03_idB\a\n" +
 	"\x05_nameB\x0e\n" +
 	"\f_descriptionB\a\n" +
-	"\x05_typeB\x15\n" +
-	"\x13_resolverMetadataIDB\n" +
+	"\x05_typeB\x17\n" +
+	"\x15_resolver_metadata_idB\n" +
 	"\n" +
 	"\b_api_key*s\n" +
 	"\aAppType\x12\x18\n" +

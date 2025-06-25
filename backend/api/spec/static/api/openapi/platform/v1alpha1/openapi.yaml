@@ -762,7 +762,7 @@ components:
                     type: string
                     description: The type of the App.
                     format: enum
-                resolverMetadataID:
+                resolverMetadataId:
                     type: string
                     description: The DID value
                 apiKey:
