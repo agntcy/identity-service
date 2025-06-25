@@ -1,3 +1,8 @@
+/**
+ * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import {AxiosError, AxiosHeaders, AxiosResponse, InternalAxiosRequestConfig} from 'axios';
 import * as SettingsApi from '../generated/identity/settings_service.swagger.api';
 import {AuthInfo} from '@/types/okta';
