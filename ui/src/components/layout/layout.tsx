@@ -73,7 +73,7 @@ const Layout = () => {
             }}
             className={cn(
               'transition-all duration-300 ease-in-out',
-              isCollapsed && 'min-w-[3.5rem] max-w-[3.5rem]',
+              isCollapsed && 'min-w-[88px] max-w-[88px]',
               !isCollapsed && 'min-w-[264px] max-w-[264px]'
             )}
           >

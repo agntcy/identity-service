@@ -57,7 +57,7 @@ export const OrganizationsDrawer: React.FC<{
           side="left"
           className={cn(
             'left-[264px] top-[56px] bg-[#E8F1FF] w-[224px] organization-drawer data-[state=closed]:slide-out-to-left-custom data-[state=open]:slide-in-from-left-custom',
-            isCollapsed && 'left-[54px]'
+            isCollapsed && 'left-[88px]'
           )}
           useOverlay={false}
         >
