@@ -105,7 +105,7 @@
               "description": "Agent OASF App Type."
             },
             {
-              "name": "APP_TYPE_AGENT_MCP_SERVER",
+              "name": "APP_TYPE_MCP_SERVER",
               "number": "3",
               "description": "Agent MCP Server App Type."
             }
@@ -776,7 +776,7 @@
             },
             {
               "name": "code",
-              "description": "The code associated with the Session.",
+              "description": "The authorization code associated with the Session.",
               "label": "optional",
               "type": "string",
               "longType": "string",
@@ -945,7 +945,7 @@
           "extensions": [],
           "fields": [
             {
-              "name": "code",
+              "name": "authorization_code",
               "description": "If authorization is successful, return a code to be used for\nthe token endpoint.",
               "label": "",
               "type": "string",
@@ -1005,7 +1005,7 @@
           "extensions": [],
           "fields": [
             {
-              "name": "code",
+              "name": "authorization_code",
               "description": "Pass the code received from the authorization endpoint.",
               "label": "",
               "type": "string",

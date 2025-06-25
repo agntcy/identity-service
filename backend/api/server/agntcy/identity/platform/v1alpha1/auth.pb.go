@@ -102,7 +102,7 @@ type Session struct {
 	UserId *string `protobuf:"bytes,5,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// The token ID associated with the Session.
 	TokenId *string `protobuf:"bytes,6,opt,name=token_id,json=tokenId,proto3,oneof" json:"token_id,omitempty"`
-	// The code associated with the Session.
+	// The authorization code associated with the Session.
 	Code *string `protobuf:"bytes,7,opt,name=code,proto3,oneof" json:"code,omitempty"`
 	// The creation time of the Session.
 	CreatedAt *int64 `protobuf:"varint,8,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`

@@ -1,6 +1,3 @@
-# Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
-# SPDX-License-Identifier: Apache-2.0
-
 # Generated with protoc-gen-openapi
 # https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
 
@@ -53,7 +50,7 @@ paths:
                         - APP_TYPE_UNSPECIFIED
                         - APP_TYPE_AGENT_A2A
                         - APP_TYPE_AGENT_OASF
-                        - APP_TYPE_AGENT_MCP_SERVER
+                        - APP_TYPE_MCP_SERVER
                     type: string
                     format: enum
             responses:
@@ -341,7 +338,7 @@ paths:
             description: Request token for an Agent or MCP Server
             operationId: AuthService_Token
             parameters:
-                - name: code
+                - name: authorizationCode
                   in: query
                   description: Pass the code received from the authorization endpoint.
                   schema:
@@ -758,7 +755,7 @@ components:
                         - APP_TYPE_UNSPECIFIED
                         - APP_TYPE_AGENT_A2A
                         - APP_TYPE_AGENT_OASF
-                        - APP_TYPE_AGENT_MCP_SERVER
+                        - APP_TYPE_MCP_SERVER
                     type: string
                     description: The type of the App.
                     format: enum
@@ -783,7 +780,7 @@ components:
                         - APP_TYPE_UNSPECIFIED
                         - APP_TYPE_AGENT_A2A
                         - APP_TYPE_AGENT_OASF
-                        - APP_TYPE_AGENT_MCP_SERVER
+                        - APP_TYPE_MCP_SERVER
                     type: string
                     description: The type of the App
                     format: enum
@@ -793,7 +790,7 @@ components:
         AuthorizeResponse:
             type: object
             properties:
-                code:
+                authorizationCode:
                     type: string
                     description: |-
                         If authorization is successful, return a code to be used for

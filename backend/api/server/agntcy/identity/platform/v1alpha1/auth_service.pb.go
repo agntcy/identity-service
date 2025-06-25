@@ -140,9 +140,9 @@ type AuthorizeResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// If authorization is successful, return a code to be used for
 	// the token endpoint.
-	Code          string `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	AuthorizationCode string `protobuf:"bytes,1,opt,name=authorization_code,json=authorizationCode,proto3" json:"authorization_code,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
 }
 
 func (x *AuthorizeResponse) Reset() {
@@ -175,9 +175,9 @@ func (*AuthorizeResponse) Descriptor() ([]byte, []int) {
 	return file_agntcy_identity_platform_v1alpha1_auth_service_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *AuthorizeResponse) GetCode() string {
+func (x *AuthorizeResponse) GetAuthorizationCode() string {
 	if x != nil {
-		return x.Code
+		return x.AuthorizationCode
 	}
 	return ""
 }
@@ -185,9 +185,9 @@ func (x *AuthorizeResponse) GetCode() string {
 type TokenRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Pass the code received from the authorization endpoint.
-	Code          string `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	AuthorizationCode string `protobuf:"bytes,1,opt,name=authorization_code,json=authorizationCode,proto3" json:"authorization_code,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
 }
 
 func (x *TokenRequest) Reset() {
@@ -220,9 +220,9 @@ func (*TokenRequest) Descriptor() ([]byte, []int) {
 	return file_agntcy_identity_platform_v1alpha1_auth_service_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *TokenRequest) GetCode() string {
+func (x *TokenRequest) GetAuthorizationCode() string {
 	if x != nil {
-		return x.Code
+		return x.AuthorizationCode
 	}
 	return ""
 }
@@ -341,11 +341,11 @@ const file_agntcy_identity_platform_v1alpha1_auth_service_proto_rawDesc = "" +
 	"user_token\x18\x03 \x01(\tH\x01R\tuserToken\x88\x01\x01B\f\n" +
 	"\n" +
 	"_tool_nameB\r\n" +
-	"\v_user_token\"'\n" +
-	"\x11AuthorizeResponse\x12\x12\n" +
-	"\x04code\x18\x01 \x01(\tR\x04code\"\"\n" +
-	"\fTokenRequest\x12\x12\n" +
-	"\x04code\x18\x01 \x01(\tR\x04code\"O\n" +
+	"\v_user_token\"B\n" +
+	"\x11AuthorizeResponse\x12-\n" +
+	"\x12authorization_code\x18\x01 \x01(\tR\x11authorizationCode\"=\n" +
+	"\fTokenRequest\x12-\n" +
+	"\x12authorization_code\x18\x01 \x01(\tR\x11authorizationCode\"O\n" +
 	"\rTokenResponse\x12>\n" +
 	"\x05token\x18\x01 \x01(\v2(.agntcy.identity.platform.v1alpha1.TokenR\x05token\"y\n" +
 	"\x15RegisterDeviceRequest\x12\x1d\n" +
