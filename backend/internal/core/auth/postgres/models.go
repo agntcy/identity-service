@@ -8,15 +8,15 @@ import (
 )
 
 type Session struct {
-	ID         string `gorm:"primarykey"`
-	CreatedAt  int64  `gorm:"autoCreateTime"`
-	ExpiresAt  *int64
-	OwnerAppID string `gorm:"references:OwnerAppID"`
-	AppID      string `gorm:"references:AppID"`
-	ToolName   *string
-	UserID     *string
-	TokenID    *string
-	Code       *string
+	ID                string `gorm:"primarykey"`
+	CreatedAt         int64  `gorm:"autoCreateTime"`
+	ExpiresAt         *int64
+	OwnerAppID        string `gorm:"references:OwnerAppID"`
+	AppID             string `gorm:"references:AppID"`
+	ToolName          *string
+	UserID            *string
+	TokenID           *string
+	AuthorizationCode *string
 }
 
 func (i *Session) ToCoreType() *types.Session {
