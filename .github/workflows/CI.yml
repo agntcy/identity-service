@@ -73,11 +73,12 @@ jobs:
       ### REQUIRED 
       ### Docker image name
       image-name: "eti-sre/${{ github.event.repository.name }}-bff"
-          
+      image-tag: "dev-${{ github.sha }}"
+
       ### path to where docker should copy files into image
       ### defaults to root of repository (.)
       context: ./backend
-      
+
       ### Dockerfile alternate name. Default is Dockerfile (relative to context path)
       dockerfile: deployments/docker/backend/Dockerfile.bff
       ### REQUIRED
