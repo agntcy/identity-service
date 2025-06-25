@@ -763,15 +763,15 @@
               "defaultValue": ""
             },
             {
-              "name": "token_id",
-              "description": "The token ID associated with the Session.",
+              "name": "access_token",
+              "description": "The access token associated with the Session.",
               "label": "optional",
               "type": "string",
               "longType": "string",
               "fullType": "string",
               "ismap": false,
               "isoneof": true,
-              "oneofdecl": "_token_id",
+              "oneofdecl": "_access_token",
               "defaultValue": ""
             },
             {
@@ -808,42 +808,6 @@
               "ismap": false,
               "isoneof": true,
               "oneofdecl": "_expires_at",
-              "defaultValue": ""
-            }
-          ]
-        },
-        {
-          "name": "Token",
-          "longName": "Token",
-          "fullName": "agntcy.identity.platform.v1alpha1.Token",
-          "description": "Identity Platform Token",
-          "hasExtensions": false,
-          "hasFields": true,
-          "hasOneofs": true,
-          "extensions": [],
-          "fields": [
-            {
-              "name": "id",
-              "description": "A unique identifier for the Token.",
-              "label": "optional",
-              "type": "string",
-              "longType": "string",
-              "fullType": "string",
-              "ismap": false,
-              "isoneof": true,
-              "oneofdecl": "_id",
-              "defaultValue": ""
-            },
-            {
-              "name": "value",
-              "description": "Token value.",
-              "label": "optional",
-              "type": "string",
-              "longType": "string",
-              "fullType": "string",
-              "ismap": false,
-              "isoneof": true,
-              "oneofdecl": "_value",
               "defaultValue": ""
             }
           ]
@@ -1029,12 +993,12 @@
           "extensions": [],
           "fields": [
             {
-              "name": "token",
-              "description": "The token issued to the Agent or MCP Server.",
+              "name": "access_token",
+              "description": "The access token issued to the Agent or MCP Server.",
               "label": "",
-              "type": "Token",
-              "longType": "Token",
-              "fullType": "agntcy.identity.platform.v1alpha1.Token",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
               "ismap": false,
               "isoneof": false,
               "oneofdecl": "",

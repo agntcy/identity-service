@@ -15,8 +15,8 @@ type Session struct {
 	AppID             string `gorm:"references:AppID"`
 	ToolName          *string
 	UserID            *string
-	TokenID           *string
-	AuthorizationCode *string
+	AccessToken       *string `gorm:"type:varchar(256);index:at_idx,unique;"`
+	AuthorizationCode *string `gorm:"type:varchar(256);index:ac_idx,unique;"`
 }
 
 func (i *Session) ToCoreType() *types.Session {

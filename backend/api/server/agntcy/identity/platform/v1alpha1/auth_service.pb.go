@@ -229,8 +229,8 @@ func (x *TokenRequest) GetAuthorizationCode() string {
 
 type TokenResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The token issued to the Agent or MCP Server.
-	Token         *Token `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
+	// The access token issued to the Agent or MCP Server.
+	AccessToken   string `protobuf:"bytes,1,opt,name=access_token,json=accessToken,proto3" json:"access_token,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -265,11 +265,11 @@ func (*TokenResponse) Descriptor() ([]byte, []int) {
 	return file_agntcy_identity_platform_v1alpha1_auth_service_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *TokenResponse) GetToken() *Token {
+func (x *TokenResponse) GetAccessToken() string {
 	if x != nil {
-		return x.Token
+		return x.AccessToken
 	}
-	return nil
+	return ""
 }
 
 type RegisterDeviceRequest struct {
@@ -345,9 +345,9 @@ const file_agntcy_identity_platform_v1alpha1_auth_service_proto_rawDesc = "" +
 	"\x11AuthorizeResponse\x12-\n" +
 	"\x12authorization_code\x18\x01 \x01(\tR\x11authorizationCode\"=\n" +
 	"\fTokenRequest\x12-\n" +
-	"\x12authorization_code\x18\x01 \x01(\tR\x11authorizationCode\"O\n" +
-	"\rTokenResponse\x12>\n" +
-	"\x05token\x18\x01 \x01(\v2(.agntcy.identity.platform.v1alpha1.TokenR\x05token\"y\n" +
+	"\x12authorization_code\x18\x01 \x01(\tR\x11authorizationCode\"2\n" +
+	"\rTokenResponse\x12!\n" +
+	"\faccess_token\x18\x01 \x01(\tR\vaccessToken\"y\n" +
 	"\x15RegisterDeviceRequest\x12\x1d\n" +
 	"\n" +
 	"user_token\x18\x01 \x01(\tR\tuserToken\x12A\n" +
@@ -381,29 +381,27 @@ var file_agntcy_identity_platform_v1alpha1_auth_service_proto_goTypes = []any{
 	(*TokenResponse)(nil),         // 4: agntcy.identity.platform.v1alpha1.TokenResponse
 	(*RegisterDeviceRequest)(nil), // 5: agntcy.identity.platform.v1alpha1.RegisterDeviceRequest
 	(*App)(nil),                   // 6: agntcy.identity.platform.v1alpha1.App
-	(*Token)(nil),                 // 7: agntcy.identity.platform.v1alpha1.Token
-	(*Device)(nil),                // 8: agntcy.identity.platform.v1alpha1.Device
-	(*emptypb.Empty)(nil),         // 9: google.protobuf.Empty
+	(*Device)(nil),                // 7: agntcy.identity.platform.v1alpha1.Device
+	(*emptypb.Empty)(nil),         // 8: google.protobuf.Empty
 }
 var file_agntcy_identity_platform_v1alpha1_auth_service_proto_depIdxs = []int32{
 	6, // 0: agntcy.identity.platform.v1alpha1.AppInfoResponse.app:type_name -> agntcy.identity.platform.v1alpha1.App
-	7, // 1: agntcy.identity.platform.v1alpha1.TokenResponse.token:type_name -> agntcy.identity.platform.v1alpha1.Token
-	8, // 2: agntcy.identity.platform.v1alpha1.RegisterDeviceRequest.device:type_name -> agntcy.identity.platform.v1alpha1.Device
-	9, // 3: agntcy.identity.platform.v1alpha1.AuthService.AppInfo:input_type -> google.protobuf.Empty
-	1, // 4: agntcy.identity.platform.v1alpha1.AuthService.Authorize:input_type -> agntcy.identity.platform.v1alpha1.AuthorizeRequest
-	3, // 5: agntcy.identity.platform.v1alpha1.AuthService.Token:input_type -> agntcy.identity.platform.v1alpha1.TokenRequest
-	9, // 6: agntcy.identity.platform.v1alpha1.AuthService.ExtAuthz:input_type -> google.protobuf.Empty
-	5, // 7: agntcy.identity.platform.v1alpha1.AuthService.RegisterDevice:input_type -> agntcy.identity.platform.v1alpha1.RegisterDeviceRequest
-	0, // 8: agntcy.identity.platform.v1alpha1.AuthService.AppInfo:output_type -> agntcy.identity.platform.v1alpha1.AppInfoResponse
-	2, // 9: agntcy.identity.platform.v1alpha1.AuthService.Authorize:output_type -> agntcy.identity.platform.v1alpha1.AuthorizeResponse
-	4, // 10: agntcy.identity.platform.v1alpha1.AuthService.Token:output_type -> agntcy.identity.platform.v1alpha1.TokenResponse
-	9, // 11: agntcy.identity.platform.v1alpha1.AuthService.ExtAuthz:output_type -> google.protobuf.Empty
-	9, // 12: agntcy.identity.platform.v1alpha1.AuthService.RegisterDevice:output_type -> google.protobuf.Empty
-	8, // [8:13] is the sub-list for method output_type
-	3, // [3:8] is the sub-list for method input_type
-	3, // [3:3] is the sub-list for extension type_name
-	3, // [3:3] is the sub-list for extension extendee
-	0, // [0:3] is the sub-list for field type_name
+	7, // 1: agntcy.identity.platform.v1alpha1.RegisterDeviceRequest.device:type_name -> agntcy.identity.platform.v1alpha1.Device
+	8, // 2: agntcy.identity.platform.v1alpha1.AuthService.AppInfo:input_type -> google.protobuf.Empty
+	1, // 3: agntcy.identity.platform.v1alpha1.AuthService.Authorize:input_type -> agntcy.identity.platform.v1alpha1.AuthorizeRequest
+	3, // 4: agntcy.identity.platform.v1alpha1.AuthService.Token:input_type -> agntcy.identity.platform.v1alpha1.TokenRequest
+	8, // 5: agntcy.identity.platform.v1alpha1.AuthService.ExtAuthz:input_type -> google.protobuf.Empty
+	5, // 6: agntcy.identity.platform.v1alpha1.AuthService.RegisterDevice:input_type -> agntcy.identity.platform.v1alpha1.RegisterDeviceRequest
+	0, // 7: agntcy.identity.platform.v1alpha1.AuthService.AppInfo:output_type -> agntcy.identity.platform.v1alpha1.AppInfoResponse
+	2, // 8: agntcy.identity.platform.v1alpha1.AuthService.Authorize:output_type -> agntcy.identity.platform.v1alpha1.AuthorizeResponse
+	4, // 9: agntcy.identity.platform.v1alpha1.AuthService.Token:output_type -> agntcy.identity.platform.v1alpha1.TokenResponse
+	8, // 10: agntcy.identity.platform.v1alpha1.AuthService.ExtAuthz:output_type -> google.protobuf.Empty
+	8, // 11: agntcy.identity.platform.v1alpha1.AuthService.RegisterDevice:output_type -> google.protobuf.Empty
+	7, // [7:12] is the sub-list for method output_type
+	2, // [2:7] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_agntcy_identity_platform_v1alpha1_auth_service_proto_init() }

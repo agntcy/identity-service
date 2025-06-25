@@ -110,7 +110,7 @@ func (s *authService) Token(
 	}
 
 	return &identity_platform_sdk_go.TokenResponse{
-		Token: session.AccessToken,
+		AccessToken: ptrutil.DerefStr(session.AccessToken),
 	}, nil
 }
 
