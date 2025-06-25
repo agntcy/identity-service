@@ -103,7 +103,8 @@ func main() {
 	err = dbContext.AutoMigrate(
 		&apppg.App{},                 // App model
 		&settingspg.IssuerSettings{}, // Issuer settings model
-		&badgepg.Badge{},
+		&badgepg.Badge{},             // Badge model
+		&authpg.Session{},            // Session model
 	)
 	if err != nil {
 		log.Fatal(err)
