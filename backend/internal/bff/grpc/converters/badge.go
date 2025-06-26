@@ -21,6 +21,17 @@ func FromBadge(src *badgetypes.Badge) *identity_platform_sdk_go.Badge {
 	}
 }
 
+func ToBadge(src *identity_platform_sdk_go.Badge) *badgetypes.Badge {
+	if src == nil {
+		return nil
+	}
+
+	return &badgetypes.Badge{
+		VerifiableCredential: *ToVerifiableCredential(src.VerifiableCredential),
+		AppID:                ptrutil.DerefStr(src.AppId),
+	}
+}
+
 func FromCredentialSchema(
 	src *badgetypes.CredentialSchema,
 ) *identity_platform_sdk_go.CredentialSchema {

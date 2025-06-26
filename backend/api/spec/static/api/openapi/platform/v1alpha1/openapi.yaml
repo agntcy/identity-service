@@ -195,7 +195,7 @@ paths:
         post:
             tags:
                 - BadgeService
-            description: Create a new App.
+            description: Create a new Badge.
             operationId: BadgeService_IssueBadge
             parameters:
                 - name: appId
@@ -359,6 +359,31 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/TokenResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1alpha1/badges/verify:
+        post:
+            tags:
+                - BadgeService
+            description: Verify a badge.
+            operationId: BadgeService_VerifyBadge
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/VerifyBadgeRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/BadgeClaims'
                 default:
                     description: Default error response
                     content:
@@ -879,9 +904,13 @@ components:
                     type: string
                     description: App Id.
                 a2a:
-                    $ref: '#/components/schemas/IssueA2ABadgeRequest'
+                    allOf:
+                        - $ref: '#/components/schemas/IssueA2ABadgeRequest'
+                    description: The A2A badge.
                 mcp:
-                    $ref: '#/components/schemas/IssueMcpBadgeRequest'
+                    allOf:
+                        - $ref: '#/components/schemas/IssueMcpBadgeRequest'
+                    description: The MCP badge.
         IssueMcpBadgeRequest:
             type: object
             properties:
@@ -1142,6 +1171,12 @@ components:
                 DataModel represents the W3C Verifiable Credential Data Model defined [here]
 
                  [here]: https://www.w3.org/TR/vc-data-model/
+        VerifyBadgeRequest:
+            type: object
+            properties:
+                badge:
+                    type: string
+                    description: The JOSE enveloped badge to verify.
     headers:
         "":
     securitySchemes:

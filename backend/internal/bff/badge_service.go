@@ -54,6 +54,10 @@ type BadgeService interface {
 		appID string,
 		options ...IssueOption,
 	) (*badgetypes.Badge, error)
+	VerifyBadge(
+		ctx context.Context,
+		badge *string,
+	) (*badgetypes.BadgeClaims, error)
 }
 
 type badgeService struct {
@@ -226,4 +230,19 @@ func (s *badgeService) createBadgeClaims(
 	}
 
 	return &claims, badgeType, nil
+}
+
+func (s *badgeService) VerifyBadge(
+	ctx context.Context,
+	badge *string,
+) (*badgetypes.BadgeClaims, error) {
+	if badge == nil {
+		return nil, errors.New("badge or verifiable credential is empty")
+	}
+
+	// Use the identity service to verify the VC
+	return s.identityService.VerifyVerifiableCredential(
+		ctx,
+		badge,
+	)
 }
