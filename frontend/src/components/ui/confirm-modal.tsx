@@ -1,3 +1,8 @@
+/**
+ * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import React, {ReactNode} from 'react';
 import {Modal, ModalTitle, ModalContent, ModalActions, Button, Typography} from '@outshift/spark-design';
 
