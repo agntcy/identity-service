@@ -15,7 +15,7 @@ const CreateAgenticService: React.FC = () => {
       breadcrumbs={[
         {
           text: 'Agentic Services',
-          link: PATHS.agenticServices
+          link: PATHS.agenticServices.base
         },
         {
           text: 'Create Agentic Service'

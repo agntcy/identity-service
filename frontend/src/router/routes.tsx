@@ -25,6 +25,7 @@ const CreateOrganization = React.lazy(() => import('@/pages/settings/organizatio
 const OrganizationInfo = React.lazy(() => import('@/pages/settings/organizations/info-organization'));
 const AgenticServices = React.lazy(() => import('@/pages/agentic-services/agentic-services'));
 const CreateAgenticService = React.lazy(() => import('@/pages/agentic-services/create-agentic-service'));
+const AccessPolicies = React.lazy(() => import('@/pages/access-policies/access-policies'));
 
 export const generateRoutes = (routes: Route[]): Route[] => {
   return [
@@ -88,14 +89,14 @@ export const useRoutes = () => {
         ]
       },
       {
-        path: PATHS.agenticServices,
+        path: PATHS.agenticServices.base,
         children: [
           {
             index: true,
             element: <AgenticServices />
           },
           {
-            path: PATHS.agenticServicesCreate,
+            path: PATHS.agenticServices.create,
             element: <CreateAgenticService />
           },
           {
@@ -105,16 +106,12 @@ export const useRoutes = () => {
         ]
       },
       {
-        path: PATHS.accessPolicies,
+        path: PATHS.accessPolicies.base,
         children: [
-          // {
-          //   index: true,
-          //   element: <Applications />
-          // },
-          // {
-          //   path: PATHS.applicationsCreate,
-          //   element: <CreateApplication />
-          // },
+          {
+            index: true,
+            element: <AccessPolicies />
+          },
           {
             path: '*',
             element: <NotFound />
@@ -122,33 +119,33 @@ export const useRoutes = () => {
         ]
       },
       {
-        path: PATHS.settings,
+        path: PATHS.settings.base,
         children: [
           {
             index: true,
-            element: <Navigate to={PATHS.settingsIdentityProvider} replace />
+            element: <Navigate to={PATHS.settings.identityProvider} replace />
           },
           {
-            path: PATHS.settingsIdentityProvider,
+            path: PATHS.settings.identityProvider,
             element: <SettingsIdentityProvider />
           },
           {
-            path: PATHS.settingsApiKey,
+            path: PATHS.settings.apiKey,
             element: <SettingsApiKey />
           },
           {
-            path: PATHS.settingsOrganizations,
+            path: PATHS.settings.organizations.base,
             children: [
               {
                 index: true,
                 element: <SettingsOrganizations />
               },
               {
-                path: PATHS.settingsOrganizationsCreate,
+                path: PATHS.settings.organizations.create,
                 element: <CreateOrganization />
               },
               {
-                path: PATHS.settingsOrganizationInfo,
+                path: PATHS.settings.organizations.info,
                 element: <OrganizationInfo />
               },
               {

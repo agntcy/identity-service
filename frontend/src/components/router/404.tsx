@@ -5,7 +5,8 @@
 
 import React from 'react';
 import {useNavigate} from 'react-router-dom';
-import {Card, EmptyState} from '@outshift/spark-design';
+import {EmptyState} from '@outshift/spark-design';
+import {Card} from '../ui/card';
 
 const NotFound: React.FC = () => {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ const NotFound: React.FC = () => {
   };
 
   return (
-    <Card className="mt-4 mx-8 ml-4 p-4">
+    <Card className="mt-[24px] mx-[32px] p-[24px]" variant="secondary">
       <EmptyState
         variant="warning"
         title="404: Page Not Found"

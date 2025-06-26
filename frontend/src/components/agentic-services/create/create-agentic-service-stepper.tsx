@@ -10,14 +10,13 @@ import {zodResolver} from '@hookform/resolvers/zod';
 import {z} from 'zod';
 import {Form} from '@/components/ui/form';
 import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from '@/components/ui/accordion';
-import {Button, Card, toast, Typography} from '@outshift/spark-design';
+import {Button, toast, Typography} from '@outshift/spark-design';
 import {AgenticServiceInfo} from './steps/agentic-service-info';
 import {RegisterAgenticProvider} from './steps/register-agentic-provider';
 import {AgenticServiceFormValues, AgenticServiceSchema} from '@/schemas/agentic-service-schema';
 import {validateForm} from '@/lib/utils';
 import {useCreateAgenticService} from '@/mutations';
 import {useNavigate} from 'react-router-dom';
-import {PATHS} from '@/router/paths';
 
 export const CreateAgenticServiceStepper = () => {
   return (
@@ -37,8 +36,6 @@ const FormStepperComponent = () => {
     mode: 'all'
   });
 
-  const navigate = useNavigate();
-
   const mutationCreate = useCreateAgenticService({
     callbacks: {
       onSuccess: () => {
@@ -48,8 +45,6 @@ const FormStepperComponent = () => {
           description: 'Agentic service created successfully.',
           type: 'success'
         });
-        // TODO: Go to info page of the created agentic service
-        void navigate(PATHS.agenticServices);
       },
       onError: () => {
         setIsLoading(false);
@@ -97,13 +92,13 @@ const FormStepperComponent = () => {
   }, [form, methods]);
 
   const handleSave = useCallback(() => {
-    setIsLoading(true);
-    const values = form.getValues() as AgenticServiceFormValues;
-    mutationCreate.mutate({
-      type: values.type,
-      name: values.name,
-      description: values.description
-    });
+    // setIsLoading(true);
+    // const values = form.getValues() as AgenticServiceFormValues;
+    // mutationCreate.mutate({
+    //   type: values.type,
+    //   name: values.name,
+    //   description: values.description
+    // });
   }, [form, mutationCreate]);
 
   const onSubmit = useCallback(() => {
@@ -116,7 +111,7 @@ const FormStepperComponent = () => {
   }, [handleSave, handleSelectAgenticService, methods]);
 
   return (
-    <Card>
+    <>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="mt-1">
           <StepperPanel className="w-full">
@@ -166,6 +161,6 @@ const FormStepperComponent = () => {
           </StepperPanel>
         </form>
       </Form>
-    </Card>
+    </>
   );
 };

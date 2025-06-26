@@ -59,7 +59,7 @@ const UserSection = () => {
 
   const navigate = useNavigate();
   const {authInfo, logout} = useAuth();
-  const {data: dataSession, isLoading, isError} = useGetSession();
+  const {data: dataSession, isLoading} = useGetSession();
 
   const role = useMemo(() => {
     const temp = dataSession?.groups[0]?.role || 'VIEWER';
@@ -108,9 +108,15 @@ const UserSection = () => {
             {authInfo?.user?.name || 'User'}
           </Typography>
           {!isLoading ? (
-            <Typography textAlign="left" variant="caption" sx={(theme) => ({color: theme.palette.vars.baseTextStrong, textTransform: 'capitalize'})}>
-              {role}
-            </Typography>
+            <div className="-mt-[3px]">
+              <Typography
+                textAlign="left"
+                variant="caption"
+                sx={(theme) => ({color: theme.palette.vars.baseTextStrong, textTransform: 'capitalize'})}
+              >
+                {role}
+              </Typography>
+            </div>
           ) : (
             <Skeleton />
           )}

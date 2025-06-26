@@ -18,7 +18,7 @@ const Dashboard: React.FC = () => {
   const navigate = useNavigate();
 
   const goToIdentity = useCallback(() => {
-    void navigate(PATHS.settingsIdentityProvider);
+    void navigate(PATHS.settings.identityProvider);
   }, [navigate]);
 
   return (

@@ -11,7 +11,6 @@ import {RefreshCcwIcon} from 'lucide-react';
 import React, {useCallback} from 'react';
 import {ConfirmModal} from '../ui/confirm-modal';
 import {Card} from '../ui/card';
-import StatsCard from '../ui/stats-card';
 
 export const ContentApiKey: React.FC = () => {
   const [openActionsModal, setOpenActionsModal] = React.useState(false);
@@ -101,41 +100,6 @@ export const ContentApiKey: React.FC = () => {
             </div>
           </div>
         </CardContent>
-        {/* <div className='flex justify-between items-center '>
-          <div className="flex gap-4 items-center">
-            <div className="flex gap-2 items-center">
-              <Typography variant="body2" fontWeight={600}>
-                API Key:
-              </Typography>
-              <Typography variant="body2">
-                {data?.apiKey?.apiKey ? `${'*'.repeat(55)}${data.apiKey.apiKey.slice(-5)}` : 'No API Key available'}
-              </Typography>
-            </div>
-            <CopyButton
-              text={data?.apiKey?.apiKey || ''}
-              onCopy={() => {
-                toast({
-                  title: 'API Key copied to clipboard',
-                  description: 'You can now use this API Key in your applications.',
-                  type: 'success'
-                });
-              }}
-            />
-          </div>
-          <div>
-
-          <Tooltip title="Refresh API Key">
-            <Button
-              onClick={() => handleChangeActionsModal(true)}
-              variant="primary"
-              color="negative"
-              startIcon={<RefreshCcwIcon className="w-4 h-4" />}
-            >
-              Refresh
-            </Button>
-          </Tooltip>
-          </div>
-        </div> */}
       </Card>
       <ConfirmModal
         open={openActionsModal}

@@ -4,7 +4,8 @@
  */
 
 import {FallbackProps} from 'react-error-boundary';
-import {Card, EmptyState} from '@outshift/spark-design';
+import {EmptyState} from '@outshift/spark-design';
+import {Card} from '../ui/card';
 
 interface ErrorPageProps extends Omit<FallbackProps, 'resetErrorBoundary'> {
   className?: string;
@@ -24,7 +25,7 @@ export const AuthError = ({error, resetErrorBoundary}: ErrorPageProps) => {
   }
 
   return (
-    <Card className="mt-4 mx-4 p-4">
+    <Card className="mt-[24px] mx-[32px] p-[24px]" variant="secondary">
       <EmptyState
         variant="warning"
         title="Something went wrong"

@@ -14,11 +14,11 @@ const InfoOrganization: React.FC = () => {
       breadcrumbs={[
         {
           text: 'Settings',
-          link: PATHS.settings
+          link: PATHS.settings.base
         },
         {
           text: 'Organizations',
-          link: PATHS.settingsOrganizations
+          link: PATHS.settings.organizations.base
         },
         {
           text: 'Organization'

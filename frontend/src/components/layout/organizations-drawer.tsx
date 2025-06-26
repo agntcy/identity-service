@@ -70,7 +70,7 @@ export const OrganizationsDrawer: React.FC<{
             <LoaderRelative />
           ) : (
             <div className="flex flex-col gap-4 px-4">
-              <Link to={PATHS.settingsOrganizationsCreate}>
+              <Link to={PATHS.settings.organizations.create}>
                 <Button
                   variant="outlined"
                   endIcon={<PlusIcon className="w-4 h-4" />}

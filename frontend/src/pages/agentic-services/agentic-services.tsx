@@ -28,43 +28,43 @@ const AgentServices: React.FC = () => {
       title="Agentic Services"
       rightSideItems={
         <div className="flex gap-4 items-center">
-          <Link to={PATHS.agenticServicesVerifyIdentity}>
+          <Link to={PATHS.agenticServices.verifyIdentity}>
             <Button startIcon={<CheckIcon className="w-4 h-4" />} variant="secondary" sx={{fontWeight: '600 !important'}}>
               Verify Identity
             </Button>
           </Link>
-          <Link to={PATHS.agenticServicesCreate}>
-            <Button startIcon={<PlusIcon className="w-4 h-4" />} variant="primary" sx={{fontWeight: '600 !important'}}>
-              Add Agentic Service
-            </Button>
-          </Link>
+          {!isEmptyIdp && (
+            <Link to={PATHS.agenticServices.create}>
+              <Button startIcon={<PlusIcon className="w-4 h-4" />} variant="primary" sx={{fontWeight: '600 !important'}}>
+                Add Agentic Service
+              </Button>
+            </Link>
+          )}
         </div>
       }
     >
-      <div className="mt-2">
-        <ConditionalQueryRenderer
-          itemName="Identity Provider"
-          data={isEmptyIdp ? undefined : data?.issuerSettings}
-          error={error}
-          isLoading={isLoading || isFetching}
-          useRelativeLoader
-          useContainer
-          errorListStateProps={{
-            actionCallback: () => {
-              void refetch();
-            },
-            actionTitle: 'Retry'
-          }}
-          emptyListStateProps={{
-            actionCallback: () => {
-              void navigate(PATHS.settingsIdentityProvider);
-            },
-            actionTitle: 'Add Identity Provider'
-          }}
-        >
-          <ListAgenticServices />
-        </ConditionalQueryRenderer>
-      </div>
+      <ConditionalQueryRenderer
+        itemName="Identity Provider"
+        data={isEmptyIdp ? undefined : data?.issuerSettings}
+        error={error}
+        isLoading={isLoading || isFetching}
+        useRelativeLoader
+        useContainer
+        errorListStateProps={{
+          actionCallback: () => {
+            void refetch();
+          },
+          actionTitle: 'Retry'
+        }}
+        emptyListStateProps={{
+          actionCallback: () => {
+            void navigate(PATHS.settings.identityProvider);
+          },
+          actionTitle: 'Add Identity Provider'
+        }}
+      >
+        <ListAgenticServices />
+      </ConditionalQueryRenderer>
     </BasePage>
   );
 };

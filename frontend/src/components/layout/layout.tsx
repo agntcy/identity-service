@@ -3,11 +3,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {Outlet, useLocation} from 'react-router-dom';
+import {Outlet} from 'react-router-dom';
 import {useEffect, useState} from 'react';
 import {cn} from '@/lib/utils';
 import {ResizablePanel, ResizablePanelGroup} from '@/components/ui/resizable';
-import {PATHS} from '@/router/paths';
 import {SideNav} from './side-nav';
 import {Header} from './header';
 import {Footer} from './footer';
@@ -17,8 +16,6 @@ const Layout = () => {
   const defaultCollapsedLayout = [3.5, 96.5];
   const [layout, setLayout] = useState<number[]>(window.innerWidth < 768 ? defaultCollapsedLayout : defaultLayout);
   const [isCollapsed, setIsCollapsed] = useState(window.innerWidth < 768 ? true : false);
-
-  const location = useLocation();
 
   const handleResize = () => {
     if (window.innerWidth < 768) {
@@ -58,28 +55,26 @@ const Layout = () => {
     >
       <Header />
       <ResizablePanelGroup direction="horizontal" onLayout={onLayout}>
-        {!location.pathname.includes(PATHS.onBoarding) && (
-          <ResizablePanel
-            defaultSize={layout[0]}
-            collapsedSize={defaultCollapsedLayout[0]}
-            minSize={10}
-            maxSize={15}
-            collapsible={true}
-            onCollapse={() => {
-              setIsCollapsed(true);
-            }}
-            onExpand={() => {
-              setIsCollapsed(false);
-            }}
-            className={cn(
-              'transition-all duration-300 ease-in-out',
-              isCollapsed && 'min-w-[88px] max-w-[88px]',
-              !isCollapsed && 'min-w-[264px] max-w-[264px]'
-            )}
-          >
-            <SideNav isCollapsed={isCollapsed} onChangeCollapsed={(value) => setIsCollapsed(value as boolean)} />
-          </ResizablePanel>
-        )}
+        <ResizablePanel
+          defaultSize={layout[0]}
+          collapsedSize={defaultCollapsedLayout[0]}
+          minSize={10}
+          maxSize={15}
+          collapsible={true}
+          onCollapse={() => {
+            setIsCollapsed(true);
+          }}
+          onExpand={() => {
+            setIsCollapsed(false);
+          }}
+          className={cn(
+            'transition-all duration-300 ease-in-out',
+            isCollapsed && 'min-w-[88px] max-w-[88px]',
+            !isCollapsed && 'min-w-[264px] max-w-[264px]'
+          )}
+        >
+          <SideNav isCollapsed={isCollapsed} onChangeCollapsed={(value) => setIsCollapsed(value as boolean)} />
+        </ResizablePanel>
         <ResizablePanel defaultSize={defaultLayout[1]} collapsible={false} minSize={30}>
           <main className="pt-[56px] h-full">
             <Outlet />

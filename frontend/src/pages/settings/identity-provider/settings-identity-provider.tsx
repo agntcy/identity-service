@@ -26,21 +26,21 @@ const SettingsIdentityProvider: React.FC = () => {
       subNav={[
         {
           label: 'Identity Provider',
-          href: PATHS.settingsIdentityProvider
+          href: PATHS.settings.identityProvider
         },
         {
           label: 'Api Key',
-          href: PATHS.settingsApiKey
+          href: PATHS.settings.apiKey
         },
         {
           label: 'Organizations',
-          href: PATHS.settingsOrganizations
+          href: PATHS.settings.organizations.base
         }
       ]}
       breadcrumbs={[
         {
           text: 'Settings',
-          link: PATHS.settings
+          link: PATHS.settings.base
         },
         {
           text: 'Identity Provider'

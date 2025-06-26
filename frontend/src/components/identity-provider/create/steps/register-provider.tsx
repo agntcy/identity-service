@@ -6,14 +6,13 @@
 import {Card, CardContent} from '@/components/ui/card';
 import {ExternalLinkIcon} from 'lucide-react';
 import {useStepper} from '../stepper';
-import StatsCard from '@/components/ui/stats-card';
 import {labels} from '@/constants/labels';
 import {Link, Typography} from '@outshift/spark-design';
 import {IdentityProvidersFormValues} from '@/schemas/identity-provider-schema';
 import {useMemo} from 'react';
 import {IdpType} from '@/types/api/settings';
 import {LoaderRelative} from '@/components/ui/loading';
-import KeyValue from '@/components/ui/key-value';
+import KeyValue, {KeyValuePair} from '@/components/ui/key-value';
 
 export const RegisterProvider = ({isLoading = false}: {isLoading?: boolean}) => {
   const methods = useStepper();
@@ -28,10 +27,7 @@ export const RegisterProvider = ({isLoading = false}: {isLoading?: boolean}) => 
   const secretKey = metaData?.secretKey;
 
   const keyValuePairs = useMemo(() => {
-    const temp: {
-      keyProp: string;
-      value: string;
-    }[] = [];
+    const temp: KeyValuePair[] = [];
     temp.push({
       keyProp: 'Provider Type',
       value: labels.providerTypes[provider as keyof typeof labels.providerTypes] || 'Not provided'

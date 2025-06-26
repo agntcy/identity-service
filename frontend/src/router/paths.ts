@@ -7,22 +7,26 @@ export const PATHS = {
   basePath: '/',
   welcome: '/welcome',
   callBackLoading: '/login/callback',
-  // dashboard paths
   dashboard: '/dashboard',
-  // agentic services paths
-  agenticServices: '/agentic-services',
-  agenticServicesCreate: '/agentic-services/create',
-  agenticServicesVerifyIdentity: '/agentic-services/verify-identity',
-  // access policies paths
-  accessPolicies: '/access-policies',
-  // settings paths
-  settings: '/settings',
-  settingsIdentityProvider: '/settings/identity-provider',
-  settingsApiKey: '/settings/api-key',
-  settingsOrganizations: '/settings/organizations',
-  settingsOrganizationsCreate: '/settings/organizations/create',
-  settingsOrganizationInfo: '/settings/organizations/:id',
-  // internal paths
-  termsAndConditions: '/terms-and-conditions',
-  onBoarding: '/on-boarding'
+  agenticServices: {
+    base: '/agentic-services',
+    create: '/agentic-services/create',
+    verifyIdentity: '/agentic-services/verify-identity'
+  },
+  accessPolicies: {
+    base: '/access-policies',
+    create: '/access-policies/create',
+    info: '/access-policies/:id'
+  },
+  settings: {
+    base: '/settings',
+    identityProvider: '/settings/identity-provider',
+    apiKey: '/settings/api-key',
+    organizations: {
+      base: '/settings/organizations',
+      create: '/settings/organizations/create',
+      info: '/settings/organizations/:id'
+    }
+  },
+  termsAndConditions: '/terms-and-conditions'
 };

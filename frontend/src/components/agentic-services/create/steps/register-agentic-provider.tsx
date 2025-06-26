@@ -6,13 +6,13 @@
 import {Card, CardContent} from '@/components/ui/card';
 import {ExternalLinkIcon} from 'lucide-react';
 import {useStepper} from '../stepper';
-import StatsCard, {Stat} from '@/components/ui/stats-card';
 import {labels} from '@/constants/labels';
 import {Link, Typography} from '@outshift/spark-design';
 import {useMemo} from 'react';
 import {LoaderRelative} from '@/components/ui/loading';
 import {AgenticServiceFormValues} from '@/schemas/agentic-service-schema';
 import {AppType} from '@/types/api/app';
+import KeyValue, {KeyValuePair} from '@/components/ui/key-value';
 
 export const RegisterAgenticProvider = ({isLoading = false}: {isLoading?: boolean}) => {
   const methods = useStepper();
@@ -23,24 +23,24 @@ export const RegisterAgenticProvider = ({isLoading = false}: {isLoading?: boolea
   const description = metaData?.description;
   const mcpServer = metaData?.mcpServer;
 
-  const stats: Stat[] = useMemo(() => {
-    const temp: Stat[] = [
+  const keyValuePairs = useMemo(() => {
+    const temp: KeyValuePair[] = [
       {
-        title: 'Name',
+        keyProp: 'Name',
         value: name || 'Not provided'
       },
       {
-        title: 'Description',
+        keyProp: 'Description',
         value: description || 'Not provided'
       },
       {
-        title: 'Type',
+        keyProp: 'Type',
         value: labels.appTypes[type as keyof typeof labels.appTypes] || 'Not provided'
       }
     ];
     if (type === AppType.APP_TYPE_MCP_SERVER) {
       temp.push({
-        title: 'MCP Server',
+        keyProp: 'MCP Server',
         value: mcpServer || 'Not provided'
       });
     }
@@ -56,10 +56,10 @@ export const RegisterAgenticProvider = ({isLoading = false}: {isLoading?: boolea
   }
 
   return (
-    <Card className="text-start py-4 bg-[#F5F8FD] rounded-[8px] p-[24px] space-y-4" variant="secondary">
+    <Card className="text-start space-y-6" variant="secondary">
       <div className="flex justify-between items-center">
         <Typography variant="subtitle1" fontWeight={600}>
-          Agentic Service Information
+          About
         </Typography>
         <Link href="" openInNewTab>
           <div className="flex items-center gap-1">
@@ -69,7 +69,7 @@ export const RegisterAgenticProvider = ({isLoading = false}: {isLoading?: boolea
         </Link>
       </div>
       <CardContent className="p-0 space-y-4">
-        <StatsCard stats={stats} />
+        <KeyValue pairs={keyValuePairs} useCard={false} />
       </CardContent>
     </Card>
   );

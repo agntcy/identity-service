@@ -166,7 +166,7 @@ const defineStepper = <const Steps extends Stepperize.Step[]>(...steps: Steps): 
               role="tab"
               tabIndex={dataState !== 'inactive' ? 0 : -1}
               className={cn(
-                'stepper-step-indicator rounded-full border-2 border-[#D5DFF7] w-6 h-6 cursor-default hover:bg-inherit',
+                'stepper-step-indicator rounded-full border-2 border-[#D5DFF7] w-[18px] h-[18px] cursor-default hover:bg-inherit',
                 dataState === 'completed' && ' border-[#0051AF]',
                 dataState === 'active' && 'custom-border',
                 isLoading && 'animate-spin'
@@ -181,7 +181,11 @@ const defineStepper = <const Steps extends Stepperize.Step[]>(...steps: Steps): 
               onKeyDown={(e) => onStepKeyDown(e, utils.getNext(props.of), utils.getPrev(props.of))}
               {...props}
             >
-              {!onlyIcon ? (icon ?? stepIndex + 1) : dataState === 'completed' ? <CheckIcon className="text-[#0051AF]" /> : null}
+              {!onlyIcon ? (
+                (icon ?? stepIndex + 1)
+              ) : dataState === 'completed' ? (
+                <CheckIcon className="text-[#0051AF]" style={{width: '12px', height: '12px'}} />
+              ) : null}
             </Button>
             {variant === 'horizontal' && labelOrientation === 'vertical' && (
               <StepperSeparator

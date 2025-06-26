@@ -31,20 +31,21 @@ export const ListOrganizations = () => {
 
   return (
     <>
-      <Card className={cn('bg-[#F5F8FD]', isFetching || isLoading ? 'p-[24px]' : 'p-0')}>
-        <ConditionalQueryRenderer
-          itemName="organizations"
-          data={data?.tenants}
-          error={error}
-          isLoading={isLoading || isFetching}
-          useRelativeLoader
-          errorListStateProps={{
-            actionCallback: () => {
-              void refetch();
-            },
-            actionTitle: 'Retry'
-          }}
-        >
+      <ConditionalQueryRenderer
+        itemName="organizations"
+        data={data?.tenants}
+        error={error}
+        isLoading={isLoading || isFetching}
+        useRelativeLoader
+        errorListStateProps={{
+          actionCallback: () => {
+            void refetch();
+          },
+          actionTitle: 'Retry'
+        }}
+        useContainer
+      >
+        <Card className={cn(!(isFetching || isLoading) && 'p-0')} variant="secondary">
           <Table
             columns={OrganizationsColumns()}
             data={data?.tenants || []}
@@ -53,7 +54,7 @@ export const ListOrganizations = () => {
             muiTableBodyRowProps={({row}) => ({
               sx: {cursor: 'pointer', '& .MuiIconButton-root': {color: (theme) => theme.palette.vars.interactiveSecondaryDefaultDefault}},
               onClick: () => {
-                const path = generatePath(PATHS.settingsOrganizationInfo, {id: row.original?.id});
+                const path = generatePath(PATHS.settings.organizations.info, {id: row.original?.id});
                 void navigate(path, {replace: true});
               }
             })}
@@ -97,8 +98,8 @@ export const ListOrganizations = () => {
               }
             }}
           />
-        </ConditionalQueryRenderer>
-      </Card>
+        </Card>
+      </ConditionalQueryRenderer>
     </>
   );
 };

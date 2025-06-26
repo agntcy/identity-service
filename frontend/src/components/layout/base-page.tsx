@@ -106,15 +106,15 @@ export const BasePage = ({
             </Box>
           )}
         </Box>
-        <Box display="flex" justifyContent="space-between" flexDirection="column" flexWrap="wrap" maxWidth="100%" flexGrow={1} height="auto">
-          {subNav && (
+        {subNav && (
+          <Box display="flex" justifyContent="space-between" flexDirection="column" flexWrap="wrap" maxWidth="100%" flexGrow={1} height="auto">
             <Tabs value={tab} onChange={handleChange} role="navigation" {...tabsProps}>
               {subNav.map((item, idx) => {
                 return <Tab key={`item-tab-${idx}`} component={Link} aria-current={item.selected && 'page'} {...item} to={item.href || '#'} />;
               })}
             </Tabs>
-          )}
-        </Box>
+          </Box>
+        )}
         <Box width="100%" height="100%">
           {children}
         </Box>

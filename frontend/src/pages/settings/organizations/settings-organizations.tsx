@@ -41,7 +41,7 @@ const SettingsOrganizations: React.FC = () => {
       rightSideItems={
         <Link to={PATHS.settingsOrganizationsCreate}>
           <Button variant="outlined" endIcon={<PlusIcon className="w-4 h-4" />} fullWidth sx={{fontWeight: '600 !important'}}>
-            New organization
+            New Organization
           </Button>
         </Link>
       }

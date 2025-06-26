@@ -61,56 +61,20 @@ export const AgenticServiceInfo = ({isLoading = false}: {isLoading?: boolean}) =
   }, [metaData]);
 
   return (
-    <Card className="text-start py-4 bg-[#F5F8FD] rounded-[8px] p-[24px] space-y-4" variant="secondary">
-      <div className="flex justify-between items-center">
-        <Typography variant="subtitle1" fontWeight={600}>
-          Agentic Service details
-        </Typography>
-        <Link href="" openInNewTab>
-          <div className="flex items-center gap-1">
-            View documentation
-            <ExternalLinkIcon className="w-4 h-4 ml-1" />
-          </div>
-        </Link>
-      </div>
-      <CardContent className="space-y-4 p-0">
-        <div className="space-y-2">
-          <div className="space-y-2">
-            <div className="flex gap-4 items-start">
-              <FormField
-                control={control}
-                name="name"
-                render={({field}) => (
-                  <FormItem className="w-[50%]">
-                    <FormLabel className="form-label">Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Type the name..." {...field} disabled={isLoading} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={control}
-                name="description"
-                render={({field}) => (
-                  <FormItem className="w-[50%]">
-                    <FormLabel className="form-label">Description</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Type the description..." {...field} disabled={isLoading} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </div>
-          </div>
-        </div>
-        <div className="space-y-2">
-          <div>
+    <Card className="text-start py-4 rounded-[8px] p-[24px]" variant="secondary">
+      <CardContent className="space-y-6 p-0">
+        <div className="space-y-4">
+          <div className="flex justify-between items-center">
             <Typography variant="subtitle1" fontWeight={600}>
-              Select Agentic Service type
+              Select Agentic Service Type
             </Typography>
+            <Link href="" openInNewTab>
+              <div className="flex items-center gap-1">
+                View Documentation
+                <ExternalLinkIcon className="w-4 h-4 ml-1" />
+              </div>
+            </Link>
           </div>
-
           <FormField
             control={control}
             name="type"
@@ -127,23 +91,53 @@ export const AgenticServiceInfo = ({isLoading = false}: {isLoading?: boolean}) =
             )}
           />
         </div>
-        {appType === AppType.APP_TYPE_AGENT_OASF && (
-          <div className="space-y-2 pt-2">
+        <div className="space-y-4">
+          <div>
+            <Typography variant="subtitle1" fontWeight={600}>
+              Details
+            </Typography>
+          </div>
+          <div className="flex gap-4 items-start">
+            <FormField
+              control={control}
+              name="name"
+              render={({field}) => (
+                <FormItem className="w-[50%]">
+                  <FormLabel className="form-label">Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Type the name..." {...field} disabled={isLoading} />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={control}
+              name="description"
+              render={({field}) => (
+                <FormItem className="w-[50%]">
+                  <FormLabel className="form-label">Description</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Type the description..." {...field} disabled={isLoading} />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+          </div>
+          {appType === AppType.APP_TYPE_AGENT_OASF && (
             <FormField
               control={control}
               name="oasfSpecs"
               render={({field}) => (
                 <FormItem>
+                  <FormLabel className="form-label">OASF specs</FormLabel>
                   <FormControl>
                     <FileUpload {...field} disabled={isLoading} />
                   </FormControl>
                 </FormItem>
               )}
             />
-          </div>
-        )}
-        {appType === AppType.APP_TYPE_MCP_SERVER && (
-          <div className="space-y-2 pt-2">
+          )}
+          {appType === AppType.APP_TYPE_MCP_SERVER && (
             <FormField
               control={control}
               name="mcpServer"
@@ -151,13 +145,13 @@ export const AgenticServiceInfo = ({isLoading = false}: {isLoading?: boolean}) =
                 <FormItem className="w-[50%] pr-2">
                   <FormLabel className="form-label">URL</FormLabel>
                   <FormControl>
-                    <Input placeholder="Type the url mcp server..." {...field} disabled={isLoading} />
+                    <Input placeholder="Type the URL of the mcp server..." {...field} disabled={isLoading} />
                   </FormControl>
                 </FormItem>
               )}
             />
-          </div>
-        )}
+          )}
+        </div>
       </CardContent>
     </Card>
   );

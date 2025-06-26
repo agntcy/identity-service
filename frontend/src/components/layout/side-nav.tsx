@@ -37,17 +37,17 @@ export const SideNav: React.FC<{isCollapsed?: boolean; onChangeCollapsed?: (valu
         icon: <LayoutDashboardIcon className="w-4 h-4" />
       },
       {
-        href: PATHS.agenticServices,
+        href: PATHS.agenticServices.base,
         label: 'Agentic Services',
         icon: <AgenticServicesLogo className="w-4 h-4" />
       },
       {
-        href: PATHS.accessPolicies,
+        href: PATHS.accessPolicies.base,
         label: 'Access Policies',
         icon: <AccessPoliciesLogo className="w-4 h-4" />
       },
       {
-        href: PATHS.settings,
+        href: PATHS.settings.base,
         label: 'Settings',
         icon: <SettingsIcon className="w-4 h-4" />
       }
