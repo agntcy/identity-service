@@ -126,7 +126,7 @@ jobs:
   ################################################################################# 
   call-docker-build-push-ui:
     name: Call Docker Build
-    needs: [ checkout-unit-tests, fetch-secrets ]
+    needs: [ checkout-unit-tests ]
     uses: ./.github/workflows/build-push-docker.yaml
 
     secrets:
