@@ -53,6 +53,10 @@ type Service interface {
 		issuer *Issuer,
 		userID string,
 	) error
+	VerifyVerifiableCredential(
+		ctx context.Context,
+		vc *badgetypes.VerifiableCredential,
+	) error
 }
 
 // The verificationService struct implements the VerificationService interface
@@ -307,4 +311,33 @@ func (s *service) generateProof(
 	proof.ProofValue = proofValue
 
 	return proof, nil
+}
+
+func (s *service) VerifyVerifiableCredential(
+	ctx context.Context,
+	vc *badgetypes.VerifiableCredential,
+) error {
+	if vc == nil || vc.Proof == nil || vc.Proof.ProofValue == "" {
+		return errors.New("verifiable credential or proof is empty")
+	}
+
+	// Get the json representation of the verifiable credential
+	value, err := json.Marshal(vc)
+	if err != nil {
+		return errutil.Err(
+			err,
+			"error marshalling verifiable credential to JSON",
+		)
+	}
+
+	// Verify the proof of the verifiable credential
+	_, err = s.vcClient.VerifyVerifiableCredential(&vcsdk.VerifyVerifiableCredentialParams{
+		Body: &identitymodels.V1alpha1VerifyRequest{
+			Vc: &identitymodels.V1alpha1EnvelopedCredential{
+				Value: string(value),
+			},
+		},
+	})
+
+	return err
 }
