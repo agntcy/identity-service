@@ -15,6 +15,7 @@ import (
 	"github.com/agntcy/identity-platform/internal/pkg/secrets"
 	"github.com/agntcy/identity-platform/internal/pkg/strutil"
 	"github.com/agntcy/identity-platform/pkg/db"
+	"github.com/google/uuid"
 )
 
 const (
@@ -114,6 +115,7 @@ func (r *postgresRepository) GetByAccessToken(
 
 func (r *postgresRepository) Update(ctx context.Context, session *types.Session) error {
 	model := newSessionModel(session)
+	model.ID = uuid.MustParse(session.ID)
 
 	result := r.dbContext.Client().Save(model)
 	if result.Error != nil {
