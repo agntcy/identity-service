@@ -93,7 +93,7 @@ jobs:
   ################################################################################ 
   call-corona-blackduck-scan-backend:
     name: Call Corona & Blackduck scan
-    needs: [ call-docker-build-push ]
+    needs: [ call-docker-build-push-backend ]
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/corona-blackduck-scan.yaml@production
 
     secrets:
@@ -161,7 +161,7 @@ jobs:
   ################################################################################ 
   call-corona-blackduck-scan-ui:
     name: Call Corona & Blackduck scan
-    needs: [ call-docker-build-push ]
+    needs: [ call-docker-build-push-ui ]
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/corona-blackduck-scan.yaml@production
 
     secrets:
