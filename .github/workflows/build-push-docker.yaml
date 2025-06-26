@@ -307,7 +307,7 @@
             required: true
           artifactory_password:
             description: Artifactory password
-            required: false
+            required: true
 
     permissions:
       contents: read
