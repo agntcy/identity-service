@@ -8,6 +8,6 @@ services:
       dockerfile: deployments/docker/frontend/Dockerfile
     restart: always
     ports:
-      - "5500:5500"
+      - ${VITE_APP_CLIENT_PORT}:${VITE_APP_CLIENT_PORT}
     env_file:
       - .env

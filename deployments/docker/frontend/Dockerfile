@@ -12,7 +12,7 @@ RUN apk add --update \
 WORKDIR /home/web
 
 # Copy src
-COPY ./ui .
+COPY ./frontend .
 
 # Install libs
 RUN --mount=type=secret,id=ARTIFACTORY_PASSWORD,env=ARTIFACTORY_PASSWORD yarn install
@@ -33,8 +33,8 @@ RUN addgroup -S web && adduser -S -G web -u 999 web
 WORKDIR /home/web
 
 COPY --from=build /home/web/dist ./dist
-COPY --chown=web:web ./deployments/docker/ui/nginx/entrypoint.sh .
-COPY --chown=web:web ./deployments/docker/ui/nginx/nginx.conf ./nginx/nginx.env.conf
+COPY --chown=web:web ./deployments/docker/frontend/nginx/entrypoint.sh .
+COPY --chown=web:web ./deployments/docker/frontend/nginx/nginx.conf ./nginx/nginx.env.conf
 RUN mkdir ./nginx/logs && \
   mkdir ./nginx/tmp && \
   chown web:web ./nginx/logs && \

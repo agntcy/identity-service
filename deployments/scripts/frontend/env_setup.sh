@@ -2,7 +2,7 @@
 # Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
 # SPDX-License-Identifier: Apache-2.0
 
-FRONTEND_ENV=./ui/.env
+FRONTEND_ENV=./frontend/.env
 IDENTITY_DEPLOYMENTS_DIR=./deployments/docker-compose/frontend
 
 # This script sets up the environment for the Identity frontend service.

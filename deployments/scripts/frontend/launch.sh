@@ -6,7 +6,6 @@
 # If not, create an env with defaults
 ./deployments/scripts/frontend/env_setup.sh
 
-# Check if dev option is set
 compose_file="./deployments/docker-compose/frontend/docker-compose.yml"
 
 docker compose -f "$compose_file" build --no-cache

@@ -43,4 +43,4 @@ start_docs: do_start_docs
 stop_docs: do_stop_docs
 
 stop_frontend: do_stop_frontend
-start_frontend: do_stop_frontend do_start_frontend
+start_frontend: do_start_frontend
