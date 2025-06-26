@@ -10,11 +10,10 @@ import {Link, Typography} from '@outshift/spark-design';
 import {IdentityProvidersFormValues} from '@/schemas/identity-provider-schema';
 import {useMemo} from 'react';
 import {IdpType} from '@/types/api/settings';
-import {LoaderRelative} from '@/components/ui/loading';
 import KeyValue, {KeyValuePair} from '@/components/ui/key-value';
 import {ProviderType} from '@/components/shared/provider-type';
 
-export const RegisterProvider = ({isLoading = false}: {isLoading?: boolean}) => {
+export const RegisterProvider = () => {
   const methods = useStepper();
   const metaData = methods.getMetadata('providerInfo') as IdentityProvidersFormValues | undefined;
 
@@ -62,14 +61,6 @@ export const RegisterProvider = ({isLoading = false}: {isLoading?: boolean}) => 
     }
     return temp;
   }, [clientId, hostname, integrationKey, orgUrl, privateKey, provider, secretKey]);
-
-  if (isLoading) {
-    return (
-      <Card className="text-start" variant="secondary">
-        <LoaderRelative />
-      </Card>
-    );
-  }
 
   return (
     <Card className="text-start space-y-6" variant="secondary">

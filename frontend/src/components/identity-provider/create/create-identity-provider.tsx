@@ -12,7 +12,7 @@ import {ProviderInfo} from './steps/provider-info';
 import {RegisterProvider} from './steps/register-provider';
 import {Form} from '@/components/ui/form';
 import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from '@/components/ui/accordion';
-import {Button, Card, toast, Typography} from '@outshift/spark-design';
+import {Button, toast, Typography} from '@outshift/spark-design';
 import {IdpType, IssuerSettings} from '@/types/api/settings';
 import {IdentityProvidersFormValues, IdentityProvidersSchema} from '@/schemas/identity-provider-schema';
 import {validateForm} from '@/lib/utils';
@@ -58,6 +58,7 @@ const FormStepperComponent = () => {
   });
 
   const handleOnClear = useCallback(() => {
+    setIsLoading(false);
     form.reset({
       provider: undefined,
       orgUrl: undefined,
@@ -155,10 +156,10 @@ const FormStepperComponent = () => {
                         {step.id === 'providerInfo' ? (
                           <ProviderInfo isLoading={isLoading} />
                         ) : step.id === 'registerProvider' ? (
-                          <RegisterProvider isLoading={isLoading} />
+                          <RegisterProvider />
                         ) : null}
                         <div className="flex justify-between items-center">
-                          <Button variant="tertariary" onClick={handleOnClear}>
+                          <Button variant="tertariary" onClick={handleOnClear} disabled={isLoading}>
                             Cancel
                           </Button>
                           <StepperControls className="pt-4">
@@ -167,7 +168,13 @@ const FormStepperComponent = () => {
                                 Previous
                               </Button>
                             )}
-                            <Button type="submit" disabled={isLoading || !form.formState.isValid} className="cursor-pointer">
+                            <Button
+                              loading={isLoading}
+                              loadingPosition="start"
+                              type="submit"
+                              disabled={isLoading || !form.formState.isValid}
+                              className="cursor-pointer"
+                            >
                               {methods.isLast ? 'Register' : 'Next'}
                             </Button>
                           </StepperControls>

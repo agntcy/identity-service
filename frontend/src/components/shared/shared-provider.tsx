@@ -6,7 +6,7 @@
 import {ReactNode} from 'react';
 import {Card} from '../ui/card';
 import {cn} from '@/lib/utils';
-import {Typography} from '@outshift/spark-design';
+import {Tooltip, Typography} from '@outshift/spark-design';
 
 export const SharedProvider = <T,>({
   imgURI,
@@ -19,14 +19,33 @@ export const SharedProvider = <T,>({
   type,
   onSelect
 }: SharedProviderProps<T>) => {
-  return (
+  return isDisabled ? (
+    <Tooltip title="This option is not available" placement="top">
+      <span>
+        <Card
+          onClick={() => undefined}
+          className={cn(
+            'border-[#D5DFF7] border-solid border-[2px] py-[8px] px-[16px] rounded-[4px] bg-[#FBFCFE] h-[48px]',
+            'flex justify-center w-fit flex-row gap-[12px] items-center cursor-pointer hover:border-[#187ADC] hover:border-[2px] hover:opacity-100',
+            isSelected && 'border-[#187ADC] border-[2px]',
+            isDisabled && 'opacity-55 cursor-no-drop pointer-events-none',
+            flexGroup && 'card-flex-group',
+            className
+          )}
+        >
+          {imgURI && imgURI}
+          <Typography variant="body1">{title}</Typography>
+          {infoAction && <div>{infoAction}</div>}
+        </Card>
+      </span>
+    </Tooltip>
+  ) : (
     <Card
-      onClick={() => (!isDisabled ? onSelect?.(type) : undefined)}
+      onClick={() => onSelect?.(type)}
       className={cn(
         'border-[#D5DFF7] border-solid border-[2px] py-[8px] px-[16px] rounded-[4px] bg-[#FBFCFE] h-[48px]',
         'flex justify-center w-fit flex-row gap-[12px] items-center cursor-pointer hover:border-[#187ADC] hover:border-[2px] hover:opacity-100',
         isSelected && 'border-[#187ADC] border-[2px]',
-        isDisabled && 'opacity-55 cursor-no-drop pointer-events-none',
         flexGroup && 'card-flex-group',
         className
       )}

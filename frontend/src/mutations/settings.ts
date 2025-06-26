@@ -48,16 +48,14 @@ export const useSetIdentityProvider = ({callbacks}: PropsSetIdentityProvider) =>
   return useMutation({
     mutationKey: ['set-identity-provider'],
     mutationFn: (data: SetIssuerRequest) => SettingsAPI.setUpIssuer(data),
-    onSettled: async () => {
-      await queryClient.invalidateQueries({queryKey: ['get-settings']});
-    },
     onError: () => {
       if (callbacks?.onError) {
         callbacks.onError();
       }
     },
-    onSuccess: (resp) => {
+    onSuccess: async (resp) => {
       if (callbacks?.onSuccess) {
+        await queryClient.invalidateQueries({queryKey: ['get-settings']});
         callbacks.onSuccess(resp);
       }
     }
