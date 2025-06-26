@@ -5,10 +5,11 @@ package postgres
 
 import (
 	"github.com/agntcy/identity-platform/internal/core/app/types"
+	"github.com/google/uuid"
 )
 
 type App struct {
-	ID                 string        `gorm:"primaryKey"`
+	ID                 uuid.UUID     `gorm:"primaryKey;default:gen_random_uuid()"`
 	TenantID           string        `gorm:"not null;type:varchar(256);"`
 	Name               *string       `gorm:"not null;type:varchar(256);"`
 	Description        *string       `gorm:"not null;type:varchar(256);"`
@@ -18,7 +19,7 @@ type App struct {
 
 func (i *App) ToCoreType() *types.App {
 	return &types.App{
-		ID:                 i.ID,
+		ID:                 i.ID.String(),
 		Name:               i.Name,
 		Description:        i.Description,
 		Type:               i.Type,
@@ -28,7 +29,7 @@ func (i *App) ToCoreType() *types.App {
 
 func newAppModel(src *types.App) *App {
 	return &App{
-		ID:                 src.ID,
+		ID:                 uuid.MustParse(src.ID),
 		Name:               src.Name,
 		Description:        src.Description,
 		Type:               src.Type,

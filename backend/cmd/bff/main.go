@@ -102,10 +102,12 @@ func main() {
 
 	// Migrate the database
 	err = dbContext.AutoMigrate(
-		&apppg.App{},                 // App model
-		&settingspg.IssuerSettings{}, // Issuer settings model
-		&badgepg.Badge{},             // Badge model
-		&authpg.Session{},            // Session model
+		&apppg.App{},                  // App model
+		&settingspg.IssuerSettings{},  // Issuer settings model
+		&settingspg.DuoIdpSettings{},  // Duo IDP settings model
+		&settingspg.OktaIdpSettings{}, // Okta IDP settings model
+		&badgepg.Badge{},              // Badge model
+		&authpg.Session{},             // Session model
 	)
 	if err != nil {
 		log.Fatal(err)
