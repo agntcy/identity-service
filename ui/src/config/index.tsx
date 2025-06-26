@@ -14,6 +14,7 @@ declare global {
     iamApi?: string;
     iamOidcClientId?: string;
     iamOidcIssuer?: string;
+    segmentId?: string;
   }
 }
 
@@ -24,5 +25,6 @@ export default {
   IAM_UI: isEnvSet(import.meta.env.VITE_IAM_UI) ? import.meta.env.VITE_IAM_UI : window.iamUi,
   IAM_API: isEnvSet(import.meta.env.VITE_IAM_API) ? import.meta.env.VITE_IAM_API : window.iamApi,
   IAM_OIDC_CLIENT_ID: isEnvSet(import.meta.env.VITE_IAM_OIDC_CLIENT_ID) ? import.meta.env.VITE_IAM_OIDC_CLIENT_ID : window.iamOidcClientId,
-  IAM_OIDC_ISSUER: isEnvSet(import.meta.env.VITE_IAM_OIDC_ISSUER) ? import.meta.env.VITE_IAM_OIDC_ISSUER : window.iamOidcIssuer
+  IAM_OIDC_ISSUER: isEnvSet(import.meta.env.VITE_IAM_OIDC_ISSUER) ? import.meta.env.VITE_IAM_OIDC_ISSUER : window.iamOidcIssuer,
+  SEGMENT_ID: isEnvSet(import.meta.env.VITE_SEGMENT_ID) ? import.meta.env.VITE_SEGMENT_ID : window.segmentId,
 };
