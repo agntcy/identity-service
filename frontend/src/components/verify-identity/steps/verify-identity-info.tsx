@@ -47,13 +47,11 @@ export const VerifyIdentityInfo = ({isLoading = false}: {isLoading?: boolean}) =
                   <FormControl>
                     <FileUpload
                       onBlur={field.onBlur}
-                      onChange={(e) => {
-                        if (e.target.files && e.target.files.length > 0) {
-                          field.onChange(e.target.files[0]);
-                        }
-                      }}
                       name={field.name}
                       disabled={isLoading}
+                      onConvert={(binary) => {
+                        field.onChange(binary);
+                      }}
                     />
                   </FormControl>
                 </FormItem>

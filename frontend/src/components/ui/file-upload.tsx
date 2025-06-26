@@ -4,13 +4,14 @@
  */
 
 import {Input, InputProps} from '@/components/ui/input';
-import {SVGProps} from 'react';
+import {SVGProps, useEffect} from 'react';
 import {JSX} from 'react/jsx-runtime';
 import {IconButton, Typography} from '@mui/material';
 import {useState} from 'react';
 import {CircleXIcon, FileIcon} from 'lucide-react';
+import { toast } from '@outshift/spark-design';
 
-export const FileUpload = (props: InputProps) => {
+export const FileUpload = ({onConvert, ...props}: InputProps & {onConvert?: (binary: ArrayBuffer) => void}) => {
   const [file, setFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
 
@@ -38,6 +39,25 @@ export const FileUpload = (props: InputProps) => {
   };
 
   const hasFile = file !== null;
+
+  useEffect(() => {
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsArrayBuffer(file);
+      reader.onload = () => {
+        onConvert?.(reader.result as ArrayBuffer);
+      };
+      reader.onerror = () => {
+        setFile(null);
+        toast({
+          title: 'Error reading file',
+          description: 'There was an error reading the file. Please try again.',
+          type: 'error'
+        })
+      };
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [file]);
 
   return (
     <div
