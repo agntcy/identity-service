@@ -14,6 +14,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -22,7 +23,8 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	BadgeService_IssueBadge_FullMethodName = "/agntcy.identity.platform.v1alpha1.BadgeService/IssueBadge"
+	BadgeService_IssueBadge_FullMethodName  = "/agntcy.identity.platform.v1alpha1.BadgeService/IssueBadge"
+	BadgeService_VerifyBadge_FullMethodName = "/agntcy.identity.platform.v1alpha1.BadgeService/VerifyBadge"
 )
 
 // BadgeServiceClient is the client API for BadgeService service.
@@ -31,8 +33,10 @@ const (
 //
 // BadgeService manages badges.
 type BadgeServiceClient interface {
-	// Create a new App.
+	// Create a new Badge.
 	IssueBadge(ctx context.Context, in *IssueBadgeRequest, opts ...grpc.CallOption) (*Badge, error)
+	// Verify a badge.
+	VerifyBadge(ctx context.Context, in *Badge, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type badgeServiceClient struct {
@@ -53,14 +57,26 @@ func (c *badgeServiceClient) IssueBadge(ctx context.Context, in *IssueBadgeReque
 	return out, nil
 }
 
+func (c *badgeServiceClient) VerifyBadge(ctx context.Context, in *Badge, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, BadgeService_VerifyBadge_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // BadgeServiceServer is the server API for BadgeService service.
 // All implementations should embed UnimplementedBadgeServiceServer
 // for forward compatibility.
 //
 // BadgeService manages badges.
 type BadgeServiceServer interface {
-	// Create a new App.
+	// Create a new Badge.
 	IssueBadge(context.Context, *IssueBadgeRequest) (*Badge, error)
+	// Verify a badge.
+	VerifyBadge(context.Context, *Badge) (*emptypb.Empty, error)
 }
 
 // UnimplementedBadgeServiceServer should be embedded to have
@@ -72,6 +88,9 @@ type UnimplementedBadgeServiceServer struct{}
 
 func (UnimplementedBadgeServiceServer) IssueBadge(context.Context, *IssueBadgeRequest) (*Badge, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method IssueBadge not implemented")
+}
+func (UnimplementedBadgeServiceServer) VerifyBadge(context.Context, *Badge) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method VerifyBadge not implemented")
 }
 func (UnimplementedBadgeServiceServer) testEmbeddedByValue() {}
 
@@ -111,6 +130,24 @@ func _BadgeService_IssueBadge_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _BadgeService_VerifyBadge_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Badge)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BadgeServiceServer).VerifyBadge(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BadgeService_VerifyBadge_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BadgeServiceServer).VerifyBadge(ctx, req.(*Badge))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // BadgeService_ServiceDesc is the grpc.ServiceDesc for BadgeService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -121,6 +158,10 @@ var BadgeService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "IssueBadge",
 			Handler:    _BadgeService_IssueBadge_Handler,
+		},
+		{
+			MethodName: "VerifyBadge",
+			Handler:    _BadgeService_VerifyBadge_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

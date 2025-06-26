@@ -14,6 +14,7 @@ import (
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -29,8 +30,10 @@ const (
 type IssueBadgeRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// App Id.
-	AppId         string                `protobuf:"bytes,1,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
-	A2A           *IssueA2ABadgeRequest `protobuf:"bytes,2,opt,name=a2a,proto3" json:"a2a,omitempty"`
+	AppId string `protobuf:"bytes,1,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
+	// The A2A badge.
+	A2A *IssueA2ABadgeRequest `protobuf:"bytes,2,opt,name=a2a,proto3" json:"a2a,omitempty"`
+	// The MCP badge.
 	Mcp           *IssueMcpBadgeRequest `protobuf:"bytes,3,opt,name=mcp,proto3" json:"mcp,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -187,7 +190,7 @@ var File_agntcy_identity_platform_v1alpha1_badge_service_proto protoreflect.File
 
 const file_agntcy_identity_platform_v1alpha1_badge_service_proto_rawDesc = "" +
 	"\n" +
-	"5agntcy/identity/platform/v1alpha1/badge_service.proto\x12!agntcy.identity.platform.v1alpha1\x1a-agntcy/identity/platform/v1alpha1/badge.proto\x1a\x1cgoogle/api/annotations.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\"\xc0\x01\n" +
+	"5agntcy/identity/platform/v1alpha1/badge_service.proto\x12!agntcy.identity.platform.v1alpha1\x1a-agntcy/identity/platform/v1alpha1/badge.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\"\xc0\x01\n" +
 	"\x11IssueBadgeRequest\x12\x15\n" +
 	"\x06app_id\x18\x01 \x01(\tR\x05appId\x12I\n" +
 	"\x03a2a\x18\x02 \x01(\v27.agntcy.identity.platform.v1alpha1.IssueA2ABadgeRequestR\x03a2a\x12I\n" +
@@ -196,11 +199,12 @@ const file_agntcy_identity_platform_v1alpha1_badge_service_proto_rawDesc = "" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x10\n" +
 	"\x03url\x18\x02 \x01(\tR\x03url\"<\n" +
 	"\x14IssueA2ABadgeRequest\x12$\n" +
-	"\x0ewell_known_url\x18\x01 \x01(\tR\fwellKnownUrl2\xd2\x01\n" +
+	"\x0ewell_known_url\x18\x01 \x01(\tR\fwellKnownUrl2\xe8\x02\n" +
 	"\fBadgeService\x12\xb5\x01\n" +
 	"\n" +
 	"IssueBadge\x124.agntcy.identity.platform.v1alpha1.IssueBadgeRequest\x1a(.agntcy.identity.platform.v1alpha1.Badge\"G\x92A\x1b\x12\rIssue a badge*\n" +
-	"IssueBadge\x82\xd3\xe4\x93\x02#:\x01*\"\x1e/v1alpha1/apps/{app_id}/badges\x1a\n" +
+	"IssueBadge\x82\xd3\xe4\x93\x02#:\x01*\"\x1e/v1alpha1/apps/{app_id}/badges\x12\x93\x01\n" +
+	"\vVerifyBadge\x12(.agntcy.identity.platform.v1alpha1.Badge\x1a\x16.google.protobuf.Empty\"B\x92A\x1d\x12\x0eVerify a badge*\vVerifyBadge\x82\xd3\xe4\x93\x02\x1c:\x01*\"\x17/v1alpha1/badges/verify\x1a\n" +
 	"\x92A\a\n" +
 	"\x05BadgeBkZigithub.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_gob\x06proto3"
 
@@ -222,14 +226,17 @@ var file_agntcy_identity_platform_v1alpha1_badge_service_proto_goTypes = []any{
 	(*IssueMcpBadgeRequest)(nil), // 1: agntcy.identity.platform.v1alpha1.IssueMcpBadgeRequest
 	(*IssueA2ABadgeRequest)(nil), // 2: agntcy.identity.platform.v1alpha1.IssueA2ABadgeRequest
 	(*Badge)(nil),                // 3: agntcy.identity.platform.v1alpha1.Badge
+	(*emptypb.Empty)(nil),        // 4: google.protobuf.Empty
 }
 var file_agntcy_identity_platform_v1alpha1_badge_service_proto_depIdxs = []int32{
 	2, // 0: agntcy.identity.platform.v1alpha1.IssueBadgeRequest.a2a:type_name -> agntcy.identity.platform.v1alpha1.IssueA2ABadgeRequest
 	1, // 1: agntcy.identity.platform.v1alpha1.IssueBadgeRequest.mcp:type_name -> agntcy.identity.platform.v1alpha1.IssueMcpBadgeRequest
 	0, // 2: agntcy.identity.platform.v1alpha1.BadgeService.IssueBadge:input_type -> agntcy.identity.platform.v1alpha1.IssueBadgeRequest
-	3, // 3: agntcy.identity.platform.v1alpha1.BadgeService.IssueBadge:output_type -> agntcy.identity.platform.v1alpha1.Badge
-	3, // [3:4] is the sub-list for method output_type
-	2, // [2:3] is the sub-list for method input_type
+	3, // 3: agntcy.identity.platform.v1alpha1.BadgeService.VerifyBadge:input_type -> agntcy.identity.platform.v1alpha1.Badge
+	3, // 4: agntcy.identity.platform.v1alpha1.BadgeService.IssueBadge:output_type -> agntcy.identity.platform.v1alpha1.Badge
+	4, // 5: agntcy.identity.platform.v1alpha1.BadgeService.VerifyBadge:output_type -> google.protobuf.Empty
+	4, // [4:6] is the sub-list for method output_type
+	2, // [2:4] is the sub-list for method input_type
 	2, // [2:2] is the sub-list for extension type_name
 	2, // [2:2] is the sub-list for extension extendee
 	0, // [0:2] is the sub-list for field type_name

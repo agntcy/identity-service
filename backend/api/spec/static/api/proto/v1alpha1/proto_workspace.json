@@ -1525,7 +1525,7 @@
             },
             {
               "name": "a2a",
-              "description": "",
+              "description": "The A2A badge.",
               "label": "",
               "type": "IssueA2ABadgeRequest",
               "longType": "IssueA2ABadgeRequest",
@@ -1537,7 +1537,7 @@
             },
             {
               "name": "mcp",
-              "description": "",
+              "description": "The MCP badge.",
               "label": "",
               "type": "IssueMcpBadgeRequest",
               "longType": "IssueMcpBadgeRequest",
@@ -1595,7 +1595,7 @@
           "methods": [
             {
               "name": "IssueBadge",
-              "description": "Create a new App.",
+              "description": "Create a new Badge.",
               "requestType": "IssueBadgeRequest",
               "requestLongType": "IssueBadgeRequest",
               "requestFullType": "agntcy.identity.platform.v1alpha1.IssueBadgeRequest",
@@ -1610,6 +1610,29 @@
                     {
                       "method": "POST",
                       "pattern": "/v1alpha1/apps/{app_id}/badges",
+                      "body": "*"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "VerifyBadge",
+              "description": "Verify a badge.",
+              "requestType": "Badge",
+              "requestLongType": "Badge",
+              "requestFullType": "agntcy.identity.platform.v1alpha1.Badge",
+              "requestStreaming": false,
+              "responseType": "Empty",
+              "responseLongType": ".google.protobuf.Empty",
+              "responseFullType": "google.protobuf.Empty",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "POST",
+                      "pattern": "/v1alpha1/badges/verify",
                       "body": "*"
                     }
                   ]
