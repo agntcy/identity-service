@@ -8,18 +8,20 @@ import {BasePage} from '@/components/layout/base-page';
 import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-renderer';
 import {useGetSettings} from '@/queries';
 import {PATHS} from '@/router/paths';
-import {IdpType} from '@/types/api/settings';
+import {useIdentityProviderStore} from '@/store';
 import {Button, Skeleton} from '@outshift/spark-design';
 import {CheckIcon, PlusIcon} from 'lucide-react';
-import {useMemo} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
+import {useShallow} from 'zustand/react/shallow';
 
 const AgentServices: React.FC = () => {
   const {data, error, isFetching, isLoading, refetch} = useGetSettings();
 
-  const isEmptyIdp = useMemo(() => {
-    return !data?.issuerSettings || data.issuerSettings.idpType === IdpType.IDP_TYPE_UNSPECIFIED;
-  }, [data?.issuerSettings]);
+  const {isEmptyIdp} = useIdentityProviderStore(
+    useShallow((state) => ({
+      isEmptyIdp: state.isEmptyIdp
+    }))
+  );
 
   const navigate = useNavigate();
 

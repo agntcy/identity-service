@@ -9,15 +9,17 @@ import {BasePage} from '@/components/layout/base-page';
 import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-renderer';
 import {useGetSettings} from '@/queries';
 import {PATHS} from '@/router/paths';
-import {IdpType} from '@/types/api/settings';
-import {useMemo} from 'react';
+import {useIdentityProviderStore} from '@/store';
+import {useShallow} from 'zustand/react/shallow';
 
 const SettingsIdentityProvider: React.FC = () => {
   const {data, error, isLoading, isFetching, refetch} = useGetSettings();
 
-  const isEmptyIdp = useMemo(() => {
-    return !data?.issuerSettings || data.issuerSettings.idpType === IdpType.IDP_TYPE_UNSPECIFIED;
-  }, [data?.issuerSettings]);
+  const {isEmptyIdp} = useIdentityProviderStore(
+    useShallow((state) => ({
+      isEmptyIdp: state.isEmptyIdp
+    }))
+  );
 
   return (
     <BasePage

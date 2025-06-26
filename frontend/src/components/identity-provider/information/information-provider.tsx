@@ -5,10 +5,9 @@
 
 import {Card, CardContent} from '@/components/ui/card';
 import {ExternalLinkIcon} from 'lucide-react';
-import {labels} from '@/constants/labels';
 import {Link, Typography} from '@outshift/spark-design';
 import {useMemo} from 'react';
-import {IdpType, IssuerSettings} from '@/types/api/settings';
+import {IssuerSettings} from '@/types/api/settings';
 import KeyValue, {KeyValuePair} from '@/components/ui/key-value';
 import {ProviderType} from '@/components/shared/provider-type';
 
