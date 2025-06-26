@@ -14,6 +14,7 @@ import (
 	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 	outshiftiam "github.com/agntcy/identity-platform/internal/pkg/iam"
+	"github.com/agntcy/identity-platform/internal/pkg/pagination"
 	"github.com/agntcy/identity-platform/pkg/log"
 	"github.com/google/uuid"
 )
@@ -21,6 +22,12 @@ import (
 type AppService interface {
 	CreateApp(ctx context.Context, app *apptypes.App) (*apptypes.App, error)
 	GetApp(ctx context.Context, id string) (*apptypes.App, error)
+	ListApps(
+		ctx context.Context,
+		paginationFilter pagination.PaginationFilter,
+		query *string,
+		appType *apptypes.AppType,
+	) (*pagination.Pageable[apptypes.App], error)
 }
 
 type appService struct {
@@ -146,4 +153,13 @@ func (s *appService) GetApp(
 	app.ApiKey = apiKey.Secret
 
 	return app, nil
+}
+
+func (s *appService) ListApps(
+	ctx context.Context,
+	paginationFilter pagination.PaginationFilter,
+	query *string,
+	appType *apptypes.AppType,
+) (*pagination.Pageable[apptypes.App], error) {
+	return s.appRepository.GetAllApps(ctx, paginationFilter, query, appType)
 }
