@@ -28,16 +28,14 @@ jobs:
     steps:
       - name: Import Vault Secrets
         id: vault
-        uses: hashicorp/vault-action@v2.7.5
+        uses: hashicorp/vault-action@v3
         with:
           url: ${{ vars.KEEPER_URL }}
           method: approle
           roleId: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
           secretId: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
-          namespace: eticloud/apps/pyramid
           secrets: |
-            secret/data/dev/pyramid-ui ARTIFACTORY_PASSWORD | ARTIFACTORY_PASSWORD
-
+            eticloud/apps/pyramid/secret/data/dev/pyramid-ui ARTIFACTORY_PASSWORD | ARTIFACTORY_PASSWORD
   ################################## checkout & unit tests ######################
   ###############################################################################
   checkout-unit-tests:
