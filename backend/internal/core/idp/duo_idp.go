@@ -40,12 +40,18 @@ type integration struct {
 }
 
 type DuoIdp struct {
-	IdpSettings *types.DuoIdpSettings
-	api         *duosdk.DuoApi
+	settings *types.DuoIdpSettings
+	api      *duosdk.DuoApi
+}
+
+func NewDuoIdp(settings *types.DuoIdpSettings) Idp {
+	return &DuoIdp{
+		settings: settings,
+	}
 }
 
 func (d *DuoIdp) TestSettings(ctx context.Context) error {
-	if d.IdpSettings == nil {
+	if d.settings == nil {
 		return errutil.Err(
 			nil,
 			"duo idp settings are not configured",
@@ -53,9 +59,9 @@ func (d *DuoIdp) TestSettings(ctx context.Context) error {
 	}
 
 	d.api = duosdk.NewDuoApi(
-		d.IdpSettings.IntegrationKey,
-		d.IdpSettings.SecretKey,
-		d.IdpSettings.Hostname,
+		d.settings.IntegrationKey,
+		d.settings.SecretKey,
+		d.settings.Hostname,
 		duoClientName,
 		duosdk.SetTimeout(duoTimeout*time.Second))
 
@@ -135,6 +141,10 @@ func (d *DuoIdp) DeleteClientCredentialsPair(
 	ctx context.Context,
 	clientCredentials *ClientCredentials,
 ) error {
+	return d.deleteIntegration(clientCredentials)
+}
+
+func (d *DuoIdp) deleteIntegration(clientCredentials *ClientCredentials) error {
 	if clientCredentials == nil || clientCredentials.Issuer == "" {
 		return fmt.Errorf("client credentials are not provided or issuer is empty")
 	}
@@ -179,7 +189,15 @@ func (d *DuoIdp) duoCall(
 		}
 	}()
 
-	if err != nil || response.StatusCode != http.StatusOK {
+	if err != nil {
+		return nil, errutil.Err(
+			err,
+			fmt.Sprintf("duo API call failed: %s",
+				string(data)),
+		)
+	}
+
+	if response.StatusCode != http.StatusOK {
 		return nil, errutil.Err(
 			err,
 			fmt.Sprintf("duo API call failed: %s, status code: %d",

@@ -1,0 +1,99 @@
+/**
+ * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import {useState} from 'react';
+import {ConditionalQueryRenderer} from '../../ui/conditional-query-renderer';
+import {MenuItem, Table} from '@outshift/spark-design';
+import {useGetAgenticServices, useGetTenants} from '@/queries';
+import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
+import {AgenticServiceColumns} from './agentic-services-columns';
+import {Card} from '@/components/ui/card';
+import {Typography} from '@mui/material';
+import {Trash2Icon, UserRoundPlusIcon} from 'lucide-react';
+import {cn} from '@/lib/utils';
+import {useAuth} from '@/hooks';
+import {generatePath, useNavigate} from 'react-router-dom';
+import {PATHS} from '@/router/paths';
+
+export const ListAgenticServices = () => {
+  const [pagination, setPagination] = useState<MRT_PaginationState>({
+    pageIndex: 0,
+    pageSize: 10
+  });
+  const [sorting, setSorting] = useState<MRT_SortingState>([]);
+
+  const {data, isLoading, isFetching, error, isError, refetch} = useGetAgenticServices();
+  const {authInfo} = useAuth();
+
+  const navigate = useNavigate();
+
+  return (
+    <>
+      <ConditionalQueryRenderer
+        itemName="Agentic Services"
+        data={data?.apps}
+        error={error}
+        isLoading={isFetching || isLoading}
+        useRelativeLoader
+        errorListStateProps={{
+          actionCallback: () => {
+            void refetch();
+          },
+          actionTitle: 'Retry'
+        }}
+        useContainer
+      >
+        <Card className={cn(!(isFetching || isLoading) && 'p-0')} variant="secondary"></Card>
+        {/* <Table
+          columns={AgenticServiceColumns()}
+          data={data?.tenants || []}
+          isLoading={isLoading || isFetching}
+          densityCompact
+          muiTableBodyRowProps={({row}) => ({
+            sx: {cursor: 'pointer', '& .MuiIconButton-root': {color: (theme) => theme.palette.vars.interactiveSecondaryDefaultDefault}},
+            onClick: () => {
+              const path = generatePath(PATHS.settingsOrganizationInfo, {id: row.original?.id});
+              void navigate(path, {replace: true});
+            }
+          })}
+          enableRowActions
+          topToolbarProps={{
+            enableActions: false
+          }}
+          muiTableContainerProps={{
+            style: {
+              border: '1px solid #D5DFF7'
+            }
+          }}
+          onPaginationChange={setPagination}
+          rowCount={data?.tenants.length ?? 0}
+          rowsPerPageOptions={[1, 10, 25, 50, 100]}
+          title={{label: 'organizations', count: data?.tenants?.length || 0}}
+          state={{pagination, sorting}}
+          onSortingChange={setSorting}
+          renderRowActionMenuItems={({row}) => {
+            if (authInfo?.user?.tenant?.id !== row.original.id) {
+              return [];
+            }
+            return [
+              <MenuItem key="edit" onClick={() => console.info('Edit', row)} sx={{display: 'flex', alignItems: 'center', gap: '8px'}}>
+                <UserRoundPlusIcon className="w-4 h-4" color="#062242" />
+                <Typography variant="body2" color="#1A1F27">
+                  Add user
+                </Typography>
+              </MenuItem>,
+              <MenuItem key="delete" onClick={() => console.info('Delete', row)} sx={{display: 'flex', alignItems: 'center', gap: '8px'}}>
+                <Trash2Icon className="w-4 h-4" color="#C62953" />
+                <Typography variant="body2" color="#C0244C">
+                  Delete organization
+                </Typography>
+              </MenuItem>
+            ];
+          }}
+        /> */}
+      </ConditionalQueryRenderer>
+    </>
+  );
+};

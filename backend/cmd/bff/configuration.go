@@ -14,6 +14,7 @@ type Configuration struct {
 	ApiUrl                                                  string        `split_words:"true" default:"http://localhost:4000"`
 	GoEnv                                                   string        `split_words:"true" default:"production"`
 	LogLevel                                                string        `split_words:"true" default:"InfoLevel"`
+	SecretsCryptoKey                                        string        `split_words:"true" default:"secretkey"`
 	DbHost                                                  string        `split_words:"true"                                              required:"true"`
 	DbPort                                                  string        `split_words:"true"                                              required:"true"`
 	DbName                                                  string        `split_words:"true" default:"identity"`

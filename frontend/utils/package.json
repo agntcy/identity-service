@@ -1,0 +1,14 @@
+{
+  "name": "utils",
+  "version": "1.0.0",
+  "private": true,
+  "packageManager": "yarn@4.5.0",
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "globby": "^13.2.2",
+    "shelljs": "^0.8.5"
+  },
+  "scripts": {
+    "generate-bff": "node generate-bff.js"
+  }
+}

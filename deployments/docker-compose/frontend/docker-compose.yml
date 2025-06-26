@@ -1,0 +1,13 @@
+name: identity-frontend
+services:
+  identity-ui:
+    container_name: identity-ui
+    image: identity-ui
+    build:
+      context: ../../../
+      dockerfile: deployments/docker/frontend/Dockerfile
+    restart: always
+    ports:
+      - ${VITE_APP_CLIENT_PORT}:${VITE_APP_CLIENT_PORT}
+    env_file:
+      - .env

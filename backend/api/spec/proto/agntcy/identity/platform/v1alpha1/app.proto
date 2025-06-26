@@ -16,13 +16,18 @@ message App {
   optional string id = 1;
 
   // A human-readable name for the App.
-  optional string name = 4;
+  optional string name = 2;
 
   // A human-readable description for the App.
-  optional string description = 5;
+  optional string description = 3;
 
   // The type of the App.
-  optional AppType type = 6;
+  optional AppType type = 4;
+
+  // The DID value
+  optional string resolver_metadata_id = 5;
+
+  optional string api_key = 6;
 }
 
 // App Type
@@ -34,5 +39,5 @@ enum AppType {
   // Agent OASF App Type.
   APP_TYPE_AGENT_OASF = 2;
   // Agent MCP Server App Type.
-  APP_TYPE_AGENT_MCP_SERVER = 3;
+  APP_TYPE_MCP_SERVER = 3;
 }

@@ -2,7 +2,7 @@
 # Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
 # SPDX-License-Identifier: Apache-2.0
 
-BACKEND_ENV=./cmd/bff/.env
+BACKEND_ENV=./backend/cmd/bff/.env
 IDENTITY_DEPLOYMENTS_DIR=./deployments/docker-compose/backend
 
 # This script sets up the environment for the Identity Backend service.

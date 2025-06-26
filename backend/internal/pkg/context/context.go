@@ -41,6 +41,13 @@ func GetTenantID(ctx context.Context) (string, bool) {
 	return tenantID, ok
 }
 
+// AppID fetches the app ID from a context (if any).
+func GetAppID(ctx context.Context) (string, bool) {
+	appID, ok := ctx.Value(AppID).(string)
+
+	return appID, ok
+}
+
 // UserID fetches the user ID from a context (if any).
 func GetUserID(ctx context.Context) (string, bool) {
 	userID, ok := ctx.Value(UserID).(string)

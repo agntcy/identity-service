@@ -45,6 +45,12 @@ type ApiKey struct {
 	Tags     *IdentityTags `json:"tags,omitempty"`
 }
 
+func NewApiKey() ApiKey {
+	return ApiKey{
+		Tags: &IdentityTags{},
+	}
+}
+
 type ApiKeyList struct {
 	ApiKeys []ApiKey `json:"apiKeys,omitempty"`
 }
@@ -81,7 +87,7 @@ const IAMTenantEndpoint = "/tenant"
 
 const defaultIAMAud = "api://default"
 
-type IAM interface {
+type Client interface {
 	AuthJwt(
 		ctx context.Context,
 		header string,
@@ -93,13 +99,14 @@ type IAM interface {
 		forApp bool,
 	) (newCtx context.Context, err error)
 	GetTenantApiKey(ctx context.Context) (apiKey ApiKey, err error)
+	GetAppApiKey(ctx context.Context, appID string) (apiKey ApiKey, err error)
 	CreateTenantApiKey(ctx context.Context) (apiKey ApiKey, err error)
 	CreateAppApiKey(ctx context.Context, appID string) (apiKey ApiKey, err error)
 	RevokeTenantApiKey(ctx context.Context) (err error)
 	RevokeAppApiKey(ctx context.Context, appID string) (err error)
 }
 
-type Client struct {
+type HttpClient struct {
 	httpClient          *http.Client
 	url                 string
 	adminApiKey         string
@@ -117,7 +124,7 @@ func NewClient(
 	multitenant bool,
 	singleTenantID string,
 	issuer, userCid, apiKeyCid *string,
-) *Client {
+) Client {
 	// Init verifier for UI and Api Keys
 	toValidateForUser := map[string]string{}
 	toValidateForApiKey := map[string]string{}
@@ -147,7 +154,7 @@ func NewClient(
 	)
 	apiKeyV1Cache := cache.New[[]byte](freecacheStore)
 
-	return &Client{
+	return &HttpClient{
 		httpClient,
 		url,
 		adminApiKey,
@@ -161,7 +168,7 @@ func NewClient(
 
 // ------------------------ GLOBAL -------------------- //
 
-func (c *Client) AuthJwt(
+func (c *HttpClient) AuthJwt(
 	ctx context.Context,
 	header string,
 ) (context.Context, error) {
@@ -199,7 +206,7 @@ func (c *Client) AuthJwt(
 	return ctx, nil
 }
 
-func (c *Client) AuthApiKey(
+func (c *HttpClient) AuthApiKey(
 	ctx context.Context,
 	productID string,
 	apiKey string,
@@ -235,8 +242,8 @@ func (c *Client) AuthApiKey(
 }
 
 // GetTenantApiKey returns the Api Key for the tenant. If no Api Key exists, an empty Api Key is returned.
-func (c *Client) GetTenantApiKey(ctx context.Context) (ApiKey, error) {
-	var apiKey ApiKey
+func (c *HttpClient) GetTenantApiKey(ctx context.Context) (ApiKey, error) {
+	apiKey := NewApiKey()
 
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
@@ -261,8 +268,31 @@ func (c *Client) GetTenantApiKey(ctx context.Context) (ApiKey, error) {
 	return apiKey, nil
 }
 
+// GetAppApiKey returns the Api Key for the app. If no Api Key exists, an empty Api Key is returned.
+func (c *HttpClient) GetAppApiKey(ctx context.Context, appID string) (ApiKey, error) {
+	if appID == "" {
+		return ApiKey{}, errors.New("missing appID")
+	}
+
+	if !c.multitenant {
+		return ApiKey{}, errors.New("operation not supported in single tenant mode")
+	}
+
+	tenantID, ok := identitycontext.GetTenantID(ctx)
+	if !ok {
+		return ApiKey{}, errors.New("missing TenantID in context")
+	}
+
+	apiKey, err := c.getApiKeyByApp(ctx, appID, tenantID)
+	if err != nil {
+		return ApiKey{}, err
+	}
+
+	return apiKey, nil
+}
+
 // CreateTenantApiKey creates an Api Key for a tenant. The Api Key is unique per tenant.
-func (c *Client) CreateTenantApiKey(ctx context.Context) (ApiKey, error) {
+func (c *HttpClient) CreateTenantApiKey(ctx context.Context) (ApiKey, error) {
 	var apiKey ApiKey
 
 	tenantID, ok := identitycontext.GetTenantID(ctx)
@@ -296,11 +326,11 @@ func (c *Client) CreateTenantApiKey(ctx context.Context) (ApiKey, error) {
 }
 
 // CreateAppApiKey creates an Api Key for a app. The Api Key is tagged with the appID.
-func (c *Client) CreateAppApiKey(
+func (c *HttpClient) CreateAppApiKey(
 	ctx context.Context,
 	appID string,
 ) (ApiKey, error) {
-	var apiKey ApiKey
+	apiKey := NewApiKey()
 
 	if appID == "" {
 		return apiKey, errors.New("missing appID")
@@ -341,7 +371,7 @@ func (c *Client) CreateAppApiKey(
 }
 
 // RevokeTenantApiKey revokes the Api Key for a tenant.
-func (c *Client) RevokeTenantApiKey(ctx context.Context) error {
+func (c *HttpClient) RevokeTenantApiKey(ctx context.Context) error {
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
 		return errors.New("missing TenantID in context")
@@ -366,7 +396,7 @@ func (c *Client) RevokeTenantApiKey(ctx context.Context) error {
 }
 
 // RevokeAppApiKey revokes the Api Key for a app.
-func (c *Client) RevokeAppApiKey(ctx context.Context, appID string) error {
+func (c *HttpClient) RevokeAppApiKey(ctx context.Context, appID string) error {
 	if appID == "" {
 		return errors.New("missing appID")
 	}
@@ -395,7 +425,7 @@ func (c *Client) RevokeAppApiKey(ctx context.Context, appID string) error {
 }
 
 // This method will use Okta library to validate JWTs from both User / Api Key
-func (c *Client) validateAccessToken(
+func (c *HttpClient) validateAccessToken(
 	_ context.Context,
 	accessToken string,
 ) (*string, *string, *string, error) {
@@ -437,7 +467,7 @@ func (c *Client) validateAccessToken(
 	return username, tenant, organization, nil
 }
 
-func (c *Client) createApiKey(
+func (c *HttpClient) createApiKey(
 	ctx context.Context,
 	apiKey *ApiKey,
 ) error {
@@ -463,7 +493,7 @@ func (c *Client) createApiKey(
 	return nil
 }
 
-func (c *Client) getApiKeyByTenant(
+func (c *HttpClient) getApiKeyByTenant(
 	ctx context.Context,
 	tenantID string,
 ) (ApiKey, error) {
@@ -484,7 +514,7 @@ func (c *Client) getApiKeyByTenant(
 	}
 
 	for _, k := range apiKeys.ApiKeys {
-		if k.Tags.AppID == "" {
+		if k.Tags == nil || k.Tags.AppID == "" {
 			apiKey = k
 			break
 		}
@@ -493,7 +523,7 @@ func (c *Client) getApiKeyByTenant(
 	return apiKey, nil
 }
 
-func (c *Client) getApiKeyByApp(
+func (c *HttpClient) getApiKeyByApp(
 	ctx context.Context,
 	appID string,
 	tenantID string,
@@ -515,7 +545,7 @@ func (c *Client) getApiKeyByApp(
 	}
 
 	for _, k := range apiKeys.ApiKeys {
-		if k.Tags.AppID == appID {
+		if k.Tags != nil && k.Tags.AppID == appID {
 			apiKey = k
 			break
 		}
@@ -524,7 +554,7 @@ func (c *Client) getApiKeyByApp(
 	return apiKey, nil
 }
 
-func (c *Client) revokeApiKey(
+func (c *HttpClient) revokeApiKey(
 	ctx context.Context,
 	apiKey *ApiKey,
 ) error {
@@ -555,7 +585,7 @@ func (c *Client) revokeApiKey(
 	return nil
 }
 
-func (c *Client) apiKeyCall(
+func (c *HttpClient) apiKeyCall(
 	ctx context.Context,
 	method string,
 	uri string,
@@ -613,7 +643,7 @@ func (c *Client) apiKeyCall(
 }
 
 // This method will call IAM ext auth endoint to validate the Api Key
-func (c *Client) validateApiKeyV1(
+func (c *HttpClient) validateApiKeyV1(
 	ctx context.Context,
 	productID string,
 	apiKey string,
@@ -665,7 +695,7 @@ func (c *Client) validateApiKeyV1(
 	return &tenant, &newTags
 }
 
-func (c *Client) extAuth(
+func (c *HttpClient) extAuth(
 	ctx context.Context,
 	uri string,
 	headers map[string]string,

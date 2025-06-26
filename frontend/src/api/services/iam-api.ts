@@ -1,0 +1,95 @@
+/**
+ * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import axios, {AxiosError, AxiosHeaders, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig} from 'axios';
+import {AuthInfo} from '@/types/okta';
+import {getAuthConfig} from '@/utils/get-auth-config';
+import {httpErrorsAuth} from '@/constants/http-errors';
+import {GetSessionResponse, GetTenantsResponse} from '@/types/api/iam';
+
+class IamAPIClass {
+  protected authInfo: AuthInfo | null | undefined;
+  public instance: AxiosInstance;
+  protected retry = false;
+  protected tokenExpiredHttpHandler?: () => Promise<AuthInfo | undefined>;
+  protected logout?: (params: {revokeAccessToken?: boolean; revokeRefreshToken?: boolean; clearTokensBeforeRedirect?: boolean}) => void;
+
+  constructor() {
+    this.instance = axios.create({
+      baseURL: getAuthConfig().iamApi,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+
+  public getTenants = () => {
+    return this.instance.get<GetTenantsResponse>(`/tenant?product=${getAuthConfig().productId}`);
+  };
+
+  public getSession = () => {
+    return this.instance.get<GetSessionResponse>('/session');
+  };
+
+  protected handleLogout = () => {
+    this.logout?.({
+      revokeAccessToken: true,
+      revokeRefreshToken: true,
+      clearTokensBeforeRedirect: true
+    });
+  };
+
+  protected reqResInterceptor = (config: InternalAxiosRequestConfig<AxiosHeaders>) => {
+    if (this.authInfo?.accessToken?.accessToken) {
+      config.headers['Authorization'] = `Bearer ${this.authInfo.accessToken.accessToken}`;
+    }
+    return config;
+  };
+
+  protected reqErrInterceptor = (error: AxiosError) => Promise.reject(error);
+
+  protected resResInterceptor = (response: AxiosResponse) => response;
+
+  protected resErrInterceptor = async (error: AxiosError) => {
+    const originalConfig = error.config;
+    if (this.authInfo && !this.retry && originalConfig && error.response && httpErrorsAuth.includes(error.response?.status)) {
+      this.retry = true;
+      if (this.tokenExpiredHttpHandler) {
+        try {
+          const newAuthInfo = await this.tokenExpiredHttpHandler();
+          if (newAuthInfo) {
+            this.instance.defaults.headers.common['Authorization'] = `Bearer ${newAuthInfo.accessToken?.accessToken}`;
+            return this.instance(originalConfig);
+          }
+          return this.handleLogout();
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (error) {
+          return this.handleLogout();
+        }
+      }
+      return this.handleLogout();
+    }
+    if (!this.authInfo || !this.authInfo.accessToken?.accessToken) {
+      return this.handleLogout();
+    }
+    return Promise.reject(error);
+  };
+
+  public setAuthInfo = (authInfo?: AuthInfo) => {
+    this.authInfo = authInfo;
+    this.instance.interceptors.request.use(this.reqResInterceptor, this.reqErrInterceptor);
+    this.instance.interceptors.response.use(this.resResInterceptor, this.resErrInterceptor);
+  };
+
+  public setTokenExpiredHandlers(handlers: {
+    tokenExpiredHttpHandler?: () => Promise<AuthInfo | undefined>;
+    logout?: (params: {revokeAccessToken?: boolean; revokeRefreshToken?: boolean; clearTokensBeforeRedirect?: boolean}) => void;
+  }) {
+    this.tokenExpiredHttpHandler = handlers.tokenExpiredHttpHandler;
+    this.logout = handlers.logout;
+  }
+}
+
+export const IamAPI = new IamAPIClass();
