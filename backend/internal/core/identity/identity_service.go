@@ -15,6 +15,7 @@ import (
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 	"github.com/agntcy/identity-platform/internal/pkg/httputil"
 	"github.com/agntcy/identity-platform/internal/pkg/jwtutil"
+	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
 	"github.com/agntcy/identity-platform/pkg/log"
 	idsdk "github.com/agntcy/identity/api/client/client/id_service"
 	issuersdk "github.com/agntcy/identity/api/client/client/issuer_service"
@@ -327,6 +328,9 @@ func (s *service) VerifyVerifiableCredential(
 	_, err := s.vcClient.VerifyVerifiableCredential(&vcsdk.VerifyVerifiableCredentialParams{
 		Body: &identitymodels.V1alpha1VerifyRequest{
 			Vc: &identitymodels.V1alpha1EnvelopedCredential{
+				EnvelopeType: ptrutil.Ptr(
+					identitymodels.V1alpha1CredentialEnvelopeTypeCREDENTIALENVELOPETYPEJOSE,
+				),
 				Value: *vc,
 			},
 		},
@@ -337,6 +341,8 @@ func (s *service) VerifyVerifiableCredential(
 			"error verifying verifiable credential",
 		)
 	}
+
+	log.Debug("Verifiable credential verified successfully")
 
 	// Parse the verifiable credential to extract claims
 	claimValue, err := jwtutil.GetClaim(
@@ -350,9 +356,13 @@ func (s *service) VerifyVerifiableCredential(
 		)
 	}
 
+	log.Debug("Extracted credential subject: ", *claimValue)
+
 	// Unmarshal the claims from the credential subject
 	var claims badgetypes.BadgeClaims
 	err = json.Unmarshal([]byte(*claimValue), &claims)
+
+	log.Debug("Unmarshalled claims: ", claims)
 
 	return &claims, err
 }

@@ -4,7 +4,10 @@
 package jwtutil
 
 import (
+	"encoding/json"
+
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
+	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
 	"github.com/lestrrat-go/jwx/v3/jwt"
 )
 
@@ -56,7 +59,7 @@ func GetClaim(
 		)
 	}
 
-	var claimValue string
+	var claimValue map[string]any
 
 	err = token.Get(claimName, &claimValue)
 	if err != nil {
@@ -66,5 +69,14 @@ func GetClaim(
 		)
 	}
 
-	return &claimValue, nil
+	// Convert the claim value to a string
+	rawClaims, err := json.Marshal(&claimValue)
+	if err != nil {
+		return nil, errutil.Err(
+			err,
+			"failed to marshal claim value to JSON",
+		)
+	}
+
+	return ptrutil.Ptr(string(rawClaims)), nil
 }
