@@ -9,9 +9,9 @@ import {JSX} from 'react/jsx-runtime';
 import {IconButton, Typography} from '@mui/material';
 import {useState} from 'react';
 import {CircleXIcon, FileIcon} from 'lucide-react';
-import { toast } from '@outshift/spark-design';
+import {toast} from '@outshift/spark-design';
 
-export const FileUpload = ({onConvert, ...props}: InputProps & {onConvert?: (binary: ArrayBuffer) => void}) => {
+export const FileUpload = ({onConvert, ...props}: InputProps & {onConvert?: (binary?: ArrayBuffer) => void}) => {
   const [file, setFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
 
@@ -53,10 +53,10 @@ export const FileUpload = ({onConvert, ...props}: InputProps & {onConvert?: (bin
           title: 'Error reading file',
           description: 'There was an error reading the file. Please try again.',
           type: 'error'
-        })
+        });
       };
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [file]);
 
   return (
@@ -104,7 +104,12 @@ export const FileUpload = ({onConvert, ...props}: InputProps & {onConvert?: (bin
             <Typography variant="caption" color="#59616B">
               {file.name}
             </Typography>
-            <IconButton onClick={() => setFile(null)}>
+            <IconButton
+              onClick={() => {
+                setFile(null);
+                onConvert?.(undefined);
+              }}
+            >
               <CircleXIcon className="w-4 h-4 text-[#C5C7CB]" />
             </IconButton>
           </div>

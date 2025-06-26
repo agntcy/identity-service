@@ -14,16 +14,19 @@ import {VerifyIdentityFormValues} from '@/schemas/verify-identity-schema';
 import {Textarea} from '@/components/ui/textarea';
 
 export const VerifyIdentityInfo = ({isLoading = false}: {isLoading?: boolean}) => {
-  const {control, reset} = useFormContext<VerifyIdentityFormValues>();
+  const {control, watch, reset, setValue} = useFormContext<VerifyIdentityFormValues>();
   const methods = useStepper();
 
   const metaData = methods.getMetadata('uploadBadge') as VerifyIdentityFormValues | undefined;
+
+  const badgeId = watch('badgeId');
 
   useEffect(() => {
     if (metaData) {
       reset({
         badgeId: metaData.badgeId || undefined,
-        file: metaData.file || undefined
+        file: metaData.file || undefined,
+        buffer: metaData.buffer || undefined
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -50,7 +53,7 @@ export const VerifyIdentityInfo = ({isLoading = false}: {isLoading?: boolean}) =
                       name={field.name}
                       disabled={isLoading}
                       onConvert={(binary) => {
-                        field.onChange(binary);
+                        setValue('buffer', binary);
                       }}
                     />
                   </FormControl>
@@ -73,7 +76,7 @@ export const VerifyIdentityInfo = ({isLoading = false}: {isLoading?: boolean}) =
                 <FormItem>
                   <FormLabel className="form-label">ID Badge</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Type the ID of the badge..." rows={4} {...field} disabled={isLoading} />
+                    <Textarea placeholder="Type the ID of the badge..." rows={3} {...field} disabled={isLoading} />
                   </FormControl>
                 </FormItem>
               )}

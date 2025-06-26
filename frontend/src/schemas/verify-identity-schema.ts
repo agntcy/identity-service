@@ -17,6 +17,12 @@ export const VerifyIdentitySchema = z.object({
     .refine((value) => value instanceof File || typeof value === 'string', {
       message: 'File is required'
     })
+    .optional(),
+  buffer: z
+    .instanceof(ArrayBuffer, {message: 'Buffer is required'})
+    .refine((buffer) => buffer.byteLength > 0 && buffer.byteLength <= 3000000, {
+      message: 'Max size exceeded'
+    })
     .optional()
 });
 
