@@ -18,6 +18,7 @@ lint:
       - agntcy/identity/platform/v1alpha1/settings_service.proto
       - agntcy/identity/platform/v1alpha1/policy_service.proto
       - agntcy/identity/platform/v1alpha1/auth_service.proto
+      - agntcy/identity/platform/v1alpha1/badge_service.proto
     RPC_RESPONSE_STANDARD_NAME:
       - agntcy/identity/platform/v1alpha1/app_service.proto
       - agntcy/identity/platform/v1alpha1/settings_service.proto

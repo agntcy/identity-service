@@ -1,3 +1,6 @@
+# Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
 FROM node:20.18.2-alpine3.21 AS build
 
 # Install packages
