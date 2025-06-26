@@ -31,7 +31,7 @@ service BadgeService {
   }
 
   // Verify a badge.
-  rpc VerifyBadge(Badge) returns (google.protobuf.Empty) {
+  rpc VerifyBadge(VerifyBadgeRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/v1alpha1/badges/verify"
       body: "*"
@@ -62,4 +62,9 @@ message IssueMcpBadgeRequest {
 
 message IssueA2ABadgeRequest {
   string well_known_url = 1;
+}
+
+message VerifyBadgeRequest {
+  // The JOSE enveloped badge to verify.
+  string badge = 1;
 }
