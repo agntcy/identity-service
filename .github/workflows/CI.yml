@@ -18,24 +18,13 @@ permissions:
   packages: write # needed to push docker image to gar or ecr
 
 jobs:
- ################################## Fetch Secrets ##########################
   fetch-secrets:
-    name: Fetch Secrets from Vault
-    runs-on: ${{ vars.UBUNTU_RUNNER }}
+    runs-on: ubuntu-latest
     outputs:
-      artifactory_password: ${{ steps.vault.outputs.ARTIFACTORY_PASSWORD }}
-    
+      artifactory_password: ${{ steps.get_password.outputs.password }}
     steps:
-      - name: Import Vault Secrets
-        id: vault
-        uses: hashicorp/vault-action@v3
-        with:
-          url: ${{ vars.KEEPER_URL }}
-          method: approle
-          roleId: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
-          secretId: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
-          secrets: |
-            eticloud/apps/pyramid/secret/data/dev/pyramid-ui ARTIFACTORY_PASSWORD | ARTIFACTORY_PASSWORD
+      - id: get_password
+        run: echo "password=${{ secrets.ARTIFACTORY_PASSWORD }}" >> $GITHUB_OUTPUT
   ################################## checkout & unit tests ######################
   ###############################################################################
   checkout-unit-tests:
