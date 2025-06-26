@@ -136,7 +136,6 @@ jobs:
       ghcr-username: ${{ secrets.GHCR_USERNAME }}
       ghcr-token: ${{ secrets.GHCR_TOKEN }}
       ghcr-org-token: ${{ secrets.GHCR_TOKEN }}
-      artifactory_password: ${{ secrets.ARTIFACTORY_PASSWORD }}
     
     with:
       runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
@@ -157,6 +156,7 @@ jobs:
       artifactory-devhub-enabled: false
       ghcr-enabled: true
       ghcr-org-registry: ${{ vars.GHCR_REGISTRY }}
+      build-args: "--build-arg ARTIFACTORY_PASSWORD=${{ secrets.ARTIFACTORY_PASSWORD }}"
 
   ################################# Corona & blackduck ###########################
   ################################################################################ 
