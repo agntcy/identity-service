@@ -12,7 +12,6 @@ import (
 	"github.com/agntcy/identity-platform/internal/bff/grpc/converters"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 	"github.com/agntcy/identity-platform/internal/pkg/grpcutil"
-	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 type BadgeService struct {
@@ -54,14 +53,14 @@ func (s *BadgeService) IssueBadge(
 func (s *BadgeService) VerifyBadge(
 	ctx context.Context,
 	in *identity_platform_sdk_go.VerifyBadgeRequest,
-) (*emptypb.Empty, error) {
-	if in.Badge == nil {
+) (*identity_platform_sdk_go.BadgeClaims, error) {
+	if in.Badge == "" {
 		return nil, grpcutil.BadRequestError(errors.New("badge or verifiable credential is empty"))
 	}
 
-	err := s.badgeService.VerifyBadge(
+	claims, err := s.badgeService.VerifyBadge(
 		ctx,
-		in.Badge,
+		&in.Badge,
 	)
 	if err != nil {
 		return nil, grpcutil.NotFoundError(grpcutil.NotFoundError(errutil.Err(
@@ -70,5 +69,5 @@ func (s *BadgeService) VerifyBadge(
 		)))
 	}
 
-	return &emptypb.Empty{}, nil
+	return converters.FromBadgeClaims(claims), nil
 }

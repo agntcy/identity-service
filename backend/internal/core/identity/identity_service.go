@@ -58,7 +58,7 @@ type Service interface {
 	VerifyVerifiableCredential(
 		ctx context.Context,
 		vc *string,
-	) error
+	) (*badgetypes.BadgeClaims, error)
 }
 
 // The verificationService struct implements the VerificationService interface
