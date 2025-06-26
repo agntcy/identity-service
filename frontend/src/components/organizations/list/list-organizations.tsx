@@ -31,7 +31,7 @@ export const ListOrganizations = () => {
 
   return (
     <>
-      <Card className={cn('bg-[#F5F8FD]', isFetching || isLoading ? 'p-4' : 'p-0')}>
+      <Card className={cn('bg-[#F5F8FD]', isFetching || isLoading ? 'p-[24px]' : 'p-0')}>
         <ConditionalQueryRenderer
           itemName="organizations"
           data={data?.tenants}

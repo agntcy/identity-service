@@ -78,20 +78,20 @@ export const ProviderInfo = ({isLoading = false}: {isLoading?: boolean}) => {
   }, [metaData]);
 
   return (
-    <Card className="text-start py-4 bg-[#F5F8FD] rounded-[8px] p-[24px] space-y-4" variant="secondary">
-      <div className="flex justify-between items-center">
-        <Typography variant="subtitle1" fontWeight={600}>
-          Select identity provider
-        </Typography>
-        <Link href="https://github.com/agntcy/identity?tab=readme-ov-file#step-3-register-as-an-issuer" openInNewTab>
-          <div className="flex items-center gap-1">
-            View documentation
-            <ExternalLinkIcon className="w-4 h-4 ml-1" />
+    <Card className="text-start py-4 rounded-[8px] p-[24px]" variant="secondary">
+      <CardContent className="space-y-6 p-0">
+        <div className="space-y-4">
+          <div className="flex justify-between items-center">
+            <Typography variant="subtitle1" fontWeight={600}>
+              Select Identity Provider
+            </Typography>
+            <Link href="" openInNewTab>
+              <div className="flex items-center gap-1">
+                View Documentation
+                <ExternalLinkIcon className="w-4 h-4 ml-1" />
+              </div>
+            </Link>
           </div>
-        </Link>
-      </div>
-      <CardContent className="space-y-4 p-0">
-        <div className="space-y-2">
           <FormField
             control={control}
             name="provider"
@@ -109,11 +109,13 @@ export const ProviderInfo = ({isLoading = false}: {isLoading?: boolean}) => {
           />
         </div>
         {idpType === IdpType.IDP_TYPE_DUO && (
-          <div className="space-y-2 pt-2">
-            <Typography variant="subtitle1" fontWeight={600}>
-              Provider details
-            </Typography>
-            <div className="space-y-2 mt-4">
+          <div className="space-y-4">
+            <div>
+              <Typography variant="subtitle1" fontWeight={600}>
+                Provider details
+              </Typography>
+            </div>
+            <div className="space-y-2">
               <FormField
                 control={control}
                 name="hostname"
@@ -156,11 +158,13 @@ export const ProviderInfo = ({isLoading = false}: {isLoading?: boolean}) => {
           </div>
         )}
         {idpType === IdpType.IDP_TYPE_OKTA && (
-          <div className="space-y-2 pt-2">
-            <Typography variant="subtitle1" fontWeight={600}>
-              Provider details
-            </Typography>
-            <div className="space-y-2 mt-4">
+          <div className="space-y-4">
+            <div>
+              <Typography variant="subtitle1" fontWeight={600}>
+                Provider details
+              </Typography>
+            </div>
+            <div className="space-y-2">
               <FormField
                 control={control}
                 name="orgUrl"

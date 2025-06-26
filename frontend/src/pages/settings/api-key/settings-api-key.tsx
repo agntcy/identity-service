@@ -12,6 +12,7 @@ const SettingsIdentityProvider: React.FC = () => {
   return (
     <BasePage
       title="Api Key"
+      description="Manage your API keys. You can create, view, and delete API keys for your account."
       subNav={[
         {
           label: 'Identity Provider',

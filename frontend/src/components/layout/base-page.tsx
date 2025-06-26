@@ -23,6 +23,7 @@ export interface BasePageProps {
   tabsProps?: TabsProps;
   subNav?: SubNavItem[];
   useBreadcrumbs?: boolean;
+  useBorder?: boolean;
 }
 
 export const BasePage = ({
@@ -34,11 +35,13 @@ export const BasePage = ({
   rightSideItems,
   subNav,
   tabsProps,
+  useBorder = false,
   useBreadcrumbs = true
 }: BasePageProps) => {
   const [tab, setTab] = React.useState(0);
   const hideHeader = !title && !description && !rightSideItems;
   const showHeader = !hideHeader;
+  const showBorder = useBorder && (subNav || showHeader);
 
   const handleChange = useCallback((event: React.SyntheticEvent, newValue: number) => {
     setTab(newValue);
@@ -57,67 +60,63 @@ export const BasePage = ({
   return (
     <ScrollShadowWrapper>
       <Box
+        flexDirection="column"
+        display="flex"
+        flexGrow={1}
+        width="100%"
+        height="100%"
+        maxWidth="100%"
+        maxHeight="100%"
+        gap={'24px'}
         sx={{
-          padding: '24px 16px 64px 16px',
+          padding: '24px 32px 48px 32px',
           overflow: 'hidden scroll',
           ...containerProps?.sx
         }}
         {...containerProps}
       >
-        {useBreadcrumbs && breadcrumbs ? (
+        {useBreadcrumbs && breadcrumbs && (
           <Box display="flex" justifyContent="space-between" alignItems="center" maxWidth="100%" overflow="hidden">
-            <Breadcrumbs items={breadcrumbs} />
+            <Breadcrumbs sx={{marginBottom: 0}} items={breadcrumbs} />
           </Box>
-        ) : null}
+        )}
         <Box>
           {showHeader && (
             <Box
               display="flex"
               flexDirection="column"
               justifyContent="space-between"
-              gap={1}
-              pb={1}
-              mb={1}
-              borderBottom={!subNav ? 1 : 0}
+              pb={showBorder ? 2 : 0}
+              borderBottom={showBorder ? 1 : 0}
               borderColor="divider"
             >
-              <Box display="flex" justifyContent="space-between" flexWrap="wrap" gap={1}>
-                <Box display="flex" flexDirection="column" gap={0.5} flexGrow={1}>
+              <Box display="flex" justifyContent="space-between" flexWrap="wrap">
+                <Box display="flex" flexDirection="column" gap="8px" flexGrow={1}>
                   <Typography variant="h5" component="h1" fontWeight="bold" sx={(theme) => ({color: theme.palette.vars.baseTextStrong})}>
                     {title}
                   </Typography>
                   {description && <Typography variant="body2">{description}</Typography>}
                 </Box>
                 {rightSideItems && (
-                  <Box display="flex" gap={2} flexWrap="wrap">
+                  <Box display="flex" gap="8px" flexWrap="wrap">
                     {rightSideItems}
                   </Box>
                 )}
               </Box>
             </Box>
           )}
-          <Box
-            sx={{
-              maxWidth: '100%',
-              flexGrow: 1,
-              display: 'flex',
-              flexDirection: 'column',
-              height: 'auto'
-            }}
-            display="flex"
-            justifyContent="space-between"
-            flexWrap="wrap"
-            gap={2.5}
-          >
-            {subNav && (
-              <Tabs value={tab} onChange={handleChange} role="navigation" {...tabsProps}>
-                {subNav.map((item, idx) => {
-                  return <Tab key={`item-tab-${idx}`} component={Link} aria-current={item.selected && 'page'} {...item} to={item.href || '#'} />;
-                })}
-              </Tabs>
-            )}
-            {children}
-          </Box>
+        </Box>
+        <Box display="flex" justifyContent="space-between" flexDirection="column" flexWrap="wrap" maxWidth="100%" flexGrow={1} height="auto">
+          {subNav && (
+            <Tabs value={tab} onChange={handleChange} role="navigation" {...tabsProps}>
+              {subNav.map((item, idx) => {
+                return <Tab key={`item-tab-${idx}`} component={Link} aria-current={item.selected && 'page'} {...item} to={item.href || '#'} />;
+              })}
+            </Tabs>
+          )}
+        </Box>
+        <Box width="100%" height="100%">
+          {children}
         </Box>
       </Box>
     </ScrollShadowWrapper>

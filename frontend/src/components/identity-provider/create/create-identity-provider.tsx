@@ -131,7 +131,7 @@ const FormStepperComponent = () => {
   }, [handleSave, handleSelectProvider, methods]);
 
   return (
-    <Card>
+    <>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="mt-1">
           <StepperPanel className="w-full">
@@ -181,6 +181,6 @@ const FormStepperComponent = () => {
           </StepperPanel>
         </form>
       </Form>
-    </Card>
+    </>
   );
 };
