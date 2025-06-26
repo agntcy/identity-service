@@ -56,7 +56,7 @@ jobs:
 
   ################################## Docker build & push ##########################
   ################################################################################# 
-  call-docker-build-push:
+  call-docker-build-push-backend:
     name: Call Docker Build
     needs: [ checkout-unit-tests ]
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/build-push-docker.yaml@production
@@ -91,7 +91,7 @@ jobs:
 
   ################################# Corona & blackduck ###########################
   ################################################################################ 
-  call-corona-blackduck-scan:
+  call-corona-blackduck-scan-backend:
     name: Call Corona & Blackduck scan
     needs: [ call-docker-build-push ]
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/corona-blackduck-scan.yaml@production
@@ -120,4 +120,72 @@ jobs:
       ghcr-org-registry: ${{ vars.GHCR_REGISTRY }}
       # optional
       image-name: "${{ github.event.repository.name }}"
+      image-tag: " "
+
+  ################################## Docker build & push ##########################
+  ################################################################################# 
+  call-docker-build-push-ui:
+    name: Call Docker Build
+    needs: [ checkout-unit-tests ]
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/build-push-docker.yaml@production
+
+    secrets:
+      # Only needed if with:ecr-enabled or with:gar-enabled is true below
+      vault-approle-role-id: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
+      vault-approle-secret-id: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
+      ghcr-username: ${{ secrets.GHCR_USERNAME }}
+      ghcr-token: ${{ secrets.GHCR_TOKEN }}
+      ghcr-org-token: ${{ secrets.GHCR_TOKEN }}
+    
+    with:
+      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      ### REQUIRED 
+      ### Docker image name
+      image-name: "${{ github.event.repository.name }}-ui"
+
+      ### path to where docker should copy files into image
+      ### defaults to root of repository (.)
+      context: ./frontend
+
+      ### Dockerfile alternate name. Default is Dockerfile (relative to context path)
+      dockerfile: deployments/docker/frontend/Dockerfile
+      ### REQUIRED
+      ### ENABLE ONE OR BOTH REGISTRIES
+      ### tell docker where to push.
+      ecr-enabled: true
+      artifactory-devhub-enabled: false
+      ghcr-enabled: true
+      ghcr-org-registry: ${{ vars.GHCR_REGISTRY }}
+
+  ################################# Corona & blackduck ###########################
+  ################################################################################ 
+  call-corona-blackduck-scan-ui:
+    name: Call Corona & Blackduck scan
+    needs: [ call-docker-build-push ]
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/corona-blackduck-scan.yaml@production
+
+    secrets:
+      vault-approle-role-id: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
+      vault-approle-secret-id: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
+      # GHCR Login for docker build runner
+      ghcr-username: ${{ secrets.GHCR_USERNAME }}
+      ghcr-token: ${{ secrets.GHCR_TOKEN }}
+      # GHCR Login for docker scan
+      ghcr-org-username: ${{ secrets.GHCR_USERNAME }}
+      ghcr-org-token: ${{ secrets.GHCR_TOKEN }}
+    
+    with:
+      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      enable-corona: true
+      enable-blackduck: false
+      corona-product-name: ${{ vars.CORONA_PRODUCT_NAME }}
+      corona-product-id: ${{ vars.CORONA_PRODUCT_ID }}
+      corona-release-id: ${{ vars.CORONA_RELEASE_ID }}
+      corona-csdl-id: ${{ vars.CORONA_CSDL_ID }}
+      corona-security-contact: ${{ vars.CORONA_SECURITY_CONTACT }}
+      corona-engineering-contact: ${{ vars.CORONA_ENGINEERING_CONTACT }}
+      corona-image-admins: ${{ vars.CORONA_IMAGE_ADMINS }}
+      ghcr-org-registry: ${{ vars.GHCR_REGISTRY }}
+      # optional
+      image-name: "${{ github.event.repository.name }}-ui"
       image-tag: " "
