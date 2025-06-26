@@ -5437,9 +5437,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"identity-ui@workspace:.":
+"identity-frontend@workspace:.":
   version: 0.0.0-use.local
-  resolution: "identity-ui@workspace:."
+  resolution: "identity-frontend@workspace:."
   dependencies:
     "@emotion/react": "npm:^11.14.0"
     "@emotion/styled": "npm:^11.14.0"

@@ -5,7 +5,7 @@ services:
     image: identity-ui
     build:
       context: ../../../
-      dockerfile: deployments/docker/ui/Dockerfile
+      dockerfile: deployments/docker/frontend/Dockerfile
     restart: always
     ports:
       - "5500:5500"
