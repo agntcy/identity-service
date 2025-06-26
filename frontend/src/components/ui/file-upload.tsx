@@ -62,7 +62,20 @@ export const FileUpload = (props: InputProps) => {
           <Typography variant="caption" color="#59616B">
             JSON (max. 3MB)
           </Typography>
-          <Input {...props} id="file" type="file" placeholder="File" accept=".json" className="hidden" onChange={handleFileChange} />
+          <Input
+            {...props}
+            id="file"
+            type="file"
+            placeholder="File"
+            accept=".json"
+            className="hidden"
+            onChange={(e) => {
+              handleFileChange(e);
+              if (props.onChange) {
+                props.onChange(e);
+              }
+            }}
+          />
         </>
       ) : (
         <>

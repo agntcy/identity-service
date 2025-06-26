@@ -9,7 +9,7 @@ import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-render
 import {useGetSettings} from '@/queries';
 import {PATHS} from '@/router/paths';
 import {IdpType} from '@/types/api/settings';
-import {Button} from '@outshift/spark-design';
+import {Button, Skeleton} from '@outshift/spark-design';
 import {CheckIcon, PlusIcon} from 'lucide-react';
 import {useMemo} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
@@ -33,12 +33,16 @@ const AgentServices: React.FC = () => {
               Verify Identity
             </Button>
           </Link>
-          {!isEmptyIdp && (
-            <Link to={PATHS.agenticServices.create}>
-              <Button startIcon={<PlusIcon className="w-4 h-4" />} variant="primary" sx={{fontWeight: '600 !important'}}>
-                Add Agentic Service
-              </Button>
-            </Link>
+          {isLoading || isFetching ? (
+            <Skeleton width={160} height={56} />
+          ) : (
+            !isEmptyIdp && (
+              <Link to={PATHS.agenticServices.create}>
+                <Button startIcon={<PlusIcon className="w-4 h-4" />} variant="primary" sx={{fontWeight: '600 !important'}}>
+                  Add Agentic Service
+                </Button>
+              </Link>
+            )
           )}
         </div>
       }

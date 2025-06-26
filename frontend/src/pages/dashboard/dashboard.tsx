@@ -7,19 +7,13 @@ import {Button, Link, Typography} from '@outshift/spark-design';
 import EmptyState from '@/assets/empty-state.svg';
 import {CheckIcon, PlusIcon} from 'lucide-react';
 import ScrollShadowWrapper from '@/components/ui/scroll-shadow-wrapper';
-import {useNavigate} from 'react-router-dom';
-import {useCallback} from 'react';
 import {PATHS} from '@/router/paths';
 import {useAuth} from '@/hooks';
+import {Link as RouterLink} from 'react-router-dom';
 import '@/styles/dashboard.css';
 
 const Dashboard: React.FC = () => {
   const {authInfo} = useAuth();
-  const navigate = useNavigate();
-
-  const goToIdentity = useCallback(() => {
-    void navigate(PATHS.settings.identityProvider);
-  }, [navigate]);
 
   return (
     <ScrollShadowWrapper>
@@ -70,37 +64,36 @@ const Dashboard: React.FC = () => {
               <div className="bg-[#FBFCFE] rounded-[8px] flex-col flex justify-center items-center px-20 w-[50%] pt-[40px] pb-[24px]">
                 <div>
                   <Typography variant="h6" textAlign="center">
-                    Verify identities
+                    Verify Identities
                   </Typography>
                   <Typography variant="body1" marginTop={2} textAlign="center">
                     Begin verifying your MCP servers, agents, and A2A identities to ensure secure communication and proper authentication across your
                     environment.
                   </Typography>
                   <div className="flex justify-center items-center mt-8">
-                    <Button variant="outlined" sx={{fontWeight: '600 !important'}} startIcon={<CheckIcon className="w-4 h-4" />}>
-                      Verify identity
-                    </Button>
+                    <RouterLink to={PATHS.agenticServices.verifyIdentity}>
+                      <Button variant="outlined" sx={{fontWeight: '600 !important'}} startIcon={<CheckIcon className="w-4 h-4" />}>
+                        Verify Identity
+                      </Button>
+                    </RouterLink>
                   </div>
                 </div>
               </div>
               <div className="bg-[#FBFCFE] rounded-[8px] flex-col flex justify-center items-center px-20 w-[50%] pt-[40px] pb-[24px]">
                 <div>
                   <Typography variant="h6" textAlign="center">
-                    Create identities
+                    Create Identities
                   </Typography>
                   <Typography variant="body1" marginTop={2} textAlign="center">
                     Start adding agents (MCP servers, agents, and A2A) to create and manage identities, apply tool-based access control and policies
                     effectively.
                   </Typography>
                   <div className="flex justify-center items-center mt-8">
-                    <Button
-                      variant="outlined"
-                      sx={{fontWeight: '600 !important'}}
-                      startIcon={<PlusIcon className="w-4 h-4" />}
-                      onClick={goToIdentity}
-                    >
-                      Create
-                    </Button>
+                    <RouterLink to={PATHS.settings.identityProvider}>
+                      <Button variant="outlined" sx={{fontWeight: '600 !important'}} startIcon={<PlusIcon className="w-4 h-4" />}>
+                        Create
+                      </Button>
+                    </RouterLink>
                   </div>
                 </div>
               </div>

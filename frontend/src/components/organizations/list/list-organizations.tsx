@@ -17,7 +17,7 @@ import {useAuth} from '@/hooks';
 import {generatePath, useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
 import {useDeleteTenant} from '@/mutations';
-import { ConfirmModal } from '@/components/ui/confirm-modal';
+import {ConfirmModal} from '@/components/ui/confirm-modal';
 
 export const ListOrganizations = () => {
   const [pagination, setPagination] = useState<MRT_PaginationState>({
@@ -57,13 +57,10 @@ export const ListOrganizations = () => {
     }
   });
 
-  const handleClickOnDelete = useCallback(
-    () => {
-      deleteTenantMutation.mutate(tenantId! || '');
-      setTenantId(undefined);
-    },
-    [deleteTenantMutation, tenantId]
-  );
+  const handleClickOnDelete = useCallback(() => {
+    deleteTenantMutation.mutate(tenantId! || '');
+    setTenantId(undefined);
+  }, [deleteTenantMutation, tenantId]);
 
   return (
     <>
@@ -139,7 +136,11 @@ export const ListOrganizations = () => {
       <ConfirmModal
         open={openActionsModal}
         title="Delete Organization"
-        description={<>Are you sure you want to delete this organization <b>{tenantId}</b>? This action cannot be undone.</>}
+        description={
+          <>
+            Are you sure you want to delete this organization <b>{tenantId}</b>? This action cannot be undone.
+          </>
+        }
         confirmButtonText="Delete"
         onCancel={() => setTenantId(undefined)}
         onConfirm={handleClickOnDelete}
