@@ -22,6 +22,7 @@ import (
 	identitycore "github.com/agntcy/identity-platform/internal/core/identity"
 	idpcore "github.com/agntcy/identity-platform/internal/core/idp"
 	"github.com/agntcy/identity-platform/internal/core/issuer"
+	policycore "github.com/agntcy/identity-platform/internal/core/policy"
 	policypg "github.com/agntcy/identity-platform/internal/core/policy/postgres"
 	settingspg "github.com/agntcy/identity-platform/internal/core/settings/postgres"
 	"github.com/agntcy/identity-platform/internal/pkg/grpcutil"
@@ -201,6 +202,8 @@ func main() {
 
 	// OIDC Authenticator
 	oidcAuthenticator := oidc.NewAuthenticator()
+	a2aClient := badgea2a.NewDiscoveryClient()
+	mcpClient := badgemcp.NewDiscoveryClient()
 
 	// Identity service
 	identityService := identitycore.NewService(
@@ -209,9 +212,7 @@ func main() {
 		keyStore,
 		oidcAuthenticator,
 	)
-
-	a2aClient := badgea2a.NewDiscoveryClient()
-	mcpClient := badgemcp.NewDiscoveryClient()
+	taskService := policycore.NewTaskService(mcpClient, policyRepository)
 
 	// Create internal services
 	appSrv := bff.NewAppService(
@@ -241,6 +242,7 @@ func main() {
 		keyStore,
 		identityService,
 		credentialStore,
+		taskService,
 	)
 	authSrv := bff.NewAuthService(
 		authRepository,

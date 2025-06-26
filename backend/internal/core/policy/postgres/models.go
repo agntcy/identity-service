@@ -10,12 +10,24 @@ import (
 )
 
 type Task struct {
-	ID       string `gorm:"primaryKey"`
-	TenantID string `gorm:"not null;type:varchar(256);index"`
-	Name     string
-	AppID    string
-	App      app.App `gorm:"foreignKey:AppID"`
-	ToolName string
+	ID          string `gorm:"primaryKey"`
+	TenantID    string `gorm:"not null;type:varchar(256);index"`
+	Name        string
+	Description string
+	AppID       string
+	App         app.App `gorm:"foreignKey:AppID"`
+	ToolName    string
+	Rules       []*Rule `gorm:"many2many:rule_tasks;"`
+}
+
+func (t *Task) ToCoreType() *types.Task {
+	return &types.Task{
+		ID:          t.ID,
+		Name:        t.Name,
+		Description: t.Description,
+		AppID:       t.AppID,
+		ToolName:    t.ToolName,
+	}
 }
 
 type Rule struct {

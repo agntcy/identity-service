@@ -19,31 +19,31 @@ type Badge struct {
 // [here]: https://www.w3.org/TR/vc-data-model/
 type VerifiableCredential struct {
 	// https://www.w3.org/TR/vc-data-model/#contexts
-	Context []string `json:"context"`
+	Context []string `json:"context" protobuf:"bytes,1,opt,name=context"`
 
 	// https://www.w3.org/TR/vc-data-model/#dfn-type
-	Type []string `json:"type"`
+	Type []string `json:"type" protobuf:"bytes,2,opt,name=type"`
 
 	// https://www.w3.org/TR/vc-data-model/#issuer
-	Issuer string `json:"issuer"`
+	Issuer string `json:"issuer" protobuf:"bytes,3,opt,name=issuer"`
 
 	// https://www.w3.org/TR/vc-data-model/#credential-subject
-	CredentialSubject *BadgeClaims `json:"credential_subject"`
+	CredentialSubject *BadgeClaims `json:"credentialSubject" protobuf:"google.protobuf.Struct,4,opt,name=content"`
 
 	// https://www.w3.org/TR/vc-data-model/#identifiers
-	ID string `json:"id,omitempty"`
+	ID string `json:"id,omitempty" protobuf:"bytes,5,opt,name=id"`
 
 	// https://www.w3.org/TR/vc-data-model/#issuance-date
-	IssuanceDate string `json:"issuance_date"`
+	IssuanceDate string `json:"issuanceDate" protobuf:"bytes,6,opt,name=issuance_date"`
 
 	// https://www.w3.org/TR/vc-data-model/#expiration
-	ExpirationDate string `json:"expiration_date,omitempty"`
+	ExpirationDate string `json:"expirationDate,omitempty" protobuf:"bytes,7,opt,name=expiration_date"`
 
 	// https://www.w3.org/TR/vc-data-model-2.0/#data-schemas
-	CredentialSchema []*CredentialSchema `json:"credential_schema,omitempty"`
+	CredentialSchema []*CredentialSchema `json:"credentialSchema,omitempty" protobuf:"bytes,8,opt,name=credential_schema"`
 
 	// https://w3id.org/security#proof
-	Proof *Proof `json:"proof,omitempty"`
+	Proof *Proof `json:"proof,omitempty" protobuf:"bytes,9,opt,name=proof"`
 }
 
 // BadgeClaims represents the content of a Badge VC defined [here]
@@ -75,13 +75,13 @@ type CredentialSchema struct {
 // parameters required to verify that proof, and the proof value itself.
 type Proof struct {
 	// The type of the proof
-	Type string `json:"type"`
+	Type string `json:"type" protobuf:"bytes,1,opt,name=type"`
 
 	// The proof purpose
-	ProofPurpose string `json:"proof_purpose"`
+	ProofPurpose string `json:"proofPurpose" protobuf:"bytes,2,opt,name=proof_purpose"`
 
 	// The proof value
-	ProofValue string `json:"proof_value"`
+	ProofValue string `json:"proofValue" protobuf:"bytes,3,opt,name=proof_value"`
 }
 
 const JoseProof = "jwt"

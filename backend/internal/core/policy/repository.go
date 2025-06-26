@@ -12,4 +12,8 @@ import (
 type Repository interface {
 	Create(ctx context.Context, policy *types.Policy) error
 	CreateRule(ctx context.Context, rule *types.Rule) error
+	CreateTasks(ctx context.Context, tasks ...*types.Task) error
+	UpdateTasks(ctx context.Context, tasks ...*types.Task) error
+	DeleteTasks(ctx context.Context, tasks ...*types.Task) error
+	GetTasksByAppID(ctx context.Context, appID string) ([]*types.Task, error)
 }
