@@ -39,8 +39,7 @@ func (r *postgresRepository) Create(
 ) (*types.Session, error) {
 	model := newSessionModel(session)
 
-	// Generate and id and a new auth code
-	model.ID = uuid.NewString()
+	// Generate a new auth code
 	model.AuthorizationCode = ptrutil.Ptr(strutil.Random(codeLength))
 
 	// Add expiration time
@@ -116,6 +115,7 @@ func (r *postgresRepository) GetByAccessToken(
 
 func (r *postgresRepository) Update(ctx context.Context, session *types.Session) error {
 	model := newSessionModel(session)
+	model.ID = uuid.MustParse(session.ID)
 
 	result := r.dbContext.Client().Save(model)
 	if result.Error != nil {
