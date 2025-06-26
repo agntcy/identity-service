@@ -18,13 +18,6 @@ permissions:
   packages: write # needed to push docker image to gar or ecr
 
 jobs:
-  fetch-secrets:
-    runs-on: ubuntu-latest
-    outputs:
-      artifactory_password: ${{ steps.get_password.outputs.password }}
-    steps:
-      - id: get_password
-        run: echo "password=${{ secrets.ARTIFACTORY_PASSWORD }}" >> $GITHUB_OUTPUT
   ################################## checkout & unit tests ######################
   ###############################################################################
   checkout-unit-tests:
@@ -134,7 +127,7 @@ jobs:
   call-docker-build-push-ui:
     name: Call Docker Build
     needs: [ checkout-unit-tests, fetch-secrets ]
-    uses: cisco-eti/gh-reusable-workflows/.github/workflows/build-push-docker.yaml@production
+    uses: ./.github/workflows/build-push-docker.yaml
 
     secrets:
       # Only needed if with:ecr-enabled or with:gar-enabled is true below
@@ -143,6 +136,7 @@ jobs:
       ghcr-username: ${{ secrets.GHCR_USERNAME }}
       ghcr-token: ${{ secrets.GHCR_TOKEN }}
       ghcr-org-token: ${{ secrets.GHCR_TOKEN }}
+      artifactory_password: ${{ secrets.ARTIFACTORY_PASSWORD }}
     
     with:
       runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
@@ -163,7 +157,6 @@ jobs:
       artifactory-devhub-enabled: false
       ghcr-enabled: true
       ghcr-org-registry: ${{ vars.GHCR_REGISTRY }}
-      build-args: "--build-arg ARTIFACTORY_PASSWORD=${{ needs.fetch-secrets.outputs.artifactory_password }}"
 
   ################################# Corona & blackduck ###########################
   ################################################################################ 
