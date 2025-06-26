@@ -15,7 +15,7 @@ import {AppType} from '@/types/api/app';
 import KeyValue, {KeyValuePair} from '@/components/ui/key-value';
 import {AgenticServiceType} from '@/components/shared/agentic-service-type';
 
-export const VerificationResults = ({isLoading = false}: {isLoading?: boolean}) => {
+export const VerificationResults = () => {
   // const methods = useStepper();
   // const metaData = methods.getMetadata('uploadBadge') as AgenticServiceFormValues | undefined;
 
@@ -47,14 +47,6 @@ export const VerificationResults = ({isLoading = false}: {isLoading?: boolean}) 
   //   }
   //   return temp;
   // }, [description, mcpServer, name, type]);
-
-  // if (isLoading) {
-  //   return (
-  //     <Card className="text-start py-4 bg-[#F5F8FD] rounded-[8px] p-[24px] space-y-4" variant="secondary">
-  //       <LoaderRelative />
-  //     </Card>
-  //   );
-  // }
 
   return (
     <Card className="text-start space-y-6" variant="secondary">

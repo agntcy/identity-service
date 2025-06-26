@@ -12,8 +12,6 @@ import {Form} from '@/components/ui/form';
 import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from '@/components/ui/accordion';
 import {Button, toast, Tooltip, Typography} from '@outshift/spark-design';
 import {validateForm} from '@/lib/utils';
-import {useCreateAgenticService} from '@/mutations';
-import {useNavigate} from 'react-router-dom';
 import {IconButton} from '@mui/material';
 import {InfoIcon} from 'lucide-react';
 import {VerifyIdentityInfo} from './steps/verify-identity-info';
@@ -51,6 +49,11 @@ const FormStepperComponent = () => {
       },
       onError: () => {
         setIsLoading(false);
+        toast({
+          title: 'Error verifying badge',
+          description: 'There was an error verifying the badge. Please try again.',
+          type: 'error'
+        });
       }
     }
   });
@@ -140,14 +143,20 @@ const FormStepperComponent = () => {
                         {step.id === 'uploadBadge' ? (
                           <VerifyIdentityInfo isLoading={isLoading} />
                         ) : (
-                          step.id === 'verficationResults' && <VerificationResults isLoading={isLoading} />
+                          step.id === 'verficationResults' && <VerificationResults />
                         )}
                         <div className="flex justify-between items-center">
                           <Button variant="tertariary" onClick={handleOnClear}>
                             Cancel
                           </Button>
                           <StepperControls className="pt-4">
-                            <Button type="submit" disabled={isLoading || !form.formState.isValid} className="cursor-pointer">
+                            <Button
+                              type="submit"
+                              loading={isLoading}
+                              loadingPosition="start"
+                              disabled={isLoading || !form.formState.isValid}
+                              className="cursor-pointer"
+                            >
                               {methods.isLast ? 'Done' : 'Verify'}
                             </Button>
                           </StepperControls>

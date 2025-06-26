@@ -12,7 +12,6 @@ import {Divider, Typography} from '@outshift/spark-design';
 import {FileUpload} from '@/components/ui/file-upload';
 import {VerifyIdentityFormValues} from '@/schemas/verify-identity-schema';
 import {Textarea} from '@/components/ui/textarea';
-import {LoaderRelative} from '@/components/ui/loading';
 
 export const VerifyIdentityInfo = ({isLoading = false}: {isLoading?: boolean}) => {
   const {control, reset} = useFormContext<VerifyIdentityFormValues>();
@@ -29,14 +28,6 @@ export const VerifyIdentityInfo = ({isLoading = false}: {isLoading?: boolean}) =
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [metaData]);
-
-  if (isLoading) {
-    return (
-      <Card className="text-start py-4 bg-[#F5F8FD] rounded-[8px] p-[24px] space-y-4" variant="secondary">
-        <LoaderRelative />
-      </Card>
-    );
-  }
 
   return (
     <Card className="text-start py-4 rounded-[8px] p-[24px]" variant="secondary">
