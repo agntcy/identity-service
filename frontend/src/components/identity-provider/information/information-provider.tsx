@@ -10,6 +10,7 @@ import {Link, Typography} from '@outshift/spark-design';
 import {useMemo} from 'react';
 import {IdpType, IssuerSettings} from '@/types/api/settings';
 import KeyValue, {KeyValuePair} from '@/components/ui/key-value';
+import {ProviderType} from '@/components/shared/provider-type';
 
 export const InformationProvider = ({idpSettings}: {idpSettings?: IssuerSettings}) => {
   const provider = idpSettings?.idpType;
@@ -24,7 +25,7 @@ export const InformationProvider = ({idpSettings}: {idpSettings?: IssuerSettings
     const temp: KeyValuePair[] = [];
     temp.push({
       keyProp: 'Provider Type',
-      value: labels.providerTypes[provider as keyof typeof labels.providerTypes] || 'Not provided'
+      value: <ProviderType type={provider} />
     });
     if (provider === IdpType.IDP_TYPE_DUO) {
       temp.push({

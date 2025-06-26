@@ -20,7 +20,7 @@ import {useNavigate} from 'react-router-dom';
 
 export const CreateAgenticServiceStepper = () => {
   return (
-    <StepperProvider variant="vertical" className="space-y-4 mt-2">
+    <StepperProvider variant="vertical">
       <FormStepperComponent />
     </StepperProvider>
   );
@@ -113,7 +113,7 @@ const FormStepperComponent = () => {
   return (
     <>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="mt-1">
+        <form onSubmit={form.handleSubmit(onSubmit)}>
           <StepperPanel className="w-full">
             <Accordion type="single" collapsible className="w-full" defaultValue={methods.get('agenticServiceInfo').id} value={methods.current.id}>
               {methods.all.map((step) => {

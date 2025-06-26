@@ -10,7 +10,7 @@ import {PATHS} from '@/router/paths';
 const CreateOrganization: React.FC = () => {
   return (
     <BasePage
-      title="Create organization"
+      title="Create Organization"
       breadcrumbs={[
         {
           text: 'Settings',
@@ -21,9 +21,10 @@ const CreateOrganization: React.FC = () => {
           link: PATHS.settings.organizations.base
         },
         {
-          text: 'Create organization'
+          text: 'Create Organization'
         }
       ]}
+      useBorder
     >
       <CreateOrganizationForm />
     </BasePage>

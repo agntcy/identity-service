@@ -133,7 +133,7 @@ const FormStepperComponent = () => {
   return (
     <>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="mt-1">
+        <form onSubmit={form.handleSubmit(onSubmit)}>
           <StepperPanel className="w-full">
             <Accordion type="single" collapsible className="w-full" defaultValue={methods.get('providerInfo').id} value={methods.current.id}>
               {methods.all.map((step) => {

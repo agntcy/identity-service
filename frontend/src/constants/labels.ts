@@ -8,9 +8,9 @@ import {IdpType} from '@/types/api/settings';
 
 export const labels = {
   appTypes: {
-    [AppType.APP_TYPE_AGENT_OASF]: 'Open Agentic Schema Framework (OASF)',
-    [AppType.APP_TYPE_AGENT_A2A]: 'Application to Application (A2A)',
-    [AppType.APP_TYPE_MCP_SERVER]: 'Model Context Protocol (MCP)'
+    [AppType.APP_TYPE_AGENT_OASF]: 'OASF',
+    [AppType.APP_TYPE_AGENT_A2A]: 'A2A Protocol',
+    [AppType.APP_TYPE_MCP_SERVER]: 'MCP Server'
   },
   providerTypes: {
     [IdpType.IDP_TYPE_OKTA]: 'Okta',

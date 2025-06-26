@@ -13,6 +13,7 @@ import {LoaderRelative} from '@/components/ui/loading';
 import {AgenticServiceFormValues} from '@/schemas/agentic-service-schema';
 import {AppType} from '@/types/api/app';
 import KeyValue, {KeyValuePair} from '@/components/ui/key-value';
+import {AgenticServiceType} from '@/components/shared/agentic-service-type';
 
 export const RegisterAgenticProvider = ({isLoading = false}: {isLoading?: boolean}) => {
   const methods = useStepper();
@@ -35,12 +36,12 @@ export const RegisterAgenticProvider = ({isLoading = false}: {isLoading?: boolea
       },
       {
         keyProp: 'Type',
-        value: labels.appTypes[type as keyof typeof labels.appTypes] || 'Not provided'
+        value: <AgenticServiceType type={type} />
       }
     ];
     if (type === AppType.APP_TYPE_MCP_SERVER) {
       temp.push({
-        keyProp: 'MCP Server',
+        keyProp: 'MCP Server URL',
         value: mcpServer || 'Not provided'
       });
     }

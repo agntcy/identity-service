@@ -7,7 +7,7 @@ import axios, {AxiosError, AxiosHeaders, AxiosInstance, AxiosResponse, InternalA
 import {AuthInfo} from '@/types/okta';
 import {getAuthConfig} from '@/utils/get-auth-config';
 import {httpErrorsAuth} from '@/constants/http-errors';
-import {GetSessionResponse, GetTenantsResponse} from '@/types/api/iam';
+import {GetSessionResponse, GetTenantsResponse, TenantReponse} from '@/types/api/iam';
 
 class IamAPIClass {
   protected authInfo: AuthInfo | null | undefined;
@@ -25,12 +25,33 @@ class IamAPIClass {
     });
   }
 
-  public getTenants = () => {
-    return this.instance.get<GetTenantsResponse>(`/tenant?product=${getAuthConfig().productId}`);
-  };
-
   public getSession = () => {
     return this.instance.get<GetSessionResponse>('/session');
+  };
+
+  public getTenants = () => {
+    return this.instance.get<GetTenantsResponse>('/tenant', {
+      params: {
+        product: getAuthConfig().productId
+      }
+    });
+  };
+
+  public createTenant = () => {
+    return this.instance.post<TenantReponse>('/tenant/user', undefined, {
+      params: {
+        product: getAuthConfig().productId
+      }
+    });
+  };
+
+  public updateTenant = (id: string, name: string) => {
+    const payload = {name};
+    return this.instance.put<TenantReponse>(`/tenant/${id}`, payload);
+  };
+
+  public deleteTenant = (id: string) => {
+    return this.instance.delete<TenantReponse>(`/tenant/${id}`);
   };
 
   protected handleLogout = () => {

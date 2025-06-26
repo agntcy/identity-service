@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {useState} from 'react';
+import {useCallback, useState} from 'react';
 import {ConditionalQueryRenderer} from '../../ui/conditional-query-renderer';
-import {MenuItem, Table} from '@outshift/spark-design';
+import {MenuItem, Table, toast} from '@outshift/spark-design';
 import {useGetTenants} from '@/queries';
 import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
 import {OrganizationsColumns} from './organizations-columns';
@@ -16,6 +16,8 @@ import {cn} from '@/lib/utils';
 import {useAuth} from '@/hooks';
 import {generatePath, useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
+import {useDeleteTenant} from '@/mutations';
+import { ConfirmModal } from '@/components/ui/confirm-modal';
 
 export const ListOrganizations = () => {
   const [pagination, setPagination] = useState<MRT_PaginationState>({
@@ -23,11 +25,45 @@ export const ListOrganizations = () => {
     pageSize: 10
   });
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
+  const [tenantId, setTenantId] = useState<string | undefined>(undefined);
+  const openActionsModal = Boolean(tenantId);
 
   const {data, isLoading, isFetching, refetch, error} = useGetTenants();
-  const {authInfo} = useAuth();
+  const {authInfo, logout} = useAuth();
 
   const navigate = useNavigate();
+
+  const deleteTenantMutation = useDeleteTenant({
+    callbacks: {
+      onSuccess: () => {
+        void logout({
+          revokeAccessToken: true,
+          revokeRefreshToken: true,
+          clearTokensBeforeRedirect: true
+        });
+        toast({
+          title: 'Success',
+          description: 'Organization deleted successfully. You have been logged out.',
+          type: 'success'
+        });
+      },
+      onError: () => {
+        toast({
+          title: 'Error',
+          description: 'An error occurred while deleting the organization. Please try again.',
+          type: 'error'
+        });
+      }
+    }
+  });
+
+  const handleClickOnDelete = useCallback(
+    () => {
+      deleteTenantMutation.mutate(tenantId! || '');
+      setTenantId(undefined);
+    },
+    [deleteTenantMutation, tenantId]
+  );
 
   return (
     <>
@@ -81,13 +117,13 @@ export const ListOrganizations = () => {
                 <MenuItem key="edit" onClick={() => console.info('Edit', row)} sx={{display: 'flex', alignItems: 'center', gap: '8px'}}>
                   <UserRoundPlusIcon className="w-4 h-4" color="#062242" />
                   <Typography variant="body2" color="#1A1F27">
-                    Add user
+                    Add
                   </Typography>
                 </MenuItem>,
-                <MenuItem key="delete" onClick={() => console.info('Delete', row)} sx={{display: 'flex', alignItems: 'center', gap: '8px'}}>
+                <MenuItem key="delete" onClick={() => setTenantId(row.original.id)} sx={{display: 'flex', alignItems: 'center', gap: '8px'}}>
                   <Trash2Icon className="w-4 h-4" color="#C62953" />
                   <Typography variant="body2" color="#C0244C">
-                    Delete organization
+                    Delete
                   </Typography>
                 </MenuItem>
               ];
@@ -100,6 +136,14 @@ export const ListOrganizations = () => {
           />
         </Card>
       </ConditionalQueryRenderer>
+      <ConfirmModal
+        open={openActionsModal}
+        title="Delete Organization"
+        description={<>Are you sure you want to delete this organization <b>{tenantId}</b>? This action cannot be undone.</>}
+        confirmButtonText="Delete"
+        onCancel={() => setTenantId(undefined)}
+        onConfirm={handleClickOnDelete}
+      />
     </>
   );
 };
