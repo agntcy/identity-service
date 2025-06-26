@@ -1584,6 +1584,30 @@
               "defaultValue": ""
             }
           ]
+        },
+        {
+          "name": "VerifyBadgeRequest",
+          "longName": "VerifyBadgeRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.VerifyBadgeRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "badge",
+              "description": "The JOSE enveloped badge to verify.",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
         }
       ],
       "services": [
@@ -1619,13 +1643,13 @@
             {
               "name": "VerifyBadge",
               "description": "Verify a badge.",
-              "requestType": "Badge",
-              "requestLongType": "Badge",
-              "requestFullType": "agntcy.identity.platform.v1alpha1.Badge",
+              "requestType": "VerifyBadgeRequest",
+              "requestLongType": "VerifyBadgeRequest",
+              "requestFullType": "agntcy.identity.platform.v1alpha1.VerifyBadgeRequest",
               "requestStreaming": false,
-              "responseType": "Empty",
-              "responseLongType": ".google.protobuf.Empty",
-              "responseFullType": "google.protobuf.Empty",
+              "responseType": "BadgeClaims",
+              "responseLongType": "BadgeClaims",
+              "responseFullType": "agntcy.identity.platform.v1alpha1.BadgeClaims",
               "responseStreaming": false,
               "options": {
                 "google.api.http": {

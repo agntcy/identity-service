@@ -14,7 +14,6 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -36,7 +35,7 @@ type BadgeServiceClient interface {
 	// Create a new Badge.
 	IssueBadge(ctx context.Context, in *IssueBadgeRequest, opts ...grpc.CallOption) (*Badge, error)
 	// Verify a badge.
-	VerifyBadge(ctx context.Context, in *Badge, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	VerifyBadge(ctx context.Context, in *VerifyBadgeRequest, opts ...grpc.CallOption) (*BadgeClaims, error)
 }
 
 type badgeServiceClient struct {
@@ -57,9 +56,9 @@ func (c *badgeServiceClient) IssueBadge(ctx context.Context, in *IssueBadgeReque
 	return out, nil
 }
 
-func (c *badgeServiceClient) VerifyBadge(ctx context.Context, in *Badge, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *badgeServiceClient) VerifyBadge(ctx context.Context, in *VerifyBadgeRequest, opts ...grpc.CallOption) (*BadgeClaims, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
+	out := new(BadgeClaims)
 	err := c.cc.Invoke(ctx, BadgeService_VerifyBadge_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -76,7 +75,7 @@ type BadgeServiceServer interface {
 	// Create a new Badge.
 	IssueBadge(context.Context, *IssueBadgeRequest) (*Badge, error)
 	// Verify a badge.
-	VerifyBadge(context.Context, *Badge) (*emptypb.Empty, error)
+	VerifyBadge(context.Context, *VerifyBadgeRequest) (*BadgeClaims, error)
 }
 
 // UnimplementedBadgeServiceServer should be embedded to have
@@ -89,7 +88,7 @@ type UnimplementedBadgeServiceServer struct{}
 func (UnimplementedBadgeServiceServer) IssueBadge(context.Context, *IssueBadgeRequest) (*Badge, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method IssueBadge not implemented")
 }
-func (UnimplementedBadgeServiceServer) VerifyBadge(context.Context, *Badge) (*emptypb.Empty, error) {
+func (UnimplementedBadgeServiceServer) VerifyBadge(context.Context, *VerifyBadgeRequest) (*BadgeClaims, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method VerifyBadge not implemented")
 }
 func (UnimplementedBadgeServiceServer) testEmbeddedByValue() {}
@@ -131,7 +130,7 @@ func _BadgeService_IssueBadge_Handler(srv interface{}, ctx context.Context, dec 
 }
 
 func _BadgeService_VerifyBadge_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Badge)
+	in := new(VerifyBadgeRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -143,7 +142,7 @@ func _BadgeService_VerifyBadge_Handler(srv interface{}, ctx context.Context, dec
 		FullMethod: BadgeService_VerifyBadge_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BadgeServiceServer).VerifyBadge(ctx, req.(*Badge))
+		return srv.(BadgeServiceServer).VerifyBadge(ctx, req.(*VerifyBadgeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

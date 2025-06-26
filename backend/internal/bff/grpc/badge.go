@@ -53,15 +53,15 @@ func (s *BadgeService) IssueBadge(
 
 func (s *BadgeService) VerifyBadge(
 	ctx context.Context,
-	in *identity_platform_sdk_go.Badge,
+	in *identity_platform_sdk_go.VerifyBadgeRequest,
 ) (*emptypb.Empty, error) {
-	if in == nil {
+	if in.Badge == nil {
 		return nil, grpcutil.BadRequestError(errors.New("badge or verifiable credential is empty"))
 	}
 
 	err := s.badgeService.VerifyBadge(
 		ctx,
-		converters.ToBadge(in),
+		in.Badge,
 	)
 	if err != nil {
 		return nil, grpcutil.NotFoundError(grpcutil.NotFoundError(errutil.Err(

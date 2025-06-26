@@ -82,7 +82,7 @@ func local_request_BadgeService_IssueBadge_0(ctx context.Context, marshaler runt
 
 func request_BadgeService_VerifyBadge_0(ctx context.Context, marshaler runtime.Marshaler, client BadgeServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq Badge
+		protoReq VerifyBadgeRequest
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -97,7 +97,7 @@ func request_BadgeService_VerifyBadge_0(ctx context.Context, marshaler runtime.M
 
 func local_request_BadgeService_VerifyBadge_0(ctx context.Context, marshaler runtime.Marshaler, server BadgeServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq Badge
+		protoReq VerifyBadgeRequest
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {

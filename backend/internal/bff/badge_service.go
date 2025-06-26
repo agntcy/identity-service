@@ -19,7 +19,6 @@ import (
 	idpcore "github.com/agntcy/identity-platform/internal/core/idp"
 	settingscore "github.com/agntcy/identity-platform/internal/core/settings"
 	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
-	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
 	"github.com/go-playground/validator/v10"
 )
 
@@ -57,8 +56,8 @@ type BadgeService interface {
 	) (*badgetypes.Badge, error)
 	VerifyBadge(
 		ctx context.Context,
-		badge *badgetypes.Badge,
-	) error
+		badge *string,
+	) (*badgetypes.BadgeClaims, error)
 }
 
 type badgeService struct {
@@ -235,15 +234,15 @@ func (s *badgeService) createBadgeClaims(
 
 func (s *badgeService) VerifyBadge(
 	ctx context.Context,
-	badge *badgetypes.Badge,
-) error {
-	if badge == nil || badge.VerifiableCredential.Issuer == "" {
-		return errors.New("badge or verifiable credential is empty")
+	badge *string,
+) (*badgetypes.BadgeClaims, error) {
+	if badge == nil {
+		return nil, errors.New("badge or verifiable credential is empty")
 	}
 
 	// Use the identity service to verify the VC
 	return s.identityService.VerifyVerifiableCredential(
 		ctx,
-		ptrutil.Ptr(badge.VerifiableCredential),
+		badge,
 	)
 }

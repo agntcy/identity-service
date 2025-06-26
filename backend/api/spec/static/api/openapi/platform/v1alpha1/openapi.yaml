@@ -375,12 +375,15 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/Badge'
+                            $ref: '#/components/schemas/VerifyBadgeRequest'
                 required: true
             responses:
                 "200":
                     description: OK
-                    content: {}
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/BadgeClaims'
                 default:
                     description: Default error response
                     content:
@@ -1168,6 +1171,12 @@ components:
                 DataModel represents the W3C Verifiable Credential Data Model defined [here]
 
                  [here]: https://www.w3.org/TR/vc-data-model/
+        VerifyBadgeRequest:
+            type: object
+            properties:
+                badge:
+                    type: string
+                    description: The JOSE enveloped badge to verify.
     headers:
         "":
     securitySchemes:

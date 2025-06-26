@@ -14,6 +14,7 @@ import (
 	idpcore "github.com/agntcy/identity-platform/internal/core/idp"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 	"github.com/agntcy/identity-platform/internal/pkg/httputil"
+	"github.com/agntcy/identity-platform/internal/pkg/jwtutil"
 	"github.com/agntcy/identity-platform/pkg/log"
 	idsdk "github.com/agntcy/identity/api/client/client/id_service"
 	issuersdk "github.com/agntcy/identity/api/client/client/issuer_service"
@@ -26,7 +27,8 @@ import (
 )
 
 const (
-	proofTypeJWT = "JWT"
+	proofTypeJWT      = "JWT"
+	credentialSubject = "credentialSubject"
 )
 
 type Issuer struct {
@@ -55,7 +57,7 @@ type Service interface {
 	) error
 	VerifyVerifiableCredential(
 		ctx context.Context,
-		vc *badgetypes.VerifiableCredential,
+		vc *string,
 	) error
 }
 
@@ -315,29 +317,42 @@ func (s *service) generateProof(
 
 func (s *service) VerifyVerifiableCredential(
 	ctx context.Context,
-	vc *badgetypes.VerifiableCredential,
-) error {
-	if vc == nil || vc.Proof == nil || vc.Proof.ProofValue == "" {
-		return errors.New("verifiable credential or proof is empty")
-	}
-
-	// Get the json representation of the verifiable credential
-	value, err := json.Marshal(vc)
-	if err != nil {
-		return errutil.Err(
-			err,
-			"error marshalling verifiable credential to JSON",
-		)
+	vc *string,
+) (*badgetypes.BadgeClaims, error) {
+	if vc == nil || *vc == "" {
+		return nil, errors.New("verifiable credential is empty")
 	}
 
 	// Verify the proof of the verifiable credential
-	_, err = s.vcClient.VerifyVerifiableCredential(&vcsdk.VerifyVerifiableCredentialParams{
+	_, err := s.vcClient.VerifyVerifiableCredential(&vcsdk.VerifyVerifiableCredentialParams{
 		Body: &identitymodels.V1alpha1VerifyRequest{
 			Vc: &identitymodels.V1alpha1EnvelopedCredential{
-				Value: string(value),
+				Value: *vc,
 			},
 		},
 	})
+	if err != nil {
+		return nil, errutil.Err(
+			err,
+			"error verifying verifiable credential",
+		)
+	}
 
-	return err
+	// Parse the verifiable credential to extract claims
+	claimValue, err := jwtutil.GetClaim(
+		vc,
+		credentialSubject,
+	)
+	if err != nil {
+		return nil, errutil.Err(
+			err,
+			"error extracting credential subject from verifiable credential",
+		)
+	}
+
+	// Unmarshal the claims from the credential subject
+	var claims badgetypes.BadgeClaims
+	err = json.Unmarshal([]byte(*claimValue), &claims)
+
+	return &claims, err
 }
