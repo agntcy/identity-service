@@ -6,33 +6,34 @@ package postgres
 import (
 	"github.com/agntcy/identity-platform/internal/core/settings/types"
 	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
+	"github.com/agntcy/identity-platform/internal/pkg/secrets"
 	"github.com/google/uuid"
 )
 
 type IssuerSettings struct {
-	ID              uuid.UUID     `gorm:"primaryKey;default:gen_random_uuid()"`
-	TenantID        string        `gorm:"not null;type:varchar(256);"`
-	IssuerID        *string       `gorm:"type:varchar(256);"`
-	KeyID           *string       `gorm:"type:varchar(256);"`
-	IdpType         types.IdpType `gorm:"not null;type:uint;default:0;"`
-	DuoIdpSettings  *DuoIdpSettings
-	OktaIdpSettings *OktaIdpSettings
+	ID                uuid.UUID     `gorm:"primaryKey;default:gen_random_uuid()"`
+	TenantID          string        `gorm:"not null;type:varchar(256);"`
+	IssuerID          *string       `gorm:"type:varchar(256);"`
+	KeyID             *string       `gorm:"type:varchar(256);"`
+	IdpType           types.IdpType `gorm:"not null;type:uint;default:0;"`
+	DuoIdpSettingsID  *uuid.UUID    `gorm:"foreignKey:ID"`
+	DuoIdpSettings    *DuoIdpSettings
+	OktaIdpSettingsID *uuid.UUID `gorm:"foreignKey:ID"`
+	OktaIdpSettings   *OktaIdpSettings
 }
 
 type DuoIdpSettings struct {
-	IssuerSettingsID uuid.UUID
-	IssuerSettings   IssuerSettings
-	Hostname         string `gorm:"type:varchar(256);"`
-	IntegrationKey   string `gorm:"type:varchar(256);"`
-	SecretKey        string `gorm:"type:varchar(2048);"`
+	ID             uuid.UUID                `gorm:"primaryKey;default:gen_random_uuid()"`
+	Hostname       string                   `gorm:"type:varchar(256);"`
+	IntegrationKey string                   `gorm:"type:varchar(256);"`
+	SecretKey      *secrets.EncryptedString `gorm:"type:varchar(2048);"`
 }
 
 type OktaIdpSettings struct {
-	IssuerSettingsID uuid.UUID
-	IssuerSettings   IssuerSettings
-	OrgUrl           string `gorm:"type:varchar(256);"`
-	ClientID         string `gorm:"type:varchar(256);"`
-	PrivateKey       string `gorm:"type:varchar(2048);"`
+	ID         uuid.UUID                `gorm:"primaryKey;default:gen_random_uuid()"`
+	OrgUrl     string                   `gorm:"type:varchar(256);"`
+	ClientID   string                   `gorm:"type:varchar(256);"`
+	PrivateKey *secrets.EncryptedString `gorm:"type:varchar(4096);"`
 }
 
 func (i *OktaIdpSettings) ToCoreType() *types.OktaIdpSettings {
@@ -43,7 +44,7 @@ func (i *OktaIdpSettings) ToCoreType() *types.OktaIdpSettings {
 	return &types.OktaIdpSettings{
 		OrgUrl:     i.OrgUrl,
 		ClientID:   i.ClientID,
-		PrivateKey: i.PrivateKey,
+		PrivateKey: ptrutil.DerefStr(secrets.ToString(i.PrivateKey)),
 	}
 }
 
@@ -55,7 +56,7 @@ func (i *DuoIdpSettings) ToCoreType() *types.DuoIdpSettings {
 	return &types.DuoIdpSettings{
 		Hostname:       i.Hostname,
 		IntegrationKey: i.IntegrationKey,
-		SecretKey:      i.SecretKey,
+		SecretKey:      ptrutil.DerefStr(secrets.ToString(i.SecretKey)),
 	}
 }
 
@@ -81,7 +82,7 @@ func newOktaIdpSettingsModel(src *types.OktaIdpSettings) *OktaIdpSettings {
 	return &OktaIdpSettings{
 		OrgUrl:     src.OrgUrl,
 		ClientID:   src.ClientID,
-		PrivateKey: src.PrivateKey,
+		PrivateKey: secrets.FromString(ptrutil.Ptr(src.PrivateKey)),
 	}
 }
 
@@ -93,7 +94,7 @@ func newDuoIdpSettingsModel(src *types.DuoIdpSettings) *DuoIdpSettings {
 	return &DuoIdpSettings{
 		Hostname:       src.Hostname,
 		IntegrationKey: src.IntegrationKey,
-		SecretKey:      src.SecretKey,
+		SecretKey:      secrets.FromString(ptrutil.Ptr(src.SecretKey)),
 	}
 }
 

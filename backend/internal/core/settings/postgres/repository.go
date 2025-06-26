@@ -13,6 +13,7 @@ import (
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 	"github.com/agntcy/identity-platform/pkg/db"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type repository struct {
@@ -90,9 +91,11 @@ func (r *repository) getOrCreateIssuerSettings(
 		)
 	}
 
-	result := r.dbContext.Client().First(&issuerSettings, map[string]any{
-		"tenant_id": tenantID,
-	})
+	result := r.dbContext.Client().
+		Preload(clause.Associations).
+		First(&issuerSettings, map[string]any{
+			"tenant_id": tenantID,
+		})
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 			// Create a new IssuerSettings if not found
