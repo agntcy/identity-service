@@ -84,7 +84,7 @@ jobs:
       ### REQUIRED
       ### ENABLE ONE OR BOTH REGISTRIES
       ### tell docker where to push.
-      ecr-enabled: false
+      ecr-enabled: true
       artifactory-devhub-enabled: false
       ghcr-enabled: true
       ghcr-org-registry: ${{ vars.GHCR_REGISTRY }}
