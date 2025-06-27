@@ -190,3 +190,4 @@ jobs:
       # optional
       image-name: "${{ github.event.repository.name }}-ui"
       #image-tag: "" # By default it will get latest docker tag built
+      
