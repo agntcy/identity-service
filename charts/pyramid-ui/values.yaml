@@ -43,7 +43,7 @@ serviceAccount:
 configMaps:
   # Application Configuration
   VITE_NODE_ENV: ""
-  VITE_API_URL: "http://localhost:4000"
+  VITE_API_URL: "https://api.pyramid-platform.dev.outshift.ai/"
   VITE_APP_CLIENT_PORT: "5500"
   VITE_APP_LOG_LEVEL: ""
   
