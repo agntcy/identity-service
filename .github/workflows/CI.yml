@@ -120,7 +120,7 @@ jobs:
       ghcr-org-registry: ${{ vars.GHCR_REGISTRY }}
       # optional
       image-name: "${{ github.event.repository.name }}"
-      image-tag: " "
+      image-tag: ""
 
   ################################## Docker build & push ##########################
   ################################################################################# 
