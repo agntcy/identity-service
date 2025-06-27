@@ -10,6 +10,7 @@ import (
 	identity_platform_sdk_go "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1"
 	"github.com/agntcy/identity-platform/internal/bff"
 	"github.com/agntcy/identity-platform/internal/bff/grpc/converters"
+	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 	"github.com/agntcy/identity-platform/internal/pkg/grpcutil"
 )
 
@@ -47,4 +48,26 @@ func (s *BadgeService) IssueBadge(
 	}
 
 	return converters.FromBadge(badge), nil
+}
+
+func (s *BadgeService) VerifyBadge(
+	ctx context.Context,
+	in *identity_platform_sdk_go.VerifyBadgeRequest,
+) (*identity_platform_sdk_go.BadgeClaims, error) {
+	if in.Badge == "" {
+		return nil, grpcutil.BadRequestError(errors.New("badge or verifiable credential is empty"))
+	}
+
+	claims, err := s.badgeService.VerifyBadge(
+		ctx,
+		&in.Badge,
+	)
+	if err != nil {
+		return nil, grpcutil.NotFoundError(grpcutil.NotFoundError(errutil.Err(
+			err,
+			"badge verification failed",
+		)))
+	}
+
+	return converters.FromBadgeClaims(claims), nil
 }

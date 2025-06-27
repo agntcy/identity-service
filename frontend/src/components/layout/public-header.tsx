@@ -1,3 +1,8 @@
+/**
+ * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import {Button, Header, Typography} from '@outshift/spark-design';
 import {Link} from 'react-router-dom';
 import Logo from '@/assets/logo-app-bar.svg';

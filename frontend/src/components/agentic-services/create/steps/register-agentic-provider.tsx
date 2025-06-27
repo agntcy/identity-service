@@ -6,15 +6,14 @@
 import {Card, CardContent} from '@/components/ui/card';
 import {ExternalLinkIcon} from 'lucide-react';
 import {useStepper} from '../stepper';
-import {labels} from '@/constants/labels';
 import {Link, Typography} from '@outshift/spark-design';
 import {useMemo} from 'react';
-import {LoaderRelative} from '@/components/ui/loading';
 import {AgenticServiceFormValues} from '@/schemas/agentic-service-schema';
 import {AppType} from '@/types/api/app';
 import KeyValue, {KeyValuePair} from '@/components/ui/key-value';
+import {AgenticServiceType} from '@/components/shared/agentic-service-type';
 
-export const RegisterAgenticProvider = ({isLoading = false}: {isLoading?: boolean}) => {
+export const RegisterAgenticProvider = () => {
   const methods = useStepper();
   const metaData = methods.getMetadata('agenticServiceInfo') as AgenticServiceFormValues | undefined;
 
@@ -35,25 +34,17 @@ export const RegisterAgenticProvider = ({isLoading = false}: {isLoading?: boolea
       },
       {
         keyProp: 'Type',
-        value: labels.appTypes[type as keyof typeof labels.appTypes] || 'Not provided'
+        value: <AgenticServiceType type={type} />
       }
     ];
     if (type === AppType.APP_TYPE_MCP_SERVER) {
       temp.push({
-        keyProp: 'MCP Server',
+        keyProp: 'MCP Server URL',
         value: mcpServer || 'Not provided'
       });
     }
     return temp;
   }, [description, mcpServer, name, type]);
-
-  if (isLoading) {
-    return (
-      <Card className="text-start py-4 bg-[#F5F8FD] rounded-[8px] p-[24px] space-y-4" variant="secondary">
-        <LoaderRelative />
-      </Card>
-    );
-  }
 
   return (
     <Card className="text-start space-y-6" variant="secondary">

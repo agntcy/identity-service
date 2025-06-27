@@ -14,6 +14,9 @@ import React from 'react';
 import {SecureRoute} from '@/components/router/secure-route';
 import {Loading} from '@/components/ui/loading';
 import {BannerProvider} from '@/providers/banner-provider/banner-provider';
+import {IdentityProvider} from '@/providers/identity-provider/identity-provider';
+import {useIdentityProviderStore} from '@/store';
+import {useShallow} from 'zustand/react/shallow';
 
 const Welcome = React.lazy(() => import('@/pages/welcome/welcome'));
 const SettingsIdentityProvider = React.lazy(() => import('@/pages/settings/identity-provider/settings-identity-provider'));
@@ -26,6 +29,8 @@ const OrganizationInfo = React.lazy(() => import('@/pages/settings/organizations
 const AgenticServices = React.lazy(() => import('@/pages/agentic-services/agentic-services'));
 const CreateAgenticService = React.lazy(() => import('@/pages/agentic-services/create-agentic-service'));
 const AccessPolicies = React.lazy(() => import('@/pages/access-policies/access-policies'));
+const VerifyIdentityPrivate = React.lazy(() => import('@/pages/agentic-services/verify-identity-private'));
+const VerifyIdentityPublic = React.lazy(() => import('@/pages/verify-identity/verify-identity-public'));
 
 export const generateRoutes = (routes: Route[]): Route[] => {
   return [
@@ -46,12 +51,22 @@ export const generateRoutes = (routes: Route[]): Route[] => {
       )
     },
     {
+      path: PATHS.verifyIdentity,
+      element: (
+        <NodeRoute>
+          <VerifyIdentityPublic />
+        </NodeRoute>
+      )
+    },
+    {
       path: PATHS.basePath,
       element: (
         <SecureRoute redirectPath={PATHS.welcome}>
           <NodeRoute>
             <BannerProvider>
-              <Layout />
+              <IdentityProvider>
+                <Layout />
+              </IdentityProvider>
             </BannerProvider>
           </NodeRoute>
         </SecureRoute>
@@ -72,7 +87,12 @@ export const generateRoutes = (routes: Route[]): Route[] => {
 };
 
 export const useRoutes = () => {
-  // TODO: create router according to IAM entitlements and Identity Provider
+  const {isEmptyIdp} = useIdentityProviderStore(
+    useShallow((state) => ({
+      isEmptyIdp: state.isEmptyIdp
+    }))
+  );
+
   const routes = useMemo<Route[]>(() => {
     return [
       {
@@ -97,7 +117,12 @@ export const useRoutes = () => {
           },
           {
             path: PATHS.agenticServices.create,
-            element: <CreateAgenticService />
+            element: <CreateAgenticService />,
+            disabled: isEmptyIdp
+          },
+          {
+            path: PATHS.agenticServices.verifyIdentity,
+            element: <VerifyIdentityPrivate />
           },
           {
             path: '*',
@@ -165,7 +190,7 @@ export const useRoutes = () => {
         element: <TermsAndConditions />
       }
     ];
-  }, []);
+  }, [isEmptyIdp]);
 
   const removeDisabledRoutes = useCallback((routes: Route[]): Route[] => {
     return routes

@@ -7,18 +7,21 @@ import * as React from 'react';
 
 import {cn} from '@/lib/utils';
 
-function Textarea({className, ...props}: React.ComponentProps<'textarea'>) {
+export type TextareaProps = React.ComponentProps<'textarea'>;
+
+function Textarea({className, ...props}: TextareaProps) {
   return (
     <textarea
       data-slot="textarea"
       className={cn(
-        'border-input placeholder:text-[#777D85] focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 aria-invalid:border-destructive flex field-sizing-content min-h-16 w-full rounded-md border bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
-        'file:text-foreground placeholder:text-[#777D85] selection:bg-primary selection:text-[#3C4551] border-input flex h-9 w-full min-w-0 rounded-[4px] border bg-input px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
-        'focus-visible:border-ring focus-visible:ring-[#0051AF] focus-visible:ring-[2px]',
-        'aria-invalid:ring-destructive/20 aria-invalid:border-destructive',
+        'file:text-foreground placeholder:text-[#777D85] selection:bg-primary selection:text-[#3C4551] border-input flex min-h-16 w-full rounded-[4px] border bg-input px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
+        'focus-visible:border-[2px] focus-visible:border-[#0051AF]',
+        'aria-invalid:border-[2px] aria-invalid:border-destructive',
         'bg-[#FBFCFE]',
+        'border-[#E8EEFB] border-solid border-[2px]',
         className
       )}
+      autoComplete="off"
       {...props}
     />
   );

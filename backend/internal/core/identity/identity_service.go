@@ -14,6 +14,8 @@ import (
 	idpcore "github.com/agntcy/identity-platform/internal/core/idp"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 	"github.com/agntcy/identity-platform/internal/pkg/httputil"
+	"github.com/agntcy/identity-platform/internal/pkg/jwtutil"
+	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
 	"github.com/agntcy/identity-platform/pkg/log"
 	idsdk "github.com/agntcy/identity/api/client/client/id_service"
 	issuersdk "github.com/agntcy/identity/api/client/client/issuer_service"
@@ -26,7 +28,8 @@ import (
 )
 
 const (
-	proofTypeJWT = "JWT"
+	proofTypeJWT      = "JWT"
+	credentialSubject = "credentialSubject"
 )
 
 type Issuer struct {
@@ -53,6 +56,10 @@ type Service interface {
 		issuer *Issuer,
 		userID string,
 	) error
+	VerifyVerifiableCredential(
+		ctx context.Context,
+		vc *string,
+	) (*badgetypes.BadgeClaims, error)
 }
 
 // The verificationService struct implements the VerificationService interface
@@ -307,4 +314,55 @@ func (s *service) generateProof(
 	proof.ProofValue = proofValue
 
 	return proof, nil
+}
+
+func (s *service) VerifyVerifiableCredential(
+	ctx context.Context,
+	vc *string,
+) (*badgetypes.BadgeClaims, error) {
+	if vc == nil || *vc == "" {
+		return nil, errors.New("verifiable credential is empty")
+	}
+
+	// Verify the proof of the verifiable credential
+	_, err := s.vcClient.VerifyVerifiableCredential(&vcsdk.VerifyVerifiableCredentialParams{
+		Body: &identitymodels.V1alpha1VerifyRequest{
+			Vc: &identitymodels.V1alpha1EnvelopedCredential{
+				EnvelopeType: ptrutil.Ptr(
+					identitymodels.V1alpha1CredentialEnvelopeTypeCREDENTIALENVELOPETYPEJOSE,
+				),
+				Value: *vc,
+			},
+		},
+	})
+	if err != nil {
+		return nil, errutil.Err(
+			err,
+			"error verifying verifiable credential",
+		)
+	}
+
+	log.Debug("Verifiable credential verified successfully")
+
+	// Parse the verifiable credential to extract claims
+	claimValue, err := jwtutil.GetClaim(
+		vc,
+		credentialSubject,
+	)
+	if err != nil {
+		return nil, errutil.Err(
+			err,
+			"error extracting credential subject from verifiable credential",
+		)
+	}
+
+	log.Debug("Extracted credential subject: ", *claimValue)
+
+	// Unmarshal the claims from the credential subject
+	var claims badgetypes.BadgeClaims
+	err = json.Unmarshal([]byte(*claimValue), &claims)
+
+	log.Debug("Unmarshalled claims: ", claims)
+
+	return &claims, err
 }

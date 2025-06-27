@@ -1,3 +1,8 @@
+/**
+ * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 /* eslint-disable */
 /* tslint:disable */
 // @ts-nocheck
@@ -11,7 +16,9 @@
  */
 
 export interface BadgeServiceIssueBadgeBody {
+  /** The A2A badge. */
   a2a?: V1Alpha1IssueA2ABadgeRequest;
+  /** The MCP badge. */
   mcp?: V1Alpha1IssueMcpBadgeRequest;
 }
 
@@ -230,6 +237,11 @@ export interface V1Alpha1VerifiableCredential {
   proof?: V1Alpha1Proof;
 }
 
+export interface V1Alpha1VerifyBadgeRequest {
+  /** The JOSE enveloped badge to verify. */
+  badge?: string;
+}
+
 import type {AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType} from 'axios';
 import axios from 'axios';
 
@@ -372,6 +384,24 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     issueBadge: (appId: string, body: BadgeServiceIssueBadgeBody, params: RequestParams = {}) =>
       this.request<V1Alpha1Badge, RpcStatus>({
         path: `/v1alpha1/apps/${appId}/badges`,
+        method: 'POST',
+        body: body,
+        type: ContentType.Json,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Badge
+     * @name VerifyBadge
+     * @summary Verify a badge
+     * @request POST:/v1alpha1/badges/verify
+     */
+    verifyBadge: (body: V1Alpha1VerifyBadgeRequest, params: RequestParams = {}) =>
+      this.request<V1Alpha1BadgeClaims, RpcStatus>({
+        path: `/v1alpha1/badges/verify`,
         method: 'POST',
         body: body,
         type: ContentType.Json,

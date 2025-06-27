@@ -24,6 +24,7 @@ export interface BasePageProps {
   subNav?: SubNavItem[];
   useBreadcrumbs?: boolean;
   useBorder?: boolean;
+  initialTab?: number;
 }
 
 export const BasePage = ({
@@ -38,7 +39,7 @@ export const BasePage = ({
   useBorder = false,
   useBreadcrumbs = true
 }: BasePageProps) => {
-  const [tab, setTab] = React.useState(0);
+  const [tab, setTab] = React.useState<number | undefined>(undefined);
   const hideHeader = !title && !description && !rightSideItems;
   const showHeader = !hideHeader;
   const showBorder = useBorder && (subNav || showHeader);
@@ -106,7 +107,7 @@ export const BasePage = ({
             </Box>
           )}
         </Box>
-        {subNav && (
+        {subNav && tab !== undefined && (
           <Box display="flex" justifyContent="space-between" flexDirection="column" flexWrap="wrap" maxWidth="100%" flexGrow={1} height="auto">
             <Tabs value={tab} onChange={handleChange} role="navigation" {...tabsProps}>
               {subNav.map((item, idx) => {

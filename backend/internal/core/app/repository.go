@@ -7,6 +7,7 @@ import (
 	"context"
 
 	"github.com/agntcy/identity-platform/internal/core/app/types"
+	"github.com/agntcy/identity-platform/internal/pkg/pagination"
 )
 
 type Repository interface {
@@ -18,4 +19,10 @@ type Repository interface {
 		ctx context.Context,
 		id string,
 	) (*types.App, error)
+	GetAllApps(
+		ctx context.Context,
+		paginationFilter pagination.PaginationFilter,
+		query *string,
+		appType *types.AppType,
+	) (*pagination.Pageable[types.App], error)
 }

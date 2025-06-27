@@ -89,7 +89,11 @@ export const ConditionalQueryRenderer: React.FC<React.PropsWithChildren<Conditio
   const unreadyResult = getUnreadyStateUI();
 
   if (useContainer && unreadyResult) {
-    return <Card className={cn('flex flex-col gap-2 items-center p-[24px] bg-[#F5F8FD]', classNameContainer, useSkeleton)}>{unreadyResult}</Card>;
+    return (
+      <Card className={cn('flex flex-col gap-2 items-center p-[24px] bg-[#F5F8FD]', classNameContainer, useSkeleton)}>
+        <div className="bg-[#FBFCFE] p-[24px] rounded-[8px] w-full h-full">{unreadyResult}</div>
+      </Card>
+    );
   }
 
   if (unreadyResult) {

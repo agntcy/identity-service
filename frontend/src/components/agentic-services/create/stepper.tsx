@@ -20,5 +20,11 @@ export const {StepperProvider, StepperControls, StepperNavigation, StepperStep, 
       title: 'Register Agentic Service',
       description: 'Confirm the registration of the agentic service',
       schema: z.object({})
+    },
+    {
+      id: 'createBadge',
+      title: 'Create Badge',
+      description: 'Create a badge for the agentic service',
+      schema: z.object({})
     }
   );

@@ -15,8 +15,8 @@ services:
       dockerfile: deployments/docker/backend/Dockerfile.bff
     restart: always
     depends_on:
-      - identity-node
       - identity-postgres
+      - identity-node
       - identity-vault
     ports:
       - "4000:4000"

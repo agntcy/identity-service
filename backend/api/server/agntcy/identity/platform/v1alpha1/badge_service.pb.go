@@ -29,8 +29,10 @@ const (
 type IssueBadgeRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// App Id.
-	AppId         string                `protobuf:"bytes,1,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
-	A2A           *IssueA2ABadgeRequest `protobuf:"bytes,2,opt,name=a2a,proto3" json:"a2a,omitempty"`
+	AppId string `protobuf:"bytes,1,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
+	// The A2A badge.
+	A2A *IssueA2ABadgeRequest `protobuf:"bytes,2,opt,name=a2a,proto3" json:"a2a,omitempty"`
+	// The MCP badge.
 	Mcp           *IssueMcpBadgeRequest `protobuf:"bytes,3,opt,name=mcp,proto3" json:"mcp,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -183,6 +185,51 @@ func (x *IssueA2ABadgeRequest) GetWellKnownUrl() string {
 	return ""
 }
 
+type VerifyBadgeRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The JOSE enveloped badge to verify.
+	Badge         string `protobuf:"bytes,1,opt,name=badge,proto3" json:"badge,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *VerifyBadgeRequest) Reset() {
+	*x = VerifyBadgeRequest{}
+	mi := &file_agntcy_identity_platform_v1alpha1_badge_service_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *VerifyBadgeRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*VerifyBadgeRequest) ProtoMessage() {}
+
+func (x *VerifyBadgeRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_agntcy_identity_platform_v1alpha1_badge_service_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use VerifyBadgeRequest.ProtoReflect.Descriptor instead.
+func (*VerifyBadgeRequest) Descriptor() ([]byte, []int) {
+	return file_agntcy_identity_platform_v1alpha1_badge_service_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *VerifyBadgeRequest) GetBadge() string {
+	if x != nil {
+		return x.Badge
+	}
+	return ""
+}
+
 var File_agntcy_identity_platform_v1alpha1_badge_service_proto protoreflect.FileDescriptor
 
 const file_agntcy_identity_platform_v1alpha1_badge_service_proto_rawDesc = "" +
@@ -196,11 +243,14 @@ const file_agntcy_identity_platform_v1alpha1_badge_service_proto_rawDesc = "" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x10\n" +
 	"\x03url\x18\x02 \x01(\tR\x03url\"<\n" +
 	"\x14IssueA2ABadgeRequest\x12$\n" +
-	"\x0ewell_known_url\x18\x01 \x01(\tR\fwellKnownUrl2\xd2\x01\n" +
+	"\x0ewell_known_url\x18\x01 \x01(\tR\fwellKnownUrl\"*\n" +
+	"\x12VerifyBadgeRequest\x12\x14\n" +
+	"\x05badge\x18\x01 \x01(\tR\x05badge2\x8d\x03\n" +
 	"\fBadgeService\x12\xb5\x01\n" +
 	"\n" +
 	"IssueBadge\x124.agntcy.identity.platform.v1alpha1.IssueBadgeRequest\x1a(.agntcy.identity.platform.v1alpha1.Badge\"G\x92A\x1b\x12\rIssue a badge*\n" +
-	"IssueBadge\x82\xd3\xe4\x93\x02#:\x01*\"\x1e/v1alpha1/apps/{app_id}/badges\x1a\n" +
+	"IssueBadge\x82\xd3\xe4\x93\x02#:\x01*\"\x1e/v1alpha1/apps/{app_id}/badges\x12\xb8\x01\n" +
+	"\vVerifyBadge\x125.agntcy.identity.platform.v1alpha1.VerifyBadgeRequest\x1a..agntcy.identity.platform.v1alpha1.BadgeClaims\"B\x92A\x1d\x12\x0eVerify a badge*\vVerifyBadge\x82\xd3\xe4\x93\x02\x1c:\x01*\"\x17/v1alpha1/badges/verify\x1a\n" +
 	"\x92A\a\n" +
 	"\x05BadgeBkZigithub.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_gob\x06proto3"
 
@@ -216,20 +266,24 @@ func file_agntcy_identity_platform_v1alpha1_badge_service_proto_rawDescGZIP() []
 	return file_agntcy_identity_platform_v1alpha1_badge_service_proto_rawDescData
 }
 
-var file_agntcy_identity_platform_v1alpha1_badge_service_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_agntcy_identity_platform_v1alpha1_badge_service_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_agntcy_identity_platform_v1alpha1_badge_service_proto_goTypes = []any{
 	(*IssueBadgeRequest)(nil),    // 0: agntcy.identity.platform.v1alpha1.IssueBadgeRequest
 	(*IssueMcpBadgeRequest)(nil), // 1: agntcy.identity.platform.v1alpha1.IssueMcpBadgeRequest
 	(*IssueA2ABadgeRequest)(nil), // 2: agntcy.identity.platform.v1alpha1.IssueA2ABadgeRequest
-	(*Badge)(nil),                // 3: agntcy.identity.platform.v1alpha1.Badge
+	(*VerifyBadgeRequest)(nil),   // 3: agntcy.identity.platform.v1alpha1.VerifyBadgeRequest
+	(*Badge)(nil),                // 4: agntcy.identity.platform.v1alpha1.Badge
+	(*BadgeClaims)(nil),          // 5: agntcy.identity.platform.v1alpha1.BadgeClaims
 }
 var file_agntcy_identity_platform_v1alpha1_badge_service_proto_depIdxs = []int32{
 	2, // 0: agntcy.identity.platform.v1alpha1.IssueBadgeRequest.a2a:type_name -> agntcy.identity.platform.v1alpha1.IssueA2ABadgeRequest
 	1, // 1: agntcy.identity.platform.v1alpha1.IssueBadgeRequest.mcp:type_name -> agntcy.identity.platform.v1alpha1.IssueMcpBadgeRequest
 	0, // 2: agntcy.identity.platform.v1alpha1.BadgeService.IssueBadge:input_type -> agntcy.identity.platform.v1alpha1.IssueBadgeRequest
-	3, // 3: agntcy.identity.platform.v1alpha1.BadgeService.IssueBadge:output_type -> agntcy.identity.platform.v1alpha1.Badge
-	3, // [3:4] is the sub-list for method output_type
-	2, // [2:3] is the sub-list for method input_type
+	3, // 3: agntcy.identity.platform.v1alpha1.BadgeService.VerifyBadge:input_type -> agntcy.identity.platform.v1alpha1.VerifyBadgeRequest
+	4, // 4: agntcy.identity.platform.v1alpha1.BadgeService.IssueBadge:output_type -> agntcy.identity.platform.v1alpha1.Badge
+	5, // 5: agntcy.identity.platform.v1alpha1.BadgeService.VerifyBadge:output_type -> agntcy.identity.platform.v1alpha1.BadgeClaims
+	4, // [4:6] is the sub-list for method output_type
+	2, // [2:4] is the sub-list for method input_type
 	2, // [2:2] is the sub-list for extension type_name
 	2, // [2:2] is the sub-list for extension extendee
 	0, // [0:2] is the sub-list for field type_name
@@ -247,7 +301,7 @@ func file_agntcy_identity_platform_v1alpha1_badge_service_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_agntcy_identity_platform_v1alpha1_badge_service_proto_rawDesc), len(file_agntcy_identity_platform_v1alpha1_badge_service_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

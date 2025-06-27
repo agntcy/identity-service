@@ -6,6 +6,7 @@
 export const PATHS = {
   basePath: '/',
   welcome: '/welcome',
+  verifyIdentity: '/verify-identity',
   callBackLoading: '/login/callback',
   dashboard: '/dashboard',
   agenticServices: {

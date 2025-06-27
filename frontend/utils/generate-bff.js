@@ -63,7 +63,7 @@ const path = require('path');
 
     // Function to generate code using buf
     function doGenerate(protoPath) {
-      if (shell.exec(`buf generate --template buf.gen.openapiv2.yaml --output ../../../ui --path ${protoPath}`).code !== 0) {
+      if (shell.exec(`buf generate --template buf.gen.openapiv2.yaml --output ../../../frontend --path ${protoPath}`).code !== 0) {
         shell.echo(chalk.red(`Error: buf generate failed for ${protoPath}.`));
         shell.exit(1);
       }
@@ -88,7 +88,7 @@ const path = require('path');
     shell.cd('../../backend/api/spec');
     doGenerateAll();
     shell.cd('../../../');
-    shell.cd('ui');
+    shell.cd('frontend');
     await doRenameAndConvertAll();
     shell.exec('yarn run format');
     shell.echo(chalk.green('Generate bff completed.'));

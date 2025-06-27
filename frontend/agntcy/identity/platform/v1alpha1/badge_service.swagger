@@ -55,6 +55,39 @@
           "Badge"
         ]
       }
+    },
+    "/v1alpha1/badges/verify": {
+      "post": {
+        "summary": "Verify a badge",
+        "operationId": "VerifyBadge",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1alpha1BadgeClaims"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1alpha1VerifyBadgeRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Badge"
+        ]
+      }
     }
   },
   "definitions": {
@@ -62,10 +95,12 @@
       "type": "object",
       "properties": {
         "a2a": {
-          "$ref": "#/definitions/v1alpha1IssueA2ABadgeRequest"
+          "$ref": "#/definitions/v1alpha1IssueA2ABadgeRequest",
+          "description": "The A2A badge."
         },
         "mcp": {
-          "$ref": "#/definitions/v1alpha1IssueMcpBadgeRequest"
+          "$ref": "#/definitions/v1alpha1IssueMcpBadgeRequest",
+          "description": "The MCP badge."
         }
       }
     },
@@ -230,6 +265,15 @@
       },
       "description": "[here]: https://www.w3.org/TR/vc-data-model/",
       "title": "DataModel represents the W3C Verifiable Credential Data Model defined [here]"
+    },
+    "v1alpha1VerifyBadgeRequest": {
+      "type": "object",
+      "properties": {
+        "badge": {
+          "type": "string",
+          "description": "The JOSE enveloped badge to verify."
+        }
+      }
     }
   }
 }
