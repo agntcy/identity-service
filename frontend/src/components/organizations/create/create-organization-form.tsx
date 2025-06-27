@@ -1,3 +1,8 @@
+/**
+ * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import {Card, CardContent} from '@/components/ui/card';
 import {Form, FormControl, FormField, FormItem, FormLabel} from '@/components/ui/form';
 import {Input} from '@/components/ui/input';

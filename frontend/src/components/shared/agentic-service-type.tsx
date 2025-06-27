@@ -1,3 +1,8 @@
+/**
+ * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import {AppType} from '@/types/api/app';
 import {cn} from '@/lib/utils';
 import MCPIcon from '@/assets/types-agentic-services/mcp.svg?react';

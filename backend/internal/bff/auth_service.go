@@ -5,6 +5,7 @@ package bff
 
 import (
 	"context"
+	"time"
 
 	authcore "github.com/agntcy/identity-platform/internal/core/auth"
 	authtypes "github.com/agntcy/identity-platform/internal/core/auth/types"
@@ -173,7 +174,7 @@ func (s *authService) ExtAuthZ(
 		)
 	}
 
-	_, err := s.authRepository.GetByAccessToken(ctx, accessToken)
+	session, err := s.authRepository.GetByAccessToken(ctx, accessToken)
 	if err != nil {
 		return errutil.Err(
 			err,
@@ -186,6 +187,9 @@ func (s *authService) ExtAuthZ(
 
 	// Evaluate the session based on existing policies
 	// TODO: Implement policy evaluation logic here
+
+	// Expire the session
+	session.ExpiresAt = ptrutil.Ptr(time.Now().Add(-time.Hour).Unix())
 
 	return err
 }
