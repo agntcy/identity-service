@@ -189,4 +189,4 @@ jobs:
       ghcr-org-registry: ${{ vars.GHCR_REGISTRY }}
       # optional
       image-name: "${{ github.event.repository.name }}-ui"
-      image-tag: " "
+      image-tag: ""
