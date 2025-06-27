@@ -40,12 +40,12 @@ serviceAccount:
   name: "" 
 
 # values.yaml
-configMaps:
+configmap:
   # Application Configuration
   VITE_NODE_ENV: ""
-  VITE_API_URL: "https://api.pyramid-platform.dev.outshift.ai/"
+  VITE_API_URL: "https://pyramid-platform.dev.outshift.ai/"
   VITE_APP_CLIENT_PORT: "5500"
-  VITE_APP_LOG_LEVEL: ""
+  VITE_APP_LOG_LEVEL: "debug"
   
   # IAM Authentication Configuration
   VITE_IAM_PRODUCT_ID: "a8cdd82d-5891-4f04-8ca6-43d8e748a9d1"

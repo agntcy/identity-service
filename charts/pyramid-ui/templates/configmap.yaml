@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ $.Release.Name }}-configmap-backend
+  name: {{ $.Release.Name }}-configmap-ui
 data:
   {{- range $key, $value := $.Values.configmap }}
   {{ $key }}: {{ $value | quote }}

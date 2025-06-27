@@ -42,6 +42,11 @@ spec:
             - name: http
               containerPort: {{ .Values.service.http.port }}
               protocol: TCP
+          envFrom:
+          - configMapRef:
+              name: {{ .Release.Name }}-configmap-ui
+          - secretRef:
+              name: {{ .Release.Name }}-{{ .Chart.Name }}-secret
           {{- with .Values.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}
