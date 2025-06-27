@@ -16,4 +16,5 @@ type Repository interface {
 	UpdateTasks(ctx context.Context, tasks ...*types.Task) error
 	DeleteTasks(ctx context.Context, tasks ...*types.Task) error
 	GetTasksByAppID(ctx context.Context, appID string) ([]*types.Task, error)
+	GetTasksByID(ctx context.Context, ids []string) ([]*types.Task, error)
 }

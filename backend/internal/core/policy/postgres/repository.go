@@ -172,3 +172,25 @@ func (r *repository) GetTasksByAppID(ctx context.Context, appID string) ([]*type
 		return task.ToCoreType()
 	}), nil
 }
+
+func (r *repository) GetTasksByID(ctx context.Context, ids []string) ([]*types.Task, error) {
+	var tasks []*Task
+
+	tenantID, ok := identitycontext.GetTenantID(ctx)
+	if !ok {
+		return nil, identitycontext.ErrTenantNotFound
+	}
+
+	result := r.dbContext.Client().Where("tenant_id = ?", tenantID).Find(&tasks, ids)
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return nil, errutil.Err(result.Error, "tasks not found")
+		}
+
+		return nil, errutil.Err(result.Error, "there was an error fetching the tasks")
+	}
+
+	return convertutil.ConvertSlice(tasks, func(task *Task) *types.Task {
+		return task.ToCoreType()
+	}), nil
+}

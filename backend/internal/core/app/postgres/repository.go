@@ -141,7 +141,7 @@ func (r *repository) GetAllApps(
 	}, nil
 }
 
-func (r *repository) GetApps(ctx context.Context, ids []string) ([]*types.App, error) {
+func (r *repository) GetAppsByID(ctx context.Context, ids []string) ([]*types.App, error) {
 	var apps []*App
 
 	tenantID, ok := identitycontext.GetTenantID(ctx)

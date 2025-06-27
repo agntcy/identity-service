@@ -11,6 +11,7 @@ import (
 	"github.com/agntcy/identity-platform/internal/bff"
 	"github.com/agntcy/identity-platform/internal/bff/grpc/converters"
 	"github.com/agntcy/identity-platform/internal/pkg/grpcutil"
+	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -32,9 +33,12 @@ func (s *PolicyService) CreatePolicy(
 		return nil, grpcutil.BadRequestError(errors.New("request is empty"))
 	}
 
-	policy := converters.ToPolicy(in.Policy)
-
-	result, err := s.policyService.CreatePolicy(ctx, policy)
+	result, err := s.policyService.CreatePolicy(
+		ctx,
+		in.Name,
+		ptrutil.DerefStr(in.Description),
+		in.AssignedTo,
+	)
 	if err != nil {
 		return nil, grpcutil.BadRequestError(err)
 	}
@@ -50,9 +54,13 @@ func (s *PolicyService) CreateRule(
 		return nil, grpcutil.BadRequestError(errors.New("request is empty"))
 	}
 
-	rule := converters.ToRule(in.Rule)
-
-	result, err := s.policyService.CreateRule(ctx, rule)
+	result, err := s.policyService.CreateRule(
+		ctx,
+		in.Name,
+		ptrutil.DerefStr(in.Description),
+		in.Tasks,
+		ptrutil.Derefrence(in.NeedsApproval, false),
+	)
 	if err != nil {
 		return nil, grpcutil.BadRequestError(err)
 	}

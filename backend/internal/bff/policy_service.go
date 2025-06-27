@@ -18,8 +18,19 @@ import (
 )
 
 type PolicyService interface {
-	CreatePolicy(ctx context.Context, policy *policytypes.Policy) (*policytypes.Policy, error)
-	CreateRule(ctx context.Context, rule *policytypes.Rule) (*policytypes.Rule, error)
+	CreatePolicy(
+		ctx context.Context,
+		name string,
+		description string,
+		assignedTo string,
+	) (*policytypes.Policy, error)
+	CreateRule(
+		ctx context.Context,
+		name string,
+		description string,
+		taskIDs []string,
+		needsApproval bool,
+	) (*policytypes.Rule, error)
 }
 
 type policyService struct {
@@ -39,25 +50,23 @@ func NewPolicyService(
 
 func (s *policyService) CreatePolicy(
 	ctx context.Context,
-	policy *policytypes.Policy,
+	name string,
+	description string,
+	assignedTo string,
 ) (*policytypes.Policy, error) {
-	if policy == nil {
-		return nil, errors.New("request cannot be empty")
+	if name == "" {
+		return nil, errors.New("name cannot be empty")
 	}
 
-	policy.ID = uuid.NewString()
-
-	err := s.validatePolicy(ctx, policy)
+	err := s.validateAppIDs(ctx, assignedTo)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("policy is linked to an invalid app %s", assignedTo)
 	}
 
-	for _, rule := range policy.Rules {
-		rule.ID = uuid.NewString()
-
-		for _, task := range rule.Tasks {
-			task.ID = uuid.NewString()
-		}
+	policy := &policytypes.Policy{
+		ID:          uuid.NewString(),
+		Name:        name,
+		Description: description,
 	}
 
 	err = s.policyRepository.Create(ctx, policy)
@@ -70,21 +79,26 @@ func (s *policyService) CreatePolicy(
 
 func (s *policyService) CreateRule(
 	ctx context.Context,
-	rule *policytypes.Rule,
+	name string,
+	description string,
+	taskIDs []string,
+	needsApproval bool,
 ) (*policytypes.Rule, error) {
-	if rule == nil {
-		return nil, errors.New("rule cannot be empty")
+	if name == "" {
+		return nil, errors.New("name cannot be empty")
 	}
 
-	rule.ID = uuid.NewString()
-
-	err := s.validateRules(ctx, []*policytypes.Rule{rule})
+	tasks, err := s.validateTasks(ctx, taskIDs)
 	if err != nil {
 		return nil, err
 	}
 
-	for _, task := range rule.Tasks {
-		task.ID = uuid.NewString()
+	rule := &policytypes.Rule{
+		ID:            uuid.NewString(),
+		Name:          name,
+		Description:   description,
+		Tasks:         tasks,
+		NeedsApproval: needsApproval,
 	}
 
 	err = s.policyRepository.CreateRule(ctx, rule)
@@ -95,42 +109,25 @@ func (s *policyService) CreateRule(
 	return rule, nil
 }
 
-func (s *policyService) validatePolicy(ctx context.Context, policy *policytypes.Policy) error {
-	err := s.validateAppIDs(ctx, policy.AssignedTo)
+func (s *policyService) validateTasks(ctx context.Context, ids []string) ([]*policytypes.Task, error) {
+	tasks, err := s.policyRepository.GetTasksByID(ctx, ids)
 	if err != nil {
-		return fmt.Errorf("policy is linked to an invalid app %s", policy.AssignedTo)
+		return nil, fmt.Errorf("unable to valiate tasks")
 	}
 
-	return s.validateRules(ctx, policy.Rules)
-}
-
-func (s *policyService) validateRules(ctx context.Context, rules []*policytypes.Rule) error {
-	for _, rule := range rules {
-		err := s.validateTasks(ctx, rule.Tasks)
-		if err != nil {
-			return err
+	for _, id := range ids {
+		if slices.ContainsFunc(tasks, func(task *policytypes.Task) bool {
+			return strings.EqualFold(id, task.ID)
+		}) {
+			return nil, fmt.Errorf("invalid task %s", id)
 		}
 	}
 
-	return nil
-}
-
-func (s *policyService) validateTasks(ctx context.Context, tasks []*policytypes.Task) error {
-	appIDs := make([]string, len(tasks))
-	for idx, task := range tasks {
-		appIDs[idx] = task.AppID
-	}
-
-	err := s.validateAppIDs(ctx, appIDs...)
-	if err != nil {
-		return fmt.Errorf("invalid tasks: %w", err)
-	}
-
-	return nil
+	return tasks, nil
 }
 
 func (s *policyService) validateAppIDs(ctx context.Context, ids ...string) error {
-	apps, err := s.appRepository.GetApps(ctx, ids)
+	apps, err := s.appRepository.GetAppsByID(ctx, ids)
 	if err != nil {
 		return fmt.Errorf("unable to validate the applications: %w", err)
 	}
