@@ -1,3 +1,8 @@
+/**
+ * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import {useGetSettings} from '@/queries';
 import {IdpType} from '@/types/api/settings';
 import {toast} from '@outshift/spark-design';

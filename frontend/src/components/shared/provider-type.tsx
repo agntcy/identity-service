@@ -1,3 +1,8 @@
+/**
+ * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import {cn} from '@/lib/utils';
 import {Typography} from '@mui/material';
 import {labels} from '@/constants/labels';
