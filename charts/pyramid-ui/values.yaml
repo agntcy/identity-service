@@ -1,0 +1,55 @@
+replicaCount: 1
+
+image:
+  repository: 626007623524.dkr.ecr.us-east-2.amazonaws.com/pyramid-platform-ui
+  pullPolicy: IfNotPresent
+  tag: "dev-66465f2"
+
+namespace: pyramid-platform-dev
+imagePullSecrets:
+  - name: regcred
+
+service:
+  type: ClusterIP
+  http:
+    port: 5500
+    targetPort: 5500
+
+ingress:
+  enabled: true
+  className: nginx-internal
+  annotations:
+    http:
+      kubernetes.io/ingress.class: nginx-internal
+      nginx.ingress.kubernetes.io/rewrite-target: /
+      cert-manager.io/cluster-issuer: letsencrypt
+  domainPrefixHttp: pyramid-ui
+  apiDomainName: dev.outshift.ai
+
+externalSecrets:
+  secretStoreName: vault-eticloud-apps-pyramid
+  secretStoreKind: ClusterSecretStore
+  data:
+    - secretKey: ARTIFACTORY_PASSWORD
+      remoteRef:
+        key: dev/pyramid-ui
+        property: ARTIFACTORY_PASSWORD
+
+serviceAccount:
+  create: true # Set to true to create a new ServiceAccount, false to use an existing one
+  name: "" 
+
+# values.yaml
+configMaps:
+  # Application Configuration
+  VITE_NODE_ENV: ""
+  VITE_API_URL: "http://localhost:4000"
+  VITE_APP_CLIENT_PORT: "5500"
+  VITE_APP_LOG_LEVEL: ""
+  
+  # IAM Authentication Configuration
+  VITE_IAM_PRODUCT_ID: "a8cdd82d-5891-4f04-8ca6-43d8e748a9d1"
+  VITE_IAM_OIDC_CLIENT_ID: "0oan4zfvj8pE64t8Y1d7"
+  VITE_IAM_UI: "https://id.staging.eticloud.io"
+  VITE_IAM_API: "https://api.id.staging.eticloud.io/v1alpha1"
+  VITE_IAM_OIDC_ISSUER: "https://idp.preview.eticloud.io/oauth2/default"
