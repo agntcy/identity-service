@@ -1087,6 +1087,8 @@ components:
                 description:
                     type: string
                     description: A human-readable description for the Rule.
+                policyId:
+                    type: string
                 tasks:
                     type: array
                     items:

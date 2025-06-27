@@ -114,10 +114,11 @@ type Rule struct {
 	Name *string `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
 	// A human-readable description for the Rule.
 	Description *string `protobuf:"bytes,3,opt,name=description,proto3,oneof" json:"description,omitempty"`
+	PolicyId    *string `protobuf:"bytes,4,opt,name=policy_id,json=policyId,proto3,oneof" json:"policy_id,omitempty"`
 	// The tasks that this Rule applies to.
-	Tasks []*Task `protobuf:"bytes,4,rep,name=tasks,proto3" json:"tasks,omitempty"`
+	Tasks []*Task `protobuf:"bytes,5,rep,name=tasks,proto3" json:"tasks,omitempty"`
 	// Need User Approval for this Rule.
-	NeedsApproval *bool `protobuf:"varint,5,opt,name=needs_approval,json=needsApproval,proto3,oneof" json:"needs_approval,omitempty"`
+	NeedsApproval *bool `protobuf:"varint,6,opt,name=needs_approval,json=needsApproval,proto3,oneof" json:"needs_approval,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -169,6 +170,13 @@ func (x *Rule) GetName() string {
 func (x *Rule) GetDescription() string {
 	if x != nil && x.Description != nil {
 		return *x.Description
+	}
+	return ""
+}
+
+func (x *Rule) GetPolicyId() string {
+	if x != nil && x.PolicyId != nil {
+		return *x.PolicyId
 	}
 	return ""
 }
@@ -284,16 +292,19 @@ const file_agntcy_identity_platform_v1alpha1_policy_proto_rawDesc = "" +
 	"\x03_idB\a\n" +
 	"\x05_nameB\x0e\n" +
 	"\f_descriptionB\x0e\n" +
-	"\f_assigned_to\"\xf9\x01\n" +
+	"\f_assigned_to\"\xa9\x02\n" +
 	"\x04Rule\x12\x13\n" +
 	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x17\n" +
 	"\x04name\x18\x02 \x01(\tH\x01R\x04name\x88\x01\x01\x12%\n" +
-	"\vdescription\x18\x03 \x01(\tH\x02R\vdescription\x88\x01\x01\x12=\n" +
-	"\x05tasks\x18\x04 \x03(\v2'.agntcy.identity.platform.v1alpha1.TaskR\x05tasks\x12*\n" +
-	"\x0eneeds_approval\x18\x05 \x01(\bH\x03R\rneedsApproval\x88\x01\x01B\x05\n" +
+	"\vdescription\x18\x03 \x01(\tH\x02R\vdescription\x88\x01\x01\x12 \n" +
+	"\tpolicy_id\x18\x04 \x01(\tH\x03R\bpolicyId\x88\x01\x01\x12=\n" +
+	"\x05tasks\x18\x05 \x03(\v2'.agntcy.identity.platform.v1alpha1.TaskR\x05tasks\x12*\n" +
+	"\x0eneeds_approval\x18\x06 \x01(\bH\x04R\rneedsApproval\x88\x01\x01B\x05\n" +
 	"\x03_idB\a\n" +
 	"\x05_nameB\x0e\n" +
-	"\f_descriptionB\x11\n" +
+	"\f_descriptionB\f\n" +
+	"\n" +
+	"_policy_idB\x11\n" +
 	"\x0f_needs_approval\"\xd2\x01\n" +
 	"\x04Task\x12\x13\n" +
 	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x17\n" +

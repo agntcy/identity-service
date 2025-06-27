@@ -35,8 +35,22 @@ type Rule struct {
 	TenantID      string `gorm:"not null;type:varchar(256);index"`
 	Name          string
 	Description   string
+	PolicyID      string
 	Tasks         []*Task `gorm:"many2many:rule_tasks;"`
 	NeedsApproval bool
+}
+
+func (r *Rule) ToCoreType() *types.Rule {
+	return &types.Rule{
+		ID:            r.ID,
+		Name:          r.Name,
+		Description:   r.Description,
+		PolicyID:      r.PolicyID,
+		NeedsApproval: r.NeedsApproval,
+		Tasks: convertutil.ConvertSlice(r.Tasks, func(task *Task) *types.Task {
+			return task.ToCoreType()
+		}),
+	}
 }
 
 type Policy struct {
@@ -46,7 +60,19 @@ type Policy struct {
 	Description string
 	AssignedTo  string
 	App         app.App `gorm:"foreignKey:AssignedTo"`
-	Rules       []*Rule `gorm:"many2many:policy_rules;"`
+	Rules       []*Rule
+}
+
+func (p *Policy) ToCoreType() *types.Policy {
+	return &types.Policy{
+		ID:          p.ID,
+		Name:        p.Name,
+		Description: p.Description,
+		AssignedTo:  p.AssignedTo,
+		Rules: convertutil.ConvertSlice(p.Rules, func(rule *Rule) *types.Rule {
+			return rule.ToCoreType()
+		}),
+	}
 }
 
 func newPolicyModel(src *types.Policy, tenantID string) *Policy {
@@ -68,6 +94,7 @@ func NewRuleModel(src *types.Rule, tenantID string) *Rule {
 		TenantID:      tenantID,
 		Name:          src.Name,
 		Description:   src.Description,
+		PolicyID:      src.PolicyID,
 		NeedsApproval: src.NeedsApproval,
 		Tasks: convertutil.ConvertSlice(src.Tasks, func(task *types.Task) *Task {
 			return newTaskModel(task, tenantID)

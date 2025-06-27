@@ -1909,6 +1909,18 @@
               "defaultValue": ""
             },
             {
+              "name": "policy_id",
+              "description": "",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_policy_id",
+              "defaultValue": ""
+            },
+            {
               "name": "tasks",
               "description": "The tasks that this Rule applies to.",
               "label": "repeated",

@@ -115,7 +115,7 @@ func (r *repository) GetAllApps(
 
 	dbQuery = dbQuery.Session(&gorm.Session{}) // https://gorm.io/docs/method_chaining.html#Reusability-and-Safety
 
-	var apps []*types.App
+	var apps []*App
 
 	err := dbQuery.Scopes(gormutil.Paginate(paginationFilter)).Find(&apps).Error
 	if err != nil {
@@ -128,13 +128,15 @@ func (r *repository) GetAllApps(
 
 	var totalApps int64
 
-	err = dbQuery.Model(&types.App{}).Count(&totalApps).Error
+	err = dbQuery.Model(&App{}).Count(&totalApps).Error
 	if err != nil {
 		return nil, errutil.Err(err, "there was an error fetching the apps")
 	}
 
 	return &pagination.Pageable[types.App]{
-		Items: apps,
+		Items: convertutil.ConvertSlice(apps, func(app *App) *types.App {
+			return app.ToCoreType()
+		}),
 		Total: totalApps,
 		Page:  paginationFilter.GetPage(),
 		Size:  int32(len(apps)),

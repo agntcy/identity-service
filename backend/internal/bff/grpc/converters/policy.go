@@ -16,10 +16,10 @@ func FromPolicy(src *policytypes.Policy) *identity_platform_sdk_go.Policy {
 	}
 
 	return &identity_platform_sdk_go.Policy{
-		Id:          ptrutil.Ptr(string(src.ID)),
-		Name:        ptrutil.Ptr(string(src.Name)),
-		Description: ptrutil.Ptr(string(src.Description)),
-		AssignedTo:  ptrutil.Ptr(string(src.AssignedTo)),
+		Id:          ptrutil.Ptr(src.ID),
+		Name:        ptrutil.Ptr(src.Name),
+		Description: ptrutil.Ptr(src.Description),
+		AssignedTo:  ptrutil.Ptr(src.AssignedTo),
 		Rules:       convertutil.ConvertSlice(src.Rules, FromRule),
 	}
 }
@@ -44,10 +44,10 @@ func FromRule(src *policytypes.Rule) *identity_platform_sdk_go.Rule {
 	}
 
 	return &identity_platform_sdk_go.Rule{
-		Id:            ptrutil.Ptr(string(src.ID)),
-		Name:          ptrutil.Ptr(string(src.Name)),
-		Description:   ptrutil.Ptr(string(src.Description)),
-		NeedsApproval: ptrutil.Ptr(bool(src.NeedsApproval)),
+		Id:            ptrutil.Ptr(src.ID),
+		Name:          ptrutil.Ptr(src.Name),
+		Description:   ptrutil.Ptr(src.Description),
+		NeedsApproval: ptrutil.Ptr(src.NeedsApproval),
 		Tasks:         convertutil.ConvertSlice(src.Tasks, FromTask),
 	}
 }
@@ -72,10 +72,10 @@ func FromTask(src *policytypes.Task) *identity_platform_sdk_go.Task {
 	}
 
 	return &identity_platform_sdk_go.Task{
-		Id:       ptrutil.Ptr(string(src.ID)),
-		Name:     ptrutil.Ptr(string(src.Name)),
-		AppId:    ptrutil.Ptr(string(src.AppID)),
-		ToolName: ptrutil.Ptr(string(src.ToolName)),
+		Id:       ptrutil.Ptr(src.ID),
+		Name:     ptrutil.Ptr(src.Name),
+		AppId:    ptrutil.Ptr(src.AppID),
+		ToolName: ptrutil.Ptr(src.ToolName),
 	}
 }
 

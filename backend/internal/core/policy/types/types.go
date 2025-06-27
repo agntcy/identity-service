@@ -32,6 +32,8 @@ type Rule struct {
 	// A human-readable description for the Rule.
 	Description string `json:"description,omitempty"`
 
+	PolicyID string `json:"policy_id,omitempty"`
+
 	// The tasks that this Rule applies to.
 	Tasks []*Task `json:"tasks,omitempty"`
 

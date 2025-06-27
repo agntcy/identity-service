@@ -36,11 +36,13 @@ message Rule {
   // A human-readable description for the Rule.
   optional string description = 3;
 
+  optional string policy_id = 4;
+
   // The tasks that this Rule applies to.
-  repeated Task tasks = 4;
+  repeated Task tasks = 5;
 
   // Need User Approval for this Rule.
-  optional bool needs_approval = 5;
+  optional bool needs_approval = 6;
 }
 
 // Identity Platform Policy Task
