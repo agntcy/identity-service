@@ -169,7 +169,7 @@ func (s *badgeService) IssueBadge(
 		if err != nil {
 			return nil, fmt.Errorf("error trying to create tasks: %w", err)
 		}
-	case apptypes.APP_TYPE_AGENT_MCP_SERVER:
+	case apptypes.APP_TYPE_MCP_SERVER:
 		_, err = s.taskService.CreateForMCP(ctx, app.ID, in.mcp.Name, in.mcp.Url)
 		if err != nil {
 			return nil, fmt.Errorf("error trying to create tasks: %w", err)

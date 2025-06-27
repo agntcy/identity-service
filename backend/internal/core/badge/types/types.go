@@ -28,7 +28,7 @@ type VerifiableCredential struct {
 	Issuer string `json:"issuer" protobuf:"bytes,3,opt,name=issuer"`
 
 	// https://www.w3.org/TR/vc-data-model/#credential-subject
-	CredentialSubject *BadgeClaims `json:"credentialSubject" protobuf:"google.protobuf.Struct,4,opt,name=content"`
+	CredentialSubject *BadgeClaims `json:"credentialSubject" protobuf:"bytes,4,opt,name=credential_subject"`
 
 	// https://www.w3.org/TR/vc-data-model/#identifiers
 	ID string `json:"id,omitempty" protobuf:"bytes,5,opt,name=id"`

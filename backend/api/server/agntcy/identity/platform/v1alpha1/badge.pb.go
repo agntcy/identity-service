@@ -9,12 +9,11 @@
 package identity_platform_sdk_go
 
 import (
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
-
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -480,11 +479,11 @@ const file_agntcy_identity_platform_v1alpha1_badge_proto_rawDesc = "" +
 	"\x03_idB\x10\n" +
 	"\x0e_issuance_dateB\x12\n" +
 	"\x10_expiration_dateB\b\n" +
-	"\x06_proof*\x84\x01\n" +
-	"\tBadgeType\x12'\n" +
-	"#CREDENTIAL_CONTENT_TYPE_UNSPECIFIED\x10\x00\x12'\n" +
-	"#CREDENTIAL_CONTENT_TYPE_AGENT_BADGE\x10\x01\x12%\n" +
-	"!CREDENTIAL_CONTENT_TYPE_MCP_BADGE\x10\x02BkZigithub.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_gob\x06proto3"
+	"\x06_proof*]\n" +
+	"\tBadgeType\x12\x1a\n" +
+	"\x16BADGE_TYPE_UNSPECIFIED\x10\x00\x12\x1a\n" +
+	"\x16BADGE_TYPE_AGENT_BADGE\x10\x01\x12\x18\n" +
+	"\x14BADGE_TYPE_MCP_BADGE\x10\x02BkZigithub.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_gob\x06proto3"
 
 var (
 	file_agntcy_identity_platform_v1alpha1_badge_proto_rawDescOnce sync.Once
@@ -509,7 +508,7 @@ var file_agntcy_identity_platform_v1alpha1_badge_proto_goTypes = []any{
 	(*VerifiableCredential)(nil), // 5: agntcy.identity.platform.v1alpha1.VerifiableCredential
 }
 var file_agntcy_identity_platform_v1alpha1_badge_proto_depIdxs = []int32{
-	5, // 0: agntcy.identity.platform.v1alpha1.Badge.verifiableCredential:type_name -> agntcy.identity.platform.v1alpha1.VerifiableCredential
+	5, // 0: agntcy.identity.platform.v1alpha1.Badge.verifiable_credential:type_name -> agntcy.identity.platform.v1alpha1.VerifiableCredential
 	2, // 1: agntcy.identity.platform.v1alpha1.VerifiableCredential.credential_subject:type_name -> agntcy.identity.platform.v1alpha1.BadgeClaims
 	3, // 2: agntcy.identity.platform.v1alpha1.VerifiableCredential.credential_schema:type_name -> agntcy.identity.platform.v1alpha1.CredentialSchema
 	4, // 3: agntcy.identity.platform.v1alpha1.VerifiableCredential.proof:type_name -> agntcy.identity.platform.v1alpha1.Proof
