@@ -56,6 +56,7 @@ func (s *appService) ListApps(
 		Size:        req.Size,
 		DefaultSize: defaultPageSize,
 	}
+
 	var appType *apptypes.AppType
 	if req.Type != nil {
 		appType = ptrutil.Ptr(apptypes.AppType(*req.Type))

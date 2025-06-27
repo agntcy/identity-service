@@ -247,7 +247,7 @@ func (c *HttpClient) GetTenantApiKey(ctx context.Context) (ApiKey, error) {
 
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
-		return apiKey, errors.New("missing TenantID in context")
+		return apiKey, identitycontext.ErrTenantNotFound
 	}
 
 	if !c.multitenant {
@@ -280,7 +280,7 @@ func (c *HttpClient) GetAppApiKey(ctx context.Context, appID string) (ApiKey, er
 
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
-		return ApiKey{}, errors.New("missing TenantID in context")
+		return ApiKey{}, identitycontext.ErrTenantNotFound
 	}
 
 	apiKey, err := c.getApiKeyByApp(ctx, appID, tenantID)
@@ -297,7 +297,7 @@ func (c *HttpClient) CreateTenantApiKey(ctx context.Context) (ApiKey, error) {
 
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
-		return apiKey, errors.New("missing TenantID in context")
+		return apiKey, identitycontext.ErrTenantNotFound
 	}
 
 	log.Debug(
@@ -342,7 +342,7 @@ func (c *HttpClient) CreateAppApiKey(
 
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
-		return apiKey, errors.New("missing TenantID in context")
+		return apiKey, identitycontext.ErrTenantNotFound
 	}
 
 	log.Debug(
@@ -374,7 +374,7 @@ func (c *HttpClient) CreateAppApiKey(
 func (c *HttpClient) RevokeTenantApiKey(ctx context.Context) error {
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
-		return errors.New("missing TenantID in context")
+		return identitycontext.ErrTenantNotFound
 	}
 
 	if !c.multitenant {
@@ -407,7 +407,7 @@ func (c *HttpClient) RevokeAppApiKey(ctx context.Context, appID string) error {
 
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
-		return errors.New("missing TenantID in context")
+		return identitycontext.ErrTenantNotFound
 	}
 
 	apiKey, err := c.getApiKeyByApp(ctx, appID, tenantID)
@@ -473,7 +473,7 @@ func (c *HttpClient) createApiKey(
 ) error {
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
-		return errors.New("missing TenantID in context")
+		return identitycontext.ErrTenantNotFound
 	}
 
 	uri := c.url + fmt.Sprintf(IAMApiKeyEndpoint, tenantID)
@@ -560,7 +560,7 @@ func (c *HttpClient) revokeApiKey(
 ) error {
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
-		return errors.New("missing TenantID in context")
+		return identitycontext.ErrTenantNotFound
 	}
 
 	uri := c.url +

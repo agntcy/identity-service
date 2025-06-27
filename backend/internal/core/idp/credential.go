@@ -6,7 +6,6 @@ package idp
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 
 	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
@@ -49,7 +48,7 @@ func (s *VaultCredentialStore) Get(
 ) (*ClientCredentials, error) {
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
-		return nil, errors.New("tenant id not found in context")
+		return nil, identitycontext.ErrTenantNotFound
 	}
 
 	data, err := s.vaultClient.Get(ctx, s.getSecretPath(tenantID, subject))
@@ -79,7 +78,7 @@ func (s *VaultCredentialStore) Put(
 ) error {
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
-		return errors.New("tenant id not found in context")
+		return identitycontext.ErrTenantNotFound
 	}
 
 	raw, err := json.Marshal(cred)
@@ -108,7 +107,7 @@ func (s *VaultCredentialStore) Delete(
 ) error {
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
-		return errors.New("tenant id not found in context")
+		return identitycontext.ErrTenantNotFound
 	}
 
 	err := s.vaultClient.Delete(ctx, s.getSecretPath(tenantID, subject))

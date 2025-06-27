@@ -54,7 +54,7 @@ type App struct {
 	Type AppType `json:"type,omitempty"`
 
 	// The DID value
-	ResolverMetadataID string `json:"resolver_metadata_id,omitempty"`
+	ResolverMetadataID string `json:"resolver_metadata_id,omitempty" protobuf:"-"`
 
 	ApiKey string `json:"api_key"`
 }

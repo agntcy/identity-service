@@ -26,14 +26,16 @@ const (
 // Identity Platform Policy.
 type Policy struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// A unique identifier for the App.
+	// A unique identifier for the Policy.
 	Id *string `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// A human-readable name for the App.
-	Name *string `protobuf:"bytes,4,opt,name=name,proto3,oneof" json:"name,omitempty"`
-	// A human-readable description for the App.
-	Description *string `protobuf:"bytes,5,opt,name=description,proto3,oneof" json:"description,omitempty"`
+	// A human-readable name for the Policy.
+	Name *string `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
+	// A human-readable description for the Policy.
+	Description *string `protobuf:"bytes,3,opt,name=description,proto3,oneof" json:"description,omitempty"`
+	// The requester application that this Rule applies to.
+	AssignedTo *string `protobuf:"bytes,4,opt,name=assigned_to,json=assignedTo,proto3,oneof" json:"assigned_to,omitempty"`
 	// All the rules that apply to this Policy.
-	Rules         []*Rule `protobuf:"bytes,6,rep,name=rules,proto3" json:"rules,omitempty"`
+	Rules         []*Rule `protobuf:"bytes,5,rep,name=rules,proto3" json:"rules,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -89,6 +91,13 @@ func (x *Policy) GetDescription() string {
 	return ""
 }
 
+func (x *Policy) GetAssignedTo() string {
+	if x != nil && x.AssignedTo != nil {
+		return *x.AssignedTo
+	}
+	return ""
+}
+
 func (x *Policy) GetRules() []*Rule {
 	if x != nil {
 		return x.Rules
@@ -99,18 +108,17 @@ func (x *Policy) GetRules() []*Rule {
 // Identity Platform Policy Rule
 type Rule struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// A unique identifier for the App.
+	// A unique identifier for the Rule.
 	Id *string `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
-	// A human-readable name for the App.
-	Name *string `protobuf:"bytes,4,opt,name=name,proto3,oneof" json:"name,omitempty"`
-	// A human-readable description for the App.
-	Description *string `protobuf:"bytes,5,opt,name=description,proto3,oneof" json:"description,omitempty"`
-	// The requester application that this Rule applies to.
-	AssignedTo *string `protobuf:"bytes,2,opt,name=assigned_to,json=assignedTo,proto3,oneof" json:"assigned_to,omitempty"`
+	// A human-readable name for the Rule.
+	Name *string `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
+	// A human-readable description for the Rule.
+	Description *string `protobuf:"bytes,3,opt,name=description,proto3,oneof" json:"description,omitempty"`
+	PolicyId    *string `protobuf:"bytes,4,opt,name=policy_id,json=policyId,proto3,oneof" json:"policy_id,omitempty"`
 	// The tasks that this Rule applies to.
-	Tasks []*Task `protobuf:"bytes,3,rep,name=tasks,proto3" json:"tasks,omitempty"`
+	Tasks []*Task `protobuf:"bytes,5,rep,name=tasks,proto3" json:"tasks,omitempty"`
 	// Need User Approval for this Rule.
-	NeedsApproval *bool `protobuf:"varint,8,opt,name=needs_approval,json=needsApproval,proto3,oneof" json:"needs_approval,omitempty"`
+	NeedsApproval *bool `protobuf:"varint,6,opt,name=needs_approval,json=needsApproval,proto3,oneof" json:"needs_approval,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -166,9 +174,9 @@ func (x *Rule) GetDescription() string {
 	return ""
 }
 
-func (x *Rule) GetAssignedTo() string {
-	if x != nil && x.AssignedTo != nil {
-		return *x.AssignedTo
+func (x *Rule) GetPolicyId() string {
+	if x != nil && x.PolicyId != nil {
+		return *x.PolicyId
 	}
 	return ""
 }
@@ -193,11 +201,13 @@ type Task struct {
 	// A unique identifier for the Task.
 	Id *string `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
 	// A human-readable name for the Task.
-	Name *string `protobuf:"bytes,4,opt,name=name,proto3,oneof" json:"name,omitempty"`
+	Name *string `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
+	// A human-readable description for the Task.
+	Description *string `protobuf:"bytes,3,opt,name=description,proto3,oneof" json:"description,omitempty"`
 	// An application ID for the Task.
-	AppId *string `protobuf:"bytes,3,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
+	AppId *string `protobuf:"bytes,4,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
 	// A tool name for the Task.
-	ToolName      *string `protobuf:"bytes,2,opt,name=tool_name,json=toolName,proto3,oneof" json:"tool_name,omitempty"`
+	ToolName      *string `protobuf:"bytes,5,opt,name=tool_name,json=toolName,proto3,oneof" json:"tool_name,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -246,6 +256,13 @@ func (x *Task) GetName() string {
 	return ""
 }
 
+func (x *Task) GetDescription() string {
+	if x != nil && x.Description != nil {
+		return *x.Description
+	}
+	return ""
+}
+
 func (x *Task) GetAppId() string {
 	if x != nil && x.AppId != nil {
 		return *x.AppId
@@ -264,35 +281,40 @@ var File_agntcy_identity_platform_v1alpha1_policy_proto protoreflect.FileDescrip
 
 const file_agntcy_identity_platform_v1alpha1_policy_proto_rawDesc = "" +
 	"\n" +
-	".agntcy/identity/platform/v1alpha1/policy.proto\x12!agntcy.identity.platform.v1alpha1\"\xbc\x01\n" +
+	".agntcy/identity/platform/v1alpha1/policy.proto\x12!agntcy.identity.platform.v1alpha1\"\xf2\x01\n" +
 	"\x06Policy\x12\x13\n" +
 	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x17\n" +
-	"\x04name\x18\x04 \x01(\tH\x01R\x04name\x88\x01\x01\x12%\n" +
-	"\vdescription\x18\x05 \x01(\tH\x02R\vdescription\x88\x01\x01\x12=\n" +
-	"\x05rules\x18\x06 \x03(\v2'.agntcy.identity.platform.v1alpha1.RuleR\x05rulesB\x05\n" +
-	"\x03_idB\a\n" +
-	"\x05_nameB\x0e\n" +
-	"\f_description\"\xaf\x02\n" +
-	"\x04Rule\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x17\n" +
-	"\x04name\x18\x04 \x01(\tH\x01R\x04name\x88\x01\x01\x12%\n" +
-	"\vdescription\x18\x05 \x01(\tH\x02R\vdescription\x88\x01\x01\x12$\n" +
-	"\vassigned_to\x18\x02 \x01(\tH\x03R\n" +
+	"\x04name\x18\x02 \x01(\tH\x01R\x04name\x88\x01\x01\x12%\n" +
+	"\vdescription\x18\x03 \x01(\tH\x02R\vdescription\x88\x01\x01\x12$\n" +
+	"\vassigned_to\x18\x04 \x01(\tH\x03R\n" +
 	"assignedTo\x88\x01\x01\x12=\n" +
-	"\x05tasks\x18\x03 \x03(\v2'.agntcy.identity.platform.v1alpha1.TaskR\x05tasks\x12*\n" +
-	"\x0eneeds_approval\x18\b \x01(\bH\x04R\rneedsApproval\x88\x01\x01B\x05\n" +
+	"\x05rules\x18\x05 \x03(\v2'.agntcy.identity.platform.v1alpha1.RuleR\x05rulesB\x05\n" +
 	"\x03_idB\a\n" +
 	"\x05_nameB\x0e\n" +
 	"\f_descriptionB\x0e\n" +
-	"\f_assigned_toB\x11\n" +
-	"\x0f_needs_approval\"\x9b\x01\n" +
+	"\f_assigned_to\"\xa9\x02\n" +
+	"\x04Rule\x12\x13\n" +
+	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x17\n" +
+	"\x04name\x18\x02 \x01(\tH\x01R\x04name\x88\x01\x01\x12%\n" +
+	"\vdescription\x18\x03 \x01(\tH\x02R\vdescription\x88\x01\x01\x12 \n" +
+	"\tpolicy_id\x18\x04 \x01(\tH\x03R\bpolicyId\x88\x01\x01\x12=\n" +
+	"\x05tasks\x18\x05 \x03(\v2'.agntcy.identity.platform.v1alpha1.TaskR\x05tasks\x12*\n" +
+	"\x0eneeds_approval\x18\x06 \x01(\bH\x04R\rneedsApproval\x88\x01\x01B\x05\n" +
+	"\x03_idB\a\n" +
+	"\x05_nameB\x0e\n" +
+	"\f_descriptionB\f\n" +
+	"\n" +
+	"_policy_idB\x11\n" +
+	"\x0f_needs_approval\"\xd2\x01\n" +
 	"\x04Task\x12\x13\n" +
 	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x17\n" +
-	"\x04name\x18\x04 \x01(\tH\x01R\x04name\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x03 \x01(\tH\x02R\x05appId\x88\x01\x01\x12 \n" +
-	"\ttool_name\x18\x02 \x01(\tH\x03R\btoolName\x88\x01\x01B\x05\n" +
+	"\x04name\x18\x02 \x01(\tH\x01R\x04name\x88\x01\x01\x12%\n" +
+	"\vdescription\x18\x03 \x01(\tH\x02R\vdescription\x88\x01\x01\x12\x1a\n" +
+	"\x06app_id\x18\x04 \x01(\tH\x03R\x05appId\x88\x01\x01\x12 \n" +
+	"\ttool_name\x18\x05 \x01(\tH\x04R\btoolName\x88\x01\x01B\x05\n" +
 	"\x03_idB\a\n" +
-	"\x05_nameB\t\n" +
+	"\x05_nameB\x0e\n" +
+	"\f_descriptionB\t\n" +
 	"\a_app_idB\f\n" +
 	"\n" +
 	"_tool_nameBkZigithub.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_gob\x06proto3"
