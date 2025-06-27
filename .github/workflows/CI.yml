@@ -120,13 +120,13 @@ jobs:
       ghcr-org-registry: ${{ vars.GHCR_REGISTRY }}
       # optional
       image-name: "${{ github.event.repository.name }}"
-      #image-tag: ""
+      #image-tag: "" # By default it will get latest docker tag built
 
   ################################## Docker build & push ##########################
   ################################################################################# 
   call-docker-build-push-ui:
     name: Call Docker Build
-    needs: [ checkout-unit-tests ]
+    needs: [ call-corona-blackduck-scan-backend ]
     uses: ./.github/workflows/build-push-docker.yaml
 
     secrets:
@@ -189,5 +189,4 @@ jobs:
       ghcr-org-registry: ${{ vars.GHCR_REGISTRY }}
       # optional
       image-name: "${{ github.event.repository.name }}-ui"
-      #image-tag: ""
-
+      #image-tag: "" # By default it will get latest docker tag built
