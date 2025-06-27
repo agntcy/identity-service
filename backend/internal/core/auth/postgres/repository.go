@@ -19,8 +19,11 @@ import (
 )
 
 const (
-	codeLength      = 128
-	sessionDuration = 5 * time.Minute // Default session duration for authorization codes
+	// Default length for authorization codes
+	codeLength = 128
+
+	// Default session duration for authorization codes and consumption
+	sessionDuration = 5 * time.Minute
 )
 
 type postgresRepository struct {
