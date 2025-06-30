@@ -12,6 +12,7 @@ export const PATHS = {
   agenticServices: {
     base: '/agentic-services',
     create: '/agentic-services/create',
+    info: '/agentic-services/:id',
     verifyIdentity: '/agentic-services/verify-identity'
   },
   accessPolicies: {

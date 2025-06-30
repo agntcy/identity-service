@@ -18,11 +18,11 @@ import OasfLogo from '@/assets/oasf.svg?react';
 import McpLogo from '@/assets/mcp.svg?react';
 import {FileUpload} from '@/components/ui/file-upload';
 
-export const AgenticServiceInfo = ({isLoading = false}: {isLoading?: boolean}) => {
-  const {control, watch, reset} = useFormContext<AgenticServiceFormValues>();
+export const AgenticServicForm = ({isLoading = false}: {isLoading?: boolean}) => {
+  const {control, watch, reset, setValue} = useFormContext<AgenticServiceFormValues>();
   const methods = useStepper();
 
-  const metaData = methods.getMetadata('agenticServiceInfo') as AgenticServiceFormValues | undefined;
+  const metaData = methods.getMetadata('agenticServiceForm') as AgenticServiceFormValues | undefined;
 
   const appTypes: SharedProviderProps<AppType>[] = [
     {
@@ -131,7 +131,19 @@ export const AgenticServiceInfo = ({isLoading = false}: {isLoading?: boolean}) =
                 <FormItem>
                   <FormLabel className="form-label">OASF specs</FormLabel>
                   <FormControl>
-                    <FileUpload {...field} disabled={isLoading} />
+                    <FileUpload
+                      defaultFile={field.value}
+                      ref={field.ref}
+                      name={field.name}
+                      disabled={isLoading}
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        field.onChange(file ? file : undefined);
+                      }}
+                      onConvert={(content) => {
+                        setValue('oasfSpecsContent', content ? new TextDecoder().decode(content) : undefined);
+                      }}
+                    />
                   </FormControl>
                 </FormItem>
               )}

@@ -29,6 +29,7 @@ const CreateOrganization = React.lazy(() => import('@/pages/settings/organizatio
 const OrganizationInfo = React.lazy(() => import('@/pages/settings/organizations/info-organization'));
 const AgenticServices = React.lazy(() => import('@/pages/agentic-services/agentic-services'));
 const CreateAgenticService = React.lazy(() => import('@/pages/agentic-services/create-agentic-service'));
+const AgenticServiceInfo = React.lazy(() => import('@/pages/agentic-services/agentic-service-info'));
 const AccessPolicies = React.lazy(() => import('@/pages/access-policies/access-policies'));
 const VerifyIdentityPrivate = React.lazy(() => import('@/pages/agentic-services/verify-identity-private'));
 const VerifyIdentityPublic = React.lazy(() => import('@/pages/verify-identity/verify-identity-public'));
@@ -119,6 +120,11 @@ export const useRoutes = () => {
           {
             path: PATHS.agenticServices.create,
             element: <CreateAgenticService />,
+            disabled: isEmptyIdp
+          },
+          {
+            path: PATHS.agenticServices.info,
+            element: <AgenticServiceInfo />,
             disabled: isEmptyIdp
           },
           {

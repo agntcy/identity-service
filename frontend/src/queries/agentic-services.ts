@@ -16,11 +16,11 @@ export const useGetAgenticServices = () => {
   });
 };
 
-export const useGetApp = (id: string) => {
+export const useGetAgenticService = (id?: string) => {
   return useQuery({
     queryKey: ['get-agentic-service', id],
     queryFn: async () => {
-      const {data} = await AgenticServicesAPI.getApp(id);
+      const {data} = await AgenticServicesAPI.getApp(id!);
       return data;
     },
     enabled: !!id
