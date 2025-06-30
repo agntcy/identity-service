@@ -449,7 +449,6 @@
               else
                 echo "BUILD_ARGS=--build-arg ARTIFACTORY_PASSWORD=${{ env.ARTIFACTORY_PASSWORD }}" >> "$GITHUB_ENV"
               fi
-              
               if [ "${{ inputs.npm-github-registry-enabled }}" = "true" ]; then
                 echo "NPM_TOKEN=${{ env.GHEC_PAT }}" >> "$GITHUB_ENV"
                 echo "SECRET_ARG=--build-arg NPM_TOKEN=${{ env.GHEC_PAT }}" >> "$GITHUB_ENV"
@@ -457,10 +456,8 @@
                 echo "SECRET_ARG=" >> "$GITHUB_ENV"
               fi
               {
-                echo "BUILD_ARGS=$BUILD_ARGS"
-                echo "SECRET_ARG=$SECRET_ARG"
                 echo "DATE=$(date +'%Y-%m-%d')"
-                echo "GIT_BRANCH=$BRANCH" | sed 's/\//_/g'
+                echo "GIT_BRANCH=${BRANCH//\//_}"
                 echo "SHA=$(git rev-parse --short HEAD)"
               } >> "$GITHUB_ENV"
               git config --global --add safe.directory '*'
