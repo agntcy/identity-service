@@ -1534,6 +1534,18 @@
               "isoneof": false,
               "oneofdecl": "",
               "defaultValue": ""
+            },
+            {
+              "name": "oasf",
+              "description": "The OASF badge.",
+              "label": "",
+              "type": "IssueOASFBadgeRequest",
+              "longType": "IssueOASFBadgeRequest",
+              "fullType": "agntcy.identity.platform.v1alpha1.IssueOASFBadgeRequest",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
             }
           ]
         },
@@ -1562,6 +1574,30 @@
             {
               "name": "url",
               "description": "",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "IssueOASFBadgeRequest",
+          "longName": "IssueOASFBadgeRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.IssueOASFBadgeRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "schema_base64",
+              "description": "The OASF schema in a base64 encoded format",
               "label": "",
               "type": "string",
               "longType": "string",
