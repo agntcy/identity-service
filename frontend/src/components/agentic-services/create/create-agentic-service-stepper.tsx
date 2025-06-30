@@ -94,11 +94,7 @@ const FormStepperComponent = () => {
       ...methods.getMetadata('agenticServiceForm'),
       type: values.type,
       name: values.name,
-      description: values.description,
-      oasfSpecs: values.oasfSpecs,
-      mcpServer: values.mcpServer,
-      oasfSpecsContent: values.oasfSpecsContent,
-      wellKnowServer: values.wellKnowServer
+      description: values.description
     });
     methods.next();
   }, [form, methods]);

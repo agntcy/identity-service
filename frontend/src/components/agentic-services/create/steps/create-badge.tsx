@@ -19,52 +19,20 @@ import {
   Typography
 } from '@outshift/spark-design';
 import {useCallback, useMemo, useState} from 'react';
-import {App, AppType} from '@/types/api/app';
+import {App} from '@/types/api/app';
 import KeyValue, {KeyValuePair} from '@/components/ui/key-value';
 import {AgenticServiceType} from '@/components/shared/agentic-service-type';
-import {Badge, IssueBadgeBody} from '@/types/api/badge';
-import {LoaderRelative} from '@/components/ui/loading';
-import {useIssueBadge} from '@/mutations/badge';
+import {Badge} from '@/types/api/badge';
 import {generatePath, useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
-import {useStepper} from '../stepper';
-import {AgenticServiceFormValues} from '@/schemas/agentic-service-schema';
-import {encodeBase64} from '@/utils/utils';
+import {BadgeModalForm} from '@/components/shared/badge-modal-form';
 
 export const CreateBadge = ({app}: {app?: App}) => {
   const [badge, setBadge] = useState<Badge | undefined>(undefined);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showBadge, setShowBadge] = useState<boolean>(false);
-
-  const methods = useStepper();
-  const metaData = methods.getMetadata('agenticServiceForm') as AgenticServiceFormValues | undefined;
-  const oasfSpecsContent = metaData?.oasfSpecsContent;
-  const wellKnowServer = metaData?.wellKnowServer;
-  const mcpServer = metaData?.mcpServer;
+  const [showBadgeForm, setShowBadgeForm] = useState<boolean>(false);
 
   const navigate = useNavigate();
-
-  const createBadge = useIssueBadge({
-    callbacks: {
-      onSuccess: (resp) => {
-        setIsLoading(false);
-        setBadge(resp.data);
-        toast({
-          title: 'Badge created successfully',
-          description: 'You can now use this badge in your applications.',
-          type: 'success'
-        });
-      },
-      onError: () => {
-        setIsLoading(false);
-        toast({
-          title: 'Error creating badge',
-          description: 'There was an error while trying to create the badge. Please try again later.',
-          type: 'error'
-        });
-      }
-    }
-  });
 
   const keyValuePairs = useMemo(() => {
     const temp: KeyValuePair[] = [
@@ -106,28 +74,6 @@ export const CreateBadge = ({app}: {app?: App}) => {
       type: 'success'
     });
   }, [badge?.verifiableCredential]);
-
-  const handleCreateBadge = useCallback(() => {
-    setIsLoading(true);
-    const data: IssueBadgeBody = {};
-    if (app?.type === AppType.APP_TYPE_AGENT_OASF) {
-      data.oasf = {
-        schemaBase64: encodeBase64(oasfSpecsContent!) || ''
-      };
-    } else if (app?.type === AppType.APP_TYPE_MCP_SERVER) {
-      data.mcp = {
-        url: mcpServer || ''
-      };
-    } else if (app?.type === AppType.APP_TYPE_AGENT_A2A) {
-      data.a2a = {
-        wellKnownUrl: wellKnowServer || ''
-      };
-    }
-    createBadge.mutate({
-      id: app?.id || '',
-      data: {...data}
-    });
-  }, [app?.id, app?.type, createBadge, mcpServer, oasfSpecsContent, wellKnowServer]);
 
   return (
     <div className="space-y-4">
@@ -181,15 +127,13 @@ export const CreateBadge = ({app}: {app?: App}) => {
         </div>
         <div className="w-full">
           <Card variant="secondary" className="h-full flex flex-col justify-center">
-            {isLoading ? (
-              <LoaderRelative />
-            ) : !badge ? (
+            {!badge ? (
               <EmptyState
                 size={GeneralSize.Medium}
-                title="No ID badge"
-                description="In order to create an ID badge for an A2A instance, complete source url and credentials in previous step."
-                actionTitle="Create ID badge"
-                actionCallback={() => handleCreateBadge()}
+                title="No Badge"
+                description="Create a badge for your agentic service to enable verifiable credentials."
+                actionTitle="Create Badge"
+                actionCallback={() => setShowBadgeForm(true)}
                 actionButtonProps={{
                   sx: {fontWeight: '600 !important'},
                   startIcon: <PlusIcon className="w-4 h-4" />
@@ -197,7 +141,7 @@ export const CreateBadge = ({app}: {app?: App}) => {
               />
             ) : (
               <div className="space-y-4">
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-start">
                   <Typography variant="subtitle1" fontWeight={600}>
                     Badge
                   </Typography>
@@ -235,7 +179,6 @@ export const CreateBadge = ({app}: {app?: App}) => {
       </div>
       <div className="flex justify-end">
         <Button
-          disabled={isLoading}
           variant="secondary"
           onClick={() => {
             const path = generatePath(PATHS.agenticServices.info, {id: app?.id});
@@ -262,6 +205,23 @@ export const CreateBadge = ({app}: {app?: App}) => {
             <CodeBlock showLineNumbers wrapLongLines text={JSON.stringify(badge?.verifiableCredential, null, 2)} />
           </ModalContent>
         </Modal>
+      )}
+      {app && (
+        <BadgeModalForm
+          app={app}
+          open={showBadgeForm}
+          onClose={() => {
+            setShowBadgeForm(false);
+          }}
+          onCancel={() => {
+            setShowBadgeForm(false);
+          }}
+          onBadgeCreated={(createdBadge) => {
+            setBadge(createdBadge);
+            setShowBadgeForm(false);
+          }}
+          navigateTo={false}
+        />
       )}
     </div>
   );

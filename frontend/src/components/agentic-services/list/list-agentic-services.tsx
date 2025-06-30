@@ -14,10 +14,11 @@ import {cn} from '@/lib/utils';
 import {generatePath, useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
 import {FilterSections} from '@/components/shared/filters-sections';
-import {AppType} from '@/types/api/app';
+import {App, AppType} from '@/types/api/app';
 import {IdCardIcon, Trash2Icon} from 'lucide-react';
 import {ConfirmModal} from '@/components/ui/confirm-modal';
 import {useDeleteAgenticService} from '@/mutations';
+import {BadgeModalForm} from '@/components/shared/badge-modal-form';
 
 export const ListAgenticServices = () => {
   const [pagination, setPagination] = useState<MRT_PaginationState>({
@@ -26,8 +27,9 @@ export const ListAgenticServices = () => {
   });
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
   const [query, setQuery] = useState<string | undefined>(undefined);
-  const [appId, setAppId] = useState<string | undefined>(undefined);
-  const openActionsModal = Boolean(appId);
+  const [tempApp, setTempApp] = useState<App | undefined>(undefined);
+  const [showBadgeForm, setShowBadgeForm] = useState<boolean>(false);
+  const [showActionsModal, setShowActionsModal] = useState<boolean>(false);
 
   const {data, isLoading, isFetching, error, refetch} = useGetAgenticServices({
     page: pagination.pageIndex + 1,
@@ -65,9 +67,9 @@ export const ListAgenticServices = () => {
   });
 
   const handleClickOnDelete = useCallback(() => {
-    deleteMutation.mutate(appId! || '');
-    setAppId(undefined);
-  }, [deleteMutation, appId]);
+    deleteMutation.mutate(tempApp?.id || '');
+    setTempApp(undefined);
+  }, [deleteMutation, tempApp]);
 
   return (
     <>
@@ -84,16 +86,6 @@ export const ListAgenticServices = () => {
           actionTitle: 'Retry'
         }}
         useContainer
-        // emptyListStateProps={{
-        //   actionButtonProps: {
-        //     startIcon: <PlusIcon className="w-4 h-4" />,
-        //     sx: {fontWeight: '600 !important'}
-        //   },
-        //   actionCallback: () => {
-        //     void navigate(PATHS.agenticServices.create);
-        //   },
-        //   actionTitle: 'Add Agentic Service'
-        // }}
         useLoading={false}
       >
         <Card className={cn(!isLoading && 'p-0')} variant="secondary">
@@ -166,13 +158,27 @@ export const ListAgenticServices = () => {
             onSortingChange={setSorting}
             renderRowActionMenuItems={({row}) => {
               return [
-                <MenuItem key="re-issue" onClick={() => console.info('Edit', row)} sx={{display: 'flex', alignItems: 'center', gap: '8px'}}>
+                <MenuItem
+                  key="re-issue"
+                  onClick={() => {
+                    setTempApp(row.original);
+                    setShowBadgeForm(true);
+                  }}
+                  sx={{display: 'flex', alignItems: 'center', gap: '8px'}}
+                >
                   <IdCardIcon className="w-4 h-4" color="#062242" />
                   <Typography variant="body2" color="#1A1F27">
                     Re-Issue Badge
                   </Typography>
                 </MenuItem>,
-                <MenuItem key="delete" onClick={() => setAppId(row.original.id)} sx={{display: 'flex', alignItems: 'center', gap: '8px'}}>
+                <MenuItem
+                  key="delete"
+                  onClick={() => {
+                    setTempApp(row.original);
+                    setShowActionsModal(true);
+                  }}
+                  sx={{display: 'flex', alignItems: 'center', gap: '8px'}}
+                >
                   <Trash2Icon className="w-4 h-4" color="#C62953" />
                   <Typography variant="body2" color="#C0244C">
                     Delete
@@ -192,17 +198,34 @@ export const ListAgenticServices = () => {
         </Card>
       </ConditionalQueryRenderer>
       <ConfirmModal
-        open={openActionsModal}
+        open={showActionsModal}
         title="Delete Agentic Service"
         description={
           <>
-            Are you sure you want to delete this agentic service <b>{appId}</b>? This action cannot be undone.
+            Are you sure you want to delete this agentic service <b>{tempApp?.id}</b>? This action cannot be undone.
           </>
         }
         confirmButtonText="Delete"
-        onCancel={() => setAppId(undefined)}
+        onCancel={() => {
+          setShowActionsModal(false);
+          setTempApp(undefined);
+        }}
         onConfirm={handleClickOnDelete}
       />
+      {tempApp && (
+        <BadgeModalForm
+          app={tempApp}
+          open={showBadgeForm}
+          onClose={() => {
+            setShowBadgeForm(false);
+            setTempApp(undefined);
+          }}
+          onCancel={() => {
+            setShowBadgeForm(false);
+            setTempApp(undefined);
+          }}
+        />
+      )}
     </>
   );
 };

@@ -41,7 +41,7 @@ const AgenticServiceInfo: React.FC = () => {
               Update
             </Button>
             <Button onClick={() => {}} startIcon={<IdCardIcon className="w-4 h-4" />} variant="primary" sx={{fontWeight: '600 !important'}}>
-              Re-issue Badge
+              Re-Issue Badge
             </Button>
           </div>
         )
