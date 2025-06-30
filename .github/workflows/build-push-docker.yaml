@@ -333,7 +333,7 @@
 
         env:
           BRANCH: ${{ github.head_ref || github.ref_name }}
-          NEXT_PUBLIC_STRAPI_READ_TOKEN: ${{ secrets.DEV_NEXT_PUBLIC_STRAPI_READ_TOKEN }} 
+          NEXT_PUBLIC_STRAPI_READ_TOKEN: ""
 
         steps:
           -
@@ -444,7 +444,7 @@
             env:
               ARTIFACTORY_PASSWORD: ${{ secrets.artifactory_password }}
             run: |
-              if [ ${{ inputs.setup-go }} = true ]; then
+              if [ "${{ inputs.setup-go }}" = "true" ]; then
                 BUILD_ARGS="${{ inputs.build-args }} --build-arg GITHUB_TOKEN=${{ env.GHEC_PAT }}"
               else
                 BUILD_ARGS="--build-arg ARTIFACTORY_PASSWORD=${{ env.ARTIFACTORY_PASSWORD }}"
@@ -455,12 +455,14 @@
               else
                 SECRET_ARG=""
               fi
-              echo "BUILD_ARGS=$BUILD_ARGS" >> "$GITHUB_ENV"
-              echo "SECRET_ARG=$SECRET_ARG" >> "$GITHUB_ENV"
-              echo "DATE=$(date +'%Y-%m-%d')" >> "$GITHUB_ENV"
+              {
+                echo "BUILD_ARGS=$BUILD_ARGS"
+                echo "SECRET_ARG=$SECRET_ARG"
+                echo "DATE=$(date +'%Y-%m-%d')"
+                echo "GIT_BRANCH=$BRANCH" | sed 's/\//_/g'
+                echo "SHA=$(git rev-parse --short HEAD)"
+              } >> "$GITHUB_ENV"
               git config --global --add safe.directory '*'
-              echo "GIT_BRANCH=$BRANCH" | sed 's/\//_/g' >> "$GITHUB_ENV"
-              echo "SHA=$(git rev-parse --short HEAD)" >> "$GITHUB_ENV"
 
           - name: Download Build Artifact
             if: ${{ inputs.download-build-artifact-enabled }}
@@ -504,12 +506,14 @@
           - name: Outshift websites Prepare
             if: ${{ inputs.outshift-websites }}
             run: |
-              echo "ORIGIN=${{ inputs.outshift-website-origin }}" >> "$GITHUB_ENV"
-              echo "ADMIN_ORIGIN=${{ inputs.outshift-website-admin-origin }}" >> "$GITHUB_ENV"
-              echo "STRAPI_API_URL=${{ inputs.strapi-api-url }}" >> "$GITHUB_ENV"
-              echo "RESEARCH_ADMIN_ORIGIN=${{ inputs.research-admin-origin }}" >> "$GITHUB_ENV"
-              echo "STRAPI_API_KEY=${{ env.STRAPI_API_KEY }}" >> "$GITHUB_ENV"
-              echo "RESEARCH_STRAPI_API_KEY=${{ env.RESEARCH_STRAPI_API_KEY }}" >> "$GITHUB_ENV"
+              {
+                echo "ORIGIN=${{ inputs.outshift-website-origin }}"
+                echo "ADMIN_ORIGIN=${{ inputs.outshift-website-admin-origin }}"
+                echo "STRAPI_API_URL=${{ inputs.strapi-api-url }}"
+                echo "RESEARCH_ADMIN_ORIGIN=${{ inputs.research-admin-origin }}"
+                echo "STRAPI_API_KEY=${{ env.STRAPI_API_KEY }}"
+                echo "RESEARCH_STRAPI_API_KEY=${{ env.RESEARCH_STRAPI_API_KEY }}"
+              } >> "$GITHUB_ENV"
             shell: bash
 
           - name: Build Docker Image
@@ -518,8 +522,8 @@
               ADMIN_ORIGIN: ${{ env.ADMIN_ORIGIN }}
             run: |
               figlet -w 140 'BUILD DOCKER' || true
-              echo $SHA
-              docker build $BUILD_ARGS $SECRET_ARG -t ${{ inputs.image-name }}:latest -f ${{ inputs.dockerfile }} ${{ inputs.context }}
+              echo "$SHA"
+              docker build "$BUILD_ARGS" "$SECRET_ARG" -t "${{ inputs.image-name }}:latest" -f "${{ inputs.dockerfile }}" "${{ inputs.context }}"
             shell: bash
 
           #region: PUBLIC ECR
@@ -555,8 +559,8 @@
               ECR_PUBLIC_REGISTRY: ${{ steps.login-public-ecr-custom.outputs.registry }}
             run: |
               figlet -w 140 'BUILD DOCKER' || true
-              echo $SHA
-              $GITHUB_WORKSPACE/build/build-docker.sh --image ${{ inputs.image-name }}:latest --path ${{ inputs.dockerfile }} --args "$BUILD_ARGS" ${{ inputs.script-extra-args }}
+              echo "$SHA"
+              "$GITHUB_WORKSPACE/build/build-docker.sh" --image "${{ inputs.image-name }}:latest" --path "${{ inputs.dockerfile }}" --args "$BUILD_ARGS" ${{ inputs.script-extra-args }}
             shell: bash
 
           - name: Upload Image as Artifact
@@ -577,29 +581,29 @@
             run: |-
               figlet -w 140 'PUSH DOCKER TO GHCR' || true
               if [[ -n "${{ inputs.image-custom-tag }}" ]]; then
-                docker tag ${{ inputs.image-name }}:latest $GHCR_REGISTRY/${{ inputs.image-name }}:${{ inputs.image-custom-tag }}
+                docker tag "${{ inputs.image-name }}:latest" "$GHCR_REGISTRY/${{ inputs.image-name }}:${{ inputs.image-custom-tag }}"
                 echo "Publishing to repository: $GHCR_REGISTRY/${{inputs.image-name}}, with tag: ${{ inputs.image-custom-tag }}"
-                docker push $GHCR_REGISTRY/${{ inputs.image-name }}:${{ inputs.image-custom-tag }}
+                docker push "$GHCR_REGISTRY/${{ inputs.image-name }}:${{ inputs.image-custom-tag }}"
               elif [[ $GITHUB_REF == 'refs/heads/main' ]]; then
-                docker tag ${{ inputs.image-name }}:latest $GHCR_REGISTRY/${{ inputs.image-name }}:latest
+                docker tag "${{ inputs.image-name }}:latest" "$GHCR_REGISTRY/${{ inputs.image-name }}:latest"
                 echo "Publishing to repository: $GHCR_REGISTRY/${{inputs.image-name}}, with tag: latest"
-                docker tag ${{ inputs.image-name }}:latest $GHCR_REGISTRY/${{ inputs.image-name }}:ref-$SHA
+                docker tag "${{ inputs.image-name }}:latest" "$GHCR_REGISTRY/${{ inputs.image-name }}:ref-$SHA"
 
-                docker push $GHCR_REGISTRY/${{ inputs.image-name }}:latest
-                docker push $GHCR_REGISTRY/${{ inputs.image-name }}:ref-$SHA
+                docker push "$GHCR_REGISTRY/${{ inputs.image-name }}:latest"
+                docker push "$GHCR_REGISTRY/${{ inputs.image-name }}:ref-$SHA"
               else
                 # Any branch different than main
-                docker tag ${{ inputs.image-name }}:latest $GHCR_REGISTRY/${{ inputs.image-name }}:dev-$SHA
+                docker tag "${{ inputs.image-name }}:latest" "$GHCR_REGISTRY/${{ inputs.image-name }}:dev-$SHA"
                 echo "Publishing to repository: $GHCR_REGISTRY/${{inputs.image-name}}, with tag: dev-$SHA"
-                docker push $GHCR_REGISTRY/${{ inputs.image-name }}:dev-$SHA
+                docker push "$GHCR_REGISTRY/${{ inputs.image-name }}:dev-$SHA"
               fi
-              docker tag ${{ inputs.image-name }}:latest $GHCR_REGISTRY/${{ inputs.image-name }}:$GIT_BRANCH
-              docker tag ${{ inputs.image-name }}:latest $GHCR_REGISTRY/${{ inputs.image-name }}:$DATE-$SHA
+              docker tag "${{ inputs.image-name }}:latest" "$GHCR_REGISTRY/${{ inputs.image-name }}:$GIT_BRANCH"
+              docker tag "${{ inputs.image-name }}:latest" "$GHCR_REGISTRY/${{ inputs.image-name }}:$DATE-$SHA"
 
               echo "Publishing to repository: $GHCR_REGISTRY/${{ inputs.image-name }}, with tag: $GIT_BRANCH"
-              docker push $GHCR_REGISTRY/${{ inputs.image-name }}:$GIT_BRANCH
+              docker push "$GHCR_REGISTRY/${{ inputs.image-name }}:$GIT_BRANCH"
               echo "Publishing to repository: $GHCR_REGISTRY/${{ inputs.image-name }}, with tag: $DATE-$SHA"
-              docker push $GHCR_REGISTRY/${{ inputs.image-name }}:$DATE-$SHA
+              docker push "$GHCR_REGISTRY/${{ inputs.image-name }}:$DATE-$SHA"
             shell: bash
 
           - name: Push Docker Image to AWS ECR
@@ -614,36 +618,36 @@
               repository_exists=$(aws ecr describe-repositories --repository-names "${{ inputs.image-name }}" --no-cli-pager 2>/dev/null || true )
               if [[ -z "$repository_exists" ]]; then
                 echo "Repository [${{ inputs.image-name }}] does not exist! Creating..."
-                aws ecr create-repository --no-cli-pager --repository-name ${{ inputs.image-name }}
+                aws ecr create-repository --no-cli-pager --repository-name "${{ inputs.image-name }}"
               fi
 
-              aws ecr describe-repositories --no-cli-pager --repository-names ${{ inputs.image-name }}
+              aws ecr describe-repositories --no-cli-pager --repository-names "${{ inputs.image-name }}"
 
               if [[ -n "${{ inputs.image-custom-tag }}" ]]; then
-                docker tag ${{ inputs.image-name }}:latest $ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}:${{ inputs.image-custom-tag }}
+                docker tag "${{ inputs.image-name }}:latest" "$ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}:${{ inputs.image-custom-tag }}"
                 echo "Publishing to repository: $ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}, with tag: ${{ inputs.image-custom-tag }}"
-                docker push $ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}:${{ inputs.image-custom-tag }}
+                docker push "$ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}:${{ inputs.image-custom-tag }}"
               elif [[ $GITHUB_REF == 'refs/heads/main' ]]; then
-                docker tag ${{ inputs.image-name }}:latest $ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}:latest
-                docker tag ${{ inputs.image-name }}:latest $ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}:ref-$SHA
+                docker tag "${{ inputs.image-name }}:latest" "$ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}:latest"
+                docker tag "${{ inputs.image-name }}:latest" "$ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}:ref-$SHA"
 
                 echo "Publishing to repository $ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}, with tag: latest"
-                docker push $ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}:latest
+                docker push "$ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}:latest"
                 echo "Publishing to repository $ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}, with tag: ref-$SHA"
-                docker push $ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}:ref-$SHA
+                docker push "$ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}:ref-$SHA"
               else
-                docker tag ${{ inputs.image-name }}:latest $ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}:dev-$SHA
+                docker tag "${{ inputs.image-name }}:latest" "$ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}:dev-$SHA"
                 echo "Publishing to repository: $ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}, with tag: dev-$SHA"
-                docker push $ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}:dev-$SHA
+                docker push "$ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}:dev-$SHA"
               fi
 
-              docker tag ${{ inputs.image-name }}:latest $ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}:$GIT_BRANCH
-              docker tag ${{ inputs.image-name }}:latest $ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}:$DATE-$SHA
+              docker tag "${{ inputs.image-name }}:latest" "$ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}:$GIT_BRANCH"
+              docker tag "${{ inputs.image-name }}:latest" "$ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}:$DATE-$SHA"
 
               echo "Publishing to repository: $ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}, with tag: $GIT_BRANCH"
-              docker push $ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}:$GIT_BRANCH
+              docker push "$ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}:$GIT_BRANCH"
               echo " Publishing to repository $ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}, with tag: $DATE-$SHA"
-              docker push $ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}:$DATE-$SHA
+              docker push "$ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}:$DATE-$SHA"
             shell: bash
 
           #region: PUBLIC ECR
@@ -676,35 +680,35 @@
               repository_exists=$(aws ecr-public describe-repositories --repository-names "${{ inputs.image-name }}" --no-cli-pager 2>/dev/null || true )
               if [[ -z "$repository_exists" ]]; then
                 echo "Repository [${{ inputs.image-name }}] does not exist! Creating..."
-                aws ecr-public create-repository --no-cli-pager --repository-name ${{ inputs.image-name }}
+                aws ecr-public create-repository --no-cli-pager --repository-name "${{ inputs.image-name }}"
               fi
 
-              aws ecr-public describe-repositories --no-cli-pager --repository-names ${{ inputs.image-name }}
+              aws ecr-public describe-repositories --no-cli-pager --repository-names "${{ inputs.image-name }}"
 
               if [[ -n "${{ inputs.image-custom-tag }}" ]]; then
-                docker tag ${{ inputs.image-name }}:latest $ECR_PUBLIC_REGISTRY/ciscoeti/${{ inputs.image-name }}:${{ inputs.image-custom-tag }}
+                docker tag "${{ inputs.image-name }}:latest" "$ECR_PUBLIC_REGISTRY/ciscoeti/${{ inputs.image-name }}:${{ inputs.image-custom-tag }}"
                 echo "Pushing in to repository: $ECR_PUBLIC_REGISTRY/ciscoeti/${{ inputs.image-name }}, with tag: ${{ inputs.image-custom-tag }}"
-                docker push $ECR_PUBLIC_REGISTRY/ciscoeti/${{ inputs.image-name }}:${{ inputs.image-custom-tag }}
+                docker push "$ECR_PUBLIC_REGISTRY/ciscoeti/${{ inputs.image-name }}:${{ inputs.image-custom-tag }}"
               elif [[ $GITHUB_REF == 'refs/heads/main' ]]; then
-                docker tag ${{ inputs.image-name }}:latest $ECR_PUBLIC_REGISTRY/${{ inputs.image-name }}:latest
-                docker tag ${{ inputs.image-name }}:latest $ECR_PUBLIC_REGISTRY/${{ inputs.image-name }}:ref-$SHA
+                docker tag "${{ inputs.image-name }}:latest" "$ECR_PUBLIC_REGISTRY/${{ inputs.image-name }}:latest"
+                docker tag "${{ inputs.image-name }}:latest" "$ECR_PUBLIC_REGISTRY/${{ inputs.image-name }}:ref-$SHA"
                 echo "Pushing into repository: $ECR_PUBLIC_REGISTRY/${{ inputs.image-name }}, with tag: latest"
-                docker push $ECR_PUBLIC_REGISTRY/${{ inputs.image-name }}:latest
+                docker push "$ECR_PUBLIC_REGISTRY/${{ inputs.image-name }}:latest"
                 echo "Pushing into repository: $ECR_PUBLIC_REGISTRY/${{ inputs.image-name }}, with tag: ref-$SHA"
-                docker push $ECR_PUBLIC_REGISTRY/${{ inputs.image-name }}:ref-$SHA
+                docker push "$ECR_PUBLIC_REGISTRY/${{ inputs.image-name }}:ref-$SHA"
               else
-                docker tag ${{ inputs.image-name }}:latest $ECR_PUBLIC_REGISTRY/${{ inputs.image-name }}:dev-$SHA
+                docker tag "${{ inputs.image-name }}:latest" "$ECR_PUBLIC_REGISTRY/${{ inputs.image-name }}:dev-$SHA"
                 echo "Pushing in to repository: $ECR_PUBLIC_REGISTRY/${{ inputs.image-name }}, with tag: dev-$SHA"
-                docker push $ECR_PUBLIC_REGISTRY/${{ inputs.image-name }}:dev-$SHA
+                docker push "$ECR_PUBLIC_REGISTRY/${{ inputs.image-name }}:dev-$SHA"
               fi
 
-              docker tag ${{ inputs.image-name }}:latest $ECR_PUBLIC_REGISTRY/ciscoeti/${{ inputs.image-name }}:$GIT_BRANCH
-              docker tag ${{ inputs.image-name }}:latest $ECR_PUBLIC_REGISTRY/ciscoeti/${{ inputs.image-name }}:$DATE-$SHA
+              docker tag "${{ inputs.image-name }}:latest" "$ECR_PUBLIC_REGISTRY/ciscoeti/${{ inputs.image-name }}:$GIT_BRANCH"
+              docker tag "${{ inputs.image-name }}:latest" "$ECR_PUBLIC_REGISTRY/ciscoeti/${{ inputs.image-name }}:$DATE-$SHA"
 
               echo "Publishing to repository: $ECR_PUBLIC_REGISTRY/ciscoeti/${{ inputs.image-name }}, with tag: $GIT_BRANCH"
-              docker push $ECR_PUBLIC_REGISTRY/ciscoeti/${{ inputs.image-name }}:$GIT_BRANCH
+              docker push "$ECR_PUBLIC_REGISTRY/ciscoeti/${{ inputs.image-name }}:$GIT_BRANCH"
               echo "Publishing to repository: $ECR_PUBLIC_REGISTRY/ciscoeti/${{ inputs.image-name }}, with tag: $DATE-$SHA"
-              docker push $ECR_PUBLIC_REGISTRY/ciscoeti/${{ inputs.image-name }}:$DATE-$SHA
+              docker push "$ECR_PUBLIC_REGISTRY/ciscoeti/${{ inputs.image-name }}:$DATE-$SHA"
             shell: bash
 
           - name: Push Docker Image to Harbor
@@ -715,30 +719,30 @@
               figlet -w 140 'PUSH DOCKER TO Harbor' || true
 
               if [[ -n "${{ inputs.image-custom-tag }}" ]]; then
-                docker tag ${{ inputs.image-name }}:latest ${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}:${{ inputs.image-custom-tag }}
+                docker tag "${{ inputs.image-name }}:latest" "${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}:${{ inputs.image-custom-tag }}"
                 echo "Pushing into ${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name}}, with tag: ${{ inputs.image-custom-tag }}"
-                docker push ${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}:${{ inputs.image-custom-tag }}
+                docker push "${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}:${{ inputs.image-custom-tag }}"
               elif [[ $GITHUB_REF == 'refs/heads/main' ]]; then
-                docker tag ${{ inputs.image-name }}:latest ${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}:latest
-                docker tag ${{ inputs.image-name }}:latest ${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}:ref-$SHA
+                docker tag "${{ inputs.image-name }}:latest" "${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}:latest"
+                docker tag "${{ inputs.image-name }}:latest" "${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}:ref-$SHA"
                 echo "Pushing into repository: ${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}, with tag: latest"
-                docker push ${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}:latest
+                docker push "${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}:latest"
                 echo "Pushing into repository: ${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}, with tag: ref-$SHA"
-                docker push ${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}:ref-$SHA
+                docker push "${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}:ref-$SHA"
               else
-                docker tag ${{ inputs.image-name }}:latest ${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}:dev-$SHA
+                docker tag "${{ inputs.image-name }}:latest" "${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}:dev-$SHA"
                 echo "Publishing to repository: ${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}, with tag: dev-$SHA"
-                docker push ${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}:dev-$SHA
+                docker push "${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}:dev-$SHA"
               fi
 
               if [[ "${{ inputs.harbor-multi-tag }}" == "true" ]]; then
-                docker tag ${{ inputs.image-name }}:latest ${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}:$GIT_BRANCH
-                docker tag ${{ inputs.image-name }}:latest ${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}:$DATE-$SHA
+                docker tag "${{ inputs.image-name }}:latest" "${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}:$GIT_BRANCH"
+                docker tag "${{ inputs.image-name }}:latest" "${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}:$DATE-$SHA"
 
                 echo "Publishing to repository: ${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}, with tag $GIT_BRANCH"
-                docker push ${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}:$GIT_BRANCH
+                docker push "${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}:$GIT_BRANCH"
                 echo "Publishing to repository: ${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}, with tag $DATE-$SHA"
-                docker push ${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}:$DATE-$SHA
+                docker push "${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}:$DATE-$SHA"
               fi
             shell: bash
             #endregion
@@ -752,30 +756,30 @@
               figlet -w 140 'PUSH DOCKER TO Artifactory Devhub' || true
 
               if [[ -n "${{ inputs.image-custom-tag }}" ]]; then
-                docker tag ${{ inputs.image-name }}:latest ${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}:${{ inputs.image-custom-tag }}
+                docker tag "${{ inputs.image-name }}:latest" "${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}:${{ inputs.image-custom-tag }}"
                 echo "Publishing to repository: ${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}, with tag: ${{ inputs.image-custom-tag }}"
-                docker push ${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}:${{ inputs.image-custom-tag }}
+                docker push "${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}:${{ inputs.image-custom-tag }}"
               elif [[ $GITHUB_REF == 'refs/heads/main' ]]; then
-                docker tag ${{ inputs.image-name }}:latest ${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}:latest
-                docker tag ${{ inputs.image-name }}:latest ${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}:ref-$SHA
+                docker tag "${{ inputs.image-name }}:latest" "${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}:latest"
+                docker tag "${{ inputs.image-name }}:latest" "${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}:ref-$SHA"
                 echo "Publishing to repository: ${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}, with tag: latest"
-                docker push ${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}:latest
+                docker push "${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}:latest"
                 echo "Publishing to repository: ${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}, with tag: ref-$SHA"
-                docker push ${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}:ref-$SHA
+                docker push "${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}:ref-$SHA"
               else
-                docker tag ${{ inputs.image-name }}:latest ${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}:dev-$SHA
+                docker tag "${{ inputs.image-name }}:latest" "${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}:dev-$SHA"
                 echo "Publishing to repository: ${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}, with tag: dev-$SHA"
-                docker push ${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}:dev-$SHA
+                docker push "${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}:dev-$SHA"
               fi
 
               if [[ "${{ inputs.harbor-multi-tag }}" == "true" ]]; then
-                docker tag ${{ inputs.image-name }}:latest ${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}:$GIT_BRANCH
-                docker tag ${{ inputs.image-name }}:latest ${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}:$DATE-$SHA
+                docker tag "${{ inputs.image-name }}:latest" "${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}:$GIT_BRANCH"
+                docker tag "${{ inputs.image-name }}:latest" "${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}:$DATE-$SHA"
 
-                echo "Publishin to repository: ${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}, with tag: $GIT_BRANCH"
-                docker push ${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}:$GIT_BRANCH
+                echo "Publishing to repository: ${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}, with tag: $GIT_BRANCH"
+                docker push "${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}:$GIT_BRANCH"
                 echo "Publishing to repository: ${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}, with tag: $DATE-$SHA"
-                docker push ${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}:$DATE-$SHA
+                docker push "${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}:$DATE-$SHA"
               fi
             shell: bash
             #endregion
