@@ -63,10 +63,18 @@ const AgentServices: React.FC = () => {
           actionTitle: 'Retry'
         }}
         emptyListStateProps={{
+          title: 'Get started with Agent Identity',
+          description:
+            'Register issuer to add Agentic services (MCP servers, OASF agents, and A2A protocols), manage identities and apply access policies',
+          actionTitle: 'Register Issuer',
           actionCallback: () => {
-            void navigate(PATHS.settings.identityProvider);
+            void navigate(PATHS.settings.identityProvider.create);
           },
-          actionTitle: 'Add Identity Provider'
+          actionButtonProps: {
+            variant: 'outlined',
+            startIcon: <PlusIcon className="w-4 h-4" />,
+            sx: {fontWeight: '600 !important'}
+          }
         }}
       >
         <ListAgenticServices />
