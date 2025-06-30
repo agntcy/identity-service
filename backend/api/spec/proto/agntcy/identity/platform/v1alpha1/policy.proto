@@ -18,7 +18,7 @@ message Policy {
   // A human-readable description for the Policy.
   optional string description = 3;
 
-  // The requester application that this Rule applies to.
+  // The requester application that this Policy applies to.
   optional string assigned_to = 4;
 
   // All the rules that apply to this Policy.

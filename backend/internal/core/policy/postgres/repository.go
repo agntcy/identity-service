@@ -94,6 +94,28 @@ func (r *repository) CreateTasks(ctx context.Context, tasks ...*types.Task) erro
 	return nil
 }
 
+func (r *repository) UpdatePolicy(ctx context.Context, policy *types.Policy) error {
+	tenantID, ok := identitycontext.GetTenantID(ctx)
+	if !ok {
+		return identitycontext.ErrTenantNotFound
+	}
+
+	model := newPolicyModel(policy, tenantID)
+
+	return r.dbContext.Client().Save(model).Error
+}
+
+func (r *repository) UpdateRule(ctx context.Context, rule *types.Rule) error {
+	tenantID, ok := identitycontext.GetTenantID(ctx)
+	if !ok {
+		return identitycontext.ErrTenantNotFound
+	}
+
+	model := NewRuleModel(rule, tenantID)
+
+	return r.dbContext.Client().Save(model).Error
+}
+
 func (r *repository) UpdateTasks(ctx context.Context, tasks ...*types.Task) error {
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {

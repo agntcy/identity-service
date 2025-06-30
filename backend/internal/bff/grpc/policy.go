@@ -161,16 +161,48 @@ func (s *PolicyService) ListRules(
 	}, nil
 }
 
-func (p *PolicyService) UpdatePolicy(
-	context.Context,
-	*identity_platform_sdk_go.UpdatePolicyRequest,
+func (s *PolicyService) UpdatePolicy(
+	ctx context.Context,
+	in *identity_platform_sdk_go.UpdatePolicyRequest,
 ) (*identity_platform_sdk_go.Policy, error) {
-	panic("unimplemented")
+	if in == nil {
+		return nil, grpcutil.BadRequestError(errors.New("request is empty"))
+	}
+
+	policy, err := s.policyService.UpdatePolicy(
+		ctx,
+		in.PolicyId,
+		in.Name,
+		ptrutil.DerefStr(in.Description),
+		in.AssignedTo,
+	)
+	if err != nil {
+		return nil, grpcutil.BadRequestError(err)
+	}
+
+	return converters.FromPolicy(policy), nil
 }
 
-func (p *PolicyService) UpdateRule(
-	context.Context,
-	*identity_platform_sdk_go.UpdateRuleRequest,
+func (s *PolicyService) UpdateRule(
+	ctx context.Context,
+	in *identity_platform_sdk_go.UpdateRuleRequest,
 ) (*identity_platform_sdk_go.Rule, error) {
-	panic("unimplemented")
+	if in == nil {
+		return nil, grpcutil.BadRequestError(errors.New("request is empty"))
+	}
+
+	rule, err := s.policyService.UpdateRule(
+		ctx,
+		in.PolicyId,
+		in.RuleId,
+		in.Name,
+		*in.Description,
+		in.Tasks,
+		ptrutil.Derefrence(in.NeedsApproval, false),
+	)
+	if err != nil {
+		return nil, grpcutil.BadRequestError(err)
+	}
+
+	return converters.FromRule(rule), nil
 }
