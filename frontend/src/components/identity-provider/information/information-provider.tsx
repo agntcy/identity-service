@@ -22,10 +22,6 @@ export const InformationProvider = ({idpSettings}: {idpSettings?: IssuerSettings
 
   const keyValuePairs = useMemo(() => {
     const temp: KeyValuePair[] = [];
-    temp.push({
-      keyProp: 'Provider Type',
-      value: <ProviderType type={provider} />
-    });
     if (provider === IdpType.IDP_TYPE_DUO) {
       temp.push({
         keyProp: 'Hostname',
@@ -54,6 +50,10 @@ export const InformationProvider = ({idpSettings}: {idpSettings?: IssuerSettings
         value: privateKey ? `${'*'.repeat(15)}${privateKey.slice(-3)}` : 'Not provided'
       });
     }
+    temp.push({
+      keyProp: 'Type',
+      value: <ProviderType type={provider} />
+    });
     return temp;
   }, [clientId, hostname, integrationKey, orgUrl, privateKey, provider, secretKey]);
 

@@ -117,7 +117,7 @@ export const ListOrganizations = () => {
                     Add
                   </Typography>
                 </MenuItem>,
-                <MenuItem key="delete" onClick={() => setTenantId(row.original.id)} sx={{display: 'flex', alignItems: 'center', gap: '8px'}}>
+                <MenuItem key="delete" onClick={() => console.info('Delete', row)} sx={{display: 'flex', alignItems: 'center', gap: '8px'}}>
                   <Trash2Icon className="w-4 h-4" color="#C62953" />
                   <Typography variant="body2" color="#C0244C">
                     Delete
