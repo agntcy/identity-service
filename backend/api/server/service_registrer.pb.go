@@ -1,6 +1,3 @@
-// Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
-// SPDX-License-Identifier: Apache-2.0
-
 package app_grpc_register
 
 import (
@@ -21,6 +18,8 @@ type GrpcServiceRegister struct {
 
 	BadgeServiceServer v1alpha1.BadgeServiceServer
 
+	DeviceServiceServer v1alpha1.DeviceServiceServer
+
 	PolicyServiceServer v1alpha1.PolicyServiceServer
 
 	SettingsServiceServer v1alpha1.SettingsServiceServer
@@ -38,6 +37,10 @@ func (r GrpcServiceRegister) RegisterGrpcHandlers(grpcServer *grpc.Server) {
 
 	if r.BadgeServiceServer != nil {
 		v1alpha1.RegisterBadgeServiceServer(grpcServer, r.BadgeServiceServer)
+	}
+
+	if r.DeviceServiceServer != nil {
+		v1alpha1.RegisterDeviceServiceServer(grpcServer, r.DeviceServiceServer)
 	}
 
 	if r.PolicyServiceServer != nil {
@@ -68,6 +71,13 @@ func (r GrpcServiceRegister) RegisterHttpHandlers(ctx context.Context, mux *runt
 
 	if r.BadgeServiceServer != nil {
 		err := v1alpha1.RegisterBadgeServiceHandler(ctx, mux, conn)
+		if err != nil {
+			return err
+		}
+	}
+
+	if r.DeviceServiceServer != nil {
+		err := v1alpha1.RegisterDeviceServiceHandler(ctx, mux, conn)
 		if err != nil {
 			return err
 		}
