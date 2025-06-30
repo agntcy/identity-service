@@ -5,6 +5,7 @@ package bff
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -33,6 +34,10 @@ type issueInput struct {
 		Name string `validate:"required"`
 		Url  string `validate:"required"`
 	}
+
+	oasf struct {
+		SchemaBase64 string `validate:"required"`
+	}
 }
 
 type IssueOption func(in *issueInput)
@@ -47,6 +52,12 @@ func WithMCP(name, url string) IssueOption {
 	return func(in *issueInput) {
 		in.mcp.Name = name
 		in.mcp.Url = url
+	}
+}
+
+func WithOASF(schemaBase64 string) IssueOption {
+	return func(in *issueInput) {
+		in.oasf.SchemaBase64 = schemaBase64
 	}
 }
 
@@ -211,8 +222,21 @@ func (s *badgeService) createBadgeClaims(
 		claims.Badge = card
 		badgeType = badgetypes.BADGE_TYPE_AGENT_BADGE
 	case apptypes.APP_TYPE_AGENT_OASF:
-		// Add implementation for OASF
-		return nil, 0, nil
+		err := s.validator.Struct(&in.oasf)
+		if err != nil {
+			return nil, badgetypes.BADGE_TYPE_AGENT_BADGE, err
+		}
+
+		oasfSchema, err := base64.StdEncoding.DecodeString(in.oasf.SchemaBase64)
+		if err != nil {
+			return nil, badgetypes.BADGE_TYPE_AGENT_BADGE, err
+		}
+
+		// see how you can validate the OASF schema
+		// https://schema.oasf.agntcy.org/doc/index.html#/Validation/SchemaWeb_SchemaController_validate_object
+
+		claims.Badge = string(oasfSchema)
+		badgeType = badgetypes.BADGE_TYPE_AGENT_BADGE
 	case apptypes.APP_TYPE_MCP_SERVER:
 		err := s.validator.Struct(&in.mcp)
 		if err != nil {
