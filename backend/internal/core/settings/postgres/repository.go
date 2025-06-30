@@ -86,9 +86,7 @@ func (r *repository) getOrCreateIssuerSettings(
 	// Get the tenant ID from the context
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
-		return nil, errutil.Err(
-			nil, "failed to get tenant ID from context",
-		)
+		return nil, identitycontext.ErrTenantNotFound
 	}
 
 	result := r.dbContext.Client().

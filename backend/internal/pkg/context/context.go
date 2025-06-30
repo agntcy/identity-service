@@ -8,6 +8,8 @@ import (
 	"errors"
 )
 
+var ErrTenantNotFound = errors.New("context doesn't contain a tenant id")
+
 // InsertTenantID inserts tenantID into the context.
 func InsertTenantID(ctx context.Context, tenantID string) context.Context {
 	if tenantID != "" {
@@ -31,7 +33,7 @@ func MustHaveTenantID(ctx context.Context) string {
 	// The originating http request doesn't contain the tenant ID field
 	// or the field has been removed from the context at some stage through the processing pipeline.
 
-	panic(errors.New("context doesn't contain a tenant id"))
+	panic(ErrTenantNotFound)
 }
 
 // TenantID fetches the tenant ID from a context (if any).

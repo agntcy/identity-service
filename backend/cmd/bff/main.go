@@ -22,6 +22,8 @@ import (
 	identitycore "github.com/agntcy/identity-platform/internal/core/identity"
 	idpcore "github.com/agntcy/identity-platform/internal/core/idp"
 	"github.com/agntcy/identity-platform/internal/core/issuer"
+	policycore "github.com/agntcy/identity-platform/internal/core/policy"
+	policypg "github.com/agntcy/identity-platform/internal/core/policy/postgres"
 	settingspg "github.com/agntcy/identity-platform/internal/core/settings/postgres"
 	"github.com/agntcy/identity-platform/internal/pkg/grpcutil"
 	outshiftiam "github.com/agntcy/identity-platform/internal/pkg/iam"
@@ -108,6 +110,9 @@ func main() {
 		&settingspg.OktaIdpSettings{}, // Okta IDP settings model
 		&badgepg.Badge{},              // Badge model
 		&authpg.Session{},             // Session model
+		&policypg.Policy{},
+		&policypg.Task{},
+		&policypg.Rule{},
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -163,6 +168,7 @@ func main() {
 	settingsRepository := settingspg.NewRepository(dbContext)
 	badgeRepository := badgepg.NewRepository(dbContext)
 	authRepository := authpg.NewRepository(dbContext)
+	policyRepository := policypg.NewRepository(dbContext)
 
 	// Get the token depending on the environment
 	token := ""
@@ -196,6 +202,8 @@ func main() {
 
 	// OIDC Authenticator
 	oidcAuthenticator := oidc.NewAuthenticator()
+	a2aClient := badgea2a.NewDiscoveryClient()
+	mcpClient := badgemcp.NewDiscoveryClient()
 
 	// Identity service
 	identityService := identitycore.NewService(
@@ -204,9 +212,7 @@ func main() {
 		keyStore,
 		oidcAuthenticator,
 	)
-
-	a2aClient := badgea2a.NewDiscoveryClient()
-	mcpClient := badgemcp.NewDiscoveryClient()
+	taskService := policycore.NewTaskService(mcpClient, policyRepository)
 
 	// Create internal services
 	appSrv := bff.NewAppService(
@@ -236,18 +242,21 @@ func main() {
 		keyStore,
 		identityService,
 		credentialStore,
+		taskService,
 	)
 	authSrv := bff.NewAuthService(
 		authRepository,
 		credentialStore,
 		oidcAuthenticator,
 	)
+	policySrv := bff.NewPolicyService(appRepository, policyRepository)
 
 	register := identity_platform_api.GrpcServiceRegister{
 		AppServiceServer:      bffgrpc.NewAppService(appSrv),
 		SettingsServiceServer: bffgrpc.NewSettingsService(settingsSrv),
 		BadgeServiceServer:    bffgrpc.NewBadgeService(badgeSrv),
 		AuthServiceServer:     bffgrpc.NewAuthService(authSrv, appSrv),
+		PolicyServiceServer:   bffgrpc.NewPolicyService(policySrv),
 	}
 
 	register.RegisterGrpcHandlers(grpcsrv.Server)

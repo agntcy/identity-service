@@ -24,10 +24,7 @@ message App {
   // The type of the App.
   optional AppType type = 4;
 
-  // The DID value
-  optional string resolver_metadata_id = 5;
-
-  optional string api_key = 6;
+  optional string api_key = 5;
 }
 
 // App Type

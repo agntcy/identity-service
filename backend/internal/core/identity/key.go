@@ -60,7 +60,7 @@ func NewVaultKeyStore(
 func (s *VaultKeyStore) GenerateAndSaveKey(ctx context.Context) (*jwk.Jwk, error) {
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
-		return nil, fmt.Errorf("tenant ID not found in context")
+		return nil, identitycontext.ErrTenantNotFound
 	}
 
 	// Generate a new key
@@ -82,7 +82,7 @@ func (s *VaultKeyStore) GenerateAndSaveKey(ctx context.Context) (*jwk.Jwk, error
 func (s *VaultKeyStore) RetrievePubKey(ctx context.Context, id string) (*jwk.Jwk, error) {
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
-		return nil, fmt.Errorf("tenant ID not found in context")
+		return nil, identitycontext.ErrTenantNotFound
 	}
 
 	return s.store.RetrievePubKey(ctx, s.buildFullPath(tenantID, id))
@@ -91,7 +91,7 @@ func (s *VaultKeyStore) RetrievePubKey(ctx context.Context, id string) (*jwk.Jwk
 func (s *VaultKeyStore) RetrievePrivKey(ctx context.Context, id string) (*jwk.Jwk, error) {
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
-		return nil, fmt.Errorf("tenant ID not found in context")
+		return nil, identitycontext.ErrTenantNotFound
 	}
 
 	return s.store.RetrievePrivKey(ctx, s.buildFullPath(tenantID, id))
