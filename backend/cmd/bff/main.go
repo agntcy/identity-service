@@ -110,9 +110,9 @@ func main() {
 		&settingspg.OktaIdpSettings{}, // Okta IDP settings model
 		&badgepg.Badge{},              // Badge model
 		&authpg.Session{},             // Session model
+		&policypg.Policy{},
 		&policypg.Task{},
 		&policypg.Rule{},
-		&policypg.Policy{},
 	)
 	if err != nil {
 		log.Fatal(err)
