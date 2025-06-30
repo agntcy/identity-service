@@ -59,10 +59,10 @@ message Proof {
 // [here]: https://www.w3.org/TR/vc-data-model/
 message VerifiableCredential {
   // https://www.w3.org/TR/vc-data-model/#contexts
-  repeated string context = 1;
+  repeated string contexts = 1;
 
   // https://www.w3.org/TR/vc-data-model/#dfn-type
-  repeated string type = 2;
+  repeated string types = 2;
 
   // https://www.w3.org/TR/vc-data-model/#issuer
   optional string issuer = 3;
@@ -80,7 +80,7 @@ message VerifiableCredential {
   optional string expiration_date = 7;
 
   // https://www.w3.org/TR/vc-data-model-2.0/#data-schemas
-  repeated CredentialSchema credential_schema = 8;
+  repeated CredentialSchema credential_schemas = 8;
 
   // https://w3id.org/security#proof
   optional Proof proof = 9;
@@ -98,10 +98,6 @@ enum BadgeType {
   BADGE_TYPE_AGENT_BADGE = 1;
   // McpBadge Content Type.
   // The MCP content representation following a defined schema
-  // The schema is defined in the MCP specification as the MCPServer type
-  BADGE_TYPE_MCP_BADGE = 2;
-}
-ined schema
   // The schema is defined in the MCP specification as the MCPServer type
   BADGE_TYPE_MCP_BADGE = 2;
 }

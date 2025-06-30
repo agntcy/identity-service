@@ -47,7 +47,7 @@ message AddDeviceRequest {
 
 message RegisterDeviceRequest {
   // The unique identifier for the device to register.
-  optional string device_id = 1;
+  string device_id = 1;
 
   // The device information to register.
   Device device = 2;
