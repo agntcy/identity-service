@@ -1,8 +1,3 @@
-/**
- * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
- * SPDX-License-Identifier: Apache-2.0
- */
-
 /* eslint-disable */
 /* tslint:disable */
 // @ts-nocheck
@@ -20,6 +15,8 @@ export interface BadgeServiceIssueBadgeBody {
   a2a?: V1Alpha1IssueA2ABadgeRequest;
   /** The MCP badge. */
   mcp?: V1Alpha1IssueMcpBadgeRequest;
+  /** The OASF badge. */
+  oasf?: V1Alpha1IssueOASFBadgeRequest;
 }
 
 /**
@@ -190,6 +187,11 @@ export interface V1Alpha1IssueA2ABadgeRequest {
 export interface V1Alpha1IssueMcpBadgeRequest {
   name?: string;
   url?: string;
+}
+
+export interface V1Alpha1IssueOASFBadgeRequest {
+  /** The OASF schema in a base64 encoded format */
+  schemaBase64?: string;
 }
 
 /**

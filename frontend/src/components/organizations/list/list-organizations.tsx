@@ -103,7 +103,7 @@ export const ListOrganizations = () => {
             onPaginationChange={setPagination}
             rowCount={data?.tenants.length ?? 0}
             rowsPerPageOptions={[1, 10, 25, 50, 100]}
-            title={{label: 'organizations', count: data?.tenants?.length || 0}}
+            title={{label: 'Organizations', count: data?.tenants?.length || 0}}
             state={{pagination, sorting}}
             onSortingChange={setSorting}
             renderRowActionMenuItems={({row}) => {

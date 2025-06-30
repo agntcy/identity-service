@@ -72,7 +72,8 @@ const FormStepperComponent = () => {
       description: undefined,
       oasfSpecs: undefined,
       mcpServer: undefined,
-      oasfSpecsContent: undefined
+      oasfSpecsContent: undefined,
+      wellKnowServer: undefined
     });
     methods.reset();
     methods.resetMetadata();
@@ -96,7 +97,8 @@ const FormStepperComponent = () => {
       description: values.description,
       oasfSpecs: values.oasfSpecs,
       mcpServer: values.mcpServer,
-      oasfSpecsContent: values.oasfSpecsContent
+      oasfSpecsContent: values.oasfSpecsContent,
+      wellKnowServer: values.wellKnowServer
     });
     methods.next();
   }, [form, methods]);

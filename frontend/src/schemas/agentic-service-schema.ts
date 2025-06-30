@@ -23,7 +23,8 @@ export const AgenticServiceSchema = z
       })
       .optional(),
     mcpServer: z.string().optional(),
-    oasfSpecsContent: z.string().optional()
+    oasfSpecsContent: z.string().optional(),
+    wellKnowServer: z.string().optional()
   })
   .superRefine((data, ctx) => {
     if (data.type === AppType.APP_TYPE_AGENT_OASF) {
@@ -31,6 +32,20 @@ export const AgenticServiceSchema = z
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: 'OASF Specs are required for OASF Agentic Service'
+        });
+      }
+    } else if (data.type === AppType.APP_TYPE_MCP_SERVER) {
+      if (!data.mcpServer) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'MCP Server is required for MCP Agentic Service'
+        });
+      }
+    } else if (data.type === AppType.APP_TYPE_AGENT_A2A) {
+      if (!data.wellKnowServer) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Well-Known Server is required for A2A Agentic Service'
         });
       }
     }
