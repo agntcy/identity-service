@@ -18,7 +18,7 @@ const SettingsOrganizations: React.FC = () => {
       subNav={[
         {
           label: 'Identity Provider',
-          href: PATHS.settings.identityProvider
+          href: PATHS.settings.identityProvider.base
         },
         {
           label: 'Api Key',

@@ -4,10 +4,8 @@
  */
 
 import {Card, CardContent} from '@/components/ui/card';
-import {useStepper} from '../stepper';
 import {useFormContext} from 'react-hook-form';
 import {FormControl, FormField, FormItem, FormLabel} from '@/components/ui/form';
-import {useEffect} from 'react';
 import {IdentityProvidersFormValues} from '@/schemas/identity-provider-schema';
 import {SharedProvider, SharedProviderProps} from '@/components/shared/shared-provider';
 import {Input} from '@/components/ui/input';
@@ -20,11 +18,8 @@ import OktaLogo from '@/assets/okta.svg?react';
 import OasfLogo from '@/assets/oasf.svg?react';
 import {IdpType} from '@/types/api/settings';
 
-export const ProviderInfo = ({isLoading = false}: {isLoading?: boolean}) => {
-  const {control, watch, reset} = useFormContext<IdentityProvidersFormValues>();
-  const methods = useStepper();
-
-  const metaData = methods.getMetadata('providerInfo') as IdentityProvidersFormValues | undefined;
+export const IdentityProviderForm = ({isLoading = false}: {isLoading?: boolean}) => {
+  const {control, watch} = useFormContext<IdentityProvidersFormValues>();
 
   const identityProviders: SharedProviderProps<IdpType>[] = [
     {
@@ -61,21 +56,6 @@ export const ProviderInfo = ({isLoading = false}: {isLoading?: boolean}) => {
   ];
 
   const idpType = watch('provider') as IdpType;
-
-  useEffect(() => {
-    if (metaData) {
-      reset({
-        provider: metaData.provider ?? undefined,
-        orgUrl: metaData.orgUrl ?? undefined,
-        clientId: metaData.clientId ?? undefined,
-        privateKey: metaData.privateKey ?? undefined,
-        hostname: metaData.hostname ?? undefined,
-        integrationKey: metaData.integrationKey ?? undefined,
-        secretKey: metaData.secretKey ?? undefined
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [metaData]);
 
   return (
     <Card className="text-start py-4 rounded-[8px] p-[24px]" variant="secondary">

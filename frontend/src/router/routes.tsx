@@ -20,6 +20,7 @@ import {useShallow} from 'zustand/react/shallow';
 
 const Welcome = React.lazy(() => import('@/pages/welcome/welcome'));
 const SettingsIdentityProvider = React.lazy(() => import('@/pages/settings/identity-provider/settings-identity-provider'));
+const SettingsCreateIdentityProvider = React.lazy(() => import('@/pages/settings/identity-provider/settings-create-identity-provider'));
 const TermsAndConditions = React.lazy(() => import('@/pages/terms-and-conditions/terms-and-conditions'));
 const Dashboard = React.lazy(() => import('@/pages/dashboard/dashboard'));
 const SettingsApiKey = React.lazy(() => import('@/pages/settings/api-key/settings-api-key'));
@@ -148,11 +149,25 @@ export const useRoutes = () => {
         children: [
           {
             index: true,
-            element: <Navigate to={PATHS.settings.identityProvider} replace />
+            element: <Navigate to={PATHS.settings.identityProvider.base} replace />
           },
           {
-            path: PATHS.settings.identityProvider,
-            element: <SettingsIdentityProvider />
+            path: PATHS.settings.identityProvider.base,
+            children: [
+              {
+                index: true,
+                element: <SettingsIdentityProvider />
+              },
+              {
+                path: PATHS.settings.identityProvider.create,
+                element: <SettingsCreateIdentityProvider />,
+                disabled: !isEmptyIdp
+              },
+              {
+                path: '*',
+                element: <NotFound />
+              }
+            ]
           },
           {
             path: PATHS.settings.apiKey,

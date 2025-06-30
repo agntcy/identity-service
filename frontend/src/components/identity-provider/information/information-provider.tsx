@@ -7,12 +7,18 @@ import {Card, CardContent} from '@/components/ui/card';
 import {ExternalLinkIcon} from 'lucide-react';
 import {Link, Typography} from '@outshift/spark-design';
 import {useMemo} from 'react';
-import {IssuerSettings} from '@/types/api/settings';
+import {IdpType, IssuerSettings} from '@/types/api/settings';
 import KeyValue, {KeyValuePair} from '@/components/ui/key-value';
 import {ProviderType} from '@/components/shared/provider-type';
 
 export const InformationProvider = ({idpSettings}: {idpSettings?: IssuerSettings}) => {
   const provider = idpSettings?.idpType;
+  const hostname = idpSettings?.duoIdpSettings?.hostname;
+  const integrationKey = idpSettings?.duoIdpSettings?.integrationKey;
+  const secretKey = idpSettings?.duoIdpSettings?.secretKey;
+  const orgUrl = idpSettings?.oktaIdpSettings?.orgUrl;
+  const clientId = idpSettings?.oktaIdpSettings?.clientId;
+  const privateKey = idpSettings?.oktaIdpSettings?.privateKey;
 
   const keyValuePairs = useMemo(() => {
     const temp: KeyValuePair[] = [];
@@ -20,8 +26,36 @@ export const InformationProvider = ({idpSettings}: {idpSettings?: IssuerSettings
       keyProp: 'Provider Type',
       value: <ProviderType type={provider} />
     });
+    if (provider === IdpType.IDP_TYPE_DUO) {
+      temp.push({
+        keyProp: 'Hostname',
+        value: hostname || 'Not provided'
+      });
+      temp.push({
+        keyProp: 'Integration Key',
+        value: integrationKey || 'Not provided'
+      });
+      temp.push({
+        keyProp: 'Secret Key',
+        value: secretKey ? `${'*'.repeat(15)}${secretKey.slice(-3)}` : 'Not provided'
+      });
+    }
+    if (provider === IdpType.IDP_TYPE_OKTA) {
+      temp.push({
+        keyProp: 'Org URL',
+        value: orgUrl || 'Not provided'
+      });
+      temp.push({
+        keyProp: 'Client ID',
+        value: clientId || 'Not provided'
+      });
+      temp.push({
+        keyProp: 'Private Key',
+        value: privateKey ? `${'*'.repeat(15)}${privateKey.slice(-3)}` : 'Not provided'
+      });
+    }
     return temp;
-  }, [provider]);
+  }, [clientId, hostname, integrationKey, orgUrl, privateKey, provider, secretKey]);
 
   return (
     <Card className="text-start space-y-6" variant="secondary">
