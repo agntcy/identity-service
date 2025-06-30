@@ -136,13 +136,3 @@ func (s *authService) ExtAuthz(
 
 	return &emptypb.Empty{}, nil
 }
-
-func (s *authService) RegisterDevice(
-	ctx context.Context,
-	req *identity_platform_sdk_go.RegisterDeviceRequest,
-) (*emptypb.Empty, error) {
-	return nil, grpcutil.UnauthorizedError(errutil.Err(
-		nil,
-		"RegisterDevice method is not implemented",
-	))
-}

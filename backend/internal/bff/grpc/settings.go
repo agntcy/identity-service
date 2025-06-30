@@ -10,6 +10,8 @@ import (
 	"github.com/agntcy/identity-platform/internal/bff"
 	"github.com/agntcy/identity-platform/internal/bff/grpc/converters"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
+	"github.com/agntcy/identity-platform/internal/pkg/grpcutil"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 type settingsService struct {
@@ -66,4 +68,14 @@ func (s *settingsService) SetIssuer(
 	}
 
 	return converters.FromIssuerSettings(updatedIssuerSettings), nil
+}
+
+func (s *settingsService) AddDevice(
+	ctx context.Context,
+	req *identity_platform_sdk_go.AddDeviceRequest,
+) (*emptypb.Empty, error) {
+	return nil, grpcutil.UnauthorizedError(errutil.Err(
+		nil,
+		"RegisterDevice method is not implemented",
+	))
 }
