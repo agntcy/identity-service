@@ -32,7 +32,7 @@ type Policy struct {
 	Name *string `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
 	// A human-readable description for the Policy.
 	Description *string `protobuf:"bytes,3,opt,name=description,proto3,oneof" json:"description,omitempty"`
-	// The requester application that this Rule applies to.
+	// The requester application that this Policy applies to.
 	AssignedTo *string `protobuf:"bytes,4,opt,name=assigned_to,json=assignedTo,proto3,oneof" json:"assigned_to,omitempty"`
 	// All the rules that apply to this Policy.
 	Rules         []*Rule `protobuf:"bytes,5,rep,name=rules,proto3" json:"rules,omitempty"`
