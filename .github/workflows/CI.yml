@@ -126,7 +126,7 @@ jobs:
   ################################################################################# 
   call-docker-build-push-ui:
     name: Call Docker Build
-    needs: [ call-corona-blackduck-scan-backend ]
+    needs: [ checkout-unit-tests ]
     uses: ./.github/workflows/build-push-docker.yaml
 
     secrets:
