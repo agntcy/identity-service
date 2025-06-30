@@ -90,9 +90,9 @@ const file_agntcy_identity_platform_v1alpha1_device_service_proto_rawDesc = "" +
 	"\n" +
 	"user_token\x18\x01 \x01(\tH\x00R\tuserToken\x88\x01\x01\x12A\n" +
 	"\x06device\x18\x02 \x01(\v2).agntcy.identity.platform.v1alpha1.DeviceR\x06deviceB\r\n" +
-	"\v_user_token2\xce\x01\n" +
-	"\rDeviceService\x12\xaf\x01\n" +
-	"\tAddDevice\x123.agntcy.identity.platform.v1alpha1.AddDeviceRequest\x1a\x16.google.protobuf.Empty\"U\x92A2\x12%Register new device for approval flow*\tAddDevice\x82\xd3\xe4\x93\x02\x1a\"\x18/v1alpha1/device/devices\x1a\v\x92A\b\n" +
+	"\v_user_token2\xc1\x01\n" +
+	"\rDeviceService\x12\xa2\x01\n" +
+	"\tAddDevice\x123.agntcy.identity.platform.v1alpha1.AddDeviceRequest\x1a\x16.google.protobuf.Empty\"H\x92A-\x12 Add new device for approval flow*\tAddDevice\x82\xd3\xe4\x93\x02\x12\"\x10/v1alpha1/device\x1a\v\x92A\b\n" +
 	"\x06DeviceBkZigithub.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_gob\x06proto3"
 
 var (
