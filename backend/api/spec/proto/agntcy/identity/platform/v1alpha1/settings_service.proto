@@ -8,6 +8,7 @@ package agntcy.identity.platform.v1alpha1;
 import "agntcy/identity/platform/v1alpha1/settings.proto";
 import "google/api/annotations.proto";
 import "google/api/field_behavior.proto";
+import "google/protobuf/empty.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
 option go_package = "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_go";
@@ -73,11 +74,10 @@ message SetIssuerRequest {
   IssuerSettings issuer_settings = 1 [(google.api.field_behavior) = REQUIRED];
 }
 
-message RegisterDeviceRequest {
+message AddDeviceRequest {
   // The User context in the form of an id or access token.
   optional string user_token = 1;
 
   // The device information to register.
   Device device = 2;
 }
-

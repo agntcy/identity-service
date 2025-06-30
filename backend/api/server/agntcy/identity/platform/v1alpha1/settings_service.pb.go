@@ -14,6 +14,7 @@ import (
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -143,19 +144,79 @@ func (x *SetIssuerRequest) GetIssuerSettings() *IssuerSettings {
 	return nil
 }
 
+type AddDeviceRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The User context in the form of an id or access token.
+	UserToken *string `protobuf:"bytes,1,opt,name=user_token,json=userToken,proto3,oneof" json:"user_token,omitempty"`
+	// The device information to register.
+	Device        *Device `protobuf:"bytes,2,opt,name=device,proto3" json:"device,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AddDeviceRequest) Reset() {
+	*x = AddDeviceRequest{}
+	mi := &file_agntcy_identity_platform_v1alpha1_settings_service_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AddDeviceRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AddDeviceRequest) ProtoMessage() {}
+
+func (x *AddDeviceRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_agntcy_identity_platform_v1alpha1_settings_service_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AddDeviceRequest.ProtoReflect.Descriptor instead.
+func (*AddDeviceRequest) Descriptor() ([]byte, []int) {
+	return file_agntcy_identity_platform_v1alpha1_settings_service_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *AddDeviceRequest) GetUserToken() string {
+	if x != nil && x.UserToken != nil {
+		return *x.UserToken
+	}
+	return ""
+}
+
+func (x *AddDeviceRequest) GetDevice() *Device {
+	if x != nil {
+		return x.Device
+	}
+	return nil
+}
+
 var File_agntcy_identity_platform_v1alpha1_settings_service_proto protoreflect.FileDescriptor
 
 const file_agntcy_identity_platform_v1alpha1_settings_service_proto_rawDesc = "" +
 	"\n" +
-	"8agntcy/identity/platform/v1alpha1/settings_service.proto\x12!agntcy.identity.platform.v1alpha1\x1a0agntcy/identity/platform/v1alpha1/settings.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\"\x14\n" +
+	"8agntcy/identity/platform/v1alpha1/settings_service.proto\x12!agntcy.identity.platform.v1alpha1\x1a0agntcy/identity/platform/v1alpha1/settings.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\"\x14\n" +
 	"\x12GetSettingsRequest\"\x12\n" +
 	"\x10SetApiKeyRequest\"s\n" +
 	"\x10SetIssuerRequest\x12_\n" +
-	"\x0fissuer_settings\x18\x01 \x01(\v21.agntcy.identity.platform.v1alpha1.IssuerSettingsB\x03\xe0A\x02R\x0eissuerSettings2\xbb\x05\n" +
+	"\x0fissuer_settings\x18\x01 \x01(\v21.agntcy.identity.platform.v1alpha1.IssuerSettingsB\x03\xe0A\x02R\x0eissuerSettings\"\x88\x01\n" +
+	"\x10AddDeviceRequest\x12\"\n" +
+	"\n" +
+	"user_token\x18\x01 \x01(\tH\x00R\tuserToken\x88\x01\x01\x12A\n" +
+	"\x06device\x18\x02 \x01(\v2).agntcy.identity.platform.v1alpha1.DeviceR\x06deviceB\r\n" +
+	"\v_user_token2\xef\x06\n" +
 	"\x0fSettingsService\x12\xbb\x01\n" +
 	"\vGetSettings\x125.agntcy.identity.platform.v1alpha1.GetSettingsRequest\x1a+.agntcy.identity.platform.v1alpha1.Settings\"H\x92A+\x12\x1bGet Settings for the Tenant*\fGet Settings\x82\xd3\xe4\x93\x02\x14\x12\x12/v1alpha1/settings\x12\xe4\x01\n" +
 	"\tSetApiKey\x123.agntcy.identity.platform.v1alpha1.SetApiKeyRequest\x1a).agntcy.identity.platform.v1alpha1.ApiKey\"w\x92AR\x12\x0eSet up API Key\x1a@Create a new API Key for the Tenant. Revoke any previous API Key\x82\xd3\xe4\x93\x02\x1c\"\x1a/v1alpha1/settings/api-key\x12\xf3\x01\n" +
-	"\tSetIssuer\x123.agntcy.identity.platform.v1alpha1.SetIssuerRequest\x1a1.agntcy.identity.platform.v1alpha1.IssuerSettings\"~\x92AW\x12FCreate and register Issuer for the Tenant. Revoke any previous Issuer.*\rSet up Issuer\x82\xd3\xe4\x93\x02\x1e:\x01*\"\x19/v1alpha1/settings/issuer\x1a\r\x92A\n" +
+	"\tSetIssuer\x123.agntcy.identity.platform.v1alpha1.SetIssuerRequest\x1a1.agntcy.identity.platform.v1alpha1.IssuerSettings\"~\x92AW\x12FCreate and register Issuer for the Tenant. Revoke any previous Issuer.*\rSet up Issuer\x82\xd3\xe4\x93\x02\x1e:\x01*\"\x19/v1alpha1/settings/issuer\x12\xb1\x01\n" +
+	"\tAddDevice\x123.agntcy.identity.platform.v1alpha1.AddDeviceRequest\x1a\x16.google.protobuf.Empty\"W\x92A2\x12%Register new device for approval flow*\tAddDevice\x82\xd3\xe4\x93\x02\x1c\"\x1a/v1alpha1/settings/devices\x1a\r\x92A\n" +
 	"\n" +
 	"\bSettingsBkZigithub.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_gob\x06proto3"
 
@@ -171,28 +232,34 @@ func file_agntcy_identity_platform_v1alpha1_settings_service_proto_rawDescGZIP()
 	return file_agntcy_identity_platform_v1alpha1_settings_service_proto_rawDescData
 }
 
-var file_agntcy_identity_platform_v1alpha1_settings_service_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_agntcy_identity_platform_v1alpha1_settings_service_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_agntcy_identity_platform_v1alpha1_settings_service_proto_goTypes = []any{
 	(*GetSettingsRequest)(nil), // 0: agntcy.identity.platform.v1alpha1.GetSettingsRequest
 	(*SetApiKeyRequest)(nil),   // 1: agntcy.identity.platform.v1alpha1.SetApiKeyRequest
 	(*SetIssuerRequest)(nil),   // 2: agntcy.identity.platform.v1alpha1.SetIssuerRequest
-	(*IssuerSettings)(nil),     // 3: agntcy.identity.platform.v1alpha1.IssuerSettings
-	(*Settings)(nil),           // 4: agntcy.identity.platform.v1alpha1.Settings
-	(*ApiKey)(nil),             // 5: agntcy.identity.platform.v1alpha1.ApiKey
+	(*AddDeviceRequest)(nil),   // 3: agntcy.identity.platform.v1alpha1.AddDeviceRequest
+	(*IssuerSettings)(nil),     // 4: agntcy.identity.platform.v1alpha1.IssuerSettings
+	(*Device)(nil),             // 5: agntcy.identity.platform.v1alpha1.Device
+	(*Settings)(nil),           // 6: agntcy.identity.platform.v1alpha1.Settings
+	(*ApiKey)(nil),             // 7: agntcy.identity.platform.v1alpha1.ApiKey
+	(*emptypb.Empty)(nil),      // 8: google.protobuf.Empty
 }
 var file_agntcy_identity_platform_v1alpha1_settings_service_proto_depIdxs = []int32{
-	3, // 0: agntcy.identity.platform.v1alpha1.SetIssuerRequest.issuer_settings:type_name -> agntcy.identity.platform.v1alpha1.IssuerSettings
-	0, // 1: agntcy.identity.platform.v1alpha1.SettingsService.GetSettings:input_type -> agntcy.identity.platform.v1alpha1.GetSettingsRequest
-	1, // 2: agntcy.identity.platform.v1alpha1.SettingsService.SetApiKey:input_type -> agntcy.identity.platform.v1alpha1.SetApiKeyRequest
-	2, // 3: agntcy.identity.platform.v1alpha1.SettingsService.SetIssuer:input_type -> agntcy.identity.platform.v1alpha1.SetIssuerRequest
-	4, // 4: agntcy.identity.platform.v1alpha1.SettingsService.GetSettings:output_type -> agntcy.identity.platform.v1alpha1.Settings
-	5, // 5: agntcy.identity.platform.v1alpha1.SettingsService.SetApiKey:output_type -> agntcy.identity.platform.v1alpha1.ApiKey
-	3, // 6: agntcy.identity.platform.v1alpha1.SettingsService.SetIssuer:output_type -> agntcy.identity.platform.v1alpha1.IssuerSettings
-	4, // [4:7] is the sub-list for method output_type
-	1, // [1:4] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	4, // 0: agntcy.identity.platform.v1alpha1.SetIssuerRequest.issuer_settings:type_name -> agntcy.identity.platform.v1alpha1.IssuerSettings
+	5, // 1: agntcy.identity.platform.v1alpha1.AddDeviceRequest.device:type_name -> agntcy.identity.platform.v1alpha1.Device
+	0, // 2: agntcy.identity.platform.v1alpha1.SettingsService.GetSettings:input_type -> agntcy.identity.platform.v1alpha1.GetSettingsRequest
+	1, // 3: agntcy.identity.platform.v1alpha1.SettingsService.SetApiKey:input_type -> agntcy.identity.platform.v1alpha1.SetApiKeyRequest
+	2, // 4: agntcy.identity.platform.v1alpha1.SettingsService.SetIssuer:input_type -> agntcy.identity.platform.v1alpha1.SetIssuerRequest
+	3, // 5: agntcy.identity.platform.v1alpha1.SettingsService.AddDevice:input_type -> agntcy.identity.platform.v1alpha1.AddDeviceRequest
+	6, // 6: agntcy.identity.platform.v1alpha1.SettingsService.GetSettings:output_type -> agntcy.identity.platform.v1alpha1.Settings
+	7, // 7: agntcy.identity.platform.v1alpha1.SettingsService.SetApiKey:output_type -> agntcy.identity.platform.v1alpha1.ApiKey
+	4, // 8: agntcy.identity.platform.v1alpha1.SettingsService.SetIssuer:output_type -> agntcy.identity.platform.v1alpha1.IssuerSettings
+	8, // 9: agntcy.identity.platform.v1alpha1.SettingsService.AddDevice:output_type -> google.protobuf.Empty
+	6, // [6:10] is the sub-list for method output_type
+	2, // [2:6] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_agntcy_identity_platform_v1alpha1_settings_service_proto_init() }
@@ -201,13 +268,14 @@ func file_agntcy_identity_platform_v1alpha1_settings_service_proto_init() {
 		return
 	}
 	file_agntcy_identity_platform_v1alpha1_settings_proto_init()
+	file_agntcy_identity_platform_v1alpha1_settings_service_proto_msgTypes[3].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_agntcy_identity_platform_v1alpha1_settings_service_proto_rawDesc), len(file_agntcy_identity_platform_v1alpha1_settings_service_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -15,6 +15,18 @@ message ApiKey {
   optional string api_key = 1;
 }
 
+// Devices used for user approval
+message Device {
+  // A unique identifier for the Device.
+  optional string id = 1;
+
+  // User ID associated with the Device.
+  optional string user_id = 2;
+
+  // Subscription Token for the Device.
+  optional string subscription_token = 3;
+}
+
 // Duo IdP Settings
 message DuoIdpSettings {
   optional string hostname = 1;
@@ -53,18 +65,6 @@ message OktaIdpSettings {
   optional string private_key = 3;
 }
 
-// Devices used for user approval
-message Device {
-  // A unique identifier for the Device.
-  optional string id = 1;
-
-  // User ID associated with the Device.
-  optional string user_id = 2;
-
-  // Subscription Token for the Device.
-  optional string subscription_token = 3;
-}
-
 // Identity Settings
 message Settings {
   // An API Key for the Identity Platform.
@@ -73,7 +73,7 @@ message Settings {
   // Settings for the Issuer.
   optional IssuerSettings issuer_settings = 2;
 
-  // Devices registered for user approval.
+  // Devices used for user approval.
   repeated Device devices = 3;
 }
 

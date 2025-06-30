@@ -125,6 +125,70 @@ func (x *ApiKey) GetApiKey() string {
 	return ""
 }
 
+// Devices used for user approval
+type Device struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// A unique identifier for the Device.
+	Id *string `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
+	// User ID associated with the Device.
+	UserId *string `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
+	// Subscription Token for the Device.
+	SubscriptionToken *string `protobuf:"bytes,3,opt,name=subscription_token,json=subscriptionToken,proto3,oneof" json:"subscription_token,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *Device) Reset() {
+	*x = Device{}
+	mi := &file_agntcy_identity_platform_v1alpha1_settings_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Device) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Device) ProtoMessage() {}
+
+func (x *Device) ProtoReflect() protoreflect.Message {
+	mi := &file_agntcy_identity_platform_v1alpha1_settings_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Device.ProtoReflect.Descriptor instead.
+func (*Device) Descriptor() ([]byte, []int) {
+	return file_agntcy_identity_platform_v1alpha1_settings_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *Device) GetId() string {
+	if x != nil && x.Id != nil {
+		return *x.Id
+	}
+	return ""
+}
+
+func (x *Device) GetUserId() string {
+	if x != nil && x.UserId != nil {
+		return *x.UserId
+	}
+	return ""
+}
+
+func (x *Device) GetSubscriptionToken() string {
+	if x != nil && x.SubscriptionToken != nil {
+		return *x.SubscriptionToken
+	}
+	return ""
+}
+
 // Duo IdP Settings
 type DuoIdpSettings struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
@@ -137,7 +201,7 @@ type DuoIdpSettings struct {
 
 func (x *DuoIdpSettings) Reset() {
 	*x = DuoIdpSettings{}
-	mi := &file_agntcy_identity_platform_v1alpha1_settings_proto_msgTypes[1]
+	mi := &file_agntcy_identity_platform_v1alpha1_settings_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -149,7 +213,7 @@ func (x *DuoIdpSettings) String() string {
 func (*DuoIdpSettings) ProtoMessage() {}
 
 func (x *DuoIdpSettings) ProtoReflect() protoreflect.Message {
-	mi := &file_agntcy_identity_platform_v1alpha1_settings_proto_msgTypes[1]
+	mi := &file_agntcy_identity_platform_v1alpha1_settings_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -162,7 +226,7 @@ func (x *DuoIdpSettings) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DuoIdpSettings.ProtoReflect.Descriptor instead.
 func (*DuoIdpSettings) Descriptor() ([]byte, []int) {
-	return file_agntcy_identity_platform_v1alpha1_settings_proto_rawDescGZIP(), []int{1}
+	return file_agntcy_identity_platform_v1alpha1_settings_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *DuoIdpSettings) GetHostname() string {
@@ -207,7 +271,7 @@ type IssuerSettings struct {
 
 func (x *IssuerSettings) Reset() {
 	*x = IssuerSettings{}
-	mi := &file_agntcy_identity_platform_v1alpha1_settings_proto_msgTypes[2]
+	mi := &file_agntcy_identity_platform_v1alpha1_settings_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -219,7 +283,7 @@ func (x *IssuerSettings) String() string {
 func (*IssuerSettings) ProtoMessage() {}
 
 func (x *IssuerSettings) ProtoReflect() protoreflect.Message {
-	mi := &file_agntcy_identity_platform_v1alpha1_settings_proto_msgTypes[2]
+	mi := &file_agntcy_identity_platform_v1alpha1_settings_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -232,7 +296,7 @@ func (x *IssuerSettings) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IssuerSettings.ProtoReflect.Descriptor instead.
 func (*IssuerSettings) Descriptor() ([]byte, []int) {
-	return file_agntcy_identity_platform_v1alpha1_settings_proto_rawDescGZIP(), []int{2}
+	return file_agntcy_identity_platform_v1alpha1_settings_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *IssuerSettings) GetIssuerId() string {
@@ -282,7 +346,7 @@ type OktaIdpSettings struct {
 
 func (x *OktaIdpSettings) Reset() {
 	*x = OktaIdpSettings{}
-	mi := &file_agntcy_identity_platform_v1alpha1_settings_proto_msgTypes[3]
+	mi := &file_agntcy_identity_platform_v1alpha1_settings_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -294,7 +358,7 @@ func (x *OktaIdpSettings) String() string {
 func (*OktaIdpSettings) ProtoMessage() {}
 
 func (x *OktaIdpSettings) ProtoReflect() protoreflect.Message {
-	mi := &file_agntcy_identity_platform_v1alpha1_settings_proto_msgTypes[3]
+	mi := &file_agntcy_identity_platform_v1alpha1_settings_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -307,7 +371,7 @@ func (x *OktaIdpSettings) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OktaIdpSettings.ProtoReflect.Descriptor instead.
 func (*OktaIdpSettings) Descriptor() ([]byte, []int) {
-	return file_agntcy_identity_platform_v1alpha1_settings_proto_rawDescGZIP(), []int{3}
+	return file_agntcy_identity_platform_v1alpha1_settings_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *OktaIdpSettings) GetOrgUrl() string {
@@ -338,13 +402,15 @@ type Settings struct {
 	ApiKey *ApiKey `protobuf:"bytes,1,opt,name=api_key,json=apiKey,proto3,oneof" json:"api_key,omitempty"`
 	// Settings for the Issuer.
 	IssuerSettings *IssuerSettings `protobuf:"bytes,2,opt,name=issuer_settings,json=issuerSettings,proto3,oneof" json:"issuer_settings,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
+	// Devices used for user approval.
+	Devices       []*Device `protobuf:"bytes,3,rep,name=devices,proto3" json:"devices,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Settings) Reset() {
 	*x = Settings{}
-	mi := &file_agntcy_identity_platform_v1alpha1_settings_proto_msgTypes[4]
+	mi := &file_agntcy_identity_platform_v1alpha1_settings_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -356,7 +422,7 @@ func (x *Settings) String() string {
 func (*Settings) ProtoMessage() {}
 
 func (x *Settings) ProtoReflect() protoreflect.Message {
-	mi := &file_agntcy_identity_platform_v1alpha1_settings_proto_msgTypes[4]
+	mi := &file_agntcy_identity_platform_v1alpha1_settings_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -369,7 +435,7 @@ func (x *Settings) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Settings.ProtoReflect.Descriptor instead.
 func (*Settings) Descriptor() ([]byte, []int) {
-	return file_agntcy_identity_platform_v1alpha1_settings_proto_rawDescGZIP(), []int{4}
+	return file_agntcy_identity_platform_v1alpha1_settings_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *Settings) GetApiKey() *ApiKey {
@@ -386,6 +452,13 @@ func (x *Settings) GetIssuerSettings() *IssuerSettings {
 	return nil
 }
 
+func (x *Settings) GetDevices() []*Device {
+	if x != nil {
+		return x.Devices
+	}
+	return nil
+}
+
 var File_agntcy_identity_platform_v1alpha1_settings_proto protoreflect.FileDescriptor
 
 const file_agntcy_identity_platform_v1alpha1_settings_proto_rawDesc = "" +
@@ -394,7 +467,15 @@ const file_agntcy_identity_platform_v1alpha1_settings_proto_rawDesc = "" +
 	"\x06ApiKey\x12\x1c\n" +
 	"\aapi_key\x18\x01 \x01(\tH\x00R\x06apiKey\x88\x01\x01B\n" +
 	"\n" +
-	"\b_api_key\"\xb3\x01\n" +
+	"\b_api_key\"\x99\x01\n" +
+	"\x06Device\x12\x13\n" +
+	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x1c\n" +
+	"\auser_id\x18\x02 \x01(\tH\x01R\x06userId\x88\x01\x01\x122\n" +
+	"\x12subscription_token\x18\x03 \x01(\tH\x02R\x11subscriptionToken\x88\x01\x01B\x05\n" +
+	"\x03_idB\n" +
+	"\n" +
+	"\b_user_idB\x15\n" +
+	"\x13_subscription_token\"\xb3\x01\n" +
 	"\x0eDuoIdpSettings\x12\x1f\n" +
 	"\bhostname\x18\x01 \x01(\tH\x00R\bhostname\x88\x01\x01\x12,\n" +
 	"\x0fintegration_key\x18\x02 \x01(\tH\x01R\x0eintegrationKey\x88\x01\x01\x12\"\n" +
@@ -424,10 +505,11 @@ const file_agntcy_identity_platform_v1alpha1_settings_proto_rawDesc = "" +
 	"\b_org_urlB\f\n" +
 	"\n" +
 	"_client_idB\x0e\n" +
-	"\f_private_key\"\xd4\x01\n" +
+	"\f_private_key\"\x99\x02\n" +
 	"\bSettings\x12G\n" +
 	"\aapi_key\x18\x01 \x01(\v2).agntcy.identity.platform.v1alpha1.ApiKeyH\x00R\x06apiKey\x88\x01\x01\x12_\n" +
-	"\x0fissuer_settings\x18\x02 \x01(\v21.agntcy.identity.platform.v1alpha1.IssuerSettingsH\x01R\x0eissuerSettings\x88\x01\x01B\n" +
+	"\x0fissuer_settings\x18\x02 \x01(\v21.agntcy.identity.platform.v1alpha1.IssuerSettingsH\x01R\x0eissuerSettings\x88\x01\x01\x12C\n" +
+	"\adevices\x18\x03 \x03(\v2).agntcy.identity.platform.v1alpha1.DeviceR\adevicesB\n" +
 	"\n" +
 	"\b_api_keyB\x12\n" +
 	"\x10_issuer_settings*[\n" +
@@ -450,26 +532,28 @@ func file_agntcy_identity_platform_v1alpha1_settings_proto_rawDescGZIP() []byte 
 }
 
 var file_agntcy_identity_platform_v1alpha1_settings_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_agntcy_identity_platform_v1alpha1_settings_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_agntcy_identity_platform_v1alpha1_settings_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_agntcy_identity_platform_v1alpha1_settings_proto_goTypes = []any{
 	(IdpType)(0),            // 0: agntcy.identity.platform.v1alpha1.IdpType
 	(*ApiKey)(nil),          // 1: agntcy.identity.platform.v1alpha1.ApiKey
-	(*DuoIdpSettings)(nil),  // 2: agntcy.identity.platform.v1alpha1.DuoIdpSettings
-	(*IssuerSettings)(nil),  // 3: agntcy.identity.platform.v1alpha1.IssuerSettings
-	(*OktaIdpSettings)(nil), // 4: agntcy.identity.platform.v1alpha1.OktaIdpSettings
-	(*Settings)(nil),        // 5: agntcy.identity.platform.v1alpha1.Settings
+	(*Device)(nil),          // 2: agntcy.identity.platform.v1alpha1.Device
+	(*DuoIdpSettings)(nil),  // 3: agntcy.identity.platform.v1alpha1.DuoIdpSettings
+	(*IssuerSettings)(nil),  // 4: agntcy.identity.platform.v1alpha1.IssuerSettings
+	(*OktaIdpSettings)(nil), // 5: agntcy.identity.platform.v1alpha1.OktaIdpSettings
+	(*Settings)(nil),        // 6: agntcy.identity.platform.v1alpha1.Settings
 }
 var file_agntcy_identity_platform_v1alpha1_settings_proto_depIdxs = []int32{
 	0, // 0: agntcy.identity.platform.v1alpha1.IssuerSettings.idp_type:type_name -> agntcy.identity.platform.v1alpha1.IdpType
-	2, // 1: agntcy.identity.platform.v1alpha1.IssuerSettings.duo_idp_settings:type_name -> agntcy.identity.platform.v1alpha1.DuoIdpSettings
-	4, // 2: agntcy.identity.platform.v1alpha1.IssuerSettings.okta_idp_settings:type_name -> agntcy.identity.platform.v1alpha1.OktaIdpSettings
+	3, // 1: agntcy.identity.platform.v1alpha1.IssuerSettings.duo_idp_settings:type_name -> agntcy.identity.platform.v1alpha1.DuoIdpSettings
+	5, // 2: agntcy.identity.platform.v1alpha1.IssuerSettings.okta_idp_settings:type_name -> agntcy.identity.platform.v1alpha1.OktaIdpSettings
 	1, // 3: agntcy.identity.platform.v1alpha1.Settings.api_key:type_name -> agntcy.identity.platform.v1alpha1.ApiKey
-	3, // 4: agntcy.identity.platform.v1alpha1.Settings.issuer_settings:type_name -> agntcy.identity.platform.v1alpha1.IssuerSettings
-	5, // [5:5] is the sub-list for method output_type
-	5, // [5:5] is the sub-list for method input_type
-	5, // [5:5] is the sub-list for extension type_name
-	5, // [5:5] is the sub-list for extension extendee
-	0, // [0:5] is the sub-list for field type_name
+	4, // 4: agntcy.identity.platform.v1alpha1.Settings.issuer_settings:type_name -> agntcy.identity.platform.v1alpha1.IssuerSettings
+	2, // 5: agntcy.identity.platform.v1alpha1.Settings.devices:type_name -> agntcy.identity.platform.v1alpha1.Device
+	6, // [6:6] is the sub-list for method output_type
+	6, // [6:6] is the sub-list for method input_type
+	6, // [6:6] is the sub-list for extension type_name
+	6, // [6:6] is the sub-list for extension extendee
+	0, // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_agntcy_identity_platform_v1alpha1_settings_proto_init() }
@@ -482,13 +566,14 @@ func file_agntcy_identity_platform_v1alpha1_settings_proto_init() {
 	file_agntcy_identity_platform_v1alpha1_settings_proto_msgTypes[2].OneofWrappers = []any{}
 	file_agntcy_identity_platform_v1alpha1_settings_proto_msgTypes[3].OneofWrappers = []any{}
 	file_agntcy_identity_platform_v1alpha1_settings_proto_msgTypes[4].OneofWrappers = []any{}
+	file_agntcy_identity_platform_v1alpha1_settings_proto_msgTypes[5].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_agntcy_identity_platform_v1alpha1_settings_proto_rawDesc), len(file_agntcy_identity_platform_v1alpha1_settings_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   5,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

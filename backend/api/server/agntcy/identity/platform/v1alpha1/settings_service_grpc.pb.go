@@ -14,6 +14,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -25,6 +26,7 @@ const (
 	SettingsService_GetSettings_FullMethodName = "/agntcy.identity.platform.v1alpha1.SettingsService/GetSettings"
 	SettingsService_SetApiKey_FullMethodName   = "/agntcy.identity.platform.v1alpha1.SettingsService/SetApiKey"
 	SettingsService_SetIssuer_FullMethodName   = "/agntcy.identity.platform.v1alpha1.SettingsService/SetIssuer"
+	SettingsService_AddDevice_FullMethodName   = "/agntcy.identity.platform.v1alpha1.SettingsService/AddDevice"
 )
 
 // SettingsServiceClient is the client API for SettingsService service.
@@ -39,6 +41,8 @@ type SettingsServiceClient interface {
 	SetApiKey(ctx context.Context, in *SetApiKeyRequest, opts ...grpc.CallOption) (*ApiKey, error)
 	// Set up Issuer
 	SetIssuer(ctx context.Context, in *SetIssuerRequest, opts ...grpc.CallOption) (*IssuerSettings, error)
+	// Add new device for approval flow
+	AddDevice(ctx context.Context, in *AddDeviceRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type settingsServiceClient struct {
@@ -79,6 +83,16 @@ func (c *settingsServiceClient) SetIssuer(ctx context.Context, in *SetIssuerRequ
 	return out, nil
 }
 
+func (c *settingsServiceClient) AddDevice(ctx context.Context, in *AddDeviceRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, SettingsService_AddDevice_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // SettingsServiceServer is the server API for SettingsService service.
 // All implementations should embed UnimplementedSettingsServiceServer
 // for forward compatibility.
@@ -91,6 +105,8 @@ type SettingsServiceServer interface {
 	SetApiKey(context.Context, *SetApiKeyRequest) (*ApiKey, error)
 	// Set up Issuer
 	SetIssuer(context.Context, *SetIssuerRequest) (*IssuerSettings, error)
+	// Add new device for approval flow
+	AddDevice(context.Context, *AddDeviceRequest) (*emptypb.Empty, error)
 }
 
 // UnimplementedSettingsServiceServer should be embedded to have
@@ -108,6 +124,9 @@ func (UnimplementedSettingsServiceServer) SetApiKey(context.Context, *SetApiKeyR
 }
 func (UnimplementedSettingsServiceServer) SetIssuer(context.Context, *SetIssuerRequest) (*IssuerSettings, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SetIssuer not implemented")
+}
+func (UnimplementedSettingsServiceServer) AddDevice(context.Context, *AddDeviceRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddDevice not implemented")
 }
 func (UnimplementedSettingsServiceServer) testEmbeddedByValue() {}
 
@@ -183,6 +202,24 @@ func _SettingsService_SetIssuer_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _SettingsService_AddDevice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddDeviceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SettingsServiceServer).AddDevice(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: SettingsService_AddDevice_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SettingsServiceServer).AddDevice(ctx, req.(*AddDeviceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // SettingsService_ServiceDesc is the grpc.ServiceDesc for SettingsService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -201,6 +238,10 @@ var SettingsService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SetIssuer",
 			Handler:    _SettingsService_SetIssuer_Handler,
+		},
+		{
+			MethodName: "AddDevice",
+			Handler:    _SettingsService_AddDevice_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

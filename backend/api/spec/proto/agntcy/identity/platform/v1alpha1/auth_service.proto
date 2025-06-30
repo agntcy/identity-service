@@ -6,7 +6,6 @@ syntax = "proto3";
 package agntcy.identity.platform.v1alpha1;
 
 import "agntcy/identity/platform/v1alpha1/app.proto";
-import "agntcy/identity/platform/v1alpha1/auth.proto";
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
