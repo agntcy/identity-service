@@ -28,7 +28,7 @@ const AgenticServiceInfo: React.FC = () => {
           link: PATHS.agenticServices.base
         },
         {
-          text: data?.name || 'Agentic Service Info'
+          text: id || 'Agentic Service Info'
         }
       ]}
       rightSideItems={

@@ -41,7 +41,7 @@ export const AgenticServicForm = ({isLoading = false}: {isLoading?: boolean}) =>
       type: AppType.APP_TYPE_AGENT_A2A,
       title: 'Protocol',
       imgURI: <Typography>A2A</Typography>,
-      isDisabled: true
+      isDisabled: isLoading
     }
   ];
 
@@ -54,7 +54,9 @@ export const AgenticServicForm = ({isLoading = false}: {isLoading?: boolean}) =>
         name: metaData.name ?? undefined,
         description: metaData.description ?? undefined,
         oasfSpecs: metaData.oasfSpecs ?? undefined,
-        mcpServer: metaData.mcpServer ?? undefined
+        mcpServer: metaData.mcpServer ?? undefined,
+        oasfSpecsContent: metaData.oasfSpecsContent ?? undefined,
+        wellKnowServer: metaData.wellKnowServer ?? undefined
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -158,6 +160,20 @@ export const AgenticServicForm = ({isLoading = false}: {isLoading?: boolean}) =>
                   <FormLabel className="form-label">URL</FormLabel>
                   <FormControl>
                     <Input placeholder="Type the URL of the mcp server..." {...field} disabled={isLoading} />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+          )}
+          {appType === AppType.APP_TYPE_AGENT_A2A && (
+            <FormField
+              control={control}
+              name="wellKnowServer"
+              render={({field}) => (
+                <FormItem className="w-[50%] pr-2">
+                  <FormLabel className="form-label">Well Know Server</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Type the URL of the well know server..." {...field} disabled={isLoading} />
                   </FormControl>
                 </FormItem>
               )}

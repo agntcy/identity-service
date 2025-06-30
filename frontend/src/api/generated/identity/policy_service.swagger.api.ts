@@ -1,8 +1,3 @@
-/**
- * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
- * SPDX-License-Identifier: Apache-2.0
- */
-
 /* eslint-disable */
 /* tslint:disable */
 // @ts-nocheck
@@ -14,6 +9,17 @@
  * ## SOURCE: https://github.com/acacode/swagger-typescript-api ##
  * ---------------------------------------------------------------
  */
+
+export interface PolicyServiceCreateRuleBody {
+  /** A human-readable name for the Rule. */
+  name?: string;
+  /** A human-readable description for the Rule. */
+  description?: string;
+  /** The tasks that this Rule applies to. */
+  tasks?: string[];
+  /** Need User Approval for this Rule. */
+  needsApproval?: boolean;
+}
 
 /**
  * `Any` contains an arbitrary serialized protocol buffer message along with a
@@ -144,6 +150,15 @@ export interface RpcStatus {
   details?: GoogleprotobufAny[];
 }
 
+export interface V1Alpha1CreatePolicyRequest {
+  /** A human-readable name for the Policy. */
+  name?: string;
+  /** A human-readable description for the Policy. */
+  description?: string;
+  /** The requester application that this policy applies to. */
+  assignedTo?: string;
+}
+
 export interface V1Alpha1ListPoliciesResponse {
   /** A list of Policies. */
   policies?: V1Alpha1Policy[];
@@ -181,26 +196,27 @@ export interface V1Alpha1PagedResponse {
 
 /** Identity Platform Policy. */
 export interface V1Alpha1Policy {
-  /** A unique identifier for the App. */
+  /** A unique identifier for the Policy. */
   id?: string;
-  /** A human-readable name for the App. */
+  /** A human-readable name for the Policy. */
   name?: string;
-  /** A human-readable description for the App. */
+  /** A human-readable description for the Policy. */
   description?: string;
+  /** The requester application that this Rule applies to. */
+  assignedTo?: string;
   /** All the rules that apply to this Policy. */
   rules?: V1Alpha1Rule[];
 }
 
 /** Identity Platform Policy Rule */
 export interface V1Alpha1Rule {
-  /** A unique identifier for the App. */
+  /** A unique identifier for the Rule. */
   id?: string;
-  /** A human-readable name for the App. */
+  /** A human-readable name for the Rule. */
   name?: string;
-  /** A human-readable description for the App. */
+  /** A human-readable description for the Rule. */
   description?: string;
-  /** The requester application that this Rule applies to. */
-  assignedTo?: string;
+  policyId?: string;
   /** The tasks that this Rule applies to. */
   tasks?: V1Alpha1Task[];
   /** Need User Approval for this Rule. */
@@ -213,6 +229,8 @@ export interface V1Alpha1Task {
   id?: string;
   /** A human-readable name for the Task. */
   name?: string;
+  /** A human-readable description for the Task. */
+  description?: string;
   /** An application ID for the Task. */
   appId?: string;
   /** A tool name for the Task. */
@@ -391,11 +409,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @summary Create Policy
      * @request POST:/v1alpha1/policies
      */
-    createPolicy: (policy: V1Alpha1Policy, params: RequestParams = {}) =>
+    createPolicy: (body: V1Alpha1CreatePolicyRequest, params: RequestParams = {}) =>
       this.request<V1Alpha1Policy, RpcStatus>({
         path: `/v1alpha1/policies`,
         method: 'POST',
-        body: policy,
+        body: body,
         type: ContentType.Json,
         format: 'json',
         ...params
@@ -493,11 +511,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @summary Create Rule
      * @request POST:/v1alpha1/policies/{policyId}/rules
      */
-    createRule: (policyId: string, rule: V1Alpha1Rule, params: RequestParams = {}) =>
+    createRule: (policyId: string, body: PolicyServiceCreateRuleBody, params: RequestParams = {}) =>
       this.request<V1Alpha1Rule, RpcStatus>({
         path: `/v1alpha1/policies/${policyId}/rules`,
         method: 'POST',
-        body: rule,
+        body: body,
         type: ContentType.Json,
         format: 'json',
         ...params

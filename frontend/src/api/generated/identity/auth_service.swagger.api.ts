@@ -1,8 +1,3 @@
-/**
- * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
- * SPDX-License-Identifier: Apache-2.0
- */
-
 /* eslint-disable */
 /* tslint:disable */
 // @ts-nocheck
@@ -169,8 +164,6 @@ export interface V1Alpha1App {
   description?: string;
   /** The type of the App. */
   type?: V1Alpha1AppType;
-  /** The DID value */
-  resolverMetadataId?: string;
   apiKey?: string;
 }
 

@@ -82,12 +82,11 @@
         },
         "parameters": [
           {
-            "name": "policy",
-            "description": "The Policy to create.",
+            "name": "body",
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1alpha1Policy"
+              "$ref": "#/definitions/v1alpha1CreatePolicyRequest"
             }
           }
         ],
@@ -278,12 +277,11 @@
             "type": "string"
           },
           {
-            "name": "rule",
-            "description": "The Rule to create.",
+            "name": "body",
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1alpha1Rule"
+              "$ref": "#/definitions/PolicyServiceCreateRuleBody"
             }
           }
         ],
@@ -417,6 +415,30 @@
     }
   },
   "definitions": {
+    "PolicyServiceCreateRuleBody": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "A human-readable name for the Rule."
+        },
+        "description": {
+          "type": "string",
+          "description": "A human-readable description for the Rule."
+        },
+        "tasks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The tasks that this Rule applies to."
+        },
+        "needsApproval": {
+          "type": "boolean",
+          "description": "Need User Approval for this Rule."
+        }
+      }
+    },
     "googleprotobufAny": {
       "type": "object",
       "properties": {
@@ -444,6 +466,23 @@
             "type": "object",
             "$ref": "#/definitions/googleprotobufAny"
           }
+        }
+      }
+    },
+    "v1alpha1CreatePolicyRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "A human-readable name for the Policy."
+        },
+        "description": {
+          "type": "string",
+          "description": "A human-readable description for the Policy."
+        },
+        "assignedTo": {
+          "type": "string",
+          "description": "The requester application that this policy applies to."
         }
       }
     },
@@ -511,15 +550,19 @@
       "properties": {
         "id": {
           "type": "string",
-          "description": "A unique identifier for the App."
+          "description": "A unique identifier for the Policy."
         },
         "name": {
           "type": "string",
-          "description": "A human-readable name for the App."
+          "description": "A human-readable name for the Policy."
         },
         "description": {
           "type": "string",
-          "description": "A human-readable description for the App."
+          "description": "A human-readable description for the Policy."
+        },
+        "assignedTo": {
+          "type": "string",
+          "description": "The requester application that this Rule applies to."
         },
         "rules": {
           "type": "array",
@@ -537,19 +580,18 @@
       "properties": {
         "id": {
           "type": "string",
-          "description": "A unique identifier for the App."
+          "description": "A unique identifier for the Rule."
         },
         "name": {
           "type": "string",
-          "description": "A human-readable name for the App."
+          "description": "A human-readable name for the Rule."
         },
         "description": {
           "type": "string",
-          "description": "A human-readable description for the App."
+          "description": "A human-readable description for the Rule."
         },
-        "assignedTo": {
-          "type": "string",
-          "description": "The requester application that this Rule applies to."
+        "policyId": {
+          "type": "string"
         },
         "tasks": {
           "type": "array",
@@ -576,6 +618,10 @@
         "name": {
           "type": "string",
           "description": "A human-readable name for the Task."
+        },
+        "description": {
+          "type": "string",
+          "description": "A human-readable description for the Task."
         },
         "appId": {
           "type": "string",
