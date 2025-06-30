@@ -1586,6 +1586,196 @@
       ]
     },
     {
+      "name": "agntcy/identity/platform/v1alpha1/device.proto",
+      "description": "",
+      "package": "agntcy.identity.platform.v1alpha1",
+      "hasEnums": false,
+      "hasExtensions": false,
+      "hasMessages": true,
+      "hasServices": false,
+      "enums": [],
+      "extensions": [],
+      "messages": [
+        {
+          "name": "Device",
+          "longName": "Device",
+          "fullName": "agntcy.identity.platform.v1alpha1.Device",
+          "description": "Devices used for user approval",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "id",
+              "description": "A unique identifier for the Device.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_id",
+              "defaultValue": ""
+            },
+            {
+              "name": "user_id",
+              "description": "User ID associated with the Device.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_user_id",
+              "defaultValue": ""
+            },
+            {
+              "name": "subscription_token",
+              "description": "Subscription Token for the Device.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_subscription_token",
+              "defaultValue": ""
+            }
+          ]
+        }
+      ],
+      "services": []
+    },
+    {
+      "name": "agntcy/identity/platform/v1alpha1/device_service.proto",
+      "description": "",
+      "package": "agntcy.identity.platform.v1alpha1",
+      "hasEnums": false,
+      "hasExtensions": false,
+      "hasMessages": true,
+      "hasServices": true,
+      "enums": [],
+      "extensions": [],
+      "messages": [
+        {
+          "name": "AddDeviceRequest",
+          "longName": "AddDeviceRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.AddDeviceRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "device",
+              "description": "The device information to register.",
+              "label": "",
+              "type": "Device",
+              "longType": "Device",
+              "fullType": "agntcy.identity.platform.v1alpha1.Device",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "RegisterDeviceRequest",
+          "longName": "RegisterDeviceRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.RegisterDeviceRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "device_id",
+              "description": "The unique identifier for the device to register.",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            },
+            {
+              "name": "device",
+              "description": "The device information to register.",
+              "label": "",
+              "type": "Device",
+              "longType": "Device",
+              "fullType": "agntcy.identity.platform.v1alpha1.Device",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        }
+      ],
+      "services": [
+        {
+          "name": "DeviceService",
+          "longName": "DeviceService",
+          "fullName": "agntcy.identity.platform.v1alpha1.DeviceService",
+          "description": "DeviceService manages device.",
+          "methods": [
+            {
+              "name": "AddDevice",
+              "description": "Add new device for approval flow",
+              "requestType": "AddDeviceRequest",
+              "requestLongType": "AddDeviceRequest",
+              "requestFullType": "agntcy.identity.platform.v1alpha1.AddDeviceRequest",
+              "requestStreaming": false,
+              "responseType": "Empty",
+              "responseLongType": ".google.protobuf.Empty",
+              "responseFullType": "google.protobuf.Empty",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "POST",
+                      "pattern": "/v1alpha1/device",
+                      "body": "device"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "RegisterDevice",
+              "description": "Add new device for approval flow",
+              "requestType": "RegisterDeviceRequest",
+              "requestLongType": "RegisterDeviceRequest",
+              "requestFullType": "agntcy.identity.platform.v1alpha1.RegisterDeviceRequest",
+              "requestStreaming": false,
+              "responseType": "Empty",
+              "responseLongType": ".google.protobuf.Empty",
+              "responseFullType": "google.protobuf.Empty",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "POST",
+                      "pattern": "/v1alpha1/device/{device_id}"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "agntcy/identity/platform/v1alpha1/errors.proto",
       "description": "",
       "package": "agntcy.identity.platform.v1alpha1",
@@ -2827,54 +3017,6 @@
           ]
         },
         {
-          "name": "Device",
-          "longName": "Device",
-          "fullName": "agntcy.identity.platform.v1alpha1.Device",
-          "description": "Devices used for user approval",
-          "hasExtensions": false,
-          "hasFields": true,
-          "hasOneofs": true,
-          "extensions": [],
-          "fields": [
-            {
-              "name": "id",
-              "description": "A unique identifier for the Device.",
-              "label": "optional",
-              "type": "string",
-              "longType": "string",
-              "fullType": "string",
-              "ismap": false,
-              "isoneof": true,
-              "oneofdecl": "_id",
-              "defaultValue": ""
-            },
-            {
-              "name": "user_id",
-              "description": "User ID associated with the Device.",
-              "label": "optional",
-              "type": "string",
-              "longType": "string",
-              "fullType": "string",
-              "ismap": false,
-              "isoneof": true,
-              "oneofdecl": "_user_id",
-              "defaultValue": ""
-            },
-            {
-              "name": "subscription_token",
-              "description": "Subscription Token for the Device.",
-              "label": "optional",
-              "type": "string",
-              "longType": "string",
-              "fullType": "string",
-              "ismap": false,
-              "isoneof": true,
-              "oneofdecl": "_subscription_token",
-              "defaultValue": ""
-            }
-          ]
-        },
-        {
           "name": "DuoIdpSettings",
           "longName": "DuoIdpSettings",
           "fullName": "agntcy.identity.platform.v1alpha1.DuoIdpSettings",
@@ -3075,18 +3217,6 @@
               "isoneof": true,
               "oneofdecl": "_issuer_settings",
               "defaultValue": ""
-            },
-            {
-              "name": "devices",
-              "description": "Devices used for user approval.",
-              "label": "repeated",
-              "type": "Device",
-              "longType": "Device",
-              "fullType": "agntcy.identity.platform.v1alpha1.Device",
-              "ismap": false,
-              "isoneof": false,
-              "oneofdecl": "",
-              "defaultValue": ""
             }
           ]
         }
@@ -3104,42 +3234,6 @@
       "enums": [],
       "extensions": [],
       "messages": [
-        {
-          "name": "AddDeviceRequest",
-          "longName": "AddDeviceRequest",
-          "fullName": "agntcy.identity.platform.v1alpha1.AddDeviceRequest",
-          "description": "",
-          "hasExtensions": false,
-          "hasFields": true,
-          "hasOneofs": true,
-          "extensions": [],
-          "fields": [
-            {
-              "name": "user_token",
-              "description": "The User context in the form of an id or access token.",
-              "label": "optional",
-              "type": "string",
-              "longType": "string",
-              "fullType": "string",
-              "ismap": false,
-              "isoneof": true,
-              "oneofdecl": "_user_token",
-              "defaultValue": ""
-            },
-            {
-              "name": "device",
-              "description": "The device information to register.",
-              "label": "",
-              "type": "Device",
-              "longType": "Device",
-              "fullType": "agntcy.identity.platform.v1alpha1.Device",
-              "ismap": false,
-              "isoneof": false,
-              "oneofdecl": "",
-              "defaultValue": ""
-            }
-          ]
-        },
         {
           "name": "GetSettingsRequest",
           "longName": "GetSettingsRequest",
@@ -3256,28 +3350,6 @@
                       "method": "POST",
                       "pattern": "/v1alpha1/settings/issuer",
                       "body": "*"
-                    }
-                  ]
-                }
-              }
-            },
-            {
-              "name": "AddDevice",
-              "description": "Add new device for approval flow",
-              "requestType": "AddDeviceRequest",
-              "requestLongType": "AddDeviceRequest",
-              "requestFullType": "agntcy.identity.platform.v1alpha1.AddDeviceRequest",
-              "requestStreaming": false,
-              "responseType": "Empty",
-              "responseLongType": ".google.protobuf.Empty",
-              "responseFullType": "google.protobuf.Empty",
-              "responseStreaming": false,
-              "options": {
-                "google.api.http": {
-                  "rules": [
-                    {
-                      "method": "POST",
-                      "pattern": "/v1alpha1/settings/devices"
                     }
                   ]
                 }

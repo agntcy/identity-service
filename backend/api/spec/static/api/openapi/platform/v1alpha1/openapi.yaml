@@ -1,6 +1,3 @@
-# Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
-# SPDX-License-Identifier: Apache-2.0
-
 # Generated with protoc-gen-openapi
 # https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
 
@@ -351,6 +348,66 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /v1alpha1/device:
+        post:
+            tags:
+                - DeviceService
+            description: Add new device for approval flow
+            operationId: DeviceService_AddDevice
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Device'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1alpha1/device/{deviceId}:
+        post:
+            tags:
+                - DeviceService
+            description: Add new device for approval flow
+            operationId: DeviceService_RegisterDevice
+            parameters:
+                - name: deviceId
+                  in: path
+                  description: The unique identifier for the device to register.
+                  required: true
+                  schema:
+                    type: string
+                - name: device.id
+                  in: query
+                  description: A unique identifier for the Device.
+                  schema:
+                    type: string
+                - name: device.userId
+                  in: query
+                  description: User ID associated with the Device.
+                  schema:
+                    type: string
+                - name: device.subscriptionToken
+                  in: query
+                  description: Subscription Token for the Device.
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /v1alpha1/policies:
         get:
             tags:
@@ -694,43 +751,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/ApiKey'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /v1alpha1/settings/devices:
-        post:
-            tags:
-                - SettingsService
-            description: Add new device for approval flow
-            operationId: SettingsService_AddDevice
-            parameters:
-                - name: userToken
-                  in: query
-                  description: The User context in the form of an id or access token.
-                  schema:
-                    type: string
-                - name: device.id
-                  in: query
-                  description: A unique identifier for the Device.
-                  schema:
-                    type: string
-                - name: device.userId
-                  in: query
-                  description: User ID associated with the Device.
-                  schema:
-                    type: string
-                - name: device.subscriptionToken
-                  in: query
-                  description: Subscription Token for the Device.
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: OK
-                    content: {}
                 default:
                     description: Default error response
                     content:
@@ -1142,11 +1162,6 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/IssuerSettings'
                     description: Settings for the Issuer.
-                devices:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/Device'
-                    description: Devices used for user approval.
             description: Identity Settings
         Status:
             type: object
@@ -1298,6 +1313,8 @@ tags:
       description: AuthService manages auth.
     - name: BadgeService
       description: BadgeService manages badges.
+    - name: DeviceService
+      description: DeviceService manages device.
     - name: PolicyService
       description: PolicyService manages policy.
     - name: SettingsService
