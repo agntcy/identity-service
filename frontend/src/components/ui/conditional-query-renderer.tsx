@@ -7,7 +7,7 @@ import type {ReactNode} from 'react';
 import React from 'react';
 import {LoaderRelative, Loading} from './loading';
 import {parseError} from '@/utils/api';
-import {EmptyState, EmptyStateProps} from '@outshift/spark-design';
+import {EmptyState, EmptyStateProps, GeneralSize} from '@outshift/spark-design';
 import {cn} from '@/lib/utils';
 import {Card} from './card';
 
@@ -44,13 +44,19 @@ export const ConditionalQueryRenderer: React.FC<React.PropsWithChildren<Conditio
   const defaultErrorListStateProps: EmptyStateProps = {
     title: `Could not load ${itemName}`,
     description: parseError(error) || error,
-    variant: 'negative'
+    variant: 'negative',
+    actionButtonProps: {
+      sx: {fontWeight: '600 !important'}
+    }
   };
 
   const defaultEmptyListStateProps: EmptyStateProps = {
     title: `No ${itemName} found.`,
     description: `There are no ${itemName} available at the moment.`,
-    variant: 'info'
+    variant: 'info',
+    actionButtonProps: {
+      sx: {fontWeight: '600 !important'}
+    }
   };
 
   const empty = !data || (Array.isArray(data) && data.length === 0) || isEmpty;
@@ -89,7 +95,11 @@ export const ConditionalQueryRenderer: React.FC<React.PropsWithChildren<Conditio
   const unreadyResult = getUnreadyStateUI();
 
   if (useContainer && unreadyResult) {
-    return <Card className={cn('flex flex-col gap-2 items-center p-[24px] bg-[#F5F8FD]', classNameContainer, useSkeleton)}>{unreadyResult}</Card>;
+    return (
+      <Card className={cn('flex flex-col gap-2 items-center p-[24px] bg-[#F5F8FD]', classNameContainer, useSkeleton)}>
+        <div className="bg-[#FBFCFE] p-[24px] rounded-[8px] w-full h-full">{unreadyResult}</div>
+      </Card>
+    );
   }
 
   if (unreadyResult) {

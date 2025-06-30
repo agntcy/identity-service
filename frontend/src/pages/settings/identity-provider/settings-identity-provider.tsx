@@ -3,21 +3,26 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {CreateIdentityProvider} from '@/components/identity-provider/create/create-identity-provider';
 import {InformationProvider} from '@/components/identity-provider/information/information-provider';
 import {BasePage} from '@/components/layout/base-page';
 import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-renderer';
 import {useGetSettings} from '@/queries';
 import {PATHS} from '@/router/paths';
-import {IdpType} from '@/types/api/settings';
-import {useMemo} from 'react';
+import {useIdentityProviderStore} from '@/store';
+import {PlusIcon} from 'lucide-react';
+import {useNavigate} from 'react-router-dom';
+import {useShallow} from 'zustand/react/shallow';
 
 const SettingsIdentityProvider: React.FC = () => {
   const {data, error, isLoading, isFetching, refetch} = useGetSettings();
 
-  const isEmptyIdp = useMemo(() => {
-    return !data?.issuerSettings || data.issuerSettings.idpType === IdpType.IDP_TYPE_UNSPECIFIED;
-  }, [data?.issuerSettings]);
+  const navigate = useNavigate();
+
+  const {isEmptyIdp} = useIdentityProviderStore(
+    useShallow((state) => ({
+      isEmptyIdp: state.isEmptyIdp
+    }))
+  );
 
   return (
     <BasePage
@@ -26,7 +31,7 @@ const SettingsIdentityProvider: React.FC = () => {
       subNav={[
         {
           label: 'Identity Provider',
-          href: PATHS.settings.identityProvider
+          href: PATHS.settings.identityProvider.base
         },
         {
           label: 'Api Key',
@@ -49,7 +54,7 @@ const SettingsIdentityProvider: React.FC = () => {
     >
       <ConditionalQueryRenderer
         itemName="Identity Provider"
-        data={data?.issuerSettings}
+        data={isEmptyIdp ? undefined : data?.issuerSettings}
         error={error}
         isLoading={isLoading || isFetching}
         useRelativeLoader
@@ -60,8 +65,22 @@ const SettingsIdentityProvider: React.FC = () => {
           },
           actionTitle: 'Retry'
         }}
+        emptyListStateProps={{
+          title: 'Get started with Agent Identity',
+          description:
+            'Register issuer to add Agentic services (MCP servers, OASF agents, and A2A protocols), manage identities and apply access policies',
+          actionTitle: 'Register Issuer',
+          actionCallback: () => {
+            void navigate(PATHS.settings.identityProvider.create);
+          },
+          actionButtonProps: {
+            variant: 'outlined',
+            startIcon: <PlusIcon className="w-4 h-4" />,
+            sx: {fontWeight: '600 !important'}
+          }
+        }}
       >
-        {isEmptyIdp ? <CreateIdentityProvider /> : <InformationProvider idpSettings={data?.issuerSettings} />}
+        <InformationProvider idpSettings={data?.issuerSettings} />
       </ConditionalQueryRenderer>
     </BasePage>
   );

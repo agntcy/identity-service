@@ -195,7 +195,7 @@ paths:
         post:
             tags:
                 - BadgeService
-            description: Create a new App.
+            description: Create a new Badge.
             operationId: BadgeService_IssueBadge
             parameters:
                 - name: appId
@@ -365,6 +365,31 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /v1alpha1/badges/verify:
+        post:
+            tags:
+                - BadgeService
+            description: Verify a badge.
+            operationId: BadgeService_VerifyBadge
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/VerifyBadgeRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/BadgeClaims'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /v1alpha1/policies:
         get:
             tags:
@@ -411,7 +436,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/Policy'
+                            $ref: '#/components/schemas/CreatePolicyRequest'
                 required: true
             responses:
                 "200":
@@ -564,7 +589,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/Rule'
+                            $ref: '#/components/schemas/CreateRuleRequest'
                 required: true
             responses:
                 "200":
@@ -768,9 +793,6 @@ components:
                     type: string
                     description: The type of the App.
                     format: enum
-                resolverMetadataId:
-                    type: string
-                    description: The DID value
                 apiKey:
                     type: string
             description: Identity Platform App.
@@ -827,6 +849,38 @@ components:
                 BadgeClaims represents the content of a Badge VC defined [here]
 
                  [here]: https://spec.identity.agntcy.org/docs/vc/intro/
+        CreatePolicyRequest:
+            type: object
+            properties:
+                name:
+                    type: string
+                    description: A human-readable name for the Policy.
+                description:
+                    type: string
+                    description: A human-readable description for the Policy.
+                assignedTo:
+                    type: string
+                    description: The requester application that this policy applies to.
+        CreateRuleRequest:
+            type: object
+            properties:
+                policyId:
+                    type: string
+                    description: The Policy Id to which these Rules belong.
+                name:
+                    type: string
+                    description: A human-readable name for the Rule.
+                description:
+                    type: string
+                    description: A human-readable description for the Rule.
+                tasks:
+                    type: array
+                    items:
+                        type: string
+                    description: The tasks that this Rule applies to.
+                needsApproval:
+                    type: boolean
+                    description: Need User Approval for this Rule.
         CredentialSchema:
             type: object
             properties:
@@ -879,9 +933,13 @@ components:
                     type: string
                     description: App Id.
                 a2a:
-                    $ref: '#/components/schemas/IssueA2ABadgeRequest'
+                    allOf:
+                        - $ref: '#/components/schemas/IssueA2ABadgeRequest'
+                    description: The A2A badge.
                 mcp:
-                    $ref: '#/components/schemas/IssueMcpBadgeRequest'
+                    allOf:
+                        - $ref: '#/components/schemas/IssueMcpBadgeRequest'
+                    description: The MCP badge.
         IssueMcpBadgeRequest:
             type: object
             properties:
@@ -989,13 +1047,16 @@ components:
             properties:
                 id:
                     type: string
-                    description: A unique identifier for the App.
+                    description: A unique identifier for the Policy.
                 name:
                     type: string
-                    description: A human-readable name for the App.
+                    description: A human-readable name for the Policy.
                 description:
                     type: string
-                    description: A human-readable description for the App.
+                    description: A human-readable description for the Policy.
+                assignedTo:
+                    type: string
+                    description: The requester application that this Rule applies to.
                 rules:
                     type: array
                     items:
@@ -1022,16 +1083,15 @@ components:
             properties:
                 id:
                     type: string
-                    description: A unique identifier for the App.
+                    description: A unique identifier for the Rule.
                 name:
                     type: string
-                    description: A human-readable name for the App.
+                    description: A human-readable name for the Rule.
                 description:
                     type: string
-                    description: A human-readable description for the App.
-                assignedTo:
+                    description: A human-readable description for the Rule.
+                policyId:
                     type: string
-                    description: The requester application that this Rule applies to.
                 tasks:
                     type: array
                     items:
@@ -1087,6 +1147,9 @@ components:
                 name:
                     type: string
                     description: A human-readable name for the Task.
+                description:
+                    type: string
+                    description: A human-readable description for the Task.
                 appId:
                     type: string
                     description: An application ID for the Task.
@@ -1142,6 +1205,12 @@ components:
                 DataModel represents the W3C Verifiable Credential Data Model defined [here]
 
                  [here]: https://www.w3.org/TR/vc-data-model/
+        VerifyBadgeRequest:
+            type: object
+            properties:
+                badge:
+                    type: string
+                    description: The JOSE enveloped badge to verify.
     headers:
         "":
     securitySchemes:

@@ -8,7 +8,9 @@ import OutshiftLogo from '@/assets/outshift-logo.svg';
 import {CheckIcon} from 'lucide-react';
 import {useAuth} from '@/hooks';
 import {PublicHeader} from '@/components/layout/public-header';
+import {Link as RouterLink} from 'react-router-dom';
 import '@/styles/welcome.css';
+import {PATHS} from '@/router/paths';
 
 const Welcome = () => {
   const {login, register} = useAuth();
@@ -70,9 +72,11 @@ const Welcome = () => {
                   Begin verifying your MCP servers, agents, and A2A identities.
                 </Typography>
                 <div className="absolute bottom-10 transform translate-y-1/2 left-1/2 -translate-x-1/2 w-full">
-                  <Button variant="outlined" onClick={() => {}} sx={{fontWeight: '600 !important'}} startIcon={<CheckIcon className="w-4 h-4" />}>
-                    Verify identity
-                  </Button>
+                  <RouterLink to={PATHS.verifyIdentity}>
+                    <Button variant="outlined" sx={{fontWeight: '600 !important'}} startIcon={<CheckIcon className="w-4 h-4" />}>
+                      Verify Identity
+                    </Button>
+                  </RouterLink>
                 </div>
                 <div className="h-[50px]"></div>
               </div>

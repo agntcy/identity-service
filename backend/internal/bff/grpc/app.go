@@ -9,9 +9,16 @@ import (
 	identity_platform_sdk_go "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1"
 	"github.com/agntcy/identity-platform/internal/bff"
 	"github.com/agntcy/identity-platform/internal/bff/grpc/converters"
+	apptypes "github.com/agntcy/identity-platform/internal/core/app/types"
+	"github.com/agntcy/identity-platform/internal/pkg/convertutil"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
+	"github.com/agntcy/identity-platform/internal/pkg/grpcutil"
+	"github.com/agntcy/identity-platform/internal/pkg/pagination"
+	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
+
+const defaultPageSize int32 = 20
 
 type appService struct {
 	appSrv bff.AppService
@@ -44,8 +51,26 @@ func (s *appService) ListApps(
 	ctx context.Context,
 	req *identity_platform_sdk_go.ListAppsRequest,
 ) (*identity_platform_sdk_go.ListAppsResponse, error) {
-	// This method is not implemented yet.
-	return nil, errutil.Err(nil, "ListApps method is not implemented")
+	paginationFilter := pagination.PaginationFilter{
+		Page:        req.Page,
+		Size:        req.Size,
+		DefaultSize: defaultPageSize,
+	}
+
+	var appType *apptypes.AppType
+	if req.Type != nil {
+		appType = ptrutil.Ptr(apptypes.AppType(*req.Type))
+	}
+
+	apps, err := s.appSrv.ListApps(ctx, paginationFilter, req.Query, appType)
+	if err != nil {
+		return nil, grpcutil.BadRequestError(err)
+	}
+
+	return &identity_platform_sdk_go.ListAppsResponse{
+		Apps:       convertutil.ConvertSlice(apps.Items, converters.FromApp),
+		Pagination: pagination.ConvertToPagedResponse(paginationFilter, apps),
+	}, nil
 }
 
 func (s *appService) GetAppsCount(

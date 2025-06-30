@@ -40,7 +40,7 @@ service PolicyService {
   rpc CreatePolicy(CreatePolicyRequest) returns (Policy) {
     option (google.api.http) = {
       post: "/v1alpha1/policies"
-      body: "policy"
+      body: "*"
     };
 
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -95,7 +95,7 @@ service PolicyService {
   rpc CreateRule(CreateRuleRequest) returns (Rule) {
     option (google.api.http) = {
       post: "/v1alpha1/policies/{policy_id}/rules"
-      body: "rule"
+      body: "*"
     };
 
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -148,8 +148,14 @@ message ListPoliciesRequest {
 }
 
 message CreatePolicyRequest {
-  // The Policy to create.
-  Policy policy = 1;
+  // A human-readable name for the Policy.
+  string name = 1;
+
+  // A human-readable description for the Policy.
+  optional string description = 2;
+
+  // The requester application that this policy applies to.
+  string assigned_to = 3;
 }
 
 message GetPolicyRequest {
@@ -196,8 +202,17 @@ message CreateRuleRequest {
   // The Policy Id to which these Rules belong.
   string policy_id = 1;
 
-  // The Rule to create.
-  Rule rule = 2;
+  // A human-readable name for the Rule.
+  string name = 2;
+
+  // A human-readable description for the Rule.
+  optional string description = 3;
+
+  // The tasks that this Rule applies to.
+  repeated string tasks = 4;
+
+  // Need User Approval for this Rule.
+  optional bool needs_approval = 5;
 }
 
 message GetRuleRequest {

@@ -123,11 +123,27 @@ const UserSection = () => {
         </div>
       </Button>
       <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-        <MenuItem>
-          <Typography variant="caption">
-            <b>Email:</b> {authInfo?.user?.username}
-          </Typography>
-        </MenuItem>
+        <div className="min-w-[210px] my-2 space-y-2 mb-4">
+          <div className="flex justify-center">
+            <Avatar sx={{width: '20px', height: '20px', '&:hover': {backgroundColor: 'inherit'}}} src={UserIcon} />
+          </div>
+          <div className="text-center">
+            <Typography variant="subtitle2" sx={(theme) => ({color: theme.palette.vars.baseTextStrong})}>
+              {authInfo?.user?.name || 'User'}
+            </Typography>
+            {!isLoading ? (
+              <div className="-mt-[4px]">
+                <Typography variant="caption" sx={(theme) => ({color: theme.palette.vars.baseTextStrong, textTransform: 'capitalize'})}>
+                  {role}
+                </Typography>
+              </div>
+            ) : (
+              <div className="mx-12">
+                <Skeleton />
+              </div>
+            )}
+          </div>
+        </div>
         <Divider />
         <MenuItem disableRipple onClick={handleLogout}>
           <div className="flex items-center justify-between w-full">

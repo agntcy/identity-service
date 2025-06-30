@@ -173,18 +173,6 @@
               "defaultValue": ""
             },
             {
-              "name": "resolver_metadata_id",
-              "description": "The DID value",
-              "label": "optional",
-              "type": "string",
-              "longType": "string",
-              "fullType": "string",
-              "ismap": false,
-              "isoneof": true,
-              "oneofdecl": "_resolver_metadata_id",
-              "defaultValue": ""
-            },
-            {
               "name": "api_key",
               "description": "",
               "label": "optional",
@@ -1525,7 +1513,7 @@
             },
             {
               "name": "a2a",
-              "description": "",
+              "description": "The A2A badge.",
               "label": "",
               "type": "IssueA2ABadgeRequest",
               "longType": "IssueA2ABadgeRequest",
@@ -1537,7 +1525,7 @@
             },
             {
               "name": "mcp",
-              "description": "",
+              "description": "The MCP badge.",
               "label": "",
               "type": "IssueMcpBadgeRequest",
               "longType": "IssueMcpBadgeRequest",
@@ -1584,6 +1572,30 @@
               "defaultValue": ""
             }
           ]
+        },
+        {
+          "name": "VerifyBadgeRequest",
+          "longName": "VerifyBadgeRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.VerifyBadgeRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "badge",
+              "description": "The JOSE enveloped badge to verify.",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
         }
       ],
       "services": [
@@ -1595,7 +1607,7 @@
           "methods": [
             {
               "name": "IssueBadge",
-              "description": "Create a new App.",
+              "description": "Create a new Badge.",
               "requestType": "IssueBadgeRequest",
               "requestLongType": "IssueBadgeRequest",
               "requestFullType": "agntcy.identity.platform.v1alpha1.IssueBadgeRequest",
@@ -1610,6 +1622,29 @@
                     {
                       "method": "POST",
                       "pattern": "/v1alpha1/apps/{app_id}/badges",
+                      "body": "*"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "VerifyBadge",
+              "description": "Verify a badge.",
+              "requestType": "VerifyBadgeRequest",
+              "requestLongType": "VerifyBadgeRequest",
+              "requestFullType": "agntcy.identity.platform.v1alpha1.VerifyBadgeRequest",
+              "requestStreaming": false,
+              "responseType": "BadgeClaims",
+              "responseLongType": "BadgeClaims",
+              "responseFullType": "agntcy.identity.platform.v1alpha1.BadgeClaims",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "POST",
+                      "pattern": "/v1alpha1/badges/verify",
                       "body": "*"
                     }
                   ]
@@ -1767,7 +1802,7 @@
           "fields": [
             {
               "name": "id",
-              "description": "A unique identifier for the App.",
+              "description": "A unique identifier for the Policy.",
               "label": "optional",
               "type": "string",
               "longType": "string",
@@ -1779,7 +1814,7 @@
             },
             {
               "name": "name",
-              "description": "A human-readable name for the App.",
+              "description": "A human-readable name for the Policy.",
               "label": "optional",
               "type": "string",
               "longType": "string",
@@ -1791,7 +1826,7 @@
             },
             {
               "name": "description",
-              "description": "A human-readable description for the App.",
+              "description": "A human-readable description for the Policy.",
               "label": "optional",
               "type": "string",
               "longType": "string",
@@ -1799,6 +1834,18 @@
               "ismap": false,
               "isoneof": true,
               "oneofdecl": "_description",
+              "defaultValue": ""
+            },
+            {
+              "name": "assigned_to",
+              "description": "The requester application that this Rule applies to.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_assigned_to",
               "defaultValue": ""
             },
             {
@@ -1827,7 +1874,7 @@
           "fields": [
             {
               "name": "id",
-              "description": "A unique identifier for the App.",
+              "description": "A unique identifier for the Rule.",
               "label": "optional",
               "type": "string",
               "longType": "string",
@@ -1839,7 +1886,7 @@
             },
             {
               "name": "name",
-              "description": "A human-readable name for the App.",
+              "description": "A human-readable name for the Rule.",
               "label": "optional",
               "type": "string",
               "longType": "string",
@@ -1851,7 +1898,7 @@
             },
             {
               "name": "description",
-              "description": "A human-readable description for the App.",
+              "description": "A human-readable description for the Rule.",
               "label": "optional",
               "type": "string",
               "longType": "string",
@@ -1862,15 +1909,15 @@
               "defaultValue": ""
             },
             {
-              "name": "assigned_to",
-              "description": "The requester application that this Rule applies to.",
+              "name": "policy_id",
+              "description": "",
               "label": "optional",
               "type": "string",
               "longType": "string",
               "fullType": "string",
               "ismap": false,
               "isoneof": true,
-              "oneofdecl": "_assigned_to",
+              "oneofdecl": "_policy_id",
               "defaultValue": ""
             },
             {
@@ -1934,6 +1981,18 @@
               "defaultValue": ""
             },
             {
+              "name": "description",
+              "description": "A human-readable description for the Task.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_description",
+              "defaultValue": ""
+            },
+            {
               "name": "app_id",
               "description": "An application ID for the Task.",
               "label": "optional",
@@ -1980,16 +2039,40 @@
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
-          "hasOneofs": false,
+          "hasOneofs": true,
           "extensions": [],
           "fields": [
             {
-              "name": "policy",
-              "description": "The Policy to create.",
+              "name": "name",
+              "description": "A human-readable name for the Policy.",
               "label": "",
-              "type": "Policy",
-              "longType": "Policy",
-              "fullType": "agntcy.identity.platform.v1alpha1.Policy",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            },
+            {
+              "name": "description",
+              "description": "A human-readable description for the Policy.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_description",
+              "defaultValue": ""
+            },
+            {
+              "name": "assigned_to",
+              "description": "The requester application that this policy applies to.",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
               "ismap": false,
               "isoneof": false,
               "oneofdecl": "",
@@ -2004,7 +2087,7 @@
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
-          "hasOneofs": false,
+          "hasOneofs": true,
           "extensions": [],
           "fields": [
             {
@@ -2020,15 +2103,51 @@
               "defaultValue": ""
             },
             {
-              "name": "rule",
-              "description": "The Rule to create.",
+              "name": "name",
+              "description": "A human-readable name for the Rule.",
               "label": "",
-              "type": "Rule",
-              "longType": "Rule",
-              "fullType": "agntcy.identity.platform.v1alpha1.Rule",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
               "ismap": false,
               "isoneof": false,
               "oneofdecl": "",
+              "defaultValue": ""
+            },
+            {
+              "name": "description",
+              "description": "A human-readable description for the Rule.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_description",
+              "defaultValue": ""
+            },
+            {
+              "name": "tasks",
+              "description": "The tasks that this Rule applies to.",
+              "label": "repeated",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            },
+            {
+              "name": "needs_approval",
+              "description": "Need User Approval for this Rule.",
+              "label": "optional",
+              "type": "bool",
+              "longType": "bool",
+              "fullType": "bool",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_needs_approval",
               "defaultValue": ""
             }
           ]
@@ -2486,7 +2605,7 @@
                     {
                       "method": "POST",
                       "pattern": "/v1alpha1/policies",
-                      "body": "policy"
+                      "body": "*"
                     }
                   ]
                 }
@@ -2598,7 +2717,7 @@
                     {
                       "method": "POST",
                       "pattern": "/v1alpha1/policies/{policy_id}/rules",
-                      "body": "rule"
+                      "body": "*"
                     }
                   ]
                 }

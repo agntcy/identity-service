@@ -6,6 +6,7 @@
 export const PATHS = {
   basePath: '/',
   welcome: '/welcome',
+  verifyIdentity: '/verify-identity',
   callBackLoading: '/login/callback',
   dashboard: '/dashboard',
   agenticServices: {
@@ -20,7 +21,10 @@ export const PATHS = {
   },
   settings: {
     base: '/settings',
-    identityProvider: '/settings/identity-provider',
+    identityProvider: {
+      base: '/settings/identity-provider',
+      create: '/settings/identity-provider/create'
+    },
     apiKey: '/settings/api-key',
     organizations: {
       base: '/settings/organizations',

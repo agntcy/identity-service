@@ -5,26 +5,26 @@
 
 import {Card, CardContent} from '@/components/ui/card';
 import {ExternalLinkIcon} from 'lucide-react';
-import {labels} from '@/constants/labels';
 import {Link, Typography} from '@outshift/spark-design';
 import {useMemo} from 'react';
 import {IdpType, IssuerSettings} from '@/types/api/settings';
 import KeyValue, {KeyValuePair} from '@/components/ui/key-value';
+import {ProviderType} from '@/components/shared/provider-type';
 
 export const InformationProvider = ({idpSettings}: {idpSettings?: IssuerSettings}) => {
   const provider = idpSettings?.idpType;
-  const orgUrl = idpSettings?.oktaIdpSettings?.orgUrl;
-  const clientId = idpSettings?.oktaIdpSettings?.clientId;
-  const privateKey = idpSettings?.oktaIdpSettings?.privateKey;
   const hostname = idpSettings?.duoIdpSettings?.hostname;
   const integrationKey = idpSettings?.duoIdpSettings?.integrationKey;
   const secretKey = idpSettings?.duoIdpSettings?.secretKey;
+  const orgUrl = idpSettings?.oktaIdpSettings?.orgUrl;
+  const clientId = idpSettings?.oktaIdpSettings?.clientId;
+  const privateKey = idpSettings?.oktaIdpSettings?.privateKey;
 
   const keyValuePairs = useMemo(() => {
     const temp: KeyValuePair[] = [];
     temp.push({
       keyProp: 'Provider Type',
-      value: labels.providerTypes[provider as keyof typeof labels.providerTypes] || 'Not provided'
+      value: <ProviderType type={provider} />
     });
     if (provider === IdpType.IDP_TYPE_DUO) {
       temp.push({

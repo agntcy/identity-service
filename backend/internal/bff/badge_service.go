@@ -17,8 +17,10 @@ import (
 	badgetypes "github.com/agntcy/identity-platform/internal/core/badge/types"
 	identitycore "github.com/agntcy/identity-platform/internal/core/identity"
 	idpcore "github.com/agntcy/identity-platform/internal/core/idp"
+	policycore "github.com/agntcy/identity-platform/internal/core/policy"
 	settingscore "github.com/agntcy/identity-platform/internal/core/settings"
 	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
+	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
 	"github.com/go-playground/validator/v10"
 )
 
@@ -54,6 +56,10 @@ type BadgeService interface {
 		appID string,
 		options ...IssueOption,
 	) (*badgetypes.Badge, error)
+	VerifyBadge(
+		ctx context.Context,
+		badge *string,
+	) (*badgetypes.BadgeClaims, error)
 }
 
 type badgeService struct {
@@ -66,6 +72,7 @@ type badgeService struct {
 	keyStore           identitycore.KeyStore
 	identityService    identitycore.Service
 	credentialStore    idpcore.CredentialStore
+	taskService        policycore.TaskService
 }
 
 func NewBadgeService(
@@ -77,6 +84,7 @@ func NewBadgeService(
 	keyStore identitycore.KeyStore,
 	identityService identitycore.Service,
 	credentialStore idpcore.CredentialStore,
+	taskService policycore.TaskService,
 ) BadgeService {
 	return &badgeService{
 		settingsRepository: settingsRepository,
@@ -88,6 +96,7 @@ func NewBadgeService(
 		keyStore:           keyStore,
 		identityService:    identityService,
 		credentialStore:    credentialStore,
+		taskService:        taskService,
 	}
 }
 
@@ -151,6 +160,20 @@ func (s *badgeService) IssueBadge(
 	)
 	if err != nil {
 		return nil, fmt.Errorf("unable to publish the badge: %w", err)
+	}
+
+	// Create tasks
+	switch app.Type {
+	case apptypes.APP_TYPE_AGENT_A2A, apptypes.APP_TYPE_AGENT_OASF:
+		_, err = s.taskService.CreateForAgent(ctx, app.ID, ptrutil.DerefStr(app.Name))
+		if err != nil {
+			return nil, fmt.Errorf("error trying to create tasks: %w", err)
+		}
+	case apptypes.APP_TYPE_MCP_SERVER:
+		_, err = s.taskService.CreateForMCP(ctx, app.ID, in.mcp.Name, in.mcp.Url)
+		if err != nil {
+			return nil, fmt.Errorf("error trying to create tasks: %w", err)
+		}
 	}
 
 	err = s.badgeRepository.Create(ctx, badge)
@@ -226,4 +249,19 @@ func (s *badgeService) createBadgeClaims(
 	}
 
 	return &claims, badgeType, nil
+}
+
+func (s *badgeService) VerifyBadge(
+	ctx context.Context,
+	badge *string,
+) (*badgetypes.BadgeClaims, error) {
+	if badge == nil {
+		return nil, errors.New("badge or verifiable credential is empty")
+	}
+
+	// Use the identity service to verify the VC
+	return s.identityService.VerifyVerifiableCredential(
+		ctx,
+		badge,
+	)
 }

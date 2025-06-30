@@ -1,11 +1,17 @@
+/**
+ * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import {Input, InputProps} from '@/components/ui/input';
-import {SVGProps} from 'react';
+import {SVGProps, useEffect} from 'react';
 import {JSX} from 'react/jsx-runtime';
 import {IconButton, Typography} from '@mui/material';
 import {useState} from 'react';
 import {CircleXIcon, FileIcon} from 'lucide-react';
+import {toast} from '@outshift/spark-design';
 
-export const FileUpload = (props: InputProps) => {
+export const FileUpload = ({onConvert, ...props}: InputProps & {onConvert?: (binary?: ArrayBuffer) => void}) => {
   const [file, setFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
 
@@ -34,6 +40,25 @@ export const FileUpload = (props: InputProps) => {
 
   const hasFile = file !== null;
 
+  useEffect(() => {
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsArrayBuffer(file);
+      reader.onload = () => {
+        onConvert?.(reader.result as ArrayBuffer);
+      };
+      reader.onerror = () => {
+        setFile(null);
+        toast({
+          title: 'Error reading file',
+          description: 'There was an error reading the file. Please try again.',
+          type: 'error'
+        });
+      };
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [file]);
+
   return (
     <div
       className={`border-2 border-dashed rounded-[4px] flex flex-col gap-2 p-6 items-center w-full ${isDragging ? 'bg-[#E0E7FF]' : 'bg-[#FBFCFE]'}`}
@@ -57,7 +82,20 @@ export const FileUpload = (props: InputProps) => {
           <Typography variant="caption" color="#59616B">
             JSON (max. 3MB)
           </Typography>
-          <Input {...props} id="file" type="file" placeholder="File" accept=".json" className="hidden" onChange={handleFileChange} />
+          <Input
+            {...props}
+            id="file"
+            type="file"
+            placeholder="File"
+            accept=".json"
+            className="hidden"
+            onChange={(e) => {
+              handleFileChange(e);
+              if (props.onChange) {
+                props.onChange(e);
+              }
+            }}
+          />
         </>
       ) : (
         <>
@@ -66,7 +104,12 @@ export const FileUpload = (props: InputProps) => {
             <Typography variant="caption" color="#59616B">
               {file.name}
             </Typography>
-            <IconButton onClick={() => setFile(null)}>
+            <IconButton
+              onClick={() => {
+                setFile(null);
+                onConvert?.(undefined);
+              }}
+            >
               <CircleXIcon className="w-4 h-4 text-[#C5C7CB]" />
             </IconButton>
           </div>
