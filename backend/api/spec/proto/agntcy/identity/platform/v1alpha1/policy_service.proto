@@ -53,7 +53,7 @@ service PolicyService {
   rpc UpdatePolicy(UpdatePolicyRequest) returns (Policy) {
     option (google.api.http) = {
       patch: "/v1alpha1/policies/{policy_id}"
-      body: "policy"
+      body: "*"
     };
 
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -167,8 +167,14 @@ message UpdatePolicyRequest {
   // Policy Id to update.
   string policy_id = 1;
 
-  // Policy parameters to update.
-  Policy policy = 2;
+  // A human-readable name for the Policy.
+  string name = 2;
+
+  // A human-readable description for the Policy.
+  optional string description = 3;
+
+  // The requester application that this policy applies to.
+  string assigned_to = 4;
 }
 
 message DeletePolicyRequest {

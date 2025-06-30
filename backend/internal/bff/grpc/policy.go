@@ -161,11 +161,26 @@ func (s *PolicyService) ListRules(
 	}, nil
 }
 
-func (p *PolicyService) UpdatePolicy(
-	context.Context,
-	*identity_platform_sdk_go.UpdatePolicyRequest,
+func (s *PolicyService) UpdatePolicy(
+	ctx context.Context,
+	in *identity_platform_sdk_go.UpdatePolicyRequest,
 ) (*identity_platform_sdk_go.Policy, error) {
-	panic("unimplemented")
+	if in == nil {
+		return nil, grpcutil.BadRequestError(errors.New("request is empty"))
+	}
+
+	result, err := s.policyService.UpdatePolicy(
+		ctx,
+		in.PolicyId,
+		in.Name,
+		ptrutil.DerefStr(in.Description),
+		in.AssignedTo,
+	)
+	if err != nil {
+		return nil, grpcutil.BadRequestError(err)
+	}
+
+	return converters.FromPolicy(result), nil
 }
 
 func (p *PolicyService) UpdateRule(

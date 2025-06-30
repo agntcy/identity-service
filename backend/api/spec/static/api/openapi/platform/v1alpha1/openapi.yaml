@@ -512,7 +512,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/Policy'
+                            $ref: '#/components/schemas/UpdatePolicyRequest'
                 required: true
             responses:
                 "200":
@@ -1170,6 +1170,21 @@ components:
                 accessToken:
                     type: string
                     description: The access token issued to the Agent or MCP Server.
+        UpdatePolicyRequest:
+            type: object
+            properties:
+                policyId:
+                    type: string
+                    description: Policy Id to update.
+                name:
+                    type: string
+                    description: A human-readable name for the Policy.
+                description:
+                    type: string
+                    description: A human-readable description for the Policy.
+                assignedTo:
+                    type: string
+                    description: The requester application that this policy applies to.
         VerifiableCredential:
             type: object
             properties:
