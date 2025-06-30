@@ -3,6 +3,10 @@
 
 package types
 
+import (
+	coredevice "github.com/agntcy/identity-platform/internal/core/device/types"
+)
+
 // Type
 type IdpType int
 
@@ -85,17 +89,5 @@ type Settings struct {
 	IssuerSettings *IssuerSettings `json:"issuer_settings,omitempty" protobuf:"bytes,2,opt,name=issuer_settings"`
 
 	// Devices used for user approval.
-	Devices []*Device `json:"devices,omitempty" protobuf:"bytes,3,rep,name=devices"`
-}
-
-// Devices used for user approval
-type Device struct {
-	// A unique identifier for the Device.
-	ID string `json:"id,omitempty" protobuf:"bytes,1,opt,name=id"`
-
-	// User ID associated with the Device.
-	UserID string `json:"user_id,omitempty" protobuf:"bytes,2,opt,name=user_id"`
-
-	// Subscription Token for the Device.
-	SubscriptionToken string `json:"subscription_token,omitempty" protobuf:"bytes,3,opt,name=subscription_token"`
+	Devices []*coredevice.Device `json:"devices,omitempty" protobuf:"bytes,3,rep,name=devices"`
 }

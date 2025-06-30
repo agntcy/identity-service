@@ -81,30 +81,6 @@ func (i *IssuerSettings) ToCoreType() *types.IssuerSettings {
 	}
 }
 
-func (d *Device) ToCoreType() *types.Device {
-	if d == nil {
-		return nil
-	}
-
-	return &types.Device{
-		ID:                d.ID.String(),
-		UserID:            ptrutil.DerefStr(d.UserID),
-		SubscriptionToken: d.SubscriptionToken,
-	}
-}
-
-func newDeviceModel(src *types.Device) *Device {
-	if src == nil {
-		return nil
-	}
-
-	return &Device{
-		ID:                uuid.MustParse(src.ID),
-		UserID:            ptrutil.Ptr(src.UserID),
-		SubscriptionToken: src.SubscriptionToken,
-	}
-}
-
 func newOktaIdpSettingsModel(src *types.OktaIdpSettings) *OktaIdpSettings {
 	if src == nil {
 		return nil

@@ -17,12 +17,4 @@ type Repository interface {
 	GetIssuerSettings(
 		ctx context.Context,
 	) (*types.IssuerSettings, error)
-	AddDevice(
-		ctx context.Context,
-		device *types.Device,
-	) (*types.Device, error)
-	GetDevices(
-		ctx context.Context,
-		userID *string,
-	) ([]*types.Device, error)
 }
