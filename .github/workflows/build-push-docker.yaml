@@ -457,10 +457,11 @@
               fi
               {
                 echo "DATE=$(date +'%Y-%m-%d')"
-                echo "GIT_BRANCH=${BRANCH//\//_}"
+                echo "GIT_BRANCH=$BRANCH" | sed 's/\//_/g'
                 echo "SHA=$(git rev-parse --short HEAD)"
               } >> "$GITHUB_ENV"
               git config --global --add safe.directory '*'
+              shell: bash
 
           - name: Download Build Artifact
             if: ${{ inputs.download-build-artifact-enabled }}
