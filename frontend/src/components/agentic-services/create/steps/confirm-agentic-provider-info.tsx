@@ -6,21 +6,22 @@
 import {Card, CardContent} from '@/components/ui/card';
 import {ExternalLinkIcon} from 'lucide-react';
 import {useStepper} from '../stepper';
-import {Link, Typography} from '@outshift/spark-design';
+import {CodeBlock, Link, Typography} from '@outshift/spark-design';
 import {useMemo} from 'react';
 import {AgenticServiceFormValues} from '@/schemas/agentic-service-schema';
 import {AppType} from '@/types/api/app';
 import KeyValue, {KeyValuePair} from '@/components/ui/key-value';
 import {AgenticServiceType} from '@/components/shared/agentic-service-type';
 
-export const RegisterAgenticProvider = () => {
+export const ConfirmAgenticProvider = () => {
   const methods = useStepper();
-  const metaData = methods.getMetadata('agenticServiceInfo') as AgenticServiceFormValues | undefined;
+  const metaData = methods.getMetadata('agenticServiceForm') as AgenticServiceFormValues | undefined;
 
   const type = metaData?.type;
   const name = metaData?.name;
   const description = metaData?.description;
   const mcpServer = metaData?.mcpServer;
+  const oasfSpecsContent = metaData?.oasfSpecsContent;
 
   const keyValuePairs = useMemo(() => {
     const temp: KeyValuePair[] = [
@@ -43,8 +44,18 @@ export const RegisterAgenticProvider = () => {
         value: mcpServer || 'Not provided'
       });
     }
+    if (type === AppType.APP_TYPE_AGENT_OASF) {
+      temp.push({
+        keyProp: 'OASF Specs',
+        value: oasfSpecsContent ? (
+          <CodeBlock containerProps={{maxWidth: '50vw'}} showLineNumbers wrapLongLines text={oasfSpecsContent} />
+        ) : (
+          'Not provided'
+        )
+      });
+    }
     return temp;
-  }, [description, mcpServer, name, type]);
+  }, [description, mcpServer, name, oasfSpecsContent, type]);
 
   return (
     <Card className="text-start space-y-6" variant="secondary">

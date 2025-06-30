@@ -10,13 +10,13 @@ import {z} from 'zod';
 export const {StepperProvider, StepperControls, StepperNavigation, StepperStep, StepperTitle, StepperDescription, StepperPanel, useStepper} =
   defineStepper(
     {
-      id: 'agenticServiceInfo',
+      id: 'agenticServiceForm',
       title: 'Agentic Service Type & Source',
       description: 'Select the agentic service type you want to use and enter the service information',
       schema: AgenticServiceSchema
     },
     {
-      id: 'registerAgenticService',
+      id: 'confirmAgenticService',
       title: 'Register Agentic Service',
       description: 'Confirm the registration of the agentic service',
       schema: z.object({})

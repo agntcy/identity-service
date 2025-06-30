@@ -11,14 +11,15 @@ import {z} from 'zod';
 import {Form} from '@/components/ui/form';
 import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from '@/components/ui/accordion';
 import {Button, toast, Tooltip, Typography} from '@outshift/spark-design';
-import {AgenticServiceInfo} from './steps/agentic-service-info';
-import {RegisterAgenticProvider} from './steps/register-agentic-provider';
+import {AgenticServicForm} from './steps/agentic-service-form';
+import {ConfirmAgenticProvider} from './steps/confirm-agentic-provider-info';
 import {AgenticServiceFormValues, AgenticServiceSchema} from '@/schemas/agentic-service-schema';
 import {validateForm} from '@/lib/utils';
 import {useCreateAgenticService} from '@/mutations';
 import {IconButton} from '@mui/material';
 import {InfoIcon} from 'lucide-react';
-import {LoadingText} from '@/components/ui/loading-text';
+import {App} from '@/types/api/app';
+import {CreateBadge} from './steps/create-badge';
 
 export const CreateAgenticServiceStepper = () => {
   return (
@@ -30,7 +31,7 @@ export const CreateAgenticServiceStepper = () => {
 
 const FormStepperComponent = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isVerifying, setIsVerifying] = useState<boolean>(false);
+  const [app, setApp] = useState<App | undefined>(undefined);
 
   const methods = useStepper();
 
@@ -41,13 +42,15 @@ const FormStepperComponent = () => {
 
   const mutationCreate = useCreateAgenticService({
     callbacks: {
-      onSuccess: () => {
+      onSuccess: (resp) => {
         setIsLoading(false);
         toast({
           title: 'Success',
           description: 'Agentic service created successfully.',
           type: 'success'
         });
+        setApp(resp.data);
+        methods.next();
       },
       onError: () => {
         setIsLoading(false);
@@ -62,32 +65,19 @@ const FormStepperComponent = () => {
 
   const handleOnClear = useCallback(() => {
     setIsLoading(false);
-    setIsVerifying(false);
+    setApp(undefined);
     form.reset({
       type: undefined,
       name: undefined,
       description: undefined,
       oasfSpecs: undefined,
-      mcpServer: undefined
+      mcpServer: undefined,
+      oasfSpecsContent: undefined
     });
     methods.reset();
     methods.resetMetadata();
-    methods.goTo('agenticServiceInfo');
+    methods.goTo('agenticServiceForm');
   }, [form, methods]);
-
-  const handleVerifyOwnership = useCallback(() => {
-    setIsVerifying(true);
-    methods.next();
-    setTimeout(() => {
-      // TODO: Replace with actual ownership verification logic
-      setIsVerifying(false);
-      toast({
-        title: 'Ownership Verified',
-        description: 'You are the owner of this Agentic service.',
-        type: 'success'
-      });
-    }, 5000);
-  }, [methods]);
 
   const handleSelectAgenticService = useCallback(() => {
     const values = form.getValues() as AgenticServiceFormValues;
@@ -99,16 +89,17 @@ const FormStepperComponent = () => {
       });
       return;
     }
-    methods.setMetadata('agenticServiceInfo', {
-      ...methods.getMetadata('agenticServiceInfo'),
+    methods.setMetadata('agenticServiceForm', {
+      ...methods.getMetadata('agenticServiceForm'),
       type: values.type,
       name: values.name,
       description: values.description,
       oasfSpecs: values.oasfSpecs,
-      mcpServer: values.mcpServer
+      mcpServer: values.mcpServer,
+      oasfSpecsContent: values.oasfSpecsContent
     });
-    handleVerifyOwnership();
-  }, [form, handleVerifyOwnership, methods]);
+    methods.next();
+  }, [form, methods]);
 
   const handleSave = useCallback(() => {
     setIsLoading(true);
@@ -121,10 +112,10 @@ const FormStepperComponent = () => {
   }, [form, mutationCreate]);
 
   const onSubmit = useCallback(() => {
-    if (methods.current.id === 'agenticServiceInfo') {
+    if (methods.current.id === 'agenticServiceForm') {
       return handleSelectAgenticService();
     }
-    if (methods.current.id === 'registerAgenticService') {
+    if (methods.current.id === 'confirmAgenticService') {
       return handleSave();
     }
   }, [handleSave, handleSelectAgenticService, methods]);
@@ -134,7 +125,7 @@ const FormStepperComponent = () => {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <StepperPanel className="w-full">
-            <Accordion type="single" collapsible className="w-full" defaultValue={methods.get('agenticServiceInfo').id} value={methods.current.id}>
+            <Accordion type="single" collapsible className="w-full" defaultValue={methods.get('agenticServiceForm').id} value={methods.current.id}>
               {methods.all.map((step) => {
                 return (
                   <div className="flex gap-2 items-top -ml-1" key={step.id}>
@@ -148,9 +139,9 @@ const FormStepperComponent = () => {
                             <Typography variant="h6" fontSize={18} sx={(theme) => ({color: theme.palette.vars.baseTextStrong})}>
                               {step.title}
                             </Typography>
-                            {step.id === 'registerAgenticService' && (
+                            {step.id === 'createBadge' && (
                               <>
-                                <Tooltip title="You must be the Agentic service owner to create ID badges." arrow placement="top">
+                                <Tooltip title="Create Badge for your agentic service" arrow placement="top">
                                   <IconButton
                                     sx={(theme) => ({
                                       color: theme.palette.vars.baseTextDefault,
@@ -161,14 +152,6 @@ const FormStepperComponent = () => {
                                     <InfoIcon className="w-4 h-4" />
                                   </IconButton>
                                 </Tooltip>
-                                {isVerifying && (
-                                  <>
-                                    <Typography variant="body2" sx={(theme) => ({color: theme.palette.vars.baseTextDefault})}>
-                                      |
-                                    </Typography>
-                                    <LoadingText text="Verifying agent ownership" />
-                                  </>
-                                )}
                               </>
                             )}
                           </div>
@@ -176,36 +159,39 @@ const FormStepperComponent = () => {
                         </div>
                       </AccordionTrigger>
                       <AccordionContent>
-                        {step.id === 'agenticServiceInfo' ? (
-                          <AgenticServiceInfo isLoading={isLoading} />
+                        {step.id === 'agenticServiceForm' ? (
+                          <AgenticServicForm isLoading={isLoading} />
+                        ) : step.id === 'confirmAgenticService' ? (
+                          <ConfirmAgenticProvider />
                         ) : (
-                          step.id === 'registerAgenticService' && !isVerifying && <RegisterAgenticProvider />
+                          step.id === 'createBadge' && <CreateBadge app={app} />
                         )}
                         <div className="flex justify-between items-center">
-                          <Button variant="tertariary" onClick={handleOnClear} disabled={isLoading || isVerifying}>
-                            Cancel
-                          </Button>
-                          <StepperControls className="pt-4">
-                            {!methods.isFirst && (
+                          {methods.current.id !== 'createBadge' ? (
+                            <Button variant="tertariary" onClick={handleOnClear} disabled={isLoading}>
+                              Cancel
+                            </Button>
+                          ) : (
+                            <div />
+                          )}
+                          {methods.current.id !== 'createBadge' && (
+                            <StepperControls className="pt-4">
+                              {!methods.isFirst && (
+                                <Button variant="outlined" onClick={methods.prev} disabled={methods.isFirst || isLoading} className="cursor-pointer">
+                                  Previous
+                                </Button>
+                              )}
                               <Button
-                                variant="outlined"
-                                onClick={methods.prev}
-                                disabled={methods.isFirst || isLoading || isVerifying}
+                                loading={isLoading}
+                                loadingPosition="start"
+                                type="submit"
+                                disabled={isLoading || !form.formState.isValid}
                                 className="cursor-pointer"
                               >
-                                Previous
+                                {methods.current.id === 'confirmAgenticService' ? 'Save' : 'Next'}
                               </Button>
-                            )}
-                            <Button
-                              loading={isLoading || isVerifying}
-                              loadingPosition="start"
-                              type="submit"
-                              disabled={isLoading || !form.formState.isValid || isVerifying}
-                              className="cursor-pointer"
-                            >
-                              {methods.isLast ? 'Save' : 'Next'}
-                            </Button>
-                          </StepperControls>
+                            </StepperControls>
+                          )}
                         </div>
                       </AccordionContent>
                     </AccordionItem>

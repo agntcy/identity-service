@@ -11,7 +11,7 @@ import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
 import {AgenticServiceColumns} from './agentic-services-columns';
 import {Card} from '@/components/ui/card';
 import {Typography} from '@mui/material';
-import {Trash2Icon, UserRoundPlusIcon} from 'lucide-react';
+import {PlusIcon, Trash2Icon, UserRoundPlusIcon} from 'lucide-react';
 import {cn} from '@/lib/utils';
 import {useAuth} from '@/hooks';
 import {generatePath, useNavigate} from 'react-router-dom';
@@ -44,6 +44,16 @@ export const ListAgenticServices = () => {
           actionTitle: 'Retry'
         }}
         useContainer
+        emptyListStateProps={{
+          actionButtonProps: {
+            startIcon: <PlusIcon className="w-4 h-4" />,
+            sx: {fontWeight: '600 !important'}
+          },
+          actionCallback: () => {
+            void navigate(PATHS.agenticServices.create);
+          },
+          actionTitle: 'Add Agentic Service'
+        }}
       >
         <Card className={cn(!(isFetching || isLoading) && 'p-0')} variant="secondary"></Card>
         {/* <Table
