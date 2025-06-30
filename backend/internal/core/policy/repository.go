@@ -15,6 +15,7 @@ type Repository interface {
 	CreateRule(ctx context.Context, rule *types.Rule) error
 	CreateTasks(ctx context.Context, tasks ...*types.Task) error
 	UpdatePolicy(ctx context.Context, policy *types.Policy) error
+	UpdateRule(ctx context.Context, rule *types.Rule) error
 	UpdateTasks(ctx context.Context, tasks ...*types.Task) error
 	DeletePolicies(ctx context.Context, policies ...*types.Policy) error
 	DeleteRules(ctx context.Context, rules ...*types.Rule) error

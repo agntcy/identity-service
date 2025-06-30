@@ -637,8 +637,14 @@ type UpdateRuleRequest struct {
 	PolicyId string `protobuf:"bytes,1,opt,name=policy_id,json=policyId,proto3" json:"policy_id,omitempty"`
 	// Rule Id to update.
 	RuleId string `protobuf:"bytes,2,opt,name=rule_id,json=ruleId,proto3" json:"rule_id,omitempty"`
-	// Rule parameters to update.
-	Rule          *Rule `protobuf:"bytes,3,opt,name=rule,proto3" json:"rule,omitempty"`
+	// A human-readable name for the Rule.
+	Name string `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
+	// A human-readable description for the Rule.
+	Description *string `protobuf:"bytes,4,opt,name=description,proto3,oneof" json:"description,omitempty"`
+	// The tasks that this Rule applies to.
+	Tasks []string `protobuf:"bytes,5,rep,name=tasks,proto3" json:"tasks,omitempty"`
+	// Need User Approval for this Rule.
+	NeedsApproval *bool `protobuf:"varint,6,opt,name=needs_approval,json=needsApproval,proto3,oneof" json:"needs_approval,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -687,11 +693,32 @@ func (x *UpdateRuleRequest) GetRuleId() string {
 	return ""
 }
 
-func (x *UpdateRuleRequest) GetRule() *Rule {
+func (x *UpdateRuleRequest) GetName() string {
 	if x != nil {
-		return x.Rule
+		return x.Name
+	}
+	return ""
+}
+
+func (x *UpdateRuleRequest) GetDescription() string {
+	if x != nil && x.Description != nil {
+		return *x.Description
+	}
+	return ""
+}
+
+func (x *UpdateRuleRequest) GetTasks() []string {
+	if x != nil {
+		return x.Tasks
 	}
 	return nil
+}
+
+func (x *UpdateRuleRequest) GetNeedsApproval() bool {
+	if x != nil && x.NeedsApproval != nil {
+		return *x.NeedsApproval
+	}
+	return false
 }
 
 type DeleteRuleRequest struct {
@@ -807,14 +834,19 @@ const file_agntcy_identity_platform_v1alpha1_policy_service_proto_rawDesc = "" +
 	"\x0f_needs_approval\"F\n" +
 	"\x0eGetRuleRequest\x12\x1b\n" +
 	"\tpolicy_id\x18\x01 \x01(\tR\bpolicyId\x12\x17\n" +
-	"\arule_id\x18\x02 \x01(\tR\x06ruleId\"\x86\x01\n" +
+	"\arule_id\x18\x02 \x01(\tR\x06ruleId\"\xe9\x01\n" +
 	"\x11UpdateRuleRequest\x12\x1b\n" +
 	"\tpolicy_id\x18\x01 \x01(\tR\bpolicyId\x12\x17\n" +
-	"\arule_id\x18\x02 \x01(\tR\x06ruleId\x12;\n" +
-	"\x04rule\x18\x03 \x01(\v2'.agntcy.identity.platform.v1alpha1.RuleR\x04rule\"I\n" +
+	"\arule_id\x18\x02 \x01(\tR\x06ruleId\x12\x12\n" +
+	"\x04name\x18\x03 \x01(\tR\x04name\x12%\n" +
+	"\vdescription\x18\x04 \x01(\tH\x00R\vdescription\x88\x01\x01\x12\x14\n" +
+	"\x05tasks\x18\x05 \x03(\tR\x05tasks\x12*\n" +
+	"\x0eneeds_approval\x18\x06 \x01(\bH\x01R\rneedsApproval\x88\x01\x01B\x0e\n" +
+	"\f_descriptionB\x11\n" +
+	"\x0f_needs_approval\"I\n" +
 	"\x11DeleteRuleRequest\x12\x1b\n" +
 	"\tpolicy_id\x18\x01 \x01(\tR\bpolicyId\x12\x17\n" +
-	"\arule_id\x18\x02 \x01(\tR\x06ruleId2\xdc\x0e\n" +
+	"\arule_id\x18\x02 \x01(\tR\x06ruleId2\xd9\x0e\n" +
 	"\rPolicyService\x12\xbb\x01\n" +
 	"\fListPolicies\x126.agntcy.identity.platform.v1alpha1.ListPoliciesRequest\x1a7.agntcy.identity.platform.v1alpha1.ListPoliciesResponse\":\x92A\x1d\x12\rList Policies*\fListPolicies\x82\xd3\xe4\x93\x02\x14\x12\x12/v1alpha1/policies\x12\xb3\x01\n" +
 	"\tGetPolicy\x123.agntcy.identity.platform.v1alpha1.GetPolicyRequest\x1a).agntcy.identity.platform.v1alpha1.Policy\"F\x92A\x1d\x12\x10Get Policy by Id*\tGetPolicy\x82\xd3\xe4\x93\x02 \x12\x1e/v1alpha1/policies/{policy_id}\x12\xb0\x01\n" +
@@ -826,10 +858,10 @@ const file_agntcy_identity_platform_v1alpha1_policy_service_proto_rawDesc = "" +
 	"\aGetRule\x121.agntcy.identity.platform.v1alpha1.GetRuleRequest\x1a'.agntcy.identity.platform.v1alpha1.Rule\"R\x92A\x19\x12\x0eGet Rule by Id*\aGetRule\x82\xd3\xe4\x93\x020\x12./v1alpha1/policies/{policy_id}/rules/{rule_id}\x12\xb8\x01\n" +
 	"\n" +
 	"CreateRule\x124.agntcy.identity.platform.v1alpha1.CreateRuleRequest\x1a'.agntcy.identity.platform.v1alpha1.Rule\"K\x92A\x19\x12\vCreate Rule*\n" +
-	"CreateRule\x82\xd3\xe4\x93\x02):\x01*\"$/v1alpha1/policies/{policy_id}/rules\x12\xc5\x01\n" +
+	"CreateRule\x82\xd3\xe4\x93\x02):\x01*\"$/v1alpha1/policies/{policy_id}/rules\x12\xc2\x01\n" +
 	"\n" +
-	"UpdateRule\x124.agntcy.identity.platform.v1alpha1.UpdateRuleRequest\x1a'.agntcy.identity.platform.v1alpha1.Rule\"X\x92A\x19\x12\vUpdate Rule*\n" +
-	"UpdateRule\x82\xd3\xe4\x93\x026:\x04rule2./v1alpha1/policies/{policy_id}/rules/{rule_id}\x12\xae\x01\n" +
+	"UpdateRule\x124.agntcy.identity.platform.v1alpha1.UpdateRuleRequest\x1a'.agntcy.identity.platform.v1alpha1.Rule\"U\x92A\x19\x12\vUpdate Rule*\n" +
+	"UpdateRule\x82\xd3\xe4\x93\x023:\x01*2./v1alpha1/policies/{policy_id}/rules/{rule_id}\x12\xae\x01\n" +
 	"\n" +
 	"DeleteRule\x124.agntcy.identity.platform.v1alpha1.DeleteRuleRequest\x1a\x16.google.protobuf.Empty\"R\x92A\x19\x12\vDelete Rule*\n" +
 	"DeleteRule\x82\xd3\xe4\x93\x020*./v1alpha1/policies/{policy_id}/rules/{rule_id}\x1a\v\x92A\b\n" +
@@ -871,32 +903,31 @@ var file_agntcy_identity_platform_v1alpha1_policy_service_proto_depIdxs = []int3
 	13, // 1: agntcy.identity.platform.v1alpha1.ListPoliciesResponse.pagination:type_name -> agntcy.identity.platform.shared.v1alpha1.PagedResponse
 	14, // 2: agntcy.identity.platform.v1alpha1.ListRulesResponse.rules:type_name -> agntcy.identity.platform.v1alpha1.Rule
 	13, // 3: agntcy.identity.platform.v1alpha1.ListRulesResponse.pagination:type_name -> agntcy.identity.platform.shared.v1alpha1.PagedResponse
-	14, // 4: agntcy.identity.platform.v1alpha1.UpdateRuleRequest.rule:type_name -> agntcy.identity.platform.v1alpha1.Rule
-	1,  // 5: agntcy.identity.platform.v1alpha1.PolicyService.ListPolicies:input_type -> agntcy.identity.platform.v1alpha1.ListPoliciesRequest
-	3,  // 6: agntcy.identity.platform.v1alpha1.PolicyService.GetPolicy:input_type -> agntcy.identity.platform.v1alpha1.GetPolicyRequest
-	2,  // 7: agntcy.identity.platform.v1alpha1.PolicyService.CreatePolicy:input_type -> agntcy.identity.platform.v1alpha1.CreatePolicyRequest
-	4,  // 8: agntcy.identity.platform.v1alpha1.PolicyService.UpdatePolicy:input_type -> agntcy.identity.platform.v1alpha1.UpdatePolicyRequest
-	5,  // 9: agntcy.identity.platform.v1alpha1.PolicyService.DeletePolicy:input_type -> agntcy.identity.platform.v1alpha1.DeletePolicyRequest
-	7,  // 10: agntcy.identity.platform.v1alpha1.PolicyService.ListRules:input_type -> agntcy.identity.platform.v1alpha1.ListRulesRequest
-	9,  // 11: agntcy.identity.platform.v1alpha1.PolicyService.GetRule:input_type -> agntcy.identity.platform.v1alpha1.GetRuleRequest
-	8,  // 12: agntcy.identity.platform.v1alpha1.PolicyService.CreateRule:input_type -> agntcy.identity.platform.v1alpha1.CreateRuleRequest
-	10, // 13: agntcy.identity.platform.v1alpha1.PolicyService.UpdateRule:input_type -> agntcy.identity.platform.v1alpha1.UpdateRuleRequest
-	11, // 14: agntcy.identity.platform.v1alpha1.PolicyService.DeleteRule:input_type -> agntcy.identity.platform.v1alpha1.DeleteRuleRequest
-	0,  // 15: agntcy.identity.platform.v1alpha1.PolicyService.ListPolicies:output_type -> agntcy.identity.platform.v1alpha1.ListPoliciesResponse
-	12, // 16: agntcy.identity.platform.v1alpha1.PolicyService.GetPolicy:output_type -> agntcy.identity.platform.v1alpha1.Policy
-	12, // 17: agntcy.identity.platform.v1alpha1.PolicyService.CreatePolicy:output_type -> agntcy.identity.platform.v1alpha1.Policy
-	12, // 18: agntcy.identity.platform.v1alpha1.PolicyService.UpdatePolicy:output_type -> agntcy.identity.platform.v1alpha1.Policy
-	15, // 19: agntcy.identity.platform.v1alpha1.PolicyService.DeletePolicy:output_type -> google.protobuf.Empty
-	6,  // 20: agntcy.identity.platform.v1alpha1.PolicyService.ListRules:output_type -> agntcy.identity.platform.v1alpha1.ListRulesResponse
-	14, // 21: agntcy.identity.platform.v1alpha1.PolicyService.GetRule:output_type -> agntcy.identity.platform.v1alpha1.Rule
-	14, // 22: agntcy.identity.platform.v1alpha1.PolicyService.CreateRule:output_type -> agntcy.identity.platform.v1alpha1.Rule
-	14, // 23: agntcy.identity.platform.v1alpha1.PolicyService.UpdateRule:output_type -> agntcy.identity.platform.v1alpha1.Rule
-	15, // 24: agntcy.identity.platform.v1alpha1.PolicyService.DeleteRule:output_type -> google.protobuf.Empty
-	15, // [15:25] is the sub-list for method output_type
-	5,  // [5:15] is the sub-list for method input_type
-	5,  // [5:5] is the sub-list for extension type_name
-	5,  // [5:5] is the sub-list for extension extendee
-	0,  // [0:5] is the sub-list for field type_name
+	1,  // 4: agntcy.identity.platform.v1alpha1.PolicyService.ListPolicies:input_type -> agntcy.identity.platform.v1alpha1.ListPoliciesRequest
+	3,  // 5: agntcy.identity.platform.v1alpha1.PolicyService.GetPolicy:input_type -> agntcy.identity.platform.v1alpha1.GetPolicyRequest
+	2,  // 6: agntcy.identity.platform.v1alpha1.PolicyService.CreatePolicy:input_type -> agntcy.identity.platform.v1alpha1.CreatePolicyRequest
+	4,  // 7: agntcy.identity.platform.v1alpha1.PolicyService.UpdatePolicy:input_type -> agntcy.identity.platform.v1alpha1.UpdatePolicyRequest
+	5,  // 8: agntcy.identity.platform.v1alpha1.PolicyService.DeletePolicy:input_type -> agntcy.identity.platform.v1alpha1.DeletePolicyRequest
+	7,  // 9: agntcy.identity.platform.v1alpha1.PolicyService.ListRules:input_type -> agntcy.identity.platform.v1alpha1.ListRulesRequest
+	9,  // 10: agntcy.identity.platform.v1alpha1.PolicyService.GetRule:input_type -> agntcy.identity.platform.v1alpha1.GetRuleRequest
+	8,  // 11: agntcy.identity.platform.v1alpha1.PolicyService.CreateRule:input_type -> agntcy.identity.platform.v1alpha1.CreateRuleRequest
+	10, // 12: agntcy.identity.platform.v1alpha1.PolicyService.UpdateRule:input_type -> agntcy.identity.platform.v1alpha1.UpdateRuleRequest
+	11, // 13: agntcy.identity.platform.v1alpha1.PolicyService.DeleteRule:input_type -> agntcy.identity.platform.v1alpha1.DeleteRuleRequest
+	0,  // 14: agntcy.identity.platform.v1alpha1.PolicyService.ListPolicies:output_type -> agntcy.identity.platform.v1alpha1.ListPoliciesResponse
+	12, // 15: agntcy.identity.platform.v1alpha1.PolicyService.GetPolicy:output_type -> agntcy.identity.platform.v1alpha1.Policy
+	12, // 16: agntcy.identity.platform.v1alpha1.PolicyService.CreatePolicy:output_type -> agntcy.identity.platform.v1alpha1.Policy
+	12, // 17: agntcy.identity.platform.v1alpha1.PolicyService.UpdatePolicy:output_type -> agntcy.identity.platform.v1alpha1.Policy
+	15, // 18: agntcy.identity.platform.v1alpha1.PolicyService.DeletePolicy:output_type -> google.protobuf.Empty
+	6,  // 19: agntcy.identity.platform.v1alpha1.PolicyService.ListRules:output_type -> agntcy.identity.platform.v1alpha1.ListRulesResponse
+	14, // 20: agntcy.identity.platform.v1alpha1.PolicyService.GetRule:output_type -> agntcy.identity.platform.v1alpha1.Rule
+	14, // 21: agntcy.identity.platform.v1alpha1.PolicyService.CreateRule:output_type -> agntcy.identity.platform.v1alpha1.Rule
+	14, // 22: agntcy.identity.platform.v1alpha1.PolicyService.UpdateRule:output_type -> agntcy.identity.platform.v1alpha1.Rule
+	15, // 23: agntcy.identity.platform.v1alpha1.PolicyService.DeleteRule:output_type -> google.protobuf.Empty
+	14, // [14:24] is the sub-list for method output_type
+	4,  // [4:14] is the sub-list for method input_type
+	4,  // [4:4] is the sub-list for extension type_name
+	4,  // [4:4] is the sub-list for extension extendee
+	0,  // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_agntcy_identity_platform_v1alpha1_policy_service_proto_init() }
@@ -912,6 +943,7 @@ func file_agntcy_identity_platform_v1alpha1_policy_service_proto_init() {
 	file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[6].OneofWrappers = []any{}
 	file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[7].OneofWrappers = []any{}
 	file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[8].OneofWrappers = []any{}
+	file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[10].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

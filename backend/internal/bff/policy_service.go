@@ -53,6 +53,15 @@ type PolicyService interface {
 		ctx context.Context,
 		id, name, description, assignedTo string,
 	) (*policytypes.Policy, error)
+	UpdateRule(
+		ctx context.Context,
+		policyID string,
+		ruleID string,
+		name string,
+		description string,
+		taskIDs []string,
+		needsApproval bool,
+	) (*policytypes.Rule, error)
 }
 
 type policyService struct {
@@ -233,6 +242,42 @@ func (s *policyService) UpdatePolicy(
 	}
 
 	return policy, nil
+}
+
+func (s *policyService) UpdateRule(
+	ctx context.Context,
+	policyID string,
+	ruleID string,
+	name string,
+	description string,
+	taskIDs []string,
+	needsApproval bool,
+) (*policytypes.Rule, error) {
+	if name == "" {
+		return nil, errors.New("name cannot be empty")
+	}
+
+	rule, err := s.policyRepository.GetRuleByID(ctx, ruleID, policyID)
+	if err != nil {
+		return nil, errutil.Err(err, "unable to find rule")
+	}
+
+	tasks, err := s.validateTasks(ctx, taskIDs)
+	if err != nil {
+		return nil, err
+	}
+
+	rule.Name = name
+	rule.Description = description
+	rule.NeedsApproval = needsApproval
+	rule.Tasks = tasks
+
+	err = s.policyRepository.UpdateRule(ctx, rule)
+	if err != nil {
+		return nil, fmt.Errorf("unable to update the rule: %w", err)
+	}
+
+	return rule, nil
 }
 
 func (s *policyService) validateTasks(ctx context.Context, ids []string) ([]*policytypes.Task, error) {

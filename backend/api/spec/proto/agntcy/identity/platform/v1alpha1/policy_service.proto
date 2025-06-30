@@ -108,7 +108,7 @@ service PolicyService {
   rpc UpdateRule(UpdateRuleRequest) returns (Rule) {
     option (google.api.http) = {
       patch: "/v1alpha1/policies/{policy_id}/rules/{rule_id}"
-      body: "rule"
+      body: "*"
     };
 
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -236,8 +236,17 @@ message UpdateRuleRequest {
   // Rule Id to update.
   string rule_id = 2;
 
-  // Rule parameters to update.
-  Rule rule = 3;
+  // A human-readable name for the Rule.
+  string name = 3;
+
+  // A human-readable description for the Rule.
+  optional string description = 4;
+
+  // The tasks that this Rule applies to.
+  repeated string tasks = 5;
+
+  // Need User Approval for this Rule.
+  optional bool needs_approval = 6;
 }
 
 message DeleteRuleRequest {
