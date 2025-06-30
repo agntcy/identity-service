@@ -449,18 +449,18 @@
               else
                 BUILD_ARGS="--build-arg ARTIFACTORY_PASSWORD=${{ env.ARTIFACTORY_PASSWORD }}"
               fi
-              if [ ${{ inputs.npm-github-registry-enabled }} = true }}]; then
-                echo "NPM_TOKEN=${{ env.GHEC_PAT }}" >> $GITHUB_ENV
+              if [ "${{ inputs.npm-github-registry-enabled }}" = "true" ]; then
+                echo "NPM_TOKEN=${{ env.GHEC_PAT }}" >> "$GITHUB_ENV"
                 SECRET_ARG=" --build-arg NPM_TOKEN=$GITHUB_TOKEN"
               else
                 SECRET_ARG=""
               fi
-              echo "BUILD_ARGS=$BUILD_ARGS" >> $GITHUB_ENV
-              echo "SECRET_ARG=$SECRET_ARG" >> $GITHUB_ENV
-              echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+              echo "BUILD_ARGS=$BUILD_ARGS" >> "$GITHUB_ENV"
+              echo "SECRET_ARG=$SECRET_ARG" >> "$GITHUB_ENV"
+              echo "DATE=$(date +'%Y-%m-%d')" >> "$GITHUB_ENV"
               git config --global --add safe.directory '*'
-              echo "GIT_BRANCH=$BRANCH" | sed 's/\//_/g' >> $GITHUB_ENV
-              echo "SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+              echo "GIT_BRANCH=$BRANCH" | sed 's/\//_/g' >> "$GITHUB_ENV"
+              echo "SHA=$(git rev-parse --short HEAD)" >> "$GITHUB_ENV"
 
           - name: Download Build Artifact
             if: ${{ inputs.download-build-artifact-enabled }}
@@ -497,19 +497,19 @@
           - name: Outshift Research websites Prepare
             if: ${{ inputs.research-websites }}
             run: |
-              echo "ADMIN_ORIGIN=${{ inputs.research-admin-origin }}" >> $GITHUB_ENV
-              echo "NEXT_PUBLIC_STRAPI_READ_TOKEN=${{ env.NEXT_PUBLIC_STRAPI_READ_TOKEN }}" >> $GITHUB_ENV
+              echo "ADMIN_ORIGIN=${{ inputs.research-admin-origin }}" >> "$GITHUB_ENV"
+              echo "NEXT_PUBLIC_STRAPI_READ_TOKEN=${{ env.NEXT_PUBLIC_STRAPI_READ_TOKEN }}" >> "$GITHUB_ENV"
             shell: bash
 
           - name: Outshift websites Prepare
             if: ${{ inputs.outshift-websites }}
             run: |
-              echo "ORIGIN=${{ inputs.outshift-website-origin }}" >> $GITHUB_ENV
-              echo "ADMIN_ORIGIN=${{ inputs.outshift-website-admin-origin }}" >> $GITHUB_ENV
-              echo "STRAPI_API_URL=${{ inputs.strapi-api-url }}" >> $GITHUB_ENV
-              echo "RESEARCH_ADMIN_ORIGIN=${{ inputs.research-admin-origin }}" >> $GITHUB_ENV
-              echo "STRAPI_API_KEY=${{ env.STRAPI_API_KEY }}" >> $GITHUB_ENV
-              echo "RESEARCH_STRAPI_API_KEY=${{ env.RESEARCH_STRAPI_API_KEY }}" >> $GITHUB_ENV
+              echo "ORIGIN=${{ inputs.outshift-website-origin }}" >> "$GITHUB_ENV"
+              echo "ADMIN_ORIGIN=${{ inputs.outshift-website-admin-origin }}" >> "$GITHUB_ENV"
+              echo "STRAPI_API_URL=${{ inputs.strapi-api-url }}" >> "$GITHUB_ENV"
+              echo "RESEARCH_ADMIN_ORIGIN=${{ inputs.research-admin-origin }}" >> "$GITHUB_ENV"
+              echo "STRAPI_API_KEY=${{ env.STRAPI_API_KEY }}" >> "$GITHUB_ENV"
+              echo "RESEARCH_STRAPI_API_KEY=${{ env.RESEARCH_STRAPI_API_KEY }}" >> "$GITHUB_ENV"
             shell: bash
 
           - name: Build Docker Image
