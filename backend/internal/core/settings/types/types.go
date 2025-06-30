@@ -3,10 +3,6 @@
 
 package types
 
-import (
-	coredevice "github.com/agntcy/identity-platform/internal/core/device/types"
-)
-
 // Type
 type IdpType int
 
@@ -87,7 +83,4 @@ type Settings struct {
 
 	// Settings for the Issuer.
 	IssuerSettings *IssuerSettings `json:"issuer_settings,omitempty" protobuf:"bytes,2,opt,name=issuer_settings"`
-
-	// Devices used for user approval.
-	Devices []*coredevice.Device `json:"devices,omitempty" protobuf:"bytes,3,rep,name=devices"`
 }
