@@ -18,18 +18,36 @@ service DeviceService {
 
   // Add new device for approval flow
   rpc AddDevice(AddDeviceRequest) returns (google.protobuf.Empty) {
-    option (google.api.http) = {post: "/v1alpha1/device"};
+    option (google.api.http) = {
+      post: "/v1alpha1/device"
+      body: "device"
+    };
 
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       operation_id: "AddDevice";
       summary: "Add new device for approval flow";
     };
   }
+
+  // Add new device for approval flow
+  rpc RegisterDevice(RegisterDeviceRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {post: "/v1alpha1/device/{device_id}"};
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "RegisterDevice";
+      summary: "Register device for approval flow";
+    };
+  }
 }
 
 message AddDeviceRequest {
-  // The User context in the form of an id or access token.
-  optional string user_token = 1;
+  // The device information to register.
+  Device device = 1;
+}
+
+message RegisterDeviceRequest {
+  // The unique identifier for the device to register.
+  optional string device_id = 1;
 
   // The device information to register.
   Device device = 2;

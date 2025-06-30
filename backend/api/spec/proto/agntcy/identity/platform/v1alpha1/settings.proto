@@ -7,6 +7,8 @@ syntax = "proto3";
 
 package agntcy.identity.platform.v1alpha1;
 
+import "agntcy/identity/platform/v1alpha1/device.proto";
+
 // Package-wide variables from generator "generated".
 option go_package = "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_go";
 
@@ -60,6 +62,9 @@ message Settings {
 
   // Settings for the Issuer.
   optional IssuerSettings issuer_settings = 2;
+
+  // Devices used for user approval.
+  repeated .github.com.agntcy.identity_platform.internal.core.device.types.Device devices = 3;
 }
 
 // Type

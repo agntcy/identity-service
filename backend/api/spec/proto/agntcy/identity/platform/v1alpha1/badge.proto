@@ -101,3 +101,7 @@ enum BadgeType {
   // The schema is defined in the MCP specification as the MCPServer type
   BADGE_TYPE_MCP_BADGE = 2;
 }
+ined schema
+  // The schema is defined in the MCP specification as the MCPServer type
+  BADGE_TYPE_MCP_BADGE = 2;
+}
