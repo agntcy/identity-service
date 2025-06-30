@@ -461,7 +461,7 @@
                 echo "SHA=$(git rev-parse --short HEAD)"
               } >> "$GITHUB_ENV"
               git config --global --add safe.directory '*'
-              shell: bash
+            shell: bash
 
           - name: Download Build Artifact
             if: ${{ inputs.download-build-artifact-enabled }}
