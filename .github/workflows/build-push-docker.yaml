@@ -445,15 +445,16 @@
               ARTIFACTORY_PASSWORD: ${{ secrets.artifactory_password }}
             run: |
               if [ "${{ inputs.setup-go }}" = "true" ]; then
-                BUILD_ARGS="${{ inputs.build-args }} --build-arg GITHUB_TOKEN=${{ env.GHEC_PAT }}"
+                echo "BUILD_ARGS=--build-arg GITHUB_TOKEN=${{ env.GHEC_PAT }}" >> "$GITHUB_ENV"
               else
-                BUILD_ARGS="--build-arg ARTIFACTORY_PASSWORD=${{ env.ARTIFACTORY_PASSWORD }}"
+                echo "BUILD_ARGS=--build-arg ARTIFACTORY_PASSWORD=${{ env.ARTIFACTORY_PASSWORD }}" >> "$GITHUB_ENV"
               fi
+              
               if [ "${{ inputs.npm-github-registry-enabled }}" = "true" ]; then
                 echo "NPM_TOKEN=${{ env.GHEC_PAT }}" >> "$GITHUB_ENV"
-                SECRET_ARG=" --build-arg NPM_TOKEN=$GITHUB_TOKEN"
+                echo "SECRET_ARG=--build-arg NPM_TOKEN=${{ env.GHEC_PAT }}" >> "$GITHUB_ENV"
               else
-                SECRET_ARG=""
+                echo "SECRET_ARG=" >> "$GITHUB_ENV"
               fi
               {
                 echo "BUILD_ARGS=$BUILD_ARGS"
