@@ -8,13 +8,11 @@ import (
 
 	devicecore "github.com/agntcy/identity-platform/internal/core/device"
 	devicetypes "github.com/agntcy/identity-platform/internal/core/device/types"
-	issuercore "github.com/agntcy/identity-platform/internal/core/issuer"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
-	outshiftiam "github.com/agntcy/identity-platform/internal/pkg/iam"
 )
 
 type DeviceService interface {
-	AddDevice(ctx context.Context, *devicetypes.Device) error
+	AddDevice(ctx context.Context, device *devicetypes.Device) error
 }
 
 type deviceService struct {
@@ -34,18 +32,14 @@ func (s *deviceService) AddDevice(
 	device *devicetypes.Device,
 ) error {
 	if device == nil {
-		return errutil.ErrInvalidArgument("device cannot be nil")
-	}
-
-	// Validate the device before adding it.
-	if err := device.Validate(); err != nil {
-		return errutil.ErrInvalidArgument("invalid device: %w", err)
+		return errutil.Err(
+			nil,
+			"device cannot be nil",
+		)
 	}
 
 	// Add the device to the repository.
-	if _, err := s.deviceRepository.AddDevice(ctx, device); err != nil {
-		return errutil.ErrInternal("failed to add device: %w", err)
-	}
+	_, err := s.deviceRepository.AddDevice(ctx, device)
 
-	return nil
+	return err
 }
