@@ -36,6 +36,13 @@ type OktaIdpSettings struct {
 	PrivateKey *secrets.EncryptedString `gorm:"type:varchar(4096);"`
 }
 
+type Device struct {
+	ID                uuid.UUID `gorm:"primaryKey;default:gen_random_uuid()"`
+	TenantID          string    `gorm:"not null;type:varchar(256);"`
+	UserID            *string   `gorm:"not null;type:varchar(256);"`
+	SubscriptionToken string    `gorm:"not null;type:varchar(256);"`
+}
+
 func (i *OktaIdpSettings) ToCoreType() *types.OktaIdpSettings {
 	if i == nil {
 		return nil

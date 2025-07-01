@@ -301,45 +301,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-    /v1alpha1/auth/register_device:
-        post:
-            tags:
-                - AuthService
-            description: Register new user device for approval flow
-            operationId: AuthService_RegisterDevice
-            parameters:
-                - name: userToken
-                  in: query
-                  description: |-
-                    The User context in the form of an id or access token.
-                     Mandatory for User Approval Flows.
-                  schema:
-                    type: string
-                - name: device.id
-                  in: query
-                  description: A unique identifier for the Device.
-                  schema:
-                    type: string
-                - name: device.userId
-                  in: query
-                  description: User ID associated with the Device.
-                  schema:
-                    type: string
-                - name: device.subscriptionToken
-                  in: query
-                  description: Subscription Token for the Device.
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: OK
-                    content: {}
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
     /v1alpha1/auth/token:
         post:
             tags:
@@ -384,6 +345,60 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/BadgeClaims'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1alpha1/device:
+        post:
+            tags:
+                - DeviceService
+            description: Add new device for approval flow
+            operationId: DeviceService_AddDevice
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Device'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Device'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1alpha1/device/{deviceId}:
+        post:
+            tags:
+                - DeviceService
+            description: Add new device for approval flow
+            operationId: DeviceService_RegisterDevice
+            parameters:
+                - name: deviceId
+                  in: path
+                  description: The unique identifier for the device to register.
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Device'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
                 default:
                     description: Default error response
                     content:
@@ -895,6 +910,19 @@ components:
                  more information can be found [here]
 
                  [here]: https://www.w3.org/TR/vc-data-model-2.0/#data-schemas
+        Device:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: A unique identifier for the Device.
+                userId:
+                    type: string
+                    description: User ID associated with the Device.
+                subscriptionToken:
+                    type: string
+                    description: Subscription Token for the Device.
+            description: Devices used for user approval
         DuoIdpSettings:
             type: object
             properties:
@@ -1282,6 +1310,8 @@ tags:
       description: AuthService manages auth.
     - name: BadgeService
       description: BadgeService manages badges.
+    - name: DeviceService
+      description: DeviceService manages device.
     - name: PolicyService
       description: PolicyService manages policy.
     - name: SettingsService

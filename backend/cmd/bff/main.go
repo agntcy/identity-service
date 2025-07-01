@@ -19,6 +19,7 @@ import (
 	badgea2a "github.com/agntcy/identity-platform/internal/core/badge/a2a"
 	badgemcp "github.com/agntcy/identity-platform/internal/core/badge/mcp"
 	badgepg "github.com/agntcy/identity-platform/internal/core/badge/postgres"
+	devicepg "github.com/agntcy/identity-platform/internal/core/device/postgres"
 	identitycore "github.com/agntcy/identity-platform/internal/core/identity"
 	idpcore "github.com/agntcy/identity-platform/internal/core/idp"
 	"github.com/agntcy/identity-platform/internal/core/issuer"
@@ -105,14 +106,15 @@ func main() {
 	// Migrate the database
 	err = dbContext.AutoMigrate(
 		&apppg.App{},                  // App model
+		&devicepg.Device{},            // Device model
 		&settingspg.IssuerSettings{},  // Issuer settings model
 		&settingspg.DuoIdpSettings{},  // Duo IDP settings model
 		&settingspg.OktaIdpSettings{}, // Okta IDP settings model
 		&badgepg.Badge{},              // Badge model
 		&authpg.Session{},             // Session model
-		&policypg.Policy{},
-		&policypg.Task{},
-		&policypg.Rule{},
+		&policypg.Policy{},            // Policy model
+		&policypg.Task{},              // Task model
+		&policypg.Rule{},              // Rule model
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -167,6 +169,7 @@ func main() {
 	appRepository := apppg.NewRepository(dbContext)
 	settingsRepository := settingspg.NewRepository(dbContext)
 	badgeRepository := badgepg.NewRepository(dbContext)
+	deviceRepository := devicepg.NewRepository(dbContext)
 	authRepository := authpg.NewRepository(dbContext)
 	policyRepository := policypg.NewRepository(dbContext)
 
@@ -250,6 +253,15 @@ func main() {
 		oidcAuthenticator,
 	)
 	policySrv := bff.NewPolicyService(appRepository, policyRepository)
+	notificationSrv := bff.NewNotificationService(
+		config.WebApprovalEmail,
+		config.WebApprovalPubKey,
+		config.WebApprovalPrivKey,
+	)
+	deviceSrv := bff.NewDeviceService(
+		deviceRepository,
+		notificationSrv,
+	)
 
 	register := identity_platform_api.GrpcServiceRegister{
 		AppServiceServer:      bffgrpc.NewAppService(appSrv),
@@ -257,6 +269,7 @@ func main() {
 		BadgeServiceServer:    bffgrpc.NewBadgeService(badgeSrv),
 		AuthServiceServer:     bffgrpc.NewAuthService(authSrv, appSrv),
 		PolicyServiceServer:   bffgrpc.NewPolicyService(policySrv),
+		DeviceServiceServer:   bffgrpc.NewDeviceService(deviceSrv),
 	}
 
 	register.RegisterGrpcHandlers(grpcsrv.Server)

@@ -34,6 +34,9 @@ type Configuration struct {
 	IamApiKeyCid                                            string        `split_words:"true"`
 	IamSingleTenantID                                       string        `split_words:"true" default:"000000-0000-0000-0000-000000000000"`
 	IamMultiTenant                                          bool          `split_words:"true" default:"true"`
+	WebApprovalEmail                                        string        `split_words:"true"                                              required:"true"`
+	WebApprovalPubKey                                       string        `split_words:"true"                                              required:"true"`
+	WebApprovalPrivKey                                      string        `split_words:"true"                                              required:"true"`
 	ServerGrpcKeepAliveEnvorcementPolicyMinTime             int           `split_words:"true" default:"300"`
 	ServerGrpcKeepAliveEnvorcementPolicyPermitWithoutStream bool          `split_words:"true" default:"false"`
 	ServerGrpcKeepAliveServerParametersMaxConnectionIdle    int           `split_words:"true" default:"100"`

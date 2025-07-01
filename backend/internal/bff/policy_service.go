@@ -22,15 +22,11 @@ import (
 type PolicyService interface {
 	CreatePolicy(
 		ctx context.Context,
-		name string,
-		description string,
-		assignedTo string,
+		name, description, assignedTo string,
 	) (*policytypes.Policy, error)
 	CreateRule(
 		ctx context.Context,
-		policyID string,
-		name string,
-		description string,
+		policyID, name, description string,
 		taskIDs []string,
 		needsApproval bool,
 	) (*policytypes.Rule, error)
@@ -81,9 +77,7 @@ func NewPolicyService(
 
 func (s *policyService) CreatePolicy(
 	ctx context.Context,
-	name string,
-	description string,
-	assignedTo string,
+	name, description, assignedTo string,
 ) (*policytypes.Policy, error) {
 	if name == "" {
 		return nil, errors.New("name cannot be empty")
@@ -111,9 +105,7 @@ func (s *policyService) CreatePolicy(
 
 func (s *policyService) CreateRule(
 	ctx context.Context,
-	policyID string,
-	name string,
-	description string,
+	policyID, name, description string,
 	taskIDs []string,
 	needsApproval bool,
 ) (*policytypes.Rule, error) {

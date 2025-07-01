@@ -1,0 +1,57 @@
+// Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package agntcy.identity.platform.v1alpha1;
+
+import "agntcy/identity/platform/v1alpha1/device.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_go";
+
+// DeviceService manages device.
+service DeviceService {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_tag) = {name: "Device"};
+
+  // Add new device for approval flow
+  rpc AddDevice(AddDeviceRequest) returns (Device) {
+    option (google.api.http) = {
+      post: "/v1alpha1/device"
+      body: "device"
+    };
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "AddDevice";
+      summary: "Add new device for approval flow";
+    };
+  }
+
+  // Add new device for approval flow
+  rpc RegisterDevice(RegisterDeviceRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v1alpha1/device/{device_id}"
+      body: "device"
+    };
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "RegisterDevice";
+      summary: "Register device for approval flow";
+    };
+  }
+}
+
+message AddDeviceRequest {
+  // The device information to register.
+  Device device = 1;
+}
+
+message RegisterDeviceRequest {
+  // The unique identifier for the device to register.
+  string device_id = 1;
+
+  // The device information to register.
+  Device device = 2;
+}

@@ -23,11 +23,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AuthService_AppInfo_FullMethodName        = "/agntcy.identity.platform.v1alpha1.AuthService/AppInfo"
-	AuthService_Authorize_FullMethodName      = "/agntcy.identity.platform.v1alpha1.AuthService/Authorize"
-	AuthService_Token_FullMethodName          = "/agntcy.identity.platform.v1alpha1.AuthService/Token"
-	AuthService_ExtAuthz_FullMethodName       = "/agntcy.identity.platform.v1alpha1.AuthService/ExtAuthz"
-	AuthService_RegisterDevice_FullMethodName = "/agntcy.identity.platform.v1alpha1.AuthService/RegisterDevice"
+	AuthService_AppInfo_FullMethodName   = "/agntcy.identity.platform.v1alpha1.AuthService/AppInfo"
+	AuthService_Authorize_FullMethodName = "/agntcy.identity.platform.v1alpha1.AuthService/Authorize"
+	AuthService_Token_FullMethodName     = "/agntcy.identity.platform.v1alpha1.AuthService/Token"
+	AuthService_ExtAuthz_FullMethodName  = "/agntcy.identity.platform.v1alpha1.AuthService/ExtAuthz"
 )
 
 // AuthServiceClient is the client API for AuthService service.
@@ -44,8 +43,6 @@ type AuthServiceClient interface {
 	Token(ctx context.Context, in *TokenRequest, opts ...grpc.CallOption) (*TokenResponse, error)
 	// Handle external authorization requests
 	ExtAuthz(ctx context.Context, in *ExtAuthzRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	// Register new user device for approval flow
-	RegisterDevice(ctx context.Context, in *RegisterDeviceRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type authServiceClient struct {
@@ -96,16 +93,6 @@ func (c *authServiceClient) ExtAuthz(ctx context.Context, in *ExtAuthzRequest, o
 	return out, nil
 }
 
-func (c *authServiceClient) RegisterDevice(ctx context.Context, in *RegisterDeviceRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, AuthService_RegisterDevice_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // AuthServiceServer is the server API for AuthService service.
 // All implementations should embed UnimplementedAuthServiceServer
 // for forward compatibility.
@@ -120,8 +107,6 @@ type AuthServiceServer interface {
 	Token(context.Context, *TokenRequest) (*TokenResponse, error)
 	// Handle external authorization requests
 	ExtAuthz(context.Context, *ExtAuthzRequest) (*emptypb.Empty, error)
-	// Register new user device for approval flow
-	RegisterDevice(context.Context, *RegisterDeviceRequest) (*emptypb.Empty, error)
 }
 
 // UnimplementedAuthServiceServer should be embedded to have
@@ -142,9 +127,6 @@ func (UnimplementedAuthServiceServer) Token(context.Context, *TokenRequest) (*To
 }
 func (UnimplementedAuthServiceServer) ExtAuthz(context.Context, *ExtAuthzRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ExtAuthz not implemented")
-}
-func (UnimplementedAuthServiceServer) RegisterDevice(context.Context, *RegisterDeviceRequest) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RegisterDevice not implemented")
 }
 func (UnimplementedAuthServiceServer) testEmbeddedByValue() {}
 
@@ -238,24 +220,6 @@ func _AuthService_ExtAuthz_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AuthService_RegisterDevice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RegisterDeviceRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AuthServiceServer).RegisterDevice(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: AuthService_RegisterDevice_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).RegisterDevice(ctx, req.(*RegisterDeviceRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // AuthService_ServiceDesc is the grpc.ServiceDesc for AuthService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -278,10 +242,6 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ExtAuthz",
 			Handler:    _AuthService_ExtAuthz_Handler,
-		},
-		{
-			MethodName: "RegisterDevice",
-			Handler:    _AuthService_RegisterDevice_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

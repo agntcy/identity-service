@@ -23,6 +23,7 @@ const (
 )
 
 var allowedServicesWithoutAuth = []string{
+	"/agntcy.identity.platform.v1alpha1.DeviceService/RegisterDevice",
 	"/agntcy.identity.platform.v1alpha1.BadgeService/VerifyBadge",
 	"/grpc.health.v1.Health/Check",
 }

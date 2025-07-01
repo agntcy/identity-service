@@ -79,7 +79,7 @@ func (es *EncryptedString) Value(
 	fieldValue interface{},
 ) (interface{}, error) {
 	if es == nil {
-		//nolint: nilnil // If the EncryptedString is nil, return nil to avoid storing an empty string
+		//nolint: nilnil  //If the EncryptedString is nil, return nil to avoid storing an empty string
 		return nil, nil
 	}
 
