@@ -1,6 +1,3 @@
-# Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
-# SPDX-License-Identifier: Apache-2.0
-
 # Generated with protoc-gen-openapi
 # https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
 
@@ -185,6 +182,32 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/App'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1alpha1/apps/{appId}/badge:
+        get:
+            tags:
+                - AppService
+            description: Get the current badge issued for the App.
+            operationId: AppService_GetBadge
+            parameters:
+                - name: appId
+                  in: path
+                  description: App Id to get the badge for.
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Badge'
                 default:
                     description: Default error response
                     content:
