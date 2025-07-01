@@ -68,6 +68,18 @@ jobs:
         with:
           version: 'v3.14.0'
 
+      - name: Build Helm Dependencies
+        run: |
+          echo "Adding Helm repositories..."
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm repo add hashicorp https://helm.releases.hashicorp.com
+          helm repo update
+          echo "Building Helm dependencies..."
+          find ./charts -mindepth 1 -maxdepth 1 -type d | while read -r chart_dir; do
+            echo "Building dependencies for: $chart_dir"
+            helm dependency build "$chart_dir"
+          done
+
       - name: Lint Helm Charts
         run: |
           echo "Linting Helm charts..."

@@ -1,0 +1,35 @@
+# Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
+{{- if .Values.ingress.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "pyramid-backend.fullname" . }}-grpc
+  namespace: '{{ .Release.Namespace }}'
+  labels:
+    {{ include "pyramid-backend.labels" . | nindent 4 }}
+  {{- if .Values.ingress.annotations.grpc }}
+  annotations:
+    {{- range $key, $value := .Values.ingress.annotations.grpc }}
+    {{ $key }}: {{ tpl $value $ | quote }}
+    {{- end }}
+  {{- end }}
+spec:
+  ingressClassName: {{ .Values.ingress.className }}
+  tls:
+  - hosts:
+    - "{{ .Values.ingress.domainPrefixGrpc }}.{{ .Values.ingress.apiDomainName }}"
+    secretName: "{{ .Release.Name }}-grpc-tls"
+  rules:
+  - host: "{{ .Values.ingress.domainPrefixGrpc }}.{{ .Values.ingress.apiDomainName }}"
+    http:
+      paths:
+      - backend:
+          service:
+            name: {{ include "pyramid-backend.fullname" . }}
+            port:
+              number: {{ .Values.service.grpc.port}}
+        path: /
+        pathType: ImplementationSpecific
+{{- end }}
