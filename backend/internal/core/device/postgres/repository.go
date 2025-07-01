@@ -78,6 +78,7 @@ func (r *repository) GetDevice(
 				result.Error, "device not found",
 			)
 		}
+
 		return nil, errutil.Err(
 			result.Error, "there was an error fetching the device",
 		)

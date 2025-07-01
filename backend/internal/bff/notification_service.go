@@ -65,8 +65,8 @@ func (s *notificationService) SendNotification(
 		return nil // No session to notify
 	}
 
-	// This is a placeholder for the actual implementation.
-	// In a real-world scenario, this would send a notification based on the session details.
+	// TODO: Add notification logic and wait here
+
 	return nil
 }
 

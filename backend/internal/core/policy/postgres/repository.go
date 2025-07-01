@@ -248,7 +248,10 @@ func (r *repository) GetPolicyByID(ctx context.Context, id string) (*types.Polic
 	return policy.ToCoreType(), nil
 }
 
-func (r *repository) GetRuleByID(ctx context.Context, ruleID string, policyID string) (*types.Rule, error) {
+func (r *repository) GetRuleByID(
+	ctx context.Context,
+	ruleID, policyID string,
+) (*types.Rule, error) {
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
 		return nil, identitycontext.ErrTenantNotFound
