@@ -18,7 +18,7 @@ const Dashboard: React.FC = () => {
   return (
     <ScrollShadowWrapper>
       <div className="flex flex-col h-full gap-[24px]">
-        <div className="w-full h-[184px] bg-[#00142B] flex flex-col justify-between">
+        <div className="w-full h-[184px] bg-[#00142B] flex flex-col justify-between sticky top-0 z-10">
           <div className="flex justify-center items-center my-auto">
             <div>
               <Typography variant="h3" textAlign="center" sx={(theme) => ({color: theme.palette.vars.brandIconTertiaryDefault})}>
