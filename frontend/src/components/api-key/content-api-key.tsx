@@ -70,7 +70,7 @@ export const ContentApiKey: React.FC = () => {
         <CardContent>
           <div className="flex flex-col gap-4">
             <Typography variant="body1Semibold">API Key</Typography>
-            <div className="bg-[#FBFCFE] border border-[#D5DFF7] rounded-[6px] w-fit py-2 px-4 flex justify-between items-center gap-8">
+            <div className="bg-[#FBFCFE] border-[2px] border-[#D5DFF7] rounded-[4px] w-fit py-2 px-4 flex justify-between items-center gap-4">
               <Typography variant="body2">
                 {data?.apiKey?.apiKey ? `${'*'.repeat(55)}${data.apiKey.apiKey.slice(-5)}` : 'No API Key available'}
               </Typography>

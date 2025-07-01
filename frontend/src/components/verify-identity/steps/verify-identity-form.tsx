@@ -8,10 +8,11 @@ import {useStepper} from '../stepper';
 import {useFormContext} from 'react-hook-form';
 import {FormControl, FormField, FormItem, FormLabel} from '@/components/ui/form';
 import {useEffect} from 'react';
-import {Divider, Typography} from '@outshift/spark-design';
+import {Divider, toast, Typography} from '@outshift/spark-design';
 import {FileUpload} from '@/components/ui/file-upload';
 import {VerifyIdentityFormValues} from '@/schemas/verify-identity-schema';
 import {Textarea} from '@/components/ui/textarea';
+import {VerifiableCredential} from '@/types/api/badge';
 
 export const VerifyIdentityForm = ({isLoading = false}: {isLoading?: boolean}) => {
   const {control, watch, reset, setValue} = useFormContext<VerifyIdentityFormValues>();
@@ -25,9 +26,9 @@ export const VerifyIdentityForm = ({isLoading = false}: {isLoading?: boolean}) =
   useEffect(() => {
     if (metaData) {
       reset({
-        badgeId: metaData.badgeId || undefined,
+        badgeId: metaData.badgeId || '',
         badgeFile: metaData.badgeFile || undefined,
-        badgeContent: metaData.badgeContent || undefined
+        badgeContent: metaData.badgeContent || ''
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -59,7 +60,30 @@ export const VerifyIdentityForm = ({isLoading = false}: {isLoading?: boolean}) =
                         field.onChange(file ? file : undefined);
                       }}
                       onConvert={(content) => {
-                        setValue('badgeContent', content ? new TextDecoder().decode(content) : undefined);
+                        try {
+                          if (content) {
+                            const decodedContent = new TextDecoder().decode(content);
+                            setValue('badgeContent', JSON.stringify(decodedContent, null, 2));
+                            const VC: VerifiableCredential = JSON.parse(decodedContent);
+                            const isValidVC = VC && VC.proof?.proofValue;
+                            if (isValidVC) {
+                              setValue('joseEnvelope', VC.proof?.proofValue);
+                            } else {
+                              toast({
+                                title: 'Invalid Badge',
+                                description: 'The uploaded file does not contain a valid badge.',
+                                type: 'error'
+                              });
+                            }
+                          }
+                          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                        } catch (error) {
+                          toast({
+                            title: 'Error processing file',
+                            description: 'There was an error processing the file. Please ensure it is a valid badge JSON.',
+                            type: 'error'
+                          });
+                        }
                       }}
                     />
                   </FormControl>
@@ -74,15 +98,21 @@ export const VerifyIdentityForm = ({isLoading = false}: {isLoading?: boolean}) =
             </Typography>
             <Divider orientation="vertical" sx={{height: '37%', margin: '0 auto'}} />
           </div>
-          <div className="py-6 w-[50%]">
+          <div className="w-[50%] my-auto">
             <FormField
               control={control}
               name="badgeId"
               render={({field}) => (
                 <FormItem>
-                  <FormLabel className="form-label">ID Badge</FormLabel>
+                  <FormLabel className="form-label">Badge ID</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Type the ID of the badge..." rows={3} {...field} disabled={isLoading || !!badgeContent} />
+                    <Textarea
+                      className="resize-none"
+                      placeholder="Type the ID of the badge..."
+                      rows={3}
+                      {...field}
+                      disabled={isLoading || !!badgeContent}
+                    />
                   </FormControl>
                 </FormItem>
               )}

@@ -65,6 +65,8 @@ export const FileUpload = ({onConvert, handleChange, defaultFile, disabled, ...p
           type: 'error'
         });
       };
+    } else {
+      onConvert?.(undefined);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [file]);

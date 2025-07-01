@@ -39,13 +39,17 @@ const FormStepperComponent = () => {
 
   const verifyIdentityMutation = useVerifyBadge({
     callbacks: {
-      onSuccess: (data) => {
+      onSuccess: (resp) => {
+        methods.setMetadata('verficationResults', {
+          badgeClaims: resp.data
+        });
+        toast({
+          title: 'Badge verified successfully',
+          description: 'The badge has been verified successfully, check the results below.',
+          type: 'success'
+        });
         setIsLoading(false);
-        // methods.setMetadata('uploadBadge', {
-        //   badgeId: data.badgeId,
-        //   file: data.file
-        // });
-        // methods.next();
+        methods.next();
       },
       onError: () => {
         setIsLoading(false);
@@ -60,8 +64,9 @@ const FormStepperComponent = () => {
 
   const handleOnClear = useCallback(() => {
     form.reset({
-      badgeId: undefined,
-      file: undefined
+      badgeId: '',
+      file: undefined,
+      badgeContent: ''
     });
     methods.reset();
     methods.resetMetadata();
@@ -79,29 +84,26 @@ const FormStepperComponent = () => {
       return;
     }
     setIsLoading(true);
-    verifyIdentityMutation.mutate({
-      badge: values.badgeId
+    methods.setMetadata('verifyIdentityForm', {
+      ...methods.getMetadata('verifyIdentityForm'),
+      badgeContent: values.badgeContent,
+      badgeFile: values.badgeFile,
+      badgeId: values.badgeId,
+      joseEnvelope: values.joseEnvelope
     });
-  }, [form, verifyIdentityMutation]);
-
-  const handleSave = useCallback(() => {
-    // setIsLoading(true);
-    // const values = form.getValues() as AgenticServiceFormValues;
-    // mutationCreate.mutate({
-    //   type: values.type,
-    //   name: values.name,
-    //   description: values.description
-    // });
-  }, [form]);
+    verifyIdentityMutation.mutate({
+      badge: values.badgeId ? values.badgeId : values.joseEnvelope
+    });
+  }, [form, methods, verifyIdentityMutation]);
 
   const onSubmit = useCallback(() => {
     if (methods.current.id === 'verifyIdentityForm') {
       return handleVerifyBadge();
     }
-    // if (methods.current.id === 'registerAgenticService') {
-    //   return handleSave();
-    // }
-  }, [handleVerifyBadge, methods]);
+    if (methods.current.id === 'verficationResults') {
+      return handleOnClear();
+    }
+  }, [handleOnClear, handleVerifyBadge, methods]);
 
   return (
     <>
