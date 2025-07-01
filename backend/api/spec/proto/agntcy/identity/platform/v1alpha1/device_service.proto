@@ -17,7 +17,7 @@ service DeviceService {
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_tag) = {name: "Device"};
 
   // Add new device for approval flow
-  rpc AddDevice(AddDeviceRequest) returns (google.protobuf.Empty) {
+  rpc AddDevice(AddDeviceRequest) returns (Device) {
     option (google.api.http) = {
       post: "/v1alpha1/device"
       body: "device"

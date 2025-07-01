@@ -14,8 +14,16 @@ type Repository interface {
 		ctx context.Context,
 		device *types.Device,
 	) (*types.Device, error)
+	GetDevice(
+		ctx context.Context,
+		deviceID string,
+	) (*types.Device, error)
 	GetDevices(
 		ctx context.Context,
 		userID *string,
 	) ([]*types.Device, error)
+	UpdateDevice(
+		ctx context.Context,
+		device *types.Device,
+	) (*types.Device, error)
 }

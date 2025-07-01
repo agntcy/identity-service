@@ -13,6 +13,7 @@ import (
 	"github.com/agntcy/identity-platform/internal/pkg/convertutil"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 	"github.com/agntcy/identity-platform/pkg/db"
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -55,6 +56,42 @@ func (r *repository) AddDevice(
 	return model.ToCoreType(), nil
 }
 
+func (r *repository) GetDevice(
+	ctx context.Context,
+	deviceID string,
+) (*types.Device, error) {
+	if deviceID == "" {
+		return nil, errutil.Err(
+			errors.New("device ID cannot be empty"), "device ID is required",
+		)
+	}
+
+	var device Device
+
+	// Get the tenant ID from the context
+	tenantID, ok := identitycontext.GetTenantID(ctx)
+	if !ok {
+		return nil, identitycontext.ErrTenantNotFound
+	}
+
+	result := r.dbContext.Client().
+		Where("tenant_id = ? AND id = ?", tenantID, deviceID).
+		First(&device)
+
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return nil, errutil.Err(
+				result.Error, "device not found",
+			)
+		}
+		return nil, errutil.Err(
+			result.Error, "there was an error fetching the device",
+		)
+	}
+
+	return device.ToCoreType(), nil
+}
+
 func (r *repository) GetDevices(
 	ctx context.Context,
 	userID *string,
@@ -89,4 +126,34 @@ func (r *repository) GetDevices(
 	return convertutil.ConvertSlice(devices, func(device *Device) *types.Device {
 		return device.ToCoreType()
 	}), nil
+}
+
+func (r *repository) UpdateDevice(
+	ctx context.Context,
+	device *types.Device,
+) (*types.Device, error) {
+	if device == nil {
+		return nil, errutil.Err(
+			errors.New("device cannot be nil"), "device is required",
+		)
+	}
+
+	model := newDeviceModel(device)
+	model.ID = uuid.MustParse(device.ID)
+
+	// Get the tenant ID from the context
+	tenantID, ok := identitycontext.GetTenantID(ctx)
+	if !ok {
+		return nil, identitycontext.ErrTenantNotFound
+	}
+	model.TenantID = tenantID
+
+	result := r.dbContext.Client().Save(model)
+	if result.Error != nil {
+		return nil, errutil.Err(
+			result.Error, "there was an error updating the device",
+		)
+	}
+
+	return model.ToCoreType(), nil
 }

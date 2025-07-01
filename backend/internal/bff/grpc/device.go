@@ -40,3 +40,18 @@ func (s *deviceService) AddDevice(
 
 	return &emptypb.Empty{}, err
 }
+
+func (s *deviceService) RegisterDevice(
+	ctx context.Context,
+	req *identity_platform_sdk_go.RegisterDeviceRequest,
+) (*emptypb.Empty, error) {
+	err := s.deviceSrv.RegisterDevice(ctx, req.GetDeviceId(), converters.ToDevice(req.GetDevice()))
+	if err != nil {
+		return nil, grpcutil.NotFoundError(errutil.Err(
+			err,
+			"failed to get device",
+		))
+	}
+
+	return &emptypb.Empty{}, nil
+}
