@@ -56,9 +56,9 @@
    }
    
    .toggle__icon-circle {
-      height: 18px;
-      width: 18px;
-      margin-top: 1.5px;
+      height: 16px;
+      width: 16px;
+      margin-top: 2px;
       margin-left: 2px;
    }
 }
