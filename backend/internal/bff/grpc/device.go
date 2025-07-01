@@ -11,6 +11,7 @@ import (
 	"github.com/agntcy/identity-platform/internal/bff/grpc/converters"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 	"github.com/agntcy/identity-platform/internal/pkg/grpcutil"
+	"github.com/agntcy/identity-platform/pkg/log"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -28,9 +29,8 @@ func NewDeviceService(
 func (s *deviceService) AddDevice(
 	ctx context.Context,
 	req *identity_platform_sdk_go.AddDeviceRequest,
-) (*emptypb.Empty, error) {
-	err := s.deviceSrv.AddDevice(ctx, converters.ToDevice(req.GetDevice()))
-
+) (*identity_platform_sdk_go.Device, error) {
+	device, err := s.deviceSrv.AddDevice(ctx, converters.ToDevice(req.GetDevice()))
 	if err != nil {
 		return nil, grpcutil.BadRequestError(errutil.Err(
 			err,
@@ -38,13 +38,15 @@ func (s *deviceService) AddDevice(
 		))
 	}
 
-	return &emptypb.Empty{}, err
+	return converters.FromDevice(device), nil
 }
 
 func (s *deviceService) RegisterDevice(
 	ctx context.Context,
 	req *identity_platform_sdk_go.RegisterDeviceRequest,
 ) (*emptypb.Empty, error) {
+	log.Debug(*req.GetDevice().SubscriptionToken)
+
 	err := s.deviceSrv.RegisterDevice(ctx, req.GetDeviceId(), converters.ToDevice(req.GetDevice()))
 	if err != nil {
 		return nil, grpcutil.NotFoundError(errutil.Err(

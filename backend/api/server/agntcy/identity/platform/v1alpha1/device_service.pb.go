@@ -10,14 +10,15 @@
 package identity_platform_sdk_go
 
 import (
+	reflect "reflect"
+	sync "sync"
+	unsafe "unsafe"
+
 	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
-	reflect "reflect"
-	sync "sync"
-	unsafe "unsafe"
 )
 
 const (
@@ -135,9 +136,9 @@ const file_agntcy_identity_platform_v1alpha1_device_service_proto_rawDesc = "" +
 	"\x06device\x18\x01 \x01(\v2).agntcy.identity.platform.v1alpha1.DeviceR\x06device\"w\n" +
 	"\x15RegisterDeviceRequest\x12\x1b\n" +
 	"\tdevice_id\x18\x01 \x01(\tR\bdeviceId\x12A\n" +
-	"\x06device\x18\x02 \x01(\v2).agntcy.identity.platform.v1alpha1.DeviceR\x06device2\x8a\x03\n" +
-	"\rDeviceService\x12\xaa\x01\n" +
-	"\tAddDevice\x123.agntcy.identity.platform.v1alpha1.AddDeviceRequest\x1a\x16.google.protobuf.Empty\"P\x92A-\x12 Add new device for approval flow*\tAddDevice\x82\xd3\xe4\x93\x02\x1a:\x06device\"\x10/v1alpha1/device\x12\xbe\x01\n" +
+	"\x06device\x18\x02 \x01(\v2).agntcy.identity.platform.v1alpha1.DeviceR\x06device2\x9d\x03\n" +
+	"\rDeviceService\x12\xbd\x01\n" +
+	"\tAddDevice\x123.agntcy.identity.platform.v1alpha1.AddDeviceRequest\x1a).agntcy.identity.platform.v1alpha1.Device\"P\x92A-\x12 Add new device for approval flow*\tAddDevice\x82\xd3\xe4\x93\x02\x1a:\x06device\"\x10/v1alpha1/device\x12\xbe\x01\n" +
 	"\x0eRegisterDevice\x128.agntcy.identity.platform.v1alpha1.RegisterDeviceRequest\x1a\x16.google.protobuf.Empty\"Z\x92A3\x12!Register device for approval flow*\x0eRegisterDevice\x82\xd3\xe4\x93\x02\x1e\"\x1c/v1alpha1/device/{device_id}\x1a\v\x92A\b\n" +
 	"\x06DeviceBkZigithub.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_gob\x06proto3"
 
@@ -165,7 +166,7 @@ var file_agntcy_identity_platform_v1alpha1_device_service_proto_depIdxs = []int3
 	2, // 1: agntcy.identity.platform.v1alpha1.RegisterDeviceRequest.device:type_name -> agntcy.identity.platform.v1alpha1.Device
 	0, // 2: agntcy.identity.platform.v1alpha1.DeviceService.AddDevice:input_type -> agntcy.identity.platform.v1alpha1.AddDeviceRequest
 	1, // 3: agntcy.identity.platform.v1alpha1.DeviceService.RegisterDevice:input_type -> agntcy.identity.platform.v1alpha1.RegisterDeviceRequest
-	3, // 4: agntcy.identity.platform.v1alpha1.DeviceService.AddDevice:output_type -> google.protobuf.Empty
+	2, // 4: agntcy.identity.platform.v1alpha1.DeviceService.AddDevice:output_type -> agntcy.identity.platform.v1alpha1.Device
 	3, // 5: agntcy.identity.platform.v1alpha1.DeviceService.RegisterDevice:output_type -> google.protobuf.Empty
 	4, // [4:6] is the sub-list for method output_type
 	2, // [2:4] is the sub-list for method input_type

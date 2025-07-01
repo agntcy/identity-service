@@ -34,7 +34,7 @@ const (
 // DeviceService manages device.
 type DeviceServiceClient interface {
 	// Add new device for approval flow
-	AddDevice(ctx context.Context, in *AddDeviceRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	AddDevice(ctx context.Context, in *AddDeviceRequest, opts ...grpc.CallOption) (*Device, error)
 	// Add new device for approval flow
 	RegisterDevice(ctx context.Context, in *RegisterDeviceRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
@@ -47,9 +47,9 @@ func NewDeviceServiceClient(cc grpc.ClientConnInterface) DeviceServiceClient {
 	return &deviceServiceClient{cc}
 }
 
-func (c *deviceServiceClient) AddDevice(ctx context.Context, in *AddDeviceRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *deviceServiceClient) AddDevice(ctx context.Context, in *AddDeviceRequest, opts ...grpc.CallOption) (*Device, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
+	out := new(Device)
 	err := c.cc.Invoke(ctx, DeviceService_AddDevice_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -74,7 +74,7 @@ func (c *deviceServiceClient) RegisterDevice(ctx context.Context, in *RegisterDe
 // DeviceService manages device.
 type DeviceServiceServer interface {
 	// Add new device for approval flow
-	AddDevice(context.Context, *AddDeviceRequest) (*emptypb.Empty, error)
+	AddDevice(context.Context, *AddDeviceRequest) (*Device, error)
 	// Add new device for approval flow
 	RegisterDevice(context.Context, *RegisterDeviceRequest) (*emptypb.Empty, error)
 }
@@ -86,7 +86,7 @@ type DeviceServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedDeviceServiceServer struct{}
 
-func (UnimplementedDeviceServiceServer) AddDevice(context.Context, *AddDeviceRequest) (*emptypb.Empty, error) {
+func (UnimplementedDeviceServiceServer) AddDevice(context.Context, *AddDeviceRequest) (*Device, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddDevice not implemented")
 }
 func (UnimplementedDeviceServiceServer) RegisterDevice(context.Context, *RegisterDeviceRequest) (*emptypb.Empty, error) {

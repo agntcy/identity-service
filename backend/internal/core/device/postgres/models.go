@@ -13,7 +13,7 @@ type Device struct {
 	ID                uuid.UUID `gorm:"primaryKey;default:gen_random_uuid()"`
 	TenantID          string    `gorm:"not null;type:varchar(256);"`
 	UserID            *string   `gorm:"not null;type:varchar(256);"`
-	SubscriptionToken string    `gorm:"not null;type:varchar(256);"`
+	SubscriptionToken string    `gorm:"not null;type:varchar(4096);"`
 }
 
 func (d *Device) ToCoreType() *types.Device {

@@ -12,7 +12,7 @@ import (
 )
 
 type DeviceService interface {
-	AddDevice(ctx context.Context, device *devicetypes.Device) error
+	AddDevice(ctx context.Context, device *devicetypes.Device) (*devicetypes.Device, error)
 	RegisterDevice(ctx context.Context, deviceId string, device *devicetypes.Device) error
 }
 
@@ -31,18 +31,16 @@ func NewDeviceService(
 func (s *deviceService) AddDevice(
 	ctx context.Context,
 	device *devicetypes.Device,
-) error {
+) (*devicetypes.Device, error) {
 	if device == nil {
-		return errutil.Err(
+		return nil, errutil.Err(
 			nil,
 			"device cannot be nil",
 		)
 	}
 
 	// Add the device to the repository.
-	_, err := s.deviceRepository.AddDevice(ctx, device)
-
-	return err
+	return s.deviceRepository.AddDevice(ctx, device)
 }
 
 func (s *deviceService) RegisterDevice(
@@ -77,7 +75,6 @@ func (s *deviceService) RegisterDevice(
 	existingDevice.SubscriptionToken = device.SubscriptionToken
 	existingDevice.UserID = device.UserID
 
-	// Save the updated device back to the repository.
 	_, err = s.deviceRepository.UpdateDevice(ctx, existingDevice)
 
 	return err

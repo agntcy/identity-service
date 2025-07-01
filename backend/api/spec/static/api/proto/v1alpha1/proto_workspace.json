@@ -1733,9 +1733,9 @@
               "requestLongType": "AddDeviceRequest",
               "requestFullType": "agntcy.identity.platform.v1alpha1.AddDeviceRequest",
               "requestStreaming": false,
-              "responseType": "Empty",
-              "responseLongType": ".google.protobuf.Empty",
-              "responseFullType": "google.protobuf.Empty",
+              "responseType": "Device",
+              "responseLongType": "Device",
+              "responseFullType": "agntcy.identity.platform.v1alpha1.Device",
               "responseStreaming": false,
               "options": {
                 "google.api.http": {

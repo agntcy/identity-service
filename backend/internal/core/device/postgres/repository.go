@@ -13,6 +13,7 @@ import (
 	"github.com/agntcy/identity-platform/internal/pkg/convertutil"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 	"github.com/agntcy/identity-platform/pkg/db"
+	"github.com/agntcy/identity-platform/pkg/log"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
@@ -68,14 +69,8 @@ func (r *repository) GetDevice(
 
 	var device Device
 
-	// Get the tenant ID from the context
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return nil, identitycontext.ErrTenantNotFound
-	}
-
 	result := r.dbContext.Client().
-		Where("tenant_id = ? AND id = ?", tenantID, deviceID).
+		Where("id = ?", deviceID).
 		First(&device)
 
 	if result.Error != nil {
@@ -141,14 +136,9 @@ func (r *repository) UpdateDevice(
 	model := newDeviceModel(device)
 	model.ID = uuid.MustParse(device.ID)
 
-	// Get the tenant ID from the context
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return nil, identitycontext.ErrTenantNotFound
-	}
-	model.TenantID = tenantID
+	log.Debug("Updating device", model.SubscriptionToken)
 
-	result := r.dbContext.Client().Save(model)
+	result := r.dbContext.Client().Omit("TenantID").Omit("UserID").Save(model)
 	if result.Error != nil {
 		return nil, errutil.Err(
 			result.Error, "there was an error updating the device",
