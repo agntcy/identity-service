@@ -8,7 +8,7 @@ import {BasePage} from '@/components/layout/base-page';
 import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-renderer';
 import {useGetSettings} from '@/queries';
 import {PATHS} from '@/router/paths';
-import {useIdentityProviderStore} from '@/store';
+import {useSettingsStore} from '@/store';
 import {PlusIcon} from 'lucide-react';
 import {useNavigate} from 'react-router-dom';
 import {useShallow} from 'zustand/react/shallow';
@@ -18,7 +18,7 @@ const SettingsIdentityProvider: React.FC = () => {
 
   const navigate = useNavigate();
 
-  const {isEmptyIdp} = useIdentityProviderStore(
+  const {isEmptyIdp} = useSettingsStore(
     useShallow((state) => ({
       isEmptyIdp: state.isEmptyIdp
     }))

@@ -71,6 +71,10 @@ type BadgeService interface {
 		ctx context.Context,
 		badge *string,
 	) (*badgetypes.BadgeClaims, error)
+	GetBadge(
+		ctx context.Context,
+		appID string,
+	) (*badgetypes.Badge, error)
 }
 
 type badgeService struct {
@@ -288,4 +292,16 @@ func (s *badgeService) VerifyBadge(
 		ctx,
 		badge,
 	)
+}
+
+func (s *badgeService) GetBadge(
+	ctx context.Context,
+	appID string,
+) (*badgetypes.Badge, error) {
+	badge, err := s.badgeRepository.GetLatestByAppID(ctx, appID)
+	if err != nil {
+		return nil, err
+	}
+
+	return badge, nil
 }

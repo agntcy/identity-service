@@ -8,7 +8,7 @@ import {BasePage} from '@/components/layout/base-page';
 import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-renderer';
 import {useGetSettings} from '@/queries';
 import {PATHS} from '@/router/paths';
-import {useIdentityProviderStore} from '@/store';
+import {useSettingsStore} from '@/store';
 import {Button, Skeleton} from '@outshift/spark-design';
 import {CheckIcon, PlusIcon} from 'lucide-react';
 import {Link, useNavigate} from 'react-router-dom';
@@ -17,7 +17,7 @@ import {useShallow} from 'zustand/react/shallow';
 const AgentServices: React.FC = () => {
   const {data, error, isFetching, isLoading, refetch} = useGetSettings();
 
-  const {isEmptyIdp} = useIdentityProviderStore(
+  const {isEmptyIdp} = useSettingsStore(
     useShallow((state) => ({
       isEmptyIdp: state.isEmptyIdp
     }))

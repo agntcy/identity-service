@@ -1,8 +1,3 @@
-/**
- * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
- * SPDX-License-Identifier: Apache-2.0
- */
-
 /* eslint-disable */
 /* tslint:disable */
 // @ts-nocheck
@@ -183,16 +178,6 @@ export interface V1Alpha1AuthorizeResponse {
    * the token endpoint.
    */
   authorizationCode?: string;
-}
-
-/** Devices used for user approval */
-export interface V1Alpha1Device {
-  /** A unique identifier for the Device. */
-  id?: string;
-  /** User ID associated with the Device. */
-  userId?: string;
-  /** Subscription Token for the Device. */
-  subscriptionToken?: string;
 }
 
 export interface V1Alpha1TokenResponse {
@@ -394,38 +379,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     ) =>
       this.request<object, RpcStatus>({
         path: `/v1alpha1/auth/ext_authz`,
-        method: 'POST',
-        query: query,
-        format: 'json',
-        ...params
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Auth
-     * @name RegisterDevice
-     * @summary Register new user device for approval flow
-     * @request POST:/v1alpha1/auth/register_device
-     */
-    registerDevice: (
-      query?: {
-        /**
-         * The User context in the form of an id or access token.
-         * Mandatory for User Approval Flows.
-         */
-        userToken?: string;
-        /** A unique identifier for the Device. */
-        'device.id'?: string;
-        /** User ID associated with the Device. */
-        'device.userId'?: string;
-        /** Subscription Token for the Device. */
-        'device.subscriptionToken'?: string;
-      },
-      params: RequestParams = {}
-    ) =>
-      this.request<object, RpcStatus>({
-        path: `/v1alpha1/auth/register_device`,
         method: 'POST',
         query: query,
         format: 'json',

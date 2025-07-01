@@ -7,6 +7,7 @@ package agntcy.identity.platform.v1alpha1;
 
 import "agntcy/identity/platform/shared/v1alpha1/pagination.proto";
 import "agntcy/identity/platform/v1alpha1/app.proto";
+import "agntcy/identity/platform/v1alpha1/badge.proto";
 import "google/api/annotations.proto";
 import "google/api/client.proto";
 import "google/protobuf/empty.proto";
@@ -83,6 +84,15 @@ service AppService {
       summary: "Delete App";
     };
   }
+
+  // Get the current badge issued for the App.
+  rpc GetBadge(GetBadgeRequest) returns (Badge) {
+    option (google.api.http) = {get: "/v1alpha1/apps/{app_id}/badge"};
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "GetAppBadge";
+      summary: "Get the current badge issued for the App";
+    };
+  }
 }
 
 message ListAppsResponse {
@@ -104,7 +114,7 @@ message ListAppsRequest {
   optional string query = 3;
 
   // The app type filter
-  optional AppType type = 4;
+  repeated AppType types = 4;
 }
 
 message CreateAppRequest {
@@ -142,5 +152,10 @@ message UpdateAppRequest {
 
 message DeleteAppRequest {
   // App Id to delete.
+  string app_id = 1;
+}
+
+message GetBadgeRequest {
+  // App Id to get the badge for.
   string app_id = 1;
 }

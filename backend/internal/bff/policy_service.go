@@ -22,15 +22,11 @@ import (
 type PolicyService interface {
 	CreatePolicy(
 		ctx context.Context,
-		name string,
-		description string,
-		assignedTo string,
+		name, description, assignedTo string,
 	) (*policytypes.Policy, error)
 	CreateRule(
 		ctx context.Context,
-		policyID string,
-		name string,
-		description string,
+		policyID, name, description string,
 		taskIDs []string,
 		needsApproval bool,
 	) (*policytypes.Rule, error)
@@ -81,9 +77,7 @@ func NewPolicyService(
 
 func (s *policyService) CreatePolicy(
 	ctx context.Context,
-	name string,
-	description string,
-	assignedTo string,
+	name, description, assignedTo string,
 ) (*policytypes.Policy, error) {
 	if name == "" {
 		return nil, errors.New("name cannot be empty")
@@ -111,9 +105,7 @@ func (s *policyService) CreatePolicy(
 
 func (s *policyService) CreateRule(
 	ctx context.Context,
-	policyID string,
-	name string,
-	description string,
+	policyID, name, description string,
 	taskIDs []string,
 	needsApproval bool,
 ) (*policytypes.Rule, error) {
@@ -162,7 +154,7 @@ func (s *policyService) DeletePolicy(ctx context.Context, id string) error {
 	return nil
 }
 
-func (s *policyService) DeleteRule(ctx context.Context, ruleID string, policyID string) error {
+func (s *policyService) DeleteRule(ctx context.Context, ruleID, policyID string) error {
 	rule, err := s.policyRepository.GetRuleByID(ctx, ruleID, policyID)
 	if err != nil {
 		return errutil.Err(err, "unable to find rule")
@@ -185,7 +177,10 @@ func (s *policyService) GetPolicy(ctx context.Context, id string) (*policytypes.
 	return policy, nil
 }
 
-func (s *policyService) GetRule(ctx context.Context, ruleID string, policyID string) (*policytypes.Rule, error) {
+func (s *policyService) GetRule(
+	ctx context.Context,
+	ruleID, policyID string,
+) (*policytypes.Rule, error) {
 	rule, err := s.policyRepository.GetRuleByID(ctx, ruleID, policyID)
 	if err != nil {
 		return nil, errutil.Err(err, "unable to get rule")
@@ -280,7 +275,10 @@ func (s *policyService) UpdateRule(
 	return rule, nil
 }
 
-func (s *policyService) validateTasks(ctx context.Context, ids []string) ([]*policytypes.Task, error) {
+func (s *policyService) validateTasks(
+	ctx context.Context,
+	ids []string,
+) ([]*policytypes.Task, error) {
 	tasks, err := s.policyRepository.GetTasksByID(ctx, ids)
 	if err != nil {
 		return nil, fmt.Errorf("unable to valiate tasks")

@@ -272,61 +272,6 @@ func (x *TokenResponse) GetAccessToken() string {
 	return ""
 }
 
-type RegisterDeviceRequest struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// The User context in the form of an id or access token.
-	// Mandatory for User Approval Flows.
-	UserToken string `protobuf:"bytes,1,opt,name=user_token,json=userToken,proto3" json:"user_token,omitempty"`
-	// The device information to register.
-	Device        *Device `protobuf:"bytes,2,opt,name=device,proto3" json:"device,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *RegisterDeviceRequest) Reset() {
-	*x = RegisterDeviceRequest{}
-	mi := &file_agntcy_identity_platform_v1alpha1_auth_service_proto_msgTypes[5]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *RegisterDeviceRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*RegisterDeviceRequest) ProtoMessage() {}
-
-func (x *RegisterDeviceRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agntcy_identity_platform_v1alpha1_auth_service_proto_msgTypes[5]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use RegisterDeviceRequest.ProtoReflect.Descriptor instead.
-func (*RegisterDeviceRequest) Descriptor() ([]byte, []int) {
-	return file_agntcy_identity_platform_v1alpha1_auth_service_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *RegisterDeviceRequest) GetUserToken() string {
-	if x != nil {
-		return x.UserToken
-	}
-	return ""
-}
-
-func (x *RegisterDeviceRequest) GetDevice() *Device {
-	if x != nil {
-		return x.Device
-	}
-	return nil
-}
-
 type ExtAuthzRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// The access token to be authorized.
@@ -337,7 +282,7 @@ type ExtAuthzRequest struct {
 
 func (x *ExtAuthzRequest) Reset() {
 	*x = ExtAuthzRequest{}
-	mi := &file_agntcy_identity_platform_v1alpha1_auth_service_proto_msgTypes[6]
+	mi := &file_agntcy_identity_platform_v1alpha1_auth_service_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -349,7 +294,7 @@ func (x *ExtAuthzRequest) String() string {
 func (*ExtAuthzRequest) ProtoMessage() {}
 
 func (x *ExtAuthzRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agntcy_identity_platform_v1alpha1_auth_service_proto_msgTypes[6]
+	mi := &file_agntcy_identity_platform_v1alpha1_auth_service_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -362,7 +307,7 @@ func (x *ExtAuthzRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ExtAuthzRequest.ProtoReflect.Descriptor instead.
 func (*ExtAuthzRequest) Descriptor() ([]byte, []int) {
-	return file_agntcy_identity_platform_v1alpha1_auth_service_proto_rawDescGZIP(), []int{6}
+	return file_agntcy_identity_platform_v1alpha1_auth_service_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *ExtAuthzRequest) GetAccessToken() string {
@@ -376,7 +321,7 @@ var File_agntcy_identity_platform_v1alpha1_auth_service_proto protoreflect.FileD
 
 const file_agntcy_identity_platform_v1alpha1_auth_service_proto_rawDesc = "" +
 	"\n" +
-	"4agntcy/identity/platform/v1alpha1/auth_service.proto\x12!agntcy.identity.platform.v1alpha1\x1a+agntcy/identity/platform/v1alpha1/app.proto\x1a,agntcy/identity/platform/v1alpha1/auth.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\"K\n" +
+	"4agntcy/identity/platform/v1alpha1/auth_service.proto\x12!agntcy.identity.platform.v1alpha1\x1a+agntcy/identity/platform/v1alpha1/app.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\"K\n" +
 	"\x0fAppInfoResponse\x128\n" +
 	"\x03app\x18\x01 \x01(\v2&.agntcy.identity.platform.v1alpha1.AppR\x03app\"\x8c\x01\n" +
 	"\x10AuthorizeRequest\x12\x15\n" +
@@ -392,19 +337,14 @@ const file_agntcy_identity_platform_v1alpha1_auth_service_proto_rawDesc = "" +
 	"\fTokenRequest\x12-\n" +
 	"\x12authorization_code\x18\x01 \x01(\tR\x11authorizationCode\"2\n" +
 	"\rTokenResponse\x12!\n" +
-	"\faccess_token\x18\x01 \x01(\tR\vaccessToken\"y\n" +
-	"\x15RegisterDeviceRequest\x12\x1d\n" +
-	"\n" +
-	"user_token\x18\x01 \x01(\tR\tuserToken\x12A\n" +
-	"\x06device\x18\x02 \x01(\v2).agntcy.identity.platform.v1alpha1.DeviceR\x06device\"4\n" +
+	"\faccess_token\x18\x01 \x01(\tR\vaccessToken\"4\n" +
 	"\x0fExtAuthzRequest\x12!\n" +
-	"\faccess_token\x18\x01 \x01(\tR\vaccessToken2\xc7\a\n" +
+	"\faccess_token\x18\x01 \x01(\tR\vaccessToken2\xfb\x05\n" +
 	"\vAuthService\x12\x90\x01\n" +
 	"\aAppInfo\x12\x16.google.protobuf.Empty\x1a2.agntcy.identity.platform.v1alpha1.AppInfoResponse\"9\x92A\x17\x12\fGet App Info*\aAppInfo\x82\xd3\xe4\x93\x02\x19\x12\x17/v1alpha1/auth/app_info\x12\xd7\x01\n" +
 	"\tAuthorize\x123.agntcy.identity.platform.v1alpha1.AuthorizeRequest\x1a4.agntcy.identity.platform.v1alpha1.AuthorizeResponse\"_\x92A<\x12/Authorize a request from an Agent or MCP Server*\tAuthorize\x82\xd3\xe4\x93\x02\x1a\x12\x18/v1alpha1/auth/authorize\x12\xc3\x01\n" +
 	"\x05Token\x12/.agntcy.identity.platform.v1alpha1.TokenRequest\x1a0.agntcy.identity.platform.v1alpha1.TokenResponse\"W\x92A8\x12(Request token for an Agent or MCP Server*\fRequestToken\x82\xd3\xe4\x93\x02\x16\"\x14/v1alpha1/auth/token\x12\xad\x01\n" +
-	"\bExtAuthz\x122.agntcy.identity.platform.v1alpha1.ExtAuthzRequest\x1a\x16.google.protobuf.Empty\"U\x92A2\x12&Handle external authorization requests*\bExtAuthz\x82\xd3\xe4\x93\x02\x1a\"\x18/v1alpha1/auth/ext_authz\x12\xc9\x01\n" +
-	"\x0eRegisterDevice\x128.agntcy.identity.platform.v1alpha1.RegisterDeviceRequest\x1a\x16.google.protobuf.Empty\"e\x92A<\x12*Register new user device for approval flow*\x0eRegisterDevice\x82\xd3\xe4\x93\x02 \"\x1e/v1alpha1/auth/register_device\x1a\t\x92A\x06\n" +
+	"\bExtAuthz\x122.agntcy.identity.platform.v1alpha1.ExtAuthzRequest\x1a\x16.google.protobuf.Empty\"U\x92A2\x12&Handle external authorization requests*\bExtAuthz\x82\xd3\xe4\x93\x02\x1a\"\x18/v1alpha1/auth/ext_authz\x1a\t\x92A\x06\n" +
 	"\x04AuthBkZigithub.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_gob\x06proto3"
 
 var (
@@ -419,37 +359,32 @@ func file_agntcy_identity_platform_v1alpha1_auth_service_proto_rawDescGZIP() []b
 	return file_agntcy_identity_platform_v1alpha1_auth_service_proto_rawDescData
 }
 
-var file_agntcy_identity_platform_v1alpha1_auth_service_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_agntcy_identity_platform_v1alpha1_auth_service_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_agntcy_identity_platform_v1alpha1_auth_service_proto_goTypes = []any{
-	(*AppInfoResponse)(nil),       // 0: agntcy.identity.platform.v1alpha1.AppInfoResponse
-	(*AuthorizeRequest)(nil),      // 1: agntcy.identity.platform.v1alpha1.AuthorizeRequest
-	(*AuthorizeResponse)(nil),     // 2: agntcy.identity.platform.v1alpha1.AuthorizeResponse
-	(*TokenRequest)(nil),          // 3: agntcy.identity.platform.v1alpha1.TokenRequest
-	(*TokenResponse)(nil),         // 4: agntcy.identity.platform.v1alpha1.TokenResponse
-	(*RegisterDeviceRequest)(nil), // 5: agntcy.identity.platform.v1alpha1.RegisterDeviceRequest
-	(*ExtAuthzRequest)(nil),       // 6: agntcy.identity.platform.v1alpha1.ExtAuthzRequest
-	(*App)(nil),                   // 7: agntcy.identity.platform.v1alpha1.App
-	(*Device)(nil),                // 8: agntcy.identity.platform.v1alpha1.Device
-	(*emptypb.Empty)(nil),         // 9: google.protobuf.Empty
+	(*AppInfoResponse)(nil),   // 0: agntcy.identity.platform.v1alpha1.AppInfoResponse
+	(*AuthorizeRequest)(nil),  // 1: agntcy.identity.platform.v1alpha1.AuthorizeRequest
+	(*AuthorizeResponse)(nil), // 2: agntcy.identity.platform.v1alpha1.AuthorizeResponse
+	(*TokenRequest)(nil),      // 3: agntcy.identity.platform.v1alpha1.TokenRequest
+	(*TokenResponse)(nil),     // 4: agntcy.identity.platform.v1alpha1.TokenResponse
+	(*ExtAuthzRequest)(nil),   // 5: agntcy.identity.platform.v1alpha1.ExtAuthzRequest
+	(*App)(nil),               // 6: agntcy.identity.platform.v1alpha1.App
+	(*emptypb.Empty)(nil),     // 7: google.protobuf.Empty
 }
 var file_agntcy_identity_platform_v1alpha1_auth_service_proto_depIdxs = []int32{
-	7, // 0: agntcy.identity.platform.v1alpha1.AppInfoResponse.app:type_name -> agntcy.identity.platform.v1alpha1.App
-	8, // 1: agntcy.identity.platform.v1alpha1.RegisterDeviceRequest.device:type_name -> agntcy.identity.platform.v1alpha1.Device
-	9, // 2: agntcy.identity.platform.v1alpha1.AuthService.AppInfo:input_type -> google.protobuf.Empty
-	1, // 3: agntcy.identity.platform.v1alpha1.AuthService.Authorize:input_type -> agntcy.identity.platform.v1alpha1.AuthorizeRequest
-	3, // 4: agntcy.identity.platform.v1alpha1.AuthService.Token:input_type -> agntcy.identity.platform.v1alpha1.TokenRequest
-	6, // 5: agntcy.identity.platform.v1alpha1.AuthService.ExtAuthz:input_type -> agntcy.identity.platform.v1alpha1.ExtAuthzRequest
-	5, // 6: agntcy.identity.platform.v1alpha1.AuthService.RegisterDevice:input_type -> agntcy.identity.platform.v1alpha1.RegisterDeviceRequest
-	0, // 7: agntcy.identity.platform.v1alpha1.AuthService.AppInfo:output_type -> agntcy.identity.platform.v1alpha1.AppInfoResponse
-	2, // 8: agntcy.identity.platform.v1alpha1.AuthService.Authorize:output_type -> agntcy.identity.platform.v1alpha1.AuthorizeResponse
-	4, // 9: agntcy.identity.platform.v1alpha1.AuthService.Token:output_type -> agntcy.identity.platform.v1alpha1.TokenResponse
-	9, // 10: agntcy.identity.platform.v1alpha1.AuthService.ExtAuthz:output_type -> google.protobuf.Empty
-	9, // 11: agntcy.identity.platform.v1alpha1.AuthService.RegisterDevice:output_type -> google.protobuf.Empty
-	7, // [7:12] is the sub-list for method output_type
-	2, // [2:7] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	6, // 0: agntcy.identity.platform.v1alpha1.AppInfoResponse.app:type_name -> agntcy.identity.platform.v1alpha1.App
+	7, // 1: agntcy.identity.platform.v1alpha1.AuthService.AppInfo:input_type -> google.protobuf.Empty
+	1, // 2: agntcy.identity.platform.v1alpha1.AuthService.Authorize:input_type -> agntcy.identity.platform.v1alpha1.AuthorizeRequest
+	3, // 3: agntcy.identity.platform.v1alpha1.AuthService.Token:input_type -> agntcy.identity.platform.v1alpha1.TokenRequest
+	5, // 4: agntcy.identity.platform.v1alpha1.AuthService.ExtAuthz:input_type -> agntcy.identity.platform.v1alpha1.ExtAuthzRequest
+	0, // 5: agntcy.identity.platform.v1alpha1.AuthService.AppInfo:output_type -> agntcy.identity.platform.v1alpha1.AppInfoResponse
+	2, // 6: agntcy.identity.platform.v1alpha1.AuthService.Authorize:output_type -> agntcy.identity.platform.v1alpha1.AuthorizeResponse
+	4, // 7: agntcy.identity.platform.v1alpha1.AuthService.Token:output_type -> agntcy.identity.platform.v1alpha1.TokenResponse
+	7, // 8: agntcy.identity.platform.v1alpha1.AuthService.ExtAuthz:output_type -> google.protobuf.Empty
+	5, // [5:9] is the sub-list for method output_type
+	1, // [1:5] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_agntcy_identity_platform_v1alpha1_auth_service_proto_init() }
@@ -458,7 +393,6 @@ func file_agntcy_identity_platform_v1alpha1_auth_service_proto_init() {
 		return
 	}
 	file_agntcy_identity_platform_v1alpha1_app_proto_init()
-	file_agntcy_identity_platform_v1alpha1_auth_proto_init()
 	file_agntcy_identity_platform_v1alpha1_auth_service_proto_msgTypes[1].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -466,7 +400,7 @@ func file_agntcy_identity_platform_v1alpha1_auth_service_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_agntcy_identity_platform_v1alpha1_auth_service_proto_rawDesc), len(file_agntcy_identity_platform_v1alpha1_auth_service_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   7,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

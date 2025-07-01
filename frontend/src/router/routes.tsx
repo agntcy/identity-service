@@ -14,14 +14,13 @@ import React from 'react';
 import {SecureRoute} from '@/components/router/secure-route';
 import {Loading} from '@/components/ui/loading';
 import {BannerProvider} from '@/providers/banner-provider/banner-provider';
-import {IdentityProvider} from '@/providers/identity-provider/identity-provider';
-import {useIdentityProviderStore} from '@/store';
+import {SettingsProvider} from '@/providers/settings-provider/settings-provider';
+import {useSettingsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
 
 const Welcome = React.lazy(() => import('@/pages/welcome/welcome'));
 const SettingsIdentityProvider = React.lazy(() => import('@/pages/settings/identity-provider/settings-identity-provider'));
 const SettingsCreateIdentityProvider = React.lazy(() => import('@/pages/settings/identity-provider/settings-create-identity-provider'));
-const TermsAndConditions = React.lazy(() => import('@/pages/terms-and-conditions/terms-and-conditions'));
 const Dashboard = React.lazy(() => import('@/pages/dashboard/dashboard'));
 const SettingsApiKey = React.lazy(() => import('@/pages/settings/api-key/settings-api-key'));
 const SettingsOrganizations = React.lazy(() => import('@/pages/settings/organizations/settings-organizations'));
@@ -66,9 +65,9 @@ export const generateRoutes = (routes: Route[]): Route[] => {
         <SecureRoute redirectPath={PATHS.welcome}>
           <NodeRoute>
             <BannerProvider>
-              <IdentityProvider>
+              <SettingsProvider>
                 <Layout />
-              </IdentityProvider>
+              </SettingsProvider>
             </BannerProvider>
           </NodeRoute>
         </SecureRoute>
@@ -89,7 +88,7 @@ export const generateRoutes = (routes: Route[]): Route[] => {
 };
 
 export const useRoutes = () => {
-  const {isEmptyIdp} = useIdentityProviderStore(
+  const {isEmptyIdp} = useSettingsStore(
     useShallow((state) => ({
       isEmptyIdp: state.isEmptyIdp
     }))
@@ -205,10 +204,6 @@ export const useRoutes = () => {
             element: <NotFound />
           }
         ]
-      },
-      {
-        path: PATHS.termsAndConditions,
-        element: <TermsAndConditions />
       }
     ];
   }, [isEmptyIdp]);

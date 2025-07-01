@@ -183,12 +183,11 @@
             "type": "string"
           },
           {
-            "name": "policy",
-            "description": "Policy parameters to update.",
+            "name": "body",
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1alpha1Policy"
+              "$ref": "#/definitions/PolicyServiceUpdatePolicyBody"
             }
           }
         ],
@@ -399,12 +398,11 @@
             "type": "string"
           },
           {
-            "name": "rule",
-            "description": "Rule parameters to update.",
+            "name": "body",
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1alpha1Rule"
+              "$ref": "#/definitions/PolicyServiceUpdateRuleBody"
             }
           }
         ],
@@ -416,6 +414,47 @@
   },
   "definitions": {
     "PolicyServiceCreateRuleBody": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "A human-readable name for the Rule."
+        },
+        "description": {
+          "type": "string",
+          "description": "A human-readable description for the Rule."
+        },
+        "tasks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The tasks that this Rule applies to."
+        },
+        "needsApproval": {
+          "type": "boolean",
+          "description": "Need User Approval for this Rule."
+        }
+      }
+    },
+    "PolicyServiceUpdatePolicyBody": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "A human-readable name for the Policy."
+        },
+        "description": {
+          "type": "string",
+          "description": "A human-readable description for the Policy."
+        },
+        "assignedTo": {
+          "type": "string",
+          "description": "The requester application that this policy applies to."
+        }
+      }
+    },
+    "PolicyServiceUpdateRuleBody": {
       "type": "object",
       "properties": {
         "name": {
@@ -562,7 +601,7 @@
         },
         "assignedTo": {
           "type": "string",
-          "description": "The requester application that this Rule applies to."
+          "description": "The requester application that this Policy applies to."
         },
         "rules": {
           "type": "array",

@@ -7,7 +7,7 @@ import {z} from 'zod';
 
 export const VerifyIdentitySchema = z.object({
   badgeId: z.string().optional(),
-  file: z
+  badgeFile: z
     .union([
       z
         .instanceof(File, {message: 'File is required'})
@@ -18,12 +18,7 @@ export const VerifyIdentitySchema = z.object({
       message: 'File is required'
     })
     .optional(),
-  buffer: z
-    .instanceof(ArrayBuffer, {message: 'Buffer is required'})
-    .refine((buffer) => buffer.byteLength > 0 && buffer.byteLength <= 3000000, {
-      message: 'Max size exceeded'
-    })
-    .optional()
+  badgeContent: z.string().optional()
 });
 
 export type VerifyIdentityFormValues = z.infer<typeof VerifyIdentitySchema>;

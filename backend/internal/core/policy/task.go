@@ -14,8 +14,8 @@ import (
 )
 
 type TaskService interface {
-	CreateForAgent(ctx context.Context, appID string, name string) (*types.Task, error)
-	CreateForMCP(ctx context.Context, appID string, name string, url string) ([]*types.Task, error)
+	CreateForAgent(ctx context.Context, appID, name string) (*types.Task, error)
+	CreateForMCP(ctx context.Context, appID, name, url string) ([]*types.Task, error)
 }
 
 type taskService struct {
@@ -33,7 +33,10 @@ func NewTaskService(
 	}
 }
 
-func (s *taskService) CreateForAgent(ctx context.Context, appID string, name string) (*types.Task, error) {
+func (s *taskService) CreateForAgent(
+	ctx context.Context,
+	appID, name string,
+) (*types.Task, error) {
 	tasks, err := s.policyRepository.GetTasksByAppID(ctx, appID)
 	if err != nil {
 		return nil, err
@@ -57,7 +60,10 @@ func (s *taskService) CreateForAgent(ctx context.Context, appID string, name str
 	return task, nil
 }
 
-func (s *taskService) CreateForMCP(ctx context.Context, appID string, name string, url string) ([]*types.Task, error) {
+func (s *taskService) CreateForMCP(
+	ctx context.Context,
+	appID, name, url string,
+) ([]*types.Task, error) {
 	mcpServer, err := s.mcpClient.Discover(ctx, name, url)
 	if err != nil {
 		return nil, err

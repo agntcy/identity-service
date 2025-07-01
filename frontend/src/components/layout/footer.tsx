@@ -3,14 +3,27 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {PATHS} from '@/router/paths';
 import {Footer as SparkFooter} from '@outshift/spark-design';
+import 'vanilla-cookieconsent/dist/cookieconsent.css';
+import * as CookieConsentVanilla from 'vanilla-cookieconsent';
+import {config} from './cookie-consent/config';
+import {useEffect} from 'react';
+import '@/styles/cookie.css';
 
 export const Footer = () => {
+  useEffect(() => {
+    if (window) {
+      void CookieConsentVanilla.run(config);
+    } else {
+      console.warn('CookieConsent is not available in this environment.');
+    }
+  }, []);
+
   return (
     <>
       <SparkFooter
-        productName="Agntcy Inc."
+        productName="Cisco Systems, Inc."
+        productLink="https://www.cisco.com/"
         links={[
           {
             children: 'support@agntcy.com',
@@ -19,7 +32,8 @@ export const Footer = () => {
           },
           {
             children: 'Terms & Conditions',
-            href: PATHS.termsAndConditions
+            href: 'https://www.cisco.com/c/en/us/about/legal/terms-conditions.html',
+            openInNewTab: true
           },
           {
             children: 'Privacy Policy',
@@ -28,7 +42,8 @@ export const Footer = () => {
           },
           {
             children: 'Cookies',
-            href: '#'
+            href: '#',
+            onClick: () => CookieConsentVanilla.showPreferences()
           }
         ]}
       />

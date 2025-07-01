@@ -7,6 +7,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"slices"
 
 	appcore "github.com/agntcy/identity-platform/internal/core/app"
 	"github.com/agntcy/identity-platform/internal/core/app/types"
@@ -91,7 +92,7 @@ func (r *repository) GetAllApps(
 	ctx context.Context,
 	paginationFilter pagination.PaginationFilter,
 	query *string,
-	appType *types.AppType,
+	appTypes []types.AppType,
 ) (*pagination.Pageable[types.App], error) {
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
@@ -109,8 +110,11 @@ func (r *repository) GetAllApps(
 		)
 	}
 
-	if appType != nil && *appType != types.APP_TYPE_UNSPECIFIED {
-		dbQuery = dbQuery.Where("type = ?", *appType)
+	appTypes = slices.DeleteFunc(appTypes, func(typ types.AppType) bool {
+		return typ == types.APP_TYPE_UNSPECIFIED
+	})
+	if len(appTypes) > 0 {
+		dbQuery = dbQuery.Where("type IN ?", appTypes)
 	}
 
 	dbQuery = dbQuery.Session(&gorm.Session{}) // https://gorm.io/docs/method_chaining.html#Reusability-and-Safety

@@ -32,15 +32,3 @@ type Session struct {
 	// The expiration time of the Session.
 	ExpiresAt *int64 `json:"expires_at,omitempty" protobuf:"bytes,9,opt,name=expires_at"`
 }
-
-// Devices used for user approval
-type Device struct {
-	// A unique identifier for the Device.
-	ID string `json:"id,omitempty" protobuf:"bytes,1,opt,name=id"`
-
-	// User ID associated with the Device.
-	UserID string `json:"user_id,omitempty" protobuf:"bytes,2,opt,name=user_id"`
-
-	// Subscription Token for the Device.
-	SubscriptionToken string `json:"subscription_token,omitempty" protobuf:"bytes,3,opt,name=subscription_token"`
-}

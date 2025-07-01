@@ -4,7 +4,7 @@
  */
 
 import {ReactNode, useMemo, useState} from 'react';
-import {IconButton, Typography} from '@mui/material';
+import {IconButton, Typography, useTheme} from '@mui/material';
 import {Link, useLocation} from 'react-router-dom';
 import {cn} from '@/lib/utils';
 import {PATHS} from '@/router/paths';
@@ -21,6 +21,7 @@ import '@/styles/side-nav.css';
 export const SideNav: React.FC<{isCollapsed?: boolean; onChangeCollapsed?: (value?: boolean) => void}> = ({isCollapsed, onChangeCollapsed}) => {
   const [isOrgOpen, setIsOrgOpen] = useState(false);
 
+  const theme = useTheme();
   const {authInfo} = useAuth();
 
   const sideNavLinks: {
@@ -70,7 +71,13 @@ export const SideNav: React.FC<{isCollapsed?: boolean; onChangeCollapsed?: (valu
         <div>
           <div className={cn('pr-4', isCollapsed && 'pr-4', isOrgOpen && 'pr-0')}>
             <SideNavLink
-              label={<OverflowTooltip value={authInfo?.user?.tenant?.name} someLongText={authInfo?.user?.tenant?.name} />}
+              label={
+                <OverflowTooltip
+                  value={authInfo?.user?.tenant?.name}
+                  someLongText={authInfo?.user?.tenant?.name}
+                  styleText={{color: theme.palette.vars.brandTextSecondary, fontSize: '14px', fontWeight: '500'}}
+                />
+              }
               isLink={false}
               icon={<OrganizationLogo className="w-5 h-5" />}
               className={cn(

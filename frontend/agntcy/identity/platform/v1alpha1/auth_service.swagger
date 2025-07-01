@@ -118,60 +118,6 @@
         ]
       }
     },
-    "/v1alpha1/auth/register_device": {
-      "post": {
-        "summary": "Register new user device for approval flow",
-        "operationId": "RegisterDevice",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "type": "object",
-              "properties": {}
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "userToken",
-            "description": "The User context in the form of an id or access token.\nMandatory for User Approval Flows.",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "device.id",
-            "description": "A unique identifier for the Device.",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "device.userId",
-            "description": "User ID associated with the Device.",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "device.subscriptionToken",
-            "description": "Subscription Token for the Device.",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "Auth"
-        ]
-      }
-    },
     "/v1alpha1/auth/token": {
       "post": {
         "summary": "Request token for an Agent or MCP Server",
@@ -290,24 +236,6 @@
           "description": "If authorization is successful, return a code to be used for\nthe token endpoint."
         }
       }
-    },
-    "v1alpha1Device": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "A unique identifier for the Device."
-        },
-        "userId": {
-          "type": "string",
-          "description": "User ID associated with the Device."
-        },
-        "subscriptionToken": {
-          "type": "string",
-          "description": "Subscription Token for the Device."
-        }
-      },
-      "title": "Devices used for user approval"
     },
     "v1alpha1TokenResponse": {
       "type": "object",

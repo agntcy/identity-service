@@ -27,3 +27,14 @@ export const useGetAgenticService = (id?: string) => {
     enabled: !!id
   });
 };
+
+export const useGetAgenticServiceBadge = (id?: string) => {
+  return useQuery({
+    queryKey: ['get-agentic-service-badge', id],
+    queryFn: async () => {
+      const {data} = await AgenticServicesAPI.getAppBadge(id!);
+      return data;
+    },
+    enabled: !!id
+  });
+};

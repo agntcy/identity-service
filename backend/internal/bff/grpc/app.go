@@ -14,19 +14,23 @@ import (
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 	"github.com/agntcy/identity-platform/internal/pkg/grpcutil"
 	"github.com/agntcy/identity-platform/internal/pkg/pagination"
-	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 const defaultPageSize int32 = 20
 
 type appService struct {
-	appSrv bff.AppService
+	appSrv   bff.AppService
+	badgeSrv bff.BadgeService
 }
 
-func NewAppService(appSrv bff.AppService) identity_platform_sdk_go.AppServiceServer {
+func NewAppService(
+	appSrv bff.AppService,
+	badgeSrv bff.BadgeService,
+) identity_platform_sdk_go.AppServiceServer {
 	return &appService{
-		appSrv: appSrv,
+		appSrv:   appSrv,
+		badgeSrv: badgeSrv,
 	}
 }
 
@@ -57,12 +61,14 @@ func (s *appService) ListApps(
 		DefaultSize: defaultPageSize,
 	}
 
-	var appType *apptypes.AppType
-	if req.Type != nil {
-		appType = ptrutil.Ptr(apptypes.AppType(*req.Type))
+	appTypes := make([]apptypes.AppType, 0)
+	if req.Types != nil {
+		for _, typ := range req.Types {
+			appTypes = append(appTypes, apptypes.AppType(typ))
+		}
 	}
 
-	apps, err := s.appSrv.ListApps(ctx, paginationFilter, req.Query, appType)
+	apps, err := s.appSrv.ListApps(ctx, paginationFilter, req.Query, appTypes)
 	if err != nil {
 		return nil, grpcutil.BadRequestError(err)
 	}
@@ -111,4 +117,16 @@ func (s *appService) DeleteApp(
 ) (*emptypb.Empty, error) {
 	// This method is not implemented yet.
 	return nil, errutil.Err(nil, "DeleteApp method is not implemented")
+}
+
+func (s *appService) GetBadge(
+	ctx context.Context,
+	in *identity_platform_sdk_go.GetBadgeRequest,
+) (*identity_platform_sdk_go.Badge, error) {
+	badge, err := s.badgeSrv.GetBadge(ctx, in.AppId)
+	if err != nil {
+		return nil, grpcutil.BadRequestError(err)
+	}
+
+	return converters.FromBadge(badge), nil
 }

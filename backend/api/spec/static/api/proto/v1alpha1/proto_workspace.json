@@ -190,957 +190,6 @@
       "services": []
     },
     {
-      "name": "agntcy/identity/platform/v1alpha1/app_service.proto",
-      "description": "",
-      "package": "agntcy.identity.platform.v1alpha1",
-      "hasEnums": false,
-      "hasExtensions": false,
-      "hasMessages": true,
-      "hasServices": true,
-      "enums": [],
-      "extensions": [],
-      "messages": [
-        {
-          "name": "AppTypeCountEntry",
-          "longName": "AppTypeCountEntry",
-          "fullName": "agntcy.identity.platform.v1alpha1.AppTypeCountEntry",
-          "description": "",
-          "hasExtensions": false,
-          "hasFields": true,
-          "hasOneofs": false,
-          "extensions": [],
-          "fields": [
-            {
-              "name": "key",
-              "description": "The type of the App",
-              "label": "",
-              "type": "AppType",
-              "longType": "AppType",
-              "fullType": "agntcy.identity.platform.v1alpha1.AppType",
-              "ismap": false,
-              "isoneof": false,
-              "oneofdecl": "",
-              "defaultValue": ""
-            },
-            {
-              "name": "value",
-              "description": "The count of apps of the given type",
-              "label": "",
-              "type": "int64",
-              "longType": "int64",
-              "fullType": "int64",
-              "ismap": false,
-              "isoneof": false,
-              "oneofdecl": "",
-              "defaultValue": ""
-            }
-          ]
-        },
-        {
-          "name": "CreateAppRequest",
-          "longName": "CreateAppRequest",
-          "fullName": "agntcy.identity.platform.v1alpha1.CreateAppRequest",
-          "description": "",
-          "hasExtensions": false,
-          "hasFields": true,
-          "hasOneofs": false,
-          "extensions": [],
-          "fields": [
-            {
-              "name": "app",
-              "description": "The App to create.",
-              "label": "",
-              "type": "App",
-              "longType": "App",
-              "fullType": "agntcy.identity.platform.v1alpha1.App",
-              "ismap": false,
-              "isoneof": false,
-              "oneofdecl": "",
-              "defaultValue": ""
-            }
-          ]
-        },
-        {
-          "name": "DeleteAppRequest",
-          "longName": "DeleteAppRequest",
-          "fullName": "agntcy.identity.platform.v1alpha1.DeleteAppRequest",
-          "description": "",
-          "hasExtensions": false,
-          "hasFields": true,
-          "hasOneofs": false,
-          "extensions": [],
-          "fields": [
-            {
-              "name": "app_id",
-              "description": "App Id to delete.",
-              "label": "",
-              "type": "string",
-              "longType": "string",
-              "fullType": "string",
-              "ismap": false,
-              "isoneof": false,
-              "oneofdecl": "",
-              "defaultValue": ""
-            }
-          ]
-        },
-        {
-          "name": "GetAppRequest",
-          "longName": "GetAppRequest",
-          "fullName": "agntcy.identity.platform.v1alpha1.GetAppRequest",
-          "description": "",
-          "hasExtensions": false,
-          "hasFields": true,
-          "hasOneofs": false,
-          "extensions": [],
-          "fields": [
-            {
-              "name": "app_id",
-              "description": "App Id to get.",
-              "label": "",
-              "type": "string",
-              "longType": "string",
-              "fullType": "string",
-              "ismap": false,
-              "isoneof": false,
-              "oneofdecl": "",
-              "defaultValue": ""
-            }
-          ]
-        },
-        {
-          "name": "GetAppsCountRequest",
-          "longName": "GetAppsCountRequest",
-          "fullName": "agntcy.identity.platform.v1alpha1.GetAppsCountRequest",
-          "description": "",
-          "hasExtensions": false,
-          "hasFields": false,
-          "hasOneofs": false,
-          "extensions": [],
-          "fields": []
-        },
-        {
-          "name": "GetAppsCountResponse",
-          "longName": "GetAppsCountResponse",
-          "fullName": "agntcy.identity.platform.v1alpha1.GetAppsCountResponse",
-          "description": "",
-          "hasExtensions": false,
-          "hasFields": true,
-          "hasOneofs": false,
-          "extensions": [],
-          "fields": [
-            {
-              "name": "counts",
-              "description": "The apps count per app type",
-              "label": "repeated",
-              "type": "AppTypeCountEntry",
-              "longType": "AppTypeCountEntry",
-              "fullType": "agntcy.identity.platform.v1alpha1.AppTypeCountEntry",
-              "ismap": false,
-              "isoneof": false,
-              "oneofdecl": "",
-              "defaultValue": ""
-            }
-          ]
-        },
-        {
-          "name": "ListAppsRequest",
-          "longName": "ListAppsRequest",
-          "fullName": "agntcy.identity.platform.v1alpha1.ListAppsRequest",
-          "description": "",
-          "hasExtensions": false,
-          "hasFields": true,
-          "hasOneofs": true,
-          "extensions": [],
-          "fields": [
-            {
-              "name": "page",
-              "description": "The current page of the pagination",
-              "label": "optional",
-              "type": "int32",
-              "longType": "int32",
-              "fullType": "int32",
-              "ismap": false,
-              "isoneof": true,
-              "oneofdecl": "_page",
-              "defaultValue": ""
-            },
-            {
-              "name": "size",
-              "description": "The page size of the pagination",
-              "label": "optional",
-              "type": "int32",
-              "longType": "int32",
-              "fullType": "int32",
-              "ismap": false,
-              "isoneof": true,
-              "oneofdecl": "_size",
-              "defaultValue": ""
-            },
-            {
-              "name": "query",
-              "description": "The search query",
-              "label": "optional",
-              "type": "string",
-              "longType": "string",
-              "fullType": "string",
-              "ismap": false,
-              "isoneof": true,
-              "oneofdecl": "_query",
-              "defaultValue": ""
-            },
-            {
-              "name": "type",
-              "description": "The app type filter",
-              "label": "optional",
-              "type": "AppType",
-              "longType": "AppType",
-              "fullType": "agntcy.identity.platform.v1alpha1.AppType",
-              "ismap": false,
-              "isoneof": true,
-              "oneofdecl": "_type",
-              "defaultValue": ""
-            }
-          ]
-        },
-        {
-          "name": "ListAppsResponse",
-          "longName": "ListAppsResponse",
-          "fullName": "agntcy.identity.platform.v1alpha1.ListAppsResponse",
-          "description": "",
-          "hasExtensions": false,
-          "hasFields": true,
-          "hasOneofs": true,
-          "extensions": [],
-          "fields": [
-            {
-              "name": "apps",
-              "description": "A list of Apps.",
-              "label": "repeated",
-              "type": "App",
-              "longType": "App",
-              "fullType": "agntcy.identity.platform.v1alpha1.App",
-              "ismap": false,
-              "isoneof": false,
-              "oneofdecl": "",
-              "defaultValue": ""
-            },
-            {
-              "name": "pagination",
-              "description": "Pagination response.",
-              "label": "optional",
-              "type": "PagedResponse",
-              "longType": "agntcy.identity.platform.shared.v1alpha1.PagedResponse",
-              "fullType": "agntcy.identity.platform.shared.v1alpha1.PagedResponse",
-              "ismap": false,
-              "isoneof": true,
-              "oneofdecl": "_pagination",
-              "defaultValue": ""
-            }
-          ]
-        },
-        {
-          "name": "UpdateAppRequest",
-          "longName": "UpdateAppRequest",
-          "fullName": "agntcy.identity.platform.v1alpha1.UpdateAppRequest",
-          "description": "",
-          "hasExtensions": false,
-          "hasFields": true,
-          "hasOneofs": false,
-          "extensions": [],
-          "fields": [
-            {
-              "name": "app_id",
-              "description": "App Id to update.",
-              "label": "",
-              "type": "string",
-              "longType": "string",
-              "fullType": "string",
-              "ismap": false,
-              "isoneof": false,
-              "oneofdecl": "",
-              "defaultValue": ""
-            },
-            {
-              "name": "app",
-              "description": "App parameters to update.",
-              "label": "",
-              "type": "App",
-              "longType": "App",
-              "fullType": "agntcy.identity.platform.v1alpha1.App",
-              "ismap": false,
-              "isoneof": false,
-              "oneofdecl": "",
-              "defaultValue": ""
-            }
-          ]
-        }
-      ],
-      "services": [
-        {
-          "name": "AppService",
-          "longName": "AppService",
-          "fullName": "agntcy.identity.platform.v1alpha1.AppService",
-          "description": "AppService manages apps.",
-          "methods": [
-            {
-              "name": "ListApps",
-              "description": "List Apps.",
-              "requestType": "ListAppsRequest",
-              "requestLongType": "ListAppsRequest",
-              "requestFullType": "agntcy.identity.platform.v1alpha1.ListAppsRequest",
-              "requestStreaming": false,
-              "responseType": "ListAppsResponse",
-              "responseLongType": "ListAppsResponse",
-              "responseFullType": "agntcy.identity.platform.v1alpha1.ListAppsResponse",
-              "responseStreaming": false,
-              "options": {
-                "google.api.http": {
-                  "rules": [
-                    {
-                      "method": "GET",
-                      "pattern": "/v1alpha1/apps"
-                    }
-                  ]
-                }
-              }
-            },
-            {
-              "name": "GetAppsCount",
-              "description": "Get apps count per type.",
-              "requestType": "GetAppsCountRequest",
-              "requestLongType": "GetAppsCountRequest",
-              "requestFullType": "agntcy.identity.platform.v1alpha1.GetAppsCountRequest",
-              "requestStreaming": false,
-              "responseType": "GetAppsCountResponse",
-              "responseLongType": "GetAppsCountResponse",
-              "responseFullType": "agntcy.identity.platform.v1alpha1.GetAppsCountResponse",
-              "responseStreaming": false,
-              "options": {
-                "google.api.http": {
-                  "rules": [
-                    {
-                      "method": "GET",
-                      "pattern": "/v1alpha1/apps/all/count"
-                    }
-                  ]
-                }
-              }
-            },
-            {
-              "name": "GetApp",
-              "description": "Get App by id",
-              "requestType": "GetAppRequest",
-              "requestLongType": "GetAppRequest",
-              "requestFullType": "agntcy.identity.platform.v1alpha1.GetAppRequest",
-              "requestStreaming": false,
-              "responseType": "App",
-              "responseLongType": "App",
-              "responseFullType": "agntcy.identity.platform.v1alpha1.App",
-              "responseStreaming": false,
-              "options": {
-                "google.api.http": {
-                  "rules": [
-                    {
-                      "method": "GET",
-                      "pattern": "/v1alpha1/apps/{app_id}"
-                    }
-                  ]
-                }
-              }
-            },
-            {
-              "name": "CreateApp",
-              "description": "Create a new App.",
-              "requestType": "CreateAppRequest",
-              "requestLongType": "CreateAppRequest",
-              "requestFullType": "agntcy.identity.platform.v1alpha1.CreateAppRequest",
-              "requestStreaming": false,
-              "responseType": "App",
-              "responseLongType": "App",
-              "responseFullType": "agntcy.identity.platform.v1alpha1.App",
-              "responseStreaming": false,
-              "options": {
-                "google.api.http": {
-                  "rules": [
-                    {
-                      "method": "POST",
-                      "pattern": "/v1alpha1/apps",
-                      "body": "app"
-                    }
-                  ]
-                }
-              }
-            },
-            {
-              "name": "UpdateApp",
-              "description": "Update an App.",
-              "requestType": "UpdateAppRequest",
-              "requestLongType": "UpdateAppRequest",
-              "requestFullType": "agntcy.identity.platform.v1alpha1.UpdateAppRequest",
-              "requestStreaming": false,
-              "responseType": "App",
-              "responseLongType": "App",
-              "responseFullType": "agntcy.identity.platform.v1alpha1.App",
-              "responseStreaming": false,
-              "options": {
-                "google.api.http": {
-                  "rules": [
-                    {
-                      "method": "PATCH",
-                      "pattern": "/v1alpha1/apps/{app_id}",
-                      "body": "app"
-                    }
-                  ]
-                }
-              }
-            },
-            {
-              "name": "DeleteApp",
-              "description": "Delete an existing App.",
-              "requestType": "DeleteAppRequest",
-              "requestLongType": "DeleteAppRequest",
-              "requestFullType": "agntcy.identity.platform.v1alpha1.DeleteAppRequest",
-              "requestStreaming": false,
-              "responseType": "Empty",
-              "responseLongType": ".google.protobuf.Empty",
-              "responseFullType": "google.protobuf.Empty",
-              "responseStreaming": false,
-              "options": {
-                "google.api.http": {
-                  "rules": [
-                    {
-                      "method": "DELETE",
-                      "pattern": "/v1alpha1/apps/{app_id}"
-                    }
-                  ]
-                }
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "agntcy/identity/platform/v1alpha1/auth.proto",
-      "description": "",
-      "package": "agntcy.identity.platform.v1alpha1",
-      "hasEnums": false,
-      "hasExtensions": false,
-      "hasMessages": true,
-      "hasServices": false,
-      "enums": [],
-      "extensions": [],
-      "messages": [
-        {
-          "name": "Device",
-          "longName": "Device",
-          "fullName": "agntcy.identity.platform.v1alpha1.Device",
-          "description": "Devices used for user approval",
-          "hasExtensions": false,
-          "hasFields": true,
-          "hasOneofs": true,
-          "extensions": [],
-          "fields": [
-            {
-              "name": "id",
-              "description": "A unique identifier for the Device.",
-              "label": "optional",
-              "type": "string",
-              "longType": "string",
-              "fullType": "string",
-              "ismap": false,
-              "isoneof": true,
-              "oneofdecl": "_id",
-              "defaultValue": ""
-            },
-            {
-              "name": "user_id",
-              "description": "User ID associated with the Device.",
-              "label": "optional",
-              "type": "string",
-              "longType": "string",
-              "fullType": "string",
-              "ismap": false,
-              "isoneof": true,
-              "oneofdecl": "_user_id",
-              "defaultValue": ""
-            },
-            {
-              "name": "subscription_token",
-              "description": "Subscription Token for the Device.",
-              "label": "optional",
-              "type": "string",
-              "longType": "string",
-              "fullType": "string",
-              "ismap": false,
-              "isoneof": true,
-              "oneofdecl": "_subscription_token",
-              "defaultValue": ""
-            }
-          ]
-        },
-        {
-          "name": "Session",
-          "longName": "Session",
-          "fullName": "agntcy.identity.platform.v1alpha1.Session",
-          "description": "Identity Platform Session",
-          "hasExtensions": false,
-          "hasFields": true,
-          "hasOneofs": true,
-          "extensions": [],
-          "fields": [
-            {
-              "name": "id",
-              "description": "A unique identifier for the Session.",
-              "label": "optional",
-              "type": "string",
-              "longType": "string",
-              "fullType": "string",
-              "ismap": false,
-              "isoneof": true,
-              "oneofdecl": "_id",
-              "defaultValue": ""
-            },
-            {
-              "name": "owner_app_id",
-              "description": "The owner application ID for which the Session is created.",
-              "label": "optional",
-              "type": "string",
-              "longType": "string",
-              "fullType": "string",
-              "ismap": false,
-              "isoneof": true,
-              "oneofdecl": "_owner_app_id",
-              "defaultValue": ""
-            },
-            {
-              "name": "app_id",
-              "description": "The application ID associated with the Session.",
-              "label": "optional",
-              "type": "string",
-              "longType": "string",
-              "fullType": "string",
-              "ismap": false,
-              "isoneof": true,
-              "oneofdecl": "_app_id",
-              "defaultValue": ""
-            },
-            {
-              "name": "tool_name",
-              "description": "The tool name associated with the Session.",
-              "label": "optional",
-              "type": "string",
-              "longType": "string",
-              "fullType": "string",
-              "ismap": false,
-              "isoneof": true,
-              "oneofdecl": "_tool_name",
-              "defaultValue": ""
-            },
-            {
-              "name": "user_id",
-              "description": "The user ID associated with the Session.",
-              "label": "optional",
-              "type": "string",
-              "longType": "string",
-              "fullType": "string",
-              "ismap": false,
-              "isoneof": true,
-              "oneofdecl": "_user_id",
-              "defaultValue": ""
-            },
-            {
-              "name": "access_token",
-              "description": "The access token associated with the Session.",
-              "label": "optional",
-              "type": "string",
-              "longType": "string",
-              "fullType": "string",
-              "ismap": false,
-              "isoneof": true,
-              "oneofdecl": "_access_token",
-              "defaultValue": ""
-            },
-            {
-              "name": "code",
-              "description": "The authorization code associated with the Session.",
-              "label": "optional",
-              "type": "string",
-              "longType": "string",
-              "fullType": "string",
-              "ismap": false,
-              "isoneof": true,
-              "oneofdecl": "_code",
-              "defaultValue": ""
-            },
-            {
-              "name": "created_at",
-              "description": "The creation time of the Session.",
-              "label": "optional",
-              "type": "int64",
-              "longType": "int64",
-              "fullType": "int64",
-              "ismap": false,
-              "isoneof": true,
-              "oneofdecl": "_created_at",
-              "defaultValue": ""
-            },
-            {
-              "name": "expires_at",
-              "description": "The expiration time of the Session.",
-              "label": "optional",
-              "type": "int64",
-              "longType": "int64",
-              "fullType": "int64",
-              "ismap": false,
-              "isoneof": true,
-              "oneofdecl": "_expires_at",
-              "defaultValue": ""
-            }
-          ]
-        }
-      ],
-      "services": []
-    },
-    {
-      "name": "agntcy/identity/platform/v1alpha1/auth_service.proto",
-      "description": "",
-      "package": "agntcy.identity.platform.v1alpha1",
-      "hasEnums": false,
-      "hasExtensions": false,
-      "hasMessages": true,
-      "hasServices": true,
-      "enums": [],
-      "extensions": [],
-      "messages": [
-        {
-          "name": "AppInfoResponse",
-          "longName": "AppInfoResponse",
-          "fullName": "agntcy.identity.platform.v1alpha1.AppInfoResponse",
-          "description": "",
-          "hasExtensions": false,
-          "hasFields": true,
-          "hasOneofs": false,
-          "extensions": [],
-          "fields": [
-            {
-              "name": "app",
-              "description": "The App information.",
-              "label": "",
-              "type": "App",
-              "longType": "App",
-              "fullType": "agntcy.identity.platform.v1alpha1.App",
-              "ismap": false,
-              "isoneof": false,
-              "oneofdecl": "",
-              "defaultValue": ""
-            }
-          ]
-        },
-        {
-          "name": "AuthorizeRequest",
-          "longName": "AuthorizeRequest",
-          "fullName": "agntcy.identity.platform.v1alpha1.AuthorizeRequest",
-          "description": "",
-          "hasExtensions": false,
-          "hasFields": true,
-          "hasOneofs": true,
-          "extensions": [],
-          "fields": [
-            {
-              "name": "app_id",
-              "description": "The app id for which authorization is requested.",
-              "label": "",
-              "type": "string",
-              "longType": "string",
-              "fullType": "string",
-              "ismap": false,
-              "isoneof": false,
-              "oneofdecl": "",
-              "defaultValue": ""
-            },
-            {
-              "name": "tool_name",
-              "description": "The MCP Server tool name.",
-              "label": "optional",
-              "type": "string",
-              "longType": "string",
-              "fullType": "string",
-              "ismap": false,
-              "isoneof": true,
-              "oneofdecl": "_tool_name",
-              "defaultValue": ""
-            },
-            {
-              "name": "user_token",
-              "description": "The User context in the form of an id or access token.\nMandatory for User Approval Flows.",
-              "label": "optional",
-              "type": "string",
-              "longType": "string",
-              "fullType": "string",
-              "ismap": false,
-              "isoneof": true,
-              "oneofdecl": "_user_token",
-              "defaultValue": ""
-            }
-          ]
-        },
-        {
-          "name": "AuthorizeResponse",
-          "longName": "AuthorizeResponse",
-          "fullName": "agntcy.identity.platform.v1alpha1.AuthorizeResponse",
-          "description": "",
-          "hasExtensions": false,
-          "hasFields": true,
-          "hasOneofs": false,
-          "extensions": [],
-          "fields": [
-            {
-              "name": "authorization_code",
-              "description": "If authorization is successful, return a code to be used for\nthe token endpoint.",
-              "label": "",
-              "type": "string",
-              "longType": "string",
-              "fullType": "string",
-              "ismap": false,
-              "isoneof": false,
-              "oneofdecl": "",
-              "defaultValue": ""
-            }
-          ]
-        },
-        {
-          "name": "ExtAuthzRequest",
-          "longName": "ExtAuthzRequest",
-          "fullName": "agntcy.identity.platform.v1alpha1.ExtAuthzRequest",
-          "description": "",
-          "hasExtensions": false,
-          "hasFields": true,
-          "hasOneofs": false,
-          "extensions": [],
-          "fields": [
-            {
-              "name": "access_token",
-              "description": "The access token to be authorized.",
-              "label": "",
-              "type": "string",
-              "longType": "string",
-              "fullType": "string",
-              "ismap": false,
-              "isoneof": false,
-              "oneofdecl": "",
-              "defaultValue": ""
-            }
-          ]
-        },
-        {
-          "name": "RegisterDeviceRequest",
-          "longName": "RegisterDeviceRequest",
-          "fullName": "agntcy.identity.platform.v1alpha1.RegisterDeviceRequest",
-          "description": "",
-          "hasExtensions": false,
-          "hasFields": true,
-          "hasOneofs": false,
-          "extensions": [],
-          "fields": [
-            {
-              "name": "user_token",
-              "description": "The User context in the form of an id or access token.\nMandatory for User Approval Flows.",
-              "label": "",
-              "type": "string",
-              "longType": "string",
-              "fullType": "string",
-              "ismap": false,
-              "isoneof": false,
-              "oneofdecl": "",
-              "defaultValue": ""
-            },
-            {
-              "name": "device",
-              "description": "The device information to register.",
-              "label": "",
-              "type": "Device",
-              "longType": "Device",
-              "fullType": "agntcy.identity.platform.v1alpha1.Device",
-              "ismap": false,
-              "isoneof": false,
-              "oneofdecl": "",
-              "defaultValue": ""
-            }
-          ]
-        },
-        {
-          "name": "TokenRequest",
-          "longName": "TokenRequest",
-          "fullName": "agntcy.identity.platform.v1alpha1.TokenRequest",
-          "description": "",
-          "hasExtensions": false,
-          "hasFields": true,
-          "hasOneofs": false,
-          "extensions": [],
-          "fields": [
-            {
-              "name": "authorization_code",
-              "description": "Pass the code received from the authorization endpoint.",
-              "label": "",
-              "type": "string",
-              "longType": "string",
-              "fullType": "string",
-              "ismap": false,
-              "isoneof": false,
-              "oneofdecl": "",
-              "defaultValue": ""
-            }
-          ]
-        },
-        {
-          "name": "TokenResponse",
-          "longName": "TokenResponse",
-          "fullName": "agntcy.identity.platform.v1alpha1.TokenResponse",
-          "description": "",
-          "hasExtensions": false,
-          "hasFields": true,
-          "hasOneofs": false,
-          "extensions": [],
-          "fields": [
-            {
-              "name": "access_token",
-              "description": "The access token issued to the Agent or MCP Server.",
-              "label": "",
-              "type": "string",
-              "longType": "string",
-              "fullType": "string",
-              "ismap": false,
-              "isoneof": false,
-              "oneofdecl": "",
-              "defaultValue": ""
-            }
-          ]
-        }
-      ],
-      "services": [
-        {
-          "name": "AuthService",
-          "longName": "AuthService",
-          "fullName": "agntcy.identity.platform.v1alpha1.AuthService",
-          "description": "AuthService manages auth.",
-          "methods": [
-            {
-              "name": "AppInfo",
-              "description": "App info endpoint",
-              "requestType": "Empty",
-              "requestLongType": ".google.protobuf.Empty",
-              "requestFullType": "google.protobuf.Empty",
-              "requestStreaming": false,
-              "responseType": "AppInfoResponse",
-              "responseLongType": "AppInfoResponse",
-              "responseFullType": "agntcy.identity.platform.v1alpha1.AppInfoResponse",
-              "responseStreaming": false,
-              "options": {
-                "google.api.http": {
-                  "rules": [
-                    {
-                      "method": "GET",
-                      "pattern": "/v1alpha1/auth/app_info"
-                    }
-                  ]
-                }
-              }
-            },
-            {
-              "name": "Authorize",
-              "description": "Authorize a request from an Agent or MCP Server",
-              "requestType": "AuthorizeRequest",
-              "requestLongType": "AuthorizeRequest",
-              "requestFullType": "agntcy.identity.platform.v1alpha1.AuthorizeRequest",
-              "requestStreaming": false,
-              "responseType": "AuthorizeResponse",
-              "responseLongType": "AuthorizeResponse",
-              "responseFullType": "agntcy.identity.platform.v1alpha1.AuthorizeResponse",
-              "responseStreaming": false,
-              "options": {
-                "google.api.http": {
-                  "rules": [
-                    {
-                      "method": "GET",
-                      "pattern": "/v1alpha1/auth/authorize"
-                    }
-                  ]
-                }
-              }
-            },
-            {
-              "name": "Token",
-              "description": "Request token for an Agent or MCP Server",
-              "requestType": "TokenRequest",
-              "requestLongType": "TokenRequest",
-              "requestFullType": "agntcy.identity.platform.v1alpha1.TokenRequest",
-              "requestStreaming": false,
-              "responseType": "TokenResponse",
-              "responseLongType": "TokenResponse",
-              "responseFullType": "agntcy.identity.platform.v1alpha1.TokenResponse",
-              "responseStreaming": false,
-              "options": {
-                "google.api.http": {
-                  "rules": [
-                    {
-                      "method": "POST",
-                      "pattern": "/v1alpha1/auth/token"
-                    }
-                  ]
-                }
-              }
-            },
-            {
-              "name": "ExtAuthz",
-              "description": "Handle external authorization requests",
-              "requestType": "ExtAuthzRequest",
-              "requestLongType": "ExtAuthzRequest",
-              "requestFullType": "agntcy.identity.platform.v1alpha1.ExtAuthzRequest",
-              "requestStreaming": false,
-              "responseType": "Empty",
-              "responseLongType": ".google.protobuf.Empty",
-              "responseFullType": "google.protobuf.Empty",
-              "responseStreaming": false,
-              "options": {
-                "google.api.http": {
-                  "rules": [
-                    {
-                      "method": "POST",
-                      "pattern": "/v1alpha1/auth/ext_authz"
-                    }
-                  ]
-                }
-              }
-            },
-            {
-              "name": "RegisterDevice",
-              "description": "Register new user device for approval flow",
-              "requestType": "RegisterDeviceRequest",
-              "requestLongType": "RegisterDeviceRequest",
-              "requestFullType": "agntcy.identity.platform.v1alpha1.RegisterDeviceRequest",
-              "requestStreaming": false,
-              "responseType": "Empty",
-              "responseLongType": ".google.protobuf.Empty",
-              "responseFullType": "google.protobuf.Empty",
-              "responseStreaming": false,
-              "options": {
-                "google.api.http": {
-                  "rules": [
-                    {
-                      "method": "POST",
-                      "pattern": "/v1alpha1/auth/register_device"
-                    }
-                  ]
-                }
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
       "name": "agntcy/identity/platform/v1alpha1/badge.proto",
       "description": "",
       "package": "agntcy.identity.platform.v1alpha1",
@@ -1455,6 +504,897 @@
       "services": []
     },
     {
+      "name": "agntcy/identity/platform/v1alpha1/app_service.proto",
+      "description": "",
+      "package": "agntcy.identity.platform.v1alpha1",
+      "hasEnums": false,
+      "hasExtensions": false,
+      "hasMessages": true,
+      "hasServices": true,
+      "enums": [],
+      "extensions": [],
+      "messages": [
+        {
+          "name": "AppTypeCountEntry",
+          "longName": "AppTypeCountEntry",
+          "fullName": "agntcy.identity.platform.v1alpha1.AppTypeCountEntry",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "key",
+              "description": "The type of the App",
+              "label": "",
+              "type": "AppType",
+              "longType": "AppType",
+              "fullType": "agntcy.identity.platform.v1alpha1.AppType",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            },
+            {
+              "name": "value",
+              "description": "The count of apps of the given type",
+              "label": "",
+              "type": "int64",
+              "longType": "int64",
+              "fullType": "int64",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "CreateAppRequest",
+          "longName": "CreateAppRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.CreateAppRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "app",
+              "description": "The App to create.",
+              "label": "",
+              "type": "App",
+              "longType": "App",
+              "fullType": "agntcy.identity.platform.v1alpha1.App",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "DeleteAppRequest",
+          "longName": "DeleteAppRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.DeleteAppRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "app_id",
+              "description": "App Id to delete.",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "GetAppRequest",
+          "longName": "GetAppRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.GetAppRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "app_id",
+              "description": "App Id to get.",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "GetAppsCountRequest",
+          "longName": "GetAppsCountRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.GetAppsCountRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": false,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": []
+        },
+        {
+          "name": "GetAppsCountResponse",
+          "longName": "GetAppsCountResponse",
+          "fullName": "agntcy.identity.platform.v1alpha1.GetAppsCountResponse",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "counts",
+              "description": "The apps count per app type",
+              "label": "repeated",
+              "type": "AppTypeCountEntry",
+              "longType": "AppTypeCountEntry",
+              "fullType": "agntcy.identity.platform.v1alpha1.AppTypeCountEntry",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "GetBadgeRequest",
+          "longName": "GetBadgeRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.GetBadgeRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "app_id",
+              "description": "App Id to get the badge for.",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "ListAppsRequest",
+          "longName": "ListAppsRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.ListAppsRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "page",
+              "description": "The current page of the pagination",
+              "label": "optional",
+              "type": "int32",
+              "longType": "int32",
+              "fullType": "int32",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_page",
+              "defaultValue": ""
+            },
+            {
+              "name": "size",
+              "description": "The page size of the pagination",
+              "label": "optional",
+              "type": "int32",
+              "longType": "int32",
+              "fullType": "int32",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_size",
+              "defaultValue": ""
+            },
+            {
+              "name": "query",
+              "description": "The search query",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_query",
+              "defaultValue": ""
+            },
+            {
+              "name": "types",
+              "description": "The app type filter",
+              "label": "repeated",
+              "type": "AppType",
+              "longType": "AppType",
+              "fullType": "agntcy.identity.platform.v1alpha1.AppType",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "ListAppsResponse",
+          "longName": "ListAppsResponse",
+          "fullName": "agntcy.identity.platform.v1alpha1.ListAppsResponse",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "apps",
+              "description": "A list of Apps.",
+              "label": "repeated",
+              "type": "App",
+              "longType": "App",
+              "fullType": "agntcy.identity.platform.v1alpha1.App",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            },
+            {
+              "name": "pagination",
+              "description": "Pagination response.",
+              "label": "optional",
+              "type": "PagedResponse",
+              "longType": "agntcy.identity.platform.shared.v1alpha1.PagedResponse",
+              "fullType": "agntcy.identity.platform.shared.v1alpha1.PagedResponse",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_pagination",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "UpdateAppRequest",
+          "longName": "UpdateAppRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.UpdateAppRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "app_id",
+              "description": "App Id to update.",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            },
+            {
+              "name": "app",
+              "description": "App parameters to update.",
+              "label": "",
+              "type": "App",
+              "longType": "App",
+              "fullType": "agntcy.identity.platform.v1alpha1.App",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        }
+      ],
+      "services": [
+        {
+          "name": "AppService",
+          "longName": "AppService",
+          "fullName": "agntcy.identity.platform.v1alpha1.AppService",
+          "description": "AppService manages apps.",
+          "methods": [
+            {
+              "name": "ListApps",
+              "description": "List Apps.",
+              "requestType": "ListAppsRequest",
+              "requestLongType": "ListAppsRequest",
+              "requestFullType": "agntcy.identity.platform.v1alpha1.ListAppsRequest",
+              "requestStreaming": false,
+              "responseType": "ListAppsResponse",
+              "responseLongType": "ListAppsResponse",
+              "responseFullType": "agntcy.identity.platform.v1alpha1.ListAppsResponse",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "GET",
+                      "pattern": "/v1alpha1/apps"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "GetAppsCount",
+              "description": "Get apps count per type.",
+              "requestType": "GetAppsCountRequest",
+              "requestLongType": "GetAppsCountRequest",
+              "requestFullType": "agntcy.identity.platform.v1alpha1.GetAppsCountRequest",
+              "requestStreaming": false,
+              "responseType": "GetAppsCountResponse",
+              "responseLongType": "GetAppsCountResponse",
+              "responseFullType": "agntcy.identity.platform.v1alpha1.GetAppsCountResponse",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "GET",
+                      "pattern": "/v1alpha1/apps/all/count"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "GetApp",
+              "description": "Get App by id",
+              "requestType": "GetAppRequest",
+              "requestLongType": "GetAppRequest",
+              "requestFullType": "agntcy.identity.platform.v1alpha1.GetAppRequest",
+              "requestStreaming": false,
+              "responseType": "App",
+              "responseLongType": "App",
+              "responseFullType": "agntcy.identity.platform.v1alpha1.App",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "GET",
+                      "pattern": "/v1alpha1/apps/{app_id}"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "CreateApp",
+              "description": "Create a new App.",
+              "requestType": "CreateAppRequest",
+              "requestLongType": "CreateAppRequest",
+              "requestFullType": "agntcy.identity.platform.v1alpha1.CreateAppRequest",
+              "requestStreaming": false,
+              "responseType": "App",
+              "responseLongType": "App",
+              "responseFullType": "agntcy.identity.platform.v1alpha1.App",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "POST",
+                      "pattern": "/v1alpha1/apps",
+                      "body": "app"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "UpdateApp",
+              "description": "Update an App.",
+              "requestType": "UpdateAppRequest",
+              "requestLongType": "UpdateAppRequest",
+              "requestFullType": "agntcy.identity.platform.v1alpha1.UpdateAppRequest",
+              "requestStreaming": false,
+              "responseType": "App",
+              "responseLongType": "App",
+              "responseFullType": "agntcy.identity.platform.v1alpha1.App",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "PATCH",
+                      "pattern": "/v1alpha1/apps/{app_id}",
+                      "body": "app"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "DeleteApp",
+              "description": "Delete an existing App.",
+              "requestType": "DeleteAppRequest",
+              "requestLongType": "DeleteAppRequest",
+              "requestFullType": "agntcy.identity.platform.v1alpha1.DeleteAppRequest",
+              "requestStreaming": false,
+              "responseType": "Empty",
+              "responseLongType": ".google.protobuf.Empty",
+              "responseFullType": "google.protobuf.Empty",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "DELETE",
+                      "pattern": "/v1alpha1/apps/{app_id}"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "GetBadge",
+              "description": "Get the current badge issued for the App.",
+              "requestType": "GetBadgeRequest",
+              "requestLongType": "GetBadgeRequest",
+              "requestFullType": "agntcy.identity.platform.v1alpha1.GetBadgeRequest",
+              "requestStreaming": false,
+              "responseType": "Badge",
+              "responseLongType": "Badge",
+              "responseFullType": "agntcy.identity.platform.v1alpha1.Badge",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "GET",
+                      "pattern": "/v1alpha1/apps/{app_id}/badge"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "agntcy/identity/platform/v1alpha1/auth.proto",
+      "description": "",
+      "package": "agntcy.identity.platform.v1alpha1",
+      "hasEnums": false,
+      "hasExtensions": false,
+      "hasMessages": true,
+      "hasServices": false,
+      "enums": [],
+      "extensions": [],
+      "messages": [
+        {
+          "name": "Session",
+          "longName": "Session",
+          "fullName": "agntcy.identity.platform.v1alpha1.Session",
+          "description": "Identity Platform Session",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "id",
+              "description": "A unique identifier for the Session.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_id",
+              "defaultValue": ""
+            },
+            {
+              "name": "owner_app_id",
+              "description": "The owner application ID for which the Session is created.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_owner_app_id",
+              "defaultValue": ""
+            },
+            {
+              "name": "app_id",
+              "description": "The application ID associated with the Session.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_app_id",
+              "defaultValue": ""
+            },
+            {
+              "name": "tool_name",
+              "description": "The tool name associated with the Session.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_tool_name",
+              "defaultValue": ""
+            },
+            {
+              "name": "user_id",
+              "description": "The user ID associated with the Session.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_user_id",
+              "defaultValue": ""
+            },
+            {
+              "name": "access_token",
+              "description": "The access token associated with the Session.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_access_token",
+              "defaultValue": ""
+            },
+            {
+              "name": "code",
+              "description": "The authorization code associated with the Session.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_code",
+              "defaultValue": ""
+            },
+            {
+              "name": "created_at",
+              "description": "The creation time of the Session.",
+              "label": "optional",
+              "type": "int64",
+              "longType": "int64",
+              "fullType": "int64",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_created_at",
+              "defaultValue": ""
+            },
+            {
+              "name": "expires_at",
+              "description": "The expiration time of the Session.",
+              "label": "optional",
+              "type": "int64",
+              "longType": "int64",
+              "fullType": "int64",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_expires_at",
+              "defaultValue": ""
+            }
+          ]
+        }
+      ],
+      "services": []
+    },
+    {
+      "name": "agntcy/identity/platform/v1alpha1/auth_service.proto",
+      "description": "",
+      "package": "agntcy.identity.platform.v1alpha1",
+      "hasEnums": false,
+      "hasExtensions": false,
+      "hasMessages": true,
+      "hasServices": true,
+      "enums": [],
+      "extensions": [],
+      "messages": [
+        {
+          "name": "AppInfoResponse",
+          "longName": "AppInfoResponse",
+          "fullName": "agntcy.identity.platform.v1alpha1.AppInfoResponse",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "app",
+              "description": "The App information.",
+              "label": "",
+              "type": "App",
+              "longType": "App",
+              "fullType": "agntcy.identity.platform.v1alpha1.App",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "AuthorizeRequest",
+          "longName": "AuthorizeRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.AuthorizeRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "app_id",
+              "description": "The app id for which authorization is requested.",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            },
+            {
+              "name": "tool_name",
+              "description": "The MCP Server tool name.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_tool_name",
+              "defaultValue": ""
+            },
+            {
+              "name": "user_token",
+              "description": "The User context in the form of an id or access token.\nMandatory for User Approval Flows.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_user_token",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "AuthorizeResponse",
+          "longName": "AuthorizeResponse",
+          "fullName": "agntcy.identity.platform.v1alpha1.AuthorizeResponse",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "authorization_code",
+              "description": "If authorization is successful, return a code to be used for\nthe token endpoint.",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "ExtAuthzRequest",
+          "longName": "ExtAuthzRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.ExtAuthzRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "access_token",
+              "description": "The access token to be authorized.",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "TokenRequest",
+          "longName": "TokenRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.TokenRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "authorization_code",
+              "description": "Pass the code received from the authorization endpoint.",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "TokenResponse",
+          "longName": "TokenResponse",
+          "fullName": "agntcy.identity.platform.v1alpha1.TokenResponse",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "access_token",
+              "description": "The access token issued to the Agent or MCP Server.",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        }
+      ],
+      "services": [
+        {
+          "name": "AuthService",
+          "longName": "AuthService",
+          "fullName": "agntcy.identity.platform.v1alpha1.AuthService",
+          "description": "AuthService manages auth.",
+          "methods": [
+            {
+              "name": "AppInfo",
+              "description": "App info endpoint",
+              "requestType": "Empty",
+              "requestLongType": ".google.protobuf.Empty",
+              "requestFullType": "google.protobuf.Empty",
+              "requestStreaming": false,
+              "responseType": "AppInfoResponse",
+              "responseLongType": "AppInfoResponse",
+              "responseFullType": "agntcy.identity.platform.v1alpha1.AppInfoResponse",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "GET",
+                      "pattern": "/v1alpha1/auth/app_info"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Authorize",
+              "description": "Authorize a request from an Agent or MCP Server",
+              "requestType": "AuthorizeRequest",
+              "requestLongType": "AuthorizeRequest",
+              "requestFullType": "agntcy.identity.platform.v1alpha1.AuthorizeRequest",
+              "requestStreaming": false,
+              "responseType": "AuthorizeResponse",
+              "responseLongType": "AuthorizeResponse",
+              "responseFullType": "agntcy.identity.platform.v1alpha1.AuthorizeResponse",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "GET",
+                      "pattern": "/v1alpha1/auth/authorize"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Token",
+              "description": "Request token for an Agent or MCP Server",
+              "requestType": "TokenRequest",
+              "requestLongType": "TokenRequest",
+              "requestFullType": "agntcy.identity.platform.v1alpha1.TokenRequest",
+              "requestStreaming": false,
+              "responseType": "TokenResponse",
+              "responseLongType": "TokenResponse",
+              "responseFullType": "agntcy.identity.platform.v1alpha1.TokenResponse",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "POST",
+                      "pattern": "/v1alpha1/auth/token"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "ExtAuthz",
+              "description": "Handle external authorization requests",
+              "requestType": "ExtAuthzRequest",
+              "requestLongType": "ExtAuthzRequest",
+              "requestFullType": "agntcy.identity.platform.v1alpha1.ExtAuthzRequest",
+              "requestStreaming": false,
+              "responseType": "Empty",
+              "responseLongType": ".google.protobuf.Empty",
+              "responseFullType": "google.protobuf.Empty",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "POST",
+                      "pattern": "/v1alpha1/auth/ext_authz"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "agntcy/identity/platform/v1alpha1/badge_service.proto",
       "description": "",
       "package": "agntcy.identity.platform.v1alpha1",
@@ -1682,6 +1622,197 @@
                       "method": "POST",
                       "pattern": "/v1alpha1/badges/verify",
                       "body": "*"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "agntcy/identity/platform/v1alpha1/device.proto",
+      "description": "",
+      "package": "agntcy.identity.platform.v1alpha1",
+      "hasEnums": false,
+      "hasExtensions": false,
+      "hasMessages": true,
+      "hasServices": false,
+      "enums": [],
+      "extensions": [],
+      "messages": [
+        {
+          "name": "Device",
+          "longName": "Device",
+          "fullName": "agntcy.identity.platform.v1alpha1.Device",
+          "description": "Devices used for user approval",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "id",
+              "description": "A unique identifier for the Device.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_id",
+              "defaultValue": ""
+            },
+            {
+              "name": "user_id",
+              "description": "User ID associated with the Device.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_user_id",
+              "defaultValue": ""
+            },
+            {
+              "name": "subscription_token",
+              "description": "Subscription Token for the Device.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_subscription_token",
+              "defaultValue": ""
+            }
+          ]
+        }
+      ],
+      "services": []
+    },
+    {
+      "name": "agntcy/identity/platform/v1alpha1/device_service.proto",
+      "description": "",
+      "package": "agntcy.identity.platform.v1alpha1",
+      "hasEnums": false,
+      "hasExtensions": false,
+      "hasMessages": true,
+      "hasServices": true,
+      "enums": [],
+      "extensions": [],
+      "messages": [
+        {
+          "name": "AddDeviceRequest",
+          "longName": "AddDeviceRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.AddDeviceRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "device",
+              "description": "The device information to register.",
+              "label": "",
+              "type": "Device",
+              "longType": "Device",
+              "fullType": "agntcy.identity.platform.v1alpha1.Device",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "RegisterDeviceRequest",
+          "longName": "RegisterDeviceRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.RegisterDeviceRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "device_id",
+              "description": "The unique identifier for the device to register.",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            },
+            {
+              "name": "device",
+              "description": "The device information to register.",
+              "label": "",
+              "type": "Device",
+              "longType": "Device",
+              "fullType": "agntcy.identity.platform.v1alpha1.Device",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        }
+      ],
+      "services": [
+        {
+          "name": "DeviceService",
+          "longName": "DeviceService",
+          "fullName": "agntcy.identity.platform.v1alpha1.DeviceService",
+          "description": "DeviceService manages device.",
+          "methods": [
+            {
+              "name": "AddDevice",
+              "description": "Add new device for approval flow",
+              "requestType": "AddDeviceRequest",
+              "requestLongType": "AddDeviceRequest",
+              "requestFullType": "agntcy.identity.platform.v1alpha1.AddDeviceRequest",
+              "requestStreaming": false,
+              "responseType": "Device",
+              "responseLongType": "Device",
+              "responseFullType": "agntcy.identity.platform.v1alpha1.Device",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "POST",
+                      "pattern": "/v1alpha1/device",
+                      "body": "device"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "RegisterDevice",
+              "description": "Add new device for approval flow",
+              "requestType": "RegisterDeviceRequest",
+              "requestLongType": "RegisterDeviceRequest",
+              "requestFullType": "agntcy.identity.platform.v1alpha1.RegisterDeviceRequest",
+              "requestStreaming": false,
+              "responseType": "Empty",
+              "responseLongType": ".google.protobuf.Empty",
+              "responseFullType": "google.protobuf.Empty",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "POST",
+                      "pattern": "/v1alpha1/device/{device_id}",
+                      "body": "device"
                     }
                   ]
                 }

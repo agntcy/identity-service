@@ -14,7 +14,7 @@ import {Button, toast, Tooltip, Typography} from '@outshift/spark-design';
 import {validateForm} from '@/lib/utils';
 import {IconButton} from '@mui/material';
 import {InfoIcon} from 'lucide-react';
-import {VerifyIdentityInfo} from './steps/verify-identity-info';
+import {VerifyIdentityForm} from './steps/verify-identity-form';
 import {VerifyIdentityFormValues, VerifyIdentitySchema} from '@/schemas/verify-identity-schema';
 import {useVerifyBadge} from '@/mutations/badge';
 import {VerificationResults} from './steps/verification-results';
@@ -65,7 +65,7 @@ const FormStepperComponent = () => {
     });
     methods.reset();
     methods.resetMetadata();
-    methods.goTo('uploadBadge');
+    methods.goTo('verifyIdentityForm');
   }, [form, methods]);
 
   const handleVerifyBadge = useCallback(() => {
@@ -95,7 +95,7 @@ const FormStepperComponent = () => {
   }, [form]);
 
   const onSubmit = useCallback(() => {
-    if (methods.current.id === 'uploadBadge') {
+    if (methods.current.id === 'verifyIdentityForm') {
       return handleVerifyBadge();
     }
     // if (methods.current.id === 'registerAgenticService') {
@@ -108,7 +108,7 @@ const FormStepperComponent = () => {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <StepperPanel className="w-full">
-            <Accordion type="single" collapsible className="w-full" defaultValue={methods.get('uploadBadge').id} value={methods.current.id}>
+            <Accordion type="single" collapsible className="w-full" defaultValue={methods.get('verifyIdentityForm').id} value={methods.current.id}>
               {methods.all.map((step) => {
                 return (
                   <div className="flex gap-2 items-top -ml-1" key={step.id}>
@@ -122,7 +122,7 @@ const FormStepperComponent = () => {
                             <Typography variant="h6" fontSize={18} sx={(theme) => ({color: theme.palette.vars.baseTextStrong})}>
                               {step.title}
                             </Typography>
-                            {step.id === 'uploadBadge' && (
+                            {step.id === 'verifyIdentityForm' && (
                               <Tooltip title="JOSE envelope" arrow placement="top">
                                 <IconButton
                                   sx={(theme) => ({
@@ -140,8 +140,8 @@ const FormStepperComponent = () => {
                         </div>
                       </AccordionTrigger>
                       <AccordionContent>
-                        {step.id === 'uploadBadge' ? (
-                          <VerifyIdentityInfo isLoading={isLoading} />
+                        {step.id === 'verifyIdentityForm' ? (
+                          <VerifyIdentityForm isLoading={isLoading} />
                         ) : (
                           step.id === 'verficationResults' && <VerificationResults />
                         )}

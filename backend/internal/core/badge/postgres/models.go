@@ -25,6 +25,7 @@ type Badge struct {
 	ExpirationDate    string
 	CredentialSchema  []*CredentialSchema `gorm:"foreignKey:VerifiableCredentialID"`
 	Proof             *types.Proof        `gorm:"embedded;embeddedPrefix:proof_"`
+	TenantID          string              `gorm:"not null;type:varchar(256);index"`
 	AppID             string
 	App               app.App
 }
@@ -71,7 +72,7 @@ func (c *CredentialSchema) ToCoreType() *types.CredentialSchema {
 	}
 }
 
-func newBadgeModel(src *types.Badge) *Badge {
+func newBadgeModel(src *types.Badge, tenantID string) *Badge {
 	sub, err := json.Marshal(src.CredentialSubject)
 	if err != nil {
 		log.Warn(err)
@@ -90,8 +91,9 @@ func newBadgeModel(src *types.Badge) *Badge {
 			src.CredentialSchema,
 			newCredentialSchemaModel,
 		),
-		Proof: src.Proof,
-		AppID: src.AppID,
+		Proof:    src.Proof,
+		TenantID: tenantID,
+		AppID:    src.AppID,
 	}
 }
 

@@ -1,8 +1,3 @@
-/**
- * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
- * SPDX-License-Identifier: Apache-2.0
- */
-
 /* eslint-disable */
 /* tslint:disable */
 // @ts-nocheck
@@ -16,6 +11,26 @@
  */
 
 export interface PolicyServiceCreateRuleBody {
+  /** A human-readable name for the Rule. */
+  name?: string;
+  /** A human-readable description for the Rule. */
+  description?: string;
+  /** The tasks that this Rule applies to. */
+  tasks?: string[];
+  /** Need User Approval for this Rule. */
+  needsApproval?: boolean;
+}
+
+export interface PolicyServiceUpdatePolicyBody {
+  /** A human-readable name for the Policy. */
+  name?: string;
+  /** A human-readable description for the Policy. */
+  description?: string;
+  /** The requester application that this policy applies to. */
+  assignedTo?: string;
+}
+
+export interface PolicyServiceUpdateRuleBody {
   /** A human-readable name for the Rule. */
   name?: string;
   /** A human-readable description for the Rule. */
@@ -207,7 +222,7 @@ export interface V1Alpha1Policy {
   name?: string;
   /** A human-readable description for the Policy. */
   description?: string;
-  /** The requester application that this Rule applies to. */
+  /** The requester application that this Policy applies to. */
   assignedTo?: string;
   /** All the rules that apply to this Policy. */
   rules?: V1Alpha1Rule[];
@@ -464,11 +479,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @summary Update Policy
      * @request PATCH:/v1alpha1/policies/{policyId}
      */
-    updatePolicy: (policyId: string, policy: V1Alpha1Policy, params: RequestParams = {}) =>
+    updatePolicy: (policyId: string, body: PolicyServiceUpdatePolicyBody, params: RequestParams = {}) =>
       this.request<V1Alpha1Policy, RpcStatus>({
         path: `/v1alpha1/policies/${policyId}`,
         method: 'PATCH',
-        body: policy,
+        body: body,
         type: ContentType.Json,
         format: 'json',
         ...params
@@ -566,11 +581,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @summary Update Rule
      * @request PATCH:/v1alpha1/policies/{policyId}/rules/{ruleId}
      */
-    updateRule: (policyId: string, ruleId: string, rule: V1Alpha1Rule, params: RequestParams = {}) =>
+    updateRule: (policyId: string, ruleId: string, body: PolicyServiceUpdateRuleBody, params: RequestParams = {}) =>
       this.request<V1Alpha1Rule, RpcStatus>({
         path: `/v1alpha1/policies/${policyId}/rules/${ruleId}`,
         method: 'PATCH',
-        body: rule,
+        body: body,
         type: ContentType.Json,
         format: 'json',
         ...params

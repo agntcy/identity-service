@@ -5,13 +5,13 @@
 
 import {create} from 'zustand';
 
-type IdentityProviderStore = {
+type SettingsStore = {
   isEmptyIdp: boolean;
   setIsEmptyIdp: (value: boolean) => void;
 };
 
-export const useIdentityProviderStore = create<IdentityProviderStore>(
-  (set): IdentityProviderStore => ({
+export const useSettingsStore = create<SettingsStore>(
+  (set): SettingsStore => ({
     isEmptyIdp: false,
     setIsEmptyIdp: (value: boolean) => set(() => ({isEmptyIdp: value}))
   })

@@ -1,8 +1,3 @@
-/**
- * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
- * SPDX-License-Identifier: Apache-2.0
- */
-
 /* eslint-disable */
 /* tslint:disable */
 // @ts-nocheck
@@ -188,6 +183,38 @@ export interface V1Alpha1AppTypeCountEntry {
   value?: string;
 }
 
+export interface V1Alpha1Badge {
+  /** [here]: https://www.w3.org/TR/vc-data-model/ */
+  verifiableCredential?: V1Alpha1VerifiableCredential;
+  appId?: string;
+}
+
+/**
+ * BadgeClaims represents the content of a Badge VC defined [here]
+ * [here]: https://spec.identity.agntcy.org/docs/vc/intro/
+ */
+export interface V1Alpha1BadgeClaims {
+  /**
+   * The ID as defined [here]
+   * [here]: https://www.w3.org/TR/vc-data-model/#credential-subject
+   */
+  id?: string;
+  /** The content of the badge */
+  badge?: string;
+}
+
+/**
+ * CredentialSchema represents the credentialSchema property of a Verifiable Credential.
+ * more information can be found [here]
+ * [here]: https://www.w3.org/TR/vc-data-model-2.0/#data-schemas
+ */
+export interface V1Alpha1CredentialSchema {
+  /** Type specifies the type of the file */
+  type?: string;
+  /** The URL identifying the schema file */
+  id?: string;
+}
+
 export interface V1Alpha1GetAppsCountResponse {
   /** The apps count per app type */
   counts?: V1Alpha1AppTypeCountEntry[];
@@ -219,6 +246,51 @@ export interface V1Alpha1PagedResponse {
    * @format int32
    */
   size?: number;
+}
+
+/**
+ * A data integrity proof provides information about the proof mechanism,
+ * parameters required to verify that proof, and the proof value itself.
+ */
+export interface V1Alpha1Proof {
+  /** The type of the proof */
+  type?: string;
+  /** The proof purpose */
+  proofPurpose?: string;
+  /** The proof value */
+  proofValue?: string;
+}
+
+/**
+ * DataModel represents the W3C Verifiable Credential Data Model defined [here]
+ * [here]: https://www.w3.org/TR/vc-data-model/
+ */
+export interface V1Alpha1VerifiableCredential {
+  /** https://www.w3.org/TR/vc-data-model/#contexts */
+  context?: string[];
+  /** https://www.w3.org/TR/vc-data-model/#dfn-type */
+  type?: string[];
+  /** https://www.w3.org/TR/vc-data-model/#issuer */
+  issuer?: string;
+  /**
+   * https://www.w3.org/TR/vc-data-model/#credential-subject
+   * [here]: https://spec.identity.agntcy.org/docs/vc/intro/
+   */
+  credentialSubject?: V1Alpha1BadgeClaims;
+  /** https://www.w3.org/TR/vc-data-model/#identifiers */
+  id?: string;
+  /** https://www.w3.org/TR/vc-data-model/#issuance-date */
+  issuanceDate?: string;
+  /** https://www.w3.org/TR/vc-data-model/#expiration */
+  expirationDate?: string;
+  /** https://www.w3.org/TR/vc-data-model-2.0/#data-schemas */
+  credentialSchema?: V1Alpha1CredentialSchema[];
+  /**
+   * https://w3id.org/security#proof
+   * A data integrity proof provides information about the proof mechanism,
+   * parameters required to verify that proof, and the proof value itself.
+   */
+  proof?: V1Alpha1Proof;
 }
 
 import type {AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType} from 'axios';
@@ -381,9 +453,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
          *  - APP_TYPE_AGENT_A2A: Agent A2A App Type.
          *  - APP_TYPE_AGENT_OASF: Agent OASF App Type.
          *  - APP_TYPE_MCP_SERVER: Agent MCP Server App Type.
-         * @default "APP_TYPE_UNSPECIFIED"
          */
-        type?: 'APP_TYPE_UNSPECIFIED' | 'APP_TYPE_AGENT_A2A' | 'APP_TYPE_AGENT_OASF' | 'APP_TYPE_MCP_SERVER';
+        types?: ('APP_TYPE_UNSPECIFIED' | 'APP_TYPE_AGENT_A2A' | 'APP_TYPE_AGENT_OASF' | 'APP_TYPE_MCP_SERVER')[];
       },
       params: RequestParams = {}
     ) =>
@@ -475,6 +546,22 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         method: 'PATCH',
         body: app,
         type: ContentType.Json,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags App
+     * @name GetAppBadge
+     * @summary Get the current badge issued for the App
+     * @request GET:/v1alpha1/apps/{appId}/badge
+     */
+    getAppBadge: (appId: string, params: RequestParams = {}) =>
+      this.request<V1Alpha1Badge, RpcStatus>({
+        path: `/v1alpha1/apps/${appId}/badge`,
+        method: 'GET',
         format: 'json',
         ...params
       })

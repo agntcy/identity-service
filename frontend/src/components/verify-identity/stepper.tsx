@@ -10,7 +10,7 @@ import {z} from 'zod';
 export const {StepperProvider, StepperControls, StepperNavigation, StepperStep, StepperTitle, StepperDescription, StepperPanel, useStepper} =
   defineStepper(
     {
-      id: 'uploadBadge',
+      id: 'verifyIdentityForm',
       title: 'Upload Badge',
       description: 'Upload your badge to verify the identity',
       schema: VerifyIdentitySchema

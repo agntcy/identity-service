@@ -11,4 +11,5 @@ import (
 
 type Repository interface {
 	Create(ctx context.Context, badge *types.Badge) error
+	GetLatestByAppID(ctx context.Context, appID string) (*types.Badge, error)
 }
