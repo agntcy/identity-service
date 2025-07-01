@@ -114,7 +114,7 @@ message ListAppsRequest {
   optional string query = 3;
 
   // The app type filter
-  optional AppType type = 4;
+  repeated AppType types = 4;
 }
 
 message CreateAppRequest {

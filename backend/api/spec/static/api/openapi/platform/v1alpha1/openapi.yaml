@@ -42,17 +42,19 @@ paths:
                   description: The search query
                   schema:
                     type: string
-                - name: type
+                - name: types
                   in: query
                   description: The app type filter
                   schema:
-                    enum:
-                        - APP_TYPE_UNSPECIFIED
-                        - APP_TYPE_AGENT_A2A
-                        - APP_TYPE_AGENT_OASF
-                        - APP_TYPE_MCP_SERVER
-                    type: string
-                    format: enum
+                    type: array
+                    items:
+                        enum:
+                            - APP_TYPE_UNSPECIFIED
+                            - APP_TYPE_AGENT_A2A
+                            - APP_TYPE_AGENT_OASF
+                            - APP_TYPE_MCP_SERVER
+                        type: string
+                        format: enum
             responses:
                 "200":
                     description: OK

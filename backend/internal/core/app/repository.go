@@ -23,7 +23,7 @@ type Repository interface {
 		ctx context.Context,
 		paginationFilter pagination.PaginationFilter,
 		query *string,
-		appType *types.AppType,
+		appTypes []types.AppType,
 	) (*pagination.Pageable[types.App], error)
 	GetAppsByID(ctx context.Context, ids []string) ([]*types.App, error)
 }
