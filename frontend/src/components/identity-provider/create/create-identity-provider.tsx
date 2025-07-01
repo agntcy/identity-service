@@ -84,7 +84,7 @@ export const CreateIdentityProvider = () => {
       };
     } else if (values.provider === IdpType.IDP_TYPE_OKTA) {
       data.oktaIdpSettings = {
-        orgUrl: values.orgUrl,
+        orgUrl: values.orgUrl?.replace(/\/$/, ''),
         clientId: values.clientId,
         privateKey: values.privateKey
       };

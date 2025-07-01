@@ -15,7 +15,7 @@ import {SecureRoute} from '@/components/router/secure-route';
 import {Loading} from '@/components/ui/loading';
 import {BannerProvider} from '@/providers/banner-provider/banner-provider';
 import {SettingsProvider} from '@/providers/settings-provider/settings-provider';
-import {useSettingsStore} from '@/store';
+import {useFeatureFlagsStore, useSettingsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
 
 const Welcome = React.lazy(() => import('@/pages/welcome/welcome'));
@@ -94,6 +94,12 @@ export const useRoutes = () => {
     }))
   );
 
+  const {isTbacEnable} = useFeatureFlagsStore(
+    useShallow((store) => ({
+      isTbacEnable: store.featureFlags.isTbacEnable
+    }))
+  );
+
   const routes = useMemo<Route[]>(() => {
     return [
       {
@@ -138,6 +144,7 @@ export const useRoutes = () => {
       },
       {
         path: PATHS.accessPolicies.base,
+        disabled: !isTbacEnable,
         children: [
           {
             index: true,
@@ -206,7 +213,7 @@ export const useRoutes = () => {
         ]
       }
     ];
-  }, [isEmptyIdp]);
+  }, [isEmptyIdp, isTbacEnable]);
 
   const removeDisabledRoutes = useCallback((routes: Route[]): Route[] => {
     return routes

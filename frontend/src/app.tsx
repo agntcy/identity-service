@@ -12,6 +12,7 @@ import AuthProvider from './providers/auth-provider/auth-provider';
 import {ThemeProvider} from './providers/theme-provider/theme-provider';
 import {ApiProvider} from './providers/api-provider/api-provider';
 import {QueryProvider} from './providers/query-provider/query-provider';
+import {FeatureFlagsProvider} from './providers/feature-flags-provider/feature-flags-provider';
 
 const App = () => {
   return (
@@ -22,7 +23,9 @@ const App = () => {
             <ApiProvider>
               <QueryProvider>
                 <Toaster offset={{top: '64px', right: '16px'}} expand={false} duration={3000} />
-                <Router />
+                <FeatureFlagsProvider>
+                  <Router />
+                </FeatureFlagsProvider>
               </QueryProvider>
             </ApiProvider>
           </AuthProvider>

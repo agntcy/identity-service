@@ -16,7 +16,18 @@ import {OverflowTooltip, Tooltip, TooltipProps} from '@outshift/spark-design';
 import SettingsIcon from '@/assets/sidebar/settings.svg?react';
 import AgenticServicesLogo from '@/assets/sidebar/agentic-services.svg?react';
 import AccessPoliciesLogo from '@/assets/sidebar/access-policies.svg?react';
+import {useFeatureFlagsStore} from '@/store';
+import {useShallow} from 'zustand/react/shallow';
 import '@/styles/side-nav.css';
+
+interface SideNavLinkItem {
+  href: string;
+  label: ReactNode;
+  icon: ReactNode;
+  description?: ReactNode;
+  disabled?: boolean;
+  onClick?: () => void;
+}
 
 export const SideNav: React.FC<{isCollapsed?: boolean; onChangeCollapsed?: (value?: boolean) => void}> = ({isCollapsed, onChangeCollapsed}) => {
   const [isOrgOpen, setIsOrgOpen] = useState(false);
@@ -24,14 +35,14 @@ export const SideNav: React.FC<{isCollapsed?: boolean; onChangeCollapsed?: (valu
   const theme = useTheme();
   const {authInfo} = useAuth();
 
-  const sideNavLinks: {
-    href: string;
-    label: ReactNode;
-    icon: ReactNode;
-    description?: ReactNode;
-    onClick?: () => void;
-  }[] = useMemo(() => {
-    return [
+  const {isTbacEnable} = useFeatureFlagsStore(
+    useShallow((store) => ({
+      isTbacEnable: store.featureFlags.isTbacEnable
+    }))
+  );
+
+  const sideNavLinks: SideNavLinkItem[] = useMemo(() => {
+    const temp: SideNavLinkItem[] = [
       {
         href: PATHS.dashboard,
         label: 'Dashboard',
@@ -45,7 +56,8 @@ export const SideNav: React.FC<{isCollapsed?: boolean; onChangeCollapsed?: (valu
       {
         href: PATHS.accessPolicies.base,
         label: 'Access Policies',
-        icon: <AccessPoliciesLogo className="w-4 h-4" />
+        icon: <AccessPoliciesLogo className="w-4 h-4" />,
+        disabled: !isTbacEnable
       },
       {
         href: PATHS.settings.base,
@@ -53,7 +65,8 @@ export const SideNav: React.FC<{isCollapsed?: boolean; onChangeCollapsed?: (valu
         icon: <SettingsIcon className="w-4 h-4" />
       }
     ];
-  }, []);
+    return temp.filter((link) => !link.disabled);
+  }, [isTbacEnable]);
 
   const location = useLocation();
   const currentPathName = location.pathname;
