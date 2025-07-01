@@ -7,8 +7,6 @@ on:
   pull_request:
     branches: ["main"]
 
-  push:
-    branches: ["PYRA-280-enable-blackduck-scan-on-pyramid-platform"] 
   workflow_dispatch:
 
 
