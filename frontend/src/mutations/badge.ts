@@ -50,6 +50,8 @@ export const useIssueBadge = ({callbacks}: PropsSetIdentityBadge) => {
     mutationFn: ({id, data}: {id: string; data: IssueBadgeBody}) => BadgeAPI.issueBadge(id, data),
     onSettled: async () => {
       await queryClient.invalidateQueries({queryKey: ['get-agentic-services']});
+      await queryClient.invalidateQueries({queryKey: ['get-agentic-service']});
+      await queryClient.invalidateQueries({queryKey: ['get-agentic-service-badge']});
     },
     onError: () => {
       if (callbacks?.onError) {

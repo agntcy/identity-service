@@ -116,7 +116,7 @@ export const BadgeModalForm = ({
   }, [app.type, form]);
 
   return (
-    <Modal maxWidth="xl" fullWidth {...props}>
+    <Modal maxWidth="lg" fullWidth {...props}>
       <ModalTitle>{title}</ModalTitle>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
@@ -177,7 +177,7 @@ export const BadgeModalForm = ({
             )}
           </ModalContent>
           <ModalActions>
-            <Button onClick={onCancel} variant="tertariary">
+            <Button onClick={onCancel} variant="tertariary" disabled={isLoading} sx={{fontWeight: '600 !important'}}>
               Cancel
             </Button>
             <Button type="submit" disabled={isLoading || !form.formState.isValid} loading={isLoading} loadingPosition="start">

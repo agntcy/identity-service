@@ -5,14 +5,19 @@
 
 import {InfoAgenticService} from '@/components/agentic-services/info/info-agentic-service';
 import {BasePage} from '@/components/layout/base-page';
+import {BadgeModalForm} from '@/components/shared/badge-modal-form';
 import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-renderer';
 import {useGetAgenticService} from '@/queries';
 import {PATHS} from '@/router/paths';
 import {Button} from '@outshift/spark-design';
 import {IdCardIcon} from 'lucide-react';
+import {useState} from 'react';
 import {useParams} from 'react-router-dom';
 
 const AgenticServiceInfo: React.FC = () => {
+  const [showReissueBadge, setShowReissueBadge] = useState<boolean>(false);
+  const [showBadgeForm, setShowBadgeForm] = useState<boolean>(false);
+
   const {id} = useParams<{id: string}>();
 
   const {data, isLoading, isFetching, error, isError, refetch} = useGetAgenticService(id);
@@ -40,9 +45,18 @@ const AgenticServiceInfo: React.FC = () => {
             <Button variant="secondary" onClick={() => {}} sx={{fontWeight: '600 !important'}}>
               Update
             </Button>
-            <Button onClick={() => {}} startIcon={<IdCardIcon className="w-4 h-4" />} variant="primary" sx={{fontWeight: '600 !important'}}>
-              Re-Issue Badge
-            </Button>
+            {showReissueBadge && (
+              <Button
+                onClick={() => {
+                  setShowBadgeForm(true);
+                }}
+                startIcon={<IdCardIcon className="w-4 h-4" />}
+                variant="primary"
+                sx={{fontWeight: '600 !important'}}
+              >
+                Re-Issue Badge
+              </Button>
+            )}
           </div>
         )
       }
@@ -61,7 +75,23 @@ const AgenticServiceInfo: React.FC = () => {
           actionTitle: 'Retry'
         }}
       >
-        <InfoAgenticService app={data} />
+        <InfoAgenticService app={data} onChangeReissueBadge={(value) => setShowReissueBadge(value)} />
+        {data && (
+          <BadgeModalForm
+            app={data}
+            open={showBadgeForm}
+            onClose={() => {
+              setShowBadgeForm(false);
+            }}
+            onCancel={() => {
+              setShowBadgeForm(false);
+            }}
+            onBadgeCreated={() => {
+              setShowBadgeForm(false);
+            }}
+            navigateTo={false}
+          />
+        )}
       </ConditionalQueryRenderer>
     </BasePage>
   );

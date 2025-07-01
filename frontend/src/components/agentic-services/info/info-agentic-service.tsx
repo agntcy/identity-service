@@ -18,17 +18,19 @@ import {
   toast,
   Typography
 } from '@outshift/spark-design';
-import {useCallback, useMemo, useState} from 'react';
+import {useCallback, useEffect, useMemo, useState} from 'react';
 import {App} from '@/types/api/app';
 import KeyValue, {KeyValuePair} from '@/components/ui/key-value';
 import {AgenticServiceType} from '@/components/shared/agentic-service-type';
-import {Badge} from '@/types/api/badge';
 import {BadgeModalForm} from '@/components/shared/badge-modal-form';
+import {useGetAgenticServiceBadge} from '@/queries';
+import {LoaderRelative} from '@/components/ui/loading';
 
-export const InfoAgenticService = ({app}: {app?: App}) => {
-  const [badge, setBadge] = useState<Badge | undefined>(undefined);
+export const InfoAgenticService = ({app, onChangeReissueBadge}: {app?: App; onChangeReissueBadge?: (value: boolean) => void}) => {
   const [showBadgeForm, setShowBadgeForm] = useState<boolean>(false);
   const [showBadge, setShowBadge] = useState<boolean>(false);
+
+  const {data, isLoading, isError} = useGetAgenticServiceBadge(app?.id);
 
   const keyValuePairs = useMemo(() => {
     const temp: KeyValuePair[] = [
@@ -49,7 +51,7 @@ export const InfoAgenticService = ({app}: {app?: App}) => {
   }, [app?.description, app?.name, app?.type]);
 
   const handleDownloadBadge = useCallback(() => {
-    if (!badge?.verifiableCredential) {
+    if (!data?.verifiableCredential) {
       toast({
         title: 'Error',
         description: 'No badge data available to download.',
@@ -57,11 +59,11 @@ export const InfoAgenticService = ({app}: {app?: App}) => {
       });
       return;
     }
-    const blob = new Blob([JSON.stringify(badge.verifiableCredential, null, 2)], {type: 'application/json'});
+    const blob = new Blob([JSON.stringify(data.verifiableCredential, null, 2)], {type: 'application/json'});
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `badge-${badge?.verifiableCredential.id || 'unknown'}.json`;
+    link.download = `badge-${data?.verifiableCredential.id || 'unknown'}.json`;
     link.click();
     URL.revokeObjectURL(url);
     toast({
@@ -69,7 +71,23 @@ export const InfoAgenticService = ({app}: {app?: App}) => {
       description: 'Your badge verifiable credential is being downloaded.',
       type: 'success'
     });
-  }, [badge?.verifiableCredential]);
+  }, [data?.verifiableCredential]);
+
+  useEffect(() => {
+    if (data?.verifiableCredential?.id) {
+      onChangeReissueBadge?.(true);
+    }
+  }, [data, onChangeReissueBadge]);
+
+  useEffect(() => {
+    if (isError && !isLoading && !data?.verifiableCredential?.id) {
+      toast({
+        title: 'Information',
+        description: 'No badge available for this agentic service.',
+        type: 'warning'
+      });
+    }
+  }, [data?.verifiableCredential?.id, isError, isLoading]);
 
   return (
     <>
@@ -123,7 +141,9 @@ export const InfoAgenticService = ({app}: {app?: App}) => {
         </div>
         <div className="w-full">
           <Card variant="secondary" className="h-full flex flex-col justify-center">
-            {!badge ? (
+            {isLoading ? (
+              <LoaderRelative />
+            ) : !data?.verifiableCredential ? (
               <EmptyState
                 size={GeneralSize.Medium}
                 title="No Badge"
@@ -165,7 +185,7 @@ export const InfoAgenticService = ({app}: {app?: App}) => {
                     containerProps={{maxWidth: '50vw'}}
                     showLineNumbers
                     wrapLongLines
-                    text={JSON.stringify(badge.verifiableCredential, null, 2)}
+                    text={JSON.stringify(data.verifiableCredential, null, 2)}
                   />
                 </div>
               </div>
@@ -173,7 +193,7 @@ export const InfoAgenticService = ({app}: {app?: App}) => {
           </Card>
         </div>
       </div>
-      {badge && (
+      {data?.verifiableCredential && (
         <Modal open={showBadge} onClose={() => setShowBadge(false)} fullWidth maxWidth="xl">
           <div className="flex justify-between items-start">
             <ModalTitle>Badge</ModalTitle>
@@ -187,7 +207,7 @@ export const InfoAgenticService = ({app}: {app?: App}) => {
             </Button>
           </div>
           <ModalContent>
-            <CodeBlock showLineNumbers wrapLongLines text={JSON.stringify(badge?.verifiableCredential, null, 2)} />
+            <CodeBlock showLineNumbers wrapLongLines text={JSON.stringify(data?.verifiableCredential, null, 2)} />
           </ModalContent>
         </Modal>
       )}
@@ -201,8 +221,7 @@ export const InfoAgenticService = ({app}: {app?: App}) => {
           onCancel={() => {
             setShowBadgeForm(false);
           }}
-          onBadgeCreated={(createdBadge) => {
-            setBadge(createdBadge);
+          onBadgeCreated={() => {
             setShowBadgeForm(false);
           }}
           navigateTo={false}

@@ -7,18 +7,18 @@ import {useGetSettings} from '@/queries';
 import {IdpType} from '@/types/api/settings';
 import {toast} from '@outshift/spark-design';
 import {useEffect, useMemo} from 'react';
-import {useIdentityProviderStore} from '@/store';
+import {useSettingsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
 import {Loading} from '@/components/ui/loading';
 
-export const IdentityProvider = ({children}: {children: React.ReactNode}) => {
+export const SettingsProvider = ({children}: {children: React.ReactNode}) => {
   const {data, isError, isLoading} = useGetSettings();
 
   const isEmptyIdp = useMemo(() => {
     return !data?.issuerSettings || data.issuerSettings.idpType === IdpType.IDP_TYPE_UNSPECIFIED;
   }, [data?.issuerSettings]);
 
-  const {setIsEmptyIdp} = useIdentityProviderStore(
+  const {setIsEmptyIdp} = useSettingsStore(
     useShallow((state) => ({
       setIsEmptyIdp: state.setIsEmptyIdp
     }))

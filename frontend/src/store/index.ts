@@ -5,4 +5,4 @@
 
 export * from './use-theme-store';
 export * from './use-local-store';
-export * from './use-identity-provider-store';
+export * from './use-settings-store';
