@@ -4,9 +4,9 @@
 ---
 name: workflow CI/CD
 on:
-  pull_request:
-    branches: ["main"]
-
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
   workflow_dispatch:
 
 
@@ -188,4 +188,44 @@ jobs:
       # optional
       image-name: "${{ github.event.repository.name }}-ui"
       #image-tag: "" # By default it will get latest docker tag built
-      
+
+
+  # ################################## Helm Publish #################################
+  # #################################################################################
+  call-helm-publish-backend:
+    name: Helm publish Backend
+    needs: [ checkout-unit-tests ]
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@a663a51a68f4158da24f29d7859dabb891586d5c #main
+    with:
+      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      enable-chartmuseum: true
+      enable-private-ecr: false
+      enable-public-ecr: false
+      chart-path: charts/pyramid-backend
+      # override-chart-version: ${{ needs.calculate-tags.outputs.chart_version }}
+      #ecr-public-registry-alias: ${{ vars.ECR_PUBLIC_REGISTRY_ALIAS}}
+    secrets:
+      # GHCR Login for docker build runner
+      ghcr-username: ${{ secrets.GHCR_USERNAME }}
+      ghcr-token: ${{ secrets.GHCR_TOKEN }}
+      vault-approle-role-id: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
+      vault-approle-secret-id: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
+
+  call-helm-publish-ui:
+    name: Helm publish UI
+    needs: [ checkout-unit-tests ]
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@a663a51a68f4158da24f29d7859dabb891586d5c #main
+    with:
+      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      enable-chartmuseum: true
+      enable-private-ecr: false
+      enable-public-ecr: false
+      chart-path: charts/pyramid-ui
+      # override-chart-version: ${{ needs.calculate-tags.outputs.chart_version }}
+      #ecr-public-registry-alias: ${{ vars.ECR_PUBLIC_REGISTRY_ALIAS}}
+    secrets:
+      # GHCR Login for docker build runner
+      ghcr-username: ${{ secrets.GHCR_USERNAME }}
+      ghcr-token: ${{ secrets.GHCR_TOKEN }}
+      vault-approle-role-id: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
+      vault-approle-secret-id: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
