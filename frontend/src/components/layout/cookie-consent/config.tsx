@@ -1,3 +1,8 @@
+/**
+ * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import {show, type CookieConsentConfig} from 'vanilla-cookieconsent';
 
 export const config: CookieConsentConfig = {
