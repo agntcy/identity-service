@@ -1765,7 +1765,8 @@
                   "rules": [
                     {
                       "method": "POST",
-                      "pattern": "/v1alpha1/device/{device_id}"
+                      "pattern": "/v1alpha1/device/{device_id}",
+                      "body": "device"
                     }
                   ]
                 }
