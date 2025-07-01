@@ -7,11 +7,11 @@ import {Card, CardContent} from '@/components/ui/card';
 import {Form, FormControl, FormField, FormItem, FormLabel} from '@/components/ui/form';
 import {Input} from '@/components/ui/input';
 import {validateForm} from '@/lib/utils';
-import {useCreateTenant, useUpdateTenant} from '@/mutations';
+// import {useCreateTenant, useUpdateTenant} from '@/mutations';
 import {PATHS} from '@/router/paths';
 import {OrganizationFormValues, OrganizationSchema} from '@/schemas/organization-schema';
 import {zodResolver} from '@hookform/resolvers/zod';
-import {Button, toast, Typography} from '@outshift/spark-design';
+import {Button, Typography} from '@outshift/spark-design';
 import {useCallback, useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {Link, useNavigate} from 'react-router-dom';
@@ -82,7 +82,7 @@ export const CreateOrganizationForm = () => {
     }
     // setIsLoading(true);
     // createOrganizationMutation.mutate();
-  }, [CreateOrganizationForm, form]);
+  }, [form]);
 
   return (
     <>

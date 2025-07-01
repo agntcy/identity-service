@@ -3,7 +3,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {ApiKey} from '@/types/api/settings';
 import {create} from 'zustand';
 
 type SettingsStore = {
