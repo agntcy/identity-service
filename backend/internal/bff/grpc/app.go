@@ -21,12 +21,17 @@ import (
 const defaultPageSize int32 = 20
 
 type appService struct {
-	appSrv bff.AppService
+	appSrv   bff.AppService
+	badgeSrv bff.BadgeService
 }
 
-func NewAppService(appSrv bff.AppService) identity_platform_sdk_go.AppServiceServer {
+func NewAppService(
+	appSrv bff.AppService,
+	badgeSrv bff.BadgeService,
+) identity_platform_sdk_go.AppServiceServer {
 	return &appService{
-		appSrv: appSrv,
+		appSrv:   appSrv,
+		badgeSrv: badgeSrv,
 	}
 }
 
@@ -111,4 +116,16 @@ func (s *appService) DeleteApp(
 ) (*emptypb.Empty, error) {
 	// This method is not implemented yet.
 	return nil, errutil.Err(nil, "DeleteApp method is not implemented")
+}
+
+func (s *appService) GetBadge(
+	ctx context.Context,
+	in *identity_platform_sdk_go.GetBadgeRequest,
+) (*identity_platform_sdk_go.Badge, error) {
+	badge, err := s.badgeSrv.GetBadge(ctx, in.AppId)
+	if err != nil {
+		return nil, grpcutil.BadRequestError(err)
+	}
+
+	return converters.FromBadge(badge), nil
 }

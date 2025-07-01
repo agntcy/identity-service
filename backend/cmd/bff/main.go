@@ -264,7 +264,7 @@ func main() {
 	)
 
 	register := identity_platform_api.GrpcServiceRegister{
-		AppServiceServer:      bffgrpc.NewAppService(appSrv),
+		AppServiceServer:      bffgrpc.NewAppService(appSrv, badgeSrv),
 		SettingsServiceServer: bffgrpc.NewSettingsService(settingsSrv),
 		BadgeServiceServer:    bffgrpc.NewBadgeService(badgeSrv),
 		AuthServiceServer:     bffgrpc.NewAuthService(authSrv, appSrv),

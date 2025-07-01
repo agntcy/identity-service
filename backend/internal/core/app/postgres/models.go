@@ -10,7 +10,7 @@ import (
 
 type App struct {
 	ID                 uuid.UUID     `gorm:"primaryKey;default:gen_random_uuid()"`
-	TenantID           string        `gorm:"not null;type:varchar(256);"`
+	TenantID           string        `gorm:"not null;type:varchar(256);index"`
 	Name               *string       `gorm:"not null;type:varchar(256);"`
 	Description        *string       `gorm:"not null;type:varchar(256);"`
 	Type               types.AppType `gorm:"not null;type:uint;default:0;"`
