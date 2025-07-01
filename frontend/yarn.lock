@@ -2948,6 +2948,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/qs@npm:^6":
+  version: 6.14.0
+  resolution: "@types/qs@npm:6.14.0"
+  checksum: 10/1909205514d22b3cbc7c2314e2bd8056d5f05dfb21cf4377f0730ee5e338ea19957c41735d5e4806c746176563f50005bbab602d8358432e25d900bdf4970826
+  languageName: node
+  linkType: hard
+
 "@types/react-dom@npm:^18.2.19":
   version: 18.3.7
   resolution: "@types/react-dom@npm:18.3.7"
@@ -5470,6 +5477,7 @@ __metadata:
     "@tanstack/react-query-devtools": "npm:^5.81.2"
     "@tanstack/react-table": "npm:^8.21.3"
     "@types/node": "npm:^22.13.10"
+    "@types/qs": "npm:^6"
     "@types/react": "npm:^18.2.56"
     "@types/react-dom": "npm:^18.2.19"
     "@types/react-router-dom": "npm:^5.3.3"
@@ -5488,6 +5496,7 @@ __metadata:
     lucide-react: "npm:^0.522.0"
     next-themes: "npm:^0.4.6"
     prettier: "npm:^3.5.3"
+    qs: "npm:^6.14.0"
     react: "npm:^18.2.0"
     react-dom: "npm:^18.2.0"
     react-error-boundary: "npm:^5.0.0"
@@ -7650,6 +7659,15 @@ __metadata:
   version: 1.1.3
   resolution: "pvutils@npm:1.1.3"
   checksum: 10/e5201b8f78ece68eae414a938c844bc45fb3f0de298178eed1775a217eedfd897c4346e5e54f410bb4d7466e09ceb262e85f20fd64239b8bb2595f14c52fa95e
+  languageName: node
+  linkType: hard
+
+"qs@npm:^6.14.0":
+  version: 6.14.0
+  resolution: "qs@npm:6.14.0"
+  dependencies:
+    side-channel: "npm:^1.1.0"
+  checksum: 10/a60e49bbd51c935a8a4759e7505677b122e23bf392d6535b8fc31c1e447acba2c901235ecb192764013cd2781723dc1f61978b5fdd93cc31d7043d31cdc01974
   languageName: node
   linkType: hard
 

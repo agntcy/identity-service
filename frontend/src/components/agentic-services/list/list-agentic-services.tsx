@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {useCallback, useState} from 'react';
+import {useCallback, useMemo, useState} from 'react';
 import {ConditionalQueryRenderer} from '../../ui/conditional-query-renderer';
-import {EmptyState, MenuItem, Table, toast, Typography} from '@outshift/spark-design';
+import {EmptyState, MenuItem, SelectNodeType, Table, toast, Typography} from '@outshift/spark-design';
 import {useGetAgenticServices} from '@/queries';
 import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
 import {AgenticServiceColumns} from './agentic-services-columns';
@@ -30,14 +30,43 @@ export const ListAgenticServices = () => {
   const [tempApp, setTempApp] = useState<App | undefined>(undefined);
   const [showBadgeForm, setShowBadgeForm] = useState<boolean>(false);
   const [showActionsModal, setShowActionsModal] = useState<boolean>(false);
+  const [appTypeFilters, setAppTypeFilters] = useState<AppType[]>([
+    AppType.APP_TYPE_AGENT_A2A,
+    AppType.APP_TYPE_AGENT_OASF,
+    AppType.APP_TYPE_MCP_SERVER
+  ]);
 
   const {data, isLoading, isFetching, error, refetch} = useGetAgenticServices({
     page: pagination.pageIndex + 1,
     size: pagination.pageSize,
-    query: query
+    query: query,
+    types: appTypeFilters
   });
 
   const navigate = useNavigate();
+
+  const treeDataTypeFilters: SelectNodeType<AppType>[] = useMemo(() => {
+    return [
+      {
+        value: AppType.APP_TYPE_AGENT_A2A,
+        valueFormatter: () => 'A2A',
+        isSelectable: true,
+        isSelected: true
+      },
+      {
+        value: AppType.APP_TYPE_AGENT_OASF,
+        valueFormatter: () => 'OASF',
+        isSelectable: true,
+        isSelected: true
+      },
+      {
+        value: AppType.APP_TYPE_MCP_SERVER,
+        valueFormatter: () => 'MCP',
+        isSelectable: true,
+        isSelected: true
+      }
+    ];
+  }, []);
 
   const handleQueryChange = useCallback(
     (value: string) => {
@@ -46,6 +75,11 @@ export const ListAgenticServices = () => {
     },
     [setQuery, setPagination]
   );
+
+  const handleTypeFilterChange = useCallback((selectedValues: SelectNodeType<AppType>[]) => {
+    setAppTypeFilters(selectedValues.map((node) => node.value as AppType));
+    setPagination((prev) => ({...prev, pageIndex: 0}));
+  }, []);
 
   const deleteMutation = useDeleteAgenticService({
     callbacks: {
@@ -113,29 +147,8 @@ export const ListAgenticServices = () => {
                   {
                     buttonContent: 'Type',
                     isSearchFieldEnabled: false,
-                    treeData: [
-                      {
-                        value: AppType.APP_TYPE_AGENT_A2A,
-                        valueFormatter: () => 'A2A',
-                        isSelectable: true,
-                        isSelected: true
-                      },
-                      {
-                        value: AppType.APP_TYPE_AGENT_OASF,
-                        valueFormatter: () => 'OASF',
-                        isSelectable: true,
-                        isSelected: true
-                      },
-                      {
-                        value: AppType.APP_TYPE_MCP_SERVER,
-                        valueFormatter: () => 'MCP',
-                        isSelectable: true,
-                        isSelected: true
-                      }
-                    ],
-                    onSelectValues: (selectedValues) => {
-                      console.log('Selected values:', selectedValues);
-                    }
+                    treeData: treeDataTypeFilters,
+                    onSelectValues: handleTypeFilterChange
                   }
                 ]}
               />

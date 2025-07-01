@@ -16,22 +16,22 @@ import {
 } from '@outshift/spark-design';
 import {useEffect} from 'react';
 
-interface CustomDropdownProps
+interface CustomDropdownProps<T>
   extends Omit<
     DropdownAutocompleteTreeProps,
     'flattenedTreeOptions' | 'setSearchText' | 'toggleExpand' | 'updateCheckbox' | 'selectAllNode' | 'searchText'
   > {
-  treeData: SelectNodeType[];
-  onSelectValues?: (selectedValues: SelectNodeType[]) => void;
+  treeData: SelectNodeType<T>[];
+  onSelectValues?: (selectedValues: SelectNodeType<T>[]) => void;
 }
 
-interface FilterSectionProps {
+interface FilterSectionProps<T> {
   searchFieldProps?: SearchFieldProps;
-  dropDowns?: CustomDropdownProps[];
+  dropDowns?: CustomDropdownProps<T>[];
   title?: string;
 }
 
-export const FilterSections = ({title, searchFieldProps, dropDowns}: FilterSectionProps) => {
+export const FilterSections = <T,>({title, searchFieldProps, dropDowns}: FilterSectionProps<T>) => {
   return (
     <Stack marginBottom="16px">
       {title && (
@@ -41,13 +41,13 @@ export const FilterSections = ({title, searchFieldProps, dropDowns}: FilterSecti
       )}
       <Stack direction="row" gap={2} alignItems="center" justifyContent="end">
         {searchFieldProps && <SearchField sx={{'& .MuiInputBase-root': {marginTop: 0, width: '320px', height: '32px'}}} {...searchFieldProps} />}
-        {dropDowns?.map((dropdown, index) => <CustomDropdown key={index} {...dropdown} />)}
+        {dropDowns?.map((dropdown, index) => <CustomDropdown<T> key={index} {...dropdown} />)}
       </Stack>
     </Stack>
   );
 };
 
-const CustomDropdown = ({treeData, onSelectValues, isSearchFieldEnabled, ...props}: CustomDropdownProps) => {
+const CustomDropdown = <T,>({treeData, onSelectValues, isSearchFieldEnabled, ...props}: CustomDropdownProps<T>) => {
   const {flattenedTreeOptions, onSelectAllChange, selectAllNode, selectedValues, setSearchText, toggleExpand, updateCheckbox, searchTextDebounced} =
     useDropdownAutocompleteTree({
       treeData: treeData,

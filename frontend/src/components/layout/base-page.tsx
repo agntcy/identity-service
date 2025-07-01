@@ -91,7 +91,7 @@ export const BasePage = ({
               borderBottom={showBorder ? 1 : 0}
               borderColor="divider"
             >
-              <Box display="flex" justifyContent="space-between" flexWrap="wrap">
+              <Box display="flex" justifyContent="space-between" flexWrap="wrap" alignItems="start">
                 <Box display="flex" flexDirection="column" gap="8px" flexGrow={1}>
                   <Typography variant="h5" component="h1" fontWeight="bold" sx={(theme) => ({color: theme.palette.vars.baseTextStrong})}>
                     {title}
