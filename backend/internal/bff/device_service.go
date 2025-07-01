@@ -17,14 +17,17 @@ type DeviceService interface {
 }
 
 type deviceService struct {
-	deviceRepository devicecore.Repository
+	deviceRepository    devicecore.Repository
+	notificationService NotificationService
 }
 
 func NewDeviceService(
 	deviceRepository devicecore.Repository,
+	notificationService NotificationService,
 ) DeviceService {
 	return &deviceService{
-		deviceRepository: deviceRepository,
+		deviceRepository:    deviceRepository,
+		notificationService: notificationService,
 	}
 }
 
@@ -68,6 +71,14 @@ func (s *deviceService) RegisterDevice(
 		return errutil.Err(
 			err,
 			"failed to get device",
+		)
+	}
+
+	// Try to send a notification about the device registration.
+	if err := s.notificationService.SendNotification(ctx, existingDevice); err != nil {
+		return errutil.Err(
+			err,
+			"failed to send notification for device registration",
 		)
 	}
 

@@ -12,9 +12,8 @@ import (
 	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
 	"github.com/agntcy/identity-platform/internal/pkg/convertutil"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
+	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
 	"github.com/agntcy/identity-platform/pkg/db"
-	"github.com/agntcy/identity-platform/pkg/log"
-	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -133,17 +132,27 @@ func (r *repository) UpdateDevice(
 		)
 	}
 
-	model := newDeviceModel(device)
-	model.ID = uuid.MustParse(device.ID)
+	var existingDevice Device
 
-	log.Debug("Updating device", model.SubscriptionToken)
+	result := r.dbContext.Client().
+		Where("id = ?", device.ID).
+		First(&existingDevice)
+	if result.Error != nil {
+		return nil, errutil.Err(
+			result.Error, "device not found",
+		)
+	}
 
-	result := r.dbContext.Client().Omit("TenantID").Omit("UserID").Save(model)
+	// Update the current device
+	existingDevice.SubscriptionToken = device.SubscriptionToken
+	existingDevice.UserID = ptrutil.Ptr(device.UserID)
+
+	result = r.dbContext.Client().Save(existingDevice)
 	if result.Error != nil {
 		return nil, errutil.Err(
 			result.Error, "there was an error updating the device",
 		)
 	}
 
-	return model.ToCoreType(), nil
+	return existingDevice.ToCoreType(), nil
 }

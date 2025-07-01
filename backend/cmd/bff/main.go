@@ -1,4 +1,4 @@
-// Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+/ Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
 // SPDX-License-Identifier: Apache-2.0
 
 package main
@@ -253,8 +253,14 @@ func main() {
 		oidcAuthenticator,
 	)
 	policySrv := bff.NewPolicyService(appRepository, policyRepository)
+	notificationSrv := bff.NewNotificationService(
+		config.NotificationSubscriber,
+		config.NotificationVapidPublicKey,
+		config.NotificationVapidPrivateKey,
+	)
 	deviceSrv := bff.NewDeviceService(
 		deviceRepository,
+		notificationSrv,
 	)
 
 	register := identity_platform_api.GrpcServiceRegister{
