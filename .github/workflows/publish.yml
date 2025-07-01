@@ -1,0 +1,70 @@
+name: Publish
+on:
+  push:
+    branches:
+      - main
+      - PYRA-292-293-add-helm-publish
+
+permissions:
+  id-token: write 
+  contents: read 
+  packages: write
+
+jobs:
+  checkout:
+    name: checkout
+    runs-on:
+      group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+    container:
+      image:  ${{ vars.SRE_BUILD_IMAGE }}
+      options: --user root
+      credentials:
+        username: ${{ secrets.GHCR_USERNAME }}
+        password: ${{ secrets.GHCR_TOKEN }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@83b7061638ee4956cf7545a6f7efe594e5ad0247 # v3.5.1
+        with:
+          ref: ${{ github.ref }}
+
+
+  # ################################## Helm Publish #################################
+  # #################################################################################
+  call-helm-publish-backend:
+    name: Helm publish Backend
+    needs: [checkout]
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@a663a51a68f4158da24f29d7859dabb891586d5c #main
+    with:
+      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      enable-chartmuseum: true
+      enable-private-ecr: false
+      enable-public-ecr: false
+      chart-path: charts/pyramid-backend
+      # override-chart-version: ${{ needs.calculate-tags.outputs.chart_version }}
+      #ecr-public-registry-alias: ${{ vars.ECR_PUBLIC_REGISTRY_ALIAS}}
+    secrets:
+      # GHCR Login for docker build runner
+      ghcr-username: ${{ secrets.GHCR_USERNAME }}
+      ghcr-token: ${{ secrets.GHCR_TOKEN }}
+      vault-approle-role-id: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
+      vault-approle-secret-id: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
+
+  call-helm-publish-ui:
+    name: Helm publish UI
+    needs: [checkout]
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@a663a51a68f4158da24f29d7859dabb891586d5c #main
+    with:
+      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      enable-chartmuseum: true
+      enable-private-ecr: false
+      enable-public-ecr: false
+      chart-path: charts/pyramid-ui
+      # override-chart-version: ${{ needs.calculate-tags.outputs.chart_version }}
+      #ecr-public-registry-alias: ${{ vars.ECR_PUBLIC_REGISTRY_ALIAS}}
+    secrets:
+      # GHCR Login for docker build runner
+      ghcr-username: ${{ secrets.GHCR_USERNAME }}
+      ghcr-token: ${{ secrets.GHCR_TOKEN }}
+      vault-approle-role-id: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
+      vault-approle-secret-id: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
