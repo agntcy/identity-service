@@ -37,6 +37,10 @@ class IamAPIClass {
     });
   };
 
+  public getTenant = (tenantId: string) => {
+    return this.instance.get<TenantReponse>(`/tenant/${tenantId}`);
+  };
+
   public createTenant = () => {
     return this.instance.post<TenantReponse>('/tenant/user', undefined, {
       params: {

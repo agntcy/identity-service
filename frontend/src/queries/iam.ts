@@ -25,3 +25,14 @@ export const useGetSession = () => {
     }
   });
 };
+
+export const useGetTenant = (tenantId: string) => {
+  return useQuery({
+    queryKey: ['get-tenant', tenantId],
+    queryFn: async () => {
+      const {data} = await IamAPI.getTenant(tenantId);
+      return data;
+    },
+    enabled: !!tenantId
+  });
+};
