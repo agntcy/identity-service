@@ -31,7 +31,10 @@ service DeviceService {
 
   // Add new device for approval flow
   rpc RegisterDevice(RegisterDeviceRequest) returns (google.protobuf.Empty) {
-    option (google.api.http) = {post: "/v1alpha1/device/{device_id}"};
+    option (google.api.http) = {
+      post: "/v1alpha1/device/{device_id}"
+      body: "device"
+    };
 
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       operation_id: "RegisterDevice";
