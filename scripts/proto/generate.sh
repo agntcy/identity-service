@@ -5,7 +5,7 @@
 
 reset_generated_pb_go() {
   (
-    cd ..
+    cd ../..
     pb_files=$(git status --porcelain | grep api/server | sed s/^...// | tr '\n' ' ')
 
     for f in $pb_files; do

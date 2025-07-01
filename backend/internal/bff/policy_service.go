@@ -49,6 +49,19 @@ type PolicyService interface {
 		paginationFilter pagination.PaginationFilter,
 		query *string,
 	) (*pagination.Pageable[policytypes.Rule], error)
+	UpdatePolicy(
+		ctx context.Context,
+		id, name, description, assignedTo string,
+	) (*policytypes.Policy, error)
+	UpdateRule(
+		ctx context.Context,
+		policyID string,
+		ruleID string,
+		name string,
+		description string,
+		taskIDs []string,
+		needsApproval bool,
+	) (*policytypes.Rule, error)
 }
 
 type policyService struct {
@@ -196,6 +209,75 @@ func (s *policyService) ListRules(
 	query *string,
 ) (*pagination.Pageable[policytypes.Rule], error) {
 	return s.policyRepository.GetAllRules(ctx, policyID, paginationFilter, query)
+}
+
+func (s *policyService) UpdatePolicy(
+	ctx context.Context,
+	id string,
+	name string,
+	description string,
+	assignedTo string,
+) (*policytypes.Policy, error) {
+	if name == "" {
+		return nil, errors.New("name cannot be empty")
+	}
+
+	policy, err := s.policyRepository.GetPolicyByID(ctx, id)
+	if err != nil {
+		return nil, errutil.Err(err, "unable to find policy")
+	}
+
+	err = s.validateAppIDs(ctx, assignedTo)
+	if err != nil {
+		return nil, fmt.Errorf("policy is linked to an invalid app %s", assignedTo)
+	}
+
+	policy.Name = name
+	policy.Description = description
+	policy.AssignedTo = assignedTo
+
+	err = s.policyRepository.UpdatePolicy(ctx, policy)
+	if err != nil {
+		return nil, fmt.Errorf("unable to update the policy: %w", err)
+	}
+
+	return policy, nil
+}
+
+func (s *policyService) UpdateRule(
+	ctx context.Context,
+	policyID string,
+	ruleID string,
+	name string,
+	description string,
+	taskIDs []string,
+	needsApproval bool,
+) (*policytypes.Rule, error) {
+	if name == "" {
+		return nil, errors.New("name cannot be empty")
+	}
+
+	rule, err := s.policyRepository.GetRuleByID(ctx, ruleID, policyID)
+	if err != nil {
+		return nil, errutil.Err(err, "unable to find rule")
+	}
+
+	tasks, err := s.validateTasks(ctx, taskIDs)
+	if err != nil {
+		return nil, err
+	}
+
+	rule.Name = name
+	rule.Description = description
+	rule.NeedsApproval = needsApproval
+	rule.Tasks = tasks
+
+	err = s.policyRepository.UpdateRule(ctx, rule)
+	if err != nil {
+		return nil, fmt.Errorf("unable to update the rule: %w", err)
+	}
+
+	return rule, nil
 }
 
 func (s *policyService) validateTasks(ctx context.Context, ids []string) ([]*policytypes.Task, error) {

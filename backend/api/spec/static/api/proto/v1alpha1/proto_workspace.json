@@ -1534,6 +1534,18 @@
               "isoneof": false,
               "oneofdecl": "",
               "defaultValue": ""
+            },
+            {
+              "name": "oasf",
+              "description": "The OASF badge.",
+              "label": "",
+              "type": "IssueOASFBadgeRequest",
+              "longType": "IssueOASFBadgeRequest",
+              "fullType": "agntcy.identity.platform.v1alpha1.IssueOASFBadgeRequest",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
             }
           ]
         },
@@ -1562,6 +1574,30 @@
             {
               "name": "url",
               "description": "",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "IssueOASFBadgeRequest",
+          "longName": "IssueOASFBadgeRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.IssueOASFBadgeRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "schema_base64",
+              "description": "The OASF schema in a base64 encoded format",
               "label": "",
               "type": "string",
               "longType": "string",
@@ -1838,7 +1874,7 @@
             },
             {
               "name": "assigned_to",
-              "description": "The requester application that this Rule applies to.",
+              "description": "The requester application that this Policy applies to.",
               "label": "optional",
               "type": "string",
               "longType": "string",
@@ -2459,7 +2495,7 @@
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
-          "hasOneofs": false,
+          "hasOneofs": true,
           "extensions": [],
           "fields": [
             {
@@ -2475,12 +2511,36 @@
               "defaultValue": ""
             },
             {
-              "name": "policy",
-              "description": "Policy parameters to update.",
+              "name": "name",
+              "description": "A human-readable name for the Policy.",
               "label": "",
-              "type": "Policy",
-              "longType": "Policy",
-              "fullType": "agntcy.identity.platform.v1alpha1.Policy",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            },
+            {
+              "name": "description",
+              "description": "A human-readable description for the Policy.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_description",
+              "defaultValue": ""
+            },
+            {
+              "name": "assigned_to",
+              "description": "The requester application that this policy applies to.",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
               "ismap": false,
               "isoneof": false,
               "oneofdecl": "",
@@ -2495,7 +2555,7 @@
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
-          "hasOneofs": false,
+          "hasOneofs": true,
           "extensions": [],
           "fields": [
             {
@@ -2523,15 +2583,51 @@
               "defaultValue": ""
             },
             {
-              "name": "rule",
-              "description": "Rule parameters to update.",
+              "name": "name",
+              "description": "A human-readable name for the Rule.",
               "label": "",
-              "type": "Rule",
-              "longType": "Rule",
-              "fullType": "agntcy.identity.platform.v1alpha1.Rule",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
               "ismap": false,
               "isoneof": false,
               "oneofdecl": "",
+              "defaultValue": ""
+            },
+            {
+              "name": "description",
+              "description": "A human-readable description for the Rule.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_description",
+              "defaultValue": ""
+            },
+            {
+              "name": "tasks",
+              "description": "The tasks that this Rule applies to.",
+              "label": "repeated",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            },
+            {
+              "name": "needs_approval",
+              "description": "Need User Approval for this Rule.",
+              "label": "optional",
+              "type": "bool",
+              "longType": "bool",
+              "fullType": "bool",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_needs_approval",
               "defaultValue": ""
             }
           ]
@@ -2628,7 +2724,7 @@
                     {
                       "method": "PATCH",
                       "pattern": "/v1alpha1/policies/{policy_id}",
-                      "body": "policy"
+                      "body": "*"
                     }
                   ]
                 }
@@ -2740,7 +2836,7 @@
                     {
                       "method": "PATCH",
                       "pattern": "/v1alpha1/policies/{policy_id}/rules/{rule_id}",
-                      "body": "rule"
+                      "body": "*"
                     }
                   ]
                 }

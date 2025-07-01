@@ -82,16 +82,16 @@ const Dashboard: React.FC = () => {
               <div className="bg-[#FBFCFE] rounded-[8px] flex-col flex justify-center items-center px-20 w-[50%] pt-[40px] pb-[24px]">
                 <div>
                   <Typography variant="h6" textAlign="center">
-                    Create Identities
+                    Register Identity Providers
                   </Typography>
                   <Typography variant="body1" marginTop={2} textAlign="center">
-                    Start adding agents (MCP servers, agents, and A2A) to create and manage identities, apply tool-based access control and policies
-                    effectively.
+                    Register identity provider to create and manage identities for your AI agents and MCP servers, including those supporting
+                    A2A-compatible protocols like Google A2A, with support for policies and access controls.
                   </Typography>
                   <div className="flex justify-center items-center mt-8">
-                    <RouterLink to={PATHS.settings.identityProvider}>
+                    <RouterLink to={PATHS.settings.identityProvider.base}>
                       <Button variant="outlined" sx={{fontWeight: '600 !important'}} startIcon={<PlusIcon className="w-4 h-4" />}>
-                        Create
+                        Register Identity Provider
                       </Button>
                     </RouterLink>
                   </div>

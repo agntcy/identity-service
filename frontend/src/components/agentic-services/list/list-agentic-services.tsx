@@ -3,19 +3,22 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {useState} from 'react';
+import {useCallback, useState} from 'react';
 import {ConditionalQueryRenderer} from '../../ui/conditional-query-renderer';
-import {MenuItem, Table} from '@outshift/spark-design';
-import {useGetAgenticServices, useGetTenants} from '@/queries';
+import {EmptyState, MenuItem, Table, toast, Typography} from '@outshift/spark-design';
+import {useGetAgenticServices} from '@/queries';
 import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
 import {AgenticServiceColumns} from './agentic-services-columns';
 import {Card} from '@/components/ui/card';
-import {Typography} from '@mui/material';
-import {Trash2Icon, UserRoundPlusIcon} from 'lucide-react';
 import {cn} from '@/lib/utils';
-import {useAuth} from '@/hooks';
 import {generatePath, useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
+import {FilterSections} from '@/components/shared/filters-sections';
+import {App, AppType} from '@/types/api/app';
+import {IdCardIcon, Trash2Icon} from 'lucide-react';
+import {ConfirmModal} from '@/components/ui/confirm-modal';
+import {useDeleteAgenticService} from '@/mutations';
+import {BadgeModalForm} from '@/components/shared/badge-modal-form';
 
 export const ListAgenticServices = () => {
   const [pagination, setPagination] = useState<MRT_PaginationState>({
@@ -23,19 +26,58 @@ export const ListAgenticServices = () => {
     pageSize: 10
   });
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
+  const [query, setQuery] = useState<string | undefined>(undefined);
+  const [tempApp, setTempApp] = useState<App | undefined>(undefined);
+  const [showBadgeForm, setShowBadgeForm] = useState<boolean>(false);
+  const [showActionsModal, setShowActionsModal] = useState<boolean>(false);
 
-  const {data, isLoading, isFetching, error, isError, refetch} = useGetAgenticServices();
-  const {authInfo} = useAuth();
+  const {data, isLoading, isFetching, error, refetch} = useGetAgenticServices({
+    page: pagination.pageIndex + 1,
+    size: pagination.pageSize,
+    query: query
+  });
 
   const navigate = useNavigate();
+
+  const handleQueryChange = useCallback(
+    (value: string) => {
+      setQuery(value);
+      setPagination((prev) => ({...prev, pageIndex: 0}));
+    },
+    [setQuery, setPagination]
+  );
+
+  const deleteMutation = useDeleteAgenticService({
+    callbacks: {
+      onSuccess: () => {
+        toast({
+          title: 'Success',
+          description: 'Agentic service deleted successfully.',
+          type: 'success'
+        });
+      },
+      onError: () => {
+        toast({
+          title: 'Error',
+          description: 'An error occurred while deleting the agentic service. Please try again.',
+          type: 'error'
+        });
+      }
+    }
+  });
+
+  const handleClickOnDelete = useCallback(() => {
+    deleteMutation.mutate(tempApp?.id || '');
+    setTempApp(undefined);
+  }, [deleteMutation, tempApp]);
 
   return (
     <>
       <ConditionalQueryRenderer
         itemName="Agentic Services"
-        data={data?.apps}
+        data={true}
         error={error}
-        isLoading={isFetching || isLoading}
+        isLoading={false}
         useRelativeLoader
         errorListStateProps={{
           actionCallback: () => {
@@ -44,56 +86,146 @@ export const ListAgenticServices = () => {
           actionTitle: 'Retry'
         }}
         useContainer
+        useLoading={false}
       >
-        <Card className={cn(!(isFetching || isLoading) && 'p-0')} variant="secondary"></Card>
-        {/* <Table
-          columns={AgenticServiceColumns()}
-          data={data?.tenants || []}
-          isLoading={isLoading || isFetching}
-          densityCompact
-          muiTableBodyRowProps={({row}) => ({
-            sx: {cursor: 'pointer', '& .MuiIconButton-root': {color: (theme) => theme.palette.vars.interactiveSecondaryDefaultDefault}},
-            onClick: () => {
-              const path = generatePath(PATHS.settingsOrganizationInfo, {id: row.original?.id});
-              void navigate(path, {replace: true});
-            }
-          })}
-          enableRowActions
-          topToolbarProps={{
-            enableActions: false
-          }}
-          muiTableContainerProps={{
-            style: {
-              border: '1px solid #D5DFF7'
-            }
-          }}
-          onPaginationChange={setPagination}
-          rowCount={data?.tenants.length ?? 0}
-          rowsPerPageOptions={[1, 10, 25, 50, 100]}
-          title={{label: 'organizations', count: data?.tenants?.length || 0}}
-          state={{pagination, sorting}}
-          onSortingChange={setSorting}
-          renderRowActionMenuItems={({row}) => {
-            if (authInfo?.user?.tenant?.id !== row.original.id) {
-              return [];
-            }
-            return [
-              <MenuItem key="edit" onClick={() => console.info('Edit', row)} sx={{display: 'flex', alignItems: 'center', gap: '8px'}}>
-                <UserRoundPlusIcon className="w-4 h-4" color="#062242" />
-                <Typography variant="body2" color="#1A1F27">
-                  Add user
-                </Typography>
-              </MenuItem>,
-              <MenuItem key="delete" onClick={() => console.info('Delete', row)} sx={{display: 'flex', alignItems: 'center', gap: '8px'}}>
-                <Trash2Icon className="w-4 h-4" color="#C62953" />
-                <Typography variant="body2" color="#C0244C">
-                  Delete organization
-                </Typography>
-              </MenuItem>
-            ];
-          }}
-        /> */}
+        <Card className={cn(!isLoading && 'p-0')} variant="secondary">
+          <Table
+            columns={AgenticServiceColumns()}
+            data={data?.apps || []}
+            isLoading={isLoading || isFetching}
+            densityCompact
+            muiTableBodyRowProps={({row}) => ({
+              sx: {cursor: 'pointer', '& .MuiIconButton-root': {color: (theme) => theme.palette.vars.interactiveSecondaryDefaultDefault}},
+              onClick: () => {
+                const path = generatePath(PATHS.agenticServices.info, {id: row.original?.id});
+                void navigate(path, {replace: true});
+              }
+            })}
+            renderTopToolbar={() => (
+              <FilterSections
+                title={`${data?.pagination?.total} Agentic Services`}
+                searchFieldProps={{
+                  placeholder: 'Search...',
+                  value: query,
+                  onChangeCallback: handleQueryChange
+                }}
+                dropDowns={[
+                  {
+                    buttonContent: 'Type',
+                    isSearchFieldEnabled: false,
+                    treeData: [
+                      {
+                        value: AppType.APP_TYPE_AGENT_A2A,
+                        valueFormatter: () => 'A2A',
+                        isSelectable: true,
+                        isSelected: true
+                      },
+                      {
+                        value: AppType.APP_TYPE_AGENT_OASF,
+                        valueFormatter: () => 'OASF',
+                        isSelectable: true,
+                        isSelected: true
+                      },
+                      {
+                        value: AppType.APP_TYPE_MCP_SERVER,
+                        valueFormatter: () => 'MCP',
+                        isSelectable: true,
+                        isSelected: true
+                      }
+                    ],
+                    onSelectValues: (selectedValues) => {
+                      console.log('Selected values:', selectedValues);
+                    }
+                  }
+                ]}
+              />
+            )}
+            enableRowActions
+            topToolbarProps={{
+              enableActions: false
+            }}
+            muiTableContainerProps={{
+              style: {
+                border: '1px solid #D5DFF7'
+              }
+            }}
+            manualPagination={true}
+            manualFiltering={true}
+            onPaginationChange={setPagination}
+            rowCount={Number(data?.pagination?.total) || 0}
+            rowsPerPageOptions={[1, 10, 25, 50, 100]}
+            state={{pagination, sorting}}
+            onSortingChange={setSorting}
+            renderRowActionMenuItems={({row}) => {
+              return [
+                <MenuItem
+                  key="re-issue"
+                  onClick={() => {
+                    setTempApp(row.original);
+                    setShowBadgeForm(true);
+                  }}
+                  sx={{display: 'flex', alignItems: 'center', gap: '8px'}}
+                >
+                  <IdCardIcon className="w-4 h-4" color="#062242" />
+                  <Typography variant="body2" color="#1A1F27">
+                    Re-Issue Badge
+                  </Typography>
+                </MenuItem>,
+                <MenuItem
+                  key="delete"
+                  onClick={() => {
+                    setTempApp(row.original);
+                    setShowActionsModal(true);
+                  }}
+                  sx={{display: 'flex', alignItems: 'center', gap: '8px'}}
+                >
+                  <Trash2Icon className="w-4 h-4" color="#C62953" />
+                  <Typography variant="body2" color="#C0244C">
+                    Delete
+                  </Typography>
+                </MenuItem>
+              ];
+            }}
+            muiBottomToolbarProps={{
+              style: {
+                boxShadow: 'none'
+              }
+            }}
+            renderEmptyRowsFallback={() => (
+              <EmptyState title="No Agentic Services" description="Currently, there are no agentic services available." />
+            )}
+          />
+        </Card>
       </ConditionalQueryRenderer>
+      <ConfirmModal
+        open={showActionsModal}
+        title="Delete Agentic Service"
+        description={
+          <>
+            Are you sure you want to delete this agentic service <b>{tempApp?.id}</b>? This action cannot be undone.
+          </>
+        }
+        confirmButtonText="Delete"
+        onCancel={() => {
+          setShowActionsModal(false);
+          setTempApp(undefined);
+        }}
+        onConfirm={handleClickOnDelete}
+      />
+      {tempApp && (
+        <BadgeModalForm
+          app={tempApp}
+          open={showBadgeForm}
+          onClose={() => {
+            setShowBadgeForm(false);
+            setTempApp(undefined);
+          }}
+          onCancel={() => {
+            setShowBadgeForm(false);
+            setTempApp(undefined);
+          }}
+        />
+      )}
     </>
   );
 };

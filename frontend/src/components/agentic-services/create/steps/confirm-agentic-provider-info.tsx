@@ -9,18 +9,16 @@ import {useStepper} from '../stepper';
 import {Link, Typography} from '@outshift/spark-design';
 import {useMemo} from 'react';
 import {AgenticServiceFormValues} from '@/schemas/agentic-service-schema';
-import {AppType} from '@/types/api/app';
 import KeyValue, {KeyValuePair} from '@/components/ui/key-value';
 import {AgenticServiceType} from '@/components/shared/agentic-service-type';
 
-export const RegisterAgenticProvider = () => {
+export const ConfirmAgenticProvider = () => {
   const methods = useStepper();
-  const metaData = methods.getMetadata('agenticServiceInfo') as AgenticServiceFormValues | undefined;
+  const metaData = methods.getMetadata('agenticServiceForm') as AgenticServiceFormValues | undefined;
 
   const type = metaData?.type;
   const name = metaData?.name;
   const description = metaData?.description;
-  const mcpServer = metaData?.mcpServer;
 
   const keyValuePairs = useMemo(() => {
     const temp: KeyValuePair[] = [
@@ -37,14 +35,8 @@ export const RegisterAgenticProvider = () => {
         value: <AgenticServiceType type={type} />
       }
     ];
-    if (type === AppType.APP_TYPE_MCP_SERVER) {
-      temp.push({
-        keyProp: 'MCP Server URL',
-        value: mcpServer || 'Not provided'
-      });
-    }
     return temp;
-  }, [description, mcpServer, name, type]);
+  }, [description, name, type]);
 
   return (
     <Card className="text-start space-y-6" variant="secondary">

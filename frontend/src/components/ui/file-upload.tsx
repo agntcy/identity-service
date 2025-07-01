@@ -6,18 +6,25 @@
 import {Input, InputProps} from '@/components/ui/input';
 import {SVGProps, useEffect} from 'react';
 import {JSX} from 'react/jsx-runtime';
-import {IconButton, Typography} from '@mui/material';
+import {Typography} from '@mui/material';
 import {useState} from 'react';
-import {CircleXIcon, FileIcon} from 'lucide-react';
-import {toast} from '@outshift/spark-design';
+import {GeneralSize, Tag, toast} from '@outshift/spark-design';
 
-export const FileUpload = ({onConvert, ...props}: InputProps & {onConvert?: (binary?: ArrayBuffer) => void}) => {
+interface FileUploadProps extends InputProps {
+  onConvert?: (binary?: ArrayBuffer) => void;
+  handleChange?: (file: File) => void;
+  defaultFile?: File | string;
+}
+
+export const FileUpload = ({onConvert, handleChange, defaultFile, ...props}: FileUploadProps) => {
   const [file, setFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       setFile(event.target.files[0]);
+      handleChange?.(event.target.files[0]);
+      props.onChange?.(event as unknown as React.ChangeEvent<HTMLInputElement>);
     }
   };
 
@@ -26,6 +33,8 @@ export const FileUpload = ({onConvert, ...props}: InputProps & {onConvert?: (bin
     setIsDragging(false);
     if (event.dataTransfer.files && event.dataTransfer.files.length > 0) {
       setFile(event.dataTransfer.files[0]);
+      handleChange?.(event.dataTransfer.files[0]);
+      props.onChange?.(event as unknown as React.ChangeEvent<HTMLInputElement>);
     }
   };
 
@@ -59,6 +68,16 @@ export const FileUpload = ({onConvert, ...props}: InputProps & {onConvert?: (bin
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [file]);
 
+  useEffect(() => {
+    if (defaultFile) {
+      if (typeof defaultFile === 'string') {
+        setFile(new File([defaultFile], 'default.json', {type: 'application/json'}));
+      } else {
+        setFile(defaultFile);
+      }
+    }
+  }, [defaultFile]);
+
   return (
     <div
       className={`border-2 border-dashed rounded-[4px] flex flex-col gap-2 p-6 items-center w-full ${isDragging ? 'bg-[#E0E7FF]' : 'bg-[#FBFCFE]'}`}
@@ -91,28 +110,22 @@ export const FileUpload = ({onConvert, ...props}: InputProps & {onConvert?: (bin
             className="hidden"
             onChange={(e) => {
               handleFileChange(e);
-              if (props.onChange) {
-                props.onChange(e);
-              }
             }}
           />
         </>
       ) : (
         <>
-          <FileIcon className="w-[40px] h-[40px] text-[#C5C7CB]" />
-          <div className="flex items-center gap-2">
+          <Tag
+            onDelete={(event) => {
+              setFile(null);
+              props.onChange?.(event as unknown as React.ChangeEvent<HTMLInputElement>);
+            }}
+            size={GeneralSize.Small}
+          >
             <Typography variant="caption" color="#59616B">
               {file.name}
             </Typography>
-            <IconButton
-              onClick={() => {
-                setFile(null);
-                onConvert?.(undefined);
-              }}
-            >
-              <CircleXIcon className="w-4 h-4 text-[#C5C7CB]" />
-            </IconButton>
-          </div>
+          </Tag>
         </>
       )}
     </div>

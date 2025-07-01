@@ -101,6 +101,10 @@
         "mcp": {
           "$ref": "#/definitions/v1alpha1IssueMcpBadgeRequest",
           "description": "The MCP badge."
+        },
+        "oasf": {
+          "$ref": "#/definitions/v1alpha1IssueOASFBadgeRequest",
+          "description": "The OASF badge."
         }
       }
     },
@@ -192,6 +196,15 @@
         },
         "url": {
           "type": "string"
+        }
+      }
+    },
+    "v1alpha1IssueOASFBadgeRequest": {
+      "type": "object",
+      "properties": {
+        "schemaBase64": {
+          "type": "string",
+          "title": "The OASF schema in a base64 encoded format"
         }
       }
     },

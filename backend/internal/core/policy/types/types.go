@@ -52,7 +52,7 @@ type Policy struct {
 	// A human-readable description for the Policy.
 	Description string `json:"description,omitempty"`
 
-	// The requester application that this Rule applies to.
+	// The requester application that this Policy applies to.
 	AssignedTo string `json:"assigned_to,omitempty"`
 
 	// All the rules that apply to this Policy.

@@ -12,6 +12,7 @@ export const PATHS = {
   agenticServices: {
     base: '/agentic-services',
     create: '/agentic-services/create',
+    info: '/agentic-services/:id',
     verifyIdentity: '/agentic-services/verify-identity'
   },
   accessPolicies: {
@@ -21,7 +22,10 @@ export const PATHS = {
   },
   settings: {
     base: '/settings',
-    identityProvider: '/settings/identity-provider',
+    identityProvider: {
+      base: '/settings/identity-provider',
+      create: '/settings/identity-provider/create'
+    },
     apiKey: '/settings/api-key',
     organizations: {
       base: '/settings/organizations',

@@ -4,23 +4,24 @@
  */
 
 import {AgenticServicesAPI} from '@/api/services';
+import {AppType} from '@/types/api/app';
 import {useQuery} from '@tanstack/react-query';
 
-export const useGetAgenticServices = () => {
+export const useGetAgenticServices = (query?: {page?: number; size?: number; query?: string; type?: AppType}) => {
   return useQuery({
-    queryKey: ['get-agentic-services'],
+    queryKey: ['get-agentic-services', query?.page, query?.size, query?.query, query?.type],
     queryFn: async () => {
-      const {data} = await AgenticServicesAPI.listApps();
+      const {data} = await AgenticServicesAPI.listApps(query);
       return data;
     }
   });
 };
 
-export const useGetApp = (id: string) => {
+export const useGetAgenticService = (id?: string) => {
   return useQuery({
     queryKey: ['get-agentic-service', id],
     queryFn: async () => {
-      const {data} = await AgenticServicesAPI.getApp(id);
+      const {data} = await AgenticServicesAPI.getApp(id!);
       return data;
     },
     enabled: !!id

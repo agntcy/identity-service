@@ -52,6 +52,9 @@ message IssueBadgeRequest {
 
   // The MCP badge.
   IssueMcpBadgeRequest mcp = 3;
+
+  // The OASF badge.
+  IssueOASFBadgeRequest oasf = 4;
 }
 
 message IssueMcpBadgeRequest {
@@ -61,6 +64,11 @@ message IssueMcpBadgeRequest {
 
 message IssueA2ABadgeRequest {
   string well_known_url = 1;
+}
+
+message IssueOASFBadgeRequest {
+  // The OASF schema in a base64 encoded format
+  string schema_base64 = 1;
 }
 
 message VerifyBadgeRequest {

@@ -1194,9 +1194,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@outshift/spark-design@npm:^4.3.7":
-  version: 4.3.7
-  resolution: "@outshift/spark-design@npm:4.3.7::__archiveUrl=https%3A%2F%2Fartifactory.devhub-cloud.cisco.com%2Fartifactory%2Fapi%2Fnpm%2Foutshift-npm%2F%40outshift%2Fspark-design%2F-%2F%40outshift%2Fspark-design-4.3.7.tgz"
+"@outshift/spark-design@npm:^4.3.14":
+  version: 4.3.14
+  resolution: "@outshift/spark-design@npm:4.3.14::__archiveUrl=https%3A%2F%2Fartifactory.devhub-cloud.cisco.com%2Fartifactory%2Fapi%2Fnpm%2Foutshift-npm%2F%40outshift%2Fspark-design%2F-%2F%40outshift%2Fspark-design-4.3.14.tgz"
   dependencies:
     "@emotion/react": "npm:^11.14.0"
     "@emotion/styled": "npm:^11.14.0"
@@ -1234,7 +1234,7 @@ __metadata:
     sonner: ">=2"
     use-debounce: ">=10"
     zustand: ">=5"
-  checksum: 10/8c43e75d3d45cfa933d76edbc020b73e2c722aa353a58c3452528eafa254eda11317baa6e7facd9ba114b3755b99620a1fa44d80fd73d076243c4ec92761221b
+  checksum: 10/9a6986c974b58c9644f9a5444fb490c4267e26ab535c5911cd7d30f0621509c92b6540ab8df1d41e72a29b034dc2e5eae79083e04632799ae3aafa15268b1b29
   languageName: node
   linkType: hard
 
@@ -5449,7 +5449,7 @@ __metadata:
     "@hookform/resolvers": "npm:^4.1.3"
     "@mui/material": "npm:^7.1.1"
     "@okta/okta-auth-js": "npm:^7.12.1"
-    "@outshift/spark-design": "npm:^4.3.7"
+    "@outshift/spark-design": "npm:^4.3.14"
     "@radix-ui/react-accordion": "npm:^1.2.10"
     "@radix-ui/react-avatar": "npm:^1.1.10"
     "@radix-ui/react-checkbox": "npm:^1.1.4"

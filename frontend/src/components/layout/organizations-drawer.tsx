@@ -84,7 +84,7 @@ export const OrganizationsDrawer: React.FC<{
                     }
                   }}
                 >
-                  New organization
+                  New Organization
                 </Button>
               </Link>
               <div className="flex flex-col gap-2 overflow-y-auto">

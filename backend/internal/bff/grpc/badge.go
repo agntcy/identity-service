@@ -42,6 +42,10 @@ func (s *BadgeService) IssueBadge(
 		options = append(options, bff.WithMCP(in.Mcp.Name, in.Mcp.Url))
 	}
 
+	if in.Oasf != nil {
+		options = append(options, bff.WithOASF(in.Oasf.SchemaBase64))
+	}
+
 	badge, err := s.badgeService.IssueBadge(ctx, in.AppId, options...)
 	if err != nil {
 		return nil, grpcutil.BadRequestError(err)
