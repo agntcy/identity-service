@@ -728,15 +728,15 @@
               "defaultValue": ""
             },
             {
-              "name": "type",
+              "name": "types",
               "description": "The app type filter",
-              "label": "optional",
+              "label": "repeated",
               "type": "AppType",
               "longType": "AppType",
               "fullType": "agntcy.identity.platform.v1alpha1.AppType",
               "ismap": false,
-              "isoneof": true,
-              "oneofdecl": "_type",
+              "isoneof": false,
+              "oneofdecl": "",
               "defaultValue": ""
             }
           ]

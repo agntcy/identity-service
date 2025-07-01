@@ -14,7 +14,6 @@ import (
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 	"github.com/agntcy/identity-platform/internal/pkg/grpcutil"
 	"github.com/agntcy/identity-platform/internal/pkg/pagination"
-	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -62,12 +61,14 @@ func (s *appService) ListApps(
 		DefaultSize: defaultPageSize,
 	}
 
-	var appType *apptypes.AppType
-	if req.Type != nil {
-		appType = ptrutil.Ptr(apptypes.AppType(*req.Type))
+	appTypes := make([]apptypes.AppType, 0)
+	if req.Types != nil {
+		for _, typ := range req.Types {
+			appTypes = append(appTypes, apptypes.AppType(typ))
+		}
 	}
 
-	apps, err := s.appSrv.ListApps(ctx, paginationFilter, req.Query, appType)
+	apps, err := s.appSrv.ListApps(ctx, paginationFilter, req.Query, appTypes)
 	if err != nil {
 		return nil, grpcutil.BadRequestError(err)
 	}

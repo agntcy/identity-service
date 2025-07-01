@@ -26,7 +26,7 @@ type AppService interface {
 		ctx context.Context,
 		paginationFilter pagination.PaginationFilter,
 		query *string,
-		appType *apptypes.AppType,
+		appTypes []apptypes.AppType,
 	) (*pagination.Pageable[apptypes.App], error)
 }
 
@@ -159,7 +159,7 @@ func (s *appService) ListApps(
 	ctx context.Context,
 	paginationFilter pagination.PaginationFilter,
 	query *string,
-	appType *apptypes.AppType,
+	appTypes []apptypes.AppType,
 ) (*pagination.Pageable[apptypes.App], error) {
-	return s.appRepository.GetAllApps(ctx, paginationFilter, query, appType)
+	return s.appRepository.GetAllApps(ctx, paginationFilter, query, appTypes)
 }

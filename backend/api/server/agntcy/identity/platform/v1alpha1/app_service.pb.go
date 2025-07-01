@@ -91,7 +91,7 @@ type ListAppsRequest struct {
 	// The search query
 	Query *string `protobuf:"bytes,3,opt,name=query,proto3,oneof" json:"query,omitempty"`
 	// The app type filter
-	Type          *AppType `protobuf:"varint,4,opt,name=type,proto3,enum=agntcy.identity.platform.v1alpha1.AppType,oneof" json:"type,omitempty"`
+	Types         []AppType `protobuf:"varint,4,rep,packed,name=types,proto3,enum=agntcy.identity.platform.v1alpha1.AppType" json:"types,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -147,11 +147,11 @@ func (x *ListAppsRequest) GetQuery() string {
 	return ""
 }
 
-func (x *ListAppsRequest) GetType() AppType {
-	if x != nil && x.Type != nil {
-		return *x.Type
+func (x *ListAppsRequest) GetTypes() []AppType {
+	if x != nil {
+		return x.Types
 	}
-	return AppType_APP_TYPE_UNSPECIFIED
+	return nil
 }
 
 type CreateAppRequest struct {
@@ -533,16 +533,15 @@ const file_agntcy_identity_platform_v1alpha1_app_service_proto_rawDesc = "" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v27.agntcy.identity.platform.shared.v1alpha1.PagedResponseH\x00R\n" +
 	"pagination\x88\x01\x01B\r\n" +
-	"\v_pagination\"\xc8\x01\n" +
+	"\v_pagination\"\xbc\x01\n" +
 	"\x0fListAppsRequest\x12\x17\n" +
 	"\x04page\x18\x01 \x01(\x05H\x00R\x04page\x88\x01\x01\x12\x17\n" +
 	"\x04size\x18\x02 \x01(\x05H\x01R\x04size\x88\x01\x01\x12\x19\n" +
-	"\x05query\x18\x03 \x01(\tH\x02R\x05query\x88\x01\x01\x12C\n" +
-	"\x04type\x18\x04 \x01(\x0e2*.agntcy.identity.platform.v1alpha1.AppTypeH\x03R\x04type\x88\x01\x01B\a\n" +
+	"\x05query\x18\x03 \x01(\tH\x02R\x05query\x88\x01\x01\x12@\n" +
+	"\x05types\x18\x04 \x03(\x0e2*.agntcy.identity.platform.v1alpha1.AppTypeR\x05typesB\a\n" +
 	"\x05_pageB\a\n" +
 	"\x05_sizeB\b\n" +
-	"\x06_queryB\a\n" +
-	"\x05_type\"L\n" +
+	"\x06_query\"L\n" +
 	"\x10CreateAppRequest\x128\n" +
 	"\x03app\x18\x01 \x01(\v2&.agntcy.identity.platform.v1alpha1.AppR\x03app\"\x15\n" +
 	"\x13GetAppsCountRequest\"g\n" +
@@ -607,7 +606,7 @@ var file_agntcy_identity_platform_v1alpha1_app_service_proto_goTypes = []any{
 var file_agntcy_identity_platform_v1alpha1_app_service_proto_depIdxs = []int32{
 	10, // 0: agntcy.identity.platform.v1alpha1.ListAppsResponse.apps:type_name -> agntcy.identity.platform.v1alpha1.App
 	11, // 1: agntcy.identity.platform.v1alpha1.ListAppsResponse.pagination:type_name -> agntcy.identity.platform.shared.v1alpha1.PagedResponse
-	12, // 2: agntcy.identity.platform.v1alpha1.ListAppsRequest.type:type_name -> agntcy.identity.platform.v1alpha1.AppType
+	12, // 2: agntcy.identity.platform.v1alpha1.ListAppsRequest.types:type_name -> agntcy.identity.platform.v1alpha1.AppType
 	10, // 3: agntcy.identity.platform.v1alpha1.CreateAppRequest.app:type_name -> agntcy.identity.platform.v1alpha1.App
 	12, // 4: agntcy.identity.platform.v1alpha1.AppTypeCountEntry.key:type_name -> agntcy.identity.platform.v1alpha1.AppType
 	4,  // 5: agntcy.identity.platform.v1alpha1.GetAppsCountResponse.counts:type_name -> agntcy.identity.platform.v1alpha1.AppTypeCountEntry
