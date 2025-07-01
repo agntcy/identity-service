@@ -522,7 +522,7 @@
             run: |
               figlet -w 140 'BUILD DOCKER' || true
               echo "$SHA"
-              docker build "$BUILD_ARGS" "$SECRET_ARG" -t "${{ inputs.image-name }}:latest" -f "${{ inputs.dockerfile }}" "${{ inputs.context }}"
+              docker build $BUILD_ARGS $SECRET_ARG -t "${{ inputs.image-name }}:latest" -f "${{ inputs.dockerfile }}" "${{ inputs.context }}"
             shell: bash
 
           #region: PUBLIC ECR
