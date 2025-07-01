@@ -45,12 +45,6 @@ func (s *service) SetIssuer(
 		return errutil.Err(nil, "issuer settings cannot be nil")
 	}
 
-	// Get common name from the issuer settings if not set.
-	userID, ok := identitycontext.GetUserID(ctx)
-	if !ok {
-		return fmt.Errorf("user id not found in context")
-	}
-
 	// Get organization details
 	organizationID, ok := identitycontext.GetOrganizationID(ctx)
 	if !ok {
@@ -86,7 +80,6 @@ func (s *service) SetIssuer(
 	issuer, err := s.identityService.RegisterIssuer(
 		ctx,
 		clientCredentials,
-		userID,
 		organizationID,
 	)
 	if err != nil {

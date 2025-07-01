@@ -41,20 +41,18 @@ type Service interface {
 	RegisterIssuer(
 		ctx context.Context,
 		clientCredentials *idpcore.ClientCredentials,
-		userID, organizationID string,
+		organizationID string,
 	) (*Issuer, error)
 	GenerateID(
 		ctx context.Context,
 		clientCredentials *idpcore.ClientCredentials,
 		issuer *Issuer,
-		userID string,
 	) (string, error)
 	PublishVerifiableCredential(
 		ctx context.Context,
 		clientCredentials *idpcore.ClientCredentials,
 		vc *badgetypes.VerifiableCredential,
 		issuer *Issuer,
-		userID string,
 	) error
 	VerifyVerifiableCredential(
 		ctx context.Context,
@@ -94,7 +92,7 @@ func NewService(
 
 func (s *service) RegisterIssuer(
 	ctx context.Context,
-	clientCredentials *idpcore.ClientCredentials, userID, organizationID string,
+	clientCredentials *idpcore.ClientCredentials, organizationID string,
 ) (*Issuer, error) {
 	// Generate a new key for the issuer
 	key, err := s.keyStore.GenerateAndSaveKey(ctx)
@@ -106,7 +104,7 @@ func (s *service) RegisterIssuer(
 	}
 
 	// Get common name for the issuer
-	commonName := s.getCommonName(clientCredentials, userID)
+	commonName := s.getCommonName(clientCredentials)
 
 	// Prepare the issuer registration parameters
 	issuer := &identitymodels.V1alpha1Issuer{
@@ -124,7 +122,7 @@ func (s *service) RegisterIssuer(
 	}
 
 	// Prepare the proof
-	proof, err := s.generateProof(ctx, clientCredentials, userID, key.KID)
+	proof, err := s.generateProof(ctx, clientCredentials, key.KID)
 	if err != nil {
 		return nil, errutil.Err(
 			err,
@@ -160,9 +158,8 @@ func (s *service) GenerateID(
 	ctx context.Context,
 	clientCredentials *idpcore.ClientCredentials,
 	issuer *Issuer,
-	userID string,
 ) (string, error) {
-	proof, err := s.generateProof(ctx, clientCredentials, userID, issuer.KeyID)
+	proof, err := s.generateProof(ctx, clientCredentials, issuer.KeyID)
 	if err != nil {
 		return "", errutil.Err(
 			err,
@@ -194,9 +191,8 @@ func (s *service) PublishVerifiableCredential(
 	clientCredentials *idpcore.ClientCredentials,
 	vc *badgetypes.VerifiableCredential,
 	issuer *Issuer,
-	userID string,
 ) error {
-	proof, err := s.generateProof(ctx, clientCredentials, userID, issuer.KeyID)
+	proof, err := s.generateProof(ctx, clientCredentials, issuer.KeyID)
 	if err != nil {
 		return fmt.Errorf(
 			"error generating proof for verifiable credential publishing: %w",
@@ -249,19 +245,17 @@ func (s *service) PublishVerifiableCredential(
 
 func (s *service) getCommonName(
 	clientCredentials *idpcore.ClientCredentials,
-	commonName string,
 ) string {
-	if clientCredentials != nil {
+	if clientCredentials.ClientSecret != "" {
 		return httputil.Hostname(clientCredentials.Issuer)
 	}
 
-	return commonName
+	return clientCredentials.Issuer
 }
 
 func (s *service) generateProof(
 	ctx context.Context,
 	clientCredentials *idpcore.ClientCredentials,
-	commonName string,
 	keyId string,
 ) (*identitymodels.V1alpha1Proof, error) {
 	proof := &identitymodels.V1alpha1Proof{
@@ -272,7 +266,7 @@ func (s *service) generateProof(
 	var err error
 
 	// If client credentials are provided, use them to generate the proof
-	if clientCredentials != nil {
+	if clientCredentials.ClientSecret != "" {
 		proofValue, err = s.oidcAuthenticator.Token(
 			ctx,
 			clientCredentials.Issuer,
@@ -288,16 +282,9 @@ func (s *service) generateProof(
 			)
 		}
 
-		if commonName == "" {
-			return nil, errutil.Err(
-				nil,
-				"common name cannot be empty for self-issued JWT proof",
-			)
-		}
-
 		// Issue a self-signed JWT proof
 		proofValue, err = oidc.SelfIssueJWT(
-			commonName,
+			clientCredentials.Issuer,
 			uuid.NewString(), // TODO: This needs to be configurable when creating VCs
 			privKey,
 		)

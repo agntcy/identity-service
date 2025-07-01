@@ -21,7 +21,10 @@ func NewFactory() IdpFactory {
 	return &idpFactory{}
 }
 
-func (f *idpFactory) Create(ctx context.Context, issuerSettings *types.IssuerSettings) (Idp, error) {
+func (f *idpFactory) Create(
+	ctx context.Context,
+	issuerSettings *types.IssuerSettings,
+) (Idp, error) {
 	var idp Idp
 
 	switch issuerSettings.IdpType {

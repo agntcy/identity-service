@@ -11,7 +11,6 @@ import (
 	identitycore "github.com/agntcy/identity-platform/internal/core/identity"
 	idpcore "github.com/agntcy/identity-platform/internal/core/idp"
 	settingscore "github.com/agntcy/identity-platform/internal/core/settings"
-	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 	outshiftiam "github.com/agntcy/identity-platform/internal/pkg/iam"
 	"github.com/agntcy/identity-platform/internal/pkg/pagination"
@@ -94,8 +93,6 @@ func (s *appService) CreateApp(
 		}
 	}()
 
-	userID, _ := identitycontext.GetUserID(ctx)
-
 	resolverMetadataID, err := s.identityService.GenerateID(
 		ctx,
 		clientCredentials,
@@ -103,7 +100,6 @@ func (s *appService) CreateApp(
 			CommonName: issSettings.IssuerID,
 			KeyID:      issSettings.KeyID,
 		},
-		userID,
 	)
 	if err != nil {
 		return nil, err

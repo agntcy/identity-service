@@ -20,7 +20,6 @@ import (
 	idpcore "github.com/agntcy/identity-platform/internal/core/idp"
 	policycore "github.com/agntcy/identity-platform/internal/core/policy"
 	settingscore "github.com/agntcy/identity-platform/internal/core/settings"
-	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
 	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
 	"github.com/go-playground/validator/v10"
 )
@@ -156,8 +155,6 @@ func (s *badgeService) IssueBadge(
 		return nil, fmt.Errorf("unable to issue badge: %w", err)
 	}
 
-	userID, _ := identitycontext.GetUserID(ctx)
-
 	clientCredentials, err := s.credentialStore.Get(ctx, app.ID)
 	if err != nil {
 		return nil, fmt.Errorf("unable to fetch client credentials: %w", err)
@@ -171,7 +168,6 @@ func (s *badgeService) IssueBadge(
 			CommonName: settings.IssuerID,
 			KeyID:      settings.KeyID,
 		},
-		userID,
 	)
 	if err != nil {
 		return nil, fmt.Errorf("unable to publish the badge: %w", err)
