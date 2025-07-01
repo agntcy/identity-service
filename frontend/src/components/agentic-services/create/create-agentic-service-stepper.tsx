@@ -72,7 +72,8 @@ const FormStepperComponent = () => {
       description: undefined,
       oasfSpecs: undefined,
       mcpServer: undefined,
-      oasfSpecsContent: undefined
+      oasfSpecsContent: undefined,
+      wellKnowServer: undefined
     });
     methods.reset();
     methods.resetMetadata();
@@ -93,10 +94,7 @@ const FormStepperComponent = () => {
       ...methods.getMetadata('agenticServiceForm'),
       type: values.type,
       name: values.name,
-      description: values.description,
-      oasfSpecs: values.oasfSpecs,
-      mcpServer: values.mcpServer,
-      oasfSpecsContent: values.oasfSpecsContent
+      description: values.description
     });
     methods.next();
   }, [form, methods]);

@@ -11,7 +11,7 @@ import React from 'react';
 const SettingsIdentityProvider: React.FC = () => {
   return (
     <BasePage
-      title="Api Key"
+      title="API Key"
       description="Manage your API keys. You can create, view, and delete API keys for your account."
       subNav={[
         {
@@ -19,7 +19,7 @@ const SettingsIdentityProvider: React.FC = () => {
           href: PATHS.settings.identityProvider.base
         },
         {
-          label: 'Api Key',
+          label: 'API Key',
           href: PATHS.settings.apiKey
         },
         {
@@ -33,7 +33,7 @@ const SettingsIdentityProvider: React.FC = () => {
           link: PATHS.settings.base
         },
         {
-          text: 'Api Key'
+          text: 'API Key'
         }
       ]}
     >

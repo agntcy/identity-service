@@ -512,7 +512,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/Policy'
+                            $ref: '#/components/schemas/UpdatePolicyRequest'
                 required: true
             responses:
                 "200":
@@ -683,7 +683,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/Rule'
+                            $ref: '#/components/schemas/UpdateRuleRequest'
                 required: true
             responses:
                 "200":
@@ -1063,7 +1063,7 @@ components:
                     description: A human-readable description for the Policy.
                 assignedTo:
                     type: string
-                    description: The requester application that this Rule applies to.
+                    description: The requester application that this Policy applies to.
                 rules:
                     type: array
                     items:
@@ -1170,6 +1170,44 @@ components:
                 accessToken:
                     type: string
                     description: The access token issued to the Agent or MCP Server.
+        UpdatePolicyRequest:
+            type: object
+            properties:
+                policyId:
+                    type: string
+                    description: Policy Id to update.
+                name:
+                    type: string
+                    description: A human-readable name for the Policy.
+                description:
+                    type: string
+                    description: A human-readable description for the Policy.
+                assignedTo:
+                    type: string
+                    description: The requester application that this policy applies to.
+        UpdateRuleRequest:
+            type: object
+            properties:
+                policyId:
+                    type: string
+                    description: The Policy Id to which these Rules belong.
+                ruleId:
+                    type: string
+                    description: Rule Id to update.
+                name:
+                    type: string
+                    description: A human-readable name for the Rule.
+                description:
+                    type: string
+                    description: A human-readable description for the Rule.
+                tasks:
+                    type: array
+                    items:
+                        type: string
+                    description: The tasks that this Rule applies to.
+                needsApproval:
+                    type: boolean
+                    description: Need User Approval for this Rule.
         VerifiableCredential:
             type: object
             properties:

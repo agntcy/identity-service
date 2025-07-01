@@ -21,7 +21,7 @@ const SettingsOrganizations: React.FC = () => {
           href: PATHS.settings.identityProvider.base
         },
         {
-          label: 'Api Key',
+          label: 'API Key',
           href: PATHS.settings.apiKey
         },
         {

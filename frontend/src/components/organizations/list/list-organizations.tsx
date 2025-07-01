@@ -103,7 +103,7 @@ export const ListOrganizations = () => {
             onPaginationChange={setPagination}
             rowCount={data?.tenants.length ?? 0}
             rowsPerPageOptions={[1, 10, 25, 50, 100]}
-            title={{label: 'organizations', count: data?.tenants?.length || 0}}
+            title={{label: 'Organizations', count: data?.tenants?.length || 0}}
             state={{pagination, sorting}}
             onSortingChange={setSorting}
             renderRowActionMenuItems={({row}) => {
@@ -117,7 +117,7 @@ export const ListOrganizations = () => {
                     Add
                   </Typography>
                 </MenuItem>,
-                <MenuItem key="delete" onClick={() => setTenantId(row.original.id)} sx={{display: 'flex', alignItems: 'center', gap: '8px'}}>
+                <MenuItem key="delete" onClick={() => console.info('Delete', row)} sx={{display: 'flex', alignItems: 'center', gap: '8px'}}>
                   <Trash2Icon className="w-4 h-4" color="#C62953" />
                   <Typography variant="body2" color="#C0244C">
                     Delete
