@@ -100,7 +100,6 @@ export const OrganizationsDrawer: React.FC<{
                     }}
                   >
                     <Typography variant="captionMedium" sx={{color: tenant.id === authInfo?.user?.tenant?.id ? '#0051AF' : '#00142B'}}>
-                      {/* @ts-expect-error */}
                       <OverflowTooltip value={tenant.name} someLongText={tenant.name} placement="right" />
                     </Typography>
                   </div>

@@ -21,7 +21,6 @@ import {useShallow} from 'zustand/react/shallow';
 const Welcome = React.lazy(() => import('@/pages/welcome/welcome'));
 const SettingsIdentityProvider = React.lazy(() => import('@/pages/settings/identity-provider/settings-identity-provider'));
 const SettingsCreateIdentityProvider = React.lazy(() => import('@/pages/settings/identity-provider/settings-create-identity-provider'));
-const TermsAndConditions = React.lazy(() => import('@/pages/terms-and-conditions/terms-and-conditions'));
 const Dashboard = React.lazy(() => import('@/pages/dashboard/dashboard'));
 const SettingsApiKey = React.lazy(() => import('@/pages/settings/api-key/settings-api-key'));
 const SettingsOrganizations = React.lazy(() => import('@/pages/settings/organizations/settings-organizations'));
@@ -205,10 +204,6 @@ export const useRoutes = () => {
             element: <NotFound />
           }
         ]
-      },
-      {
-        path: PATHS.termsAndConditions,
-        element: <TermsAndConditions />
       }
     ];
   }, [isEmptyIdp]);

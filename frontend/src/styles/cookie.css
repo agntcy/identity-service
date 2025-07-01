@@ -1,0 +1,59 @@
+ #cc-main {
+   --cc-font-family: Inter, Sharp Sans, sans-serif;
+
+   --cc-overlay-bg: #D1DBF666;
+   --cc-bg: #FBFCFE;
+
+   --cc-btn-primary-bg: #187ADC;
+   --cc-btn-primary-border-color: none;
+   --cc-btn-primary-hover-bg: #79B9FF;
+   --cc-btn-primary-hover-border-color: none;
+
+   --cc-btn-secondary-bg: none;
+   --cc-btn-secondary-border-color: none;
+   --cc-btn-secondary-hover-bg: #none;
+   --cc-btn-secondary-hover-border-color: none;
+
+   /** Also make toggles the same color as the button **/
+   --cc-toggle-on-bg: var(--cc-btn-primary-bg);
+
+   --cc-btn-border-radius: 8px;
+
+   .pm__title {
+      font-family: Sharp Sans;
+      font-weight: 700;
+      font-size: 24px;
+      line-height: 32px;
+      letter-spacing: 0px;
+      color: #00142B;
+   }
+
+   .pm__section-title {
+      font-family: Inter;
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 24px;
+      letter-spacing: 0.15px;
+      color: #3C4551;
+   }
+
+   .section__toggle-wrapper {
+      height: 20px;
+   }
+
+   .section__toggle {
+      height: 20px;
+   }
+
+   .toggle__icon {
+      height: 20px;
+      margin: auto 0;
+   }
+   
+   .toggle__icon-circle {
+      height: 18px;
+      width: 18px;
+      margin-top: 1.5px;
+      margin-left: 2px;
+   }
+}

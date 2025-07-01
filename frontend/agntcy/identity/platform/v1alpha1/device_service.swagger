@@ -1,12 +1,12 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "agntcy/identity/platform/v1alpha1/auth_service.proto",
+    "title": "agntcy/identity/platform/v1alpha1/device_service.proto",
     "version": "version not set"
   },
   "tags": [
     {
-      "name": "Auth"
+      "name": "Device"
     }
   ],
   "consumes": [
@@ -16,38 +16,15 @@
     "application/json"
   ],
   "paths": {
-    "/v1alpha1/auth/app_info": {
-      "get": {
-        "summary": "Get App Info",
-        "operationId": "AppInfo",
+    "/v1alpha1/device": {
+      "post": {
+        "summary": "Add new device for approval flow",
+        "operationId": "AddDevice",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1alpha1AppInfoResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "tags": [
-          "Auth"
-        ]
-      }
-    },
-    "/v1alpha1/auth/authorize": {
-      "get": {
-        "summary": "Authorize a request from an Agent or MCP Server",
-        "operationId": "Authorize",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1alpha1AuthorizeResponse"
+              "$ref": "#/definitions/v1alpha1Device"
             }
           },
           "default": {
@@ -59,36 +36,24 @@
         },
         "parameters": [
           {
-            "name": "appId",
-            "description": "The app id for which authorization is requested.",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "toolName",
-            "description": "The MCP Server tool name.",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "userToken",
-            "description": "The User context in the form of an id or access token.\nMandatory for User Approval Flows.",
-            "in": "query",
-            "required": false,
-            "type": "string"
+            "name": "device",
+            "description": "The device information to register.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1alpha1Device"
+            }
           }
         ],
         "tags": [
-          "Auth"
+          "Device"
         ]
       }
     },
-    "/v1alpha1/auth/ext_authz": {
+    "/v1alpha1/device/{deviceId}": {
       "post": {
-        "summary": "Handle external authorization requests",
-        "operationId": "ExtAuthz",
+        "summary": "Register device for approval flow",
+        "operationId": "RegisterDevice",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -106,47 +71,24 @@
         },
         "parameters": [
           {
-            "name": "accessToken",
-            "description": "The access token to be authorized.",
-            "in": "query",
-            "required": false,
+            "name": "deviceId",
+            "description": "The unique identifier for the device to register.",
+            "in": "path",
+            "required": true,
             "type": "string"
-          }
-        ],
-        "tags": [
-          "Auth"
-        ]
-      }
-    },
-    "/v1alpha1/auth/token": {
-      "post": {
-        "summary": "Request token for an Agent or MCP Server",
-        "operationId": "RequestToken",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1alpha1TokenResponse"
-            }
           },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
           {
-            "name": "authorizationCode",
-            "description": "Pass the code received from the authorization endpoint.",
-            "in": "query",
-            "required": false,
-            "type": "string"
+            "name": "device",
+            "description": "The device information to register.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1alpha1Device"
+            }
           }
         ],
         "tags": [
-          "Auth"
+          "Device"
         ]
       }
     }
@@ -182,69 +124,23 @@
         }
       }
     },
-    "v1alpha1App": {
+    "v1alpha1Device": {
       "type": "object",
       "properties": {
         "id": {
           "type": "string",
-          "description": "A unique identifier for the App."
+          "description": "A unique identifier for the Device."
         },
-        "name": {
+        "userId": {
           "type": "string",
-          "description": "A human-readable name for the App."
+          "description": "User ID associated with the Device."
         },
-        "description": {
+        "subscriptionToken": {
           "type": "string",
-          "description": "A human-readable description for the App."
-        },
-        "type": {
-          "$ref": "#/definitions/v1alpha1AppType",
-          "description": "The type of the App."
-        },
-        "apiKey": {
-          "type": "string"
+          "description": "Subscription Token for the Device."
         }
       },
-      "description": "Identity Platform App."
-    },
-    "v1alpha1AppInfoResponse": {
-      "type": "object",
-      "properties": {
-        "app": {
-          "$ref": "#/definitions/v1alpha1App",
-          "description": "The App information."
-        }
-      }
-    },
-    "v1alpha1AppType": {
-      "type": "string",
-      "enum": [
-        "APP_TYPE_UNSPECIFIED",
-        "APP_TYPE_AGENT_A2A",
-        "APP_TYPE_AGENT_OASF",
-        "APP_TYPE_MCP_SERVER"
-      ],
-      "default": "APP_TYPE_UNSPECIFIED",
-      "description": "- APP_TYPE_UNSPECIFIED: Unspecified Envelope Type.\n - APP_TYPE_AGENT_A2A: Agent A2A App Type.\n - APP_TYPE_AGENT_OASF: Agent OASF App Type.\n - APP_TYPE_MCP_SERVER: Agent MCP Server App Type.",
-      "title": "App Type"
-    },
-    "v1alpha1AuthorizeResponse": {
-      "type": "object",
-      "properties": {
-        "authorizationCode": {
-          "type": "string",
-          "description": "If authorization is successful, return a code to be used for\nthe token endpoint."
-        }
-      }
-    },
-    "v1alpha1TokenResponse": {
-      "type": "object",
-      "properties": {
-        "accessToken": {
-          "type": "string",
-          "description": "The access token issued to the Agent or MCP Server."
-        }
-      }
+      "title": "Devices used for user approval"
     }
   }
 }

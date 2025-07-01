@@ -59,18 +59,21 @@
             "type": "string"
           },
           {
-            "name": "type",
+            "name": "types",
             "description": "The app type filter\n\n - APP_TYPE_UNSPECIFIED: Unspecified Envelope Type.\n - APP_TYPE_AGENT_A2A: Agent A2A App Type.\n - APP_TYPE_AGENT_OASF: Agent OASF App Type.\n - APP_TYPE_MCP_SERVER: Agent MCP Server App Type.",
             "in": "query",
             "required": false,
-            "type": "string",
-            "enum": [
-              "APP_TYPE_UNSPECIFIED",
-              "APP_TYPE_AGENT_A2A",
-              "APP_TYPE_AGENT_OASF",
-              "APP_TYPE_MCP_SERVER"
-            ],
-            "default": "APP_TYPE_UNSPECIFIED"
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "APP_TYPE_UNSPECIFIED",
+                "APP_TYPE_AGENT_A2A",
+                "APP_TYPE_AGENT_OASF",
+                "APP_TYPE_MCP_SERVER"
+              ]
+            },
+            "collectionFormat": "multi"
           }
         ],
         "tags": [
@@ -234,6 +237,38 @@
           "App"
         ]
       }
+    },
+    "/v1alpha1/apps/{appId}/badge": {
+      "get": {
+        "summary": "Get the current badge issued for the App",
+        "operationId": "GetAppBadge",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1alpha1Badge"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "appId",
+            "description": "App Id to get the badge for.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      }
     }
   },
   "definitions": {
@@ -318,6 +353,48 @@
         }
       }
     },
+    "v1alpha1Badge": {
+      "type": "object",
+      "properties": {
+        "verifiableCredential": {
+          "$ref": "#/definitions/v1alpha1VerifiableCredential"
+        },
+        "appId": {
+          "type": "string"
+        }
+      }
+    },
+    "v1alpha1BadgeClaims": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "[here]: https://www.w3.org/TR/vc-data-model/#credential-subject",
+          "title": "The ID as defined [here]"
+        },
+        "badge": {
+          "type": "string",
+          "title": "The content of the badge"
+        }
+      },
+      "description": "[here]: https://spec.identity.agntcy.org/docs/vc/intro/",
+      "title": "BadgeClaims represents the content of a Badge VC defined [here]"
+    },
+    "v1alpha1CredentialSchema": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "title": "Type specifies the type of the file"
+        },
+        "id": {
+          "type": "string",
+          "title": "The URL identifying the schema file"
+        }
+      },
+      "description": "[here]: https://www.w3.org/TR/vc-data-model-2.0/#data-schemas",
+      "title": "CredentialSchema represents the credentialSchema property of a Verifiable Credential.\nmore information can be found [here]"
+    },
     "v1alpha1GetAppsCountResponse": {
       "type": "object",
       "properties": {
@@ -372,6 +449,77 @@
         }
       },
       "title": "Pagination response"
+    },
+    "v1alpha1Proof": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "title": "The type of the proof"
+        },
+        "proofPurpose": {
+          "type": "string",
+          "title": "The proof purpose"
+        },
+        "proofValue": {
+          "type": "string",
+          "title": "The proof value"
+        }
+      },
+      "description": "A data integrity proof provides information about the proof mechanism,\nparameters required to verify that proof, and the proof value itself."
+    },
+    "v1alpha1VerifiableCredential": {
+      "type": "object",
+      "properties": {
+        "context": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "https://www.w3.org/TR/vc-data-model/#contexts"
+        },
+        "type": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "https://www.w3.org/TR/vc-data-model/#dfn-type"
+        },
+        "issuer": {
+          "type": "string",
+          "title": "https://www.w3.org/TR/vc-data-model/#issuer"
+        },
+        "credentialSubject": {
+          "$ref": "#/definitions/v1alpha1BadgeClaims",
+          "title": "https://www.w3.org/TR/vc-data-model/#credential-subject"
+        },
+        "id": {
+          "type": "string",
+          "title": "https://www.w3.org/TR/vc-data-model/#identifiers"
+        },
+        "issuanceDate": {
+          "type": "string",
+          "title": "https://www.w3.org/TR/vc-data-model/#issuance-date"
+        },
+        "expirationDate": {
+          "type": "string",
+          "title": "https://www.w3.org/TR/vc-data-model/#expiration"
+        },
+        "credentialSchema": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1alpha1CredentialSchema"
+          },
+          "title": "https://www.w3.org/TR/vc-data-model-2.0/#data-schemas"
+        },
+        "proof": {
+          "$ref": "#/definitions/v1alpha1Proof",
+          "title": "https://w3id.org/security#proof"
+        }
+      },
+      "description": "[here]: https://www.w3.org/TR/vc-data-model/",
+      "title": "DataModel represents the W3C Verifiable Credential Data Model defined [here]"
     }
   }
 }

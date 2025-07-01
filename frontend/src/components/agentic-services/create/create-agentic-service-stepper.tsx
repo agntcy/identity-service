@@ -138,7 +138,7 @@ const FormStepperComponent = () => {
                               {step.title}
                             </Typography>
                             {step.id === 'createBadge' && (
-                              <>
+                              <div className="flex gap-1 items-center">
                                 <Tooltip title="Create Badge for your agentic service" arrow placement="top">
                                   <IconButton
                                     sx={(theme) => ({
@@ -150,7 +150,8 @@ const FormStepperComponent = () => {
                                     <InfoIcon className="w-4 h-4" />
                                   </IconButton>
                                 </Tooltip>
-                              </>
+                                <Typography variant="caption">| Optional</Typography>
+                              </div>
                             )}
                           </div>
                           <Typography variant="body2">{step.description}</Typography>

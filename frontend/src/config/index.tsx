@@ -4,6 +4,7 @@
  */
 
 import isEnvSet from '@/utils/is-env-set';
+import * as CookieConsentVanilla from 'vanilla-cookieconsent';
 
 declare global {
   interface Window {
@@ -15,6 +16,7 @@ declare global {
     iamOidcClientId?: string;
     iamOidcIssuer?: string;
     segmentId?: string;
+    CookieConsent: typeof CookieConsentVanilla;
   }
 }
 

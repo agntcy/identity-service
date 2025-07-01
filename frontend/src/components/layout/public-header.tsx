@@ -14,7 +14,7 @@ export const PublicHeader = () => {
     <Header
       title={
         <Typography variant="h1" fontWeight={700} fontSize="18px" lineHeight="18px" sx={(theme) => ({color: theme.palette.vars.brandTextSecondary})}>
-          Identity
+          Agent Identity
         </Typography>
       }
       logo={

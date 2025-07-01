@@ -139,6 +139,16 @@ export interface RpcStatus {
   details?: GoogleprotobufAny[];
 }
 
+/** Devices used for user approval */
+export interface V1Alpha1Device {
+  /** A unique identifier for the Device. */
+  id?: string;
+  /** User ID associated with the Device. */
+  userId?: string;
+  /** Subscription Token for the Device. */
+  subscriptionToken?: string;
+}
+
 import type {AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType} from 'axios';
 import axios from 'axios';
 
@@ -265,7 +275,45 @@ export class HttpClient<SecurityDataType = unknown> {
 }
 
 /**
- * @title agntcy/identity/platform/v1alpha1/settings.proto
+ * @title agntcy/identity/platform/v1alpha1/device_service.proto
  * @version version not set
  */
-export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {}
+export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
+  v1Alpha1 = {
+    /**
+     * No description
+     *
+     * @tags Device
+     * @name AddDevice
+     * @summary Add new device for approval flow
+     * @request POST:/v1alpha1/device
+     */
+    addDevice: (device: V1Alpha1Device, params: RequestParams = {}) =>
+      this.request<V1Alpha1Device, RpcStatus>({
+        path: `/v1alpha1/device`,
+        method: 'POST',
+        body: device,
+        type: ContentType.Json,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Device
+     * @name RegisterDevice
+     * @summary Register device for approval flow
+     * @request POST:/v1alpha1/device/{deviceId}
+     */
+    registerDevice: (deviceId: string, device: V1Alpha1Device, params: RequestParams = {}) =>
+      this.request<object, RpcStatus>({
+        path: `/v1alpha1/device/${deviceId}`,
+        method: 'POST',
+        body: device,
+        type: ContentType.Json,
+        format: 'json',
+        ...params
+      })
+  };
+}

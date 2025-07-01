@@ -32,6 +32,5 @@ export const PATHS = {
       create: '/settings/organizations/create',
       info: '/settings/organizations/:id'
     }
-  },
-  termsAndConditions: '/terms-and-conditions'
+  }
 };

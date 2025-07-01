@@ -9,6 +9,7 @@ import {JSX} from 'react/jsx-runtime';
 import {Typography} from '@mui/material';
 import {useState} from 'react';
 import {GeneralSize, Tag, toast} from '@outshift/spark-design';
+import {cn} from '@/lib/utils';
 
 interface FileUploadProps extends InputProps {
   onConvert?: (binary?: ArrayBuffer) => void;
@@ -16,7 +17,7 @@ interface FileUploadProps extends InputProps {
   defaultFile?: File | string;
 }
 
-export const FileUpload = ({onConvert, handleChange, defaultFile, ...props}: FileUploadProps) => {
+export const FileUpload = ({onConvert, handleChange, defaultFile, disabled, ...props}: FileUploadProps) => {
   const [file, setFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
 
@@ -80,13 +81,18 @@ export const FileUpload = ({onConvert, handleChange, defaultFile, ...props}: Fil
 
   return (
     <div
-      className={`border-2 border-dashed rounded-[4px] flex flex-col gap-2 p-6 items-center w-full ${isDragging ? 'bg-[#E0E7FF]' : 'bg-[#FBFCFE]'}`}
+      className={cn(
+        'border-2 border-dashed rounded-[4px] flex flex-col gap-2 p-6 items-center w-full',
+        disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer',
+        'h-[148px]',
+        isDragging ? 'bg-[#E0E7FF]' : 'bg-[#FBFCFE]'
+      )}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
       onDragLeave={handleDragLeave}
     >
       {!hasFile ? (
-        <>
+        <div className="flex flex-col items-center gap-2">
           <UploadIcon className="w-[40px] h-[40px] text-[#C5C7CB]" />
           <div className="flex items-center gap-1">
             <label htmlFor="file" className="cursor-pointer">
@@ -103,6 +109,7 @@ export const FileUpload = ({onConvert, handleChange, defaultFile, ...props}: Fil
           </Typography>
           <Input
             {...props}
+            disabled={disabled}
             id="file"
             type="file"
             placeholder="File"
@@ -112,9 +119,9 @@ export const FileUpload = ({onConvert, handleChange, defaultFile, ...props}: Fil
               handleFileChange(e);
             }}
           />
-        </>
+        </div>
       ) : (
-        <>
+        <div className="my-auto">
           <Tag
             onDelete={(event) => {
               setFile(null);
@@ -126,7 +133,7 @@ export const FileUpload = ({onConvert, handleChange, defaultFile, ...props}: Fil
               {file.name}
             </Typography>
           </Tag>
-        </>
+        </div>
       )}
     </div>
   );

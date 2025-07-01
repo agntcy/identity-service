@@ -67,7 +67,7 @@ const Welcome = () => {
             </div>
             <div className="w-full flex justify-center gap-6 mt-8">
               <div className="w-[50%] py-6 relative">
-                <Typography variant="h6">Verify identities</Typography>
+                <Typography variant="h6">Verify Identities</Typography>
                 <Typography variant="body1" marginTop={2}>
                   Begin verifying your MCP servers, agents, and A2A identities.
                 </Typography>
@@ -88,7 +88,7 @@ const Welcome = () => {
                 <Divider orientation="vertical" sx={{height: '37%', margin: '0 auto'}} />
               </div>
               <div className="w-[50%] py-6 relative">
-                <Typography variant="h6">Create identities</Typography>
+                <Typography variant="h6">Create Identities</Typography>
                 <Typography variant="body1" marginTop={2}>
                   Add agents (MCP servers, agents, and A2A) to create and manage identities & RBAC policies
                 </Typography>

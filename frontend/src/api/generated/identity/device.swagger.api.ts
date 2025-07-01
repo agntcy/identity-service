@@ -265,7 +265,7 @@ export class HttpClient<SecurityDataType = unknown> {
 }
 
 /**
- * @title agntcy/identity/platform/v1alpha1/settings.proto
+ * @title agntcy/identity/platform/v1alpha1/device.proto
  * @version version not set
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {}

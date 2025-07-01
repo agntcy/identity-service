@@ -13,20 +13,21 @@ import {FileUpload} from '@/components/ui/file-upload';
 import {VerifyIdentityFormValues} from '@/schemas/verify-identity-schema';
 import {Textarea} from '@/components/ui/textarea';
 
-export const VerifyIdentityInfo = ({isLoading = false}: {isLoading?: boolean}) => {
+export const VerifyIdentityForm = ({isLoading = false}: {isLoading?: boolean}) => {
   const {control, watch, reset, setValue} = useFormContext<VerifyIdentityFormValues>();
   const methods = useStepper();
 
-  const metaData = methods.getMetadata('uploadBadge') as VerifyIdentityFormValues | undefined;
+  const metaData = methods.getMetadata('verifyIdentityForm') as VerifyIdentityFormValues | undefined;
 
   const badgeId = watch('badgeId');
+  const badgeContent = watch('badgeContent');
 
   useEffect(() => {
     if (metaData) {
       reset({
         badgeId: metaData.badgeId || undefined,
-        file: metaData.file || undefined,
-        buffer: metaData.buffer || undefined
+        badgeFile: metaData.badgeFile || undefined,
+        badgeContent: metaData.badgeContent || undefined
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -40,20 +41,25 @@ export const VerifyIdentityInfo = ({isLoading = false}: {isLoading?: boolean}) =
             Details
           </Typography>
         </div>
-        <div className="w-full flex gap-8 items-">
-          <div className="py-6 w-[50%]">
+        <div className="w-full flex gap-8">
+          <div className="py-12 w-[50%]">
             <FormField
               control={control}
-              name="file"
+              name="badgeFile"
               render={({field}) => (
                 <FormItem>
                   <FormControl>
                     <FileUpload
-                      onBlur={field.onBlur}
+                      disabled={isLoading || !!badgeId}
+                      defaultFile={field.value}
+                      ref={field.ref}
                       name={field.name}
-                      disabled={isLoading}
-                      onConvert={(binary) => {
-                        setValue('buffer', binary);
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        field.onChange(file ? file : undefined);
+                      }}
+                      onConvert={(content) => {
+                        setValue('badgeContent', content ? new TextDecoder().decode(content) : undefined);
                       }}
                     />
                   </FormControl>
@@ -76,7 +82,7 @@ export const VerifyIdentityInfo = ({isLoading = false}: {isLoading?: boolean}) =
                 <FormItem>
                   <FormLabel className="form-label">ID Badge</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Type the ID of the badge..." rows={3} {...field} disabled={isLoading} />
+                    <Textarea placeholder="Type the ID of the badge..." rows={3} {...field} disabled={isLoading || !!badgeContent} />
                   </FormControl>
                 </FormItem>
               )}
