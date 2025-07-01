@@ -3,8 +3,7 @@ on:
   push:
     branches:
       - main
-      - PYRA-292-293-add-helm-publish
-
+      
 permissions:
   id-token: write 
   contents: read 
