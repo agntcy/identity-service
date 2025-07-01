@@ -155,11 +155,11 @@ const UserSection = () => {
             <div className="flex justify-center">
               <div className="flex flex-col gap-1">
                 <Typography variant="subtitle2">API Key</Typography>
-                <div className="bg-[#FBFCFE] border-[2px] border-[#D5DFF7] rounded-[4px] w-fit py-0 px-4 flex justify-between items-center gap-2">
+                <div className="bg-[#FBFCFE] border-[2px] border-[#D5DFF7] rounded-[4px] w-fit py-1 px-4 flex justify-between items-center gap-2">
                   <Typography variant="body2">{apiKey ? `${'*'.repeat(10)}${apiKey.slice(-5)}` : 'No API Key available'}</Typography>
                   <CopyButton
                     text={apiKey || ''}
-                    style={{border: 'none'}}
+                    style={{border: 'none', height: '20px', width: '20px'}}
                     onCopy={() => {
                       toast({
                         title: 'API Key copied to clipboard',
