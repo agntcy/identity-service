@@ -18,6 +18,7 @@ require (
 )
 
 require (
+	github.com/SherClockHolmes/webpush-go v1.4.0
 	github.com/agntcy/identity v0.0.3
 	github.com/agntcy/identity/api/client v0.0.0-20250619090527-395f86dcfbcc
 	github.com/coocood/freecache v1.2.4
@@ -39,7 +40,6 @@ require (
 )
 
 require (
-	github.com/SherClockHolmes/webpush-go v1.4.0 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cenkalti/backoff/v4 v4.3.0 // indirect

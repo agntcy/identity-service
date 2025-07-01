@@ -1,4 +1,4 @@
-/ Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+// Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
 // SPDX-License-Identifier: Apache-2.0
 
 package main
@@ -254,9 +254,9 @@ func main() {
 	)
 	policySrv := bff.NewPolicyService(appRepository, policyRepository)
 	notificationSrv := bff.NewNotificationService(
-		config.NotificationSubscriber,
-		config.NotificationVapidPublicKey,
-		config.NotificationVapidPrivateKey,
+		config.WebApprovalEmail,
+		config.WebApprovalPubKey,
+		config.WebApprovalPrivKey,
 	)
 	deviceSrv := bff.NewDeviceService(
 		deviceRepository,

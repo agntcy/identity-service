@@ -9,6 +9,7 @@ import (
 
 	webpush "github.com/SherClockHolmes/webpush-go"
 	authtypes "github.com/agntcy/identity-platform/internal/core/auth/types"
+	devicetypes "github.com/agntcy/identity-platform/internal/core/device/types"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 )
 
@@ -20,8 +21,8 @@ const (
 
 type NotificationService interface {
 	TestNotification(
-		deviceID string,
 		ctx context.Context,
+		device *devicetypes.Device,
 	) error
 	SendNotification(
 		ctx context.Context,
@@ -30,28 +31,28 @@ type NotificationService interface {
 }
 
 type notificationService struct {
-	subscriber      *string
-	vapidPublicKey  *string
-	vapidPrivateKey *string
+	subscriber      string
+	vapidPublicKey  string
+	vapidPrivateKey string
 }
 
 func NewNotificationService(
 	subscriber, vapidPublicKey, vapidPrivateKey string,
 ) NotificationService {
 	return &notificationService{
-		subscriber:      &subscriber,
-		vapidPublicKey:  &vapidPublicKey,
-		vapidPrivateKey: &vapidPrivateKey,
+		subscriber:      subscriber,
+		vapidPublicKey:  vapidPublicKey,
+		vapidPrivateKey: vapidPrivateKey,
 	}
 }
 
 func (s *notificationService) TestNotification(
-	deviceID string,
 	ctx context.Context,
+	device *devicetypes.Device,
 ) error {
 	return s.sendWebPushNotification(
 		ctx,
-		&deviceID,
+		&device.SubscriptionToken,
 		testMessage,
 	)
 }
@@ -70,7 +71,7 @@ func (s *notificationService) SendNotification(
 }
 
 func (s *notificationService) sendWebPushNotification(
-	ctx context.Context,
+	_ context.Context,
 	subscriptionToken *string,
 	message string,
 ) error {
@@ -82,11 +83,24 @@ func (s *notificationService) sendWebPushNotification(
 	}
 
 	// Decode subscription
-	s := &webpush.Subscription{}
-	json.Unmarshal([]byte(subscriptionToken), s)
+	var subscription map[string]interface{}
+
+	err := json.Unmarshal([]byte(*subscriptionToken), &subscription)
+	if err != nil {
+		return errutil.Err(
+			err,
+			"failed to unmarshal subscription token",
+		)
+	}
 
 	// Send Notification
-	resp, err := webpush.SendNotification([]byte(message), s, &webpush.Options{
+	resp, err := webpush.SendNotification([]byte(message), &webpush.Subscription{
+		Endpoint: subscription["endpoint"].(string),
+		Keys: webpush.Keys{
+			P256dh: subscription["p256dh"].(string),
+			Auth:   subscription["auth"].(string),
+		},
+	}, &webpush.Options{
 		Subscriber:      s.subscriber,
 		VAPIDPublicKey:  s.vapidPublicKey,
 		VAPIDPrivateKey: s.vapidPrivateKey,
@@ -97,7 +111,7 @@ func (s *notificationService) sendWebPushNotification(
 	}
 
 	// Check response
-	defer resp.Body.Close()
+	_ = resp.Body.Close()
 
 	return nil
 }

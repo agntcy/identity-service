@@ -74,17 +74,17 @@ func (s *deviceService) RegisterDevice(
 		)
 	}
 
+	// Update
+	existingDevice.SubscriptionToken = device.SubscriptionToken
+	existingDevice.UserID = device.UserID
+
 	// Try to send a notification about the device registration.
-	if err := s.notificationService.SendNotification(ctx, existingDevice); err != nil {
+	if err := s.notificationService.TestNotification(ctx, existingDevice); err != nil {
 		return errutil.Err(
 			err,
 			"failed to send notification for device registration",
 		)
 	}
-
-	// Update
-	existingDevice.SubscriptionToken = device.SubscriptionToken
-	existingDevice.UserID = device.UserID
 
 	_, err = s.deviceRepository.UpdateDevice(ctx, existingDevice)
 
