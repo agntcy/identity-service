@@ -185,7 +185,7 @@ func (s *badgeService) IssueBadge(
 			return nil, fmt.Errorf("error trying to create tasks: %w", err)
 		}
 	case apptypes.APP_TYPE_MCP_SERVER:
-		_, err = s.taskService.CreateForMCP(ctx, app.ID, ptrutil.DerefStr(app.Name), "")
+		_, err = s.taskService.CreateForMCP(ctx, app.ID, claims.Badge)
 		if err != nil {
 			return nil, fmt.Errorf("error trying to create tasks: %w", err)
 		}
@@ -283,7 +283,6 @@ func (s *badgeService) createBadgeClaims(
 			}
 
 			mcpClaims = string(mcpServerData)
-
 		} else if in.mcp.SchemaBase64 != nil {
 			mcpSchema, err := base64.StdEncoding.DecodeString(*in.mcp.SchemaBase64)
 			if err != nil {
