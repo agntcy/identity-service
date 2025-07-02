@@ -28,7 +28,7 @@ dependencies = ["grpcio", "protobuf", "grpcio-tools", "protoc_gen_openapiv2", "p
 identity-cli = "identityplatform.cli:app"
 
 [tool.setuptools]
-packages = ["identityplatform", "identityplatform.badge", "openapiv3", "google.api", "agntcy.identity.platform.v1alpha1", "agntcy.identity.platform.shared"]
+packages = ["identityplatform", "identityplatform.commands", "openapiv3", "google.api", "agntcy.identity.platform.v1alpha1", "agntcy.identity.platform.shared"]
 
 [tool.pytest.ini_options]
 minversion = "8.0.0"
