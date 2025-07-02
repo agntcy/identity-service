@@ -23,6 +23,7 @@ const NotFound: React.FC = () => {
         description="Sorry, we can't find the page you're looking for. It might have been removed or renamed, or maybe it never existed."
         actionTitle="Go Back"
         actionCallback={() => handleClick()}
+        containerProps={{paddingBottom: '40px'}}
       />
     </Card>
   );

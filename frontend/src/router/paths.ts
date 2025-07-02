@@ -15,10 +15,10 @@ export const PATHS = {
     info: '/agentic-services/:id',
     verifyIdentity: '/agentic-services/verify-identity'
   },
-  accessPolicies: {
-    base: '/access-policies',
-    create: '/access-policies/create',
-    info: '/access-policies/:id'
+  policies: {
+    base: '/policies',
+    create: '/policies/create',
+    info: '/policies/:id'
   },
   settings: {
     base: '/settings',

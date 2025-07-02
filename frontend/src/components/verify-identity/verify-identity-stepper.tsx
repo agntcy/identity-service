@@ -140,7 +140,6 @@ const FormStepperComponent = () => {
                               </Tooltip>
                             )}
                           </div>
-                          <Typography variant="body2">{step.description}</Typography>
                         </div>
                       </AccordionTrigger>
                       <AccordionContent>
@@ -149,22 +148,20 @@ const FormStepperComponent = () => {
                         ) : (
                           step.id === 'verficationResults' && <VerificationResults />
                         )}
-                        <div className="flex justify-between items-center">
+                        <StepperControls className="pt-4">
                           <Button variant="tertariary" onClick={handleOnClear}>
                             Cancel
                           </Button>
-                          <StepperControls className="pt-4">
-                            <Button
-                              type="submit"
-                              loading={isLoading}
-                              loadingPosition="start"
-                              disabled={isLoading || !form.formState.isValid}
-                              className="cursor-pointer"
-                            >
-                              {methods.isLast ? 'Done' : 'Verify'}
-                            </Button>
-                          </StepperControls>
-                        </div>
+                          <Button
+                            type="submit"
+                            loading={isLoading}
+                            loadingPosition="start"
+                            disabled={isLoading || !form.formState.isValid}
+                            className="cursor-pointer"
+                          >
+                            {methods.isLast ? 'Done' : 'Verify'}
+                          </Button>
+                        </StepperControls>
                       </AccordionContent>
                     </AccordionItem>
                   </div>

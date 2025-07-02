@@ -131,7 +131,7 @@ export const VerifyIdentityForm = ({isLoading = false}: {isLoading?: boolean}) =
                   <FormLabel className="form-label">Badge</FormLabel>
                   <FormControl>
                     <Textarea
-                      className="resize-none"
+                      className="resize-none h-[124px]"
                       placeholder="Type content of the badge..."
                       rows={3}
                       {...field}

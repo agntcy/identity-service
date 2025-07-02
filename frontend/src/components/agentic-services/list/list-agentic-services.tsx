@@ -205,7 +205,11 @@ export const ListAgenticServices = () => {
               }
             }}
             renderEmptyRowsFallback={() => (
-              <EmptyState title="No Agentic Services" description="Currently, there are no agentic services available." />
+              <EmptyState
+                title="No Agentic Services"
+                description="Currently, there are no agentic services available."
+                containerProps={{paddingBottom: '40px'}}
+              />
             )}
           />
         </Card>

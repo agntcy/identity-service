@@ -21,6 +21,7 @@ export const VerificationResults = () => {
 
   const badge = JSON.parse(badgeClaims?.badge || '{}');
 
+  // TODO: Check status
   const keyValuePairs = useMemo(() => {
     const temp: KeyValuePair[] = [
       {

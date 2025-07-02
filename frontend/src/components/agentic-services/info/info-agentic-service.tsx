@@ -4,20 +4,8 @@
  */
 
 import {Card, CardContent} from '@/components/ui/card';
-import {DownloadIcon, ExpandIcon, ExternalLinkIcon, PlusIcon} from 'lucide-react';
-import {
-  Button,
-  CodeBlock,
-  CopyButton,
-  EmptyState,
-  GeneralSize,
-  Link,
-  Modal,
-  ModalContent,
-  ModalTitle,
-  toast,
-  Typography
-} from '@outshift/spark-design';
+import {DownloadIcon, ExpandIcon, PlusIcon} from 'lucide-react';
+import {Button, CodeBlock, CopyButton, EmptyState, Modal, ModalContent, ModalTitle, toast, Typography} from '@outshift/spark-design';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {App} from '@/types/api/app';
 import KeyValue, {KeyValuePair} from '@/components/ui/key-value';
@@ -92,18 +80,12 @@ export const InfoAgenticService = ({app, onChangeReissueBadge}: {app?: App; onCh
   return (
     <>
       <div className="flex gap-4">
-        <div className="w-[45%] space-y-2">
-          <Card className="text-start space-y-6" variant="secondary">
+        <div className="w-[45%] space-y-4">
+          <Card className="text-start space-y-4" variant="secondary">
             <div className="flex justify-between items-center">
               <Typography variant="subtitle1" fontWeight={600}>
                 About
               </Typography>
-              <Link href="" openInNewTab>
-                <div className="flex items-center gap-1">
-                  View documentation
-                  <ExternalLinkIcon className="w-4 h-4 ml-1" />
-                </div>
-              </Link>
             </div>
             <CardContent className="p-0 space-y-4">
               <KeyValue pairs={keyValuePairs} useCard={false} />
@@ -114,12 +96,6 @@ export const InfoAgenticService = ({app, onChangeReissueBadge}: {app?: App; onCh
               <Typography variant="subtitle1" fontWeight={600}>
                 API Key
               </Typography>
-              <Link href="" openInNewTab>
-                <div className="flex items-center gap-1">
-                  View documentation
-                  <ExternalLinkIcon className="w-4 h-4 ml-1" />
-                </div>
-              </Link>
             </div>
             <CardContent className="p-0 space-y-4">
               <div className="bg-[#FBFCFE] border border-[#D5DFF7] rounded-[6px] w-fit py-2 px-4 flex justify-between items-center gap-8 w-full">
@@ -145,7 +121,6 @@ export const InfoAgenticService = ({app, onChangeReissueBadge}: {app?: App; onCh
               <LoaderRelative />
             ) : !data?.verifiableCredential ? (
               <EmptyState
-                size={GeneralSize.Medium}
                 title="No Badge"
                 description="Create a badge for your agentic service to enable verifiable credentials."
                 actionTitle="Create Badge"
@@ -154,6 +129,7 @@ export const InfoAgenticService = ({app, onChangeReissueBadge}: {app?: App; onCh
                   sx: {fontWeight: '600 !important'},
                   startIcon: <PlusIcon className="w-4 h-4" />
                 }}
+                containerProps={{paddingBottom: '40px'}}
               />
             ) : (
               <div className="space-y-4">

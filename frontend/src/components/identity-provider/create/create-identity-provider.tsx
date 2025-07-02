@@ -104,7 +104,7 @@ export const CreateIdentityProvider = () => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <IdentityProviderForm isLoading={isLoading} />
-        <div className="flex justify-between items-center">
+        <div className="flex justify-end gap-4 items-center">
           <Button variant="tertariary" onClick={handleOnClear}>
             Cancel
           </Button>

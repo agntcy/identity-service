@@ -154,7 +154,6 @@ const FormStepperComponent = () => {
                               </div>
                             )}
                           </div>
-                          <Typography variant="body2">{step.description}</Typography>
                         </div>
                       </AccordionTrigger>
                       <AccordionContent>
@@ -165,33 +164,27 @@ const FormStepperComponent = () => {
                         ) : (
                           step.id === 'createBadge' && <CreateBadge app={app} />
                         )}
-                        <div className="flex justify-between items-center">
-                          {methods.current.id !== 'createBadge' ? (
+                        {methods.current.id !== 'createBadge' && (
+                          <StepperControls className="pt-4">
                             <Button variant="tertariary" onClick={handleOnClear} disabled={isLoading}>
                               Cancel
                             </Button>
-                          ) : (
-                            <div />
-                          )}
-                          {methods.current.id !== 'createBadge' && (
-                            <StepperControls className="pt-4">
-                              {!methods.isFirst && (
-                                <Button variant="outlined" onClick={methods.prev} disabled={methods.isFirst || isLoading} className="cursor-pointer">
-                                  Previous
-                                </Button>
-                              )}
-                              <Button
-                                loading={isLoading}
-                                loadingPosition="start"
-                                type="submit"
-                                disabled={isLoading || !form.formState.isValid}
-                                className="cursor-pointer"
-                              >
-                                {methods.current.id === 'confirmAgenticService' ? 'Save' : 'Next'}
+                            {!methods.isFirst && (
+                              <Button variant="outlined" onClick={methods.prev} disabled={methods.isFirst || isLoading} className="cursor-pointer">
+                                Previous
                               </Button>
-                            </StepperControls>
-                          )}
-                        </div>
+                            )}
+                            <Button
+                              loading={isLoading}
+                              loadingPosition="start"
+                              type="submit"
+                              disabled={isLoading || !form.formState.isValid}
+                              className="cursor-pointer"
+                            >
+                              {methods.current.id === 'confirmAgenticService' ? 'Save' : 'Next'}
+                            </Button>
+                          </StepperControls>
+                        )}
                       </AccordionContent>
                     </AccordionItem>
                   </div>

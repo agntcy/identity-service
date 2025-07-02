@@ -29,7 +29,7 @@ const OrganizationInfo = React.lazy(() => import('@/pages/settings/organizations
 const AgenticServices = React.lazy(() => import('@/pages/agentic-services/agentic-services'));
 const CreateAgenticService = React.lazy(() => import('@/pages/agentic-services/create-agentic-service'));
 const AgenticServiceInfo = React.lazy(() => import('@/pages/agentic-services/agentic-service-info'));
-const AccessPolicies = React.lazy(() => import('@/pages/access-policies/access-policies'));
+const Policies = React.lazy(() => import('@/pages/policies/policies'));
 const VerifyIdentityPrivate = React.lazy(() => import('@/pages/agentic-services/verify-identity-private'));
 const VerifyIdentityPublic = React.lazy(() => import('@/pages/verify-identity/verify-identity-public'));
 
@@ -143,12 +143,12 @@ export const useRoutes = () => {
         ]
       },
       {
-        path: PATHS.accessPolicies.base,
+        path: PATHS.policies.base,
         disabled: !isTbacEnable,
         children: [
           {
             index: true,
-            element: <AccessPolicies />
+            element: <Policies />
           },
           {
             path: '*',
