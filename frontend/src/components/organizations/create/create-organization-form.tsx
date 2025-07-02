@@ -112,7 +112,7 @@ export const CreateOrganizationForm = () => {
             </CardContent>
           </Card>
           <div className="flex justify-end gap-4">
-            <Link to={PATHS.settings.organizations.base}>
+            <Link to={PATHS.settings.organizationsAndUsers.base}>
               <Button variant="tertariary" color="negative" disabled={isLoading}>
                 Cancel
               </Button>

@@ -186,18 +186,18 @@ export const useRoutes = () => {
             element: <SettingsApiKey />
           },
           {
-            path: PATHS.settings.organizations.base,
+            path: PATHS.settings.organizationsAndUsers.base,
             children: [
               {
                 index: true,
                 element: <SettingsOrganizations />
               },
               {
-                path: PATHS.settings.organizations.create,
+                path: PATHS.settings.organizationsAndUsers.create,
                 element: <CreateOrganization />
               },
               {
-                path: PATHS.settings.organizations.info,
+                path: PATHS.settings.organizationsAndUsers.info,
                 element: <OrganizationInfo />
               },
               {

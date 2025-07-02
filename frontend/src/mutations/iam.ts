@@ -6,11 +6,18 @@
 import {AxiosResponse} from 'axios';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {IamAPI} from '@/api/services';
-import {TenantReponse} from '@/types/api/iam';
+import {InviteUserPayload, TenantReponse} from '@/types/api/iam';
 
 interface PropsSettingsTenant {
   callbacks?: {
     onSuccess?: (props: AxiosResponse<TenantReponse, any>) => void;
+    onError?: () => void;
+  };
+}
+
+interface PropsSettingsInviteUser {
+  callbacks?: {
+    onSuccess?: (props: AxiosResponse<any, any>) => void;
     onError?: () => void;
   };
 }
@@ -64,6 +71,28 @@ export const useDeleteTenant = ({callbacks}: PropsSettingsTenant) => {
     mutationFn: (id: string) => IamAPI.deleteTenant(id),
     onSettled: async () => {
       await queryClient.invalidateQueries({queryKey: ['get-tenants']});
+    },
+    onError: () => {
+      if (callbacks?.onError) {
+        callbacks.onError();
+      }
+    },
+    onSuccess: (resp) => {
+      if (callbacks?.onSuccess) {
+        callbacks.onSuccess(resp);
+      }
+    }
+  });
+};
+
+export const useInviteUser = ({callbacks}: PropsSettingsInviteUser) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ['invite-user'],
+    mutationFn: ({groupId, data}: {groupId: string; data: InviteUserPayload}) => IamAPI.inviteUser(groupId, data),
+    onSettled: async () => {
+      await queryClient.invalidateQueries({queryKey: ['get-tenant-groups']});
+      await queryClient.invalidateQueries({queryKey: ['get-users-group']});
     },
     onError: () => {
       if (callbacks?.onError) {

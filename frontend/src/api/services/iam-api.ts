@@ -7,7 +7,14 @@ import axios, {AxiosError, AxiosHeaders, AxiosInstance, AxiosResponse, InternalA
 import {AuthInfo} from '@/types/okta';
 import {getAuthConfig} from '@/utils/get-auth-config';
 import {httpErrorsAuth} from '@/constants/http-errors';
-import {GetSessionResponse, GetTenantsResponse, TenantReponse} from '@/types/api/iam';
+import {
+  GetGroupsTenantResponse,
+  GetSessionResponse,
+  GetTenantsResponse,
+  GetUsersGroupsResponse,
+  InviteUserPayload,
+  TenantReponse
+} from '@/types/api/iam';
 
 class IamAPIClass {
   protected authInfo: AuthInfo | null | undefined;
@@ -27,6 +34,18 @@ class IamAPIClass {
 
   public getSession = () => {
     return this.instance.get<GetSessionResponse>('/session');
+  };
+
+  public getUsersGroups = (groupId: string) => {
+    return this.instance.get<GetUsersGroupsResponse>(`/user`, {
+      params: {
+        group: groupId
+      }
+    });
+  };
+
+  public getGroupsTenant = (tenantId: string) => {
+    return this.instance.get<GetGroupsTenantResponse>(`/tenant/${tenantId}/group`);
   };
 
   public getTenants = () => {
@@ -56,6 +75,15 @@ class IamAPIClass {
 
   public deleteTenant = (id: string) => {
     return this.instance.delete<TenantReponse>(`/tenant/${id}`);
+  };
+
+  public inviteUser = (groupId: string, data: InviteUserPayload) => {
+    return this.instance.post(`/user/request/invite`, data, {
+      params: {
+        product: getAuthConfig().productId,
+        group: groupId
+      }
+    });
   };
 
   protected handleLogout = () => {

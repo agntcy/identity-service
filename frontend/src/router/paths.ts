@@ -27,10 +27,10 @@ export const PATHS = {
       create: '/settings/identity-provider/create'
     },
     apiKey: '/settings/api-key',
-    organizations: {
-      base: '/settings/organizations',
-      create: '/settings/organizations/create',
-      info: '/settings/organizations/:id'
+    organizationsAndUsers: {
+      base: '/settings/organizations-users',
+      create: '/settings/organizations-users/create',
+      info: '/settings/organizations-users/:id'
     }
   }
 };

@@ -30,6 +30,7 @@ export const ListOrganizations = () => {
 
   const {data, isLoading, isFetching, refetch, error} = useGetTenants();
   const {authInfo, logout} = useAuth();
+  const currentTenantId = authInfo?.user?.tenant?.id;
 
   const navigate = useNavigate();
 
@@ -65,7 +66,7 @@ export const ListOrganizations = () => {
   return (
     <>
       <ConditionalQueryRenderer
-        itemName="organizations"
+        itemName="Organizations"
         data={data?.tenants}
         error={error}
         isLoading={isLoading || isFetching}
@@ -87,8 +88,16 @@ export const ListOrganizations = () => {
             muiTableBodyRowProps={({row}) => ({
               sx: {cursor: 'pointer', '& .MuiIconButton-root': {color: (theme) => theme.palette.vars.interactiveSecondaryDefaultDefault}},
               onClick: () => {
-                const path = generatePath(PATHS.settings.organizations.info, {id: row.original?.id});
-                void navigate(path, {replace: true});
+                if (currentTenantId !== row.original.id) {
+                  toast({
+                    title: 'Access Denied',
+                    description: 'You cannot view or edit this organization as it is not your current organization.',
+                    type: 'warning'
+                  });
+                } else {
+                  const path = generatePath(PATHS.settings.organizationsAndUsers.info, {id: row.original?.id});
+                  void navigate(path, {replace: true});
+                }
               }
             })}
             enableRowActions
@@ -107,7 +116,7 @@ export const ListOrganizations = () => {
             state={{pagination, sorting}}
             onSortingChange={setSorting}
             renderRowActionMenuItems={({row}) => {
-              if (authInfo?.user?.tenant?.id !== row.original.id) {
+              if (currentTenantId !== row.original.id) {
                 return [];
               }
               return [

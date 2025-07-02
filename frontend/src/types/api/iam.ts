@@ -31,3 +31,28 @@ export interface GetSessionResponse {
     productRoles: string[];
   }[];
 }
+
+export interface UserResponse {
+  name: string;
+  role: string;
+  productRoles: string[];
+}
+
+export interface GetUsersGroupsResponse {
+  users: UserResponse[];
+}
+
+export interface GetGroupsResponse {
+  id: string;
+  name: string;
+  managedId?: string;
+}
+
+export interface GetGroupsTenantResponse {
+  groups: GetGroupsResponse[];
+}
+
+export interface InviteUserPayload {
+  username: string;
+  productRedirectUri?: string;
+}

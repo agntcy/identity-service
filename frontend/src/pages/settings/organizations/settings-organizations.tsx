@@ -13,8 +13,8 @@ import {Link} from 'react-router-dom';
 const SettingsOrganizations: React.FC = () => {
   return (
     <BasePage
-      title="Organizations"
-      description="Manage your organizations. You can create, view, and delete organizations for your account."
+      title="Organizations & Users"
+      description="Manage your organizations and users. You can create, view, and delete organizations, as well as manage users within those organizations."
       subNav={[
         {
           label: 'Identity Provider',
@@ -25,8 +25,8 @@ const SettingsOrganizations: React.FC = () => {
           href: PATHS.settings.apiKey
         },
         {
-          label: 'Organizations',
-          href: PATHS.settings.organizations.base
+          label: 'Organizations & Users',
+          href: PATHS.settings.organizationsAndUsers.base
         }
       ]}
       breadcrumbs={[
@@ -39,7 +39,7 @@ const SettingsOrganizations: React.FC = () => {
         }
       ]}
       rightSideItems={
-        <Link to={PATHS.settings.organizations.create}>
+        <Link to={PATHS.settings.organizationsAndUsers.create}>
           <Button variant="outlined" endIcon={<PlusIcon className="w-4 h-4" />} fullWidth sx={{fontWeight: '600 !important'}}>
             New Organization
           </Button>
