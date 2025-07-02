@@ -179,6 +179,12 @@ func (d *OktaIdp) oktaParseAPIResponse(err error, response *oktasdk.APIResponse)
 		}
 	}()
 
+	if response == nil || response.Body == nil || err != nil {
+		return errutil.Err(
+			err, "empty response from Okta API",
+		)
+	}
+
 	data, bodyErr := io.ReadAll(response.Body)
 	if bodyErr != nil {
 		return errutil.Err(
