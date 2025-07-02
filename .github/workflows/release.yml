@@ -68,7 +68,7 @@ jobs:
       ghcr-org-token: ${{ secrets.GHCR_TOKEN }}
 
     with:
-      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      runner-group: ${{ vars.DEFAULT_RUNNER_GROUP }}
       ### REQUIRED
       ### Docker image name
       image-name: "${{ github.event.repository.name }}"
@@ -105,7 +105,7 @@ jobs:
       ghcr-org-token: ${{ secrets.GHCR_TOKEN }}
 
     with:
-      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      runner-group: ${{ vars.DEFAULT_RUNNER_GROUP }}
       enable-corona: true
       enable-blackduck: false
       corona-product-name: ${{ vars.CORONA_PRODUCT_NAME }}
@@ -137,7 +137,7 @@ jobs:
       artifactory_password: ${{ secrets.ARTIFACTORY_PASSWORD }}
 
     with:
-      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      runner-group: ${{ vars.DEFAULT_RUNNER_GROUP }}
       ### REQUIRED
       ### Docker image name
       image-name: "${{ github.event.repository.name }}-ui"
@@ -174,7 +174,7 @@ jobs:
       ghcr-org-token: ${{ secrets.GHCR_TOKEN }}
 
     with:
-      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      runner-group: ${{ vars.DEFAULT_RUNNER_GROUP }}
       enable-corona: true
       enable-blackduck: false
       corona-product-name: ${{ vars.CORONA_PRODUCT_NAME }}
@@ -197,7 +197,7 @@ jobs:
     needs: [checkout-unit-tests]
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@a663a51a68f4158da24f29d7859dabb891586d5c #main
     with:
-      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      runner-group: ${{ vars.DEFAULT_RUNNER_GROUP }}
       enable-chartmuseum: true
       enable-private-ecr: false
       enable-public-ecr: false
@@ -216,7 +216,7 @@ jobs:
     needs: [checkout-unit-tests]
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@a663a51a68f4158da24f29d7859dabb891586d5c #main
     with:
-      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      runner-group: ${{ vars.DEFAULT_RUNNER_GROUP }}
       enable-chartmuseum: true
       enable-private-ecr: false
       enable-public-ecr: false
