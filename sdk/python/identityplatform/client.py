@@ -1,6 +1,6 @@
 # Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
 # SPDX-License-Identifier: Apache-2.0
-"""Client module for the Identity Python SDK."""
+"""Client module for the Identity Platform Python SDK."""
 
 import base64
 import logging
@@ -8,20 +8,22 @@ import os
 
 import grpc
 
-from agntcyidentity import constant
+from identityplatform import constant
 
 logger = logging.getLogger("client")
 
 
 class Client:  # pylint: disable=too-few-public-methods
-    """Client class for the Identity Python SDK."""
+    """Client class for the Identity Platform Python SDK."""
 
-    def __init__(self, async_mode=False):
+    def __init__(self, api_key, async_mode=False):
         """Initialize the client."""
         # Get credentials
-        grpc_server_url = os.environ.get(
-            "IDENTITY_NODE_GRPC_SERVER_URL", constant.DEFAULT_GRPC_URL
-        )
+        grpc_server_url = os.environ.get("IDENTITY_PLATFORM_GRPC_SERVER_URL",
+                                         constant.DEFAULT_GRPC_URL)
+        call_credentials = grpc.metadata_call_credentials(
+            lambda context, callback: callback(
+                ((constant.API_KEY_KEY, api_key), ), None))
         logger.debug("Connecting to %s", grpc_server_url)
 
         # Options
@@ -43,8 +45,8 @@ class Client:  # pylint: disable=too-few-public-methods
         ]
 
         # Get credentials type
-        use_ssl = int(os.environ.get("IDENTITY_NODE_USE_SSL", 1))
-        use_insecure = int(os.environ.get("IDENTITY_NODE_USE_INSECURE", 0))
+        use_ssl = int(os.environ.get("IDENTITY_PLATFORM_USE_SSL", 0))
+        use_insecure = int(os.environ.get("IDENTITY_PLATFORM_USE_INSECURE", 0))
 
         logger.debug("Using SSL: %s, Insecure: %s", use_ssl, use_insecure)
 
@@ -53,23 +55,22 @@ class Client:  # pylint: disable=too-few-public-methods
             logger.debug("Using SSL")
             if use_insecure == 1:
                 root_cert = base64.b64decode(
-                    os.environ["IDENTITY_NODE_INSECURE_ROOT_CA"]
-                )
+                    os.environ["IDENTITY_PLATFORM_INSECURE_ROOT_CA"])
                 channel_credentials = grpc.ssl_channel_credentials(
-                    root_certificates=root_cert
-                )
+                    root_certificates=root_cert)
             else:
                 channel_credentials = grpc.ssl_channel_credentials()
         else:
+
             logger.debug("Using local credentials")
 
         # Set if async
-        secure_channel = (
-            grpc.aio.secure_channel if async_mode else grpc.secure_channel
-        )
+        secure_channel = (grpc.aio.secure_channel
+                          if async_mode else grpc.secure_channel)
 
         self.channel = secure_channel(
             grpc_server_url,
-            channel_credentials,
+            grpc.composite_channel_credentials(channel_credentials,
+                                               call_credentials),
             options=options,
         )
