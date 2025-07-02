@@ -10,20 +10,28 @@ from mcp.client.streamable_http import streamablehttp_client
 
 
 class McpTool:
+    """Represents a tool in the MCP server."""
+
     def __init__(self, name: str, description: str, parameters: dict):
+        """Initialize a McpTool instance."""
         self.name = name
         self.description = description
         self.parameters = parameters
 
 
 class McpResource:
+    """Represents a resource in the MCP server."""
+
     def __init__(self, name: str, description: str, uri: str):
+        """Initialize a McpResource instance."""
         self.name = name
         self.description = description
         self.uri = uri
 
 
 class McpServer:
+    """Represents an MCP server with its tools and resources."""
+
     def __init__(
         self,
         name: str,
@@ -31,18 +39,21 @@ class McpServer:
         tools: List[McpTool],
         resources: List[McpResource],
     ):
+        """Initialize a McpServer instance."""
         self.name = name
         self.url = url
         self.tools = tools
         self.resources = resources
 
     def toJSON(self):
+        """Convert the McpServer instance to a JSON string."""
         return json.dumps(
             self, default=lambda o: o.__dict__, sort_keys=True, indent=4
         )
 
 
 async def discover(name: str, url: str) -> str:
+    """Discover MCP server tools and resources."""
     try:
         # Connect to a streamable HTTP server
         async with streamablehttp_client(f"{url}/mcp") as (

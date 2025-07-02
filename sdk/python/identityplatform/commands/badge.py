@@ -3,6 +3,7 @@
 """Badge services for the Identity Platform Python SDK."""
 
 import asyncio
+import base64
 
 import typer
 from identityplatform.commands.a2a import discover as discover_a2a
@@ -32,7 +33,6 @@ def create(
     ] = "",
 ):
     """Issue a badge for the agentic service."""
-
     if not url:
         typer.echo("Error: Agentic Service URL is required.")
         raise typer.Exit(code=1)
@@ -53,7 +53,7 @@ def create(
     print(f"Service Name: [bold blue]{service_name}[/bold blue]")
     print(f"Service Type: [bold blue]{service_type}[/bold blue]")
 
-    claims = ""
+    claims = {}
 
     if service_type == 3:  # APP_TYPE_MCP_SERVER
         print(
@@ -61,14 +61,22 @@ def create(
         )
 
         # Discover the MCP server
-        claims = asyncio.run(discover_mcp(service_name, url))
+        schema = asyncio.run(discover_mcp(service_name, url))
+
+        claims["mcp"] = {
+            "schema_base64": base64.b64encode(schema.encode("utf-8")),
+        }
     elif service_type == 1:  # APP_TYPE_A2A_AGENT
         print(
             f"[bold green]Discovering A2A agent for {service_name} at [bold blue]{url}[/bold blue][/bold green]"
         )
 
         # Discover the A2A agent
-        claims = discover_a2a(url)
+        schema = discover_a2a(url)
+
+        claims["a2a"] = {
+            "schema_base64": base64.b64encode(schema.encode("utf-8")),
+        }
 
     if not claims:
         typer.echo("Error: No claims found for the agentic service.")
@@ -79,3 +87,10 @@ def create(
     )
 
     # Issue the badge
+    identity_sdk.get_badge_service().IssueBadge(
+        request=Sdk.IssueBadgeRequest(app_id=service_id, **claims)
+    )
+
+    print(
+        f"[bold green]Badge issued successfully for service [bold blue]{service_id}[/bold blue][/bold green]"
+    )

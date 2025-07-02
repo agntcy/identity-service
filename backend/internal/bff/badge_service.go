@@ -26,12 +26,14 @@ import (
 
 type issueInput struct {
 	a2a struct {
-		WellKnownUrl string `validate:"required"`
+		WellKnownUrl *string `validate:"required_if=SchemaBase64 null"`
+		SchemaBase64 *string `validate:"required_if=WellKnownUrl null"`
 	}
 
 	mcp struct {
-		Name string `validate:"required"`
-		Url  string `validate:"required"`
+		Name         *string `validate:"required_if=SchemaBase64 null"`
+		Url          *string `validate:"required_if=SchemaBase64 null"`
+		SchemaBase64 *string `validate:"required_if=Url null"`
 	}
 
 	oasf struct {
@@ -41,16 +43,18 @@ type issueInput struct {
 
 type IssueOption func(in *issueInput)
 
-func WithA2A(wellKnownUrl string) IssueOption {
+func WithA2A(wellKnownUrl, schemaBase64 *string) IssueOption {
 	return func(in *issueInput) {
 		in.a2a.WellKnownUrl = wellKnownUrl
+		in.a2a.SchemaBase64 = schemaBase64
 	}
 }
 
-func WithMCP(name, url string) IssueOption {
+func WithMCP(name, url, schemaBase64 *string) IssueOption {
 	return func(in *issueInput) {
 		in.mcp.Name = name
 		in.mcp.Url = url
+		in.mcp.SchemaBase64 = schemaBase64
 	}
 }
 
@@ -181,7 +185,7 @@ func (s *badgeService) IssueBadge(
 			return nil, fmt.Errorf("error trying to create tasks: %w", err)
 		}
 	case apptypes.APP_TYPE_MCP_SERVER:
-		_, err = s.taskService.CreateForMCP(ctx, app.ID, in.mcp.Name, in.mcp.Url)
+		_, err = s.taskService.CreateForMCP(ctx, app.ID, ptrutil.DerefStr(app.Name), "")
 		if err != nil {
 			return nil, fmt.Errorf("error trying to create tasks: %w", err)
 		}
@@ -212,14 +216,25 @@ func (s *badgeService) createBadgeClaims(
 			return nil, badgetypes.BADGE_TYPE_UNSPECIFIED, err
 		}
 
-		card, err := s.a2aClient.Discover(ctx, in.a2a.WellKnownUrl)
-		if err != nil {
-			return nil,
-				badgetypes.BADGE_TYPE_UNSPECIFIED,
-				fmt.Errorf("unable to discover A2A agent card: %w", err)
+		var a2aClaims string
+
+		if in.a2a.WellKnownUrl != nil {
+			a2aClaims, err = s.a2aClient.Discover(ctx, *in.a2a.WellKnownUrl)
+			if err != nil {
+				return nil,
+					badgetypes.BADGE_TYPE_UNSPECIFIED,
+					fmt.Errorf("unable to discover A2A agent card: %w", err)
+			}
+		} else {
+			a2aSchema, err := base64.StdEncoding.DecodeString(*in.a2a.SchemaBase64)
+			if err != nil {
+				return nil, badgetypes.BADGE_TYPE_AGENT_BADGE, err
+			}
+
+			a2aClaims = string(a2aSchema)
 		}
 
-		claims.Badge = card
+		claims.Badge = a2aClaims
 		badgeType = badgetypes.BADGE_TYPE_AGENT_BADGE
 	case apptypes.APP_TYPE_AGENT_OASF:
 		err := s.validator.Struct(&in.oasf)
@@ -243,28 +258,42 @@ func (s *badgeService) createBadgeClaims(
 			return nil, badgetypes.BADGE_TYPE_UNSPECIFIED, err
 		}
 
-		mcpServer, err := s.mcpClient.Discover(ctx, in.mcp.Name, in.mcp.Url)
-		if err != nil {
-			return nil,
-				badgetypes.BADGE_TYPE_UNSPECIFIED,
-				fmt.Errorf("unable to discover MCP server: %w", err)
+		var mcpClaims string
+
+		if in.mcp.Name != nil && in.mcp.Url != nil {
+			mcpServer, err := s.mcpClient.Discover(ctx, *in.mcp.Name, *in.mcp.Url)
+			if err != nil {
+				return nil,
+					badgetypes.BADGE_TYPE_UNSPECIFIED,
+					fmt.Errorf("unable to discover MCP server: %w", err)
+			}
+
+			if mcpServer == nil {
+				return nil,
+					badgetypes.BADGE_TYPE_UNSPECIFIED,
+					fmt.Errorf("no MCP server found")
+			}
+
+			// Marshal the MCP server to JSON
+			mcpServerData, err := json.Marshal(mcpServer)
+			if err != nil {
+				return nil,
+					badgetypes.BADGE_TYPE_UNSPECIFIED,
+					fmt.Errorf("error marshalling MCP server: %w", err)
+			}
+
+			mcpClaims = string(mcpServerData)
+
+		} else if in.mcp.SchemaBase64 != nil {
+			mcpSchema, err := base64.StdEncoding.DecodeString(*in.mcp.SchemaBase64)
+			if err != nil {
+				return nil, badgetypes.BADGE_TYPE_UNSPECIFIED, err
+			}
+
+			mcpClaims = string(mcpSchema)
 		}
 
-		if mcpServer == nil {
-			return nil,
-				badgetypes.BADGE_TYPE_UNSPECIFIED,
-				fmt.Errorf("no MCP server found")
-		}
-
-		// Marshal the MCP server to JSON
-		mcpServerData, err := json.Marshal(mcpServer)
-		if err != nil {
-			return nil,
-				badgetypes.BADGE_TYPE_UNSPECIFIED,
-				fmt.Errorf("error marshalling MCP server: %w", err)
-		}
-
-		claims.Badge = string(mcpServerData)
+		claims.Badge = mcpClaims
 		badgeType = badgetypes.BADGE_TYPE_MCP_BADGE
 	default:
 		return nil,

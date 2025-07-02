@@ -6,9 +6,7 @@ import requests
 
 
 def discover(well_known_url):
-    """
-    Fetch the agent card from the well-known URL.
-    """
+    """Fetch the agent card from the well-known URL."""
 
     try:
         # Perform the GET request
