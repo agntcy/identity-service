@@ -104,10 +104,6 @@ vault:
     ports:
       http: 8200
     volumes:
-      - name: vault-data
-        emptyDir: {}
-      - name: vault-config
-        emptyDir: {}
       - name: vault-logs
         emptyDir: {}
       - name: vault-certs
@@ -115,10 +111,6 @@ vault:
       - name: vault-file
         emptyDir: {}
     volumeMounts:
-      - name: vault-data
-        mountPath: /vault/data
-      - name: vault-config
-        mountPath: /vault/config
       - name: vault-logs
         mountPath: /vault/logs
       - name: vault-certs
