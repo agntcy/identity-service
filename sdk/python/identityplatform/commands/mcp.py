@@ -10,7 +10,6 @@ from mcp.client.streamable_http import streamablehttp_client
 
 
 class McpTool:
-
     def __init__(self, name: str, description: str, parameters: dict):
         self.name = name
         self.description = description
@@ -18,7 +17,6 @@ class McpTool:
 
 
 class McpResource:
-
     def __init__(self, name: str, description: str, uri: str):
         self.name = name
         self.description = description
@@ -26,28 +24,31 @@ class McpResource:
 
 
 class McpServer:
-
-    def __init__(self, name: str, url: str, tools: List[McpTool],
-                 resources: List[McpResource]):
+    def __init__(
+        self,
+        name: str,
+        url: str,
+        tools: List[McpTool],
+        resources: List[McpResource],
+    ):
         self.name = name
         self.url = url
         self.tools = tools
         self.resources = resources
 
     def toJSON(self):
-        return json.dumps(self,
-                          default=lambda o: o.__dict__,
-                          sort_keys=True,
-                          indent=4)
+        return json.dumps(
+            self, default=lambda o: o.__dict__, sort_keys=True, indent=4
+        )
 
 
 async def discover(name: str, url: str) -> str:
     try:
         # Connect to a streamable HTTP server
         async with streamablehttp_client(f"{url}/mcp") as (
-                read_stream,
-                write_stream,
-                _,
+            read_stream,
+            write_stream,
+            _,
         ):
             # Create a session using the client streams
             async with ClientSession(read_stream, write_stream) as session:
@@ -64,9 +65,12 @@ async def discover(name: str, url: str) -> str:
                     parameters = json.loads(json_params)
 
                     available_tools.append(
-                        McpTool(name=tool.name,
-                                description=tool.description,
-                                parameters=parameters))
+                        McpTool(
+                            name=tool.name,
+                            description=tool.description,
+                            parameters=parameters,
+                        )
+                    )
 
                 # Discover MCP server - List resources
                 resources_response = await session.list_resources()
@@ -74,15 +78,20 @@ async def discover(name: str, url: str) -> str:
                 available_resources = []
                 for resource in resources_response.resources:
                     available_resources.append(
-                        McpResource(name=resource.name,
-                                    description=resource.description,
-                                    uri=resource.uri))
+                        McpResource(
+                            name=resource.name,
+                            description=resource.description,
+                            uri=resource.uri,
+                        )
+                    )
 
                 # Return the discovered MCP server
-                return McpServer(name=name,
-                                 url=url,
-                                 tools=available_tools,
-                                 resources=available_resources).toJSON()
+                return McpServer(
+                    name=name,
+                    url=url,
+                    tools=available_tools,
+                    resources=available_resources,
+                ).toJSON()
 
     except Exception as err:
         raise err

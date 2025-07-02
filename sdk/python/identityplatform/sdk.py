@@ -37,8 +37,10 @@ class IdentityPlatformSdk:
     def __init__(self, api_key, async_mode=False):
         """Initialize the Identity Platform SDK."""
         # Load dynamically all objects
-        _load_grpc_objects(agntcy.identity.platform.v1alpha1,
-                           "agntcy.identity.platform.v1alpha1")
+        _load_grpc_objects(
+            agntcy.identity.platform.v1alpha1,
+            "agntcy.identity.platform.v1alpha1",
+        )
 
         self.client = client.Client(api_key, async_mode)
 
@@ -47,18 +49,26 @@ class IdentityPlatformSdk:
         return empty_pb2.Empty()
 
     def get_app_service(
-            self) -> "agntcy.identity.platform.v1alpha1.AppsService":
+        self,
+    ) -> "agntcy.identity.platform.v1alpha1.AppsService":
         return IdentityPlatformSdk.AppServiceStub(self.client.channel)
 
     def get_badge_service(
-            self) -> "agntcy.identity.platform.v1alpha1.BadgeService":
+        self,
+    ) -> "agntcy.identity.platform.v1alpha1.BadgeService":
         return IdentityPlatformSdk.BadgeServiceStub(self.client.channel)
 
     def get_auth_service(
-            self) -> "agntcy.identity.platform.v1alpha1.AuthService":
+        self,
+    ) -> "agntcy.identity.platform.v1alpha1.AuthService":
         return IdentityPlatformSdk.AuthServiceStub(self.client.channel)
 
     def verify_badge(self, badge: str) -> str:
         """Verify a badge."""
-        return self.get_badge_service().VerifyBadge(
-            request=IdentityPlatformSdk.VerifyBadgeRequest(badge=badge)).badge
+        return (
+            self.get_badge_service()
+            .VerifyBadge(
+                request=IdentityPlatformSdk.VerifyBadgeRequest(badge=badge)
+            )
+            .badge
+        )

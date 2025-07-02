@@ -19,13 +19,17 @@ def create(
     url: Annotated[
         str,
         typer.Argument(
-            help=
-            "The local accessible URL of the agentic service to issue a badge for"
-        )] = "",
-    key: Annotated[str,
-                   typer.Option(prompt="Agentic Service API Key",
-                                hide_input=True,
-                                help="The Agentic Service API Key")] = "",
+            help="The local accessible URL of the agentic service to issue a badge for"
+        ),
+    ] = "",
+    key: Annotated[
+        str,
+        typer.Option(
+            prompt="Agentic Service API Key",
+            hide_input=True,
+            help="The Agentic Service API Key",
+        ),
+    ] = "",
 ):
     """Issue a badge for the agentic service."""
 
@@ -38,7 +42,8 @@ def create(
 
     # Fetch the agentic service
     app_info = identity_sdk.get_auth_service().AppInfo(
-        identity_sdk.empty_request())
+        identity_sdk.empty_request()
+    )
 
     # Get name and type
     service_name = app_info.app.name

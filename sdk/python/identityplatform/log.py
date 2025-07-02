@@ -13,8 +13,7 @@ def configure():
         logging.basicConfig(format="%(name)s: %(message)s", level=level)
     else:
         logging.basicConfig(
-            format=
-            "%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s",
+            format="%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s",
             datefmt="%Y-%m-%d:%H:%M:%S",
             level=level,
         )
