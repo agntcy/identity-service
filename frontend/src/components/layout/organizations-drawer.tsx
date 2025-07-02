@@ -122,7 +122,6 @@ export const OrganizationsDrawer: React.FC<{
           if (tenant?.id) {
             switchTenant?.(tenant.id);
           }
-          handleConfirmationChange(undefined);
         }}
       />
     </>

@@ -64,9 +64,10 @@ const FormStepperComponent = () => {
 
   const handleOnClear = useCallback(() => {
     form.reset({
-      badgeId: '',
+      badge: '',
       file: undefined,
-      badgeContent: ''
+      badgeContent: '',
+      proofValue: ''
     });
     methods.reset();
     methods.resetMetadata();
@@ -88,11 +89,12 @@ const FormStepperComponent = () => {
       ...methods.getMetadata('verifyIdentityForm'),
       badgeContent: values.badgeContent,
       badgeFile: values.badgeFile,
-      badgeId: values.badgeId,
-      joseEnvelope: values.joseEnvelope
+      badge: values.badge,
+      joseEnvelope: values.joseEnvelope,
+      proofValue: values.proofValue
     });
     verifyIdentityMutation.mutate({
-      badge: values.badgeId ? values.badgeId : values.joseEnvelope
+      badge: values.proofValue ? values.proofValue : values.joseEnvelope
     });
   }, [form, methods, verifyIdentityMutation]);
 

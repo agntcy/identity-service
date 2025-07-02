@@ -6,7 +6,8 @@
 import {z} from 'zod';
 
 export const VerifyIdentitySchema = z.object({
-  badgeId: z.string().optional(),
+  badge: z.string().optional(),
+  proofValue: z.string().optional(),
   badgeFile: z
     .union([
       z
