@@ -1412,19 +1412,31 @@
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
-          "hasOneofs": false,
+          "hasOneofs": true,
           "extensions": [],
           "fields": [
             {
               "name": "well_known_url",
-              "description": "",
-              "label": "",
+              "description": "The A2A well_known_url.",
+              "label": "optional",
               "type": "string",
               "longType": "string",
               "fullType": "string",
               "ismap": false,
-              "isoneof": false,
-              "oneofdecl": "",
+              "isoneof": true,
+              "oneofdecl": "_well_known_url",
+              "defaultValue": ""
+            },
+            {
+              "name": "schema_base64",
+              "description": "Or the MCP Schema in a base64 encoded format.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_schema_base64",
               "defaultValue": ""
             }
           ]
@@ -1496,31 +1508,43 @@
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
-          "hasOneofs": false,
+          "hasOneofs": true,
           "extensions": [],
           "fields": [
             {
               "name": "name",
-              "description": "",
-              "label": "",
+              "description": "The MCP badge name.",
+              "label": "optional",
               "type": "string",
               "longType": "string",
               "fullType": "string",
               "ismap": false,
-              "isoneof": false,
-              "oneofdecl": "",
+              "isoneof": true,
+              "oneofdecl": "_name",
               "defaultValue": ""
             },
             {
               "name": "url",
-              "description": "",
-              "label": "",
+              "description": "The MCP badge URL.",
+              "label": "optional",
               "type": "string",
               "longType": "string",
               "fullType": "string",
               "ismap": false,
-              "isoneof": false,
-              "oneofdecl": "",
+              "isoneof": true,
+              "oneofdecl": "_url",
+              "defaultValue": ""
+            },
+            {
+              "name": "schema_base64",
+              "description": "Or the MCP Schema in a base64 encoded format.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_schema_base64",
               "defaultValue": ""
             }
           ]
