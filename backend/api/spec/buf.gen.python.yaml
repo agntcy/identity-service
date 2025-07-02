@@ -1,0 +1,12 @@
+# Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
+version: v1
+managed:
+  enabled: true
+plugins:
+  - plugin: buf.build/grpc/python:v1.64.1
+    out: ../../sdk/python
+  # dependencies
+  - plugin: buf.build/protocolbuffers/python:v25.1
+    out: ../../sdk/python
