@@ -35,11 +35,11 @@ func (s *BadgeService) IssueBadge(
 	options := make([]bff.IssueOption, 0)
 
 	if in.A2A != nil {
-		options = append(options, bff.WithA2A(in.A2A.WellKnownUrl))
+		options = append(options, bff.WithA2A(in.A2A.WellKnownUrl, in.A2A.SchemaBase64))
 	}
 
 	if in.Mcp != nil {
-		options = append(options, bff.WithMCP(in.Mcp.Name, in.Mcp.Url))
+		options = append(options, bff.WithMCP(in.Mcp.Name, in.Mcp.Url, in.Mcp.SchemaBase64))
 	}
 
 	if in.Oasf != nil {

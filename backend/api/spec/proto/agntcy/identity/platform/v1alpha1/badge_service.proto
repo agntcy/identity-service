@@ -58,12 +58,22 @@ message IssueBadgeRequest {
 }
 
 message IssueMcpBadgeRequest {
-  string name = 1;
-  string url = 2;
+  // The MCP badge name.
+  optional string name = 1;
+
+  // The MCP badge URL.
+  optional string url = 2;
+
+  // Or the MCP Schema in a base64 encoded format.
+  optional string schema_base64 = 3;
 }
 
 message IssueA2ABadgeRequest {
-  string well_known_url = 1;
+  // The A2A well_known_url.
+  optional string well_known_url = 1;
+
+  // Or the MCP Schema in a base64 encoded format.
+  optional string schema_base64 = 2;
 }
 
 message IssueOASFBadgeRequest {

@@ -33,6 +33,7 @@ var allowedServicesWithAppAuth = []string{
 	"/agntcy.identity.platform.v1alpha1.AuthService/Authorize",
 	"/agntcy.identity.platform.v1alpha1.AuthService/Token",
 	"/agntcy.identity.platform.v1alpha1.AuthService/ExtAuthz",
+	"/agntcy.identity.platform.v1alpha1.BadgeService/IssueBadge",
 }
 
 type AuthInterceptor struct {
