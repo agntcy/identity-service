@@ -6,7 +6,7 @@ requires = ["setuptools", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "identity-sdk"
+name = "identity-platform-sdk"
 version = "0.0.1"
 authors = [
     {name = "Jean Diaconu", email = "jdiaconu@cisco.com"},
@@ -18,14 +18,17 @@ license = "Apache-2.0"
 classifiers = [
     "Programming Language :: Python :: 3",
 ]
-dependencies = ["grpcio", "protobuf", "grpcio-tools", "protoc_gen_openapiv2", "pyjwt", "python-dotenv"]
+dependencies = ["grpcio", "protobuf", "grpcio-tools", "protoc_gen_openapiv2", "python-dotenv", "mcp", "typer", "requests"]
 
 [project.urls]
 "Homepage" = "https://github.com/agntcy/identity-platform"
 "Bug Tracker" = "https://github.com/agntcy/identity-platform/issues"
 
+[project.scripts]
+identity-cli = "identityplatform.cli:app"
+
 [tool.setuptools]
-packages = ["identity", "openapiv3", "google.api", "agntcy.identity.node.v1alpha1", "agntcy.identity.core.v1alpha1"]
+packages = ["identityplatform", "identityplatform.badge", "openapiv3", "google.api", "agntcy.identity.platform.v1alpha1", "agntcy.identity.platform.shared"]
 
 [tool.pytest.ini_options]
 minversion = "8.0.0"
