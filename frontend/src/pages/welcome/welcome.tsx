@@ -30,7 +30,7 @@ const Welcome = () => {
               className="text-center mb-4"
               color="#161616"
             >
-              Get started with
+              Get started with AGNTCY&apos;s
             </Typography>
             <Typography
               fontFamily={'Inter'}
@@ -49,11 +49,11 @@ const Welcome = () => {
           <div className="welcome-card text-center flex flex-col items-center justify-center">
             <div>
               <Typography textAlign="center" variant="body1" paddingTop={2}>
-                Start using Agntcy Identity&apos;s features by verifying existing identity badges or registering your agents (A2A, MCP servers,
-                agents).
+                Start using Agent Identity&apos;s features by verifying existing identity badges or registering your Agentic Services (A2A Agents, MCP
+                Servers, OASF).
               </Typography>
               <Link
-                href="https://spec.identity.agntcy.org/"
+                href="https://docs.identity.dev.outshift.ai/"
                 openInNewTab
                 fontStyle={{
                   fontWeight: 400,
@@ -69,7 +69,7 @@ const Welcome = () => {
               <div className="w-[50%] py-6 relative">
                 <Typography variant="h6">Verify Identities</Typography>
                 <Typography variant="body1" marginTop={2}>
-                  Begin verifying your MCP servers, agents, and A2A identities.
+                  Begin verifying your MCP Servers, A2A Agents and OASF identities.
                 </Typography>
                 <div className="absolute bottom-10 transform translate-y-1/2 left-1/2 -translate-x-1/2 w-full">
                   <RouterLink to={PATHS.verifyIdentity}>
@@ -90,7 +90,7 @@ const Welcome = () => {
               <div className="w-[50%] py-6 relative">
                 <Typography variant="h6">Create Identities</Typography>
                 <Typography variant="body1" marginTop={2}>
-                  Add agents (MCP servers, agents, and A2A) to create and manage identities & RBAC policies
+                  Add Agentic Services (MCP Servers, A2A Agents and OASF) to create, manage identities & TBAC Rules and Policies.
                 </Typography>
                 <div className="absolute bottom-10 transform translate-y-1/2 left-1/2 -translate-x-1/2 w-full">
                   <div className="flex justify-center items-center gap-4">
