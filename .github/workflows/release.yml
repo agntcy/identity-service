@@ -189,6 +189,41 @@ jobs:
       image-name: "${{ github.event.repository.name }}-ui"
       #image-tag: "" # By default it will get latest docker tag built
 
+  ################################## Docker build & push ##########################
+  #################################################################################
+  call-docker-build-push-docs:
+    name: Call Docker Build
+    needs: [checkout-unit-tests]
+    uses: ./.github/workflows/build-push-docker.yaml
+
+    secrets:
+      # Only needed if with:ecr-enabled or with:gar-enabled is true below
+      vault-approle-role-id: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
+      vault-approle-secret-id: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
+      ghcr-username: ${{ secrets.GHCR_USERNAME }}
+      ghcr-token: ${{ secrets.GHCR_TOKEN }}
+      ghcr-org-token: ${{ secrets.GHCR_TOKEN }}
+      artifactory_password: ${{ secrets.ARTIFACTORY_PASSWORD }}
+
+    with:
+      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      ### REQUIRED
+      ### Docker image name
+      image-name: "${{ github.event.repository.name }}-docs"
+
+      ### path to where docker should copy files into image
+      ### defaults to root of repository (.)
+      context: .
+
+      ### Dockerfile alternate name. Default is Dockerfile (relative to context path)
+      dockerfile: deployments/docker/docs/Dockerfile
+      ### REQUIRED
+      ### ENABLE ONE OR BOTH REGISTRIES
+      ### tell docker where to push.
+      ecr-enabled: true
+      artifactory-devhub-enabled: false
+      ghcr-enabled: true
+      ghcr-org-registry: ${{ vars.GHCR_REGISTRY }}
 
   # ################################## Helm Publish #################################
   # #################################################################################
