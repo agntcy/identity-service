@@ -62,6 +62,7 @@ func (s *appService) ListApps(
 	}
 
 	appTypes := make([]apptypes.AppType, 0)
+
 	if req.Types != nil {
 		for _, typ := range req.Types {
 			appTypes = append(appTypes, apptypes.AppType(typ))

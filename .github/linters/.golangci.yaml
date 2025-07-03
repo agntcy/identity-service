@@ -98,6 +98,8 @@ linters:
     gosec:
       excludes:
         - G115
+    nestif:
+      min-complexity: 10
     nolintlint:
       require-explanation: true
       require-specific: true
