@@ -12,7 +12,7 @@ import {useDeleteAgenticService} from '@/mutations';
 import {useGetAgenticService} from '@/queries';
 import {PATHS} from '@/router/paths';
 import {Button, toast} from '@outshift/spark-design';
-import {IdCardIcon, RefreshCcwIcon, Trash2Icon} from 'lucide-react';
+import {IdCardIcon, Trash2Icon} from 'lucide-react';
 import {useCallback, useState} from 'react';
 import {useParams} from 'react-router-dom';
 
