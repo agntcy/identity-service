@@ -6,7 +6,7 @@
 import {useState} from 'react';
 import {ConditionalQueryRenderer} from '../../ui/conditional-query-renderer';
 import {Table} from '@outshift/spark-design';
-import {useGetGroupsTenant, useGetUsersGroup} from '@/queries';
+import {useGetUsersGroup} from '@/queries';
 import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
 import {Card} from '@/components/ui/card';
 import {cn} from '@/lib/utils';
@@ -28,9 +28,9 @@ export const OrganizationInfo = ({
     pageSize: 10
   });
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
-
-  const {data: dataGroups, isLoading: isLoadingGroups, error: errorGroups} = useGetGroupsTenant(tenant?.id || '');
-  const groupId = dataGroups?.groups?.[0]?.id;
+  const [groupId, setGroupId] = useState<string | undefined>();
+  const [isLoadingGroups, setIsLoadingGroups] = useState<boolean>(true);
+  const [errorGroups, setErrorGroups] = useState<Error | null>(null);
 
   const {data: dataUsers, isLoading: isLoadingUsers, error: errorUsers} = useGetUsersGroup(groupId || '');
 
@@ -38,7 +38,7 @@ export const OrganizationInfo = ({
     <>
       <ConditionalQueryRenderer
         itemName="Users"
-        data={dataGroups?.groups && dataUsers?.users}
+        data={groupId && dataUsers?.users}
         error={errorGroups || errorUsers}
         isLoading={isLoadingGroups || isLoadingUsers}
         useRelativeLoader
@@ -75,11 +75,16 @@ export const OrganizationInfo = ({
       </ConditionalQueryRenderer>
       <InviteUserModal
         open={showInviteUserModal}
-        groupId={groupId || ''}
+        tenantId={tenant?.id || ''}
         onCancel={() => onChangeInviteUser(false)}
         onClose={() => onChangeInviteUser(false)}
         onUserInvited={() => {
           onChangeInviteUser(false);
+        }}
+        onGroupIdChange={(id, isLoading, error) => {
+          setGroupId(id);
+          setIsLoadingGroups(isLoading);
+          setErrorGroups(error);
         }}
       />
     </>

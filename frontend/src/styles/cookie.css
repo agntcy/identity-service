@@ -19,10 +19,12 @@
    --cc-btn-secondary-hover-bg: #none;
    --cc-btn-secondary-hover-border-color: none;
 
+   --cc-btn-primary-bg: #187adc;
+
    /** Also make toggles the same color as the button **/
    --cc-toggle-on-bg: var(--cc-btn-primary-bg);
 
-   --cc-btn-border-radius: 8px;
+   --cc-btn-border-radius: 4px;
 
    .pm__title {
       font-family: Sharp Sans;
@@ -40,6 +42,22 @@
       line-height: 24px;
       letter-spacing: 0.15px;
       color: #3C4551;
+   }
+
+   .pm__btn {
+      height: 32px;
+      min-height: 32px;
+      padding-right: 16px;
+      padding-left: 16px;
+      font-weight: 600;
+   }
+
+   .pm__btn--secondary {
+      color: #187ADC;
+   }
+
+   .pm__btn-group {
+      gap: 8px;
    }
 
    .section__toggle-wrapper {

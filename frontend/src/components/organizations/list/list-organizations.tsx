@@ -6,7 +6,7 @@
 import {useCallback, useState} from 'react';
 import {ConditionalQueryRenderer} from '../../ui/conditional-query-renderer';
 import {MenuItem, Table, toast} from '@outshift/spark-design';
-import {useGetTenants} from '@/queries';
+import {useGetSession, useGetTenants} from '@/queries';
 import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
 import {OrganizationsColumns} from './organizations-columns';
 import {Card} from '@/components/ui/card';
@@ -18,6 +18,7 @@ import {generatePath, useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
 import {useDeleteTenant} from '@/mutations';
 import {ConfirmModal} from '@/components/ui/confirm-modal';
+import {InviteUserModal} from '@/components/shared/invite-user-modal';
 
 export const ListOrganizations = () => {
   const [pagination, setPagination] = useState<MRT_PaginationState>({
@@ -26,11 +27,14 @@ export const ListOrganizations = () => {
   });
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
   const [tenantId, setTenantId] = useState<string | undefined>(undefined);
-  const openActionsModal = Boolean(tenantId);
+  const [openActionsModal, setOpenActionsModal] = useState<boolean>(false);
+  const [showInviteUserModal, setShowInviteUserModal] = useState<boolean>(false);
 
+  const {data: dataSession} = useGetSession();
   const {data, isLoading, isFetching, refetch, error} = useGetTenants();
   const {authInfo, logout} = useAuth();
   const currentTenantId = authInfo?.user?.tenant?.id;
+  const isAdmin = dataSession?.groups[0].role === 'ADMIN' || false;
 
   const navigate = useNavigate();
 
@@ -61,6 +65,7 @@ export const ListOrganizations = () => {
   const handleClickOnDelete = useCallback(() => {
     deleteTenantMutation.mutate(tenantId! || '');
     setTenantId(undefined);
+    setOpenActionsModal(false);
   }, [deleteTenantMutation, tenantId]);
 
   return (
@@ -116,17 +121,31 @@ export const ListOrganizations = () => {
             state={{pagination, sorting}}
             onSortingChange={setSorting}
             renderRowActionMenuItems={({row}) => {
-              if (currentTenantId !== row.original.id) {
+              if (currentTenantId !== row.original.id || !isAdmin) {
                 return [];
               }
               return [
-                <MenuItem key="edit" onClick={() => console.info('Edit', row)} sx={{display: 'flex', alignItems: 'center', gap: '8px'}}>
+                <MenuItem
+                  key="add-user"
+                  onClick={() => {
+                    setTenantId(row.original.id);
+                    setShowInviteUserModal(true);
+                  }}
+                  sx={{display: 'flex', alignItems: 'center', gap: '8px'}}
+                >
                   <UserRoundPlusIcon className="w-4 h-4" color="#062242" />
                   <Typography variant="body2" color="#1A1F27">
                     Add
                   </Typography>
                 </MenuItem>,
-                <MenuItem key="delete" onClick={() => console.info('Delete', row)} sx={{display: 'flex', alignItems: 'center', gap: '8px'}}>
+                <MenuItem
+                  key="delete"
+                  onClick={() => {
+                    setTenantId(row.original.id);
+                    setOpenActionsModal(true);
+                  }}
+                  sx={{display: 'flex', alignItems: 'center', gap: '8px'}}
+                >
                   <Trash2Icon className="w-4 h-4" color="#C62953" />
                   <Typography variant="body2" color="#C0244C">
                     Delete
@@ -151,8 +170,27 @@ export const ListOrganizations = () => {
           </>
         }
         confirmButtonText="Delete"
-        onCancel={() => setTenantId(undefined)}
+        onCancel={() => {
+          setTenantId(undefined);
+          setOpenActionsModal(false);
+        }}
         onConfirm={handleClickOnDelete}
+      />
+      <InviteUserModal
+        open={showInviteUserModal}
+        tenantId={tenantId || ''}
+        onCancel={() => {
+          setTenantId(undefined);
+          setShowInviteUserModal(false);
+        }}
+        onClose={() => {
+          setTenantId(undefined);
+          setShowInviteUserModal(false);
+        }}
+        onUserInvited={() => {
+          setTenantId(undefined);
+          setShowInviteUserModal(false);
+        }}
       />
     </>
   );

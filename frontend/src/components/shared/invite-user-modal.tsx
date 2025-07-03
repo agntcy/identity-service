@@ -14,24 +14,30 @@ import {useInviteUser} from '@/mutations';
 import {InviteUserFormValues, InviteUserSchema} from '@/schemas/invite-user-schema';
 import {validateForm} from '@/lib/utils';
 import z from 'zod';
+import {useGetGroupsTenant} from '@/queries';
 
 interface InviteUserModalProps extends ModalProps {
   title?: string;
-  groupId: string;
+  tenantId?: string;
   confirmButtonText?: string;
   onCancel: () => void;
   onUserInvited?: () => void;
+  onGroupIdChange?: (groupId: string, isLoadingGroups: boolean, errorGroups: Error | null) => void;
 }
 
 export const InviteUserModal = ({
   title = 'Invite User',
-  groupId,
+  tenantId,
   confirmButtonText = 'Invite',
   onCancel,
   onUserInvited,
+  onGroupIdChange,
   ...props
 }: InviteUserModalProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const {data: dataGroups, isLoading: isLoadingGroups, error: errorGroups} = useGetGroupsTenant(tenantId || '');
+  const groupId = dataGroups?.groups?.[0]?.id || '';
 
   const form = useForm<InviteUserFormValues>({
     resolver: zodResolver(InviteUserSchema),
@@ -80,6 +86,10 @@ export const InviteUserModal = ({
   }, [form, groupId, inviteUser]);
 
   useEffect(() => {
+    onGroupIdChange?.(groupId, isLoadingGroups, errorGroups);
+  }, [errorGroups, groupId, isLoadingGroups, onGroupIdChange]);
+
+  useEffect(() => {
     form.reset({
       email: ''
     });
@@ -109,7 +119,13 @@ export const InviteUserModal = ({
             <Button onClick={onCancel} variant="tertariary" disabled={isLoading} sx={{fontWeight: '600 !important'}}>
               Cancel
             </Button>
-            <Button type="submit" disabled={isLoading || !form.formState.isValid} loading={isLoading} loadingPosition="start">
+            <Button
+              type="submit"
+              disabled={isLoading || !form.formState.isValid}
+              loading={isLoading}
+              loadingPosition="start"
+              sx={{fontWeight: '600 !important'}}
+            >
               {confirmButtonText || 'Continue'}
             </Button>
           </ModalActions>

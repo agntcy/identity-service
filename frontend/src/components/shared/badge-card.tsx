@@ -7,7 +7,7 @@ import {useGetAgenticServiceBadge} from '@/queries';
 import {Card} from '../ui/card';
 import {App} from '@/types/api/app';
 import {useCallback, useEffect, useMemo, useState} from 'react';
-import {Button, CodeBlock, Modal, ModalContent, ModalTitle, toast, Typography, ViewSwitcher} from '@outshift/spark-design';
+import {Button, CodeBlock, CopyButton, Modal, ModalContent, ModalTitle, toast, Typography, ViewSwitcher} from '@outshift/spark-design';
 import {ConditionalQueryRenderer} from '../ui/conditional-query-renderer';
 import {DownloadIcon, ExpandIcon, PlusIcon} from 'lucide-react';
 import {BadgeModalForm} from './badge-modal-form';
@@ -41,26 +41,10 @@ export const BadgeCard = ({app, navigateTo = true, showError = false, onBadgeCha
   const contentToShow = useMemo(() => {
     if (view === 'credential') {
       return {
-        context: data?.verifiableCredential?.context,
-        id: data?.verifiableCredential?.id,
-        type: data?.verifiableCredential?.type,
-        issuer: data?.verifiableCredential?.issuer,
-        issuanceDate: data?.verifiableCredential?.issuanceDate,
-        expirationDate: data?.verifiableCredential?.expirationDate,
-        credentialSubject: {
-          ...data?.verifiableCredential?.credentialSubject,
-          badge: JSON.parse(data?.verifiableCredential?.credentialSubject?.badge || '{}')
-        }
+        ...JSON.parse(data?.verifiableCredential?.credentialSubject?.badge || '{}')
       };
     } else if (view === 'jose') {
-      return {
-        context: data?.verifiableCredential?.context,
-        id: data?.verifiableCredential?.id,
-        type: data?.verifiableCredential?.type,
-        issuer: data?.verifiableCredential?.issuer,
-        issuanceDate: data?.verifiableCredential?.issuanceDate,
-        proof: data?.verifiableCredential?.proof
-      };
+      return data?.verifiableCredential?.proof?.proofValue || '';
     }
     return data?.verifiableCredential || {};
   }, [data?.verifiableCredential, view]);
@@ -160,7 +144,21 @@ export const BadgeCard = ({app, navigateTo = true, showError = false, onBadgeCha
               />
             </div>
             <ScrollShadowWrapper className="max-h-[50vh] overflow-auto">
-              <CodeBlock containerProps={{maxWidth: '50vw'}} showLineNumbers wrapLongLines text={JSON.stringify(contentToShow, null, 2)} />
+              {view === 'credential' && (
+                <CodeBlock containerProps={{maxWidth: '50vw'}} showLineNumbers wrapLongLines text={JSON.stringify(contentToShow, null, 2)} />
+              )}
+              {view === 'jose' && (
+                <div className="border border-solid border-[#d5dff7] p-4 w-full rounded-[6px] bg-[#fbfcfe] relative">
+                  <div className="pt-10">
+                    <Typography className="break-all" variant="caption">
+                      {contentToShow}
+                    </Typography>
+                  </div>
+                  <div className="absolute top-4 right-4">
+                    <CopyButton text={contentToShow} />
+                  </div>
+                </div>
+              )}
             </ScrollShadowWrapper>
           </div>
         </Card>
