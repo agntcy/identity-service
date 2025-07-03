@@ -62,7 +62,7 @@ type CredentialStatus struct {
 	Type string `json:"type" protobuf:"bytes,2,opt,name=type"`
 
 	// The creation date and time of the status
-	CreatedAt time.Time `json:"createdAt" protobuf:"bytes,3,opt,name=created_at"`
+	CreatedAt time.Time `json:"createdAt" protobuf:"google.protobuf.Timestamp,3,opt,name=created_at"`
 
 	// The value of the purpose for the status entry
 	Purpose CredentialStatusPurpose `json:"purpose" protobuf:"bytes,4,opt,name=purpose"`
@@ -100,7 +100,7 @@ type VerifiableCredential struct {
 	Status []*CredentialStatus `json:"credentialStatus,omitempty" protobuf:"bytes,9,opt,name=credential_status"`
 
 	// https://w3id.org/security#proof
-	Proof *Proof `json:"proof,omitempty" protobuf:"bytes,9,opt,name=proof"`
+	Proof *Proof `json:"proof,omitempty" protobuf:"bytes,10,opt,name=proof"`
 }
 
 // BadgeClaims represents the content of a Badge VC defined [here]

@@ -11,6 +11,7 @@ package identity_platform_sdk_go
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -90,8 +91,10 @@ type App struct {
 	// A human-readable description for the App.
 	Description *string `protobuf:"bytes,3,opt,name=description,proto3,oneof" json:"description,omitempty"`
 	// The type of the App.
-	Type          *AppType `protobuf:"varint,4,opt,name=type,proto3,enum=agntcy.identity.platform.v1alpha1.AppType,oneof" json:"type,omitempty"`
-	ApiKey        *string  `protobuf:"bytes,5,opt,name=api_key,json=apiKey,proto3,oneof" json:"api_key,omitempty"`
+	Type          *AppType               `protobuf:"varint,4,opt,name=type,proto3,enum=agntcy.identity.platform.v1alpha1.AppType,oneof" json:"type,omitempty"`
+	ApiKey        *string                `protobuf:"bytes,5,opt,name=api_key,json=apiKey,proto3,oneof" json:"api_key,omitempty"`
+	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
+	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=updated_at,json=updatedAt,proto3,oneof" json:"updated_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -161,23 +164,43 @@ func (x *App) GetApiKey() string {
 	return ""
 }
 
+func (x *App) GetCreatedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.CreatedAt
+	}
+	return nil
+}
+
+func (x *App) GetUpdatedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.UpdatedAt
+	}
+	return nil
+}
+
 var File_agntcy_identity_platform_v1alpha1_app_proto protoreflect.FileDescriptor
 
 const file_agntcy_identity_platform_v1alpha1_app_proto_rawDesc = "" +
 	"\n" +
-	"+agntcy/identity/platform/v1alpha1/app.proto\x12!agntcy.identity.platform.v1alpha1\"\xf2\x01\n" +
+	"+agntcy/identity/platform/v1alpha1/app.proto\x12!agntcy.identity.platform.v1alpha1\x1a\x1fgoogle/protobuf/timestamp.proto\"\x90\x03\n" +
 	"\x03App\x12\x13\n" +
 	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x17\n" +
 	"\x04name\x18\x02 \x01(\tH\x01R\x04name\x88\x01\x01\x12%\n" +
 	"\vdescription\x18\x03 \x01(\tH\x02R\vdescription\x88\x01\x01\x12C\n" +
 	"\x04type\x18\x04 \x01(\x0e2*.agntcy.identity.platform.v1alpha1.AppTypeH\x03R\x04type\x88\x01\x01\x12\x1c\n" +
-	"\aapi_key\x18\x05 \x01(\tH\x04R\x06apiKey\x88\x01\x01B\x05\n" +
+	"\aapi_key\x18\x05 \x01(\tH\x04R\x06apiKey\x88\x01\x01\x12>\n" +
+	"\n" +
+	"created_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampH\x05R\tcreatedAt\x88\x01\x01\x12>\n" +
+	"\n" +
+	"updated_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampH\x06R\tupdatedAt\x88\x01\x01B\x05\n" +
 	"\x03_idB\a\n" +
 	"\x05_nameB\x0e\n" +
 	"\f_descriptionB\a\n" +
 	"\x05_typeB\n" +
 	"\n" +
-	"\b_api_key*m\n" +
+	"\b_api_keyB\r\n" +
+	"\v_created_atB\r\n" +
+	"\v_updated_at*m\n" +
 	"\aAppType\x12\x18\n" +
 	"\x14APP_TYPE_UNSPECIFIED\x10\x00\x12\x16\n" +
 	"\x12APP_TYPE_AGENT_A2A\x10\x01\x12\x17\n" +
@@ -199,16 +222,19 @@ func file_agntcy_identity_platform_v1alpha1_app_proto_rawDescGZIP() []byte {
 var file_agntcy_identity_platform_v1alpha1_app_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_agntcy_identity_platform_v1alpha1_app_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_agntcy_identity_platform_v1alpha1_app_proto_goTypes = []any{
-	(AppType)(0), // 0: agntcy.identity.platform.v1alpha1.AppType
-	(*App)(nil),  // 1: agntcy.identity.platform.v1alpha1.App
+	(AppType)(0),                  // 0: agntcy.identity.platform.v1alpha1.AppType
+	(*App)(nil),                   // 1: agntcy.identity.platform.v1alpha1.App
+	(*timestamppb.Timestamp)(nil), // 2: google.protobuf.Timestamp
 }
 var file_agntcy_identity_platform_v1alpha1_app_proto_depIdxs = []int32{
 	0, // 0: agntcy.identity.platform.v1alpha1.App.type:type_name -> agntcy.identity.platform.v1alpha1.AppType
-	1, // [1:1] is the sub-list for method output_type
-	1, // [1:1] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	2, // 1: agntcy.identity.platform.v1alpha1.App.created_at:type_name -> google.protobuf.Timestamp
+	2, // 2: agntcy.identity.platform.v1alpha1.App.updated_at:type_name -> google.protobuf.Timestamp
+	3, // [3:3] is the sub-list for method output_type
+	3, // [3:3] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_agntcy_identity_platform_v1alpha1_app_proto_init() }

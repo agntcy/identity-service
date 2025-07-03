@@ -52,6 +52,16 @@ for file in $type_files; do
           echo "Added 'type GoogleStruct struct{}' at the end of $file."
       fi
   fi
+  if grep -q "google.protobuf.Timestamp" "$file"; then
+    echo "Tagging 'google.protobuf.Timestamp' fields..."
+    sed -i 's/google\.protobuf\.Timestamp/GoogleTimestamp/g' "$file"
+
+    if ! grep -q '^type GoogleTimestamp struct{}' "$file"; then
+          echo "" >> "$file"
+          echo "type GoogleTimestamp struct{}" >> "$file"
+          echo "Added 'type GoogleTimestamp struct{}' at the end of $file."
+      fi
+  fi
 done
 
 packages=$(echo "$packages" | sed 's/\s$//' | sed 's/^\s//')
@@ -96,6 +106,13 @@ if [ -n "${packages_comma_separated}" ]; then
       sed -i 's/optional GoogleStruct/optional \.google\.protobuf\.Struct/g' "$protofile"
       sed -i '/message GoogleStruct {/,/}/d' "$protofile"
       echo "import \"google/protobuf/struct.proto\";" >> "$protofile"
+    fi
+
+    # Patch the google.protobuf.Timestamp tag
+    if grep -q "GoogleTimestamp" "$protofile"; then
+      sed -i 's/optional GoogleTimestamp/optional \.google\.protobuf\.Timestamp/g' "$protofile"
+      sed -i '/message GoogleTimestamp {/,/}/d' "$protofile"
+      echo "import \"google/protobuf/timestamp.proto\";" >> "$protofile"
     fi
 
     cp "local/${package}/generated.proto" "local/output/${module_name}.proto"

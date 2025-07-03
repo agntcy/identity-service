@@ -7,6 +7,8 @@ syntax = "proto3";
 
 package agntcy.identity.platform.v1alpha1;
 
+import "google/protobuf/timestamp.proto";
+
 // Package-wide variables from generator "generated".
 option go_package = "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_go";
 
@@ -25,6 +27,10 @@ message App {
   optional AppType type = 4;
 
   optional string api_key = 5;
+
+  optional .google.protobuf.Timestamp created_at = 6;
+
+  optional .google.protobuf.Timestamp updated_at = 7;
 }
 
 // App Type

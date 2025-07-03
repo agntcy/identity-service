@@ -7,6 +7,8 @@ syntax = "proto3";
 
 package agntcy.identity.platform.v1alpha1;
 
+import "google/protobuf/timestamp.proto";
+
 // Package-wide variables from generator "generated".
 option go_package = "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_go";
 
@@ -39,6 +41,24 @@ message CredentialSchema {
 
   // The URL identifying the schema file
   optional string id = 2;
+}
+
+// CredentialStatus represents the credentialStatus property of a Verifiable Credential.
+// more information can be found [here]
+//
+// [here]: https://www.w3.org/TR/vc-data-model-2.0/#status
+message CredentialStatus {
+  // The URL identifying the schema file
+  optional string id = 1;
+
+  // Type specifies the type of the file
+  optional string type = 2;
+
+  // The creation date and time of the status
+  optional .google.protobuf.Timestamp created_at = 3;
+
+  // The value of the purpose for the status entry
+  optional CredentialStatusPurpose purpose = 4;
 }
 
 // A data integrity proof provides information about the proof mechanism,
@@ -82,8 +102,11 @@ message VerifiableCredential {
   // https://www.w3.org/TR/vc-data-model-2.0/#data-schemas
   repeated CredentialSchema credential_schema = 8;
 
+  // https://www.w3.org/TR/vc-data-model-2.0/#status
+  repeated CredentialStatus credential_status = 9;
+
   // https://w3id.org/security#proof
-  optional Proof proof = 9;
+  optional Proof proof = 10;
 }
 
 // The content of the Credential.
@@ -100,4 +123,13 @@ enum BadgeType {
   // The MCP content representation following a defined schema
   // The schema is defined in the MCP specification as the MCPServer type
   BADGE_TYPE_MCP_BADGE = 2;
+}
+
+// The purpose of the status entry
+enum CredentialStatusPurpose {
+  // Unspecified status purpose
+  CREDENTIAL_STATUS_PURPOSE_UNSPECIFIED = 0;
+  // Used to cancel the validity of a verifiable credential.
+  // This status is not reversible.
+  CREDENTIAL_STATUS_PURPOSE_REVOCATION = 1;
 }
