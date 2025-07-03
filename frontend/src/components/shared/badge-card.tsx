@@ -12,6 +12,7 @@ import {ConditionalQueryRenderer} from '../ui/conditional-query-renderer';
 import {DownloadIcon, ExpandIcon, PlusIcon} from 'lucide-react';
 import {BadgeModalForm} from './badge-modal-form';
 import {Badge} from '@/types/api/badge';
+import ScrollShadowWrapper from '../ui/scroll-shadow-wrapper';
 
 interface BadgeCardProps {
   app?: App;
@@ -158,7 +159,9 @@ export const BadgeCard = ({app, navigateTo = true, showError = false, onBadgeCha
                 size="sm"
               />
             </div>
-            <CodeBlock containerProps={{maxWidth: '50vw'}} showLineNumbers wrapLongLines text={JSON.stringify(contentToShow, null, 2)} />
+            <ScrollShadowWrapper className="max-h-[50vh] overflow-auto">
+              <CodeBlock containerProps={{maxWidth: '50vw'}} showLineNumbers wrapLongLines text={JSON.stringify(contentToShow, null, 2)} />
+            </ScrollShadowWrapper>
           </div>
         </Card>
       </ConditionalQueryRenderer>
