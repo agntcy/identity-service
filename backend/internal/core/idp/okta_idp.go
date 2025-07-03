@@ -195,7 +195,7 @@ func (d *OktaIdp) oktaParseAPIResponse(err error, response *oktasdk.APIResponse)
 	if err != nil || response.StatusCode != http.StatusOK {
 		return errutil.Err(
 			nil,
-			fmt.Sprintf("duo API call failed: %s, status code: %d",
+			fmt.Sprintf("okta API call failed: %s, status code: %d",
 				string(data), response.StatusCode),
 		)
 	}

@@ -19,6 +19,8 @@ export const InformationProvider = ({idpSettings}: {idpSettings?: IssuerSettings
   const orgUrl = idpSettings?.oktaIdpSettings?.orgUrl;
   const clientId = idpSettings?.oktaIdpSettings?.clientId;
   const privateKey = idpSettings?.oktaIdpSettings?.privateKey;
+  const apiKey = idpSettings?.oryIdpSettings?.apiKey;
+  const projectSlug = idpSettings?.oryIdpSettings?.projectSlug;
 
   const keyValuePairs = useMemo(() => {
     const temp: KeyValuePair[] = [];
@@ -33,7 +35,7 @@ export const InformationProvider = ({idpSettings}: {idpSettings?: IssuerSettings
       });
       temp.push({
         keyProp: 'Secret Key',
-        value: secretKey ? `${'*'.repeat(15)}${secretKey.slice(-3)}` : 'Not provided'
+        value: secretKey ? `${'*'.repeat(15)}${secretKey.slice(-5)}` : 'Not provided'
       });
     }
     if (provider === IdpType.IDP_TYPE_OKTA) {
@@ -47,7 +49,17 @@ export const InformationProvider = ({idpSettings}: {idpSettings?: IssuerSettings
       });
       temp.push({
         keyProp: 'Private Key',
-        value: privateKey ? `${'*'.repeat(15)}${privateKey.slice(-3)}` : 'Not provided'
+        value: privateKey ? `${'*'.repeat(15)}${privateKey.slice(-5)}` : 'Not provided'
+      });
+    }
+    if (provider === IdpType.IDP_TYPE_ORY) {
+      temp.push({
+        keyProp: 'Project Slug',
+        value: projectSlug || 'Not provided'
+      });
+      temp.push({
+        keyProp: 'API Key',
+        value: apiKey ? `${'*'.repeat(15)}${apiKey.slice(-5)}` : 'Not provided'
       });
     }
     temp.push({
@@ -55,7 +67,7 @@ export const InformationProvider = ({idpSettings}: {idpSettings?: IssuerSettings
       value: <ProviderType type={provider} />
     });
     return temp;
-  }, [clientId, hostname, integrationKey, orgUrl, privateKey, provider, secretKey]);
+  }, [apiKey, clientId, hostname, integrationKey, orgUrl, privateKey, projectSlug, provider, secretKey]);
 
   return (
     <Card className="text-start space-y-6" variant="secondary">

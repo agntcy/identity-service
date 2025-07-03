@@ -49,13 +49,13 @@ export const ListAgenticServices = () => {
     return [
       {
         value: AppType.APP_TYPE_AGENT_A2A,
-        valueFormatter: () => 'A2A Protocol',
+        valueFormatter: () => 'A2A Agent',
         isSelectable: true,
         isSelected: true
       },
       {
         value: AppType.APP_TYPE_AGENT_OASF,
-        valueFormatter: () => 'OASF Agent',
+        valueFormatter: () => 'OASF',
         isSelectable: true,
         isSelected: true
       },

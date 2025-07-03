@@ -5,7 +5,7 @@
  */
 
 import {Card, CardContent} from '@/components/ui/card';
-import {ExternalLinkIcon} from 'lucide-react';
+import {CheckIcon, ExternalLinkIcon} from 'lucide-react';
 import {useStepper} from '../stepper';
 import {Badge, Link, Toast, Typography} from '@outshift/spark-design';
 import {BadgeClaims} from '@/types/api/badge';
@@ -44,9 +44,9 @@ export const VerificationResults = () => {
         keyProp: 'Badge Status',
         value: (
           <div className="flex items-center gap-2">
-            <Badge content={null} type="error" styleBadge={{width: '6px', height: '6px', padding: '0'}} />
+            <Badge content={null} type="success" styleBadge={{width: '6px', height: '6px', padding: '0'}} />
             <Typography color="#272E37" fontSize={14}>
-              Revoked
+              Active
             </Typography>
           </div>
         )
@@ -61,23 +61,19 @@ export const VerificationResults = () => {
         <Typography variant="subtitle1" fontWeight={600}>
           Badge Information
         </Typography>
-        <Link href="" openInNewTab>
+        <div className="flex items-center gap-2">
+          <CheckIcon className="w-[20px] h-[20px] text-[#00B285]" />
+          <Typography variant="body2Semibold">Verification successful</Typography>
+        </div>
+        {/* <Link href="" openInNewTab>
           <div className="flex items-center gap-1">
             View documentation
             <ExternalLinkIcon className="w-4 h-4 ml-1" />
           </div>
-        </Link>
+        </Link> */}
       </div>
       <CardContent className="p-0 flex justify-between items-center">
         <KeyValue pairs={keyValuePairs} useCard={false} />
-        <Toast
-          id="verification-results"
-          title="Verification Results"
-          description="The badge has been successfully verified. All claims are valid."
-          type="success"
-          className="w-full"
-          showCloseButton={false}
-        />
       </CardContent>
     </Card>
   );
