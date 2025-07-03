@@ -184,7 +184,12 @@
       "type": "object",
       "properties": {
         "wellKnownUrl": {
-          "type": "string"
+          "type": "string",
+          "description": "The A2A well_known_url."
+        },
+        "schemaBase64": {
+          "type": "string",
+          "description": "Or the MCP Schema in a base64 encoded format."
         }
       }
     },
@@ -192,10 +197,16 @@
       "type": "object",
       "properties": {
         "name": {
-          "type": "string"
+          "type": "string",
+          "description": "The MCP badge name."
         },
         "url": {
-          "type": "string"
+          "type": "string",
+          "description": "The MCP badge URL."
+        },
+        "schemaBase64": {
+          "type": "string",
+          "description": "Or the MCP Schema in a base64 encoded format."
         }
       }
     },

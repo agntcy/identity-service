@@ -186,12 +186,19 @@ export interface V1Alpha1CredentialSchema {
 }
 
 export interface V1Alpha1IssueA2ABadgeRequest {
+  /** The A2A well_known_url. */
   wellKnownUrl?: string;
+  /** Or the MCP Schema in a base64 encoded format. */
+  schemaBase64?: string;
 }
 
 export interface V1Alpha1IssueMcpBadgeRequest {
+  /** The MCP badge name. */
   name?: string;
+  /** The MCP badge URL. */
   url?: string;
+  /** Or the MCP Schema in a base64 encoded format. */
+  schemaBase64?: string;
 }
 
 export interface V1Alpha1IssueOASFBadgeRequest {
