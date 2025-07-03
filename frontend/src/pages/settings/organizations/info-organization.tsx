@@ -45,7 +45,7 @@ const InfoOrganization: React.FC = () => {
             sx={{fontWeight: '600 !important'}}
             endIcon={<PlusIcon className="w-4 h-4" />}
           >
-            New User
+            Invite User
           </Button>
         )
       }

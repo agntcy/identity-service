@@ -33,6 +33,10 @@ export const BadgeCard = ({app, navigateTo = true, showError = false, onBadgeCha
     {
       value: 'jose',
       label: 'JOSE'
+    },
+    {
+      value: 'claims',
+      label: 'Claims'
     }
   ];
 
@@ -41,10 +45,17 @@ export const BadgeCard = ({app, navigateTo = true, showError = false, onBadgeCha
   const contentToShow = useMemo(() => {
     if (view === 'credential') {
       return {
-        ...JSON.parse(data?.verifiableCredential?.credentialSubject?.badge || '{}')
+        ...data?.verifiableCredential,
+        badge: {
+          ...JSON.parse(data?.verifiableCredential?.credentialSubject?.badge || '{}')
+        }
       };
     } else if (view === 'jose') {
       return data?.verifiableCredential?.proof?.proofValue || '';
+    } else if (view === 'claims') {
+      return {
+        ...JSON.parse(data?.verifiableCredential?.credentialSubject?.badge || '{}')
+      };
     }
     return data?.verifiableCredential || {};
   }, [data?.verifiableCredential, view]);
@@ -145,6 +156,9 @@ export const BadgeCard = ({app, navigateTo = true, showError = false, onBadgeCha
             </div>
             <ScrollShadowWrapper className="max-h-[50vh] overflow-auto">
               {view === 'credential' && (
+                <CodeBlock containerProps={{maxWidth: '50vw'}} showLineNumbers wrapLongLines text={JSON.stringify(contentToShow, null, 2)} />
+              )}
+              {view === 'claims' && (
                 <CodeBlock containerProps={{maxWidth: '50vw'}} showLineNumbers wrapLongLines text={JSON.stringify(contentToShow, null, 2)} />
               )}
               {view === 'jose' && (

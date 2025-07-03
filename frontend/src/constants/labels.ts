@@ -9,7 +9,7 @@ import {IdpType} from '@/types/api/settings';
 export const labels = {
   appTypes: {
     [AppType.APP_TYPE_AGENT_OASF]: 'OASF',
-    [AppType.APP_TYPE_AGENT_A2A]: 'A2A Protocol',
+    [AppType.APP_TYPE_AGENT_A2A]: 'A2A Agent',
     [AppType.APP_TYPE_MCP_SERVER]: 'MCP Server'
   },
   providerTypes: {
