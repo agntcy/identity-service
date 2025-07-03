@@ -9,6 +9,7 @@ import {Input} from '@/components/ui/input';
 import {GeneralSize, MenuItem, Select, Tag, Typography} from '@outshift/spark-design';
 import {RuleFormValues} from '@/schemas/rule-schema';
 import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group';
+import {useEffect} from 'react';
 
 export const RuleForm = ({isLoading = false, values}: {isLoading?: boolean; values?: any}) => {
   const form = useFormContext<RuleFormValues>();
@@ -24,6 +25,15 @@ export const RuleForm = ({isLoading = false, values}: {isLoading?: boolean; valu
     {label: 'Action 2', value: 'action2'},
     {label: 'Action 3', value: 'action3'}
   ];
+
+  useEffect(() => {
+    form.reset({
+      name: values?.name || '',
+      description: values?.description || '',
+      needsApproval: values?.needsApproval ? 'yes' : 'no'
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [values]);
 
   return (
     <div className="space-y-6">
@@ -57,7 +67,7 @@ export const RuleForm = ({isLoading = false, values}: {isLoading?: boolean; valu
         <FormField
           control={form.control}
           name="task"
-          render={() => (
+          render={({field}) => (
             <FormItem className="w-full">
               <FormLabel className="form-label">Task</FormLabel>
               <FormControl>
@@ -90,6 +100,7 @@ export const RuleForm = ({isLoading = false, values}: {isLoading?: boolean; valu
                       </div>
                     );
                   }}
+                  {...field}
                   value={form.watch('task') ?? ''}
                   onChange={(e) => {
                     form.setValue('task', e.target.value);
@@ -108,7 +119,7 @@ export const RuleForm = ({isLoading = false, values}: {isLoading?: boolean; valu
         <FormField
           control={form.control}
           name="action"
-          render={() => (
+          render={({field}) => (
             <FormItem className="w-full">
               <FormLabel className="form-label">Action</FormLabel>
               <FormControl>
@@ -141,6 +152,7 @@ export const RuleForm = ({isLoading = false, values}: {isLoading?: boolean; valu
                       </div>
                     );
                   }}
+                  {...field}
                   value={form.watch('action') ?? ''}
                   onChange={(e) => {
                     form.setValue('action', e.target.value);

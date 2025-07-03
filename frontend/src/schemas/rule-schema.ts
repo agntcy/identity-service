@@ -8,12 +8,9 @@ import {z} from 'zod';
 export const RuleSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   description: z.string().optional(),
-  task: z.string(),
-  action: z.string(),
-  needsApproval: z.enum(['yes', 'no'], {
-    required_error: 'Needs approval is required',
-    invalid_type_error: 'Needs approval must be "yes" or "no"'
-  })
+  task: z.string().min(1, 'Task is required'),
+  action: z.string().min(1, 'Action is required'),
+  needsApproval: z.enum(['yes', 'no']).optional().default('no')
 });
 
 export type RuleFormValues = z.infer<typeof RuleSchema>;
