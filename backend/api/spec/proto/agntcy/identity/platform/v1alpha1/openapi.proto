@@ -10,8 +10,8 @@ import "openapiv3/annotations.proto";
 option go_package = "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_go";
 option (openapi.v3.document) = {
   info: {
-    title: "Identity Platform API";
-    description: "Identity Platform API provides a set of endpoints for managing identity and access control within the AGNTCY ecosystem.";
+    title: "Agent Identity API";
+    description: "Agent Identity API provides a set of endpoints for managing identity and access control within the AGNTCY ecosystem.";
     version: "v1alpha1";
     contact: {
       name: "AGNTCY Team";
@@ -23,14 +23,6 @@ option (openapi.v3.document) = {
     {
       url: "http://localhost:4000";
       description: "Local environment";
-    },
-    {
-      url: "https://api.identity.dev.agntcy.org";
-      description: "Development environment";
-    },
-    {
-      url: "https://api.identity.agntcy.org";
-      description: "Preview environment";
     }
   ]
   security: {
