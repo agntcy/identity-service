@@ -15,6 +15,18 @@
  * ---------------------------------------------------------------
  */
 
+/**
+ * The purpose of the status entry
+ * - CREDENTIAL_STATUS_PURPOSE_UNSPECIFIED: Unspecified status purpose
+ *  - CREDENTIAL_STATUS_PURPOSE_REVOCATION: Used to cancel the validity of a verifiable credential.
+ * This status is not reversible.
+ * @default "CREDENTIAL_STATUS_PURPOSE_UNSPECIFIED"
+ */
+export enum V1Alpha1CredentialStatusPurpose {
+  CREDENTIAL_STATUS_PURPOSE_UNSPECIFIED = 'CREDENTIAL_STATUS_PURPOSE_UNSPECIFIED',
+  CREDENTIAL_STATUS_PURPOSE_REVOCATION = 'CREDENTIAL_STATUS_PURPOSE_REVOCATION'
+}
+
 export interface BadgeServiceIssueBadgeBody {
   /** The A2A badge. */
   a2a?: V1Alpha1IssueA2ABadgeRequest;
@@ -185,6 +197,30 @@ export interface V1Alpha1CredentialSchema {
   id?: string;
 }
 
+/**
+ * CredentialStatus represents the credentialStatus property of a Verifiable Credential.
+ * more information can be found [here]
+ * [here]: https://www.w3.org/TR/vc-data-model-2.0/#status
+ */
+export interface V1Alpha1CredentialStatus {
+  /** The URL identifying the schema file */
+  id?: string;
+  /** Type specifies the type of the file */
+  type?: string;
+  /**
+   * The creation date and time of the status
+   * @format date-time
+   */
+  createdAt?: string;
+  /**
+   * The value of the purpose for the status entry
+   * - CREDENTIAL_STATUS_PURPOSE_UNSPECIFIED: Unspecified status purpose
+   *  - CREDENTIAL_STATUS_PURPOSE_REVOCATION: Used to cancel the validity of a verifiable credential.
+   * This status is not reversible.
+   */
+  purpose?: V1Alpha1CredentialStatusPurpose;
+}
+
 export interface V1Alpha1IssueA2ABadgeRequest {
   /** The A2A well_known_url. */
   wellKnownUrl?: string;
@@ -243,6 +279,8 @@ export interface V1Alpha1VerifiableCredential {
   expirationDate?: string;
   /** https://www.w3.org/TR/vc-data-model-2.0/#data-schemas */
   credentialSchema?: V1Alpha1CredentialSchema[];
+  /** https://www.w3.org/TR/vc-data-model-2.0/#status */
+  credentialStatus?: V1Alpha1CredentialStatus[];
   /**
    * https://w3id.org/security#proof
    * A data integrity proof provides information about the proof mechanism,

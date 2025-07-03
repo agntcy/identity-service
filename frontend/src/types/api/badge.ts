@@ -12,7 +12,9 @@ import {
   V1Alpha1Proof,
   V1Alpha1VerifiableCredential,
   V1Alpha1VerifyBadgeRequest,
-  BadgeServiceIssueBadgeBody
+  BadgeServiceIssueBadgeBody,
+  V1Alpha1CredentialStatus,
+  V1Alpha1CredentialStatusPurpose
 } from '@/api/generated/identity/badge_service.swagger.api';
 
 export type {
@@ -24,5 +26,8 @@ export type {
   V1Alpha1Proof as Proof,
   V1Alpha1VerifiableCredential as VerifiableCredential,
   V1Alpha1VerifyBadgeRequest as VerifyBadgeRequest,
-  BadgeServiceIssueBadgeBody as IssueBadgeBody
+  BadgeServiceIssueBadgeBody as IssueBadgeBody,
+  V1Alpha1CredentialStatus as CredentialStatus
 };
+
+export {V1Alpha1CredentialStatusPurpose as CredentialStatusPurpose};

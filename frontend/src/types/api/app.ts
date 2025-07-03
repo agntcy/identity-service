@@ -9,7 +9,8 @@ import {
   V1Alpha1AppTypeCountEntry,
   V1Alpha1GetAppsCountResponse,
   V1Alpha1ListAppsResponse,
-  V1Alpha1PagedResponse
+  V1Alpha1PagedResponse,
+  V1Alpha1AppStatus
 } from '@/api/generated/identity/app_service.swagger.api';
 
 export type {
@@ -20,4 +21,4 @@ export type {
   V1Alpha1PagedResponse as PagedResponse
 };
 
-export {V1Alpha1AppType as AppType};
+export {V1Alpha1AppType as AppType, V1Alpha1AppStatus as AppStatus};
