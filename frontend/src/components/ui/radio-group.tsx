@@ -32,10 +32,3 @@ function RadioGroupItem({className, ...props}: React.ComponentProps<typeof Radio
 }
 
 export {RadioGroup, RadioGroupItem};
-1/2" />
-      </RadioGroupPrimitive.Indicator>
-    </RadioGroupPrimitive.Item>
-  );
-}
-
-export {RadioGroup, RadioGroupItem};
