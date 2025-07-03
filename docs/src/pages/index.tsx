@@ -35,8 +35,8 @@ export default function Home(): ReactNode {
   const { siteConfig } = useDocusaurusContext();
   return (
     <Layout
-      title={`Agtncy ${siteConfig.title}`}
-      description="Identity Platform by Agntcy"
+      title={`AGNTCY ${siteConfig.title}`}
+      description="Agent Identity by AGNTCY"
     >
       <HomepageHeader />
     </Layout>
