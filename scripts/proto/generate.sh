@@ -22,7 +22,9 @@ cd docker &&
   docker compose -f buf-compose.yaml run --rm -w /identity/code/api/spec buf-go run.sh
 docker rmi docker-buf-go
 
-if [ -d "../../api/server" ]; then
-  cd ../../api/server &&
+cd ..
+
+if [ -d "../../backend/api/server" ]; then
+  cd ../../backend/api/server &&
     grep -rl gnostic . | xargs sed -i '' 's|github.com/google/gnostic/openapiv3|github.com/google/gnostic-models/openapiv3|g'
 fi

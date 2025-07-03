@@ -91,6 +91,7 @@ type badgeService struct {
 	identityService    identitycore.Service
 	credentialStore    idpcore.CredentialStore
 	taskService        policycore.TaskService
+	badgeRevoker       badgecore.Revoker
 }
 
 func NewBadgeService(
@@ -103,6 +104,7 @@ func NewBadgeService(
 	identityService identitycore.Service,
 	credentialStore idpcore.CredentialStore,
 	taskService policycore.TaskService,
+	badgeRevoker badgecore.Revoker,
 ) BadgeService {
 	return &badgeService{
 		settingsRepository: settingsRepository,
@@ -115,6 +117,7 @@ func NewBadgeService(
 		identityService:    identityService,
 		credentialStore:    credentialStore,
 		taskService:        taskService,
+		badgeRevoker:       badgeRevoker,
 	}
 }
 
@@ -164,31 +167,30 @@ func (s *badgeService) IssueBadge(
 		return nil, fmt.Errorf("unable to fetch client credentials: %w", err)
 	}
 
+	issuer := identitycore.Issuer{
+		CommonName: settings.IssuerID,
+		KeyID:      settings.KeyID,
+	}
+
 	err = s.identityService.PublishVerifiableCredential(
 		ctx,
 		clientCredentials,
 		&badge.VerifiableCredential,
-		&identitycore.Issuer{
-			CommonName: settings.IssuerID,
-			KeyID:      settings.KeyID,
-		},
+		&issuer,
 	)
 	if err != nil {
 		return nil, fmt.Errorf("unable to publish the badge: %w", err)
 	}
 
-	// Create tasks
-	switch app.Type {
-	case apptypes.APP_TYPE_AGENT_A2A, apptypes.APP_TYPE_AGENT_OASF:
-		_, err = s.taskService.CreateForAgent(ctx, app.ID, ptrutil.DerefStr(app.Name))
-		if err != nil {
-			return nil, fmt.Errorf("error trying to create tasks: %w", err)
-		}
-	case apptypes.APP_TYPE_MCP_SERVER:
-		_, err = s.taskService.CreateForMCP(ctx, app.ID, claims.Badge)
-		if err != nil {
-			return nil, fmt.Errorf("error trying to create tasks: %w", err)
-		}
+	err = s.createTasks(ctx, app, claims)
+	if err != nil {
+		return nil, err
+	}
+
+	// revoke all active badges
+	err = s.badgeRevoker.RevokeAll(ctx, app.ID, clientCredentials, &issuer, privKey)
+	if err != nil {
+		return nil, fmt.Errorf("unable to revoke current badges: %w", err)
 	}
 
 	err = s.badgeRepository.Create(ctx, badge)
@@ -301,6 +303,23 @@ func (s *badgeService) createBadgeClaims(
 	}
 
 	return &claims, badgeType, nil
+}
+
+func (s *badgeService) createTasks(ctx context.Context, app *apptypes.App, claims *badgetypes.BadgeClaims) error {
+	switch app.Type {
+	case apptypes.APP_TYPE_AGENT_A2A, apptypes.APP_TYPE_AGENT_OASF:
+		_, err := s.taskService.CreateForAgent(ctx, app.ID, ptrutil.DerefStr(app.Name))
+		if err != nil {
+			return fmt.Errorf("error trying to create tasks: %w", err)
+		}
+	case apptypes.APP_TYPE_MCP_SERVER:
+		_, err := s.taskService.CreateForMCP(ctx, app.ID, claims.Badge)
+		if err != nil {
+			return fmt.Errorf("error trying to create tasks: %w", err)
+		}
+	}
+
+	return nil
 }
 
 func (s *badgeService) VerifyBadge(
