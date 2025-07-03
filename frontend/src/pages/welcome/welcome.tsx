@@ -41,7 +41,7 @@ const Welcome = () => {
               className="text-center mb-4"
               color="#161616"
             >
-              Agntcy Identity
+              Agent Identity
             </Typography>
           </div>
         </div>
