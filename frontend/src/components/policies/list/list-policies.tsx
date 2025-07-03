@@ -128,14 +128,7 @@ export const ListPolicies = () => {
             onSortingChange={setSorting}
             renderRowActionMenuItems={({row}) => {
               return [
-                <MenuItem
-                  key="edit-policy"
-                  // onClick={() => {
-                  //   setTempApp(row.original);
-                  //   setShowBadgeForm(true);
-                  // }}
-                  sx={{display: 'flex', alignItems: 'center', gap: '8px'}}
-                >
+                <MenuItem key="edit-policy" disabled sx={{display: 'flex', alignItems: 'center', gap: '8px'}}>
                   <Edit2Icon className="w-4 h-4" color="#062242" />
                   <Typography variant="body2" color="#1A1F27">
                     Edit

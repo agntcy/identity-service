@@ -16,27 +16,6 @@ export const PoliciesColumns = (): MRT_ColumnDef<Policy, any>[] => {
       accessorKey: 'assignedTo',
       header: 'Assigned To'
     }
-    // {
-    //   accessorKey: 'type',
-    //   header: 'Type',
-    //   Cell: ({row}) => {
-    //     return <AgenticServiceType type={row.original.type} />;
-    //   }
-    // },
-    // {
-    //   accessorKey: 'status',
-    //   header: 'Badge Status',
-    //   Cell: ({row}) => {
-    //     return <StatusAgenticService status={row.original.status} />;
-    //   }
-    // },
-    // {
-    //   accessorKey: 'createdAt',
-    //   header: 'Created At',
-    //   Cell: ({row}) => {
-    //     return <DateHover date={row.original.createdAt} />;
-    //   }
-    // }
   ];
   return columns;
 };

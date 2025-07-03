@@ -12,16 +12,19 @@ import {CreateRuleBody} from '@/types/api/policy';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {Button, Divider} from '@mui/material';
 import {GripVerticalIcon, PlusIcon} from 'lucide-react';
-import {useCallback, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {useForm} from 'react-hook-form';
 import z from 'zod';
 import lodash from 'lodash';
 import {RuleAccordion} from '@/components/shared/rule-accordion';
 import {DragDropContext, Droppable, Draggable} from '@hello-pangea/dnd';
+import {useStepper} from '../stepper';
 
 export const PolicyLogic = ({isLoading = false}: {isLoading?: boolean}) => {
   const [rules, setRules] = useState<CreateRuleBody & {id: string}[]>([]);
   const hasRules = rules.length > 0;
+
+  const methods = useStepper();
 
   const form = useForm<RuleFormValues>({
     resolver: zodResolver(RuleSchema),
@@ -83,6 +86,13 @@ export const PolicyLogic = ({isLoading = false}: {isLoading?: boolean}) => {
     resetForm();
   };
 
+  useEffect(() => {
+    methods.setMetadata('policyLogic', {
+      rules: rules
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rules]);
+
   return (
     <Card className="text-start py-4 rounded-[8px] p-[24px]" variant="secondary">
       <CardContent className="p-0 space-y-6">
@@ -104,7 +114,7 @@ export const PolicyLogic = ({isLoading = false}: {isLoading?: boolean}) => {
                                 <RuleAccordion rule={rule} showCloseButton onClose={removeRule} />
                               </div>
                             </div>
-                            <div className={`mt-4 ${index !== rules.length - 1 ? 'pb-10' : ''}`}>
+                            <div className={`mt-8 ${index !== rules.length - 1 ? 'pb-10' : ''}`}>
                               <Divider />
                             </div>
                           </div>
@@ -123,34 +133,32 @@ export const PolicyLogic = ({isLoading = false}: {isLoading?: boolean}) => {
                     <RuleAccordion rule={rule} showCloseButton onClose={removeRule} />
                   </div>
                 </div>
-                <div className={`mt-4 ${index !== rules.length - 1 ? 'pb-10' : 'pb-4'}`}>
+                <div className={`mt-8 ${index !== rules.length - 1 && 'pb-10'}`}>
                   <Divider />
                 </div>
               </div>
             ))
           ))}
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className={cn(hasRules ? 'mt-10' : 'mt-0')}>
-              <RuleForm isLoading={isLoading} />
-              <div className="mt-8">
-                <Divider />
-              </div>
-              <div className="flex justify-end mt-4">
-                <Button
-                  variant="tertariary"
-                  sx={{fontWeight: '600 !important'}}
-                  startIcon={<PlusIcon className="w-4 h-4" />}
-                  loading={isLoading}
-                  loadingPosition="start"
-                  disabled={isLoading || !form.formState.isValid}
-                  onClick={onSubmit}
-                >
-                  Add Logic
-                </Button>
-              </div>
+          <div className={cn(hasRules ? 'mt-10' : 'mt-0')}>
+            <RuleForm isLoading={isLoading} />
+            <div className="mt-8">
+              <Divider />
             </div>
-          </form>
+            <div className="flex justify-end mt-4">
+              <Button
+                variant="tertariary"
+                sx={{fontWeight: '600 !important'}}
+                startIcon={<PlusIcon className="w-4 h-4" />}
+                loading={isLoading}
+                loadingPosition="start"
+                disabled={isLoading || !form.formState.isValid}
+                onClick={onSubmit}
+              >
+                Add Logic
+              </Button>
+            </div>
+          </div>
         </Form>
       </CardContent>
     </Card>

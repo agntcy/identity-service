@@ -10,7 +10,7 @@ import {GeneralSize, MenuItem, Select, Tag, Typography} from '@outshift/spark-de
 import {RuleFormValues} from '@/schemas/rule-schema';
 import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group';
 
-export const RuleForm = ({isLoading = false}: {isLoading?: boolean}) => {
+export const RuleForm = ({isLoading = false, values}: {isLoading?: boolean; values?: any}) => {
   const form = useFormContext<RuleFormValues>();
 
   const optionsTasks = [
@@ -27,7 +27,7 @@ export const RuleForm = ({isLoading = false}: {isLoading?: boolean}) => {
 
   return (
     <div className="space-y-6">
-      <div className="w-full flex gap-4">
+      <div className="w-full flex gap-8">
         <FormField
           control={form.control}
           name="name"
@@ -53,7 +53,7 @@ export const RuleForm = ({isLoading = false}: {isLoading?: boolean}) => {
           )}
         />
       </div>
-      <div className="w-full flex gap-4">
+      <div className="w-full flex gap-8">
         <FormField
           control={form.control}
           name="task"
@@ -164,7 +164,7 @@ export const RuleForm = ({isLoading = false}: {isLoading?: boolean}) => {
           <FormItem className="space-y-2">
             <FormLabel className="form-label">Requires Approval</FormLabel>
             <FormControl>
-              <RadioGroup disabled={isLoading} onValueChange={field.onChange} className="flex flex-col">
+              <RadioGroup disabled={isLoading} onValueChange={field.onChange} className="flex flex-col" {...field}>
                 <FormItem className="flex items-center gap-3">
                   <FormControl>
                     <RadioGroupItem value="yes" />

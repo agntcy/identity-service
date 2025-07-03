@@ -83,19 +83,14 @@ const FormStepperComponent = () => {
       });
       return;
     }
-    setIsLoading(true);
     methods.setMetadata('policyForm', {
       ...methods.getMetadata('policyForm'),
       name: values.name,
       description: values.description,
       assignedTo: values.assignedTo
     });
-    mutationCreate.mutate({
-      name: values.name,
-      description: values.description,
-      assignedTo: values.assignedTo
-    });
-  }, [form, methods, mutationCreate]);
+    methods.next();
+  }, [form, methods]);
 
   const handleSave = useCallback(() => {
     // setIsLoading(true);
