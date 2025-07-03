@@ -1,0 +1,15 @@
+# Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: v2
+name: identity-docs
+description: A Helm chart for identity documentation service
+type: application
+version: 0.0.1
+appVersion: "0.0.1"
+
+maintainers:
+  - name: identity
+    url: https://github.com/cisco-eti/pyramid-platform/blob/main/MAINTAINERS.md
+sources:
+  - https://github.com/cisco-eti/pyramid-platform
