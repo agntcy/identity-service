@@ -51,7 +51,7 @@ RUN mkdir ./nginx/logs && \
   chown web:web ./nginx/tmp
 
 # Add SSI vars
-RUN sed -i 's/<head>/<head>\<script nonce="111dd4a0-4c4e-43a9-8eb4-6446ad2e10c7" language="javascript"\>window.apiUrl=`\<!--#echo var="apiUrl"--\>`;window.logLevel=`\<!--#echo var="logLevel"--\>`;window.segmentId=`\<!--#echo var="segmentId"--\>`;window.iamProductId=`\<!--#echo var="iamProductId"--\>`;window.iamUi=`\<!--#echo var="iamUi"--\>`;window.iamApi=`\<!--#echo var="iamApi"--\>`;window.iamOidcClientId=`\<!--#echo var="iamOidcClientId"--\>`;window.iamOidcIssuer=`\<!--#echo var="iamOidcIssuer"--\>`;<\/script>/g' ./dist/index.html
+RUN sed -i 's/<head>/<head>\<script nonce="111dd4a0-4c4e-43a9-8eb4-6446ad2e10c7" language="javascript"\>window.apiUrl=`\<!--#echo var="apiUrl"--\>`;window.logLevel=`\<!--#echo var="logLevel"--\>`;window.segmentId=`\<!--#echo var="segmentId"--\>`;window.iamProductId=`\<!--#echo var="iamProductId"--\>`;window.iamUi=`\<!--#echo var="iamUi"--\>`;window.iamApi=`\<!--#echo var="iamApi"--\>`;window.iamOidcClientId=`\<!--#echo var="iamOidcClientId"--\>`;window.iamOidcIssuer=`\<!--#echo var="iamOidcIssuer"--\>`;window.docsUrl=`\<!--#echo var="docsUrl"--\>`;<\/script>/g' ./dist/index.html
 
 # Set non root user
 USER web
