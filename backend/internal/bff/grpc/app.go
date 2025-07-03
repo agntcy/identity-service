@@ -5,6 +5,7 @@ package grpc
 
 import (
 	"context"
+	"errors"
 
 	identity_platform_sdk_go "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1"
 	"github.com/agntcy/identity-platform/internal/bff"
@@ -40,12 +41,12 @@ func (s *appService) CreateApp(
 ) (*identity_platform_sdk_go.App, error) {
 	app := converters.ToApp(req.GetApp())
 	if app == nil {
-		return nil, errutil.Err(nil, "app cannot be nil")
+		return nil, grpcutil.BadRequestError(errors.New("app cannot be nil"))
 	}
 
 	createdApp, err := s.appSrv.CreateApp(ctx, app)
 	if err != nil {
-		return nil, err
+		return nil, grpcutil.BadRequestError(err)
 	}
 
 	return converters.FromApp(createdApp), nil
@@ -85,7 +86,7 @@ func (s *appService) GetAppsCount(
 	req *identity_platform_sdk_go.GetAppsCountRequest,
 ) (*identity_platform_sdk_go.GetAppsCountResponse, error) {
 	// This method is not implemented yet.
-	return nil, errutil.Err(nil, "GetAppsCount method is not implemented")
+	return nil, grpcutil.BadRequestError(errors.New("GetAppsCount method is not implemented"))
 }
 
 func (s *appService) GetApp(
@@ -93,12 +94,12 @@ func (s *appService) GetApp(
 	req *identity_platform_sdk_go.GetAppRequest,
 ) (*identity_platform_sdk_go.App, error) {
 	if req.GetAppId() == "" {
-		return nil, errutil.Err(nil, "app ID cannot be empty")
+		return nil, grpcutil.BadRequestError(errors.New("app ID cannot be empty"))
 	}
 
 	app, err := s.appSrv.GetApp(ctx, req.GetAppId())
 	if err != nil {
-		return nil, err
+		return nil, grpcutil.BadRequestError(err)
 	}
 
 	return converters.FromApp(app), nil
@@ -116,8 +117,12 @@ func (s *appService) DeleteApp(
 	ctx context.Context,
 	req *identity_platform_sdk_go.DeleteAppRequest,
 ) (*emptypb.Empty, error) {
-	// This method is not implemented yet.
-	return nil, errutil.Err(nil, "DeleteApp method is not implemented")
+	err := s.appSrv.DeleteApp(ctx, req.AppId)
+	if err != nil {
+		return nil, grpcutil.BadRequestError(err)
+	}
+
+	return &emptypb.Empty{}, nil
 }
 
 func (s *appService) GetBadge(

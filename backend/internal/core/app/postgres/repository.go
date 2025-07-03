@@ -7,6 +7,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"fmt"
 	"slices"
 
 	appcore "github.com/agntcy/identity-platform/internal/core/app"
@@ -169,4 +170,22 @@ func (r *repository) GetAppsByID(ctx context.Context, ids []string) ([]*types.Ap
 	return convertutil.ConvertSlice(apps, func(app *App) *types.App {
 		return app.ToCoreType()
 	}), nil
+}
+
+func (r *repository) DeleteApp(ctx context.Context, app *types.App) error {
+	tenantID, ok := identitycontext.GetTenantID(ctx)
+	if !ok {
+		return identitycontext.ErrTenantNotFound
+	}
+
+	// This will make a soft delete since the entity has a DeletedAt field
+	// https://gorm.io/docs/delete.html#Soft-Delete
+	err := r.dbContext.Client().
+		Where("tenant_id = ?", tenantID).
+		Delete(newAppModel(app)).Error
+	if err != nil {
+		return errutil.Err(err, fmt.Sprintf("cannot delete app %s", app.ID))
+	}
+
+	return nil
 }

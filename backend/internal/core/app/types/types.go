@@ -3,6 +3,8 @@
 
 package types
 
+import "time"
+
 // App Type
 type AppType int
 
@@ -57,4 +59,8 @@ type App struct {
 	ResolverMetadataID string `json:"resolver_metadata_id,omitempty" protobuf:"-"`
 
 	ApiKey string `json:"api_key"`
+
+	CreatedAt time.Time
+	UpdatedAt *time.Time
+	DeletedAt *time.Time
 }

@@ -16,6 +16,7 @@ import (
 	bffgrpc "github.com/agntcy/identity-platform/internal/bff/grpc"
 	apppg "github.com/agntcy/identity-platform/internal/core/app/postgres"
 	authpg "github.com/agntcy/identity-platform/internal/core/auth/postgres"
+	badgecore "github.com/agntcy/identity-platform/internal/core/badge"
 	badgea2a "github.com/agntcy/identity-platform/internal/core/badge/a2a"
 	badgemcp "github.com/agntcy/identity-platform/internal/core/badge/mcp"
 	badgepg "github.com/agntcy/identity-platform/internal/core/badge/postgres"
@@ -222,6 +223,8 @@ func main() {
 	)
 	taskService := policycore.NewTaskService(mcpClient, policyRepository)
 
+	badgeRevoker := badgecore.NewRevoker(badgeRepository, identityService)
+
 	// Create internal services
 	appSrv := bff.NewAppService(
 		appRepository,
@@ -230,6 +233,8 @@ func main() {
 		idpFactory,
 		credentialStore,
 		iamClient,
+		badgeRevoker,
+		keyStore,
 	)
 	issuerSrv := issuer.NewService(
 		identityService,
@@ -251,6 +256,7 @@ func main() {
 		identityService,
 		credentialStore,
 		taskService,
+		badgeRevoker,
 	)
 	authSrv := bff.NewAuthService(
 		authRepository,

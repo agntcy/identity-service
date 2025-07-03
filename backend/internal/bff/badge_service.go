@@ -21,8 +21,6 @@ import (
 	policycore "github.com/agntcy/identity-platform/internal/core/policy"
 	settingscore "github.com/agntcy/identity-platform/internal/core/settings"
 	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
-	identity_core_sdk_go "github.com/agntcy/identity/api/server/agntcy/identity/core/v1alpha1"
-	"github.com/agntcy/identity/pkg/jwk"
 	"github.com/go-playground/validator/v10"
 )
 
@@ -93,6 +91,7 @@ type badgeService struct {
 	identityService    identitycore.Service
 	credentialStore    idpcore.CredentialStore
 	taskService        policycore.TaskService
+	badgeRevoker       badgecore.Revoker
 }
 
 func NewBadgeService(
@@ -105,6 +104,7 @@ func NewBadgeService(
 	identityService identitycore.Service,
 	credentialStore idpcore.CredentialStore,
 	taskService policycore.TaskService,
+	badgeRevoker badgecore.Revoker,
 ) BadgeService {
 	return &badgeService{
 		settingsRepository: settingsRepository,
@@ -117,6 +117,7 @@ func NewBadgeService(
 		identityService:    identityService,
 		credentialStore:    credentialStore,
 		taskService:        taskService,
+		badgeRevoker:       badgeRevoker,
 	}
 }
 
@@ -187,7 +188,7 @@ func (s *badgeService) IssueBadge(
 	}
 
 	// revoke all active badges
-	err = s.RevokeCurrentBadges(ctx, app, clientCredentials, &issuer, privKey)
+	err = s.badgeRevoker.RevokeAll(ctx, app.ID, clientCredentials, &issuer, privKey)
 	if err != nil {
 		return nil, fmt.Errorf("unable to revoke current badges: %w", err)
 	}
@@ -198,45 +199,6 @@ func (s *badgeService) IssueBadge(
 	}
 
 	return badge, nil
-}
-
-func (s *badgeService) RevokeCurrentBadges(
-	ctx context.Context,
-	app *apptypes.App,
-	clientCredentials *idpcore.ClientCredentials,
-	issuer *identitycore.Issuer,
-	privKey *jwk.Jwk,
-) error {
-	badges, err := s.badgeRepository.GetAllActiveBadges(ctx, app.ID)
-	if err != nil {
-		return err
-	}
-
-	for _, badge := range badges {
-		err := badgecore.Revoke(badge, privKey)
-		if err != nil {
-			return err
-		}
-
-		err = s.identityService.RevokeVerifiableCredential(ctx, clientCredentials, &badge.VerifiableCredential, issuer)
-		if err != nil {
-			var errInfo identitycore.ErrorInfo
-			if errors.As(err, &errInfo) {
-				if errInfo.Reason == identity_core_sdk_go.ErrorReason_ERROR_REASON_VERIFIABLE_CREDENTIAL_REVOKED {
-					continue
-				}
-			}
-
-			return fmt.Errorf("unable to revoke badge %s: %w", badge.ID, err)
-		}
-
-		err = s.badgeRepository.Update(ctx, badge)
-		if err != nil {
-			return fmt.Errorf("unable to save revoked badge %s: %w", badge.ID, err)
-		}
-	}
-
-	return nil
 }
 
 func (s *badgeService) createBadgeClaims(

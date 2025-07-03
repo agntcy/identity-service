@@ -408,7 +408,17 @@ func (s *service) RevokeVerifiableCredential(
 		},
 	})
 	if err != nil {
-		return tryGetErrorInfo(err)
+		err := tryGetErrorInfo(err)
+
+		var errInfo ErrorInfo
+		if errors.As(err, &errInfo) {
+			if errInfo.Reason == identitysrv.ErrorReason_ERROR_REASON_VERIFIABLE_CREDENTIAL_REVOKED {
+				// it's already revoked, not exactly an error
+				return nil
+			}
+		}
+
+		return err
 	}
 
 	return nil

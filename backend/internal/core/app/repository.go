@@ -26,4 +26,5 @@ type Repository interface {
 		appTypes []types.AppType,
 	) (*pagination.Pageable[types.App], error)
 	GetAppsByID(ctx context.Context, ids []string) ([]*types.App, error)
+	DeleteApp(ctx context.Context, app *types.App) error
 }
