@@ -23,18 +23,21 @@ export const UpdateOrganizationForm = ({tenant}: {tenant?: TenantReponse}) => {
 
   const form = useForm<OrganizationFormValues>({
     resolver: zodResolver(OrganizationSchema),
-    mode: 'all'
+    mode: 'all',
+    defaultValues: {
+      name: ''
+    }
   });
 
   const navigate = useNavigate();
 
   const updateOrganizatioMutations = useUpdateTenant({
     callbacks: {
-      onSuccess: (resp) => {
+      onSuccess: () => {
         setIsLoading(false);
         toast({
           title: 'Success',
-          description: `Organization "${resp.data.name}" updated successfully.`,
+          description: 'Organization updated successfully.',
           type: 'success'
         });
         void navigate(PATHS.settings.organizationsAndUsers.base, {replace: true});
@@ -68,13 +71,16 @@ export const UpdateOrganizationForm = ({tenant}: {tenant?: TenantReponse}) => {
   }, [form, tenant?.id, updateOrganizatioMutations]);
 
   useEffect(() => {
-    if (tenant) {
+    if (tenant?.name) {
       form.reset({
-        name: tenant.name || ''
+        name: tenant.name
+      });
+    } else {
+      form.reset({
+        name: ''
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tenant]);
+  }, [form, tenant]);
 
   return (
     <>
