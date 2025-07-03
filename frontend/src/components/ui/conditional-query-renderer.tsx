@@ -47,6 +47,11 @@ export const ConditionalQueryRenderer: React.FC<React.PropsWithChildren<Conditio
     variant: 'negative',
     actionButtonProps: {
       sx: {fontWeight: '600 !important'}
+    },
+    containerProps: {
+      sx: {
+        paddingBottom: '32px'
+      }
     }
   };
 
@@ -56,6 +61,9 @@ export const ConditionalQueryRenderer: React.FC<React.PropsWithChildren<Conditio
     variant: 'info',
     actionButtonProps: {
       sx: {fontWeight: '600 !important'}
+    },
+    containerProps: {
+      paddingBottom: '32px'
     }
   };
 

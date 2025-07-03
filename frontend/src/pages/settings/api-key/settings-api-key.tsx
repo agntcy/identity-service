@@ -23,8 +23,8 @@ const SettingsIdentityProvider: React.FC = () => {
           href: PATHS.settings.apiKey
         },
         {
-          label: 'Organizations',
-          href: PATHS.settings.organizations.base
+          label: 'Organizations & Users',
+          href: PATHS.settings.organizationsAndUsers.base
         }
       ]}
       breadcrumbs={[

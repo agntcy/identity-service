@@ -17,8 +17,8 @@ const CreateOrganization: React.FC = () => {
           link: PATHS.settings.base
         },
         {
-          text: 'Organizations',
-          link: PATHS.settings.organizations.base
+          text: 'Organizations & Users',
+          link: PATHS.settings.organizationsAndUsers.base
         },
         {
           text: 'Create Organization'

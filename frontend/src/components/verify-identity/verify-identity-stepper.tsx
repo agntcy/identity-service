@@ -64,9 +64,10 @@ const FormStepperComponent = () => {
 
   const handleOnClear = useCallback(() => {
     form.reset({
-      badgeId: '',
+      badge: '',
       file: undefined,
-      badgeContent: ''
+      badgeContent: '',
+      proofValue: ''
     });
     methods.reset();
     methods.resetMetadata();
@@ -88,11 +89,12 @@ const FormStepperComponent = () => {
       ...methods.getMetadata('verifyIdentityForm'),
       badgeContent: values.badgeContent,
       badgeFile: values.badgeFile,
-      badgeId: values.badgeId,
-      joseEnvelope: values.joseEnvelope
+      badge: values.badge,
+      joseEnvelope: values.joseEnvelope,
+      proofValue: values.proofValue
     });
     verifyIdentityMutation.mutate({
-      badge: values.badgeId ? values.badgeId : values.joseEnvelope
+      badge: values.proofValue ? values.proofValue : values.joseEnvelope
     });
   }, [form, methods, verifyIdentityMutation]);
 
@@ -125,7 +127,7 @@ const FormStepperComponent = () => {
                               {step.title}
                             </Typography>
                             {step.id === 'verifyIdentityForm' && (
-                              <Tooltip title="JOSE envelope" arrow placement="top">
+                              <Tooltip title="The JOSE enveloped badge to verify" arrow placement="top">
                                 <IconButton
                                   sx={(theme) => ({
                                     color: theme.palette.vars.baseTextDefault,
@@ -138,7 +140,6 @@ const FormStepperComponent = () => {
                               </Tooltip>
                             )}
                           </div>
-                          <Typography variant="body2">{step.description}</Typography>
                         </div>
                       </AccordionTrigger>
                       <AccordionContent>
@@ -147,22 +148,20 @@ const FormStepperComponent = () => {
                         ) : (
                           step.id === 'verficationResults' && <VerificationResults />
                         )}
-                        <div className="flex justify-between items-center">
+                        <StepperControls className="pt-4">
                           <Button variant="tertariary" onClick={handleOnClear}>
                             Cancel
                           </Button>
-                          <StepperControls className="pt-4">
-                            <Button
-                              type="submit"
-                              loading={isLoading}
-                              loadingPosition="start"
-                              disabled={isLoading || !form.formState.isValid}
-                              className="cursor-pointer"
-                            >
-                              {methods.isLast ? 'Done' : 'Verify'}
-                            </Button>
-                          </StepperControls>
-                        </div>
+                          <Button
+                            type="submit"
+                            loading={isLoading}
+                            loadingPosition="start"
+                            disabled={isLoading || !form.formState.isValid}
+                            className="cursor-pointer"
+                          >
+                            {methods.isLast ? 'Done' : 'Verify'}
+                          </Button>
+                        </StepperControls>
                       </AccordionContent>
                     </AccordionItem>
                   </div>

@@ -1,0 +1,55 @@
+# Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "identity-platform-sdk"
+version = "0.0.1"
+authors = [
+    {name = "Jean Diaconu", email = "jdiaconu@cisco.com"},
+]
+description = "Identity SDK & CLI for Python"
+readme = "README.md"
+requires-python = ">=3.8"
+license = "Apache-2.0"
+classifiers = [
+    "Programming Language :: Python :: 3",
+]
+dependencies = ["grpcio", "protobuf", "grpcio-tools", "protoc_gen_openapiv2", "python-dotenv", "mcp", "typer", "requests"]
+
+[project.urls]
+"Homepage" = "https://github.com/agntcy/identity-platform"
+"Bug Tracker" = "https://github.com/agntcy/identity-platform/issues"
+
+[project.scripts]
+identity-cli = "identityplatform.cli:app"
+
+[tool.setuptools]
+packages = ["identityplatform", "identityplatform.commands", "openapiv3", "google.api", "agntcy.identity.platform.v1alpha1", "agntcy.identity.platform.shared"]
+
+[tool.pytest.ini_options]
+minversion = "8.0.0"
+testpaths = [
+  "test",
+]
+
+[tool.ruff]
+line-length = 80
+extend-include = [
+  "*.ipynb"
+]
+exclude = [
+  ".ipynb_checkpoints"
+]
+
+[tool.ruff.lint]
+select = ["D", "I"]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["D104", "F401", "F403"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"

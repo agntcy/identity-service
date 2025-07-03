@@ -36,3 +36,25 @@ export const useGetTenant = (tenantId: string) => {
     enabled: !!tenantId
   });
 };
+
+export const useGetUsersGroup = (groupId: string) => {
+  return useQuery({
+    queryKey: ['get-users-group', groupId],
+    queryFn: async () => {
+      const {data} = await IamAPI.getUsersGroups(groupId);
+      return data;
+    },
+    enabled: !!groupId
+  });
+};
+
+export const useGetGroupsTenant = (tenantId: string) => {
+  return useQuery({
+    queryKey: ['get-tenant-groups', tenantId],
+    queryFn: async () => {
+      const {data} = await IamAPI.getGroupsTenant(tenantId);
+      return data;
+    },
+    enabled: !!tenantId
+  });
+};

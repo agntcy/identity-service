@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
  * SPDX-License-Identifier: Apache-2.0
@@ -12,7 +13,7 @@ import {Divider, toast, Typography} from '@outshift/spark-design';
 import {FileUpload} from '@/components/ui/file-upload';
 import {VerifyIdentityFormValues} from '@/schemas/verify-identity-schema';
 import {Textarea} from '@/components/ui/textarea';
-import {VerifiableCredential} from '@/types/api/badge';
+import {Badge, VerifiableCredential} from '@/types/api/badge';
 
 export const VerifyIdentityForm = ({isLoading = false}: {isLoading?: boolean}) => {
   const {control, watch, reset, setValue} = useFormContext<VerifyIdentityFormValues>();
@@ -20,15 +21,39 @@ export const VerifyIdentityForm = ({isLoading = false}: {isLoading?: boolean}) =
 
   const metaData = methods.getMetadata('verifyIdentityForm') as VerifyIdentityFormValues | undefined;
 
-  const badgeId = watch('badgeId');
+  const badge = watch('badge');
   const badgeContent = watch('badgeContent');
+
+  useEffect(() => {
+    if (badge) {
+      try {
+        const vcJson: VerifiableCredential = JSON.parse(badge);
+        if (vcJson.proof?.proofValue) {
+          setValue('proofValue', vcJson.proof.proofValue);
+        } else {
+          toast({
+            title: 'Invalid Badge',
+            description: 'The provided badge does not contain a valid proof.',
+            type: 'error'
+          });
+        }
+      } catch (error) {
+        toast({
+          title: 'Error processing badge',
+          description: 'There was an error processing the badge. Please ensure it is a valid badge JSON.',
+          type: 'error'
+        });
+      }
+    }
+  }, [badge, setValue]);
 
   useEffect(() => {
     if (metaData) {
       reset({
-        badgeId: metaData.badgeId || '',
+        badge: metaData.badge || '',
         badgeFile: metaData.badgeFile || undefined,
-        badgeContent: metaData.badgeContent || ''
+        badgeContent: metaData.badgeContent || '',
+        proofValue: metaData.proofValue || ''
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -51,7 +76,7 @@ export const VerifyIdentityForm = ({isLoading = false}: {isLoading?: boolean}) =
                 <FormItem>
                   <FormControl>
                     <FileUpload
-                      disabled={isLoading || !!badgeId}
+                      disabled={isLoading || !!badge}
                       defaultFile={field.value}
                       ref={field.ref}
                       name={field.name}
@@ -76,7 +101,6 @@ export const VerifyIdentityForm = ({isLoading = false}: {isLoading?: boolean}) =
                               });
                             }
                           }
-                          // eslint-disable-next-line @typescript-eslint/no-unused-vars
                         } catch (error) {
                           toast({
                             title: 'Error processing file',
@@ -101,14 +125,14 @@ export const VerifyIdentityForm = ({isLoading = false}: {isLoading?: boolean}) =
           <div className="w-[50%] my-auto">
             <FormField
               control={control}
-              name="badgeId"
+              name="badge"
               render={({field}) => (
                 <FormItem>
-                  <FormLabel className="form-label">Badge ID</FormLabel>
+                  <FormLabel className="form-label">Badge</FormLabel>
                   <FormControl>
                     <Textarea
-                      className="resize-none"
-                      placeholder="Type the ID of the badge..."
+                      className="resize-none h-[124px]"
+                      placeholder="Type content of the badge..."
                       rows={3}
                       {...field}
                       disabled={isLoading || !!badgeContent}

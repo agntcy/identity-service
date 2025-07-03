@@ -17,6 +17,7 @@
     "paths": {
       "@/*": ["./src/*"]
     },
+    "esModuleInterop": true,
     "strict": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,

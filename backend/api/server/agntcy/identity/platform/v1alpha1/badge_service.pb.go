@@ -99,9 +99,13 @@ func (x *IssueBadgeRequest) GetOasf() *IssueOASFBadgeRequest {
 }
 
 type IssueMcpBadgeRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Url           string                 `protobuf:"bytes,2,opt,name=url,proto3" json:"url,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The MCP badge name.
+	Name *string `protobuf:"bytes,1,opt,name=name,proto3,oneof" json:"name,omitempty"`
+	// The MCP badge URL.
+	Url *string `protobuf:"bytes,2,opt,name=url,proto3,oneof" json:"url,omitempty"`
+	// Or the MCP Schema in a base64 encoded format.
+	SchemaBase64  *string `protobuf:"bytes,3,opt,name=schema_base64,json=schemaBase64,proto3,oneof" json:"schema_base64,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -137,22 +141,32 @@ func (*IssueMcpBadgeRequest) Descriptor() ([]byte, []int) {
 }
 
 func (x *IssueMcpBadgeRequest) GetName() string {
-	if x != nil {
-		return x.Name
+	if x != nil && x.Name != nil {
+		return *x.Name
 	}
 	return ""
 }
 
 func (x *IssueMcpBadgeRequest) GetUrl() string {
-	if x != nil {
-		return x.Url
+	if x != nil && x.Url != nil {
+		return *x.Url
+	}
+	return ""
+}
+
+func (x *IssueMcpBadgeRequest) GetSchemaBase64() string {
+	if x != nil && x.SchemaBase64 != nil {
+		return *x.SchemaBase64
 	}
 	return ""
 }
 
 type IssueA2ABadgeRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	WellKnownUrl  string                 `protobuf:"bytes,1,opt,name=well_known_url,json=wellKnownUrl,proto3" json:"well_known_url,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The A2A well_known_url.
+	WellKnownUrl *string `protobuf:"bytes,1,opt,name=well_known_url,json=wellKnownUrl,proto3,oneof" json:"well_known_url,omitempty"`
+	// Or the MCP Schema in a base64 encoded format.
+	SchemaBase64  *string `protobuf:"bytes,2,opt,name=schema_base64,json=schemaBase64,proto3,oneof" json:"schema_base64,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -188,8 +202,15 @@ func (*IssueA2ABadgeRequest) Descriptor() ([]byte, []int) {
 }
 
 func (x *IssueA2ABadgeRequest) GetWellKnownUrl() string {
-	if x != nil {
-		return x.WellKnownUrl
+	if x != nil && x.WellKnownUrl != nil {
+		return *x.WellKnownUrl
+	}
+	return ""
+}
+
+func (x *IssueA2ABadgeRequest) GetSchemaBase64() string {
+	if x != nil && x.SchemaBase64 != nil {
+		return *x.SchemaBase64
 	}
 	return ""
 }
@@ -293,12 +314,19 @@ const file_agntcy_identity_platform_v1alpha1_badge_service_proto_rawDesc = "" +
 	"\x06app_id\x18\x01 \x01(\tR\x05appId\x12I\n" +
 	"\x03a2a\x18\x02 \x01(\v27.agntcy.identity.platform.v1alpha1.IssueA2ABadgeRequestR\x03a2a\x12I\n" +
 	"\x03mcp\x18\x03 \x01(\v27.agntcy.identity.platform.v1alpha1.IssueMcpBadgeRequestR\x03mcp\x12L\n" +
-	"\x04oasf\x18\x04 \x01(\v28.agntcy.identity.platform.v1alpha1.IssueOASFBadgeRequestR\x04oasf\"<\n" +
-	"\x14IssueMcpBadgeRequest\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\x12\x10\n" +
-	"\x03url\x18\x02 \x01(\tR\x03url\"<\n" +
-	"\x14IssueA2ABadgeRequest\x12$\n" +
-	"\x0ewell_known_url\x18\x01 \x01(\tR\fwellKnownUrl\"<\n" +
+	"\x04oasf\x18\x04 \x01(\v28.agntcy.identity.platform.v1alpha1.IssueOASFBadgeRequestR\x04oasf\"\x93\x01\n" +
+	"\x14IssueMcpBadgeRequest\x12\x17\n" +
+	"\x04name\x18\x01 \x01(\tH\x00R\x04name\x88\x01\x01\x12\x15\n" +
+	"\x03url\x18\x02 \x01(\tH\x01R\x03url\x88\x01\x01\x12(\n" +
+	"\rschema_base64\x18\x03 \x01(\tH\x02R\fschemaBase64\x88\x01\x01B\a\n" +
+	"\x05_nameB\x06\n" +
+	"\x04_urlB\x10\n" +
+	"\x0e_schema_base64\"\x90\x01\n" +
+	"\x14IssueA2ABadgeRequest\x12)\n" +
+	"\x0ewell_known_url\x18\x01 \x01(\tH\x00R\fwellKnownUrl\x88\x01\x01\x12(\n" +
+	"\rschema_base64\x18\x02 \x01(\tH\x01R\fschemaBase64\x88\x01\x01B\x11\n" +
+	"\x0f_well_known_urlB\x10\n" +
+	"\x0e_schema_base64\"<\n" +
 	"\x15IssueOASFBadgeRequest\x12#\n" +
 	"\rschema_base64\x18\x01 \x01(\tR\fschemaBase64\"*\n" +
 	"\x12VerifyBadgeRequest\x12\x14\n" +
@@ -354,6 +382,8 @@ func file_agntcy_identity_platform_v1alpha1_badge_service_proto_init() {
 		return
 	}
 	file_agntcy_identity_platform_v1alpha1_badge_proto_init()
+	file_agntcy_identity_platform_v1alpha1_badge_service_proto_msgTypes[1].OneofWrappers = []any{}
+	file_agntcy_identity_platform_v1alpha1_badge_service_proto_msgTypes[2].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

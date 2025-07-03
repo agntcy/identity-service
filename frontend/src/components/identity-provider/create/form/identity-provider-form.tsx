@@ -59,7 +59,7 @@ export const IdentityProviderForm = ({isLoading = false}: {isLoading?: boolean})
 
   return (
     <Card className="text-start py-4 rounded-[8px] p-[24px]" variant="secondary">
-      <CardContent className="space-y-6 p-0">
+      <CardContent className="space-y-8 p-0">
         <div className="space-y-4">
           <div className="flex justify-between items-center">
             <Typography variant="subtitle1" fontWeight={600}>
@@ -76,7 +76,7 @@ export const IdentityProviderForm = ({isLoading = false}: {isLoading?: boolean})
             control={control}
             name="provider"
             render={({field}) => (
-              <FormItem>
+              <FormItem className="space-y-2">
                 <FormControl>
                   <div className="card-group">
                     {identityProviders.map((provider, index) => (
@@ -84,6 +84,9 @@ export const IdentityProviderForm = ({isLoading = false}: {isLoading?: boolean})
                     ))}
                   </div>
                 </FormControl>
+                <Typography variant="body2">
+                  <b>Note:</b> This selection can only be made one time.
+                </Typography>
               </FormItem>
             )}
           />

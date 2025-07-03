@@ -4,9 +4,8 @@
  */
 
 import {Card, CardContent} from '@/components/ui/card';
-import {ExternalLinkIcon} from 'lucide-react';
 import {useStepper} from '../stepper';
-import {Link, Typography} from '@outshift/spark-design';
+import {Typography} from '@outshift/spark-design';
 import {useMemo} from 'react';
 import {AgenticServiceFormValues} from '@/schemas/agentic-service-schema';
 import KeyValue, {KeyValuePair} from '@/components/ui/key-value';
@@ -44,12 +43,6 @@ export const ConfirmAgenticProvider = () => {
         <Typography variant="subtitle1" fontWeight={600}>
           About
         </Typography>
-        <Link href="" openInNewTab>
-          <div className="flex items-center gap-1">
-            View documentation
-            <ExternalLinkIcon className="w-4 h-4 ml-1" />
-          </div>
-        </Link>
       </div>
       <CardContent className="p-0 space-y-4">
         <KeyValue pairs={keyValuePairs} useCard={false} />

@@ -1,0 +1,24 @@
+# Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
+[project]
+name = "identity-currency-exchange-mcp-sample-server"
+version = "0.0.0"
+description = "Sample Currency Exchange MCP Server"
+requires-python = ">=3.12"
+dependencies = [
+    "uvicorn",
+    "fastapi[standard]",
+    "httpx",
+    "mcp",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["."]
+
+[tool.uv.sources]
+a2a-samples = { workspace = true }
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

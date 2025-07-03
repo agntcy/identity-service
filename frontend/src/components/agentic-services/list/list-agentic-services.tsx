@@ -49,19 +49,19 @@ export const ListAgenticServices = () => {
     return [
       {
         value: AppType.APP_TYPE_AGENT_A2A,
-        valueFormatter: () => 'A2A',
+        valueFormatter: () => 'A2A Protocol',
         isSelectable: true,
         isSelected: true
       },
       {
         value: AppType.APP_TYPE_AGENT_OASF,
-        valueFormatter: () => 'OASF',
+        valueFormatter: () => 'OASF Agent',
         isSelectable: true,
         isSelected: true
       },
       {
         value: AppType.APP_TYPE_MCP_SERVER,
-        valueFormatter: () => 'MCP',
+        valueFormatter: () => 'MCP Server',
         isSelectable: true,
         isSelected: true
       }
@@ -205,7 +205,11 @@ export const ListAgenticServices = () => {
               }
             }}
             renderEmptyRowsFallback={() => (
-              <EmptyState title="No Agentic Services" description="Currently, there are no agentic services available." />
+              <EmptyState
+                title="No Agentic Services"
+                description="Currently, there are no agentic services available."
+                containerProps={{paddingBottom: '40px'}}
+              />
             )}
           />
         </Card>

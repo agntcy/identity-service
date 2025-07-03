@@ -18,10 +18,9 @@ export const SettingsProvider = ({children}: {children: React.ReactNode}) => {
     return !data?.issuerSettings || data.issuerSettings.idpType === IdpType.IDP_TYPE_UNSPECIFIED;
   }, [data?.issuerSettings]);
 
-  const {setIsEmptyIdp, setApiKey} = useSettingsStore(
+  const {setIsEmptyIdp} = useSettingsStore(
     useShallow((state) => ({
-      setIsEmptyIdp: state.setIsEmptyIdp,
-      setApiKey: state.setApiKey
+      setIsEmptyIdp: state.setIsEmptyIdp
     }))
   );
 
@@ -34,12 +33,6 @@ export const SettingsProvider = ({children}: {children: React.ReactNode}) => {
       });
     }
   }, [isError]);
-
-  useEffect(() => {
-    if (data?.apiKey?.apiKey) {
-      setApiKey(data.apiKey.apiKey);
-    }
-  }, [data?.apiKey?.apiKey, setApiKey]);
 
   useEffect(() => {
     setIsEmptyIdp(isEmptyIdp);

@@ -52,6 +52,7 @@ export const ErrorPage = ({error, resetErrorBoundary}: ErrorPageProps) => {
         }
         actionTitle="Refresh"
         actionCallback={() => resetErrorBoundary?.()}
+        containerProps={{paddingBottom: '40px'}}
       />
     </Card>
   );

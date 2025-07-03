@@ -15,7 +15,7 @@ import {OrganizationsDrawer} from './organizations-drawer';
 import {OverflowTooltip, Tooltip, TooltipProps} from '@outshift/spark-design';
 import SettingsIcon from '@/assets/sidebar/settings.svg?react';
 import AgenticServicesLogo from '@/assets/sidebar/agentic-services.svg?react';
-import AccessPoliciesLogo from '@/assets/sidebar/access-policies.svg?react';
+import PoliciesLogo from '@/assets/sidebar/access-policies.svg?react';
 import {useFeatureFlagsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
 import '@/styles/side-nav.css';
@@ -54,9 +54,9 @@ export const SideNav: React.FC<{isCollapsed?: boolean; onChangeCollapsed?: (valu
         icon: <AgenticServicesLogo className="w-4 h-4" />
       },
       {
-        href: PATHS.accessPolicies.base,
-        label: 'Access Policies',
-        icon: <AccessPoliciesLogo className="w-4 h-4" />,
+        href: PATHS.policies.base,
+        label: 'Policies',
+        icon: <PoliciesLogo className="w-4 h-4" />,
         disabled: !isTbacEnable
       },
       {

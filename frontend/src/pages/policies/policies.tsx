@@ -6,12 +6,12 @@
 import {BasePage} from '@/components/layout/base-page';
 import PlaceholderPageContent from '@/components/ui/placeholder-page-content';
 
-const AccessPolicies: React.FC = () => {
+const Policies: React.FC = () => {
   return (
-    <BasePage title="Access Policies" useBorder>
+    <BasePage title="Policies" useBorder>
       <PlaceholderPageContent />
     </BasePage>
   );
 };
 
-export default AccessPolicies;
+export default Policies;

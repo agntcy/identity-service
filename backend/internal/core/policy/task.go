@@ -5,6 +5,7 @@ package policy
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"slices"
 
@@ -15,7 +16,7 @@ import (
 
 type TaskService interface {
 	CreateForAgent(ctx context.Context, appID, name string) (*types.Task, error)
-	CreateForMCP(ctx context.Context, appID, name, url string) ([]*types.Task, error)
+	CreateForMCP(ctx context.Context, appID string, mcpSchema string) ([]*types.Task, error)
 }
 
 type taskService struct {
@@ -62,11 +63,13 @@ func (s *taskService) CreateForAgent(
 
 func (s *taskService) CreateForMCP(
 	ctx context.Context,
-	appID, name, url string,
+	appID string, mcpSchema string,
 ) ([]*types.Task, error) {
-	mcpServer, err := s.mcpClient.Discover(ctx, name, url)
+	var mcpServer *mcp.McpServer
+
+	err := json.Unmarshal([]byte(mcpSchema), &mcpServer)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to unmarshal MCP schema: %w", err)
 	}
 
 	existingTasks, err := s.policyRepository.GetTasksByAppID(ctx, appID)

@@ -982,6 +982,10 @@ components:
             properties:
                 wellKnownUrl:
                     type: string
+                    description: The A2A well_known_url.
+                schemaBase64:
+                    type: string
+                    description: Or the MCP Schema in a base64 encoded format.
         IssueBadgeRequest:
             type: object
             properties:
@@ -1005,8 +1009,13 @@ components:
             properties:
                 name:
                     type: string
+                    description: The MCP badge name.
                 url:
                     type: string
+                    description: The MCP badge URL.
+                schemaBase64:
+                    type: string
+                    description: Or the MCP Schema in a base64 encoded format.
         IssueOASFBadgeRequest:
             type: object
             properties:

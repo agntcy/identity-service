@@ -7,7 +7,7 @@ import React, {useMemo, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
 import {ChevronDownIcon, ChevronUpIcon, LogOutIcon} from 'lucide-react';
-import {Avatar, Button, Divider, Header as SparkHeader, Menu, MenuItem, Typography, Skeleton, toast, CopyButton} from '@outshift/spark-design';
+import {Avatar, Button, Divider, Header as SparkHeader, Menu, MenuItem, Typography, Skeleton} from '@outshift/spark-design';
 import Logo from '@/assets/logo-app-bar.svg';
 import BookLogo from '@/assets/union.svg?react';
 import GitLogo from '@/assets/git.svg?react';
@@ -15,8 +15,6 @@ import UserIcon from '@/assets/user.svg';
 import {Link} from 'react-router-dom';
 import {useAuth} from '@/hooks';
 import {useGetSession} from '@/queries';
-import {useSettingsStore} from '@/store';
-import {useShallow} from 'zustand/react/shallow';
 
 export const Header = () => {
   return (
@@ -62,12 +60,6 @@ const UserSection = () => {
   const navigate = useNavigate();
   const {authInfo, logout} = useAuth();
   const {data: dataSession, isLoading} = useGetSession();
-
-  const {apiKey} = useSettingsStore(
-    useShallow((state) => ({
-      apiKey: state.apiKey
-    }))
-  );
 
   const role = useMemo(() => {
     const temp = dataSession?.groups[0]?.role || 'VIEWER';
@@ -151,27 +143,6 @@ const UserSection = () => {
               </div>
             )}
           </div>
-          {apiKey && (
-            <div className="flex justify-center">
-              <div className="flex flex-col gap-1">
-                <Typography variant="subtitle2">API Key</Typography>
-                <div className="bg-[#FBFCFE] border-[2px] border-[#D5DFF7] rounded-[4px] w-fit py-1 px-4 flex justify-between items-center gap-2">
-                  <Typography variant="body2">{apiKey ? `${'*'.repeat(10)}${apiKey.slice(-5)}` : 'No API Key available'}</Typography>
-                  <CopyButton
-                    text={apiKey || ''}
-                    style={{border: 'none', height: '20px', width: '20px'}}
-                    onCopy={() => {
-                      toast({
-                        title: 'API Key copied to clipboard',
-                        description: 'You can now use this API Key in your applications.',
-                        type: 'success'
-                      });
-                    }}
-                  />
-                </div>
-              </div>
-            </div>
-          )}
         </div>
         <Divider />
         <MenuItem disableRipple onClick={handleLogout}>

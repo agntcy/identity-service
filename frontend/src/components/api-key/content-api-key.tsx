@@ -88,12 +88,7 @@ export const ContentApiKey: React.FC = () => {
             </div>
             <div className="flex justify-end">
               <Tooltip title="Refresh API Key">
-                <Button
-                  onClick={() => handleChangeActionsModal(true)}
-                  variant="primary"
-                  color="negative"
-                  startIcon={<RefreshCcwIcon className="w-4 h-4" />}
-                >
+                <Button onClick={() => handleChangeActionsModal(true)} startIcon={<RefreshCcwIcon className="w-4 h-4" />}>
                   Refresh
                 </Button>
               </Tooltip>

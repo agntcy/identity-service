@@ -35,6 +35,7 @@ export const BadgeModalForm = ({
   app,
   confirmButtonText = 'Create',
   navigateTo = true,
+  open,
   onCancel,
   onBadgeCreated,
   ...props
@@ -116,7 +117,22 @@ export const BadgeModalForm = ({
   }, [app.type, form]);
 
   return (
-    <Modal maxWidth="lg" fullWidth {...props}>
+    <Modal
+      open={open}
+      maxWidth="lg"
+      fullWidth
+      onChange={() => {
+        setIsLoading(false);
+        form.reset({
+          type: app.type,
+          oasfSpecs: undefined,
+          mcpServer: undefined,
+          wellKnowServer: undefined,
+          oasfSpecsContent: undefined
+        });
+      }}
+      {...props}
+    >
       <ModalTitle>{title}</ModalTitle>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
