@@ -42,6 +42,9 @@ message IssuerSettings {
 
   // Settings for the Okta Identity Provider.
   optional OktaIdpSettings okta_idp_settings = 5;
+
+  // Settings for the Ory Identity Provider.
+  optional OryIdpSettings ory_idp_settings = 6;
 }
 
 // Okta IdP Settings
@@ -51,6 +54,13 @@ message OktaIdpSettings {
   optional string client_id = 2;
 
   optional string private_key = 3;
+}
+
+// Ory IdP Settings
+message OryIdpSettings {
+  optional string project_slug = 1;
+
+  optional string api_key = 2;
 }
 
 // Identity Settings
@@ -70,6 +80,8 @@ enum IdpType {
   IDP_TYPE_DUO = 1;
   // Idp Type Okta.
   IDP_TYPE_OKTA = 2;
+  // Idp Type Ory.
+  IDP_TYPE_ORY = 3;
   // Idp Type Self.
-  IDP_TYPE_SELF = 3;
+  IDP_TYPE_SELF = 4;
 }

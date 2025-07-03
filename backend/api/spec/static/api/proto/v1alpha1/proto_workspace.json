@@ -3054,8 +3054,13 @@
               "description": "Idp Type Okta."
             },
             {
-              "name": "IDP_TYPE_SELF",
+              "name": "IDP_TYPE_ORY",
               "number": "3",
+              "description": "Idp Type Ory."
+            },
+            {
+              "name": "IDP_TYPE_SELF",
+              "number": "4",
               "description": "Idp Type Self."
             }
           ]
@@ -3204,6 +3209,18 @@
               "isoneof": true,
               "oneofdecl": "_okta_idp_settings",
               "defaultValue": ""
+            },
+            {
+              "name": "ory_idp_settings",
+              "description": "Settings for the Ory Identity Provider.",
+              "label": "optional",
+              "type": "OryIdpSettings",
+              "longType": "OryIdpSettings",
+              "fullType": "agntcy.identity.platform.v1alpha1.OryIdpSettings",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_ory_idp_settings",
+              "defaultValue": ""
             }
           ]
         },
@@ -3251,6 +3268,42 @@
               "ismap": false,
               "isoneof": true,
               "oneofdecl": "_private_key",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "OryIdpSettings",
+          "longName": "OryIdpSettings",
+          "fullName": "agntcy.identity.platform.v1alpha1.OryIdpSettings",
+          "description": "Ory IdP Settings",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "project_slug",
+              "description": "",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_project_slug",
+              "defaultValue": ""
+            },
+            {
+              "name": "api_key",
+              "description": "",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_api_key",
               "defaultValue": ""
             }
           ]

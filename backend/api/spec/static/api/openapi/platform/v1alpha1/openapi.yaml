@@ -1036,6 +1036,7 @@ components:
                         - IDP_TYPE_UNSPECIFIED
                         - IDP_TYPE_DUO
                         - IDP_TYPE_OKTA
+                        - IDP_TYPE_ORY
                         - IDP_TYPE_SELF
                     type: string
                     description: The type of the IdP.
@@ -1048,6 +1049,10 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/OktaIdpSettings'
                     description: Settings for the Okta Identity Provider.
+                oryIdpSettings:
+                    allOf:
+                        - $ref: '#/components/schemas/OryIdpSettings'
+                    description: Settings for the Ory Identity Provider.
             description: Issuer Settings
         ListAppsResponse:
             type: object
@@ -1095,6 +1100,14 @@ components:
                 privateKey:
                     type: string
             description: Okta IdP Settings
+        OryIdpSettings:
+            type: object
+            properties:
+                projectSlug:
+                    type: string
+                apiKey:
+                    type: string
+            description: Ory IdP Settings
         PagedResponse:
             type: object
             properties:
