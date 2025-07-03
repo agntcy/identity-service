@@ -17,8 +17,11 @@ import (
 )
 
 const (
-	oryTimeout    = 10 // seconds
-	oryClientName = "ory-client"
+	oryTimeout                = 10 // seconds
+	oryClientName             = "ory-client"
+	oryClientCredentials      = "client_credentials"
+	oryToken                  = "token"
+	oryJwtAccessTokenStrategy = "jwt"
 )
 
 type OryIdp struct {
@@ -66,6 +69,9 @@ func (d *OryIdp) CreateClientCredentialsPair(
 
 	oAuth2Client := *orysdk.NewOAuth2Client()
 	oAuth2Client.SetClientName(clientName)
+	oAuth2Client.SetGrantTypes([]string{oryClientCredentials})
+	oAuth2Client.SetResponseTypes([]string{oryToken})
+	oAuth2Client.SetAccessTokenStrategy(oryJwtAccessTokenStrategy)
 
 	resp, body, err := d.getClient().
 		OAuth2API.CreateOAuth2Client(context.WithValue(ctx, orysdk.ContextAccessToken, d.settings.ApiKey)).
@@ -149,7 +155,8 @@ func (d *OryIdp) oryParseAPIResponse(err error, response *http.Response) error {
 		)
 	}
 
-	if err != nil || response.StatusCode != http.StatusOK {
+	if err != nil ||
+		(response.StatusCode != http.StatusOK && response.StatusCode != http.StatusCreated) {
 		return errutil.Err(
 			nil,
 			fmt.Sprintf("ory API call failed: %s, status code: %d",

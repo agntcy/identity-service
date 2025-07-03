@@ -66,6 +66,32 @@ func ToDuoIdpSettings(
 	}
 }
 
+func FromOryIdpSettings(
+	src *settingstypes.OryIdpSettings,
+) *identity_platform_sdk_go.OryIdpSettings {
+	if src == nil {
+		return nil
+	}
+
+	return &identity_platform_sdk_go.OryIdpSettings{
+		ProjectSlug: ptrutil.Ptr(src.ProjectSlug),
+		ApiKey:      ptrutil.Ptr(src.ApiKey),
+	}
+}
+
+func ToOryIdpSettings(
+	src *identity_platform_sdk_go.OryIdpSettings,
+) *settingstypes.OryIdpSettings {
+	if src == nil {
+		return nil
+	}
+
+	return &settingstypes.OryIdpSettings{
+		ProjectSlug: src.GetProjectSlug(),
+		ApiKey:      src.GetApiKey(),
+	}
+}
+
 func FromIssuerSettings(
 	src *settingstypes.IssuerSettings,
 ) *identity_platform_sdk_go.IssuerSettings {
@@ -77,6 +103,7 @@ func FromIssuerSettings(
 		IdpType:         ptrutil.Ptr(identity_platform_sdk_go.IdpType(src.IdpType)),
 		OktaIdpSettings: FromOktaIdpSettings(src.OktaIdpSettings),
 		DuoIdpSettings:  FromDuoIdpSettings(src.DuoIdpSettings),
+		OryIdpSettings:  FromOryIdpSettings(src.OryIdpSettings),
 	}
 }
 
@@ -91,6 +118,7 @@ func ToIssuerSettings(
 		IdpType:         settingstypes.IdpType(src.GetIdpType()),
 		OktaIdpSettings: ToOktaIdpSettings(src.GetOktaIdpSettings()),
 		DuoIdpSettings:  ToDuoIdpSettings(src.GetDuoIdpSettings()),
+		OryIdpSettings:  ToOryIdpSettings(src.GetOryIdpSettings()),
 	}
 }
 
