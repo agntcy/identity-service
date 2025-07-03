@@ -16,6 +16,9 @@ const (
 	// Idp Type Okta.
 	IDP_TYPE_OKTA
 
+	// Idp Type Ory.
+	IDP_TYPE_ORY
+
 	// Idp Type Self.
 	IDP_TYPE_SELF
 )
@@ -26,6 +29,8 @@ func (t *IdpType) UnmarshalText(text []byte) error {
 		*t = IDP_TYPE_DUO
 	case IDP_TYPE_OKTA.String():
 		*t = IDP_TYPE_OKTA
+	case IDP_TYPE_ORY.String():
+		*t = IDP_TYPE_ORY
 	default:
 		*t = IDP_TYPE_UNSPECIFIED
 	}
@@ -56,6 +61,12 @@ type DuoIdpSettings struct {
 	SecretKey      string `json:"secret_key,omitempty"      protobuf:"bytes,3,opt,name=secret_key "`
 }
 
+// Ory IdP Settings
+type OryIdpSettings struct {
+	ProjectSlug string `json:"project_slug,omitempty" protobuf:"bytes,1,opt,name=project_slug"`
+	ApiKey      string `json:"api_key,omitempty"      protobuf:"bytes,2,opt,name=api_key"`
+}
+
 // Issuer Settings
 type IssuerSettings struct {
 	// A unique identifier for the Issuer.
@@ -74,6 +85,9 @@ type IssuerSettings struct {
 
 	// Settings for the Okta Identity Provider.
 	OktaIdpSettings *OktaIdpSettings `json:"okta_idp_settings,omitempty" protobuf:"bytes,5,opt,name=okta_idp_settings"`
+
+	// Settings for the Ory Identity Provider.
+	OryIdpSettings *OryIdpSettings `json:"ory_idp_settings,omitempty" protobuf:"bytes,6,opt,name=ory_idp_settings"`
 }
 
 // Identity Settings
