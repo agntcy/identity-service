@@ -51,3 +51,13 @@ export const useGetAgenticServiceBadge = (id?: string) => {
     enabled: !!id
   });
 };
+
+export const useGetAgenticServicesCount = () => {
+  return useQuery({
+    queryKey: ['get-agentic-service-count'],
+    queryFn: async () => {
+      const {data} = await AgenticServicesAPI.getAppsCount();
+      return data;
+    }
+  });
+};

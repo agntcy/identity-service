@@ -11,21 +11,23 @@ import A2AIcon from '@/assets/a2a.png';
 import {Typography} from '@mui/material';
 import {labels} from '@/constants/labels';
 
-export const AgenticServiceType = ({type, className}: {type?: AppType; className?: string}) => {
+export const AgenticServiceType = ({type, className, showLabel = true}: {type?: AppType; className?: string; showLabel?: boolean}) => {
   return (
     <div className={cn('flex items-center gap-2', className)}>
       {type === AppType.APP_TYPE_MCP_SERVER && <MCPIcon className="h-[20px] w-[20px]" />}
       {type === AppType.APP_TYPE_AGENT_OASF && <OASFIcon className="h-[20px] w-[20px]" />}
       {type === AppType.APP_TYPE_AGENT_A2A && <img src={A2AIcon} className="h-[26px] w-[26px]" />}
-      <Typography
-        variant="body1"
-        fontSize={14}
-        sx={(theme) => ({
-          color: theme.palette.vars.baseTextStrong
-        })}
-      >
-        {labels.appTypes[type as keyof typeof labels.appTypes] || 'Unknown Service Type'}
-      </Typography>
+      {showLabel && (
+        <Typography
+          variant="body1"
+          fontSize={14}
+          sx={(theme) => ({
+            color: theme.palette.vars.baseTextStrong
+          })}
+        >
+          {labels.appTypes[type as keyof typeof labels.appTypes] || 'Unknown Service Type'}
+        </Typography>
+      )}
     </div>
   );
 };

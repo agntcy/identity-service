@@ -3,70 +3,39 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {useCallback, useMemo, useState} from 'react';
+import {useCallback, useState} from 'react';
 import {ConditionalQueryRenderer} from '../../ui/conditional-query-renderer';
-import {EmptyState, MenuItem, SelectNodeType, Table, toast, Typography} from '@outshift/spark-design';
-import {useGetAgenticServices} from '@/queries';
+import {EmptyState, MenuItem, Table, toast, Typography} from '@outshift/spark-design';
+import {useGetPolicies} from '@/queries';
 import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
-import {AgenticServiceColumns} from './agentic-services-columns';
+import {PoliciesColumns} from './policies-columns';
 import {Card} from '@/components/ui/card';
 import {cn} from '@/lib/utils';
 import {generatePath, useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
 import {FilterSections} from '@/components/shared/filters-sections';
-import {App, AppType} from '@/types/api/app';
-import {IdCardIcon, PlusIcon, RefreshCcwIcon, Trash2Icon} from 'lucide-react';
+import {Edit2Icon, PlusIcon, Trash2Icon} from 'lucide-react';
 import {ConfirmModal} from '@/components/ui/confirm-modal';
-import {useDeleteAgenticService} from '@/mutations';
-import {BadgeModalForm} from '@/components/shared/badge-modal-form';
+import {Policy} from '@/types/api/policy';
+import {useDeletePolicy} from '@/mutations';
 
-export const ListAgenticServices = () => {
+export const ListPolicies = () => {
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: 0,
     pageSize: 10
   });
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
   const [query, setQuery] = useState<string | undefined>(undefined);
-  const [tempApp, setTempApp] = useState<App | undefined>(undefined);
-  const [showBadgeForm, setShowBadgeForm] = useState<boolean>(false);
+  const [tempPolicy, setTempPolicy] = useState<Policy | undefined>(undefined);
   const [showActionsModal, setShowActionsModal] = useState<boolean>(false);
-  const [appTypeFilters, setAppTypeFilters] = useState<AppType[]>([
-    AppType.APP_TYPE_AGENT_A2A,
-    AppType.APP_TYPE_AGENT_OASF,
-    AppType.APP_TYPE_MCP_SERVER
-  ]);
 
-  const {data, isLoading, isFetching, error, refetch} = useGetAgenticServices({
+  const {data, isLoading, isFetching, error, refetch} = useGetPolicies({
     page: pagination.pageIndex + 1,
     size: pagination.pageSize,
-    query: query,
-    types: appTypeFilters
+    query: query
   });
 
   const navigate = useNavigate();
-
-  const treeDataTypeFilters: SelectNodeType<AppType>[] = useMemo(() => {
-    return [
-      {
-        value: AppType.APP_TYPE_AGENT_A2A,
-        valueFormatter: () => 'A2A Agent',
-        isSelectable: true,
-        isSelected: true
-      },
-      {
-        value: AppType.APP_TYPE_AGENT_OASF,
-        valueFormatter: () => 'OASF',
-        isSelectable: true,
-        isSelected: true
-      },
-      {
-        value: AppType.APP_TYPE_MCP_SERVER,
-        valueFormatter: () => 'MCP Server',
-        isSelectable: true,
-        isSelected: true
-      }
-    ];
-  }, []);
 
   const handleQueryChange = useCallback(
     (value: string) => {
@@ -76,24 +45,19 @@ export const ListAgenticServices = () => {
     [setQuery, setPagination]
   );
 
-  const handleTypeFilterChange = useCallback((selectedValues: SelectNodeType<AppType>[]) => {
-    setAppTypeFilters(selectedValues.map((node) => node.value as AppType));
-    setPagination((prev) => ({...prev, pageIndex: 0}));
-  }, []);
-
-  const deleteMutation = useDeleteAgenticService({
+  const deleteMutation = useDeletePolicy({
     callbacks: {
       onSuccess: () => {
         toast({
           title: 'Success',
-          description: 'Agentic service deleted successfully.',
+          description: `Policy deleted successfully.`,
           type: 'success'
         });
       },
       onError: () => {
         toast({
           title: 'Error',
-          description: 'An error occurred while deleting the agentic service. Please try again.',
+          description: 'An error occurred while deleting the policy. Please try again.',
           type: 'error'
         });
       }
@@ -102,14 +66,14 @@ export const ListAgenticServices = () => {
 
   const handleClickOnDelete = useCallback(() => {
     setShowActionsModal(false);
-    setTempApp(undefined);
-    deleteMutation.mutate(tempApp?.id || '');
-  }, [deleteMutation, tempApp]);
+    setTempPolicy(undefined);
+    deleteMutation.mutate(tempPolicy?.id || '');
+  }, [deleteMutation, tempPolicy]);
 
   return (
     <>
       <ConditionalQueryRenderer
-        itemName="Agentic Services"
+        itemName="Policies"
         data={true}
         error={error}
         isLoading={false}
@@ -125,33 +89,25 @@ export const ListAgenticServices = () => {
       >
         <Card className={cn(!isLoading && 'p-0')} variant="secondary">
           <Table
-            columns={AgenticServiceColumns()}
-            data={data?.apps || []}
+            columns={PoliciesColumns()}
+            data={data?.policies || []}
             isLoading={isLoading || isFetching}
             densityCompact
             muiTableBodyRowProps={({row}) => ({
               sx: {cursor: 'pointer', '& .MuiIconButton-root': {color: (theme) => theme.palette.vars.interactiveSecondaryDefaultDefault}},
               onClick: () => {
-                const path = generatePath(PATHS.agenticServices.info, {id: row.original?.id});
+                const path = generatePath(PATHS.policies.info, {id: row.original?.id});
                 void navigate(path, {replace: true});
               }
             })}
             renderTopToolbar={() => (
               <FilterSections
-                title={`${data?.pagination?.total ?? 0} Agentic ${Number(data?.pagination?.total) > 1 ? 'Services' : 'Service'}`}
+                title={`${data?.pagination?.total ?? 0} ${Number(data?.pagination?.total) > 1 ? 'Policies' : 'Policy'}`}
                 searchFieldProps={{
                   placeholder: 'Search...',
                   value: query,
                   onChangeCallback: handleQueryChange
                 }}
-                dropDowns={[
-                  {
-                    buttonContent: 'Type',
-                    isSearchFieldEnabled: false,
-                    treeData: treeDataTypeFilters,
-                    onSelectValues: handleTypeFilterChange
-                  }
-                ]}
               />
             )}
             enableRowActions
@@ -173,35 +129,22 @@ export const ListAgenticServices = () => {
             renderRowActionMenuItems={({row}) => {
               return [
                 <MenuItem
-                  key="re-issue-badge"
-                  onClick={() => {
-                    setTempApp(row.original);
-                    setShowBadgeForm(true);
-                  }}
+                  key="edit-policy"
+                  // onClick={() => {
+                  //   setTempApp(row.original);
+                  //   setShowBadgeForm(true);
+                  // }}
                   sx={{display: 'flex', alignItems: 'center', gap: '8px'}}
                 >
-                  <IdCardIcon className="w-4 h-4" color="#062242" />
+                  <Edit2Icon className="w-4 h-4" color="#062242" />
                   <Typography variant="body2" color="#1A1F27">
-                    Re-Issue Badge
+                    Edit
                   </Typography>
                 </MenuItem>,
                 <MenuItem
-                  key="update-app"
+                  key="delete-policy"
                   onClick={() => {
-                    const path = generatePath(PATHS.agenticServices.update, {id: row.original.id});
-                    void navigate(path, {replace: true});
-                  }}
-                  sx={{display: 'flex', alignItems: 'center', gap: '8px'}}
-                >
-                  <RefreshCcwIcon className="w-4 h-4" color="#062242" />
-                  <Typography variant="body2" color="#1A1F27">
-                    Update
-                  </Typography>
-                </MenuItem>,
-                <MenuItem
-                  key="delete-app"
-                  onClick={() => {
-                    setTempApp(row.original);
+                    setTempPolicy(row.original);
                     setShowActionsModal(true);
                   }}
                   sx={{display: 'flex', alignItems: 'center', gap: '8px'}}
@@ -220,12 +163,12 @@ export const ListAgenticServices = () => {
             }}
             renderEmptyRowsFallback={() => (
               <EmptyState
-                title="No Agentic Services"
-                description="Currently, there are no agentic services available."
+                title="No policies found"
+                description="No policies are currently in place. Click 'Add Policy' to create and apply one to your registered agentic services."
                 containerProps={{paddingBottom: '40px'}}
-                actionTitle="Create Agentic Service"
+                actionTitle="Add Policy"
                 actionCallback={() => {
-                  void navigate(PATHS.agenticServices.create);
+                  void navigate(PATHS.policies.create);
                 }}
                 actionButtonProps={{
                   sx: {fontWeight: '600 !important'},
@@ -238,36 +181,22 @@ export const ListAgenticServices = () => {
       </ConditionalQueryRenderer>
       <ConfirmModal
         open={showActionsModal}
-        title="Delete Agentic Service"
+        title="Delete Policy"
         description={
           <>
-            Are you sure you want to delete this agentic service <b>{tempApp?.id}</b>? This action cannot be undone.
+            Are you sure you want to delete the policy <strong>{tempPolicy?.name}</strong>? This action cannot be undone.
           </>
         }
         confirmButtonText="Delete"
         onCancel={() => {
           setShowActionsModal(false);
-          setTempApp(undefined);
+          setTempPolicy(undefined);
         }}
         onConfirm={handleClickOnDelete}
         buttonConfirmProps={{
           color: 'negative'
         }}
       />
-      {tempApp && (
-        <BadgeModalForm
-          app={tempApp}
-          open={showBadgeForm}
-          onClose={() => {
-            setShowBadgeForm(false);
-            setTempApp(undefined);
-          }}
-          onCancel={() => {
-            setShowBadgeForm(false);
-            setTempApp(undefined);
-          }}
-        />
-      )}
     </>
   );
 };

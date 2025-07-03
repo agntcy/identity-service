@@ -18,7 +18,7 @@ export const PATHS = {
   },
   policies: {
     base: '/policies',
-    create: '/policies/create',
+    create: '/policies/add',
     info: '/policies/:id'
   },
   settings: {

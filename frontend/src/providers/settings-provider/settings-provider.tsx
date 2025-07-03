@@ -12,11 +12,11 @@ import {useShallow} from 'zustand/react/shallow';
 import {Loading} from '@/components/ui/loading';
 
 export const SettingsProvider = ({children}: {children: React.ReactNode}) => {
-  const {data, isError, isLoading} = useGetSettings();
+  const {data: dataSettings, isError: isErrorSettings, isLoading: isLoadingSettings} = useGetSettings();
 
   const isEmptyIdp = useMemo(() => {
-    return !data?.issuerSettings || data.issuerSettings.idpType === IdpType.IDP_TYPE_UNSPECIFIED;
-  }, [data?.issuerSettings]);
+    return !dataSettings?.issuerSettings || dataSettings.issuerSettings.idpType === IdpType.IDP_TYPE_UNSPECIFIED;
+  }, [dataSettings?.issuerSettings]);
 
   const {setIsEmptyIdp} = useSettingsStore(
     useShallow((state) => ({
@@ -25,20 +25,20 @@ export const SettingsProvider = ({children}: {children: React.ReactNode}) => {
   );
 
   useEffect(() => {
-    if (isError) {
+    if (isErrorSettings) {
       toast({
         title: 'Error fetching identity provider settings',
         description: 'There was an error fetching the identity provider settings. Please try again later.',
         type: 'error'
       });
     }
-  }, [isError]);
+  }, [isErrorSettings]);
 
   useEffect(() => {
     setIsEmptyIdp(isEmptyIdp);
   }, [isEmptyIdp, setIsEmptyIdp]);
 
-  if (isLoading) {
+  if (isLoadingSettings) {
     return <Loading />;
   }
 

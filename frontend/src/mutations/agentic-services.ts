@@ -64,6 +64,7 @@ export const useDeleteAgenticService = ({callbacks}: PropsSettingsAgenticService
     mutationFn: (id: string) => AgenticServicesAPI.deleteApp(id),
     onSettled: async () => {
       await queryClient.invalidateQueries({queryKey: ['get-agentic-services']});
+      await queryClient.invalidateQueries({queryKey: ['get-agentic-service']});
     },
     onError: () => {
       if (callbacks?.onError) {

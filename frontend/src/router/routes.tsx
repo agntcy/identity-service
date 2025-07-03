@@ -27,10 +27,11 @@ const SettingsOrganizations = React.lazy(() => import('@/pages/settings/organiza
 const UpdateOrganization = React.lazy(() => import('@/pages/settings/organizations/update-organization'));
 const OrganizationInfo = React.lazy(() => import('@/pages/settings/organizations/info-organization'));
 const AgenticServices = React.lazy(() => import('@/pages/agentic-services/agentic-services'));
-const CreateAgenticService = React.lazy(() => import('@/pages/agentic-services/create-agentic-service'));
+const CreateAgenticService = React.lazy(() => import('@/pages/agentic-services/agentic-service-create'));
 const UpdateAgenticService = React.lazy(() => import('@/pages/agentic-services/agentic-service-update'));
 const AgenticServiceInfo = React.lazy(() => import('@/pages/agentic-services/agentic-service-info'));
 const Policies = React.lazy(() => import('@/pages/policies/policies'));
+const CreatePolicies = React.lazy(() => import('@/pages/policies/policies-create'));
 const VerifyIdentityPrivate = React.lazy(() => import('@/pages/agentic-services/verify-identity-private'));
 const VerifyIdentityPublic = React.lazy(() => import('@/pages/verify-identity/verify-identity-public'));
 
@@ -155,6 +156,10 @@ export const useRoutes = () => {
           {
             index: true,
             element: <Policies />
+          },
+          {
+            path: PATHS.policies.create,
+            element: <CreatePolicies />
           },
           {
             path: '*',

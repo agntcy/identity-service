@@ -6,7 +6,7 @@
 import React from 'react';
 import {useAuth} from '@/hooks';
 import {Loading} from '@/components/ui/loading';
-import {AgenticServicesAPI, IamAPI, SettingsAPI} from '@/api/services';
+import {AgenticServicesAPI, IamAPI, PolicyAPI, SettingsAPI} from '@/api/services';
 import {BadgeAPI} from '@/api/services/badge-api';
 
 export const ApiProvider = ({children}: React.PropsWithChildren) => {
@@ -18,6 +18,7 @@ export const ApiProvider = ({children}: React.PropsWithChildren) => {
     SettingsAPI.setTokenExpiredHandlers({tokenExpiredHttpHandler, logout});
     AgenticServicesAPI.setTokenExpiredHandlers({tokenExpiredHttpHandler, logout});
     BadgeAPI.setTokenExpiredHandlers({tokenExpiredHttpHandler, logout});
+    PolicyAPI.setTokenExpiredHandlers({tokenExpiredHttpHandler, logout});
   }, [tokenExpiredHttpHandler, logout]);
 
   React.useEffect(() => {
@@ -26,6 +27,7 @@ export const ApiProvider = ({children}: React.PropsWithChildren) => {
       SettingsAPI.setAuthInfo(authInfo);
       AgenticServicesAPI.setAuthInfo(authInfo);
       BadgeAPI.setAuthInfo(authInfo);
+      PolicyAPI.setAuthInfo(authInfo);
       setIsSet(true);
     } else {
       setIsSet(true);
