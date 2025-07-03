@@ -2,27 +2,27 @@
 # SPDX-License-Identifier: Apache-2.0
 
 ---
-name: identity-samples
+name: identity-platform-samples
 services:
-  identity-samples-currency-exchange-mcp-server:
-    container_name: identity-samples-currency-exchange-mcp-server
+  identity-platform-samples-currency-exchange-mcp-server:
+    container_name: identity-platform-samples-currency-exchange-mcp-server
     build:
       context: ./mcp/currency_exchange
       dockerfile: Dockerfile
     restart: always
     ports:
-      - "9090:9090"
+      - "9092:9090"
     extra_hosts:
       - "host.docker.internal:host-gateway"
-  identity-samples-currency-exchange-a2a-agent:
-    container_name: identity-samples-currency-exchange-a2a-agent
+  identity-platform-samples-currency-exchange-a2a-agent:
+    container_name: identity-platform-samples-currency-exchange-a2a-agent
     build:
       context: ./agent/a2a/currency_exchange
       dockerfile: Dockerfile
     restart: always
     depends_on:
-      - identity-samples-currency-exchange-mcp-server
+      - identity-platform-samples-currency-exchange-mcp-server
     ports:
-      - "9091:9091"
+      - "9093:9091"
     extra_hosts:
       - "host.docker.internal:host-gateway"
