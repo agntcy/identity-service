@@ -39,9 +39,9 @@ type OktaIdpSettings struct {
 }
 
 type OryIdpSettings struct {
-	ID          uuid.UUID `gorm:"primaryKey;default:gen_random_uuid()"`
-	ProjectSlug string    `gorm:"not null;type:varchar(256);"`
-	ApiKey      string    `gorm:"not null;type:varchar(256);"`
+	ID          uuid.UUID                `gorm:"primaryKey;default:gen_random_uuid()"`
+	ProjectSlug string                   `gorm:"not null;type:varchar(256);"`
+	ApiKey      *secrets.EncryptedString `gorm:"type:varchar(4096);"`
 }
 
 type Device struct {
@@ -82,7 +82,7 @@ func (i *OryIdpSettings) ToCoreType() *types.OryIdpSettings {
 
 	return &types.OryIdpSettings{
 		ProjectSlug: i.ProjectSlug,
-		ApiKey:      i.ApiKey,
+		ApiKey:      ptrutil.DerefStr(secrets.ToString(i.ApiKey)),
 	}
 }
 
@@ -132,7 +132,7 @@ func newOryIdpSettingsModel(src *types.OryIdpSettings) *OryIdpSettings {
 
 	return &OryIdpSettings{
 		ProjectSlug: src.ProjectSlug,
-		ApiKey:      src.ApiKey,
+		ApiKey:      secrets.FromString(ptrutil.Ptr(src.ApiKey)),
 	}
 }
 
