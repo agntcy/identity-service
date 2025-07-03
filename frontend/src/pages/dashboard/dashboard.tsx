@@ -81,16 +81,16 @@ const Dashboard: React.FC = () => {
               <div className="bg-[#FBFCFE] rounded-[8px] flex-col flex justify-center items-center px-20 w-[50%] pt-[40px] pb-[24px]">
                 <div>
                   <Typography variant="h6" textAlign="center">
-                    Register Identity Providers
+                    Register Issuer
                   </Typography>
                   <Typography variant="body1" marginTop={2} textAlign="center">
-                    Register your Identity Provider to create and manage identities for your MCP Servers and Agents, including those supporting
-                    A2A-compatible protocols like Google A2A, OASF, with support for TBAC based access control.
+                    Register your Identity Provider as an Issuer to create and manage identities for your MCP Servers and Agents, including those
+                    supporting A2A-compatible protocols like Google A2A, OASF, with support for TBAC based access control.
                   </Typography>
                   <div className="flex justify-center items-center mt-8">
                     <RouterLink to={PATHS.settings.identityProvider.base}>
                       <Button variant="outlined" sx={{fontWeight: '600 !important'}} startIcon={<PlusIcon className="w-4 h-4" />}>
-                        Register Identity Provider
+                        Register Issuer
                       </Button>
                     </RouterLink>
                   </div>
