@@ -6,7 +6,7 @@
 import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-renderer';
 import {useSetApiKey} from '@/mutations';
 import {useGetSettings} from '@/queries';
-import {Button, CardContent, CopyButton, toast, Tooltip, Typography} from '@outshift/spark-design';
+import {Button, CardContent, CopyButton, toast, Typography} from '@outshift/spark-design';
 import {RefreshCcwIcon} from 'lucide-react';
 import React, {useCallback} from 'react';
 import {ConfirmModal} from '../ui/confirm-modal';
@@ -66,7 +66,7 @@ export const ContentApiKey: React.FC = () => {
         actionTitle: 'Retry'
       }}
     >
-      <Card className="w-full bg-[#F5F8FD] p-4">
+      <Card className="w-full bg-[#F5F8FD] p-6">
         <CardContent>
           <div className="flex flex-col gap-4">
             <Typography variant="body1Semibold">API Key</Typography>
