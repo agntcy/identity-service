@@ -13,6 +13,7 @@ import {ThemeProvider} from './providers/theme-provider/theme-provider';
 import {ApiProvider} from './providers/api-provider/api-provider';
 import {QueryProvider} from './providers/query-provider/query-provider';
 import {FeatureFlagsProvider} from './providers/feature-flags-provider/feature-flags-provider';
+import {AnalyticsProvider} from './providers/analytics-provider/analytics-provider';
 
 const App = () => {
   return (
@@ -20,14 +21,16 @@ const App = () => {
       <ErrorBoundary fallbackRender={(props) => <ErrorPage {...props} />}>
         <HelmetProvider>
           <AuthProvider>
-            <ApiProvider>
-              <QueryProvider>
-                <Toaster offset={{top: '64px', right: '16px'}} expand={false} duration={3500} />
-                <FeatureFlagsProvider>
-                  <Router />
-                </FeatureFlagsProvider>
-              </QueryProvider>
-            </ApiProvider>
+            <AnalyticsProvider>
+              <ApiProvider>
+                <QueryProvider>
+                  <Toaster offset={{top: '64px', right: '16px'}} expand={false} duration={3500} />
+                  <FeatureFlagsProvider>
+                    <Router />
+                  </FeatureFlagsProvider>
+                </QueryProvider>
+              </ApiProvider>
+            </AnalyticsProvider>
           </AuthProvider>
         </HelmetProvider>
       </ErrorBoundary>

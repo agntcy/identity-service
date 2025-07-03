@@ -859,6 +859,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@lukeed/csprng@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "@lukeed/csprng@npm:1.1.0"
+  checksum: 10/926f5f7fc629470ca9a8af355bfcd0271d34535f7be3890f69902432bddc3262029bb5dbe9025542cf6c9883d878692eef2815fc2f3ba5b92e9da1f9eba2e51b
+  languageName: node
+  linkType: hard
+
+"@lukeed/uuid@npm:^2.0.0":
+  version: 2.0.1
+  resolution: "@lukeed/uuid@npm:2.0.1"
+  dependencies:
+    "@lukeed/csprng": "npm:^1.1.0"
+  checksum: 10/f5e71e4da852dbff49b93cad27d5a2f61c2241e307bbe89b3b54b889ecb7927f2487246467f90ebb6cbdb7e0ac2a213e2e58b1182cb7990cef6e049aa7c39e7b
+  languageName: node
+  linkType: hard
+
 "@mui/core-downloads-tracker@npm:^7.1.1":
   version: 7.1.1
   resolution: "@mui/core-downloads-tracker@npm:7.1.1"
@@ -2309,6 +2325,92 @@ __metadata:
   version: 4.43.0
   resolution: "@rollup/rollup-win32-x64-msvc@npm:4.43.0"
   conditions: os=win32 & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@segment/analytics-core@npm:1.8.1":
+  version: 1.8.1
+  resolution: "@segment/analytics-core@npm:1.8.1"
+  dependencies:
+    "@lukeed/uuid": "npm:^2.0.0"
+    "@segment/analytics-generic-utils": "npm:1.2.0"
+    dset: "npm:^3.1.4"
+    tslib: "npm:^2.4.1"
+  checksum: 10/4cb1ba54237c274598f9431883aa4e4705665be7d7410741bd7e4684601622d9b64acf0c0d94b966d5d15883f57ac41274224c3f91641a049bedd1d0d7bfa75c
+  languageName: node
+  linkType: hard
+
+"@segment/analytics-generic-utils@npm:1.2.0":
+  version: 1.2.0
+  resolution: "@segment/analytics-generic-utils@npm:1.2.0"
+  dependencies:
+    tslib: "npm:^2.4.1"
+  checksum: 10/f36aa093722e4f51dddd4dfa37164bd082175bb0c0960096f9b03073c482e96a17012bc99782259a9d3787e52a48f03ab3447902c6c635654a8ce544892073e5
+  languageName: node
+  linkType: hard
+
+"@segment/analytics-next@npm:^1.81.0":
+  version: 1.81.0
+  resolution: "@segment/analytics-next@npm:1.81.0"
+  dependencies:
+    "@lukeed/uuid": "npm:^2.0.0"
+    "@segment/analytics-core": "npm:1.8.1"
+    "@segment/analytics-generic-utils": "npm:1.2.0"
+    "@segment/analytics-page-tools": "npm:1.0.0"
+    "@segment/analytics.js-video-plugins": "npm:^0.2.1"
+    "@segment/facade": "npm:^3.4.9"
+    dset: "npm:^3.1.4"
+    js-cookie: "npm:3.0.1"
+    node-fetch: "npm:^2.6.7"
+    tslib: "npm:^2.4.1"
+    unfetch: "npm:^4.1.0"
+  checksum: 10/e3873ca516c962be60d6b5971e1b6a0cc52cb358683317bca5168928f9ccce7f23ceaef78686b15448a8946732da1f1d86ac50284bd0ee246f17814b0f6bded1
+  languageName: node
+  linkType: hard
+
+"@segment/analytics-page-tools@npm:1.0.0":
+  version: 1.0.0
+  resolution: "@segment/analytics-page-tools@npm:1.0.0"
+  dependencies:
+    tslib: "npm:^2.4.1"
+  checksum: 10/5af7ba4c22b93a64680fd108299d536634340dc54ecb1c83ba7f2433424a846d33465c6d204ef8ab6e132702f891b32bb0a3df56c971b6bcf7d503d42eaa1cfe
+  languageName: node
+  linkType: hard
+
+"@segment/analytics.js-video-plugins@npm:^0.2.1":
+  version: 0.2.1
+  resolution: "@segment/analytics.js-video-plugins@npm:0.2.1"
+  dependencies:
+    unfetch: "npm:^3.1.1"
+  checksum: 10/5d90e2c774e5b661faf57437c9f23e6db316a084e3b1be822c43b6162914a57f496fbb1e3d5d3c9322434a4018a74216f41837dcf92e4c1317a5e95d7f3cd633
+  languageName: node
+  linkType: hard
+
+"@segment/facade@npm:^3.4.9":
+  version: 3.4.10
+  resolution: "@segment/facade@npm:3.4.10"
+  dependencies:
+    "@segment/isodate-traverse": "npm:^1.1.1"
+    inherits: "npm:^2.0.4"
+    new-date: "npm:^1.0.3"
+    obj-case: "npm:0.2.1"
+  checksum: 10/c0492593477d8f298e6587e74924988d6e04d8a755dc29f41dd7b50252da158912f8bdd5999a95e5801be2d90f214e65967eb1c38dda3d27e34eb846cdcfd898
+  languageName: node
+  linkType: hard
+
+"@segment/isodate-traverse@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "@segment/isodate-traverse@npm:1.1.1"
+  dependencies:
+    "@segment/isodate": "npm:^1.0.3"
+  checksum: 10/09200d597dd18f1f2b5e386c261d43bd933bd4ff2a0728d980e47864706b59cc47d68fdd72d40820e6efd719c1bf72c64048f599e7c5b202f81a17963441fa88
+  languageName: node
+  linkType: hard
+
+"@segment/isodate@npm:1.0.3, @segment/isodate@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "@segment/isodate@npm:1.0.3"
+  checksum: 10/7de3244b10fedfe3d5bad84b2bcfd5a0b8b759fac95318d9dec83b55fb2949d0c3aea7d4fdba60a30a6f62a55f9fbde1ce43f4617e41c4a2c34f4021247abf1e
   languageName: node
   linkType: hard
 
@@ -4168,6 +4270,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dset@npm:^3.1.4":
+  version: 3.1.4
+  resolution: "dset@npm:3.1.4"
+  checksum: 10/6268c9e2049c8effe6e5a1952f02826e8e32468b5ced781f15f8f3b1c290da37626246fec014fbdd1503413f981dff6abd8a4c718ec9952fd45fccb6ac9de43f
+  languageName: node
+  linkType: hard
+
 "dunder-proto@npm:^1.0.0, dunder-proto@npm:^1.0.1":
   version: 1.0.1
   resolution: "dunder-proto@npm:1.0.1"
@@ -5488,6 +5597,7 @@ __metadata:
     "@radix-ui/react-slot": "npm:^1.1.2"
     "@radix-ui/react-tabs": "npm:^1.1.3"
     "@radix-ui/react-tooltip": "npm:^1.1.8"
+    "@segment/analytics-next": "npm:^1.81.0"
     "@stepperize/react": "npm:^5.1.5"
     "@tailwindcss/vite": "npm:^4.0.14"
     "@tanstack/react-query": "npm:^5.81.2"
@@ -5584,7 +5694,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"inherits@npm:2":
+"inherits@npm:2, inherits@npm:^2.0.4":
   version: 2.0.4
   resolution: "inherits@npm:2.0.4"
   checksum: 10/cd45e923bee15186c07fa4c89db0aace24824c482fb887b528304694b2aa6ff8a898da8657046a5dcf3e46cd6db6c61629551f9215f208d7c3f157cf9b290521
@@ -6011,6 +6121,13 @@ __metadata:
   bin:
     jiti: lib/jiti-cli.mjs
   checksum: 10/e2b07eb2e3fbb245e29ad288dddecab31804967fc84d5e01d39858997d2743b5e248946defcecf99272275a00284ecaf7ec88b8c841331324f0c946d8274414b
+  languageName: node
+  linkType: hard
+
+"js-cookie@npm:3.0.1":
+  version: 3.0.1
+  resolution: "js-cookie@npm:3.0.1"
+  checksum: 10/f1c452f4a53f3a365e559815e971da0bd55764be24b77167c64adfb15cb38cbb05a3e7ecf5c3337cc259cf56382f44bd62acb88d1e1166d46317d5c8fdf91203
   languageName: node
   linkType: hard
 
@@ -7149,6 +7266,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"new-date@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "new-date@npm:1.0.3"
+  dependencies:
+    "@segment/isodate": "npm:1.0.3"
+  checksum: 10/5aeb61c3019d286f2fd9cf559efbd791d9ae7496e482a34395766bd100d51028e7c10717235eea5f8a933bdd1603c89c47e61e893afb62878b9191b89c5451fe
+  languageName: node
+  linkType: hard
+
 "next-themes@npm:^0.4.6":
   version: 0.4.6
   resolution: "next-themes@npm:0.4.6"
@@ -7178,7 +7304,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-fetch@npm:^2.7.0":
+"node-fetch@npm:^2.6.7, node-fetch@npm:^2.7.0":
   version: 2.7.0
   resolution: "node-fetch@npm:2.7.0"
   dependencies:
@@ -7227,6 +7353,13 @@ __metadata:
   bin:
     nopt: bin/nopt.js
   checksum: 10/26ab456c51a96f02a9e5aa8d1b80ef3219f2070f3f3528a040e32fb735b1e651e17bdf0f1476988d3a46d498f35c65ed662d122f340d38ce4a7e71dd7b20c4bc
+  languageName: node
+  linkType: hard
+
+"obj-case@npm:0.2.1":
+  version: 0.2.1
+  resolution: "obj-case@npm:0.2.1"
+  checksum: 10/2726b29d054027c52c6ac1a18531c3f995fcc313047847c7f7357889a56cf07bd88bef459bd4645c139fa56f9432c282806e0f1c7ab444d6cbdb662e39073e36
   languageName: node
   linkType: hard
 
@@ -8935,7 +9068,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:^2.0.0, tslib@npm:^2.0.3, tslib@npm:^2.1.0, tslib@npm:^2.4.0, tslib@npm:^2.6.0, tslib@npm:^2.6.2, tslib@npm:^2.7.0, tslib@npm:^2.8.0, tslib@npm:^2.8.1":
+"tslib@npm:^2.0.0, tslib@npm:^2.0.3, tslib@npm:^2.1.0, tslib@npm:^2.4.0, tslib@npm:^2.4.1, tslib@npm:^2.6.0, tslib@npm:^2.6.2, tslib@npm:^2.7.0, tslib@npm:^2.8.0, tslib@npm:^2.8.1":
   version: 2.8.1
   resolution: "tslib@npm:2.8.1"
   checksum: 10/3e2e043d5c2316461cb54e5c7fe02c30ef6dccb3384717ca22ae5c6b5bc95232a6241df19c622d9c73b809bea33b187f6dbc73030963e29950c2141bc32a79f7
@@ -9061,6 +9194,20 @@ __metadata:
   version: 6.21.0
   resolution: "undici-types@npm:6.21.0"
   checksum: 10/ec8f41aa4359d50f9b59fa61fe3efce3477cc681908c8f84354d8567bb3701fafdddf36ef6bff307024d3feb42c837cf6f670314ba37fc8145e219560e473d14
+  languageName: node
+  linkType: hard
+
+"unfetch@npm:^3.1.1":
+  version: 3.1.2
+  resolution: "unfetch@npm:3.1.2"
+  checksum: 10/e02a6b5f88d3e8858e6baf98ce635d3f0f744fbf9e4e9d712a1085e2b48de2387dca3cb18e6cc1d20c937f9296641710640bbe16c16a02e22d972354ebd46d5d
+  languageName: node
+  linkType: hard
+
+"unfetch@npm:^4.1.0":
+  version: 4.2.0
+  resolution: "unfetch@npm:4.2.0"
+  checksum: 10/d4924178060b6828d858acef3ce2baea69acd3f3f9e2429fd503a0ed0d2b1ed0ee107786aceadfd167ce884fad12d22b5288eb865a3ea036979b8358b8555c9a
   languageName: node
   linkType: hard
 
