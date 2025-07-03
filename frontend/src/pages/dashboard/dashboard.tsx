@@ -22,10 +22,10 @@ const Dashboard: React.FC = () => {
           <div className="flex justify-center items-center my-auto">
             <div>
               <Typography variant="h3" textAlign="center" sx={(theme) => ({color: theme.palette.vars.brandIconTertiaryDefault})}>
-                Welcome to Agntcy Identity, {authInfo?.user?.name || 'User'}!
+                Welcome to Agent Identity, {authInfo?.user?.name || 'User'}!
               </Typography>
               <Typography variant="body1" textAlign="center" sx={(theme) => ({color: theme.palette.vars.baseTextInverse})}>
-                Create and manage identities for your A2A, agents and MCP servers
+                Create and manage identities for your MCP Servers, A2A Agents and OASF
               </Typography>
             </div>
           </div>
@@ -37,15 +37,14 @@ const Dashboard: React.FC = () => {
               <div className="flex justify-center items-center h-full">
                 <img src={EmptyState} alt="Empty State" className="w-[200px] h-[200px]" />
               </div>
-              <Typography variant="h6">Get started with Agntcy Identity</Typography>
+              <Typography variant="h6">Get started with AGNTCY&apos;s Agent Identity</Typography>
             </div>
             <div className="text-center">
               <Typography textAlign="center" paddingLeft={4} paddingRight={4} variant="body1">
-                Start using Agntcy Identity&apos;s features by verifying existing identity badges or registering your agents (A2A, MCP servers,
-                agents).
+                Start using Agent Identity&apos;s features by verifying existing identity badges or registering your Agents and MCP servers.
               </Typography>
               <Typography textAlign="center" paddingLeft={4} paddingRight={4} variant="body1">
-                This enables you to create identities and apply tool-based access control for secure and efficient management.
+                This enables you to create identities and apply TBAC for secure and efficient management.
               </Typography>
               <Link
                 href="https://spec.identity.agntcy.org/"
@@ -67,8 +66,8 @@ const Dashboard: React.FC = () => {
                     Verify Identities
                   </Typography>
                   <Typography variant="body1" marginTop={2} textAlign="center">
-                    Begin verifying your MCP servers, agents, and A2A identities to ensure secure communication and proper authentication across your
-                    environment.
+                    Begin verifying your MCP Servers, A2A Agents and OASF identities to ensure secure communication and proper authentication across
+                    your environment.
                   </Typography>
                   <div className="flex justify-center items-center mt-8">
                     <RouterLink to={PATHS.agenticServices.verifyIdentity}>
@@ -85,8 +84,8 @@ const Dashboard: React.FC = () => {
                     Register Identity Providers
                   </Typography>
                   <Typography variant="body1" marginTop={2} textAlign="center">
-                    Register identity provider to create and manage identities for your AI agents and MCP servers, including those supporting
-                    A2A-compatible protocols like Google A2A, with support for policies and access controls.
+                    Register your Identity Provider to create and manage identities for your MCP Servers and Agents, including those supporting
+                    A2A-compatible protocols like Google A2A, OASF, with support for TBAC based access control.
                   </Typography>
                   <div className="flex justify-center items-center mt-8">
                     <RouterLink to={PATHS.settings.identityProvider.base}>
