@@ -90,11 +90,10 @@ const FormStepperComponent = () => {
       badgeContent: values.badgeContent,
       badgeFile: values.badgeFile,
       badge: values.badge,
-      joseEnvelope: values.joseEnvelope,
       proofValue: values.proofValue
     });
     verifyIdentityMutation.mutate({
-      badge: values.proofValue ? values.proofValue : values.joseEnvelope
+      badge: values.proofValue
     });
   }, [form, methods, verifyIdentityMutation]);
 

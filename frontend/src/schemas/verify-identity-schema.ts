@@ -19,8 +19,7 @@ export const VerifyIdentitySchema = z.object({
       message: 'File is required'
     })
     .optional(),
-  badgeContent: z.string().optional(),
-  joseEnvelope: z.string().optional()
+  badgeContent: z.string().optional()
 });
 
 export type VerifyIdentityFormValues = z.infer<typeof VerifyIdentitySchema>;
