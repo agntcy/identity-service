@@ -58,7 +58,9 @@ export const CreateIdentityProvider = () => {
       privateKey: undefined,
       hostname: undefined,
       integrationKey: undefined,
-      secretKey: undefined
+      secretKey: undefined,
+      projectSlug: undefined,
+      apiKey: undefined
     });
   }, [form]);
 
@@ -87,6 +89,11 @@ export const CreateIdentityProvider = () => {
         orgUrl: values.orgUrl?.replace(/\/$/, ''),
         clientId: values.clientId,
         privateKey: values.privateKey
+      };
+    } else if (values.provider === IdpType.IDP_TYPE_ORY) {
+      data.oryIdpSettings = {
+        apiKey: values.apiKey,
+        projectSlug: values.projectSlug
       };
     }
     mutationSetIdentityProvider.mutate({

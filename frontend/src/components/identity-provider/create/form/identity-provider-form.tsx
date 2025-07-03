@@ -16,6 +16,7 @@ import {ExternalLinkIcon, InfoIcon} from 'lucide-react';
 import DuoLogo from '@/assets/duo.svg?react';
 import OktaLogo from '@/assets/okta.svg?react';
 import OasfLogo from '@/assets/oasf.svg?react';
+import OryLogo from '@/assets/ory.svg?react';
 import {IdpType} from '@/types/api/settings';
 
 export const IdentityProviderForm = ({isLoading = false}: {isLoading?: boolean}) => {
@@ -32,6 +33,12 @@ export const IdentityProviderForm = ({isLoading = false}: {isLoading?: boolean})
       type: IdpType.IDP_TYPE_OKTA,
       title: 'Okta',
       imgURI: <OktaLogo />,
+      isDisabled: isLoading
+    },
+    {
+      type: IdpType.IDP_TYPE_ORY,
+      title: 'Ory',
+      imgURI: <OryLogo />,
       isDisabled: isLoading
     },
     {
@@ -186,6 +193,41 @@ export const IdentityProviderForm = ({isLoading = false}: {isLoading?: boolean})
                   )}
                 />
               </div>
+            </div>
+          </div>
+        )}
+        {idpType === IdpType.IDP_TYPE_ORY && (
+          <div className="space-y-4">
+            <div>
+              <Typography variant="subtitle1" fontWeight={600}>
+                Provider details
+              </Typography>
+            </div>
+            <div className="space-y-3">
+              <FormField
+                control={control}
+                name="projectSlug"
+                render={({field}) => (
+                  <FormItem className="w-[50%]">
+                    <FormLabel className="form-label">Project Slug</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Type the project slug..." {...field} disabled={isLoading} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={control}
+                name="apiKey"
+                render={({field}) => (
+                  <FormItem className="w-[50%]">
+                    <FormLabel className="form-label">API Key</FormLabel>
+                    <FormControl>
+                      <PasswordInput placeholder="Type the API key..." {...field} disabled={isLoading} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
             </div>
           </div>
         )}

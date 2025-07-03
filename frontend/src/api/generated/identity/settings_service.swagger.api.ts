@@ -20,6 +20,7 @@
  * - IDP_TYPE_UNSPECIFIED: Unspecified Envelope Type.
  *  - IDP_TYPE_DUO: Idp Type Duo.
  *  - IDP_TYPE_OKTA: Idp Type Okta.
+ *  - IDP_TYPE_ORY: Idp Type Ory.
  *  - IDP_TYPE_SELF: Idp Type Self.
  * @default "IDP_TYPE_UNSPECIFIED"
  */
@@ -27,6 +28,7 @@ export enum V1Alpha1IdpType {
   IDP_TYPE_UNSPECIFIED = 'IDP_TYPE_UNSPECIFIED',
   IDP_TYPE_DUO = 'IDP_TYPE_DUO',
   IDP_TYPE_OKTA = 'IDP_TYPE_OKTA',
+  IDP_TYPE_ORY = 'IDP_TYPE_ORY',
   IDP_TYPE_SELF = 'IDP_TYPE_SELF'
 }
 
@@ -189,6 +191,8 @@ export interface V1Alpha1IssuerSettings {
   duoIdpSettings?: V1Alpha1DuoIdpSettings;
   /** Settings for the Okta Identity Provider. */
   oktaIdpSettings?: V1Alpha1OktaIdpSettings;
+  /** Settings for the Ory Identity Provider. */
+  oryIdpSettings?: V1Alpha1OryIdpSettings;
 }
 
 /** Okta IdP Settings */
@@ -196,6 +200,12 @@ export interface V1Alpha1OktaIdpSettings {
   orgUrl?: string;
   clientId?: string;
   privateKey?: string;
+}
+
+/** Ory IdP Settings */
+export interface V1Alpha1OryIdpSettings {
+  projectSlug?: string;
+  apiKey?: string;
 }
 
 export interface V1Alpha1SetIssuerRequest {
