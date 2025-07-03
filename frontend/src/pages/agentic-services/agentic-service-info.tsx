@@ -12,9 +12,9 @@ import {useDeleteAgenticService} from '@/mutations';
 import {useGetAgenticService} from '@/queries';
 import {PATHS} from '@/router/paths';
 import {Button, toast} from '@outshift/spark-design';
-import {IdCardIcon, Trash2Icon} from 'lucide-react';
+import {IdCardIcon, RefreshCcwIcon, Trash2Icon} from 'lucide-react';
 import {useCallback, useState} from 'react';
-import {useParams} from 'react-router-dom';
+import {generatePath, useNavigate, useParams} from 'react-router-dom';
 
 const AgenticServiceInfo: React.FC = () => {
   const [showReissueBadge, setShowReissueBadge] = useState<boolean>(false);
@@ -25,6 +25,8 @@ const AgenticServiceInfo: React.FC = () => {
 
   const {data, isLoading, isFetching, error, isError, refetch} = useGetAgenticService(id);
 
+  const navigate = useNavigate();
+
   const deleteMutation = useDeleteAgenticService({
     callbacks: {
       onSuccess: () => {
@@ -33,6 +35,7 @@ const AgenticServiceInfo: React.FC = () => {
           description: 'Agentic service deleted successfully.',
           type: 'success'
         });
+        void navigate(PATHS.agenticServices.base);
       },
       onError: () => {
         toast({
@@ -60,7 +63,7 @@ const AgenticServiceInfo: React.FC = () => {
           link: PATHS.agenticServices.base
         },
         {
-          text: id || 'Agentic Service Info'
+          text: id || 'Agentic Service'
         }
       ]}
       rightSideItems={
@@ -77,9 +80,17 @@ const AgenticServiceInfo: React.FC = () => {
             >
               Delete
             </Button>
-            {/* <Button disabled startIcon={<RefreshCcwIcon className='h-4 w-4' />} variant="secondary" onClick={() => {}} sx={{fontWeight: '600 !important'}}>
+            <Button
+              startIcon={<RefreshCcwIcon className="h-4 w-4" />}
+              variant="secondary"
+              sx={{fontWeight: '600 !important'}}
+              onClick={() => {
+                const path = generatePath(PATHS.agenticServices.update, {id: id || ''});
+                void navigate(path, {replace: true});
+              }}
+            >
               Update
-            </Button> */}
+            </Button>
             {showReissueBadge && (
               <Button
                 onClick={() => {

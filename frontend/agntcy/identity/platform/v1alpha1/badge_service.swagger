@@ -180,6 +180,40 @@
       "description": "[here]: https://www.w3.org/TR/vc-data-model-2.0/#data-schemas",
       "title": "CredentialSchema represents the credentialSchema property of a Verifiable Credential.\nmore information can be found [here]"
     },
+    "v1alpha1CredentialStatus": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "The URL identifying the schema file"
+        },
+        "type": {
+          "type": "string",
+          "title": "Type specifies the type of the file"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "title": "The creation date and time of the status"
+        },
+        "purpose": {
+          "$ref": "#/definitions/v1alpha1CredentialStatusPurpose",
+          "title": "The value of the purpose for the status entry"
+        }
+      },
+      "description": "[here]: https://www.w3.org/TR/vc-data-model-2.0/#status",
+      "title": "CredentialStatus represents the credentialStatus property of a Verifiable Credential.\nmore information can be found [here]"
+    },
+    "v1alpha1CredentialStatusPurpose": {
+      "type": "string",
+      "enum": [
+        "CREDENTIAL_STATUS_PURPOSE_UNSPECIFIED",
+        "CREDENTIAL_STATUS_PURPOSE_REVOCATION"
+      ],
+      "default": "CREDENTIAL_STATUS_PURPOSE_UNSPECIFIED",
+      "description": "- CREDENTIAL_STATUS_PURPOSE_UNSPECIFIED: Unspecified status purpose\n - CREDENTIAL_STATUS_PURPOSE_REVOCATION: Used to cancel the validity of a verifiable credential.\nThis status is not reversible.",
+      "title": "The purpose of the status entry"
+    },
     "v1alpha1IssueA2ABadgeRequest": {
       "type": "object",
       "properties": {
@@ -281,6 +315,14 @@
             "$ref": "#/definitions/v1alpha1CredentialSchema"
           },
           "title": "https://www.w3.org/TR/vc-data-model-2.0/#data-schemas"
+        },
+        "credentialStatus": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1alpha1CredentialStatus"
+          },
+          "title": "https://www.w3.org/TR/vc-data-model-2.0/#status"
         },
         "proof": {
           "$ref": "#/definitions/v1alpha1Proof",

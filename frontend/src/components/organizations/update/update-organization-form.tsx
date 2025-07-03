@@ -71,16 +71,11 @@ export const UpdateOrganizationForm = ({tenant}: {tenant?: TenantReponse}) => {
   }, [form, tenant?.id, updateOrganizatioMutations]);
 
   useEffect(() => {
-    if (tenant?.name) {
-      form.reset({
-        name: tenant.name
-      });
-    } else {
-      form.reset({
-        name: ''
-      });
-    }
-  }, [form, tenant]);
+    form.reset({
+      name: tenant?.name || ''
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tenant]);
 
   return (
     <>

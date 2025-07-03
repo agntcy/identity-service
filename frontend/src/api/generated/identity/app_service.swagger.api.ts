@@ -16,6 +16,18 @@
  */
 
 /**
+ * The purpose of the status entry
+ * - CREDENTIAL_STATUS_PURPOSE_UNSPECIFIED: Unspecified status purpose
+ *  - CREDENTIAL_STATUS_PURPOSE_REVOCATION: Used to cancel the validity of a verifiable credential.
+ * This status is not reversible.
+ * @default "CREDENTIAL_STATUS_PURPOSE_UNSPECIFIED"
+ */
+export enum V1Alpha1CredentialStatusPurpose {
+  CREDENTIAL_STATUS_PURPOSE_UNSPECIFIED = 'CREDENTIAL_STATUS_PURPOSE_UNSPECIFIED',
+  CREDENTIAL_STATUS_PURPOSE_REVOCATION = 'CREDENTIAL_STATUS_PURPOSE_REVOCATION'
+}
+
+/**
  * App Type
  * - APP_TYPE_UNSPECIFIED: Unspecified Envelope Type.
  *  - APP_TYPE_AGENT_A2A: Agent A2A App Type.
@@ -28,6 +40,20 @@ export enum V1Alpha1AppType {
   APP_TYPE_AGENT_A2A = 'APP_TYPE_AGENT_A2A',
   APP_TYPE_AGENT_OASF = 'APP_TYPE_AGENT_OASF',
   APP_TYPE_MCP_SERVER = 'APP_TYPE_MCP_SERVER'
+}
+
+/**
+ * - APP_STATUS_UNSPECIFIED: Unspecified status
+ *  - APP_STATUS_ACTIVE: The App has at least one active badge
+ *  - APP_STATUS_PENDING: The App has no badges
+ *  - APP_STATUS_REVOKED: The App has all the badges revoked
+ * @default "APP_STATUS_UNSPECIFIED"
+ */
+export enum V1Alpha1AppStatus {
+  APP_STATUS_UNSPECIFIED = 'APP_STATUS_UNSPECIFIED',
+  APP_STATUS_ACTIVE = 'APP_STATUS_ACTIVE',
+  APP_STATUS_PENDING = 'APP_STATUS_PENDING',
+  APP_STATUS_REVOKED = 'APP_STATUS_REVOKED'
 }
 
 /**
@@ -170,6 +196,18 @@ export interface V1Alpha1App {
   /** The type of the App. */
   type?: V1Alpha1AppType;
   apiKey?: string;
+  /** The status of the App */
+  status?: V1Alpha1AppStatus;
+  /**
+   * CreatedAt records the timestamp of when the App was initially created
+   * @format date-time
+   */
+  createdAt?: string;
+  /**
+   * UpdatedAt records the timestamp of the last update to the App
+   * @format date-time
+   */
+  updatedAt?: string;
 }
 
 export interface V1Alpha1AppTypeCountEntry {
@@ -218,6 +256,30 @@ export interface V1Alpha1CredentialSchema {
   type?: string;
   /** The URL identifying the schema file */
   id?: string;
+}
+
+/**
+ * CredentialStatus represents the credentialStatus property of a Verifiable Credential.
+ * more information can be found [here]
+ * [here]: https://www.w3.org/TR/vc-data-model-2.0/#status
+ */
+export interface V1Alpha1CredentialStatus {
+  /** The URL identifying the schema file */
+  id?: string;
+  /** Type specifies the type of the file */
+  type?: string;
+  /**
+   * The creation date and time of the status
+   * @format date-time
+   */
+  createdAt?: string;
+  /**
+   * The value of the purpose for the status entry
+   * - CREDENTIAL_STATUS_PURPOSE_UNSPECIFIED: Unspecified status purpose
+   *  - CREDENTIAL_STATUS_PURPOSE_REVOCATION: Used to cancel the validity of a verifiable credential.
+   * This status is not reversible.
+   */
+  purpose?: V1Alpha1CredentialStatusPurpose;
 }
 
 export interface V1Alpha1GetAppsCountResponse {
@@ -290,6 +352,8 @@ export interface V1Alpha1VerifiableCredential {
   expirationDate?: string;
   /** https://www.w3.org/TR/vc-data-model-2.0/#data-schemas */
   credentialSchema?: V1Alpha1CredentialSchema[];
+  /** https://www.w3.org/TR/vc-data-model-2.0/#status */
+  credentialStatus?: V1Alpha1CredentialStatus[];
   /**
    * https://w3id.org/security#proof
    * A data integrity proof provides information about the proof mechanism,

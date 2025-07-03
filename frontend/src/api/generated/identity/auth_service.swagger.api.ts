@@ -31,6 +31,20 @@ export enum V1Alpha1AppType {
 }
 
 /**
+ * - APP_STATUS_UNSPECIFIED: Unspecified status
+ *  - APP_STATUS_ACTIVE: The App has at least one active badge
+ *  - APP_STATUS_PENDING: The App has no badges
+ *  - APP_STATUS_REVOKED: The App has all the badges revoked
+ * @default "APP_STATUS_UNSPECIFIED"
+ */
+export enum V1Alpha1AppStatus {
+  APP_STATUS_UNSPECIFIED = 'APP_STATUS_UNSPECIFIED',
+  APP_STATUS_ACTIVE = 'APP_STATUS_ACTIVE',
+  APP_STATUS_PENDING = 'APP_STATUS_PENDING',
+  APP_STATUS_REVOKED = 'APP_STATUS_REVOKED'
+}
+
+/**
  * `Any` contains an arbitrary serialized protocol buffer message along with a
  * URL that describes the type of the serialized message.
  *
@@ -170,6 +184,18 @@ export interface V1Alpha1App {
   /** The type of the App. */
   type?: V1Alpha1AppType;
   apiKey?: string;
+  /** The status of the App */
+  status?: V1Alpha1AppStatus;
+  /**
+   * CreatedAt records the timestamp of when the App was initially created
+   * @format date-time
+   */
+  createdAt?: string;
+  /**
+   * UpdatedAt records the timestamp of the last update to the App
+   * @format date-time
+   */
+  updatedAt?: string;
 }
 
 export interface V1Alpha1AppInfoResponse {

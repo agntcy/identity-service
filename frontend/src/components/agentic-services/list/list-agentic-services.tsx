@@ -15,7 +15,7 @@ import {generatePath, useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
 import {FilterSections} from '@/components/shared/filters-sections';
 import {App, AppType} from '@/types/api/app';
-import {IdCardIcon, Trash2Icon} from 'lucide-react';
+import {IdCardIcon, RefreshCcwIcon, Trash2Icon} from 'lucide-react';
 import {ConfirmModal} from '@/components/ui/confirm-modal';
 import {useDeleteAgenticService} from '@/mutations';
 import {BadgeModalForm} from '@/components/shared/badge-modal-form';
@@ -101,8 +101,9 @@ export const ListAgenticServices = () => {
   });
 
   const handleClickOnDelete = useCallback(() => {
-    deleteMutation.mutate(tempApp?.id || '');
+    setShowActionsModal(false);
     setTempApp(undefined);
+    deleteMutation.mutate(tempApp?.id || '');
   }, [deleteMutation, tempApp]);
 
   return (
@@ -182,6 +183,19 @@ export const ListAgenticServices = () => {
                   <IdCardIcon className="w-4 h-4" color="#062242" />
                   <Typography variant="body2" color="#1A1F27">
                     Re-Issue Badge
+                  </Typography>
+                </MenuItem>,
+                <MenuItem
+                  key="update-app"
+                  onClick={() => {
+                    const path = generatePath(PATHS.agenticServices.update, {id: row.original.id});
+                    void navigate(path, {replace: true});
+                  }}
+                  sx={{display: 'flex', alignItems: 'center', gap: '8px'}}
+                >
+                  <RefreshCcwIcon className="w-4 h-4" color="#062242" />
+                  <Typography variant="body2" color="#1A1F27">
+                    Update
                   </Typography>
                 </MenuItem>,
                 <MenuItem

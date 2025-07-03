@@ -13,6 +13,7 @@ export const PATHS = {
     base: '/agentic-services',
     create: '/agentic-services/create',
     info: '/agentic-services/:id',
+    update: '/agentic-services/:id/update',
     verifyIdentity: '/agentic-services/verify-identity'
   },
   policies: {
