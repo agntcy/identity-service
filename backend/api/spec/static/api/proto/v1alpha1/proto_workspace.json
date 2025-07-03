@@ -84,6 +84,34 @@
       "hasServices": false,
       "enums": [
         {
+          "name": "AppStatus",
+          "longName": "AppStatus",
+          "fullName": "agntcy.identity.platform.v1alpha1.AppStatus",
+          "description": "",
+          "values": [
+            {
+              "name": "APP_STATUS_UNSPECIFIED",
+              "number": "0",
+              "description": "Unspecified status"
+            },
+            {
+              "name": "APP_STATUS_ACTIVE",
+              "number": "1",
+              "description": "The App has at least one active badge"
+            },
+            {
+              "name": "APP_STATUS_PENDING",
+              "number": "2",
+              "description": "The App has no badges"
+            },
+            {
+              "name": "APP_STATUS_REVOKED",
+              "number": "3",
+              "description": "The App has all the badges revoked"
+            }
+          ]
+        },
+        {
           "name": "AppType",
           "longName": "AppType",
           "fullName": "agntcy.identity.platform.v1alpha1.AppType",
@@ -183,6 +211,42 @@
               "isoneof": true,
               "oneofdecl": "_api_key",
               "defaultValue": ""
+            },
+            {
+              "name": "status",
+              "description": "The status of the App",
+              "label": "optional",
+              "type": "AppStatus",
+              "longType": "AppStatus",
+              "fullType": "agntcy.identity.platform.v1alpha1.AppStatus",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_status",
+              "defaultValue": ""
+            },
+            {
+              "name": "created_at",
+              "description": "CreatedAt records the timestamp of when the App was initially created",
+              "label": "optional",
+              "type": "Timestamp",
+              "longType": "google.protobuf.Timestamp",
+              "fullType": "google.protobuf.Timestamp",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_created_at",
+              "defaultValue": ""
+            },
+            {
+              "name": "updated_at",
+              "description": "UpdatedAt records the timestamp of the last update to the App",
+              "label": "optional",
+              "type": "Timestamp",
+              "longType": "google.protobuf.Timestamp",
+              "fullType": "google.protobuf.Timestamp",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_updated_at",
+              "defaultValue": ""
             }
           ]
         }
@@ -218,6 +282,24 @@
               "name": "BADGE_TYPE_MCP_BADGE",
               "number": "2",
               "description": "McpBadge Content Type.\nThe MCP content representation following a defined schema\nThe schema is defined in the MCP specification as the MCPServer type"
+            }
+          ]
+        },
+        {
+          "name": "CredentialStatusPurpose",
+          "longName": "CredentialStatusPurpose",
+          "fullName": "agntcy.identity.platform.v1alpha1.CredentialStatusPurpose",
+          "description": "The purpose of the status entry",
+          "values": [
+            {
+              "name": "CREDENTIAL_STATUS_PURPOSE_UNSPECIFIED",
+              "number": "0",
+              "description": "Unspecified status purpose"
+            },
+            {
+              "name": "CREDENTIAL_STATUS_PURPOSE_REVOCATION",
+              "number": "1",
+              "description": "Used to cancel the validity of a verifiable credential.\nThis status is not reversible."
             }
           ]
         }
@@ -328,6 +410,66 @@
               "ismap": false,
               "isoneof": true,
               "oneofdecl": "_id",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "CredentialStatus",
+          "longName": "CredentialStatus",
+          "fullName": "agntcy.identity.platform.v1alpha1.CredentialStatus",
+          "description": "CredentialStatus represents the credentialStatus property of a Verifiable Credential.\nmore information can be found [here]\n\n[here]: https://www.w3.org/TR/vc-data-model-2.0/#status",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "id",
+              "description": "The URL identifying the schema file",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_id",
+              "defaultValue": ""
+            },
+            {
+              "name": "type",
+              "description": "Type specifies the type of the file",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_type",
+              "defaultValue": ""
+            },
+            {
+              "name": "created_at",
+              "description": "The creation date and time of the status",
+              "label": "optional",
+              "type": "Timestamp",
+              "longType": "google.protobuf.Timestamp",
+              "fullType": "google.protobuf.Timestamp",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_created_at",
+              "defaultValue": ""
+            },
+            {
+              "name": "purpose",
+              "description": "The value of the purpose for the status entry",
+              "label": "optional",
+              "type": "CredentialStatusPurpose",
+              "longType": "CredentialStatusPurpose",
+              "fullType": "agntcy.identity.platform.v1alpha1.CredentialStatusPurpose",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_purpose",
               "defaultValue": ""
             }
           ]
@@ -481,6 +623,18 @@
               "type": "CredentialSchema",
               "longType": "CredentialSchema",
               "fullType": "agntcy.identity.platform.v1alpha1.CredentialSchema",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            },
+            {
+              "name": "credential_status",
+              "description": "https://www.w3.org/TR/vc-data-model-2.0/#status",
+              "label": "repeated",
+              "type": "CredentialStatus",
+              "longType": "CredentialStatus",
+              "fullType": "agntcy.identity.platform.v1alpha1.CredentialStatus",
               "ismap": false,
               "isoneof": false,
               "oneofdecl": "",

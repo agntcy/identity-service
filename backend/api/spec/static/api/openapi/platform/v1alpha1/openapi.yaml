@@ -1,6 +1,3 @@
-# Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
-# SPDX-License-Identifier: Apache-2.0
-
 # Generated with protoc-gen-openapi
 # https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
 
@@ -834,6 +831,23 @@ components:
                     format: enum
                 apiKey:
                     type: string
+                status:
+                    enum:
+                        - APP_STATUS_UNSPECIFIED
+                        - APP_STATUS_ACTIVE
+                        - APP_STATUS_PENDING
+                        - APP_STATUS_REVOKED
+                    type: string
+                    description: The status of the App
+                    format: enum
+                createdAt:
+                    type: string
+                    description: CreatedAt records the timestamp of when the App was initially created
+                    format: date-time
+                updatedAt:
+                    type: string
+                    description: UpdatedAt records the timestamp of the last update to the App
+                    format: date-time
             description: Identity Platform App.
         AppInfoResponse:
             type: object
@@ -934,6 +948,31 @@ components:
                  more information can be found [here]
 
                  [here]: https://www.w3.org/TR/vc-data-model-2.0/#data-schemas
+        CredentialStatus:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: The URL identifying the schema file
+                type:
+                    type: string
+                    description: Type specifies the type of the file
+                createdAt:
+                    type: string
+                    description: The creation date and time of the status
+                    format: date-time
+                purpose:
+                    enum:
+                        - CREDENTIAL_STATUS_PURPOSE_UNSPECIFIED
+                        - CREDENTIAL_STATUS_PURPOSE_REVOCATION
+                    type: string
+                    description: The value of the purpose for the status entry
+                    format: enum
+            description: |-
+                CredentialStatus represents the credentialStatus property of a Verifiable Credential.
+                 more information can be found [here]
+
+                 [here]: https://www.w3.org/TR/vc-data-model-2.0/#status
         Device:
             type: object
             properties:
@@ -1319,6 +1358,11 @@ components:
                     items:
                         $ref: '#/components/schemas/CredentialSchema'
                     description: https://www.w3.org/TR/vc-data-model-2.0/#data-schemas
+                credentialStatus:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/CredentialStatus'
+                    description: https://www.w3.org/TR/vc-data-model-2.0/#status
                 proof:
                     allOf:
                         - $ref: '#/components/schemas/Proof'

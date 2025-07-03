@@ -46,14 +46,29 @@ func Issue(
 		CredentialSubject: claims,
 	}
 
+	err := sign(&vc, privateKey)
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.Badge{
+		VerifiableCredential: vc,
+		AppID:                appID,
+	}, nil
+}
+
+func sign(vc *types.VerifiableCredential, privateKey *jwk.Jwk) error {
+	// Make sure to erease any existing proof
+	vc.Proof = nil
+
 	payload, err := json.Marshal(vc)
 	if err != nil {
-		return nil, fmt.Errorf("unable to marshal badge: %w", err)
+		return fmt.Errorf("unable to marshal badge: %w", err)
 	}
 
 	signed, err := joseutil.Sign(privateKey, payload)
 	if err != nil {
-		return nil, fmt.Errorf("unable to sign the badge: %w", err)
+		return fmt.Errorf("unable to sign the badge: %w", err)
 	}
 
 	vc.Proof = &types.Proof{
@@ -61,8 +76,5 @@ func Issue(
 		ProofValue: string(signed),
 	}
 
-	return &types.Badge{
-		VerifiableCredential: vc,
-		AppID:                appID,
-	}, nil
+	return nil
 }

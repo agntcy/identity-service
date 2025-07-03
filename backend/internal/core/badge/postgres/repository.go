@@ -10,6 +10,7 @@ import (
 	badgecore "github.com/agntcy/identity-platform/internal/core/badge"
 	"github.com/agntcy/identity-platform/internal/core/badge/types"
 	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
+	"github.com/agntcy/identity-platform/internal/pkg/convertutil"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 	"github.com/agntcy/identity-platform/pkg/db"
 	"gorm.io/gorm"
@@ -43,6 +44,24 @@ func (r *postgresRepository) Create(ctx context.Context, badge *types.Badge) err
 	return nil
 }
 
+func (r *postgresRepository) Update(ctx context.Context, badge *types.Badge) error {
+	tenantID, ok := identitycontext.GetTenantID(ctx)
+	if !ok {
+		return identitycontext.ErrTenantNotFound
+	}
+
+	model := newBadgeModel(badge, tenantID)
+
+	result := r.dbContext.Client().Save(model)
+	if result.Error != nil {
+		return errutil.Err(
+			result.Error, "there was an error updating the badge",
+		)
+	}
+
+	return nil
+}
+
 func (r *postgresRepository) GetLatestByAppID(
 	ctx context.Context,
 	appID string,
@@ -67,4 +86,31 @@ func (r *postgresRepository) GetLatestByAppID(
 	}
 
 	return badge.ToCoreType(), nil
+}
+
+func (r *postgresRepository) GetAllActiveBadges(ctx context.Context, appID string) ([]*types.Badge, error) {
+	tenantID, ok := identitycontext.GetTenantID(ctx)
+	if !ok {
+		return nil, identitycontext.ErrTenantNotFound
+	}
+
+	var badges []*Badge
+
+	err := r.dbContext.Client().
+		Table("badges").
+		Joins("LEFT JOIN credential_statuses ON badges.id = credential_statuses.verifiable_credential_id").
+		Where(
+			"badges.app_id = ? AND badges.tenant_id = ? AND (credential_statuses.purpose NOT IN (?) OR credential_statuses IS NULL)",
+			appID,
+			tenantID,
+			types.CREDENTIAL_STATUS_PURPOSE_REVOCATION,
+		).
+		Find(&badges).Error
+	if err != nil {
+		return nil, errutil.Err(err, "there was an error fetching the active badges")
+	}
+
+	return convertutil.ConvertSlice(badges, func(badge *Badge) *types.Badge {
+		return badge.ToCoreType()
+	}), nil
 }

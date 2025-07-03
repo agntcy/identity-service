@@ -16,6 +16,7 @@ import (
 	bffgrpc "github.com/agntcy/identity-platform/internal/bff/grpc"
 	apppg "github.com/agntcy/identity-platform/internal/core/app/postgres"
 	authpg "github.com/agntcy/identity-platform/internal/core/auth/postgres"
+	badgecore "github.com/agntcy/identity-platform/internal/core/badge"
 	badgea2a "github.com/agntcy/identity-platform/internal/core/badge/a2a"
 	badgemcp "github.com/agntcy/identity-platform/internal/core/badge/mcp"
 	badgepg "github.com/agntcy/identity-platform/internal/core/badge/postgres"
@@ -103,19 +104,23 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// Migrate the database
+	// Migrate the database models.
+	// The plural name of the structs will be
+	// used by Gorm to create tables
 	err = dbContext.AutoMigrate(
-		&apppg.App{},                  // App model
-		&devicepg.Device{},            // Device model
-		&settingspg.IssuerSettings{},  // Issuer settings model
-		&settingspg.DuoIdpSettings{},  // Duo IDP settings model
-		&settingspg.OktaIdpSettings{}, // Okta IDP settings model
-		&settingspg.OryIdpSettings{},  // Ory IDP settings model
-		&badgepg.Badge{},              // Badge model
-		&authpg.Session{},             // Session model
-		&policypg.Policy{},            // Policy model
-		&policypg.Task{},              // Task model
-		&policypg.Rule{},              // Rule model
+		&apppg.App{},
+		&devicepg.Device{},
+		&settingspg.IssuerSettings{},
+		&settingspg.DuoIdpSettings{},
+		&settingspg.OktaIdpSettings{},
+		&settingspg.OryIdpSettings{},
+		&badgepg.CredentialSchema{},
+		&badgepg.CredentialStatus{},
+		&badgepg.Badge{},
+		&authpg.Session{},
+		&policypg.Policy{},
+		&policypg.Task{},
+		&policypg.Rule{},
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -218,6 +223,8 @@ func main() {
 	)
 	taskService := policycore.NewTaskService(mcpClient, policyRepository)
 
+	badgeRevoker := badgecore.NewRevoker(badgeRepository, identityService)
+
 	// Create internal services
 	appSrv := bff.NewAppService(
 		appRepository,
@@ -226,6 +233,8 @@ func main() {
 		idpFactory,
 		credentialStore,
 		iamClient,
+		badgeRevoker,
+		keyStore,
 	)
 	issuerSrv := issuer.NewService(
 		identityService,
@@ -247,6 +256,7 @@ func main() {
 		identityService,
 		credentialStore,
 		taskService,
+		badgeRevoker,
 	)
 	authSrv := bff.NewAuthService(
 		authRepository,

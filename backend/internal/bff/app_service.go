@@ -5,21 +5,26 @@ package bff
 
 import (
 	"context"
+	"fmt"
+	"time"
 
 	appcore "github.com/agntcy/identity-platform/internal/core/app"
 	apptypes "github.com/agntcy/identity-platform/internal/core/app/types"
+	badgecore "github.com/agntcy/identity-platform/internal/core/badge"
 	identitycore "github.com/agntcy/identity-platform/internal/core/identity"
 	idpcore "github.com/agntcy/identity-platform/internal/core/idp"
 	settingscore "github.com/agntcy/identity-platform/internal/core/settings"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 	outshiftiam "github.com/agntcy/identity-platform/internal/pkg/iam"
 	"github.com/agntcy/identity-platform/internal/pkg/pagination"
+	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
 	"github.com/agntcy/identity-platform/pkg/log"
 	"github.com/google/uuid"
 )
 
 type AppService interface {
 	CreateApp(ctx context.Context, app *apptypes.App) (*apptypes.App, error)
+	UpdateApp(ctx context.Context, app *apptypes.App) (*apptypes.App, error)
 	GetApp(ctx context.Context, id string) (*apptypes.App, error)
 	ListApps(
 		ctx context.Context,
@@ -27,6 +32,7 @@ type AppService interface {
 		query *string,
 		appTypes []apptypes.AppType,
 	) (*pagination.Pageable[apptypes.App], error)
+	DeleteApp(ctx context.Context, appID string) error
 }
 
 type appService struct {
@@ -36,6 +42,8 @@ type appService struct {
 	idpFactory         idpcore.IdpFactory
 	credentialStore    idpcore.CredentialStore
 	iamClient          outshiftiam.Client
+	badgeRevoker       badgecore.Revoker
+	keyStore           identitycore.KeyStore
 }
 
 func NewAppService(
@@ -45,6 +53,8 @@ func NewAppService(
 	idpFactory idpcore.IdpFactory,
 	credentialStore idpcore.CredentialStore,
 	iamClient outshiftiam.Client,
+	badgeRevoker badgecore.Revoker,
+	keyStore identitycore.KeyStore,
 ) AppService {
 	return &appService{
 		appRepository:      appRepository,
@@ -53,6 +63,8 @@ func NewAppService(
 		idpFactory:         idpFactory,
 		credentialStore:    credentialStore,
 		iamClient:          iamClient,
+		badgeRevoker:       badgeRevoker,
+		keyStore:           keyStore,
 	}
 }
 
@@ -73,15 +85,12 @@ func (s *appService) CreateApp(
 		return nil, errutil.Err(err, "unable to fetch settings")
 	}
 
-	var clientCredentials *idpcore.ClientCredentials
-	var idp idpcore.Idp
-
-	idp, err = s.idpFactory.Create(ctx, issSettings)
+	idp, err := s.idpFactory.Create(ctx, issSettings)
 	if err != nil {
 		return nil, errutil.Err(err, "failed to create IDP instance")
 	}
 
-	clientCredentials, err = idp.CreateClientCredentialsPair(ctx)
+	clientCredentials, err := idp.CreateClientCredentialsPair(ctx)
 	if err != nil {
 		return nil, errutil.Err(err, "failed to create client credentials pair")
 	}
@@ -128,6 +137,38 @@ func (s *appService) CreateApp(
 	return createdApp, nil
 }
 
+func (s *appService) UpdateApp(
+	ctx context.Context,
+	app *apptypes.App,
+) (*apptypes.App, error) {
+	if app == nil {
+		return nil, errutil.Err(nil, "app cannot be nil")
+	}
+
+	storedApp, err := s.appRepository.GetApp(ctx, app.ID)
+	if err != nil {
+		return nil, errutil.Err(err, err.Error())
+	}
+
+	storedApp.Name = app.Name
+	storedApp.Description = app.Description
+	storedApp.UpdatedAt = ptrutil.Ptr(time.Now().UTC())
+
+	err = s.appRepository.UpdateApp(ctx, storedApp)
+	if err != nil {
+		return nil, err
+	}
+
+	apiKey, err := s.iamClient.GetAppApiKey(ctx, app.ID)
+	if err != nil {
+		log.Warn(err)
+	}
+
+	storedApp.ApiKey = apiKey.Secret
+
+	return storedApp, nil
+}
+
 func (s *appService) GetApp(
 	ctx context.Context,
 	id string,
@@ -158,4 +199,60 @@ func (s *appService) ListApps(
 	appTypes []apptypes.AppType,
 ) (*pagination.Pageable[apptypes.App], error) {
 	return s.appRepository.GetAllApps(ctx, paginationFilter, query, appTypes)
+}
+
+func (s *appService) DeleteApp(ctx context.Context, appID string) error {
+	app, err := s.appRepository.GetApp(ctx, appID)
+	if err != nil {
+		return errutil.Err(err, err.Error())
+	}
+
+	issSettings, err := s.settingsRepository.GetIssuerSettings(ctx)
+	if err != nil {
+		return errutil.Err(err, "unable to fetch settings")
+	}
+
+	idp, err := s.idpFactory.Create(ctx, issSettings)
+	if err != nil {
+		return errutil.Err(err, "failed to create IDP instance")
+	}
+
+	clientCredentials, err := s.credentialStore.Get(ctx, app.ID)
+	if err != nil {
+		return fmt.Errorf("unable to fetch client credentials: %w", err)
+	}
+
+	privKey, err := s.keyStore.RetrievePrivKey(ctx, issSettings.KeyID)
+	if err != nil {
+		return fmt.Errorf("unable to retrieve private key: %w", err)
+	}
+
+	issuer := identitycore.Issuer{
+		CommonName: issSettings.IssuerID,
+		KeyID:      issSettings.KeyID,
+	}
+
+	err = s.badgeRevoker.RevokeAll(ctx, app.ID, clientCredentials, &issuer, privKey)
+	if err != nil {
+		return err
+	}
+
+	if clientCredentials != nil {
+		err := idp.DeleteClientCredentialsPair(ctx, clientCredentials)
+		if err != nil {
+			return fmt.Errorf("unable to delete client credentials: %w", err)
+		}
+	}
+
+	err = s.credentialStore.Delete(ctx, app.ID)
+	if err != nil {
+		return err
+	}
+
+	err = s.appRepository.DeleteApp(ctx, app)
+	if err != nil {
+		return fmt.Errorf("unable to delete the app: %w", err)
+	}
+
+	return nil
 }

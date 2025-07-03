@@ -11,6 +11,7 @@ package identity_platform_sdk_go
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -80,6 +81,56 @@ func (x BadgeType) Number() protoreflect.EnumNumber {
 // Deprecated: Use BadgeType.Descriptor instead.
 func (BadgeType) EnumDescriptor() ([]byte, []int) {
 	return file_agntcy_identity_platform_v1alpha1_badge_proto_rawDescGZIP(), []int{0}
+}
+
+// The purpose of the status entry
+type CredentialStatusPurpose int32
+
+const (
+	// Unspecified status purpose
+	CredentialStatusPurpose_CREDENTIAL_STATUS_PURPOSE_UNSPECIFIED CredentialStatusPurpose = 0
+	// Used to cancel the validity of a verifiable credential.
+	// This status is not reversible.
+	CredentialStatusPurpose_CREDENTIAL_STATUS_PURPOSE_REVOCATION CredentialStatusPurpose = 1
+)
+
+// Enum value maps for CredentialStatusPurpose.
+var (
+	CredentialStatusPurpose_name = map[int32]string{
+		0: "CREDENTIAL_STATUS_PURPOSE_UNSPECIFIED",
+		1: "CREDENTIAL_STATUS_PURPOSE_REVOCATION",
+	}
+	CredentialStatusPurpose_value = map[string]int32{
+		"CREDENTIAL_STATUS_PURPOSE_UNSPECIFIED": 0,
+		"CREDENTIAL_STATUS_PURPOSE_REVOCATION":  1,
+	}
+)
+
+func (x CredentialStatusPurpose) Enum() *CredentialStatusPurpose {
+	p := new(CredentialStatusPurpose)
+	*p = x
+	return p
+}
+
+func (x CredentialStatusPurpose) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (CredentialStatusPurpose) Descriptor() protoreflect.EnumDescriptor {
+	return file_agntcy_identity_platform_v1alpha1_badge_proto_enumTypes[1].Descriptor()
+}
+
+func (CredentialStatusPurpose) Type() protoreflect.EnumType {
+	return &file_agntcy_identity_platform_v1alpha1_badge_proto_enumTypes[1]
+}
+
+func (x CredentialStatusPurpose) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use CredentialStatusPurpose.Descriptor instead.
+func (CredentialStatusPurpose) EnumDescriptor() ([]byte, []int) {
+	return file_agntcy_identity_platform_v1alpha1_badge_proto_rawDescGZIP(), []int{1}
 }
 
 type Badge struct {
@@ -251,6 +302,82 @@ func (x *CredentialSchema) GetId() string {
 	return ""
 }
 
+// CredentialStatus represents the credentialStatus property of a Verifiable Credential.
+// more information can be found [here]
+//
+// [here]: https://www.w3.org/TR/vc-data-model-2.0/#status
+type CredentialStatus struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The URL identifying the schema file
+	Id *string `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
+	// Type specifies the type of the file
+	Type *string `protobuf:"bytes,2,opt,name=type,proto3,oneof" json:"type,omitempty"`
+	// The creation date and time of the status
+	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
+	// The value of the purpose for the status entry
+	Purpose       *CredentialStatusPurpose `protobuf:"varint,4,opt,name=purpose,proto3,enum=agntcy.identity.platform.v1alpha1.CredentialStatusPurpose,oneof" json:"purpose,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CredentialStatus) Reset() {
+	*x = CredentialStatus{}
+	mi := &file_agntcy_identity_platform_v1alpha1_badge_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CredentialStatus) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CredentialStatus) ProtoMessage() {}
+
+func (x *CredentialStatus) ProtoReflect() protoreflect.Message {
+	mi := &file_agntcy_identity_platform_v1alpha1_badge_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CredentialStatus.ProtoReflect.Descriptor instead.
+func (*CredentialStatus) Descriptor() ([]byte, []int) {
+	return file_agntcy_identity_platform_v1alpha1_badge_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *CredentialStatus) GetId() string {
+	if x != nil && x.Id != nil {
+		return *x.Id
+	}
+	return ""
+}
+
+func (x *CredentialStatus) GetType() string {
+	if x != nil && x.Type != nil {
+		return *x.Type
+	}
+	return ""
+}
+
+func (x *CredentialStatus) GetCreatedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.CreatedAt
+	}
+	return nil
+}
+
+func (x *CredentialStatus) GetPurpose() CredentialStatusPurpose {
+	if x != nil && x.Purpose != nil {
+		return *x.Purpose
+	}
+	return CredentialStatusPurpose_CREDENTIAL_STATUS_PURPOSE_UNSPECIFIED
+}
+
 // A data integrity proof provides information about the proof mechanism,
 // parameters required to verify that proof, and the proof value itself.
 type Proof struct {
@@ -267,7 +394,7 @@ type Proof struct {
 
 func (x *Proof) Reset() {
 	*x = Proof{}
-	mi := &file_agntcy_identity_platform_v1alpha1_badge_proto_msgTypes[3]
+	mi := &file_agntcy_identity_platform_v1alpha1_badge_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -279,7 +406,7 @@ func (x *Proof) String() string {
 func (*Proof) ProtoMessage() {}
 
 func (x *Proof) ProtoReflect() protoreflect.Message {
-	mi := &file_agntcy_identity_platform_v1alpha1_badge_proto_msgTypes[3]
+	mi := &file_agntcy_identity_platform_v1alpha1_badge_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -292,7 +419,7 @@ func (x *Proof) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Proof.ProtoReflect.Descriptor instead.
 func (*Proof) Descriptor() ([]byte, []int) {
-	return file_agntcy_identity_platform_v1alpha1_badge_proto_rawDescGZIP(), []int{3}
+	return file_agntcy_identity_platform_v1alpha1_badge_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *Proof) GetType() string {
@@ -337,15 +464,17 @@ type VerifiableCredential struct {
 	ExpirationDate *string `protobuf:"bytes,7,opt,name=expiration_date,json=expirationDate,proto3,oneof" json:"expiration_date,omitempty"`
 	// https://www.w3.org/TR/vc-data-model-2.0/#data-schemas
 	CredentialSchema []*CredentialSchema `protobuf:"bytes,8,rep,name=credential_schema,json=credentialSchema,proto3" json:"credential_schema,omitempty"`
+	// https://www.w3.org/TR/vc-data-model-2.0/#status
+	CredentialStatus []*CredentialStatus `protobuf:"bytes,9,rep,name=credential_status,json=credentialStatus,proto3" json:"credential_status,omitempty"`
 	// https://w3id.org/security#proof
-	Proof         *Proof `protobuf:"bytes,9,opt,name=proof,proto3,oneof" json:"proof,omitempty"`
+	Proof         *Proof `protobuf:"bytes,10,opt,name=proof,proto3,oneof" json:"proof,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *VerifiableCredential) Reset() {
 	*x = VerifiableCredential{}
-	mi := &file_agntcy_identity_platform_v1alpha1_badge_proto_msgTypes[4]
+	mi := &file_agntcy_identity_platform_v1alpha1_badge_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -357,7 +486,7 @@ func (x *VerifiableCredential) String() string {
 func (*VerifiableCredential) ProtoMessage() {}
 
 func (x *VerifiableCredential) ProtoReflect() protoreflect.Message {
-	mi := &file_agntcy_identity_platform_v1alpha1_badge_proto_msgTypes[4]
+	mi := &file_agntcy_identity_platform_v1alpha1_badge_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -370,7 +499,7 @@ func (x *VerifiableCredential) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use VerifiableCredential.ProtoReflect.Descriptor instead.
 func (*VerifiableCredential) Descriptor() ([]byte, []int) {
-	return file_agntcy_identity_platform_v1alpha1_badge_proto_rawDescGZIP(), []int{4}
+	return file_agntcy_identity_platform_v1alpha1_badge_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *VerifiableCredential) GetContext() []string {
@@ -429,6 +558,13 @@ func (x *VerifiableCredential) GetCredentialSchema() []*CredentialSchema {
 	return nil
 }
 
+func (x *VerifiableCredential) GetCredentialStatus() []*CredentialStatus {
+	if x != nil {
+		return x.CredentialStatus
+	}
+	return nil
+}
+
 func (x *VerifiableCredential) GetProof() *Proof {
 	if x != nil {
 		return x.Proof
@@ -440,7 +576,7 @@ var File_agntcy_identity_platform_v1alpha1_badge_proto protoreflect.FileDescript
 
 const file_agntcy_identity_platform_v1alpha1_badge_proto_rawDesc = "" +
 	"\n" +
-	"-agntcy/identity/platform/v1alpha1/badge.proto\x12!agntcy.identity.platform.v1alpha1\"\xbb\x01\n" +
+	"-agntcy/identity/platform/v1alpha1/badge.proto\x12!agntcy.identity.platform.v1alpha1\x1a\x1fgoogle/protobuf/timestamp.proto\"\xbb\x01\n" +
 	"\x05Badge\x12q\n" +
 	"\x15verifiable_credential\x18\x01 \x01(\v27.agntcy.identity.platform.v1alpha1.VerifiableCredentialH\x00R\x14verifiableCredential\x88\x01\x01\x12\x1a\n" +
 	"\x06app_id\x18\x02 \x01(\tH\x01R\x05appId\x88\x01\x01B\x18\n" +
@@ -455,7 +591,18 @@ const file_agntcy_identity_platform_v1alpha1_badge_proto_rawDesc = "" +
 	"\x04type\x18\x01 \x01(\tH\x00R\x04type\x88\x01\x01\x12\x13\n" +
 	"\x02id\x18\x02 \x01(\tH\x01R\x02id\x88\x01\x01B\a\n" +
 	"\x05_typeB\x05\n" +
-	"\x03_id\"\x9b\x01\n" +
+	"\x03_id\"\x86\x02\n" +
+	"\x10CredentialStatus\x12\x13\n" +
+	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x17\n" +
+	"\x04type\x18\x02 \x01(\tH\x01R\x04type\x88\x01\x01\x12>\n" +
+	"\n" +
+	"created_at\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampH\x02R\tcreatedAt\x88\x01\x01\x12Y\n" +
+	"\apurpose\x18\x04 \x01(\x0e2:.agntcy.identity.platform.v1alpha1.CredentialStatusPurposeH\x03R\apurpose\x88\x01\x01B\x05\n" +
+	"\x03_idB\a\n" +
+	"\x05_typeB\r\n" +
+	"\v_created_atB\n" +
+	"\n" +
+	"\b_purpose\"\x9b\x01\n" +
 	"\x05Proof\x12\x17\n" +
 	"\x04type\x18\x01 \x01(\tH\x00R\x04type\x88\x01\x01\x12(\n" +
 	"\rproof_purpose\x18\x02 \x01(\tH\x01R\fproofPurpose\x88\x01\x01\x12$\n" +
@@ -463,7 +610,7 @@ const file_agntcy_identity_platform_v1alpha1_badge_proto_rawDesc = "" +
 	"proofValue\x88\x01\x01B\a\n" +
 	"\x05_typeB\x10\n" +
 	"\x0e_proof_purposeB\x0e\n" +
-	"\f_proof_value\"\xb2\x04\n" +
+	"\f_proof_value\"\x94\x05\n" +
 	"\x14VerifiableCredential\x12\x18\n" +
 	"\acontext\x18\x01 \x03(\tR\acontext\x12\x12\n" +
 	"\x04type\x18\x02 \x03(\tR\x04type\x12\x1b\n" +
@@ -472,8 +619,10 @@ const file_agntcy_identity_platform_v1alpha1_badge_proto_rawDesc = "" +
 	"\x02id\x18\x05 \x01(\tH\x02R\x02id\x88\x01\x01\x12(\n" +
 	"\rissuance_date\x18\x06 \x01(\tH\x03R\fissuanceDate\x88\x01\x01\x12,\n" +
 	"\x0fexpiration_date\x18\a \x01(\tH\x04R\x0eexpirationDate\x88\x01\x01\x12`\n" +
-	"\x11credential_schema\x18\b \x03(\v23.agntcy.identity.platform.v1alpha1.CredentialSchemaR\x10credentialSchema\x12C\n" +
-	"\x05proof\x18\t \x01(\v2(.agntcy.identity.platform.v1alpha1.ProofH\x05R\x05proof\x88\x01\x01B\t\n" +
+	"\x11credential_schema\x18\b \x03(\v23.agntcy.identity.platform.v1alpha1.CredentialSchemaR\x10credentialSchema\x12`\n" +
+	"\x11credential_status\x18\t \x03(\v23.agntcy.identity.platform.v1alpha1.CredentialStatusR\x10credentialStatus\x12C\n" +
+	"\x05proof\x18\n" +
+	" \x01(\v2(.agntcy.identity.platform.v1alpha1.ProofH\x05R\x05proof\x88\x01\x01B\t\n" +
 	"\a_issuerB\x15\n" +
 	"\x13_credential_subjectB\x05\n" +
 	"\x03_idB\x10\n" +
@@ -483,7 +632,10 @@ const file_agntcy_identity_platform_v1alpha1_badge_proto_rawDesc = "" +
 	"\tBadgeType\x12\x1a\n" +
 	"\x16BADGE_TYPE_UNSPECIFIED\x10\x00\x12\x1a\n" +
 	"\x16BADGE_TYPE_AGENT_BADGE\x10\x01\x12\x18\n" +
-	"\x14BADGE_TYPE_MCP_BADGE\x10\x02BkZigithub.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_gob\x06proto3"
+	"\x14BADGE_TYPE_MCP_BADGE\x10\x02*n\n" +
+	"\x17CredentialStatusPurpose\x12)\n" +
+	"%CREDENTIAL_STATUS_PURPOSE_UNSPECIFIED\x10\x00\x12(\n" +
+	"$CREDENTIAL_STATUS_PURPOSE_REVOCATION\x10\x01BkZigithub.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_gob\x06proto3"
 
 var (
 	file_agntcy_identity_platform_v1alpha1_badge_proto_rawDescOnce sync.Once
@@ -497,26 +649,32 @@ func file_agntcy_identity_platform_v1alpha1_badge_proto_rawDescGZIP() []byte {
 	return file_agntcy_identity_platform_v1alpha1_badge_proto_rawDescData
 }
 
-var file_agntcy_identity_platform_v1alpha1_badge_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_agntcy_identity_platform_v1alpha1_badge_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_agntcy_identity_platform_v1alpha1_badge_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
+var file_agntcy_identity_platform_v1alpha1_badge_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_agntcy_identity_platform_v1alpha1_badge_proto_goTypes = []any{
-	(BadgeType)(0),               // 0: agntcy.identity.platform.v1alpha1.BadgeType
-	(*Badge)(nil),                // 1: agntcy.identity.platform.v1alpha1.Badge
-	(*BadgeClaims)(nil),          // 2: agntcy.identity.platform.v1alpha1.BadgeClaims
-	(*CredentialSchema)(nil),     // 3: agntcy.identity.platform.v1alpha1.CredentialSchema
-	(*Proof)(nil),                // 4: agntcy.identity.platform.v1alpha1.Proof
-	(*VerifiableCredential)(nil), // 5: agntcy.identity.platform.v1alpha1.VerifiableCredential
+	(BadgeType)(0),                // 0: agntcy.identity.platform.v1alpha1.BadgeType
+	(CredentialStatusPurpose)(0),  // 1: agntcy.identity.platform.v1alpha1.CredentialStatusPurpose
+	(*Badge)(nil),                 // 2: agntcy.identity.platform.v1alpha1.Badge
+	(*BadgeClaims)(nil),           // 3: agntcy.identity.platform.v1alpha1.BadgeClaims
+	(*CredentialSchema)(nil),      // 4: agntcy.identity.platform.v1alpha1.CredentialSchema
+	(*CredentialStatus)(nil),      // 5: agntcy.identity.platform.v1alpha1.CredentialStatus
+	(*Proof)(nil),                 // 6: agntcy.identity.platform.v1alpha1.Proof
+	(*VerifiableCredential)(nil),  // 7: agntcy.identity.platform.v1alpha1.VerifiableCredential
+	(*timestamppb.Timestamp)(nil), // 8: google.protobuf.Timestamp
 }
 var file_agntcy_identity_platform_v1alpha1_badge_proto_depIdxs = []int32{
-	5, // 0: agntcy.identity.platform.v1alpha1.Badge.verifiable_credential:type_name -> agntcy.identity.platform.v1alpha1.VerifiableCredential
-	2, // 1: agntcy.identity.platform.v1alpha1.VerifiableCredential.credential_subject:type_name -> agntcy.identity.platform.v1alpha1.BadgeClaims
-	3, // 2: agntcy.identity.platform.v1alpha1.VerifiableCredential.credential_schema:type_name -> agntcy.identity.platform.v1alpha1.CredentialSchema
-	4, // 3: agntcy.identity.platform.v1alpha1.VerifiableCredential.proof:type_name -> agntcy.identity.platform.v1alpha1.Proof
-	4, // [4:4] is the sub-list for method output_type
-	4, // [4:4] is the sub-list for method input_type
-	4, // [4:4] is the sub-list for extension type_name
-	4, // [4:4] is the sub-list for extension extendee
-	0, // [0:4] is the sub-list for field type_name
+	7, // 0: agntcy.identity.platform.v1alpha1.Badge.verifiable_credential:type_name -> agntcy.identity.platform.v1alpha1.VerifiableCredential
+	8, // 1: agntcy.identity.platform.v1alpha1.CredentialStatus.created_at:type_name -> google.protobuf.Timestamp
+	1, // 2: agntcy.identity.platform.v1alpha1.CredentialStatus.purpose:type_name -> agntcy.identity.platform.v1alpha1.CredentialStatusPurpose
+	3, // 3: agntcy.identity.platform.v1alpha1.VerifiableCredential.credential_subject:type_name -> agntcy.identity.platform.v1alpha1.BadgeClaims
+	4, // 4: agntcy.identity.platform.v1alpha1.VerifiableCredential.credential_schema:type_name -> agntcy.identity.platform.v1alpha1.CredentialSchema
+	5, // 5: agntcy.identity.platform.v1alpha1.VerifiableCredential.credential_status:type_name -> agntcy.identity.platform.v1alpha1.CredentialStatus
+	6, // 6: agntcy.identity.platform.v1alpha1.VerifiableCredential.proof:type_name -> agntcy.identity.platform.v1alpha1.Proof
+	7, // [7:7] is the sub-list for method output_type
+	7, // [7:7] is the sub-list for method input_type
+	7, // [7:7] is the sub-list for extension type_name
+	7, // [7:7] is the sub-list for extension extendee
+	0, // [0:7] is the sub-list for field type_name
 }
 
 func init() { file_agntcy_identity_platform_v1alpha1_badge_proto_init() }
@@ -529,13 +687,14 @@ func file_agntcy_identity_platform_v1alpha1_badge_proto_init() {
 	file_agntcy_identity_platform_v1alpha1_badge_proto_msgTypes[2].OneofWrappers = []any{}
 	file_agntcy_identity_platform_v1alpha1_badge_proto_msgTypes[3].OneofWrappers = []any{}
 	file_agntcy_identity_platform_v1alpha1_badge_proto_msgTypes[4].OneofWrappers = []any{}
+	file_agntcy_identity_platform_v1alpha1_badge_proto_msgTypes[5].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_agntcy_identity_platform_v1alpha1_badge_proto_rawDesc), len(file_agntcy_identity_platform_v1alpha1_badge_proto_rawDesc)),
-			NumEnums:      1,
-			NumMessages:   5,
+			NumEnums:      2,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

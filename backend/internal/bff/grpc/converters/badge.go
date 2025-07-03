@@ -58,6 +58,21 @@ func ToCredentialSchema(
 	}
 }
 
+func FromCredentialStatus(
+	src *badgetypes.CredentialStatus,
+) *identity_platform_sdk_go.CredentialStatus {
+	if src == nil {
+		return nil
+	}
+
+	return &identity_platform_sdk_go.CredentialStatus{
+		Id:        ptrutil.Ptr(src.ID),
+		Type:      ptrutil.Ptr(src.Type),
+		CreatedAt: newTimestamp(&src.CreatedAt),
+		Purpose:   ptrutil.Ptr(identity_platform_sdk_go.CredentialStatusPurpose(src.Purpose)),
+	}
+}
+
 func FromProof(src *badgetypes.Proof) *identity_platform_sdk_go.Proof {
 	if src == nil {
 		return nil
@@ -100,6 +115,10 @@ func FromVerifiableCredential(
 		CredentialSchema: convertutil.ConvertSlice(
 			src.CredentialSchema,
 			FromCredentialSchema,
+		),
+		CredentialStatus: convertutil.ConvertSlice(
+			src.Status,
+			FromCredentialStatus,
 		),
 		Proof: FromProof(src.Proof),
 	}
