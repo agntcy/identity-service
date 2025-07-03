@@ -44,7 +44,7 @@ export const InfoAgenticService = ({app, onChangeReissueBadge}: {app?: App; onCh
               <KeyValue pairs={keyValuePairs} useCard={false} />
             </CardContent>
           </Card>
-          <Card className="text-start space-y-6" variant="secondary">
+          <Card className="text-start space-y-4" variant="secondary">
             <div className="flex justify-between items-center">
               <Typography variant="subtitle1" fontWeight={600}>
                 API Key
