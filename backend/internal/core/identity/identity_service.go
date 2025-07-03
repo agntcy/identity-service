@@ -21,6 +21,7 @@ import (
 	issuersdk "github.com/agntcy/identity/api/client/client/issuer_service"
 	vcsdk "github.com/agntcy/identity/api/client/client/vc_service"
 	identitymodels "github.com/agntcy/identity/api/client/models"
+	identitysrv "github.com/agntcy/identity/api/server/agntcy/identity/core/v1alpha1"
 	"github.com/agntcy/identity/pkg/oidc"
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
@@ -58,6 +59,12 @@ type Service interface {
 		ctx context.Context,
 		vc *string,
 	) (*badgetypes.BadgeClaims, error)
+	RevokeVerifiableCredential(
+		ctx context.Context,
+		clientCredentials *idpcore.ClientCredentials,
+		vc *badgetypes.VerifiableCredential,
+		issuer *Issuer,
+	) error
 }
 
 // The verificationService struct implements the VerificationService interface
@@ -352,4 +359,73 @@ func (s *service) VerifyVerifiableCredential(
 	log.Debug("Unmarshalled claims: ", claims)
 
 	return &claims, err
+}
+
+func (s *service) RevokeVerifiableCredential(
+	ctx context.Context,
+	clientCredentials *idpcore.ClientCredentials,
+	vc *badgetypes.VerifiableCredential,
+	issuer *Issuer,
+) error {
+	proof, err := s.generateProof(ctx, clientCredentials, issuer.KeyID)
+	if err != nil {
+		return fmt.Errorf(
+			"error generating proof for verifiable credential publishing: %w",
+			err,
+		)
+	}
+
+	var envelope *identitymodels.V1alpha1EnvelopedCredential
+
+	if vc.Proof.IsJOSE() {
+		envelope = &identitymodels.V1alpha1EnvelopedCredential{
+			EnvelopeType: identitymodels.NewV1alpha1CredentialEnvelopeType(
+				identitymodels.V1alpha1CredentialEnvelopeTypeCREDENTIALENVELOPETYPEJOSE,
+			),
+			Value: vc.Proof.ProofValue,
+		}
+	} else {
+		data, err := json.Marshal(vc)
+		if err != nil {
+			return fmt.Errorf("unable to marshal verifiable credential: %w", err)
+		}
+
+		envelope = &identitymodels.V1alpha1EnvelopedCredential{
+			EnvelopeType: identitymodels.NewV1alpha1CredentialEnvelopeType(
+				identitymodels.V1alpha1CredentialEnvelopeTypeCREDENTIALENVELOPETYPEEMBEDDEDPROOF,
+			),
+			Value: string(data),
+		}
+	}
+
+	_, err = s.vcClient.RevokeVerifiableCredential(&vcsdk.RevokeVerifiableCredentialParams{
+		Body: &identitymodels.V1alpha1RevokeRequest{
+			Vc: envelope,
+			Proof: &identitymodels.V1alpha1Proof{
+				Type:       proof.Type,
+				ProofValue: proof.ProofValue,
+			},
+		},
+	})
+	if err != nil {
+		return tryGetErrorInfo(err)
+	}
+
+	return nil
+}
+
+func tryGetErrorInfo(err error) error {
+	apiErr := vcsdk.NewRevokeVerifiableCredentialDefault(0)
+	if errors.As(err, &apiErr) {
+		payload := apiErr.GetPayload()
+		for _, detail := range payload.Details {
+			if reason, ok := detail.GoogleprotobufAny["reason"]; ok {
+				return ErrorInfo{
+					Reason: identitysrv.ErrorReason(identitysrv.ErrorReason_value[reason.(string)]),
+				}
+			}
+		}
+	}
+
+	return err
 }

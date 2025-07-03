@@ -46,14 +46,45 @@ func Issue(
 		CredentialSubject: claims,
 	}
 
+	err := sign(&vc, privateKey)
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.Badge{
+		VerifiableCredential: vc,
+		AppID:                appID,
+	}, nil
+}
+
+func Revoke(badge *types.Badge, privateKey *jwk.Jwk) error {
+	badge.Status = append(badge.Status, &types.CredentialStatus{
+		ID:        fmt.Sprintf("https://spec.identity.agntcy.org/protodocs/agntcy/identity/core/v1alpha1/vc.proto#%s", uuid.NewString()),
+		Type:      "CredentialStatus",
+		Purpose:   types.CREDENTIAL_STATUS_PURPOSE_REVOCATION,
+		CreatedAt: time.Now().UTC(),
+	})
+
+	err := sign(&badge.VerifiableCredential, privateKey)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func sign(vc *types.VerifiableCredential, privateKey *jwk.Jwk) error {
+	// Make sure to erease any existing proof
+	vc.Proof = nil
+
 	payload, err := json.Marshal(vc)
 	if err != nil {
-		return nil, fmt.Errorf("unable to marshal badge: %w", err)
+		return fmt.Errorf("unable to marshal badge: %w", err)
 	}
 
 	signed, err := joseutil.Sign(privateKey, payload)
 	if err != nil {
-		return nil, fmt.Errorf("unable to sign the badge: %w", err)
+		return fmt.Errorf("unable to sign the badge: %w", err)
 	}
 
 	vc.Proof = &types.Proof{
@@ -61,8 +92,5 @@ func Issue(
 		ProofValue: string(signed),
 	}
 
-	return &types.Badge{
-		VerifiableCredential: vc,
-		AppID:                appID,
-	}, nil
+	return nil
 }

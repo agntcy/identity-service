@@ -24,6 +24,7 @@ type Badge struct {
 	IssuanceDate      string
 	ExpirationDate    string
 	CredentialSchema  []*CredentialSchema `gorm:"foreignKey:VerifiableCredentialID"`
+	Status            []*CredentialStatus `gorm:"foreignKey:VerifiableCredentialID"`
 	Proof             *types.Proof        `gorm:"embedded;embeddedPrefix:proof_"`
 	TenantID          string              `gorm:"not null;type:varchar(256);index"`
 	AppID             string
@@ -53,6 +54,12 @@ func (bm *Badge) ToCoreType() *types.Badge {
 					return c.ToCoreType()
 				},
 			),
+			Status: convertutil.ConvertSlice(
+				bm.Status,
+				func(s *CredentialStatus) *types.CredentialStatus {
+					return s.ToCoreType()
+				},
+			),
 			Proof: bm.Proof,
 		},
 		AppID: bm.AppID,
@@ -69,6 +76,23 @@ func (c *CredentialSchema) ToCoreType() *types.CredentialSchema {
 	return &types.CredentialSchema{
 		Type: c.Type,
 		ID:   c.ID,
+	}
+}
+
+type CredentialStatus struct {
+	ID                     string `gorm:"primaryKey"`
+	VerifiableCredentialID string `gorm:"primaryKey"`
+	Type                   string
+	CreatedAt              time.Time
+	Purpose                types.CredentialStatusPurpose
+}
+
+func (s *CredentialStatus) ToCoreType() *types.CredentialStatus {
+	return &types.CredentialStatus{
+		ID:        s.ID,
+		Type:      s.Type,
+		CreatedAt: s.CreatedAt,
+		Purpose:   s.Purpose,
 	}
 }
 
@@ -89,7 +113,15 @@ func newBadgeModel(src *types.Badge, tenantID string) *Badge {
 		ExpirationDate:    src.ExpirationDate,
 		CredentialSchema: convertutil.ConvertSlice(
 			src.CredentialSchema,
-			newCredentialSchemaModel,
+			func(schema *types.CredentialSchema) *CredentialSchema {
+				return newCredentialSchemaModel(schema, src.ID)
+			},
+		),
+		Status: convertutil.ConvertSlice(
+			src.Status,
+			func(status *types.CredentialStatus) *CredentialStatus {
+				return newCredentialStatusModel(status, src.ID)
+			},
 		),
 		Proof:    src.Proof,
 		TenantID: tenantID,
@@ -97,9 +129,20 @@ func newBadgeModel(src *types.Badge, tenantID string) *Badge {
 	}
 }
 
-func newCredentialSchemaModel(src *types.CredentialSchema) *CredentialSchema {
+func newCredentialSchemaModel(src *types.CredentialSchema, verifiableCredentialID string) *CredentialSchema {
 	return &CredentialSchema{
-		ID:   src.ID,
-		Type: src.Type,
+		ID:                     src.ID,
+		Type:                   src.Type,
+		VerifiableCredentialID: verifiableCredentialID,
+	}
+}
+
+func newCredentialStatusModel(src *types.CredentialStatus, verifiableCredentialID string) *CredentialStatus {
+	return &CredentialStatus{
+		ID:                     src.ID,
+		Type:                   src.Type,
+		VerifiableCredentialID: verifiableCredentialID,
+		CreatedAt:              src.CreatedAt,
+		Purpose:                src.Purpose,
 	}
 }

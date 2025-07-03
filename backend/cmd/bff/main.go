@@ -103,19 +103,23 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// Migrate the database
+	// Migrate the database models.
+	// The plural name of the structs will be
+	// used by Gorm to create tables
 	err = dbContext.AutoMigrate(
-		&apppg.App{},                  // App model
-		&devicepg.Device{},            // Device model
-		&settingspg.IssuerSettings{},  // Issuer settings model
-		&settingspg.DuoIdpSettings{},  // Duo IDP settings model
-		&settingspg.OktaIdpSettings{}, // Okta IDP settings model
-		&settingspg.OryIdpSettings{},  // Ory IDP settings model
-		&badgepg.Badge{},              // Badge model
-		&authpg.Session{},             // Session model
-		&policypg.Policy{},            // Policy model
-		&policypg.Task{},              // Task model
-		&policypg.Rule{},              // Rule model
+		&apppg.App{},
+		&devicepg.Device{},
+		&settingspg.IssuerSettings{},
+		&settingspg.DuoIdpSettings{},
+		&settingspg.OktaIdpSettings{},
+		&settingspg.OryIdpSettings{},
+		&badgepg.CredentialSchema{},
+		&badgepg.CredentialStatus{},
+		&badgepg.Badge{},
+		&authpg.Session{},
+		&policypg.Policy{},
+		&policypg.Task{},
+		&policypg.Rule{},
 	)
 	if err != nil {
 		log.Fatal(err)

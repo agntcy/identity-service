@@ -2,16 +2,70 @@
 // SPDX-License-Identifier: Apache-2.0
 
 //go:generate stringer -type=BadgeType
+//go:generate stringer -type=CredentialStatusPurpose
 
 package types
 
 import (
+	"slices"
 	"strings"
+	"time"
 )
 
 type Badge struct {
 	VerifiableCredential `json:"verifiable_credential"`
 	AppID                string `json:"app_id,omitempty"`
+}
+
+func (b *Badge) IsRevoked() bool {
+	return slices.ContainsFunc(b.Status, func(status *CredentialStatus) bool {
+		return status.Purpose == CREDENTIAL_STATUS_PURPOSE_REVOCATION
+	})
+}
+
+// The purpose of the status entry
+type CredentialStatusPurpose int
+
+const (
+	// Unspecified status purpose
+	CREDENTIAL_STATUS_PURPOSE_UNSPECIFIED CredentialStatusPurpose = iota
+
+	// Used to cancel the validity of a verifiable credential.
+	// This status is not reversible.
+	CREDENTIAL_STATUS_PURPOSE_REVOCATION
+)
+
+func (t *CredentialStatusPurpose) UnmarshalText(text []byte) error {
+	switch string(text) {
+	case CREDENTIAL_STATUS_PURPOSE_REVOCATION.String():
+		*t = CREDENTIAL_STATUS_PURPOSE_REVOCATION
+	default:
+		*t = CREDENTIAL_STATUS_PURPOSE_UNSPECIFIED
+	}
+
+	return nil
+}
+
+func (t CredentialStatusPurpose) MarshalText() ([]byte, error) {
+	return []byte(t.String()), nil
+}
+
+// CredentialStatus represents the credentialStatus property of a Verifiable Credential.
+// more information can be found [here]
+//
+// [here]: https://www.w3.org/TR/vc-data-model-2.0/#status
+type CredentialStatus struct {
+	// The URL identifying the schema file
+	ID string `json:"id" protobuf:"bytes,1,opt,name=id"`
+
+	// Type specifies the type of the file
+	Type string `json:"type" protobuf:"bytes,2,opt,name=type"`
+
+	// The creation date and time of the status
+	CreatedAt time.Time `json:"createdAt" protobuf:"bytes,3,opt,name=created_at"`
+
+	// The value of the purpose for the status entry
+	Purpose CredentialStatusPurpose `json:"purpose" protobuf:"bytes,4,opt,name=purpose"`
 }
 
 // DataModel represents the W3C Verifiable Credential Data Model defined [here]
@@ -41,6 +95,9 @@ type VerifiableCredential struct {
 
 	// https://www.w3.org/TR/vc-data-model-2.0/#data-schemas
 	CredentialSchema []*CredentialSchema `json:"credentialSchema,omitempty" protobuf:"bytes,8,opt,name=credential_schema"`
+
+	// https://www.w3.org/TR/vc-data-model-2.0/#status
+	Status []*CredentialStatus `json:"credentialStatus,omitempty" protobuf:"bytes,9,opt,name=credential_status"`
 
 	// https://w3id.org/security#proof
 	Proof *Proof `json:"proof,omitempty" protobuf:"bytes,9,opt,name=proof"`
