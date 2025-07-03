@@ -11,8 +11,8 @@ import type { ScalarOptions } from '@scalar/docusaurus'
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: 'Identity Platform',
-  tagline: 'A platform for building identity solutions',
+  title: 'Agent Identity',
+  tagline: 'Create and manage identities for your MCP Servers, A2A Agents and OASF, with support for TBAC based access control.',
   favicon: 'img/favicon.png',
 
   // Set the production url of your site here
@@ -24,7 +24,7 @@ const config: Config = {
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'AGNTCY', // Usually your GitHub org/user name.
-  projectName: 'Identity Platform', // Usually your repo name.
+  projectName: 'Agent Identity', // Usually your repo name.
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
@@ -102,7 +102,7 @@ const config: Config = {
       },
     },
     navbar: {
-      title: 'Identity Platform',
+      title: 'Agent Identity',
       logo: {
         alt: 'Identity Engine',
         src: 'img/logo.svg',
@@ -122,7 +122,7 @@ const config: Config = {
           position: 'left',
         },
         {
-          href: 'https://github.com/agntcy/identity-platform',
+          href: 'https://github.com/agntcy/identity',
           label: 'GitHub',
           position: 'right',
         },
