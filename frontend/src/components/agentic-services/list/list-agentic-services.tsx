@@ -172,7 +172,7 @@ export const ListAgenticServices = () => {
             renderRowActionMenuItems={({row}) => {
               return [
                 <MenuItem
-                  key="re-issue"
+                  key="re-issue-badge"
                   onClick={() => {
                     setTempApp(row.original);
                     setShowBadgeForm(true);
@@ -185,7 +185,7 @@ export const ListAgenticServices = () => {
                   </Typography>
                 </MenuItem>,
                 <MenuItem
-                  key="delete"
+                  key="delete-app"
                   onClick={() => {
                     setTempApp(row.original);
                     setShowActionsModal(true);
