@@ -1,6 +1,9 @@
 // Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
 // SPDX-License-Identifier: Apache-2.0
 
+//go:generate stringer -type=AppType
+//go:generate stringer -type=AppStatus
+
 package types
 
 import "time"
@@ -41,6 +44,41 @@ func (t AppType) MarshalText() ([]byte, error) {
 	return []byte(t.String()), nil
 }
 
+type AppStatus int
+
+const (
+	// Unspecified status
+	APP_STATUS_UNSPECIFIED AppStatus = iota
+
+	// The App has at least one active badge
+	APP_STATUS_ACTIVE
+
+	// The App has no badges
+	APP_STATUS_PENDING
+
+	// The App has all the badges revoked
+	APP_STATUS_REVOKED
+)
+
+func (s *AppStatus) UnmarshalText(text []byte) error {
+	switch string(text) {
+	case APP_STATUS_ACTIVE.String():
+		*s = APP_STATUS_ACTIVE
+	case APP_STATUS_PENDING.String():
+		*s = APP_STATUS_PENDING
+	case APP_STATUS_REVOKED.String():
+		*s = APP_STATUS_REVOKED
+	default:
+		*s = APP_STATUS_UNSPECIFIED
+	}
+
+	return nil
+}
+
+func (s AppStatus) MarshalText() ([]byte, error) {
+	return []byte(s.String()), nil
+}
+
 // Identity Platform App.
 type App struct {
 	// A unique identifier for the App.
@@ -60,7 +98,14 @@ type App struct {
 
 	ApiKey string `json:"api_key" protobuf:"bytes,5,opt,name=api_key"`
 
-	CreatedAt time.Time  `json:"created_at" protobuf:"google.protobuf.Timestamp,6,opt,name=created_at"`
-	UpdatedAt *time.Time `json:"updated_at,omitempty" protobuf:"google.protobuf.Timestamp,7,opt,name=updated_at"`
+	// The status of the App
+	Status AppStatus `json:"status" protobuf:"bytes,6,opt,name=status"`
+
+	// CreatedAt records the timestamp of when the App was initially created
+	CreatedAt time.Time `json:"created_at" protobuf:"google.protobuf.Timestamp,7,opt,name=created_at"`
+
+	// UpdatedAt records the timestamp of the last update to the App
+	UpdatedAt *time.Time `json:"updated_at,omitempty" protobuf:"google.protobuf.Timestamp,8,opt,name=updated_at"`
+
 	DeletedAt *time.Time `json:"-" protobuf:"-"`
 }

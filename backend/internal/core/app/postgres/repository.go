@@ -204,3 +204,10 @@ func (r *repository) DeleteApp(ctx context.Context, app *types.App) error {
 
 	return nil
 }
+
+func (r *repository) GetAppStatuses(
+	ctx context.Context,
+	appIDs ...string,
+) (map[string]types.AppStatus, error) {
+	return nil, nil
+}
