@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
  * SPDX-License-Identifier: Apache-2.0
@@ -104,7 +105,8 @@ export const BadgeModalForm = ({
       id: app?.id || '',
       data: {...data}
     });
-  }, [app?.id, app?.type, createBadge, form]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [app?.id, app?.type, createBadge]);
 
   useEffect(() => {
     form.reset({
@@ -114,7 +116,8 @@ export const BadgeModalForm = ({
       wellKnowServer: undefined,
       oasfSpecsContent: undefined
     });
-  }, [app.type, form]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [app.type]);
 
   return (
     <Modal
@@ -147,15 +150,23 @@ export const BadgeModalForm = ({
                     <FormControl>
                       <FileUpload
                         disabled={isLoading}
-                        defaultFile={field.value}
                         ref={field.ref}
                         name={field.name}
                         onChange={(e) => {
                           const file = e.target.files?.[0];
-                          field.onChange(file ? file : undefined);
+                          field.onChange(file);
                         }}
                         onConvert={(content) => {
-                          form.setValue('oasfSpecsContent', content ? new TextDecoder().decode(content) : undefined);
+                          try {
+                            const decodedContent = content ? new TextDecoder().decode(content) : undefined;
+                            form.setValue('oasfSpecsContent', decodedContent);
+                          } catch (error) {
+                            toast({
+                              title: 'Invalid OASF specs',
+                              description: 'The uploaded file does not contain valid OASF specs.',
+                              type: 'error'
+                            });
+                          }
                         }}
                       />
                     </FormControl>
