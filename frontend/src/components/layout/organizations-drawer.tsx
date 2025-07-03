@@ -123,6 +123,9 @@ export const OrganizationsDrawer: React.FC<{
             switchTenant?.(tenant.id);
           }
         }}
+        buttonConfirmProps={{
+          color: 'default'
+        }}
       />
     </>
   );

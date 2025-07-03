@@ -5,9 +5,9 @@
  */
 
 import {Card, CardContent} from '@/components/ui/card';
-import {CheckIcon, ExternalLinkIcon} from 'lucide-react';
+import {CheckIcon} from 'lucide-react';
 import {useStepper} from '../stepper';
-import {Badge, Link, Toast, Typography} from '@outshift/spark-design';
+import {Badge, Typography} from '@outshift/spark-design';
 import {BadgeClaims} from '@/types/api/badge';
 import KeyValue, {KeyValuePair} from '@/components/ui/key-value';
 import {useMemo} from 'react';
@@ -65,12 +65,6 @@ export const VerificationResults = () => {
           <CheckIcon className="w-[20px] h-[20px] text-[#00B285]" />
           <Typography variant="body2Semibold">Verification successful</Typography>
         </div>
-        {/* <Link href="" openInNewTab>
-          <div className="flex items-center gap-1">
-            View documentation
-            <ExternalLinkIcon className="w-4 h-4 ml-1" />
-          </div>
-        </Link> */}
       </div>
       <CardContent className="p-0 flex justify-between items-center">
         <KeyValue pairs={keyValuePairs} useCard={false} />

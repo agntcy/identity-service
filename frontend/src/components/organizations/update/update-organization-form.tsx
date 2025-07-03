@@ -7,17 +7,18 @@ import {Card, CardContent} from '@/components/ui/card';
 import {Form, FormControl, FormField, FormItem, FormLabel} from '@/components/ui/form';
 import {Input} from '@/components/ui/input';
 import {validateForm} from '@/lib/utils';
-// import {useCreateTenant, useUpdateTenant} from '@/mutations';
+import {useUpdateTenant} from '@/mutations';
 import {PATHS} from '@/router/paths';
 import {OrganizationFormValues, OrganizationSchema} from '@/schemas/organization-schema';
+import {TenantReponse} from '@/types/api/iam';
 import {zodResolver} from '@hookform/resolvers/zod';
-import {Button, Typography} from '@outshift/spark-design';
-import {useCallback, useState} from 'react';
+import {Button, toast, Typography} from '@outshift/spark-design';
+import {useCallback, useEffect, useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {Link, useNavigate} from 'react-router-dom';
 import z from 'zod';
 
-export const CreateOrganizationForm = () => {
+export const UpdateOrganizationForm = ({tenant}: {tenant?: TenantReponse}) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<OrganizationFormValues>({
@@ -27,48 +28,27 @@ export const CreateOrganizationForm = () => {
 
   const navigate = useNavigate();
 
-  // const updateOrganizatioMutations = useUpdateTenant({
-  //   callbacks: {
-  //     onSuccess: (resp) => {
-  //       setIsLoading(false);
-  //       toast({
-  //         title: 'Success',
-  //         description: `Organization "${resp.data.name}" created successfully.`,
-  //         type: 'success'
-  //       });
-  //       void navigate(PATHS.settings.organizations.base);
-  //     },
-  //     onError: () => {
-  //       setIsLoading(false);
-  //       toast({
-  //         title: 'Error',
-  //         description: 'An error occurred while creating the organization. Please try again.',
-  //         type: 'error'
-  //       });
-  //     }
-  //   }
-  // });
-
-  // const createOrganizationMutation = useCreateTenant({
-  //   callbacks: {
-  //     onSuccess: (resp) => {
-  //       const {data} = resp;
-  //       const values = form.getValues();
-  //       updateOrganizatioMutations.mutate({
-  //         id: data.id,
-  //         name: values.name
-  //       });
-  //     },
-  //     onError: () => {
-  //       setIsLoading(false);
-  //       toast({
-  //         title: 'Error',
-  //         description: 'An error occurred while creating the organization. Please try again.',
-  //         type: 'error'
-  //       });
-  //     }
-  //   }
-  // });
+  const updateOrganizatioMutations = useUpdateTenant({
+    callbacks: {
+      onSuccess: (resp) => {
+        setIsLoading(false);
+        toast({
+          title: 'Success',
+          description: `Organization "${resp.data.name}" updated successfully.`,
+          type: 'success'
+        });
+        void navigate(PATHS.settings.organizationsAndUsers.base, {replace: true});
+      },
+      onError: () => {
+        setIsLoading(false);
+        toast({
+          title: 'Error',
+          description: 'An error occurred while updating the organization. Please try again.',
+          type: 'error'
+        });
+      }
+    }
+  });
 
   const onSubmit = useCallback(() => {
     const values = form.getValues();
@@ -80,9 +60,21 @@ export const CreateOrganizationForm = () => {
       });
       return;
     }
-    // setIsLoading(true);
-    // createOrganizationMutation.mutate();
-  }, [form]);
+    setIsLoading(true);
+    updateOrganizatioMutations.mutate({
+      id: tenant?.id || '',
+      name: values.name
+    });
+  }, [form, tenant?.id, updateOrganizatioMutations]);
+
+  useEffect(() => {
+    if (tenant) {
+      form.reset({
+        name: tenant.name || ''
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tenant]);
 
   return (
     <>
@@ -113,12 +105,12 @@ export const CreateOrganizationForm = () => {
           </Card>
           <div className="flex justify-end gap-4">
             <Link to={PATHS.settings.organizationsAndUsers.base}>
-              <Button variant="tertariary" color="negative" disabled={isLoading}>
+              <Button variant="tertariary" disabled={isLoading}>
                 Cancel
               </Button>
             </Link>
             <Button type="submit" disabled={isLoading || !form.formState.isValid} loading={isLoading} loadingPosition="start">
-              Create
+              Update
             </Button>
           </div>
         </form>

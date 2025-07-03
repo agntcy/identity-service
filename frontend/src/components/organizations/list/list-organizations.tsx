@@ -11,7 +11,7 @@ import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
 import {OrganizationsColumns} from './organizations-columns';
 import {Card} from '@/components/ui/card';
 import {Typography} from '@mui/material';
-import {Trash2Icon, UserRoundPlusIcon} from 'lucide-react';
+import {RefreshCcwIcon, Trash2Icon, UserRoundPlusIcon} from 'lucide-react';
 import {cn} from '@/lib/utils';
 import {useAuth} from '@/hooks';
 import {generatePath, useNavigate} from 'react-router-dom';
@@ -51,6 +51,7 @@ export const ListOrganizations = () => {
           description: 'Organization deleted successfully. You have been logged out.',
           type: 'success'
         });
+        void navigate(PATHS.callBackLoading, {replace: true});
       },
       onError: () => {
         toast({
@@ -117,7 +118,10 @@ export const ListOrganizations = () => {
             onPaginationChange={setPagination}
             rowCount={data?.tenants.length ?? 0}
             rowsPerPageOptions={[1, 10, 25, 50, 100]}
-            title={{label: 'Organizations', count: data?.tenants?.length || 0}}
+            title={{
+              label: (data?.tenants?.length ?? 0) > 1 ? 'Organizations' : 'Organization',
+              count: data?.tenants?.length ?? 0
+            }}
             state={{pagination, sorting}}
             onSortingChange={setSorting}
             renderRowActionMenuItems={({row}) => {
@@ -135,11 +139,24 @@ export const ListOrganizations = () => {
                 >
                   <UserRoundPlusIcon className="w-4 h-4" color="#062242" />
                   <Typography variant="body2" color="#1A1F27">
-                    Add
+                    Invite
                   </Typography>
                 </MenuItem>,
                 <MenuItem
-                  key="delete"
+                  key="update-org"
+                  onClick={() => {
+                    const path = generatePath(PATHS.settings.organizationsAndUsers.update, {id: row.original.id});
+                    void navigate(path, {replace: true});
+                  }}
+                  sx={{display: 'flex', alignItems: 'center', gap: '8px'}}
+                >
+                  <RefreshCcwIcon className="w-4 h-4" color="#062242" />
+                  <Typography variant="body2" color="#1A1F27">
+                    Update
+                  </Typography>
+                </MenuItem>,
+                <MenuItem
+                  key="delete-org"
                   onClick={() => {
                     setTenantId(row.original.id);
                     setOpenActionsModal(true);

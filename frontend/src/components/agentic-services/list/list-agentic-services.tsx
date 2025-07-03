@@ -137,7 +137,7 @@ export const ListAgenticServices = () => {
             })}
             renderTopToolbar={() => (
               <FilterSections
-                title={`${data?.pagination?.total} Agentic Services`}
+                title={`${data?.pagination?.total ?? 0} Agentic ${Number(data?.pagination?.total) > 1 ? 'Services' : 'Service'}`}
                 searchFieldProps={{
                   placeholder: 'Search...',
                   value: query,

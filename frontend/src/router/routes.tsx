@@ -24,7 +24,7 @@ const SettingsCreateIdentityProvider = React.lazy(() => import('@/pages/settings
 const Dashboard = React.lazy(() => import('@/pages/dashboard/dashboard'));
 const SettingsApiKey = React.lazy(() => import('@/pages/settings/api-key/settings-api-key'));
 const SettingsOrganizations = React.lazy(() => import('@/pages/settings/organizations/settings-organizations'));
-const CreateOrganization = React.lazy(() => import('@/pages/settings/organizations/create-organization'));
+const UpdateOrganization = React.lazy(() => import('@/pages/settings/organizations/update-organization'));
 const OrganizationInfo = React.lazy(() => import('@/pages/settings/organizations/info-organization'));
 const AgenticServices = React.lazy(() => import('@/pages/agentic-services/agentic-services'));
 const CreateAgenticService = React.lazy(() => import('@/pages/agentic-services/create-agentic-service'));
@@ -193,8 +193,8 @@ export const useRoutes = () => {
                 element: <SettingsOrganizations />
               },
               {
-                path: PATHS.settings.organizationsAndUsers.create,
-                element: <CreateOrganization />
+                path: PATHS.settings.organizationsAndUsers.update,
+                element: <UpdateOrganization />
               },
               {
                 path: PATHS.settings.organizationsAndUsers.info,

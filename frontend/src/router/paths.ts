@@ -29,7 +29,7 @@ export const PATHS = {
     apiKey: '/settings/api-key',
     organizationsAndUsers: {
       base: '/settings/organizations-users',
-      create: '/settings/organizations-users/create',
+      update: '/settings/organizations-users/:id/update',
       info: '/settings/organizations-users/:id'
     }
   }

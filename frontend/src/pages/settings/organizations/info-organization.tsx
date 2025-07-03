@@ -21,7 +21,7 @@ const InfoOrganization: React.FC = () => {
 
   return (
     <BasePage
-      title="Organization"
+      title="Users"
       breadcrumbs={[
         {
           text: 'Settings',

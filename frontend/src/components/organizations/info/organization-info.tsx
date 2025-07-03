@@ -62,7 +62,10 @@ export const OrganizationInfo = ({
             onPaginationChange={setPagination}
             rowCount={dataUsers?.users.length ?? 0}
             rowsPerPageOptions={[1, 10, 25, 50, 100]}
-            title={{label: 'Organizations', count: dataUsers?.users?.length || 0}}
+            title={{
+              label: (dataUsers?.users?.length ?? 0) > 1 ? 'Users' : 'User',
+              count: dataUsers?.users?.length ?? 0
+            }}
             state={{pagination, sorting}}
             onSortingChange={setSorting}
             muiBottomToolbarProps={{
