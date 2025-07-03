@@ -20,6 +20,8 @@ type IssuerSettings struct {
 	DuoIdpSettings    *DuoIdpSettings
 	OktaIdpSettingsID *uuid.UUID `gorm:"foreignKey:ID"`
 	OktaIdpSettings   *OktaIdpSettings
+	OryIdpSettingsID  *uuid.UUID `gorm:"foreignKey:ID"`
+	OryIdpSettings    *OryIdpSettings
 }
 
 type DuoIdpSettings struct {
@@ -34,6 +36,12 @@ type OktaIdpSettings struct {
 	OrgUrl     string                   `gorm:"type:varchar(256);"`
 	ClientID   string                   `gorm:"type:varchar(256);"`
 	PrivateKey *secrets.EncryptedString `gorm:"type:varchar(4096);"`
+}
+
+type OryIdpSettings struct {
+	ID          uuid.UUID `gorm:"primaryKey;default:gen_random_uuid()"`
+	ProjectSlug string    `gorm:"not null;type:varchar(256);"`
+	ApiKey      string    `gorm:"not null;type:varchar(256);"`
 }
 
 type Device struct {
@@ -67,6 +75,17 @@ func (i *DuoIdpSettings) ToCoreType() *types.DuoIdpSettings {
 	}
 }
 
+func (i *OryIdpSettings) ToCoreType() *types.OryIdpSettings {
+	if i == nil {
+		return nil
+	}
+
+	return &types.OryIdpSettings{
+		ProjectSlug: i.ProjectSlug,
+		ApiKey:      i.ApiKey,
+	}
+}
+
 func (i *IssuerSettings) ToCoreType() *types.IssuerSettings {
 	if i == nil {
 		return nil
@@ -78,6 +97,7 @@ func (i *IssuerSettings) ToCoreType() *types.IssuerSettings {
 		IdpType:         i.IdpType,
 		DuoIdpSettings:  i.DuoIdpSettings.ToCoreType(),
 		OktaIdpSettings: i.OktaIdpSettings.ToCoreType(),
+		OryIdpSettings:  i.OryIdpSettings.ToCoreType(),
 	}
 }
 
@@ -105,6 +125,17 @@ func newDuoIdpSettingsModel(src *types.DuoIdpSettings) *DuoIdpSettings {
 	}
 }
 
+func newOryIdpSettingsModel(src *types.OryIdpSettings) *OryIdpSettings {
+	if src == nil {
+		return nil
+	}
+
+	return &OryIdpSettings{
+		ProjectSlug: src.ProjectSlug,
+		ApiKey:      src.ApiKey,
+	}
+}
+
 func newIssuerSettingsModel(src *types.IssuerSettings) *IssuerSettings {
 	return &IssuerSettings{
 		IssuerID:        ptrutil.Ptr(src.IssuerID),
@@ -112,5 +143,6 @@ func newIssuerSettingsModel(src *types.IssuerSettings) *IssuerSettings {
 		IdpType:         src.IdpType,
 		DuoIdpSettings:  newDuoIdpSettingsModel(src.DuoIdpSettings),
 		OktaIdpSettings: newOktaIdpSettingsModel(src.OktaIdpSettings),
+		OryIdpSettings:  newOryIdpSettingsModel(src.OryIdpSettings),
 	}
 }

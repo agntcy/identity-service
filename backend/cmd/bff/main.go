@@ -110,6 +110,7 @@ func main() {
 		&settingspg.IssuerSettings{},  // Issuer settings model
 		&settingspg.DuoIdpSettings{},  // Duo IDP settings model
 		&settingspg.OktaIdpSettings{}, // Okta IDP settings model
+		&settingspg.OryIdpSettings{},  // Ory IDP settings model
 		&badgepg.Badge{},              // Badge model
 		&authpg.Session{},             // Session model
 		&policypg.Policy{},            // Policy model
