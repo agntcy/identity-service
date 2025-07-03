@@ -86,16 +86,14 @@ export const ContentApiKey: React.FC = () => {
                 }}
               />
             </div>
-            <div className="flex justify-end">
-              <Tooltip title="Refresh API Key">
-                <Button onClick={() => handleChangeActionsModal(true)} startIcon={<RefreshCcwIcon className="w-4 h-4" />}>
-                  Refresh
-                </Button>
-              </Tooltip>
-            </div>
           </div>
         </CardContent>
       </Card>
+      <div className="flex justify-end mt-4">
+        <Button onClick={() => handleChangeActionsModal(true)} startIcon={<RefreshCcwIcon className="w-4 h-4" />}>
+          Refresh
+        </Button>
+      </div>
       <ConfirmModal
         open={openActionsModal}
         title="Confirm Action"
