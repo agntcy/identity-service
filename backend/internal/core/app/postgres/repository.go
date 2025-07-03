@@ -37,16 +37,13 @@ func (r *repository) CreateApp(
 	ctx context.Context,
 	app *types.App,
 ) (*types.App, error) {
-	model := newAppModel(app)
-
 	// Get the tenant ID from the context
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
 		return nil, identitycontext.ErrTenantNotFound
 	}
 
-	// Set the tenant ID in the model
-	model.TenantID = tenantID
+	model := newAppModel(app, tenantID)
 
 	// Create the app
 	inserted := r.dbContext.Client().Create(model)
@@ -57,6 +54,24 @@ func (r *repository) CreateApp(
 	}
 
 	return app, nil
+}
+
+func (r *repository) UpdateApp(ctx context.Context, app *types.App) error {
+	tenantID, ok := identitycontext.GetTenantID(ctx)
+	if !ok {
+		return identitycontext.ErrTenantNotFound
+	}
+
+	model := newAppModel(app, tenantID)
+
+	err := r.dbContext.Client().
+		Where("tenant_id = ?", tenantID).
+		Save(model).Error
+	if err != nil {
+		return errutil.Err(err, "there was an error saving the app")
+	}
+
+	return nil
 }
 
 func (r *repository) GetApp(
@@ -182,7 +197,7 @@ func (r *repository) DeleteApp(ctx context.Context, app *types.App) error {
 	// https://gorm.io/docs/delete.html#Soft-Delete
 	err := r.dbContext.Client().
 		Where("tenant_id = ?", tenantID).
-		Delete(newAppModel(app)).Error
+		Delete(newAppModel(app, tenantID)).Error
 	if err != nil {
 		return errutil.Err(err, fmt.Sprintf("cannot delete app %s", app.ID))
 	}

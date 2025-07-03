@@ -6,6 +6,7 @@ package bff
 import (
 	"context"
 	"fmt"
+	"time"
 
 	appcore "github.com/agntcy/identity-platform/internal/core/app"
 	apptypes "github.com/agntcy/identity-platform/internal/core/app/types"
@@ -16,12 +17,14 @@ import (
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 	outshiftiam "github.com/agntcy/identity-platform/internal/pkg/iam"
 	"github.com/agntcy/identity-platform/internal/pkg/pagination"
+	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
 	"github.com/agntcy/identity-platform/pkg/log"
 	"github.com/google/uuid"
 )
 
 type AppService interface {
 	CreateApp(ctx context.Context, app *apptypes.App) (*apptypes.App, error)
+	UpdateApp(ctx context.Context, app *apptypes.App) (*apptypes.App, error)
 	GetApp(ctx context.Context, id string) (*apptypes.App, error)
 	ListApps(
 		ctx context.Context,
@@ -132,6 +135,38 @@ func (s *appService) CreateApp(
 	app.ApiKey = apiKey.Secret
 
 	return createdApp, nil
+}
+
+func (s *appService) UpdateApp(
+	ctx context.Context,
+	app *apptypes.App,
+) (*apptypes.App, error) {
+	if app == nil {
+		return nil, errutil.Err(nil, "app cannot be nil")
+	}
+
+	storedApp, err := s.appRepository.GetApp(ctx, app.ID)
+	if err != nil {
+		return nil, errutil.Err(err, err.Error())
+	}
+
+	storedApp.Name = app.Name
+	storedApp.Description = app.Description
+	storedApp.UpdatedAt = ptrutil.Ptr(time.Now().UTC())
+
+	err = s.appRepository.UpdateApp(ctx, storedApp)
+	if err != nil {
+		return nil, err
+	}
+
+	apiKey, err := s.iamClient.GetAppApiKey(ctx, app.ID)
+	if err != nil {
+		log.Warn(err)
+	}
+
+	storedApp.ApiKey = apiKey.Secret
+
+	return storedApp, nil
 }
 
 func (s *appService) GetApp(

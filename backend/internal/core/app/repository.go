@@ -15,6 +15,7 @@ type Repository interface {
 		ctx context.Context,
 		app *types.App,
 	) (*types.App, error)
+	UpdateApp(ctx context.Context, app *types.App) error
 	GetApp(
 		ctx context.Context,
 		id string,

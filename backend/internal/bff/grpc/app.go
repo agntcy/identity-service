@@ -12,7 +12,6 @@ import (
 	"github.com/agntcy/identity-platform/internal/bff/grpc/converters"
 	apptypes "github.com/agntcy/identity-platform/internal/core/app/types"
 	"github.com/agntcy/identity-platform/internal/pkg/convertutil"
-	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 	"github.com/agntcy/identity-platform/internal/pkg/grpcutil"
 	"github.com/agntcy/identity-platform/internal/pkg/pagination"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -109,8 +108,19 @@ func (s *appService) UpdateApp(
 	ctx context.Context,
 	req *identity_platform_sdk_go.UpdateAppRequest,
 ) (*identity_platform_sdk_go.App, error) {
-	// This method is not implemented yet.
-	return nil, errutil.Err(nil, "UpdateApp method is not implemented")
+	app := converters.ToApp(req.GetApp())
+	if app == nil {
+		return nil, grpcutil.BadRequestError(errors.New("app cannot be nil"))
+	}
+
+	app.ID = req.AppId
+
+	updatedApp, err := s.appSrv.UpdateApp(ctx, app)
+	if err != nil {
+		return nil, grpcutil.BadRequestError(err)
+	}
+
+	return converters.FromApp(updatedApp), nil
 }
 
 func (s *appService) DeleteApp(

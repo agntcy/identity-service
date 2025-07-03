@@ -40,9 +40,10 @@ func (i *App) ToCoreType() *types.App {
 	}
 }
 
-func newAppModel(src *types.App) *App {
+func newAppModel(src *types.App, tenantID string) *App {
 	return &App{
 		ID:                 uuid.MustParse(src.ID),
+		TenantID:           tenantID,
 		Name:               src.Name,
 		Description:        src.Description,
 		Type:               src.Type,
