@@ -132,7 +132,7 @@ export const VerifyIdentityForm = ({isLoading = false}: {isLoading?: boolean}) =
                   <FormControl>
                     <Textarea
                       className="resize-none h-[124px]"
-                      placeholder="Type content of the badge..."
+                      placeholder="The JOSE enveloped badge to verify"
                       rows={3}
                       {...field}
                       disabled={isLoading || !!badgeContent}
