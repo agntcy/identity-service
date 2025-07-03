@@ -79,6 +79,7 @@ export const InfoAgenticService = ({app, onChangeReissueBadge}: {app?: App; onCh
                 onChangeReissueBadge?.(false);
               }
             }}
+            showError
           />
         </div>
       </div>

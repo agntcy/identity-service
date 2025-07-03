@@ -6,8 +6,8 @@
 import {useGetAgenticServiceBadge} from '@/queries';
 import {Card} from '../ui/card';
 import {App} from '@/types/api/app';
-import {useCallback, useEffect, useState} from 'react';
-import {Button, CodeBlock, Modal, ModalContent, ModalTitle, toast, Typography} from '@outshift/spark-design';
+import {useCallback, useEffect, useMemo, useState} from 'react';
+import {Button, CodeBlock, Modal, ModalContent, ModalTitle, toast, Typography, ViewSwitcher} from '@outshift/spark-design';
 import {ConditionalQueryRenderer} from '../ui/conditional-query-renderer';
 import {DownloadIcon, ExpandIcon, PlusIcon} from 'lucide-react';
 import {BadgeModalForm} from './badge-modal-form';
@@ -16,14 +16,53 @@ import {Badge} from '@/types/api/badge';
 interface BadgeCardProps {
   app?: App;
   navigateTo?: boolean;
+  showError?: boolean;
   onBadgeChanged?: (badge?: Badge) => void;
 }
 
-export const BadgeCard = ({app, navigateTo = true, onBadgeChanged}: BadgeCardProps) => {
+export const BadgeCard = ({app, navigateTo = true, showError = false, onBadgeChanged}: BadgeCardProps) => {
   const [showBadgeForm, setShowBadgeForm] = useState<boolean>(false);
   const [showBadge, setShowBadge] = useState<boolean>(false);
+  const [view, setView] = useState('credential');
+  const options = [
+    {
+      value: 'credential',
+      label: 'Credential'
+    },
+    {
+      value: 'jose',
+      label: 'JOSE'
+    }
+  ];
 
-  const {data, isLoading} = useGetAgenticServiceBadge(app?.id);
+  const {data, isLoading, isError} = useGetAgenticServiceBadge(app?.id);
+
+  const contentToShow = useMemo(() => {
+    if (view === 'credential') {
+      return {
+        context: data?.verifiableCredential?.context,
+        id: data?.verifiableCredential?.id,
+        type: data?.verifiableCredential?.type,
+        issuer: data?.verifiableCredential?.issuer,
+        issuanceDate: data?.verifiableCredential?.issuanceDate,
+        expirationDate: data?.verifiableCredential?.expirationDate,
+        credentialSubject: {
+          ...data?.verifiableCredential?.credentialSubject,
+          badge: JSON.parse(data?.verifiableCredential?.credentialSubject?.badge || '{}')
+        }
+      };
+    } else if (view === 'jose') {
+      return {
+        context: data?.verifiableCredential?.context,
+        id: data?.verifiableCredential?.id,
+        type: data?.verifiableCredential?.type,
+        issuer: data?.verifiableCredential?.issuer,
+        issuanceDate: data?.verifiableCredential?.issuanceDate,
+        proof: data?.verifiableCredential?.proof
+      };
+    }
+    return data?.verifiableCredential || {};
+  }, [data?.verifiableCredential, view]);
 
   const handleDownloadBadge = useCallback(() => {
     if (!data?.verifiableCredential) {
@@ -51,6 +90,16 @@ export const BadgeCard = ({app, navigateTo = true, onBadgeChanged}: BadgeCardPro
   useEffect(() => {
     onBadgeChanged?.(data);
   }, [data, onBadgeChanged]);
+
+  useEffect(() => {
+    if (isError && showError && !isLoading) {
+      toast({
+        title: 'Fetching Badge',
+        description: 'There was an error fetching the badge for this agentic service.',
+        type: 'info'
+      });
+    }
+  }, [isError, isLoading, showError]);
 
   return (
     <>
@@ -98,8 +147,18 @@ export const BadgeCard = ({app, navigateTo = true, onBadgeChanged}: BadgeCardPro
               </Button>
             </div>
           </div>
-          <div>
-            <CodeBlock containerProps={{maxWidth: '50vw'}} showLineNumbers wrapLongLines text={JSON.stringify(data?.verifiableCredential, null, 2)} />
+          <div className="space-y-4">
+            <div className="flex justify-end">
+              <ViewSwitcher
+                options={options}
+                value={view}
+                onChange={(newView) => {
+                  setView(newView);
+                }}
+                size="sm"
+              />
+            </div>
+            <CodeBlock containerProps={{maxWidth: '50vw'}} showLineNumbers wrapLongLines text={JSON.stringify(contentToShow, null, 2)} />
           </div>
         </Card>
       </ConditionalQueryRenderer>
