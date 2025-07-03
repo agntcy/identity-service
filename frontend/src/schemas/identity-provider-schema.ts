@@ -14,7 +14,9 @@ export const IdentityProvidersSchema = z
     privateKey: z.string().optional(),
     hostname: z.string().optional(),
     integrationKey: z.string().optional(),
-    secretKey: z.string().optional()
+    secretKey: z.string().optional(),
+    projectSlug: z.string().optional(),
+    apiKey: z.string().optional()
   })
   .superRefine((data, ctx) => {
     if (data.provider === IdpType.IDP_TYPE_DUO) {
@@ -53,6 +55,19 @@ export const IdentityProvidersSchema = z
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: 'Private Key is required for Okta'
+        });
+      }
+    } else if (data.provider === IdpType.IDP_TYPE_ORY) {
+      if (!data.apiKey) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'API Key is required for Ory'
+        });
+      }
+      if (!data.projectSlug) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Project Slug is required for Ory'
         });
       }
     }
