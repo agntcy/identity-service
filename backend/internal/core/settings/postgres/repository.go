@@ -51,6 +51,8 @@ func (r *repository) UpdateIssuerSettings(
 		existingSettings.DuoIdpSettings = model.DuoIdpSettings
 	case types.IDP_TYPE_OKTA:
 		existingSettings.OktaIdpSettings = model.OktaIdpSettings
+	case types.IDP_TYPE_ORY:
+		existingSettings.OryIdpSettings = model.OryIdpSettings
 	}
 
 	updated := r.dbContext.Client().
