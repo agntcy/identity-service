@@ -18,7 +18,6 @@ const queryClient = new QueryClient({
 export const QueryProvider = ({children}: React.PropsWithChildren) => {
   return (
     <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
       {children}
     </QueryClientProvider>
   );

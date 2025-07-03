@@ -127,7 +127,7 @@ const FormStepperComponent = () => {
                               {step.title}
                             </Typography>
                             {step.id === 'verifyIdentityForm' && (
-                              <Tooltip title="JOSE envelope" arrow placement="top">
+                              <Tooltip title="The JOSE enveloped badge to verify" arrow placement="top">
                                 <IconButton
                                   sx={(theme) => ({
                                     color: theme.palette.vars.baseTextDefault,
