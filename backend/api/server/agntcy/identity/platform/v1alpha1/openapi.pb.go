@@ -28,12 +28,10 @@ var File_agntcy_identity_platform_v1alpha1_openapi_proto protoreflect.FileDescri
 
 const file_agntcy_identity_platform_v1alpha1_openapi_proto_rawDesc = "" +
 	"\n" +
-	"/agntcy/identity/platform/v1alpha1/openapi.proto\x12!agntcy.identity.platform.v1alpha1\x1a\x1bopenapiv3/annotations.protoB\xbc\x05\xbaG\xcd\x04\x12\xe2\x01\n" +
-	"\x15Identity Platform API\x12wIdentity Platform API provides a set of endpoints for managing identity and access control within the AGNTCY ecosystem.\"F\n" +
+	"/agntcy/identity/platform/v1alpha1/openapi.proto\x12!agntcy.identity.platform.v1alpha1\x1a\x1bopenapiv3/annotations.protoB\xbe\x04\xbaG\xcf\x03\x12\xdc\x01\n" +
+	"\x12Agent Identity API\x12tAgent Identity API provides a set of endpoints for managing identity and access control within the AGNTCY ecosystem.\"F\n" +
 	"\vAGNTCY Team\x12\"https://github.com/agntcy/identity\x1a\x13identity@agntcy.org2\bv1alpha1\x1a*\n" +
-	"\x15http://localhost:4000\x12\x11Local environment\x1a>\n" +
-	"#https://api.identity.dev.agntcy.org\x12\x17Development environment\x1a6\n" +
-	"\x1fhttps://api.identity.agntcy.org\x12\x13Preview environment*\xa2\x012\x02\n" +
+	"\x15http://localhost:4000\x12\x11Local environment*\xa2\x012\x02\n" +
 	"\x00:\x9b\x01\n" +
 	"\\\n" +
 	"\vAccessToken\x12M\n" +
