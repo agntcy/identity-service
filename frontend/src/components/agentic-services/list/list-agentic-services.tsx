@@ -228,6 +228,9 @@ export const ListAgenticServices = () => {
           setTempApp(undefined);
         }}
         onConfirm={handleClickOnDelete}
+        buttonConfirmProps={{
+          color: 'negative'
+        }}
       />
       {tempApp && (
         <BadgeModalForm

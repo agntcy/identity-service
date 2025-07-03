@@ -28,7 +28,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({open, title, descript
         <Button onClick={onCancel} variant="tertariary" sx={{fontWeight: '600 !important'}}>
           Cancel
         </Button>
-        <Button color="negative" {...buttonConfirmProps} onClick={onConfirm} sx={{fontWeight: '600 !important'}}>
+        <Button {...buttonConfirmProps} onClick={onConfirm} sx={{fontWeight: '600 !important'}}>
           {confirmButtonText || 'Continue'}
         </Button>
       </ModalActions>

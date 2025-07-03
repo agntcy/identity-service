@@ -69,10 +69,10 @@ export const OrganizationsDrawer: React.FC<{
             <LoaderRelative />
           ) : (
             <div className="flex flex-col gap-4 px-4">
-              <Link to={PATHS.settings.organizationsAndUsers.create}>
+              <Link to={PATHS.settings.organizationsAndUsers.base}>
                 <Button
                   variant="outlined"
-                  endIcon={<PlusIcon className="w-4 h-4" />}
+                  startIcon={<PlusIcon className="w-4 h-4" />}
                   fullWidth
                   sx={{
                     fontWeight: '600 !important',
@@ -122,9 +122,6 @@ export const OrganizationsDrawer: React.FC<{
           if (tenant?.id) {
             switchTenant?.(tenant.id);
           }
-        }}
-        buttonConfirmProps={{
-          color: 'default'
         }}
       />
     </>

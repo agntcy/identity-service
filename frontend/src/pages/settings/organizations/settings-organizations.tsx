@@ -78,7 +78,7 @@ const SettingsOrganizations: React.FC = () => {
             setOpenCreateModal(true);
           }}
           variant="outlined"
-          endIcon={<PlusIcon className="w-4 h-4" />}
+          startIcon={<PlusIcon className="w-4 h-4" />}
           fullWidth
           sx={{fontWeight: '600 !important'}}
         >
@@ -95,9 +95,6 @@ const SettingsOrganizations: React.FC = () => {
         }}
         title="Creating Organization"
         description="Are you sure you want to create a new organization? This action will create a new organization with default settings."
-        buttonConfirmProps={{
-          color: 'default'
-        }}
       />
     </BasePage>
   );

@@ -192,6 +192,9 @@ export const ListOrganizations = () => {
           setOpenActionsModal(false);
         }}
         onConfirm={handleClickOnDelete}
+        buttonConfirmProps={{
+          color: 'negative'
+        }}
       />
       <InviteUserModal
         open={showInviteUserModal}

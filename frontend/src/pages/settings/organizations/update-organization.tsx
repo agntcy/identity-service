@@ -30,7 +30,7 @@ const UpdateOrganization: React.FC = () => {
           link: PATHS.settings.organizationsAndUsers.base
         },
         {
-          text: id && data?.name ? data?.name : 'Organization',
+          text: data?.id ? data.id : 'Organization',
           link: link
         },
         {
