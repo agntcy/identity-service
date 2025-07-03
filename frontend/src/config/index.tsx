@@ -16,6 +16,7 @@ declare global {
     iamOidcClientId?: string;
     iamOidcIssuer?: string;
     segmentId?: string;
+    docsUrl?: string;
     CookieConsent: typeof CookieConsentVanilla;
   }
 }
@@ -28,5 +29,6 @@ export default {
   IAM_API: isEnvSet(import.meta.env.VITE_IAM_API) ? import.meta.env.VITE_IAM_API : window.iamApi,
   IAM_OIDC_CLIENT_ID: isEnvSet(import.meta.env.VITE_IAM_OIDC_CLIENT_ID) ? import.meta.env.VITE_IAM_OIDC_CLIENT_ID : window.iamOidcClientId,
   IAM_OIDC_ISSUER: isEnvSet(import.meta.env.VITE_IAM_OIDC_ISSUER) ? import.meta.env.VITE_IAM_OIDC_ISSUER : window.iamOidcIssuer,
+  DOCS_URL: isEnvSet(import.meta.env.VITE_DOCS_URL) ? import.meta.env.VITE_DOCS_URL : window.docsUrl,
   SEGMENT_ID: isEnvSet(import.meta.env.VITE_SEGMENT_ID) ? import.meta.env.VITE_SEGMENT_ID : window.segmentId
 };
