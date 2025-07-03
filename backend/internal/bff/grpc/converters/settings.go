@@ -75,7 +75,7 @@ func FromOryIdpSettings(
 
 	return &identity_platform_sdk_go.OryIdpSettings{
 		ProjectSlug: ptrutil.Ptr(src.ProjectSlug),
-		ApiKey:      ptrutil.Ptr(src.ApiKey),
+		ApiKey:      ptrutil.Ptr(strutil.Mask(src.ApiKey)),
 	}
 }
 
