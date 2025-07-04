@@ -156,7 +156,7 @@ func (d *OryIdp) oryParseAPIResponse(err error, response *http.Response) error {
 	}
 
 	if err != nil ||
-		(response.StatusCode != http.StatusOK && response.StatusCode != http.StatusCreated) {
+		(response.StatusCode != http.StatusOK && response.StatusCode != http.StatusCreated && response.StatusCode != http.StatusNoContent) {
 		return errutil.Err(
 			nil,
 			fmt.Sprintf("ory API call failed: %s, status code: %d",

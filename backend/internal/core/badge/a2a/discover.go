@@ -8,9 +8,13 @@ import (
 	"errors"
 	"io"
 	"net/http"
+	"strings"
 
 	"github.com/agntcy/identity-platform/internal/pkg/httputil"
+	"github.com/agntcy/identity-platform/pkg/log"
 )
+
+const wellKnownUrlSuffix = "/.well-known/agent.json"
 
 // The discoverClient interface defines the core methods for discovering a deployed A2A agent
 type DiscoveryClient interface {
@@ -33,6 +37,13 @@ func (d *discoveryClient) Discover(
 	ctx context.Context,
 	wellKnownUrl string,
 ) (string, error) {
+	// validate the well-known URL
+	if !strings.HasSuffix(wellKnownUrl, wellKnownUrlSuffix) {
+		wellKnownUrl = strings.TrimSuffix(wellKnownUrl, "/") + wellKnownUrlSuffix
+	}
+
+	log.Debug("Using well-known URL for agent discovery: ", wellKnownUrl)
+
 	// get the agent card from the well-known URL
 	resp, err := httputil.Get(ctx, wellKnownUrl, nil)
 	if err != nil {

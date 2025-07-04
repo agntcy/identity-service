@@ -184,11 +184,17 @@ func (s *service) GenerateID(
 		},
 	})
 	if err != nil {
-		return "", err
+		return "", errutil.Err(
+			err,
+			"error generating ID with identity service",
+		)
 	}
 
 	if resp == nil || resp.Payload == nil || resp.Payload.ResolverMetadata == nil {
-		return "", errors.New("empty response payload")
+		return "", errutil.Err(
+			nil,
+			"error generating ID with identity service",
+		)
 	}
 
 	return resp.Payload.ResolverMetadata.ID, nil
