@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {Control, useFieldArray} from 'react-hook-form';
+import {Control, useFieldArray, useFormContext} from 'react-hook-form';
 import {FormControl, FormField, FormItem, FormLabel} from '@/components/ui/form';
 import {Input} from '@/components/ui/input';
 import {Button, Tooltip, Typography} from '@outshift/spark-design';
@@ -12,33 +12,36 @@ import {useCallback} from 'react';
 import {TaskForm} from './task-form';
 import {PlusIcon, XIcon} from 'lucide-react';
 import {Divider, IconButton} from '@mui/material';
+import {PolicyLogicyFormValues} from '@/schemas/policy-logic-schema';
 
-export const RuleForm = ({isLoading = false, control}: {isLoading?: boolean; control: Control<RuleFormValues>}) => {
-  const {fields, append, remove} = useFieldArray({
-    control: control,
-    name: 'tasks'
+export const RuleForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; fieldIndex: number}) => {
+  const policyForm = useFormContext<PolicyLogicyFormValues>();
+
+  const {
+    fields,
+    append: appendTask,
+    remove: removeTask
+  } = useFieldArray<PolicyLogicyFormValues>({
+    name: `rules.${fieldIndex}.tasks`
   });
 
-  const handleRemoveTask = useCallback(
-    (index: number) => {
-      remove(index);
-    },
-    [remove]
-  );
+  const handleRemoveTask = useCallback((index: number) => {
+    // remove(index);
+  }, []);
 
   const handleAddTask = useCallback(() => {
-    append({
-      task: '',
-      action: ''
-    });
-  }, [append]);
+    // append({
+    //   task: '',
+    //   action: ''
+    // });
+  }, []);
 
   return (
     <div className="space-y-4">
       <div className="w-full flex gap-8">
         <FormField
-          control={control}
-          name="name"
+          control={policyForm.control}
+          name={`rules.${fieldIndex}.name`}
           render={({field}) => (
             <FormItem className="w-full">
               <FormLabel className="form-label">Name</FormLabel>
@@ -49,8 +52,8 @@ export const RuleForm = ({isLoading = false, control}: {isLoading?: boolean; con
           )}
         />
         <FormField
-          control={control}
-          name="description"
+          control={policyForm.control}
+          name={`rules.${fieldIndex}.description`}
           render={({field}) => (
             <FormItem className="w-full">
               <FormLabel className="form-label">Description</FormLabel>
@@ -68,12 +71,12 @@ export const RuleForm = ({isLoading = false, control}: {isLoading?: boolean; con
           </Typography>
         </div>
         <div>
-          {fields.map((form, index) => {
+          {/* {fields.map((form, index) => {
             return (
               <div key={form.id} className="flex flex-col gap-6">
                 <div className="flex items-center gap-6">
                   <div className="w-full">
-                    <TaskForm isLoading={isLoading} control={control} index={index} />
+                    <TaskForm isLoading={isLoading} control={policyForm.control} index={index} />
                   </div>
                   <Tooltip title="Remove this rule">
                     <IconButton
@@ -94,7 +97,7 @@ export const RuleForm = ({isLoading = false, control}: {isLoading?: boolean; con
                 </div>
               </div>
             );
-          })}
+          })} */}
         </div>
         <div className="flex justify-end">
           <Button
@@ -103,7 +106,7 @@ export const RuleForm = ({isLoading = false, control}: {isLoading?: boolean; con
             startIcon={<PlusIcon className="w-4 h-4" />}
             loadingPosition="start"
             size="small"
-            disabled={isLoading || (!control._formState.isValid && fields.length !== 0)}
+            disabled={isLoading || (!policyForm.formState.isValid && fields.length !== 0)}
             onClick={handleAddTask}
           >
             Add Task

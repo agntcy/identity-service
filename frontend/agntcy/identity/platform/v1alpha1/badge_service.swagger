@@ -64,7 +64,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1alpha1BadgeClaims"
+              "$ref": "#/definitions/v1alpha1VerifiableCredential"
             }
           },
           "default": {

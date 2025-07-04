@@ -9,16 +9,16 @@ import {XIcon} from 'lucide-react';
 import {RuleFormValues} from '@/schemas/rule-schema';
 
 interface RuleAccordionProps {
-  rule: RuleFormValues & {id: string};
+  fieldIndex?: number;
   showCloseButton?: boolean;
   onClose?: (ruleId: string) => void;
 }
 
-export const RuleAccordion = ({rule, showCloseButton = false, onClose}: RuleAccordionProps) => {
+export const RuleAccordion = ({showCloseButton = false, fieldIndex, onClose}: RuleAccordionProps) => {
   return (
     <div className="flex justify-between items-start gap-4">
       <div className="w-full">
-        <Accordion title={rule.name || 'Rule'}>
+        <Accordion title={'Rule'}>
           <div className="mt-4 pl-8">
             {/* <Form {...form}>
               <RuleForm />
@@ -34,7 +34,7 @@ export const RuleAccordion = ({rule, showCloseButton = false, onClose}: RuleAcco
               width: '24px',
               height: '24px'
             })}
-            onClick={() => onClose?.(rule.id || '')}
+            // onClick={() => onClose?.(rule.id || '')}
           >
             <XIcon className="h-4 w-4" />
           </IconButton>

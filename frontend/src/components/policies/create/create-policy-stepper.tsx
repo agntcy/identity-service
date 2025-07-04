@@ -40,7 +40,22 @@ const FormStepperComponent = () => {
 
   const policyLogicForm = useForm<PolicyLogicyFormValues>({
     resolver: zodResolver(PolicyLogicySchema),
-    mode: 'all'
+    mode: 'all',
+    defaultValues: {
+      rules: [
+        {
+          name: '',
+          description: '',
+          needsApproval: 'no',
+          tasks: [
+            {
+              action: '',
+              task: ''
+            }
+          ]
+        }
+      ]
+    }
   });
 
   const mutationCreate = useCreatePolicy({
@@ -143,7 +158,7 @@ const FormStepperComponent = () => {
                         {step.id === 'policyForm' ? (
                           <PolicyForm isLoading={isLoading} />
                         ) : step.id === 'policyLogic' ? (
-                          <PolicyLogic isLoading={isLoading} />
+                          <PolicyLogic isLoading={isLoading} policyForm={policyLogicForm} />
                         ) : null}
                         <StepperControls className="pt-4">
                           <Button
