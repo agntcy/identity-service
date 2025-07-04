@@ -101,6 +101,7 @@ export const BadgeModalForm = ({
       };
     } else if (app?.type === AppType.APP_TYPE_MCP_SERVER) {
       data.mcp = {
+        name: app.name,
         url: values.mcpServer || ''
       };
     } else if (app?.type === AppType.APP_TYPE_AGENT_A2A) {
