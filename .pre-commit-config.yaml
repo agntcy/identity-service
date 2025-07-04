@@ -5,7 +5,7 @@
 default_stages: [pre-commit, pre-push]
 repos:
   - repo: https://github.com/google/addlicense
-    rev: 1a754c1f96a6acd0300d72933c44dd0c503bc2c7
+    rev: 3d89fa361d3965c9b4a0217057236c0713ed75e6
     hooks:
       - id: addlicense # Add license header to files
         args: ["-ignore", "**/node_modules/**", "-ignore", "**/vendor/**", "-c", "Copyright AGNTCY Contributors (https://github.com/agntcy)", "-l", "Apache-2.0", "-s=only", "."]

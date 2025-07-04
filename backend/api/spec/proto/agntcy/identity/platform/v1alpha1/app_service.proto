@@ -8,6 +8,7 @@ package agntcy.identity.platform.v1alpha1;
 import "agntcy/identity/platform/shared/v1alpha1/pagination.proto";
 import "agntcy/identity/platform/v1alpha1/app.proto";
 import "agntcy/identity/platform/v1alpha1/badge.proto";
+import "agntcy/identity/platform/v1alpha1/policy.proto";
 import "google/api/annotations.proto";
 import "google/api/client.proto";
 import "google/protobuf/empty.proto";
@@ -93,6 +94,15 @@ service AppService {
       summary: "Get the current badge issued for the App";
     };
   }
+
+  // Get the list of tasks related to an App
+  rpc GetTasks(GetTasksRequest) returns (GetTasksResponse) {
+    option (google.api.http) = {get: "/v1alpha1/apps/{app_id}/tasks"};
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "GetTasks";
+      summary: "Get the list of tasks related to an App";
+    };
+  }
 }
 
 message ListAppsResponse {
@@ -158,4 +168,14 @@ message DeleteAppRequest {
 message GetBadgeRequest {
   // App Id to get the badge for.
   string app_id = 1;
+}
+
+message GetTasksRequest {
+  // App Id to get the tasks for.
+  string app_id = 1;
+}
+
+message GetTasksResponse {
+  // The list of tasks related to the App
+  repeated Task tasks = 1;
 }

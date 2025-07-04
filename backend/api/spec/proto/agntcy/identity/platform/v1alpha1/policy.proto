@@ -44,8 +44,11 @@ message Rule {
   // The tasks that this Rule applies to.
   repeated Task tasks = 5;
 
+  // The action applied for the rule when calling the specified tasks
+  optional RuleAction action = 6;
+
   // Need User Approval for this Rule.
-  optional bool needs_approval = 6;
+  optional bool needs_approval = 7;
 }
 
 // Identity Platform Policy Task
@@ -64,4 +67,10 @@ message Task {
 
   // A tool name for the Task.
   optional string tool_name = 5;
+}
+
+enum RuleAction {
+  RULE_ACTION_UNSPECIFIED = 0;
+  RULE_ACTION_ALLOW = 1;
+  RULE_ACTION_DENY = 2;
 }

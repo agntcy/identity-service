@@ -56,6 +56,11 @@ class AppServiceStub(object):
                 request_serializer=agntcy_dot_identity_dot_platform_dot_v1alpha1_dot_app__service__pb2.GetBadgeRequest.SerializeToString,
                 response_deserializer=agntcy_dot_identity_dot_platform_dot_v1alpha1_dot_badge__pb2.Badge.FromString,
                 _registered_method=True)
+        self.GetTasks = channel.unary_unary(
+                '/agntcy.identity.platform.v1alpha1.AppService/GetTasks',
+                request_serializer=agntcy_dot_identity_dot_platform_dot_v1alpha1_dot_app__service__pb2.GetTasksRequest.SerializeToString,
+                response_deserializer=agntcy_dot_identity_dot_platform_dot_v1alpha1_dot_app__service__pb2.GetTasksResponse.FromString,
+                _registered_method=True)
 
 
 class AppServiceServicer(object):
@@ -111,6 +116,13 @@ class AppServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GetTasks(self, request, context):
+        """Get the list of tasks related to an App
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_AppServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -148,6 +160,11 @@ def add_AppServiceServicer_to_server(servicer, server):
                     servicer.GetBadge,
                     request_deserializer=agntcy_dot_identity_dot_platform_dot_v1alpha1_dot_app__service__pb2.GetBadgeRequest.FromString,
                     response_serializer=agntcy_dot_identity_dot_platform_dot_v1alpha1_dot_badge__pb2.Badge.SerializeToString,
+            ),
+            'GetTasks': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetTasks,
+                    request_deserializer=agntcy_dot_identity_dot_platform_dot_v1alpha1_dot_app__service__pb2.GetTasksRequest.FromString,
+                    response_serializer=agntcy_dot_identity_dot_platform_dot_v1alpha1_dot_app__service__pb2.GetTasksResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -340,6 +357,33 @@ class AppService(object):
             '/agntcy.identity.platform.v1alpha1.AppService/GetBadge',
             agntcy_dot_identity_dot_platform_dot_v1alpha1_dot_app__service__pb2.GetBadgeRequest.SerializeToString,
             agntcy_dot_identity_dot_platform_dot_v1alpha1_dot_badge__pb2.Badge.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetTasks(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/agntcy.identity.platform.v1alpha1.AppService/GetTasks',
+            agntcy_dot_identity_dot_platform_dot_v1alpha1_dot_app__service__pb2.GetTasksRequest.SerializeToString,
+            agntcy_dot_identity_dot_platform_dot_v1alpha1_dot_app__service__pb2.GetTasksResponse.FromString,
             options,
             channel_credentials,
             insecure,

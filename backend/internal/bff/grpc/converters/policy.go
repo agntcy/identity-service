@@ -30,10 +30,10 @@ func ToPolicy(src *identity_platform_sdk_go.Policy) *policytypes.Policy {
 	}
 
 	return &policytypes.Policy{
-		ID:          ptrutil.DerefStr(src.Id),
-		Name:        ptrutil.DerefStr(src.Name),
-		Description: ptrutil.DerefStr(src.Description),
-		AssignedTo:  ptrutil.DerefStr(src.AssignedTo),
+		ID:          src.GetId(),
+		Name:        src.GetName(),
+		Description: src.GetDescription(),
+		AssignedTo:  src.GetAssignedTo(),
 		Rules:       convertutil.ConvertSlice(src.Rules, ToRule),
 	}
 }
@@ -49,6 +49,7 @@ func FromRule(src *policytypes.Rule) *identity_platform_sdk_go.Rule {
 		Description:   ptrutil.Ptr(src.Description),
 		NeedsApproval: ptrutil.Ptr(src.NeedsApproval),
 		Tasks:         convertutil.ConvertSlice(src.Tasks, FromTask),
+		Action:        ptrutil.Ptr(identity_platform_sdk_go.RuleAction(src.Action)),
 	}
 }
 
@@ -58,11 +59,12 @@ func ToRule(src *identity_platform_sdk_go.Rule) *policytypes.Rule {
 	}
 
 	return &policytypes.Rule{
-		ID:            ptrutil.DerefStr(src.Id),
-		Name:          ptrutil.DerefStr(src.Name),
-		Description:   ptrutil.DerefStr(src.Description),
-		NeedsApproval: ptrutil.Derefrence(src.NeedsApproval, false),
+		ID:            src.GetId(),
+		Name:          src.GetName(),
+		Description:   src.GetDescription(),
+		NeedsApproval: src.GetNeedsApproval(),
 		Tasks:         convertutil.ConvertSlice(src.Tasks, ToTask),
+		Action:        policytypes.RuleAction(src.GetAction()),
 	}
 }
 
@@ -85,9 +87,9 @@ func ToTask(src *identity_platform_sdk_go.Task) *policytypes.Task {
 	}
 
 	return &policytypes.Task{
-		ID:       ptrutil.DerefStr(src.Id),
-		Name:     ptrutil.DerefStr(src.Name),
-		AppID:    ptrutil.DerefStr(src.AppId),
-		ToolName: ptrutil.DerefStr(src.ToolName),
+		ID:       src.GetId(),
+		Name:     src.GetName(),
+		AppID:    src.GetAppId(),
+		ToolName: src.GetToolName(),
 	}
 }

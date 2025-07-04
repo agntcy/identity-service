@@ -13,6 +13,8 @@ import (
 	badgecore "github.com/agntcy/identity-platform/internal/core/badge"
 	identitycore "github.com/agntcy/identity-platform/internal/core/identity"
 	idpcore "github.com/agntcy/identity-platform/internal/core/idp"
+	policycore "github.com/agntcy/identity-platform/internal/core/policy"
+	policytypes "github.com/agntcy/identity-platform/internal/core/policy/types"
 	settingscore "github.com/agntcy/identity-platform/internal/core/settings"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 	outshiftiam "github.com/agntcy/identity-platform/internal/pkg/iam"
@@ -33,6 +35,10 @@ type AppService interface {
 		appTypes []apptypes.AppType,
 	) (*pagination.Pageable[apptypes.App], error)
 	DeleteApp(ctx context.Context, appID string) error
+	GetTasks(
+		ctx context.Context,
+		appID string,
+	) ([]*policytypes.Task, error)
 }
 
 type appService struct {
@@ -44,6 +50,7 @@ type appService struct {
 	iamClient          outshiftiam.Client
 	badgeRevoker       badgecore.Revoker
 	keyStore           identitycore.KeyStore
+	policyRepository   policycore.Repository
 }
 
 func NewAppService(
@@ -55,6 +62,7 @@ func NewAppService(
 	iamClient outshiftiam.Client,
 	badgeRevoker badgecore.Revoker,
 	keyStore identitycore.KeyStore,
+	policyRepository policycore.Repository,
 ) AppService {
 	return &appService{
 		appRepository:      appRepository,
@@ -65,6 +73,7 @@ func NewAppService(
 		iamClient:          iamClient,
 		badgeRevoker:       badgeRevoker,
 		keyStore:           keyStore,
+		policyRepository:   policyRepository,
 	}
 }
 
@@ -275,6 +284,23 @@ func (s *appService) DeleteApp(ctx context.Context, appID string) error {
 	}
 
 	return nil
+}
+
+func (s *appService) GetTasks(
+	ctx context.Context,
+	appID string,
+) ([]*policytypes.Task, error) {
+	app, err := s.appRepository.GetApp(ctx, appID)
+	if err != nil {
+		return nil, err
+	}
+
+	tasks, err := s.policyRepository.GetTasksByAppID(ctx, app.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	return tasks, nil
 }
 
 func (s *appService) populateStatues(ctx context.Context, apps ...*apptypes.App) error {

@@ -11,6 +11,7 @@ import (
 	"github.com/agntcy/identity-platform/internal/bff"
 	"github.com/agntcy/identity-platform/internal/bff/grpc/converters"
 	apptypes "github.com/agntcy/identity-platform/internal/core/app/types"
+	policytypes "github.com/agntcy/identity-platform/internal/core/policy/types"
 	"github.com/agntcy/identity-platform/internal/pkg/convertutil"
 	"github.com/agntcy/identity-platform/internal/pkg/grpcutil"
 	"github.com/agntcy/identity-platform/internal/pkg/pagination"
@@ -145,4 +146,20 @@ func (s *appService) GetBadge(
 	}
 
 	return converters.FromBadge(badge), nil
+}
+
+func (s *appService) GetTasks(
+	ctx context.Context,
+	in *identity_platform_sdk_go.GetTasksRequest,
+) (*identity_platform_sdk_go.GetTasksResponse, error) {
+	tasks, err := s.appSrv.GetTasks(ctx, in.AppId)
+	if err != nil {
+		return nil, grpcutil.BadRequestError(err)
+	}
+
+	return &identity_platform_sdk_go.GetTasksResponse{
+		Tasks: convertutil.ConvertSlice(tasks, func(task *policytypes.Task) *identity_platform_sdk_go.Task {
+			return converters.FromTask(task)
+		}),
+	}, nil
 }

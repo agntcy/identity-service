@@ -247,6 +247,32 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /v1alpha1/apps/{appId}/tasks:
+        get:
+            tags:
+                - AppService
+            description: Get the list of tasks related to an App
+            operationId: AppService_GetTasks
+            parameters:
+                - name: appId
+                  in: path
+                  description: App Id to get the tasks for.
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetTasksResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /v1alpha1/auth/app_info:
         get:
             tags:
@@ -941,6 +967,14 @@ components:
                 needsApproval:
                     type: boolean
                     description: Need User Approval for this Rule.
+                action:
+                    enum:
+                        - RULE_ACTION_UNSPECIFIED
+                        - RULE_ACTION_ALLOW
+                        - RULE_ACTION_DENY
+                    type: string
+                    description: The action applied for the rule when calling the tasks
+                    format: enum
         CredentialSchema:
             type: object
             properties:
@@ -1011,6 +1045,14 @@ components:
                     items:
                         $ref: '#/components/schemas/AppTypeCountEntry'
                     description: The apps count per app type
+        GetTasksResponse:
+            type: object
+            properties:
+                tasks:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Task'
+                    description: The list of tasks related to the App
         GoogleProtobufAny:
             type: object
             properties:
@@ -1227,6 +1269,14 @@ components:
                     items:
                         $ref: '#/components/schemas/Task'
                     description: The tasks that this Rule applies to.
+                action:
+                    enum:
+                        - RULE_ACTION_UNSPECIFIED
+                        - RULE_ACTION_ALLOW
+                        - RULE_ACTION_DENY
+                    type: string
+                    description: The action applied for the rule when calling the specified tasks
+                    format: enum
                 needsApproval:
                     type: boolean
                     description: Need User Approval for this Rule.
@@ -1331,6 +1381,14 @@ components:
                 needsApproval:
                     type: boolean
                     description: Need User Approval for this Rule.
+                action:
+                    enum:
+                        - RULE_ACTION_UNSPECIFIED
+                        - RULE_ACTION_ALLOW
+                        - RULE_ACTION_DENY
+                    type: string
+                    description: The action applied for the rule when calling the tasks
+                    format: enum
         VerifiableCredential:
             type: object
             properties:

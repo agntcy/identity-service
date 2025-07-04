@@ -23,6 +23,55 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type RuleAction int32
+
+const (
+	RuleAction_RULE_ACTION_UNSPECIFIED RuleAction = 0
+	RuleAction_RULE_ACTION_ALLOW       RuleAction = 1
+	RuleAction_RULE_ACTION_DENY        RuleAction = 2
+)
+
+// Enum value maps for RuleAction.
+var (
+	RuleAction_name = map[int32]string{
+		0: "RULE_ACTION_UNSPECIFIED",
+		1: "RULE_ACTION_ALLOW",
+		2: "RULE_ACTION_DENY",
+	}
+	RuleAction_value = map[string]int32{
+		"RULE_ACTION_UNSPECIFIED": 0,
+		"RULE_ACTION_ALLOW":       1,
+		"RULE_ACTION_DENY":        2,
+	}
+)
+
+func (x RuleAction) Enum() *RuleAction {
+	p := new(RuleAction)
+	*p = x
+	return p
+}
+
+func (x RuleAction) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (RuleAction) Descriptor() protoreflect.EnumDescriptor {
+	return file_agntcy_identity_platform_v1alpha1_policy_proto_enumTypes[0].Descriptor()
+}
+
+func (RuleAction) Type() protoreflect.EnumType {
+	return &file_agntcy_identity_platform_v1alpha1_policy_proto_enumTypes[0]
+}
+
+func (x RuleAction) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use RuleAction.Descriptor instead.
+func (RuleAction) EnumDescriptor() ([]byte, []int) {
+	return file_agntcy_identity_platform_v1alpha1_policy_proto_rawDescGZIP(), []int{0}
+}
+
 // Identity Platform Policy.
 type Policy struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -117,8 +166,10 @@ type Rule struct {
 	PolicyId    *string `protobuf:"bytes,4,opt,name=policy_id,json=policyId,proto3,oneof" json:"policy_id,omitempty"`
 	// The tasks that this Rule applies to.
 	Tasks []*Task `protobuf:"bytes,5,rep,name=tasks,proto3" json:"tasks,omitempty"`
+	// The action applied for the rule when calling the specified tasks
+	Action *RuleAction `protobuf:"varint,6,opt,name=action,proto3,enum=agntcy.identity.platform.v1alpha1.RuleAction,oneof" json:"action,omitempty"`
 	// Need User Approval for this Rule.
-	NeedsApproval *bool `protobuf:"varint,6,opt,name=needs_approval,json=needsApproval,proto3,oneof" json:"needs_approval,omitempty"`
+	NeedsApproval *bool `protobuf:"varint,7,opt,name=needs_approval,json=needsApproval,proto3,oneof" json:"needs_approval,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -186,6 +237,13 @@ func (x *Rule) GetTasks() []*Task {
 		return x.Tasks
 	}
 	return nil
+}
+
+func (x *Rule) GetAction() RuleAction {
+	if x != nil && x.Action != nil {
+		return *x.Action
+	}
+	return RuleAction_RULE_ACTION_UNSPECIFIED
 }
 
 func (x *Rule) GetNeedsApproval() bool {
@@ -292,19 +350,21 @@ const file_agntcy_identity_platform_v1alpha1_policy_proto_rawDesc = "" +
 	"\x03_idB\a\n" +
 	"\x05_nameB\x0e\n" +
 	"\f_descriptionB\x0e\n" +
-	"\f_assigned_to\"\xa9\x02\n" +
+	"\f_assigned_to\"\x80\x03\n" +
 	"\x04Rule\x12\x13\n" +
 	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x17\n" +
 	"\x04name\x18\x02 \x01(\tH\x01R\x04name\x88\x01\x01\x12%\n" +
 	"\vdescription\x18\x03 \x01(\tH\x02R\vdescription\x88\x01\x01\x12 \n" +
 	"\tpolicy_id\x18\x04 \x01(\tH\x03R\bpolicyId\x88\x01\x01\x12=\n" +
-	"\x05tasks\x18\x05 \x03(\v2'.agntcy.identity.platform.v1alpha1.TaskR\x05tasks\x12*\n" +
-	"\x0eneeds_approval\x18\x06 \x01(\bH\x04R\rneedsApproval\x88\x01\x01B\x05\n" +
+	"\x05tasks\x18\x05 \x03(\v2'.agntcy.identity.platform.v1alpha1.TaskR\x05tasks\x12J\n" +
+	"\x06action\x18\x06 \x01(\x0e2-.agntcy.identity.platform.v1alpha1.RuleActionH\x04R\x06action\x88\x01\x01\x12*\n" +
+	"\x0eneeds_approval\x18\a \x01(\bH\x05R\rneedsApproval\x88\x01\x01B\x05\n" +
 	"\x03_idB\a\n" +
 	"\x05_nameB\x0e\n" +
 	"\f_descriptionB\f\n" +
 	"\n" +
-	"_policy_idB\x11\n" +
+	"_policy_idB\t\n" +
+	"\a_actionB\x11\n" +
 	"\x0f_needs_approval\"\xd2\x01\n" +
 	"\x04Task\x12\x13\n" +
 	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x17\n" +
@@ -317,7 +377,12 @@ const file_agntcy_identity_platform_v1alpha1_policy_proto_rawDesc = "" +
 	"\f_descriptionB\t\n" +
 	"\a_app_idB\f\n" +
 	"\n" +
-	"_tool_nameBkZigithub.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_gob\x06proto3"
+	"_tool_name*V\n" +
+	"\n" +
+	"RuleAction\x12\x1b\n" +
+	"\x17RULE_ACTION_UNSPECIFIED\x10\x00\x12\x15\n" +
+	"\x11RULE_ACTION_ALLOW\x10\x01\x12\x14\n" +
+	"\x10RULE_ACTION_DENY\x10\x02BkZigithub.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_gob\x06proto3"
 
 var (
 	file_agntcy_identity_platform_v1alpha1_policy_proto_rawDescOnce sync.Once
@@ -331,20 +396,23 @@ func file_agntcy_identity_platform_v1alpha1_policy_proto_rawDescGZIP() []byte {
 	return file_agntcy_identity_platform_v1alpha1_policy_proto_rawDescData
 }
 
+var file_agntcy_identity_platform_v1alpha1_policy_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_agntcy_identity_platform_v1alpha1_policy_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_agntcy_identity_platform_v1alpha1_policy_proto_goTypes = []any{
-	(*Policy)(nil), // 0: agntcy.identity.platform.v1alpha1.Policy
-	(*Rule)(nil),   // 1: agntcy.identity.platform.v1alpha1.Rule
-	(*Task)(nil),   // 2: agntcy.identity.platform.v1alpha1.Task
+	(RuleAction)(0), // 0: agntcy.identity.platform.v1alpha1.RuleAction
+	(*Policy)(nil),  // 1: agntcy.identity.platform.v1alpha1.Policy
+	(*Rule)(nil),    // 2: agntcy.identity.platform.v1alpha1.Rule
+	(*Task)(nil),    // 3: agntcy.identity.platform.v1alpha1.Task
 }
 var file_agntcy_identity_platform_v1alpha1_policy_proto_depIdxs = []int32{
-	1, // 0: agntcy.identity.platform.v1alpha1.Policy.rules:type_name -> agntcy.identity.platform.v1alpha1.Rule
-	2, // 1: agntcy.identity.platform.v1alpha1.Rule.tasks:type_name -> agntcy.identity.platform.v1alpha1.Task
-	2, // [2:2] is the sub-list for method output_type
-	2, // [2:2] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	2, // 0: agntcy.identity.platform.v1alpha1.Policy.rules:type_name -> agntcy.identity.platform.v1alpha1.Rule
+	3, // 1: agntcy.identity.platform.v1alpha1.Rule.tasks:type_name -> agntcy.identity.platform.v1alpha1.Task
+	0, // 2: agntcy.identity.platform.v1alpha1.Rule.action:type_name -> agntcy.identity.platform.v1alpha1.RuleAction
+	3, // [3:3] is the sub-list for method output_type
+	3, // [3:3] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_agntcy_identity_platform_v1alpha1_policy_proto_init() }
@@ -360,13 +428,14 @@ func file_agntcy_identity_platform_v1alpha1_policy_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_agntcy_identity_platform_v1alpha1_policy_proto_rawDesc), len(file_agntcy_identity_platform_v1alpha1_policy_proto_rawDesc)),
-			NumEnums:      0,
+			NumEnums:      1,
 			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_agntcy_identity_platform_v1alpha1_policy_proto_goTypes,
 		DependencyIndexes: file_agntcy_identity_platform_v1alpha1_policy_proto_depIdxs,
+		EnumInfos:         file_agntcy_identity_platform_v1alpha1_policy_proto_enumTypes,
 		MessageInfos:      file_agntcy_identity_platform_v1alpha1_policy_proto_msgTypes,
 	}.Build()
 	File_agntcy_identity_platform_v1alpha1_policy_proto = out.File

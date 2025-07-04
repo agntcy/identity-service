@@ -219,6 +219,9 @@ message CreateRuleRequest {
 
   // Need User Approval for this Rule.
   optional bool needs_approval = 5;
+
+  // The action applied for the rule when calling the tasks
+  RuleAction action = 6;
 }
 
 message GetRuleRequest {
@@ -247,6 +250,9 @@ message UpdateRuleRequest {
 
   // Need User Approval for this Rule.
   optional bool needs_approval = 6;
+
+  // The action applied for the rule when calling the tasks
+  RuleAction action = 7;
 }
 
 message DeleteRuleRequest {

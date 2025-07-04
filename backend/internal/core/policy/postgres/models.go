@@ -36,7 +36,8 @@ type Rule struct {
 	Name          string
 	Description   string
 	PolicyID      string
-	Tasks         []*Task `gorm:"many2many:rule_tasks;"`
+	Tasks         []*Task          `gorm:"many2many:rule_tasks;"`
+	Action        types.RuleAction `json:"action,omitempty"`
 	NeedsApproval bool
 }
 
@@ -46,6 +47,7 @@ func (r *Rule) ToCoreType() *types.Rule {
 		Name:          r.Name,
 		Description:   r.Description,
 		PolicyID:      r.PolicyID,
+		Action:        r.Action,
 		NeedsApproval: r.NeedsApproval,
 		Tasks: convertutil.ConvertSlice(r.Tasks, func(task *Task) *types.Task {
 			return task.ToCoreType()
@@ -95,6 +97,7 @@ func NewRuleModel(src *types.Rule, tenantID string) *Rule {
 		Name:          src.Name,
 		Description:   src.Description,
 		PolicyID:      src.PolicyID,
+		Action:        src.Action,
 		NeedsApproval: src.NeedsApproval,
 		Tasks: convertutil.ConvertSlice(src.Tasks, func(task *types.Task) *Task {
 			return newTaskModel(task, tenantID)
