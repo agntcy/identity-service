@@ -652,7 +652,7 @@ const file_agntcy_identity_platform_v1alpha1_app_service_proto_rawDesc = "" +
 	"\x0fGetTasksRequest\x12\x15\n" +
 	"\x06app_id\x18\x01 \x01(\tR\x05appId\"Q\n" +
 	"\x10GetTasksResponse\x12=\n" +
-	"\x05tasks\x18\x01 \x03(\v2'.agntcy.identity.platform.v1alpha1.TaskR\x05tasks2\xbe\v\n" +
+	"\x05tasks\x18\x01 \x03(\v2'.agntcy.identity.platform.v1alpha1.TaskR\x05tasks2\xbf\v\n" +
 	"\n" +
 	"AppService\x12\xa3\x01\n" +
 	"\bListApps\x122.agntcy.identity.platform.v1alpha1.ListAppsRequest\x1a3.agntcy.identity.platform.v1alpha1.ListAppsResponse\".\x92A\x15\x12\tList Apps*\bListApps\x82\xd3\xe4\x93\x02\x10\x12\x0e/v1alpha1/apps\x12\xcb\x01\n" +
@@ -664,8 +664,8 @@ const file_agntcy_identity_platform_v1alpha1_app_service_proto_rawDesc = "" +
 	"Update App*\tUpdateApp\xdaA\x10name,description\x82\xd3\xe4\x93\x02\x1e:\x03app2\x17/v1alpha1/apps/{app_id}\x12\x93\x01\n" +
 	"\tDeleteApp\x123.agntcy.identity.platform.v1alpha1.DeleteAppRequest\x1a\x16.google.protobuf.Empty\"9\x92A\x17\x12\n" +
 	"Delete App*\tDeleteApp\x82\xd3\xe4\x93\x02\x19*\x17/v1alpha1/apps/{app_id}\x12\xc9\x01\n" +
-	"\bGetBadge\x122.agntcy.identity.platform.v1alpha1.GetBadgeRequest\x1a(.agntcy.identity.platform.v1alpha1.Badge\"_\x92A7\x12(Get the current badge issued for the App*\vGetAppBadge\x82\xd3\xe4\x93\x02\x1f\x12\x1d/v1alpha1/apps/{app_id}/badge\x12\xcf\x01\n" +
-	"\bGetTasks\x122.agntcy.identity.platform.v1alpha1.GetTasksRequest\x1a3.agntcy.identity.platform.v1alpha1.GetTasksResponse\"Z\x92A3\x12'Get the list of tasks related to an App*\bGetTasks\x82\xd3\xe4\x93\x02\x1e\x12\x1c/v1alpha1/apps/{app_id}/task\x1a\b\x92A\x05\n" +
+	"\bGetBadge\x122.agntcy.identity.platform.v1alpha1.GetBadgeRequest\x1a(.agntcy.identity.platform.v1alpha1.Badge\"_\x92A7\x12(Get the current badge issued for the App*\vGetAppBadge\x82\xd3\xe4\x93\x02\x1f\x12\x1d/v1alpha1/apps/{app_id}/badge\x12\xd0\x01\n" +
+	"\bGetTasks\x122.agntcy.identity.platform.v1alpha1.GetTasksRequest\x1a3.agntcy.identity.platform.v1alpha1.GetTasksResponse\"[\x92A3\x12'Get the list of tasks related to an App*\bGetTasks\x82\xd3\xe4\x93\x02\x1f\x12\x1d/v1alpha1/apps/{app_id}/tasks\x1a\b\x92A\x05\n" +
 	"\x03AppBkZigithub.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_gob\x06proto3"
 
 var (

@@ -97,7 +97,7 @@ service AppService {
 
   // Get the list of tasks related to an App
   rpc GetTasks(GetTasksRequest) returns (GetTasksResponse) {
-    option (google.api.http) = {get: "/v1alpha1/apps/{app_id}/task"};
+    option (google.api.http) = {get: "/v1alpha1/apps/{app_id}/tasks"};
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       operation_id: "GetTasks";
       summary: "Get the list of tasks related to an App";

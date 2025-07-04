@@ -673,11 +673,35 @@
       "name": "agntcy/identity/platform/v1alpha1/policy.proto",
       "description": "",
       "package": "agntcy.identity.platform.v1alpha1",
-      "hasEnums": false,
+      "hasEnums": true,
       "hasExtensions": false,
       "hasMessages": true,
       "hasServices": false,
-      "enums": [],
+      "enums": [
+        {
+          "name": "RuleAction",
+          "longName": "RuleAction",
+          "fullName": "agntcy.identity.platform.v1alpha1.RuleAction",
+          "description": "",
+          "values": [
+            {
+              "name": "RULE_ACTION_UNSPECIFIED",
+              "number": "0",
+              "description": ""
+            },
+            {
+              "name": "RULE_ACTION_ALLOW",
+              "number": "1",
+              "description": ""
+            },
+            {
+              "name": "RULE_ACTION_DENY",
+              "number": "2",
+              "description": ""
+            }
+          ]
+        }
+      ],
       "extensions": [],
       "messages": [
         {
@@ -820,6 +844,18 @@
               "ismap": false,
               "isoneof": false,
               "oneofdecl": "",
+              "defaultValue": ""
+            },
+            {
+              "name": "action",
+              "description": "The action applied for the rule when calling the specified tasks",
+              "label": "optional",
+              "type": "RuleAction",
+              "longType": "RuleAction",
+              "fullType": "agntcy.identity.platform.v1alpha1.RuleAction",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_action",
               "defaultValue": ""
             },
             {
@@ -1449,7 +1485,7 @@
                   "rules": [
                     {
                       "method": "GET",
-                      "pattern": "/v1alpha1/apps/{app_id}/task"
+                      "pattern": "/v1alpha1/apps/{app_id}/tasks"
                     }
                   ]
                 }
@@ -2581,6 +2617,18 @@
               "isoneof": true,
               "oneofdecl": "_needs_approval",
               "defaultValue": ""
+            },
+            {
+              "name": "action",
+              "description": "The action applied for the rule when calling the tasks",
+              "label": "",
+              "type": "RuleAction",
+              "longType": "RuleAction",
+              "fullType": "agntcy.identity.platform.v1alpha1.RuleAction",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
             }
           ]
         },
@@ -3024,6 +3072,18 @@
               "ismap": false,
               "isoneof": true,
               "oneofdecl": "_needs_approval",
+              "defaultValue": ""
+            },
+            {
+              "name": "action",
+              "description": "The action applied for the rule when calling the tasks",
+              "label": "",
+              "type": "RuleAction",
+              "longType": "RuleAction",
+              "fullType": "agntcy.identity.platform.v1alpha1.RuleAction",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
               "defaultValue": ""
             }
           ]

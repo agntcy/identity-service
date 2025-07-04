@@ -247,7 +247,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-    /v1alpha1/apps/{appId}/task:
+    /v1alpha1/apps/{appId}/tasks:
         get:
             tags:
                 - AppService
@@ -967,6 +967,14 @@ components:
                 needsApproval:
                     type: boolean
                     description: Need User Approval for this Rule.
+                action:
+                    enum:
+                        - RULE_ACTION_UNSPECIFIED
+                        - RULE_ACTION_ALLOW
+                        - RULE_ACTION_DENY
+                    type: string
+                    description: The action applied for the rule when calling the tasks
+                    format: enum
         CredentialSchema:
             type: object
             properties:
@@ -1261,6 +1269,14 @@ components:
                     items:
                         $ref: '#/components/schemas/Task'
                     description: The tasks that this Rule applies to.
+                action:
+                    enum:
+                        - RULE_ACTION_UNSPECIFIED
+                        - RULE_ACTION_ALLOW
+                        - RULE_ACTION_DENY
+                    type: string
+                    description: The action applied for the rule when calling the specified tasks
+                    format: enum
                 needsApproval:
                     type: boolean
                     description: Need User Approval for this Rule.
@@ -1365,6 +1381,14 @@ components:
                 needsApproval:
                     type: boolean
                     description: Need User Approval for this Rule.
+                action:
+                    enum:
+                        - RULE_ACTION_UNSPECIFIED
+                        - RULE_ACTION_ALLOW
+                        - RULE_ACTION_DENY
+                    type: string
+                    description: The action applied for the rule when calling the tasks
+                    format: enum
         VerifiableCredential:
             type: object
             properties:

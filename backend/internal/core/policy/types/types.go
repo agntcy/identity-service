@@ -1,6 +1,8 @@
 // Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
 // SPDX-License-Identifier: Apache-2.0
 
+//go:generate stringer -type=RuleAction
+
 package types
 
 // Identity Platform Policy Task
@@ -21,6 +23,31 @@ type Task struct {
 	ToolName string `json:"tool_name,omitempty"`
 }
 
+type RuleAction int
+
+const (
+	RULE_ACTION_UNSPECIFIED RuleAction = iota
+	RULE_ACTION_ALLOW
+	RULE_ACTION_DENY
+)
+
+func (a *RuleAction) UnmarshalText(text []byte) error {
+	switch string(text) {
+	case RULE_ACTION_ALLOW.String():
+		*a = RULE_ACTION_ALLOW
+	case RULE_ACTION_DENY.String():
+		*a = RULE_ACTION_DENY
+	default:
+		*a = RULE_ACTION_UNSPECIFIED
+	}
+
+	return nil
+}
+
+func (a RuleAction) MarshalText() ([]byte, error) {
+	return []byte(a.String()), nil
+}
+
 // Identity Platform Policy Rule
 type Rule struct {
 	// A unique identifier for the Rule.
@@ -36,6 +63,9 @@ type Rule struct {
 
 	// The tasks that this Rule applies to.
 	Tasks []*Task `json:"tasks,omitempty"`
+
+	// The action applied for the rule when calling the specified tasks
+	Action RuleAction `json:"action,omitempty"`
 
 	// Need User Approval for this Rule.
 	NeedsApproval bool `json:"needs_approval,omitempty"`

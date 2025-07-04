@@ -471,7 +471,7 @@ func RegisterAppServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/agntcy.identity.platform.v1alpha1.AppService/GetTasks", runtime.WithHTTPPathPattern("/v1alpha1/apps/{app_id}/task"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/agntcy.identity.platform.v1alpha1.AppService/GetTasks", runtime.WithHTTPPathPattern("/v1alpha1/apps/{app_id}/tasks"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -648,7 +648,7 @@ func RegisterAppServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/agntcy.identity.platform.v1alpha1.AppService/GetTasks", runtime.WithHTTPPathPattern("/v1alpha1/apps/{app_id}/task"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/agntcy.identity.platform.v1alpha1.AppService/GetTasks", runtime.WithHTTPPathPattern("/v1alpha1/apps/{app_id}/tasks"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -672,7 +672,7 @@ var (
 	pattern_AppService_UpdateApp_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v1alpha1", "apps", "app_id"}, ""))
 	pattern_AppService_DeleteApp_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v1alpha1", "apps", "app_id"}, ""))
 	pattern_AppService_GetBadge_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"v1alpha1", "apps", "app_id", "badge"}, ""))
-	pattern_AppService_GetTasks_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"v1alpha1", "apps", "app_id", "task"}, ""))
+	pattern_AppService_GetTasks_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"v1alpha1", "apps", "app_id", "tasks"}, ""))
 )
 
 var (
