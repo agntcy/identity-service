@@ -10,6 +10,7 @@ import {useMemo} from 'react';
 import {IdpType, IssuerSettings} from '@/types/api/settings';
 import KeyValue, {KeyValuePair} from '@/components/ui/key-value';
 import {ProviderType} from '@/components/shared/provider-type';
+import {docs} from '@/utils/docs';
 
 export const InformationProvider = ({idpSettings}: {idpSettings?: IssuerSettings}) => {
   const provider = idpSettings?.idpType;
@@ -75,7 +76,7 @@ export const InformationProvider = ({idpSettings}: {idpSettings?: IssuerSettings
         <Typography variant="subtitle1" fontWeight={600}>
           About
         </Typography>
-        <Link href="" openInNewTab>
+        <Link href={docs('register')} openInNewTab>
           <div className="flex items-center gap-1">
             View documentation
             <ExternalLinkIcon className="w-4 h-4 ml-1" />

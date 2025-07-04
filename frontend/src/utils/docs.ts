@@ -6,7 +6,7 @@
 import config from '@/config';
 
 export const docs = (section?: string) => {
-  const baseUrl = config.DOCS_URL + 'docs';
+  const baseUrl = config.DOCS_URL + '/docs';
   if (!section) {
     return baseUrl + "/intro";
   }
