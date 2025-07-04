@@ -201,8 +201,20 @@
               "defaultValue": ""
             },
             {
+              "name": "resolver_metadata_id",
+              "description": "The DID value",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_resolver_metadata_id",
+              "defaultValue": ""
+            },
+            {
               "name": "api_key",
-              "description": "",
+              "description": "The API Key Secret for the App.",
               "label": "optional",
               "type": "string",
               "longType": "string",

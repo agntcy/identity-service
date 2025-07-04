@@ -1,6 +1,3 @@
-# Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
-# SPDX-License-Identifier: Apache-2.0
-
 # Generated with protoc-gen-openapi
 # https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
 
@@ -832,8 +829,12 @@ components:
                     type: string
                     description: The type of the App.
                     format: enum
+                resolverMetadataId:
+                    type: string
+                    description: The DID value
                 apiKey:
                     type: string
+                    description: The API Key Secret for the App.
                 status:
                     enum:
                         - APP_STATUS_UNSPECIFIED
