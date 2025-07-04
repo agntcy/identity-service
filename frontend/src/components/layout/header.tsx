@@ -15,7 +15,7 @@ import UserIcon from '@/assets/user.svg';
 import {Link} from 'react-router-dom';
 import {useAuth} from '@/hooks';
 import {useGetSession} from '@/queries';
-import config from '@/config';
+import {docs} from '@/utils/docs';
 
 export const Header = () => {
   return (
@@ -36,7 +36,7 @@ export const Header = () => {
           id: 'docs',
           icon: <BookLogo />,
           tooltip: 'View Documentation',
-          href: config.DOCS_URL || 'https://docs.agntcy.org/identity/identity',
+          href: docs(),
           'aria-label': 'documentation',
           target: '_blank'
         },

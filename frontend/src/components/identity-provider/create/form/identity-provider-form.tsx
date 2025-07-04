@@ -18,6 +18,7 @@ import OktaLogo from '@/assets/okta.svg?react';
 import OasfLogo from '@/assets/oasf.svg?react';
 import OryLogo from '@/assets/ory.svg?react';
 import {IdpType} from '@/types/api/settings';
+import {docs} from '@/utils/docs';
 
 export const IdentityProviderForm = ({isLoading = false}: {isLoading?: boolean}) => {
   const {control, watch} = useFormContext<IdentityProvidersFormValues>();
@@ -72,7 +73,7 @@ export const IdentityProviderForm = ({isLoading = false}: {isLoading?: boolean})
             <Typography variant="subtitle1" fontWeight={600}>
               Select Identity Provider
             </Typography>
-            <Link href="" openInNewTab>
+            <Link href={docs('register')} openInNewTab>
               <div className="flex items-center gap-1">
                 View Documentation
                 <ExternalLinkIcon className="w-4 h-4 ml-1" />

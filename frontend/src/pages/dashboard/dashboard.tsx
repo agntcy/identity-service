@@ -10,6 +10,7 @@ import ScrollShadowWrapper from '@/components/ui/scroll-shadow-wrapper';
 import {PATHS} from '@/router/paths';
 import {useAuth} from '@/hooks';
 import {Link as RouterLink} from 'react-router-dom';
+import {docs} from '@/utils/docs';
 import '@/styles/dashboard.css';
 
 const Dashboard: React.FC = () => {
@@ -47,7 +48,7 @@ const Dashboard: React.FC = () => {
                 This enables you to create identities and apply TBAC for secure and efficient management.
               </Typography>
               <Link
-                href="https://spec.identity.agntcy.org/"
+                href={docs()}
                 openInNewTab
                 fontStyle={{
                   fontWeight: 400,
