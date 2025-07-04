@@ -142,7 +142,7 @@ func (s *appService) GetBadge(
 ) (*identity_platform_sdk_go.Badge, error) {
 	badge, err := s.badgeSrv.GetBadge(ctx, in.AppId)
 	if err != nil {
-		return nil, grpcutil.BadRequestError(err)
+		return nil, grpcutil.NotFoundError(err)
 	}
 
 	return converters.FromBadge(badge), nil
@@ -158,8 +158,11 @@ func (s *appService) GetTasks(
 	}
 
 	return &identity_platform_sdk_go.GetTasksResponse{
-		Tasks: convertutil.ConvertSlice(tasks, func(task *policytypes.Task) *identity_platform_sdk_go.Task {
-			return converters.FromTask(task)
-		}),
+		Tasks: convertutil.ConvertSlice(
+			tasks,
+			func(task *policytypes.Task) *identity_platform_sdk_go.Task {
+				return converters.FromTask(task)
+			},
+		),
 	}, nil
 }
