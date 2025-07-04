@@ -22,6 +22,7 @@ func FromApp(src *apptypes.App) *identity_platform_sdk_go.App {
 		Name:        src.Name,
 		Description: src.Description,
 		Type:        ptrutil.Ptr(identity_platform_sdk_go.AppType(src.Type)),
+		Status:      ptrutil.Ptr(identity_platform_sdk_go.AppStatus(src.Status)),
 		ApiKey:      ptrutil.Ptr(src.ApiKey),
 		CreatedAt:   newTimestamp(&src.CreatedAt),
 		UpdatedAt:   newTimestamp(src.UpdatedAt),
@@ -38,6 +39,7 @@ func ToApp(src *identity_platform_sdk_go.App) *apptypes.App {
 		Name:        ptrutil.Ptr(src.GetName()),
 		Description: ptrutil.Ptr(src.GetDescription()),
 		Type:        apptypes.AppType(src.GetType()),
+		Status:      apptypes.AppStatus(src.GetStatus()),
 	}
 }
 
