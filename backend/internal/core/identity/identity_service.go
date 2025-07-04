@@ -58,7 +58,7 @@ type Service interface {
 	VerifyVerifiableCredential(
 		ctx context.Context,
 		vc *string,
-	) (*badgetypes.BadgeClaims, error)
+	) (*badgetypes.VerifiableCredential, error)
 	RevokeVerifiableCredential(
 		ctx context.Context,
 		clientCredentials *idpcore.ClientCredentials,
@@ -313,7 +313,7 @@ func (s *service) generateProof(
 func (s *service) VerifyVerifiableCredential(
 	ctx context.Context,
 	vc *string,
-) (*badgetypes.BadgeClaims, error) {
+) (*badgetypes.VerifiableCredential, error) {
 	if vc == nil || *vc == "" {
 		return nil, errors.New("verifiable credential is empty")
 	}
@@ -339,7 +339,7 @@ func (s *service) VerifyVerifiableCredential(
 	log.Debug("Verifiable credential verified successfully")
 
 	// Parse the verifiable credential to extract claims
-	claimValue, err := jwtutil.GetClaim(
+	credentialSubjectClaim, err := jwtutil.GetClaim(
 		vc,
 		credentialSubject,
 	)
@@ -350,15 +350,44 @@ func (s *service) VerifyVerifiableCredential(
 		)
 	}
 
-	log.Debug("Extracted credential subject: ", *claimValue)
+	log.Debug("Extracted credential subject: ", *credentialSubjectClaim)
 
 	// Unmarshal the claims from the credential subject
-	var claims badgetypes.BadgeClaims
-	err = json.Unmarshal([]byte(*claimValue), &claims)
+	var badgeClaims badgetypes.BadgeClaims
 
-	log.Debug("Unmarshalled claims: ", claims)
+	err = json.Unmarshal([]byte(*credentialSubjectClaim), &badgeClaims)
+	if err != nil {
+		return nil, errutil.Err(
+			err,
+			"error unmarshalling credential subject claims from verifiable credential",
+		)
+	}
 
-	return &claims, err
+	log.Debug("Unmarshalled claims: ", badgeClaims)
+
+	// Parse the issuer
+	issuerClaim, err := jwtutil.GetClaim(vc, "issuer")
+	if err != nil || issuerClaim == nil || *issuerClaim == "" {
+		return nil, errutil.Err(
+			err,
+			"error extracting issuer from verifiable credential",
+		)
+	}
+
+	// Parse the issuance date
+	issuanceDateClaim, err := jwtutil.GetClaim(vc, "issuanceDate")
+	if err != nil || issuanceDateClaim == nil || *issuanceDateClaim == "" {
+		return nil, errutil.Err(
+			err,
+			"error extracting issuance date from verifiable credential",
+		)
+	}
+
+	return &badgetypes.VerifiableCredential{
+		CredentialSubject: &badgeClaims,
+		Issuer:            *issuerClaim,
+		IssuanceDate:      *issuanceDateClaim,
+	}, nil
 }
 
 func (s *service) RevokeVerifiableCredential(
