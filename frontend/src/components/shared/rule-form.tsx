@@ -11,9 +11,8 @@ import {TaskForm} from './task-form';
 
 export const RuleForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; fieldIndex: number}) => {
   const policyForm = useFormContext<PolicyLogicyFormValues>();
-
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full">
       <div className="w-full flex gap-8">
         <FormField
           control={policyForm.control}

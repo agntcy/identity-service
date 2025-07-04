@@ -14,10 +14,12 @@ import {Button, toast, Typography} from '@outshift/spark-design';
 import {validateForm} from '@/lib/utils';
 import {PolicyForm} from './steps/policy-form';
 import {PolicyFormValues, PolicySchema} from '@/schemas/policy-schema';
-import {Policy, RuleAction} from '@/types/api/policy';
+import {RuleAction} from '@/types/api/policy';
 import {PolicyLogic} from './steps/policy-logic';
-import {useCreatePolicy} from '@/mutations';
+import {useCreatePolicy, useCreateRule} from '@/mutations';
 import {PolicyLogicyFormValues, PolicyLogicySchema} from '@/schemas/policy-logic-schema';
+import {useNavigate} from 'react-router-dom';
+import {PATHS} from '@/router/paths';
 
 export const CreatePolicyStepper = () => {
   return (
@@ -29,9 +31,10 @@ export const CreatePolicyStepper = () => {
 
 const FormStepperComponent = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [policy, setPolicy] = useState<Policy | undefined>(undefined);
 
   const methods = useStepper();
+
+  const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof methods.current.schema>>({
     resolver: zodResolver(methods.current.schema),
@@ -56,17 +59,52 @@ const FormStepperComponent = () => {
     }
   });
 
-  const mutationCreate = useCreatePolicy({
+  const mutationCreateRule = useCreateRule({
+    callbacks: {
+      onSuccess: () => {},
+      onError: () => {}
+    }
+  });
+
+  const mutationCreatePolicy = useCreatePolicy({
     callbacks: {
       onSuccess: (resp) => {
-        setIsLoading(false);
-        toast({
-          title: 'Success',
-          description: `Policy "${resp.data.name}" created successfully.`,
-          type: 'success'
-        });
-        setPolicy(resp.data);
-        methods.next();
+        const valuesPolicyLogic = policyLogicForm.getValues();
+        if (valuesPolicyLogic.rules.length > 0 && resp.data.id) {
+          valuesPolicyLogic.rules.forEach((rule) => {
+            if (rule.tasks.action !== RuleAction.RULE_ACTION_UNSPECIFIED) {
+              mutationCreateRule
+                .mutateAsync({
+                  id: resp.data.id,
+                  data: {
+                    name: rule.name,
+                    description: rule.description,
+                    needsApproval: rule.needsApproval === 'yes',
+                    tasks: [rule.tasks.task],
+                    action: rule.tasks.action
+                  }
+                })
+                .then(() => {
+                  void navigate(PATHS.policies.base, {replace: true});
+                })
+                .catch(() => {
+                  toast({
+                    title: 'Error',
+                    description: 'An error occurred while creating the rule. Please try again.',
+                    type: 'error'
+                  });
+                })
+                .finally(() => {
+                  setIsLoading(false);
+                  toast({
+                    title: 'Success',
+                    description: `Policy "${resp.data.name}" created successfully.`,
+                    type: 'success'
+                  });
+                });
+            }
+          });
+        }
       },
       onError: () => {
         setIsLoading(false);
@@ -81,16 +119,28 @@ const FormStepperComponent = () => {
 
   const handleOnClear = useCallback(() => {
     setIsLoading(false);
-    setPolicy(undefined);
     form.reset({
       name: '',
       description: '',
       assignedTo: ''
     });
+    policyLogicForm.reset({
+      rules: [
+        {
+          name: '',
+          description: '',
+          needsApproval: 'no',
+          tasks: {
+            action: RuleAction.RULE_ACTION_UNSPECIFIED,
+            task: ''
+          }
+        }
+      ]
+    });
     methods.reset();
     methods.resetMetadata();
     methods.goTo('policyForm');
-  }, [form, methods]);
+  }, [form, methods, policyLogicForm]);
 
   const handleSavePolicyForm = useCallback(() => {
     const values = form.getValues() as PolicyFormValues;
@@ -112,23 +162,23 @@ const FormStepperComponent = () => {
   }, [form, methods]);
 
   const handleSave = useCallback(() => {
-    // setIsLoading(true);
-    // const values = form.getValues() as AgenticServiceFormValues;
-    // mutationCreate.mutate({
-    //   type: values.type,
-    //   name: values.name,
-    //   description: values.description
-    // });
-  }, [form, mutationCreate]);
+    const valuesPolicy = form.getValues() as PolicyFormValues;
+    setIsLoading(true);
+    mutationCreatePolicy.mutate({
+      assignedTo: valuesPolicy.assignedTo,
+      description: valuesPolicy.description,
+      name: valuesPolicy.name
+    });
+  }, [form, mutationCreatePolicy]);
 
   const onSubmit = useCallback(() => {
     if (methods.current.id === 'policyForm') {
       return handleSavePolicyForm();
     }
-    // if (methods.current.id === 'confirmAgenticService') {
-    //   return handleSave();
-    // }
-  }, [handleSavePolicyForm, methods]);
+    if (methods.current.id === 'policyLogic') {
+      return handleSave();
+    }
+  }, [handleSave, handleSavePolicyForm, methods]);
 
   return (
     <>
@@ -173,7 +223,9 @@ const FormStepperComponent = () => {
                             loading={isLoading}
                             loadingPosition="start"
                             type="submit"
-                            disabled={isLoading || !form.formState.isValid}
+                            disabled={
+                              isLoading || !form.formState.isValid || (methods.current.id === 'policyLogic' && !policyLogicForm.formState.isValid)
+                            }
                             className="cursor-pointer"
                             sx={{
                               fontWeight: '600 !important'

@@ -13,6 +13,7 @@ import {Badge} from '@/types/api/badge';
 import {generatePath, useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
 import {BadgeCard} from '@/components/shared/badge-card';
+import {StatusAgenticService} from '@/components/shared/status-agentic-service';
 
 export const CreateBadge = ({app}: {app?: App}) => {
   const [badge, setBadge] = useState<Badge | undefined>(undefined);
@@ -21,6 +22,10 @@ export const CreateBadge = ({app}: {app?: App}) => {
 
   const keyValuePairs = useMemo(() => {
     const temp: KeyValuePair[] = [
+      {
+        keyProp: 'Identity',
+        value: app?.resolverMetadataId || 'Not provided'
+      },
       {
         keyProp: 'Name',
         value: app?.name || 'Not provided'
@@ -32,15 +37,19 @@ export const CreateBadge = ({app}: {app?: App}) => {
       {
         keyProp: 'Type',
         value: <AgenticServiceType type={app?.type} />
+      },
+      {
+        keyProp: 'Status',
+        value: <StatusAgenticService status={app?.status} />
       }
     ];
     return temp;
-  }, [app?.description, app?.name, app?.type]);
+  }, [app]);
 
   return (
     <div className="space-y-4">
       <div className="flex gap-4">
-        <div className="w-[40%] space-y-4">
+        <div className="w-[50%] space-y-4">
           <Card className="text-start space-y-4" variant="secondary">
             <div className="flex justify-between items-center">
               <Typography variant="subtitle1" fontWeight={600}>
@@ -48,7 +57,7 @@ export const CreateBadge = ({app}: {app?: App}) => {
               </Typography>
             </div>
             <CardContent className="p-0 space-y-4">
-              <KeyValue pairs={keyValuePairs} useCard={false} />
+              <KeyValue pairs={keyValuePairs} useCard={false} orientation="vertical" />
             </CardContent>
           </Card>
           <Card className="text-start space-y-4" variant="secondary">

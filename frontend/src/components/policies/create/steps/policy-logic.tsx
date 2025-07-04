@@ -52,26 +52,30 @@ export const PolicyLogic = ({isLoading = false, policyForm}: {policyForm: UseFor
               <div key={field.id}>
                 <div className="flex justify-between items-start gap-4">
                   <div className="w-full">
-                    <Accordion title={'Rule'} defaultValue={field.id}>
-                      <div className="mt-4 pl-8">
-                        <RuleForm isLoading={isLoading} fieldIndex={index} />
+                    {field.name ? (
+                      <div className="w-full flex justify-between items-start gap-4">
+                        <div className="w-full">
+                          <Accordion title={field.name}>
+                            <RuleForm isLoading={isLoading} fieldIndex={index} />
+                          </Accordion>
+                        </div>
+                        <Tooltip title="Remove this rule">
+                          <IconButton
+                            sx={(theme) => ({
+                              color: theme.palette.vars.baseTextDefault,
+                              width: '24px',
+                              height: '24px'
+                            })}
+                            onClick={() => handleRemove(index)}
+                          >
+                            <XIcon className="h-4 w-4" />
+                          </IconButton>
+                        </Tooltip>
                       </div>
-                    </Accordion>
+                    ) : (
+                      <RuleForm isLoading={isLoading} fieldIndex={index} />
+                    )}
                   </div>
-                  {index > 0 && (
-                    <Tooltip title="Remove this rule">
-                      <IconButton
-                        sx={(theme) => ({
-                          color: theme.palette.vars.baseTextDefault,
-                          width: '24px',
-                          height: '24px'
-                        })}
-                        onClick={() => handleRemove(index)}
-                      >
-                        <XIcon className="h-4 w-4" />
-                      </IconButton>
-                    </Tooltip>
-                  )}
                 </div>
                 {index < fields.length - 1 && (
                   <div className="my-8">
@@ -91,7 +95,7 @@ export const PolicyLogic = ({isLoading = false, policyForm}: {policyForm: UseFor
               startIcon={<PlusIcon className="w-4 h-4" />}
               loading={isLoading}
               loadingPosition="start"
-              // disabled={isLoading || !ruleForm.formState.isValid}
+              disabled={isLoading || !policyForm.formState.isValid}
               onClick={handleAddRule}
             >
               Add Logic
