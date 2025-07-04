@@ -1,0 +1,16 @@
+# Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: v2
+name: identity-sample-currency-exchange-mcp
+description: A Helm chart for Kubernetes
+type: application
+version: 0.1.1
+appVersion: "0.0.1"
+
+maintainers:
+  - name: identity
+    url: https://github.com/cisco-eti/pyramid-platform/blob/main/MAINTAINERS.md
+sources:
+  - https://github.com/cisco-eti/pyramid-platform
+

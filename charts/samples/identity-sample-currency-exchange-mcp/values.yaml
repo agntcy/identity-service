@@ -1,0 +1,34 @@
+# Copyright 2025 Example Organization Contributors (https://github.com/example-org)
+# SPDX-License-Identifier: Apache-2.0
+
+replicaCount: 1
+
+image:
+  repository: ""
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+service:
+  type: ClusterIP
+  http:
+    port: 9090
+    targetPort: 9090
+
+namespace: dev-samples
+imagePullSecrets:
+  - name: regcred
+
+ingress:
+  enabled: true
+  className: nginx-internal
+  annotations:
+    http:
+      kubernetes.io/ingress.class: nginx-internal
+      nginx.ingress.kubernetes.io/rewrite-target: /
+      cert-manager.io/cluster-issuer: letsencrypt
+  domainPrefixHttp: mcp-server-currency-exchange
+  apiDomainName: dev.example.com
+
+serviceAccount:
+  create: true
+  name: ""
