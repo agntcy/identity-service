@@ -321,8 +321,13 @@
           "$ref": "#/definitions/v1alpha1AppType",
           "description": "The type of the App."
         },
+        "resolverMetadataId": {
+          "type": "string",
+          "title": "The DID value"
+        },
         "apiKey": {
-          "type": "string"
+          "type": "string",
+          "description": "The API Key Secret for the App."
         },
         "status": {
           "$ref": "#/definitions/v1alpha1AppStatus",

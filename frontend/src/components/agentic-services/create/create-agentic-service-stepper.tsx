@@ -166,11 +166,26 @@ const FormStepperComponent = () => {
                         )}
                         {methods.current.id !== 'createBadge' && (
                           <StepperControls className="pt-4">
-                            <Button variant="tertariary" onClick={handleOnClear} disabled={isLoading}>
+                            <Button
+                              sx={{
+                                fontWeight: '600 !important'
+                              }}
+                              variant="tertariary"
+                              onClick={handleOnClear}
+                              disabled={isLoading}
+                            >
                               Cancel
                             </Button>
                             {!methods.isFirst && (
-                              <Button variant="outlined" onClick={methods.prev} disabled={methods.isFirst || isLoading} className="cursor-pointer">
+                              <Button
+                                sx={{
+                                  fontWeight: '600 !important'
+                                }}
+                                variant="outlined"
+                                onClick={methods.prev}
+                                disabled={methods.isFirst || isLoading}
+                                className="cursor-pointer"
+                              >
                                 Previous
                               </Button>
                             )}
@@ -180,6 +195,9 @@ const FormStepperComponent = () => {
                               type="submit"
                               disabled={isLoading || !form.formState.isValid}
                               className="cursor-pointer"
+                              sx={{
+                                fontWeight: '600 !important'
+                              }}
                             >
                               {methods.current.id === 'confirmAgenticService' ? 'Save' : 'Next'}
                             </Button>

@@ -10,10 +10,16 @@ import {App} from '@/types/api/app';
 import KeyValue, {KeyValuePair} from '@/components/ui/key-value';
 import {AgenticServiceType} from '@/components/shared/agentic-service-type';
 import {BadgeCard} from '@/components/shared/badge-card';
+import {StatusAgenticService} from '@/components/shared/status-agentic-service';
+import DateHover from '@/components/ui/date-hover';
 
 export const InfoAgenticService = ({app, onChangeReissueBadge}: {app?: App; onChangeReissueBadge?: (value: boolean) => void}) => {
   const keyValuePairs = useMemo(() => {
     const temp: KeyValuePair[] = [
+      {
+        keyProp: 'Identity',
+        value: app?.resolverMetadataId || 'Not provided'
+      },
       {
         keyProp: 'Name',
         value: app?.name || 'Not provided'
@@ -25,15 +31,23 @@ export const InfoAgenticService = ({app, onChangeReissueBadge}: {app?: App; onCh
       {
         keyProp: 'Type',
         value: <AgenticServiceType type={app?.type} />
+      },
+      {
+        keyProp: 'Status',
+        value: <StatusAgenticService status={app?.status} />
+      },
+      {
+        keyProp: 'Created At',
+        value: <DateHover date={app?.createdAt} />
       }
     ];
     return temp;
-  }, [app?.description, app?.name, app?.type]);
+  }, [app]);
 
   return (
     <>
       <div className="flex gap-4">
-        <div className="w-[45%] space-y-4">
+        <div className="w-[50%] space-y-4">
           <Card className="text-start space-y-4" variant="secondary">
             <div className="flex justify-between items-center">
               <Typography variant="subtitle1" fontWeight={600}>
@@ -41,7 +55,7 @@ export const InfoAgenticService = ({app, onChangeReissueBadge}: {app?: App; onCh
               </Typography>
             </div>
             <CardContent className="p-0 space-y-4">
-              <KeyValue pairs={keyValuePairs} useCard={false} />
+              <KeyValue pairs={keyValuePairs} useCard={false} orientation="vertical" />
             </CardContent>
           </Card>
           <Card className="text-start space-y-4" variant="secondary">

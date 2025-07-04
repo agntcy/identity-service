@@ -7,6 +7,7 @@ import {ReactNode} from 'react';
 import {Card, CardContent} from './card';
 import {cn} from '@/lib/utils';
 import {Typography} from '@mui/material';
+import {OverflowTooltip} from '@outshift/spark-design';
 
 const keyValueStyles = 'flex flex-col gap-4 w-full p-0';
 
@@ -52,7 +53,9 @@ export const KeyValueDisplay: React.FC<KeyValuePair> = ({keyProp, value, descrip
           <Typography style={{minWidth}} variant="body2Semibold">
             {keyProp}
           </Typography>
-          <Typography variant="body2">{value}</Typography>
+          <Typography variant="body2" sx={{width: '100%'}}>
+            {value}
+          </Typography>
         </>
       ) : (
         <>

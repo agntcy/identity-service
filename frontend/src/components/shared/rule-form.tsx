@@ -3,43 +3,41 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {useFormContext} from 'react-hook-form';
+import {Control, useFieldArray} from 'react-hook-form';
 import {FormControl, FormField, FormItem, FormLabel} from '@/components/ui/form';
 import {Input} from '@/components/ui/input';
-import {GeneralSize, MenuItem, Select, Tag, Typography} from '@outshift/spark-design';
+import {Button, Tooltip, Typography} from '@outshift/spark-design';
 import {RuleFormValues} from '@/schemas/rule-schema';
-import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group';
-import {useEffect} from 'react';
+import {useCallback} from 'react';
+import {TaskForm} from './task-form';
+import {PlusIcon, XIcon} from 'lucide-react';
+import {Divider, IconButton} from '@mui/material';
 
-export const RuleForm = ({isLoading = false, values}: {isLoading?: boolean; values?: any}) => {
-  const form = useFormContext<RuleFormValues>();
+export const RuleForm = ({isLoading = false, control}: {isLoading?: boolean; control: Control<RuleFormValues>}) => {
+  const {fields, append, remove} = useFieldArray({
+    control: control,
+    name: 'tasks'
+  });
 
-  const optionsTasks = [
-    {label: 'Task 1', value: 'task1'},
-    {label: 'Task 2', value: 'task2'},
-    {label: 'Task 3', value: 'task3'}
-  ];
+  const handleRemoveTask = useCallback(
+    (index: number) => {
+      remove(index);
+    },
+    [remove]
+  );
 
-  const optionsActions = [
-    {label: 'Action 1', value: 'action1'},
-    {label: 'Action 2', value: 'action2'},
-    {label: 'Action 3', value: 'action3'}
-  ];
-
-  useEffect(() => {
-    form.reset({
-      name: values?.name || '',
-      description: values?.description || '',
-      needsApproval: values?.needsApproval ? 'yes' : 'no'
+  const handleAddTask = useCallback(() => {
+    append({
+      task: '',
+      action: ''
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [values]);
+  }, [append]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div className="w-full flex gap-8">
         <FormField
-          control={form.control}
+          control={control}
           name="name"
           render={({field}) => (
             <FormItem className="w-full">
@@ -51,7 +49,7 @@ export const RuleForm = ({isLoading = false, values}: {isLoading?: boolean; valu
           )}
         />
         <FormField
-          control={form.control}
+          control={control}
           name="description"
           render={({field}) => (
             <FormItem className="w-full">
@@ -63,137 +61,55 @@ export const RuleForm = ({isLoading = false, values}: {isLoading?: boolean; valu
           )}
         />
       </div>
-      <div className="w-full flex gap-8">
-        <FormField
-          control={form.control}
-          name="task"
-          render={({field}) => (
-            <FormItem className="w-full">
-              <FormLabel className="form-label">Task</FormLabel>
-              <FormControl>
-                <Select
-                  disabled={isLoading}
-                  fullWidth
-                  label="Select tasks"
-                  variant="standard"
-                  displayEmpty
-                  sx={{
-                    height: '36px',
-                    marginTop: 0,
-                    '&.MuiInputBase-root': {backgroundColor: '#FBFCFE', marginTop: 0, border: '2px solid #E8EEFB'},
-                    '& .MuiSelect-select': {backgroundColor: '#fbfcfe', color: '#777D85'},
-                    '& .MuiSelect-icon': {
-                      color: 'currentColor'
-                    }
-                  }}
-                  renderValue={(select: any) => {
-                    if (!select) {
-                      return (
-                        <Typography variant="body1" fontSize={14} sx={(theme) => ({color: theme.palette.vars.baseTextWeak})}>
-                          Select task...
-                        </Typography>
-                      );
-                    }
-                    return (
-                      <div className="mb-1">
-                        <Tag size={GeneralSize.Small}>{select}</Tag>
-                      </div>
-                    );
-                  }}
-                  {...field}
-                  value={form.watch('task') ?? ''}
-                  onChange={(e) => {
-                    form.setValue('task', e.target.value);
-                  }}
-                >
-                  {optionsTasks.map((option, key) => (
-                    <MenuItem key={key} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="action"
-          render={({field}) => (
-            <FormItem className="w-full">
-              <FormLabel className="form-label">Action</FormLabel>
-              <FormControl>
-                <Select
-                  disabled={isLoading}
-                  fullWidth
-                  label="Select action"
-                  variant="standard"
-                  displayEmpty
-                  sx={{
-                    height: '36px',
-                    marginTop: 0,
-                    '&.MuiInputBase-root': {backgroundColor: '#FBFCFE', marginTop: 0, border: '2px solid #E8EEFB'},
-                    '& .MuiSelect-select': {backgroundColor: '#fbfcfe', color: '#777D85'},
-                    '& .MuiSelect-icon': {
-                      color: 'currentColor'
-                    }
-                  }}
-                  renderValue={(select: any) => {
-                    if (!select) {
-                      return (
-                        <Typography variant="body1" fontSize={14} sx={(theme) => ({color: theme.palette.vars.baseTextWeak})}>
-                          Select action...
-                        </Typography>
-                      );
-                    }
-                    return (
-                      <div className="mb-1">
-                        <Tag size={GeneralSize.Small}>{select}</Tag>
-                      </div>
-                    );
-                  }}
-                  {...field}
-                  value={form.watch('action') ?? ''}
-                  onChange={(e) => {
-                    form.setValue('action', e.target.value);
-                  }}
-                >
-                  {optionsActions.map((option, key) => (
-                    <MenuItem key={key} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </FormItem>
-          )}
-        />
+      <div className="bg-[#FBFCFE] p-[24px] rounded-[8px] w-full h-full space-y-6">
+        <div>
+          <Typography variant="subtitle1" fontWeight={600}>
+            Select Tasks and Actions
+          </Typography>
+        </div>
+        <div>
+          {fields.map((form, index) => {
+            return (
+              <div key={form.id} className="flex flex-col gap-6">
+                <div className="flex items-center gap-6">
+                  <div className="w-full">
+                    <TaskForm isLoading={isLoading} control={control} index={index} />
+                  </div>
+                  <Tooltip title="Remove this rule">
+                    <IconButton
+                      sx={(theme) => ({
+                        color: theme.palette.vars.baseTextDefault,
+                        width: '24px',
+                        height: '24px',
+                        marginTop: '24px'
+                      })}
+                      onClick={() => handleRemoveTask?.(index)}
+                    >
+                      <XIcon className="h-4 w-4" />
+                    </IconButton>
+                  </Tooltip>
+                </div>
+                <div className="mb-4">
+                  <Divider />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <div className="flex justify-end">
+          <Button
+            variant="tertariary"
+            sx={{fontWeight: '600 !important', padding: '0 !important'}}
+            startIcon={<PlusIcon className="w-4 h-4" />}
+            loadingPosition="start"
+            size="small"
+            disabled={isLoading || (!control._formState.isValid && fields.length !== 0)}
+            onClick={handleAddTask}
+          >
+            Add Task
+          </Button>
+        </div>
       </div>
-      <FormField
-        control={form.control}
-        name="needsApproval"
-        render={({field}) => (
-          <FormItem className="space-y-2">
-            <FormLabel className="form-label">Requires Approval</FormLabel>
-            <FormControl>
-              <RadioGroup disabled={isLoading} onValueChange={field.onChange} className="flex flex-col" {...field}>
-                <FormItem className="flex items-center gap-3">
-                  <FormControl>
-                    <RadioGroupItem value="yes" />
-                  </FormControl>
-                  <Typography variant="body2">Yes</Typography>
-                </FormItem>
-                <FormItem className="flex items-center gap-3">
-                  <FormControl>
-                    <RadioGroupItem value="no" />
-                  </FormControl>
-                  <Typography variant="body2">No</Typography>
-                </FormItem>
-              </RadioGroup>
-            </FormControl>
-          </FormItem>
-        )}
-      />
     </div>
   );
 };

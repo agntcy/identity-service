@@ -45,7 +45,14 @@ export const BadgeModalForm = ({
 
   const form = useForm<BadgeFormValues>({
     resolver: zodResolver(BadgeSchema),
-    mode: 'all'
+    mode: 'all',
+    defaultValues: {
+      type: app.type,
+      oasfSpecs: undefined,
+      mcpServer: undefined,
+      wellKnowServer: undefined,
+      oasfSpecsContent: undefined
+    }
   });
 
   const navigate = useNavigate();
@@ -117,25 +124,10 @@ export const BadgeModalForm = ({
       oasfSpecsContent: undefined
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [app.type]);
+  }, [app.type, open]);
 
   return (
-    <Modal
-      open={open}
-      maxWidth="lg"
-      fullWidth
-      onChange={() => {
-        setIsLoading(false);
-        form.reset({
-          type: app.type,
-          oasfSpecs: undefined,
-          mcpServer: undefined,
-          wellKnowServer: undefined,
-          oasfSpecsContent: undefined
-        });
-      }}
-      {...props}
-    >
+    <Modal open={open} maxWidth="lg" fullWidth {...props}>
       <ModalTitle>{title}</ModalTitle>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">

@@ -195,6 +195,9 @@ export interface V1Alpha1App {
   description?: string;
   /** The type of the App. */
   type?: V1Alpha1AppType;
+  /** The DID value */
+  resolverMetadataId?: string;
+  /** The API Key Secret for the App. */
   apiKey?: string;
   /** The status of the App */
   status?: V1Alpha1AppStatus;
