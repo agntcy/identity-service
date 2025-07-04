@@ -36,12 +36,10 @@ export const PolicyLogic = ({isLoading = false, policyForm}: {policyForm: UseFor
       name: '',
       description: '',
       needsApproval: 'no',
-      tasks: [
-        {
-          task: '',
-          action: RuleAction.RULE_ACTION_UNSPECIFIED
-        }
-      ]
+      tasks: {
+        task: '',
+        action: RuleAction.RULE_ACTION_UNSPECIFIED
+      }
     });
   }, [appendRule]);
 

@@ -14,7 +14,7 @@ import {PolicyFormValues} from '@/schemas/policy-schema';
 import {useGetGetTasksAgenticService} from '@/queries';
 import {useMemo} from 'react';
 
-export const TaskForm = ({index, fieldIndex, isLoading = false}: {isLoading?: boolean; index: number; fieldIndex: number; register?: any}) => {
+export const TaskForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; fieldIndex: number}) => {
   const policyForm = useFormContext<PolicyLogicyFormValues>();
   const methods = useStepper();
   const metaData = methods.getMetadata('policyForm') as PolicyFormValues | undefined;
@@ -52,7 +52,7 @@ export const TaskForm = ({index, fieldIndex, isLoading = false}: {isLoading?: bo
         ) : (
           <FormField
             control={policyForm.control}
-            name={`rules.${fieldIndex}.tasks.${index}.task`}
+            name={`rules.${fieldIndex}.tasks.task`}
             render={({field}) => (
               <FormItem className="w-full">
                 <FormLabel className="form-label">Task</FormLabel>
@@ -82,7 +82,7 @@ export const TaskForm = ({index, fieldIndex, isLoading = false}: {isLoading?: bo
                       }
                       return (
                         <div className="mb-1">
-                          <Tag size={GeneralSize.Small}>{select}</Tag>
+                          <Tag size={GeneralSize.Small}>{optionsTasks.find((op) => op.value === select)?.label}</Tag>
                         </div>
                       );
                     }}
@@ -113,7 +113,7 @@ export const TaskForm = ({index, fieldIndex, isLoading = false}: {isLoading?: bo
       <div className="w-[50%]">
         <FormField
           control={policyForm.control}
-          name={`rules.${fieldIndex}.tasks.${index}.action`}
+          name={`rules.${fieldIndex}.tasks.action`}
           render={({field}) => (
             <FormItem className="w-full">
               <FormLabel className="form-label">Action</FormLabel>

@@ -47,12 +47,10 @@ const FormStepperComponent = () => {
           name: '',
           description: '',
           needsApproval: 'no',
-          tasks: [
-            {
-              action: RuleAction.RULE_ACTION_UNSPECIFIED,
-              task: ''
-            }
-          ]
+          tasks: {
+            action: RuleAction.RULE_ACTION_UNSPECIFIED,
+            task: ''
+          }
         }
       ]
     }
