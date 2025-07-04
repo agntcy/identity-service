@@ -166,6 +166,11 @@ func (s *appService) UpdateApp(
 
 	storedApp.ApiKey = apiKey.Secret
 
+	err = s.populateStatues(ctx, storedApp)
+	if err != nil {
+		return nil, err
+	}
+
 	return storedApp, nil
 }
 
@@ -189,6 +194,11 @@ func (s *appService) GetApp(
 
 	app.ApiKey = apiKey.Secret
 
+	err = s.populateStatues(ctx, app)
+	if err != nil {
+		return nil, err
+	}
+
 	return app, nil
 }
 
@@ -198,7 +208,17 @@ func (s *appService) ListApps(
 	query *string,
 	appTypes []apptypes.AppType,
 ) (*pagination.Pageable[apptypes.App], error) {
-	return s.appRepository.GetAllApps(ctx, paginationFilter, query, appTypes)
+	page, err := s.appRepository.GetAllApps(ctx, paginationFilter, query, appTypes)
+	if err != nil {
+		return nil, err
+	}
+
+	err = s.populateStatues(ctx, page.Items...)
+	if err != nil {
+		return nil, err
+	}
+
+	return page, nil
 }
 
 func (s *appService) DeleteApp(ctx context.Context, appID string) error {
@@ -252,6 +272,26 @@ func (s *appService) DeleteApp(ctx context.Context, appID string) error {
 	err = s.appRepository.DeleteApp(ctx, app)
 	if err != nil {
 		return fmt.Errorf("unable to delete the app: %w", err)
+	}
+
+	return nil
+}
+
+func (s *appService) populateStatues(ctx context.Context, apps ...*apptypes.App) error {
+	appIDs := make([]string, len(apps))
+	for idx, app := range apps {
+		appIDs[idx] = app.ID
+	}
+
+	statuses, err := s.appRepository.GetAppStatuses(ctx, appIDs...)
+	if err != nil {
+		return fmt.Errorf("unable to fetch statuses for apps: %w", err)
+	}
+
+	for _, app := range apps {
+		if status, ok := statuses[app.ID]; ok {
+			app.Status = status
+		}
 	}
 
 	return nil

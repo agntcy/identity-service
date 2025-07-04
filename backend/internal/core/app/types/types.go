@@ -94,18 +94,19 @@ type App struct {
 	Type AppType `json:"type,omitempty" protobuf:"bytes,4,opt,name=type"`
 
 	// The DID value
-	ResolverMetadataID string `json:"resolver_metadata_id,omitempty" protobuf:"-"`
+	ResolverMetadataID string `json:"resolver_metadata_id,omitempty" protobuf:"bytes,5,opt,name=resolver_metadata_id"`
 
-	ApiKey string `json:"api_key" protobuf:"bytes,5,opt,name=api_key"`
+	// The API Key Secret for the App.
+	ApiKey string `json:"api_key" protobuf:"bytes,6,opt,name=api_key"`
 
 	// The status of the App
-	Status AppStatus `json:"status" protobuf:"bytes,6,opt,name=status"`
+	Status AppStatus `json:"status" protobuf:"bytes,7,opt,name=status"`
 
 	// CreatedAt records the timestamp of when the App was initially created
-	CreatedAt time.Time `json:"created_at" protobuf:"google.protobuf.Timestamp,7,opt,name=created_at"`
+	CreatedAt time.Time `json:"created_at" protobuf:"google.protobuf.Timestamp,8,opt,name=created_at"`
 
 	// UpdatedAt records the timestamp of the last update to the App
-	UpdatedAt *time.Time `json:"updated_at,omitempty" protobuf:"google.protobuf.Timestamp,8,opt,name=updated_at"`
+	UpdatedAt *time.Time `json:"updated_at,omitempty" protobuf:"google.protobuf.Timestamp,9,opt,name=updated_at"`
 
 	DeletedAt *time.Time `json:"-" protobuf:"-"`
 }
