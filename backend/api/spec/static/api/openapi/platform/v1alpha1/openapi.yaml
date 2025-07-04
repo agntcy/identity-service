@@ -247,6 +247,32 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /v1alpha1/apps/{appId}/task:
+        get:
+            tags:
+                - AppService
+            description: Get the list of tasks related to an App
+            operationId: AppService_GetTasks
+            parameters:
+                - name: appId
+                  in: path
+                  description: App Id to get the tasks for.
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetTasksResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /v1alpha1/auth/app_info:
         get:
             tags:
@@ -1011,6 +1037,14 @@ components:
                     items:
                         $ref: '#/components/schemas/AppTypeCountEntry'
                     description: The apps count per app type
+        GetTasksResponse:
+            type: object
+            properties:
+                tasks:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Task'
+                    description: The list of tasks related to the App
         GoogleProtobufAny:
             type: object
             properties:

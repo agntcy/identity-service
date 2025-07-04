@@ -30,6 +30,7 @@ const (
 	AppService_UpdateApp_FullMethodName    = "/agntcy.identity.platform.v1alpha1.AppService/UpdateApp"
 	AppService_DeleteApp_FullMethodName    = "/agntcy.identity.platform.v1alpha1.AppService/DeleteApp"
 	AppService_GetBadge_FullMethodName     = "/agntcy.identity.platform.v1alpha1.AppService/GetBadge"
+	AppService_GetTasks_FullMethodName     = "/agntcy.identity.platform.v1alpha1.AppService/GetTasks"
 )
 
 // AppServiceClient is the client API for AppService service.
@@ -52,6 +53,8 @@ type AppServiceClient interface {
 	DeleteApp(ctx context.Context, in *DeleteAppRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// Get the current badge issued for the App.
 	GetBadge(ctx context.Context, in *GetBadgeRequest, opts ...grpc.CallOption) (*Badge, error)
+	// Get the list of tasks related to an App
+	GetTasks(ctx context.Context, in *GetTasksRequest, opts ...grpc.CallOption) (*GetTasksResponse, error)
 }
 
 type appServiceClient struct {
@@ -132,6 +135,16 @@ func (c *appServiceClient) GetBadge(ctx context.Context, in *GetBadgeRequest, op
 	return out, nil
 }
 
+func (c *appServiceClient) GetTasks(ctx context.Context, in *GetTasksRequest, opts ...grpc.CallOption) (*GetTasksResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetTasksResponse)
+	err := c.cc.Invoke(ctx, AppService_GetTasks_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AppServiceServer is the server API for AppService service.
 // All implementations should embed UnimplementedAppServiceServer
 // for forward compatibility.
@@ -152,6 +165,8 @@ type AppServiceServer interface {
 	DeleteApp(context.Context, *DeleteAppRequest) (*emptypb.Empty, error)
 	// Get the current badge issued for the App.
 	GetBadge(context.Context, *GetBadgeRequest) (*Badge, error)
+	// Get the list of tasks related to an App
+	GetTasks(context.Context, *GetTasksRequest) (*GetTasksResponse, error)
 }
 
 // UnimplementedAppServiceServer should be embedded to have
@@ -181,6 +196,9 @@ func (UnimplementedAppServiceServer) DeleteApp(context.Context, *DeleteAppReques
 }
 func (UnimplementedAppServiceServer) GetBadge(context.Context, *GetBadgeRequest) (*Badge, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetBadge not implemented")
+}
+func (UnimplementedAppServiceServer) GetTasks(context.Context, *GetTasksRequest) (*GetTasksResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTasks not implemented")
 }
 func (UnimplementedAppServiceServer) testEmbeddedByValue() {}
 
@@ -328,6 +346,24 @@ func _AppService_GetBadge_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AppService_GetTasks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTasksRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AppServiceServer).GetTasks(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AppService_GetTasks_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AppServiceServer).GetTasks(ctx, req.(*GetTasksRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AppService_ServiceDesc is the grpc.ServiceDesc for AppService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -362,6 +398,10 @@ var AppService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetBadge",
 			Handler:    _AppService_GetBadge_Handler,
+		},
+		{
+			MethodName: "GetTasks",
+			Handler:    _AppService_GetTasks_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

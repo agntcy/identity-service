@@ -146,3 +146,10 @@ func (s *appService) GetBadge(
 
 	return converters.FromBadge(badge), nil
 }
+
+func (s *appService) GetTasks(
+	ctx context.Context,
+	in *identity_platform_sdk_go.GetTasksRequest,
+) (*identity_platform_sdk_go.GetTasksResponse, error) {
+	return nil, errors.New("not implemented")
+}
