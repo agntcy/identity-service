@@ -7,7 +7,6 @@ import {ReactNode} from 'react';
 import {Card, CardContent} from './card';
 import {cn} from '@/lib/utils';
 import {Typography} from '@mui/material';
-import {OverflowTooltip} from '@outshift/spark-design';
 
 const keyValueStyles = 'flex flex-col gap-4 w-full p-0';
 
