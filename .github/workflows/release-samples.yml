@@ -1,0 +1,160 @@
+# Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
+---
+name: workflow CI/CD
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+  workflow_dispatch:
+
+
+permissions:
+  id-token: write # This is required for requesting the JWT
+  contents: read  # This is required for actions/checkout
+  packages: write # needed to push docker image to gar or ecr
+
+jobs:
+  ################################## checkout ######################
+  ###############################################################################
+  checkout:
+    name: checkout
+    runs-on: ${{ vars.UBUNTU_RUNNER }}
+    container:
+      image: ${{ vars.SRE_BUILD_IMAGE }}
+      options: --user root
+      credentials:
+        username: ${{ secrets.GHCR_USERNAME }}
+        password: ${{ secrets.GHCR_TOKEN }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@83b7061638ee4956cf7545a6f7efe594e5ad0247 # v3.5.1
+        with:
+          # The branch, tag or SHA to checkout, otherwise, uses the default branch.
+          ref: ${{ github.ref }}
+          # Relative path under $GITHUB_WORKSPACE to place the repository
+          path: ''
+          # Whether to execute `git clean -ffdx && git reset --hard HEAD` before fetching
+          # Default: true
+          clean: true
+          # Whether to download Git-LFS files
+          # Default: false
+          lfs: ''
+          # Whether to checkout submodules: `true` to checkout submodules or `recursive` to
+          # recursively checkout submodules.
+          # Default: false
+          submodules: ''
+
+  ################################## Docker build & push ##########################
+  #################################################################################
+  call-docker-build-push-mcp-server-currency-exchange:
+    name: Call Docker Build mcp server currency exchange
+    needs: [checkout]
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/build-push-docker.yaml@production
+
+    secrets:
+      # Only needed if with:ecr-enabled or with:gar-enabled is true below
+      vault-approle-role-id: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
+      vault-approle-secret-id: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
+      ghcr-username: ${{ secrets.GHCR_USERNAME }}
+      ghcr-token: ${{ secrets.GHCR_TOKEN }}
+      ghcr-org-token: ${{ secrets.GHCR_TOKEN }}
+
+    with:
+      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      ### REQUIRED
+      ### Docker image name
+      image-name: "${{ github.event.repository.name }}-mcp-server-currency-exchange"
+
+      ### path to where docker should copy files into image
+      ### defaults to root of repository (.)
+      context: .
+
+      ### Dockerfile alternate name. Default is Dockerfile (relative to context path)
+      dockerfile: samples/mcp/currency_exchange/Dockerfile
+      ### REQUIRED
+      ### ENABLE ONE OR BOTH REGISTRIES
+      ### tell docker where to push.
+      ecr-enabled: true
+      artifactory-devhub-enabled: false
+      ghcr-enabled: true
+      ghcr-org-registry: ${{ vars.GHCR_REGISTRY }}
+
+  call-docker-build-push-a2a-agent-currency-exchange:
+    name: Call Docker Build a2a agent currency exchange
+    needs: [checkout]
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/build-push-docker.yaml@production
+
+    secrets:
+      # Only needed if with:ecr-enabled or with:gar-enabled is true below
+      vault-approle-role-id: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
+      vault-approle-secret-id: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
+      ghcr-username: ${{ secrets.GHCR_USERNAME }}
+      ghcr-token: ${{ secrets.GHCR_TOKEN }}
+      ghcr-org-token: ${{ secrets.GHCR_TOKEN }}
+      artifactory_password: ${{ secrets.ARTIFACTORY_PASSWORD }}
+
+    with:
+      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      ### REQUIRED
+      ### Docker image name
+      image-name: "${{ github.event.repository.name }}-a2a-agent-currency-exchange"
+
+      ### path to where docker should copy files into image
+      ### defaults to root of repository (.)
+      context: .
+
+      ### Dockerfile alternate name. Default is Dockerfile (relative to context path)
+      dockerfile: samples/agent/a2a/currency_exchange/Dockerfile
+      ### REQUIRED
+      ### ENABLE ONE OR BOTH REGISTRIES
+      ### tell docker where to push.
+      ecr-enabled: true
+      artifactory-devhub-enabled: false
+      ghcr-enabled: true
+      ghcr-org-registry: ${{ vars.GHCR_REGISTRY }}
+
+  # ################################## Helm Publish #################################
+  # #################################################################################
+  # call-helm-publish-backend:
+  #   name: Helm publish Backend
+  #   needs: [checkout-unit-tests]
+  #   uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@a663a51a68f4158da24f29d7859dabb891586d5c #main
+  #   with:
+  #     runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+  #     enable-chartmuseum: true
+  #     enable-private-ecr: false
+  #     enable-public-ecr: false
+  #     chart-path: charts/pyramid-backend
+  #     # override-chart-version: ${{ needs.calculate-tags.outputs.chart_version }}
+  #     #ecr-public-registry-alias: ${{ vars.ECR_PUBLIC_REGISTRY_ALIAS}}
+  #   secrets:
+  #     # GHCR Login for docker build runner
+  #     ghcr-username: ${{ secrets.GHCR_USERNAME }}
+  #     ghcr-token: ${{ secrets.GHCR_TOKEN }}
+  #     vault-approle-role-id: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
+  #     vault-approle-secret-id: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
+
+  # call-helm-publish-ui:
+  #   name: Helm publish UI
+  #   needs: [checkout-unit-tests]
+  #   uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@a663a51a68f4158da24f29d7859dabb891586d5c #main
+  #   with:
+  #     runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+  #     enable-chartmuseum: true
+  #     enable-private-ecr: false
+  #     enable-public-ecr: false
+  #     chart-path: charts/pyramid-ui
+  #     # override-chart-version: ${{ needs.calculate-tags.outputs.chart_version }}
+  #     #ecr-public-registry-alias: ${{ vars.ECR_PUBLIC_REGISTRY_ALIAS}}
+  #   secrets:
+  #     # GHCR Login for docker build runner
+  #     ghcr-username: ${{ secrets.GHCR_USERNAME }}
+  #     ghcr-token: ${{ secrets.GHCR_TOKEN }}
+  #     vault-approle-role-id: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
+  #     vault-approle-secret-id: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
+
+
+
