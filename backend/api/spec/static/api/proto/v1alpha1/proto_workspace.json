@@ -1801,9 +1801,9 @@
               "requestLongType": "VerifyBadgeRequest",
               "requestFullType": "agntcy.identity.platform.v1alpha1.VerifyBadgeRequest",
               "requestStreaming": false,
-              "responseType": "BadgeClaims",
-              "responseLongType": "BadgeClaims",
-              "responseFullType": "agntcy.identity.platform.v1alpha1.BadgeClaims",
+              "responseType": "VerifiableCredential",
+              "responseLongType": "VerifiableCredential",
+              "responseFullType": "agntcy.identity.platform.v1alpha1.VerifiableCredential",
               "responseStreaming": false,
               "options": {
                 "google.api.http": {
@@ -2091,6 +2091,11 @@
               "name": "ERROR_REASON_ID_ALREADY_REGISTERED",
               "number": "12",
               "description": "The ID and Resolver Metadata are already registered in the system"
+            },
+            {
+              "name": "ERROR_REASON_VERIFIABLE_CREDENTIAL_REVOKED",
+              "number": "13",
+              "description": "The Verifiable Credential is revoked"
             }
           ]
         }
