@@ -12,6 +12,7 @@ import (
 
 	badgetypes "github.com/agntcy/identity-platform/internal/core/badge/types"
 	idpcore "github.com/agntcy/identity-platform/internal/core/idp"
+	"github.com/agntcy/identity-platform/internal/pkg/convertutil"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 	"github.com/agntcy/identity-platform/internal/pkg/httputil"
 	"github.com/agntcy/identity-platform/internal/pkg/jwtutil"
@@ -339,9 +340,12 @@ func (s *service) VerifyVerifiableCredential(
 	log.Debug("Verifiable credential verified successfully")
 
 	// Parse the verifiable credential to extract claims
-	credentialSubjectClaim, err := jwtutil.GetClaim(
+	var badgeClaims map[string]any
+
+	err = jwtutil.GetClaim(
 		vc,
 		credentialSubject,
+		&badgeClaims,
 	)
 	if err != nil {
 		return nil, errutil.Err(
@@ -350,43 +354,38 @@ func (s *service) VerifyVerifiableCredential(
 		)
 	}
 
-	log.Debug("Extracted credential subject: ", *credentialSubjectClaim)
-
-	// Unmarshal the claims from the credential subject
-	var badgeClaims badgetypes.BadgeClaims
-
-	err = json.Unmarshal([]byte(*credentialSubjectClaim), &badgeClaims)
-	if err != nil {
-		return nil, errutil.Err(
-			err,
-			"error unmarshalling credential subject claims from verifiable credential",
-		)
-	}
-
 	log.Debug("Unmarshalled claims: ", badgeClaims)
 
 	// Parse the issuer
-	issuerClaim, err := jwtutil.GetClaim(vc, "issuer")
-	if err != nil || issuerClaim == nil || *issuerClaim == "" {
+	var issuerClaim string
+
+	err = jwtutil.GetClaim(vc, "issuer", &issuerClaim)
+	if err != nil {
 		return nil, errutil.Err(
 			err,
 			"error extracting issuer from verifiable credential",
 		)
 	}
 
+	log.Debug("Issuer claim: ", issuerClaim)
+
 	// Parse the issuance date
-	issuanceDateClaim, err := jwtutil.GetClaim(vc, "issuanceDate")
-	if err != nil || issuanceDateClaim == nil || *issuanceDateClaim == "" {
+	var issuanceDateClaim string
+
+	err = jwtutil.GetClaim(vc, "issuanceDate", &issuanceDateClaim)
+	if err != nil {
 		return nil, errutil.Err(
 			err,
 			"error extracting issuance date from verifiable credential",
 		)
 	}
 
+	log.Debug("Issuance date claim: ", issuanceDateClaim)
+
 	return &badgetypes.VerifiableCredential{
-		CredentialSubject: &badgeClaims,
-		Issuer:            *issuerClaim,
-		IssuanceDate:      *issuanceDateClaim,
+		CredentialSubject: convertutil.Convert[badgetypes.BadgeClaims](badgeClaims),
+		Issuer:            issuerClaim,
+		IssuanceDate:      issuanceDateClaim,
 	}, nil
 }
 
