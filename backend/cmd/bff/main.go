@@ -235,6 +235,7 @@ func main() {
 		iamClient,
 		badgeRevoker,
 		keyStore,
+		policyRepository,
 	)
 	issuerSrv := issuer.NewService(
 		identityService,
