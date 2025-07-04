@@ -70,7 +70,7 @@ jobs:
 
       ### path to where docker should copy files into image
       ### defaults to root of repository (.)
-      context: .
+      context: /mcp/currency_exchange
 
       ### Dockerfile alternate name. Default is Dockerfile (relative to context path)
       dockerfile: samples/mcp/currency_exchange/Dockerfile
@@ -103,7 +103,7 @@ jobs:
 
       ### path to where docker should copy files into image
       ### defaults to root of repository (.)
-      context: .
+      context: ./agent/a2a/currency_exchange
 
       ### Dockerfile alternate name. Default is Dockerfile (relative to context path)
       dockerfile: samples/agent/a2a/currency_exchange/Dockerfile
