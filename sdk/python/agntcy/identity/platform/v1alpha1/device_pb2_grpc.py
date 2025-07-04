@@ -5,7 +5,3 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-ler plugin. DO NOT EDIT!
-"""Client and server classes corresponding to protobuf-defined services."""
-import grpc
-

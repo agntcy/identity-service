@@ -11,11 +11,12 @@ func _() {
 	_ = x[APP_STATUS_UNSPECIFIED-0]
 	_ = x[APP_STATUS_ACTIVE-1]
 	_ = x[APP_STATUS_PENDING-2]
+	_ = x[APP_STATUS_REVOKED-3]
 }
 
-const _AppStatus_name = "APP_STATUS_UNSPECIFIEDAPP_STATUS_ACTIVEAPP_STATUS_PENDING"
+const _AppStatus_name = "APP_STATUS_UNSPECIFIEDAPP_STATUS_ACTIVEAPP_STATUS_PENDINGAPP_STATUS_REVOKED"
 
-var _AppStatus_index = [...]uint8{0, 22, 39, 57}
+var _AppStatus_index = [...]uint8{0, 22, 39, 57, 75}
 
 func (i AppStatus) String() string {
 	if i < 0 || i >= AppStatus(len(_AppStatus_index)-1) {

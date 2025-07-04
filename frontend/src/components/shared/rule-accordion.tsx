@@ -3,36 +3,26 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {RuleFormValues, RuleSchema} from '@/schemas/rule-schema';
-import {zodResolver} from '@hookform/resolvers/zod';
 import {IconButton} from '@mui/material';
 import {Accordion, Tooltip} from '@outshift/spark-design';
 import {XIcon} from 'lucide-react';
-import {useForm} from 'react-hook-form';
-import {Form} from '../ui/form';
-import {RuleForm} from './rule-form';
-import {Rule} from '@/types/api/policy';
+import {RuleFormValues} from '@/schemas/rule-schema';
 
-interface RuleAccordionProps<T extends Partial<Rule>> {
-  rule: T;
+interface RuleAccordionProps {
+  fieldIndex?: number;
   showCloseButton?: boolean;
   onClose?: (ruleId: string) => void;
 }
 
-export const RuleAccordion = <T extends Rule>({rule, showCloseButton = false, onClose}: RuleAccordionProps<T>) => {
-  const form = useForm<RuleFormValues>({
-    resolver: zodResolver(RuleSchema),
-    mode: 'all'
-  });
-
+export const RuleAccordion = ({showCloseButton = false, fieldIndex, onClose}: RuleAccordionProps) => {
   return (
     <div className="flex justify-between items-start gap-4">
       <div className="w-full">
-        <Accordion title={rule.name || 'Rule'}>
+        <Accordion title={'Rule'}>
           <div className="mt-4 pl-8">
-            <Form {...form}>
-              <RuleForm values={rule} />
-            </Form>
+            {/* <Form {...form}>
+              <RuleForm />
+            </Form> */}
           </div>
         </Accordion>
       </div>
@@ -44,7 +34,7 @@ export const RuleAccordion = <T extends Rule>({rule, showCloseButton = false, on
               width: '24px',
               height: '24px'
             })}
-            onClick={() => onClose?.(rule.id || '')}
+            // onClick={() => onClose?.(rule.id || '')}
           >
             <XIcon className="h-4 w-4" />
           </IconButton>

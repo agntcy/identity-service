@@ -52,7 +52,9 @@ export const KeyValueDisplay: React.FC<KeyValuePair> = ({keyProp, value, descrip
           <Typography style={{minWidth}} variant="body2Semibold">
             {keyProp}
           </Typography>
-          <Typography variant="body2">{value}</Typography>
+          <Typography variant="body2" sx={{width: '100%'}}>
+            {value}
+          </Typography>
         </>
       ) : (
         <>

@@ -41,7 +41,7 @@ const FormStepperComponent = () => {
     callbacks: {
       onSuccess: (resp) => {
         methods.setMetadata('verficationResults', {
-          badgeClaims: resp.data
+          ...resp.data
         });
         toast({
           title: 'Badge verified successfully',
@@ -148,7 +148,13 @@ const FormStepperComponent = () => {
                           step.id === 'verficationResults' && <VerificationResults />
                         )}
                         <StepperControls className="pt-4">
-                          <Button variant="tertariary" onClick={handleOnClear}>
+                          <Button
+                            variant="tertariary"
+                            onClick={handleOnClear}
+                            sx={{
+                              fontWeight: '600 !important'
+                            }}
+                          >
                             Cancel
                           </Button>
                           <Button
@@ -157,6 +163,9 @@ const FormStepperComponent = () => {
                             loadingPosition="start"
                             disabled={isLoading || !form.formState.isValid}
                             className="cursor-pointer"
+                            sx={{
+                              fontWeight: '600 !important'
+                            }}
                           >
                             {methods.isLast ? 'Done' : 'Verify'}
                           </Button>

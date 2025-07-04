@@ -10,6 +10,7 @@ import (
 	identity_platform_sdk_go "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1"
 	"github.com/agntcy/identity-platform/internal/bff"
 	"github.com/agntcy/identity-platform/internal/bff/grpc/converters"
+	policytypes "github.com/agntcy/identity-platform/internal/core/policy/types"
 	"github.com/agntcy/identity-platform/internal/pkg/convertutil"
 	"github.com/agntcy/identity-platform/internal/pkg/grpcutil"
 	"github.com/agntcy/identity-platform/internal/pkg/pagination"
@@ -62,7 +63,8 @@ func (s *PolicyService) CreateRule(
 		in.Name,
 		ptrutil.DerefStr(in.Description),
 		in.Tasks,
-		ptrutil.Derefrence(in.NeedsApproval, false),
+		in.GetNeedsApproval(),
+		policytypes.RuleAction(in.GetAction()),
 	)
 	if err != nil {
 		return nil, grpcutil.BadRequestError(err)
@@ -198,7 +200,8 @@ func (s *PolicyService) UpdateRule(
 		in.Name,
 		*in.Description,
 		in.Tasks,
-		ptrutil.Derefrence(in.NeedsApproval, false),
+		in.GetNeedsApproval(),
+		policytypes.RuleAction(in.GetAction()),
 	)
 	if err != nil {
 		return nil, grpcutil.BadRequestError(err)

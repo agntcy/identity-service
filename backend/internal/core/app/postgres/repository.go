@@ -209,5 +209,40 @@ func (r *repository) GetAppStatuses(
 	ctx context.Context,
 	appIDs ...string,
 ) (map[string]types.AppStatus, error) {
-	return nil, nil
+	tenantID, ok := identitycontext.GetTenantID(ctx)
+	if !ok {
+		return nil, identitycontext.ErrTenantNotFound
+	}
+
+	var rows []*struct {
+		ID     string
+		Status types.AppStatus
+	}
+
+	err := r.dbContext.Client().
+		Raw(`
+			SELECT
+				a.id,
+				CASE
+					WHEN COUNT(*) FILTER (WHERE b.id IS NOT NULL AND cs.id IS NULL) > 0 THEN 1 -- active
+					WHEN COUNT(*) FILTER (WHERE b.id IS NOT NULL AND cs.id IS NOT NULL AND cs.purpose = 1) > 0 THEN 3 -- 'revoked'
+					WHEN COUNT(*) FILTER (WHERE b.id IS NULL AND cs.id IS NULL) > 0 THEN 2 -- 'pending'
+				END AS status
+			FROM apps AS a
+			LEFT JOIN badges AS b ON b.app_id = a.id
+			LEFT JOIN credential_statuses AS cs ON cs.verifiable_credential_id = b.id
+			WHERE a.tenant_id = ? AND a.id IN (?)
+			GROUP BY a.id
+		`, tenantID, appIDs).
+		Scan(&rows).Error
+	if err != nil {
+		return nil, err
+	}
+
+	statusPerApp := make(map[string]types.AppStatus)
+	for _, row := range rows {
+		statusPerApp[row.ID] = row.Status
+	}
+
+	return statusPerApp, nil
 }

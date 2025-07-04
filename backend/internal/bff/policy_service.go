@@ -29,6 +29,7 @@ type PolicyService interface {
 		policyID, name, description string,
 		taskIDs []string,
 		needsApproval bool,
+		action policytypes.RuleAction,
 	) (*policytypes.Rule, error)
 	DeletePolicy(ctx context.Context, id string) error
 	DeleteRule(ctx context.Context, ruleID string, policyID string) error
@@ -57,6 +58,7 @@ type PolicyService interface {
 		description string,
 		taskIDs []string,
 		needsApproval bool,
+		action policytypes.RuleAction,
 	) (*policytypes.Rule, error)
 }
 
@@ -108,9 +110,14 @@ func (s *policyService) CreateRule(
 	policyID, name, description string,
 	taskIDs []string,
 	needsApproval bool,
+	action policytypes.RuleAction,
 ) (*policytypes.Rule, error) {
 	if name == "" {
 		return nil, errors.New("name cannot be empty")
+	}
+
+	if action == policytypes.RULE_ACTION_UNSPECIFIED {
+		return nil, errors.New("invalid rule action")
 	}
 
 	policy, err := s.policyRepository.GetPolicyByID(ctx, policyID)
@@ -130,6 +137,7 @@ func (s *policyService) CreateRule(
 		PolicyID:      policy.ID,
 		Tasks:         tasks,
 		NeedsApproval: needsApproval,
+		Action:        action,
 	}
 
 	err = s.policyRepository.CreateRule(ctx, rule)
@@ -247,9 +255,14 @@ func (s *policyService) UpdateRule(
 	description string,
 	taskIDs []string,
 	needsApproval bool,
+	action policytypes.RuleAction,
 ) (*policytypes.Rule, error) {
 	if name == "" {
 		return nil, errors.New("name cannot be empty")
+	}
+
+	if action == policytypes.RULE_ACTION_UNSPECIFIED {
+		return nil, errors.New("invalid rule action")
 	}
 
 	rule, err := s.policyRepository.GetRuleByID(ctx, ruleID, policyID)
@@ -266,6 +279,7 @@ func (s *policyService) UpdateRule(
 	rule.Description = description
 	rule.NeedsApproval = needsApproval
 	rule.Tasks = tasks
+	rule.Action = action
 
 	err = s.policyRepository.UpdateRule(ctx, rule)
 	if err != nil {

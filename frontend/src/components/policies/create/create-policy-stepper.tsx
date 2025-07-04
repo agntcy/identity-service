@@ -17,6 +17,7 @@ import {PolicyFormValues, PolicySchema} from '@/schemas/policy-schema';
 import {Policy} from '@/types/api/policy';
 import {PolicyLogic} from './steps/policy-logic';
 import {useCreatePolicy} from '@/mutations';
+import {PolicyLogicyFormValues, PolicyLogicySchema} from '@/schemas/policy-logic-schema';
 
 export const CreatePolicyStepper = () => {
   return (
@@ -35,6 +36,26 @@ const FormStepperComponent = () => {
   const form = useForm<z.infer<typeof methods.current.schema>>({
     resolver: zodResolver(methods.current.schema),
     mode: 'all'
+  });
+
+  const policyLogicForm = useForm<PolicyLogicyFormValues>({
+    resolver: zodResolver(PolicyLogicySchema),
+    mode: 'all',
+    defaultValues: {
+      rules: [
+        {
+          name: '',
+          description: '',
+          needsApproval: 'no',
+          tasks: [
+            {
+              action: '',
+              task: ''
+            }
+          ]
+        }
+      ]
+    }
   });
 
   const mutationCreate = useCreatePolicy({
@@ -134,9 +155,20 @@ const FormStepperComponent = () => {
                         </div>
                       </AccordionTrigger>
                       <AccordionContent>
-                        {step.id === 'policyForm' ? <PolicyForm isLoading={isLoading} /> : step.id === 'policyLogic' ? <PolicyLogic /> : null}
+                        {step.id === 'policyForm' ? (
+                          <PolicyForm isLoading={isLoading} />
+                        ) : step.id === 'policyLogic' ? (
+                          <PolicyLogic isLoading={isLoading} policyForm={policyLogicForm} />
+                        ) : null}
                         <StepperControls className="pt-4">
-                          <Button variant="tertariary" onClick={handleOnClear} disabled={isLoading}>
+                          <Button
+                            variant="tertariary"
+                            onClick={handleOnClear}
+                            disabled={isLoading}
+                            sx={{
+                              fontWeight: '600 !important'
+                            }}
+                          >
                             Cancel
                           </Button>
                           <Button
@@ -145,6 +177,9 @@ const FormStepperComponent = () => {
                             type="submit"
                             disabled={isLoading || !form.formState.isValid}
                             className="cursor-pointer"
+                            sx={{
+                              fontWeight: '600 !important'
+                            }}
                           >
                             {methods.current.id === 'policyLogic' ? 'Save' : 'Next'}
                           </Button>

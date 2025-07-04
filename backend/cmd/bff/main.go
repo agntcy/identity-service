@@ -114,9 +114,9 @@ func main() {
 		&settingspg.DuoIdpSettings{},
 		&settingspg.OktaIdpSettings{},
 		&settingspg.OryIdpSettings{},
+		&badgepg.Badge{},
 		&badgepg.CredentialSchema{},
 		&badgepg.CredentialStatus{},
-		&badgepg.Badge{},
 		&authpg.Session{},
 		&policypg.Policy{},
 		&policypg.Task{},
@@ -235,6 +235,7 @@ func main() {
 		iamClient,
 		badgeRevoker,
 		keyStore,
+		policyRepository,
 	)
 	issuerSrv := issuer.NewService(
 		identityService,

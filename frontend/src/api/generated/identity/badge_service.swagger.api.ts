@@ -452,7 +452,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/v1alpha1/badges/verify
      */
     verifyBadge: (body: V1Alpha1VerifyBadgeRequest, params: RequestParams = {}) =>
-      this.request<V1Alpha1BadgeClaims, RpcStatus>({
+      this.request<V1Alpha1VerifiableCredential, RpcStatus>({
         path: `/v1alpha1/badges/verify`,
         method: 'POST',
         body: body,

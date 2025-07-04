@@ -133,3 +133,7 @@ enum CredentialStatusPurpose {
   // This status is not reversible.
   CREDENTIAL_STATUS_PURPOSE_REVOCATION = 1;
 }
+idity of a verifiable credential.
+  // This status is not reversible.
+  CREDENTIAL_STATUS_PURPOSE_REVOCATION = 1;
+}
