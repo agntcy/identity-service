@@ -382,7 +382,22 @@ func (s *service) VerifyVerifiableCredential(
 
 	log.Debug("Issuance date claim: ", issuanceDateClaim)
 
+	// Parse the status claim
+	var credentialStatusClaim []any
+
+	err = jwtutil.GetClaim(vc, "credentialStatus", &credentialStatusClaim)
+	if err != nil {
+		return nil, errutil.Err(
+			err,
+			"error extracting credential status from verifiable credential",
+		)
+	}
+
 	return &badgetypes.VerifiableCredential{
+		Status: convertutil.ConvertSlice(
+			credentialStatusClaim,
+			convertutil.Convert[badgetypes.CredentialStatus],
+		),
 		CredentialSubject: convertutil.Convert[badgetypes.BadgeClaims](badgeClaims),
 		Issuer:            issuerClaim,
 		IssuanceDate:      issuanceDateClaim,
