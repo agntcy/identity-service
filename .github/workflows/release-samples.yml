@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 ---
-name: workflow CI/CD
+name: workflow CI/CD samples
 on:
   push:
     tags:
