@@ -65,9 +65,3 @@ message Task {
   // A tool name for the Task.
   optional string tool_name = 5;
 }
-n ID for the Task.
-  optional string app_id = 4;
-
-  // A tool name for the Task.
-  optional string tool_name = 5;
-}
