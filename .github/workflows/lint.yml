@@ -75,7 +75,7 @@ jobs:
           helm repo add hashicorp https://helm.releases.hashicorp.com
           helm repo update
           echo "Building Helm dependencies..."
-          find ./charts -mindepth 1 -maxdepth 1 -type d | while read -r chart_dir; do
+          find ./charts -name Chart.yaml -exec dirname {} \; | while read -r chart_dir; do
             echo "Building dependencies for: $chart_dir"
             helm dependency build "$chart_dir"
           done
@@ -83,7 +83,7 @@ jobs:
       - name: Lint Helm Charts
         run: |
           echo "Linting Helm charts..."
-          find ./charts -mindepth 1 -maxdepth 1 -type d | while read -r chart_dir; do
+          find ./charts -name Chart.yaml -exec dirname {} \; | while read -r chart_dir; do
             echo "Linting chart: $chart_dir"
             helm lint "$chart_dir"
           done
@@ -91,7 +91,7 @@ jobs:
       - name: Validate Templates
         run: |
           echo "Validating Helm templates..."
-          find ./charts -mindepth 1 -maxdepth 1 -type d | while read -r chart_dir; do
+          find ./charts -name Chart.yaml -exec dirname {} \; | while read -r chart_dir; do
             echo "Validating templates in: $chart_dir"
             helm template "$chart_dir" > /dev/null
           done

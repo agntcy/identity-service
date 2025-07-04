@@ -1,0 +1,18 @@
+# Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "identity-sample-currency-exchange-a2a.fullname" . }}-test-connection"
+  labels:
+    {{- include "identity-sample-currency-exchange-a2a.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['{{ include "identity-sample-currency-exchange-a2a.fullname" . }}:{{ .Values.service.port }}']
+  restartPolicy: Never

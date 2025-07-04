@@ -8,6 +8,7 @@ import sys
 import click
 import httpx
 import uvicorn
+import os
 from a2a.server.apps import A2AStarletteApplication
 from a2a.server.request_handlers import DefaultRequestHandler
 from a2a.server.tasks import InMemoryPushNotifier, InMemoryTaskStore
@@ -26,9 +27,9 @@ logger = logging.getLogger(__name__)
 @click.command()
 @click.option("--host", "host", default="0.0.0.0")
 @click.option("--port", "port", default=9091)
-@click.option("--ollama-host", default="http://localhost:11434")
-@click.option("--ollama-model", default="llama3.2")
-@click.option("--mcp-server-url", default="http://localhost:9090/mcp")
+@click.option("--ollama-host", default=os.getenv("OLLAMA_HOST", "http://localhost:11434"))
+@click.option("--ollama-model", default=os.getenv("OLLAMA_MODEL", "llama3.2"))
+@click.option("--mcp-server-url", default=os.getenv("MCP_SERVER_URL", "http://localhost:9090/mcp"))
 def main(host, port, ollama_host, ollama_model, mcp_server_url):
     """Starts the Currency Agent server."""
 
