@@ -4,6 +4,7 @@
  */
 
 import {AppType} from '@/types/api/app';
+import {RuleAction} from '@/types/api/policy';
 import {IdpType} from '@/types/api/settings';
 
 export const labels = {
@@ -17,5 +18,10 @@ export const labels = {
     [IdpType.IDP_TYPE_DUO]: 'Duo',
     [IdpType.IDP_TYPE_SELF]: 'OASF (Agntcy)',
     [IdpType.IDP_TYPE_ORY]: 'Ory'
+  },
+  rulesActions: {
+    [RuleAction.RULE_ACTION_UNSPECIFIED]: 'Unspecified',
+    [RuleAction.RULE_ACTION_ALLOW]: 'Allow',
+    [RuleAction.RULE_ACTION_DENY]: 'Deny'
   }
 };

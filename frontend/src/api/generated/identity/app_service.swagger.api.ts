@@ -290,6 +290,11 @@ export interface V1Alpha1GetAppsCountResponse {
   counts?: V1Alpha1AppTypeCountEntry[];
 }
 
+export interface V1Alpha1GetTasksResponse {
+  /** The list of tasks related to the App */
+  tasks?: V1Alpha1Task[];
+}
+
 export interface V1Alpha1ListAppsResponse {
   /** A list of Apps. */
   apps?: V1Alpha1App[];
@@ -329,6 +334,20 @@ export interface V1Alpha1Proof {
   proofPurpose?: string;
   /** The proof value */
   proofValue?: string;
+}
+
+/** Identity Platform Policy Task */
+export interface V1Alpha1Task {
+  /** A unique identifier for the Task. */
+  id?: string;
+  /** A human-readable name for the Task. */
+  name?: string;
+  /** A human-readable description for the Task. */
+  description?: string;
+  /** An application ID for the Task. */
+  appId?: string;
+  /** A tool name for the Task. */
+  toolName?: string;
 }
 
 /**
@@ -633,6 +652,22 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     getAppBadge: (appId: string, params: RequestParams = {}) =>
       this.request<V1Alpha1Badge, RpcStatus>({
         path: `/v1alpha1/apps/${appId}/badge`,
+        method: 'GET',
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags App
+     * @name GetTasks
+     * @summary Get the list of tasks related to an App
+     * @request GET:/v1alpha1/apps/{appId}/tasks
+     */
+    getTasks: (appId: string, params: RequestParams = {}) =>
+      this.request<V1Alpha1GetTasksResponse, RpcStatus>({
+        path: `/v1alpha1/apps/${appId}/tasks`,
         method: 'GET',
         format: 'json',
         ...params

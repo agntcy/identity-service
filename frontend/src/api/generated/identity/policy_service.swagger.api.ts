@@ -15,6 +15,13 @@
  * ---------------------------------------------------------------
  */
 
+/** @default "RULE_ACTION_UNSPECIFIED" */
+export enum V1Alpha1RuleAction {
+  RULE_ACTION_UNSPECIFIED = 'RULE_ACTION_UNSPECIFIED',
+  RULE_ACTION_ALLOW = 'RULE_ACTION_ALLOW',
+  RULE_ACTION_DENY = 'RULE_ACTION_DENY'
+}
+
 export interface PolicyServiceCreateRuleBody {
   /** A human-readable name for the Rule. */
   name?: string;
@@ -24,6 +31,8 @@ export interface PolicyServiceCreateRuleBody {
   tasks?: string[];
   /** Need User Approval for this Rule. */
   needsApproval?: boolean;
+  /** The action applied for the rule when calling the tasks */
+  action?: V1Alpha1RuleAction;
 }
 
 export interface PolicyServiceUpdatePolicyBody {
@@ -44,6 +53,8 @@ export interface PolicyServiceUpdateRuleBody {
   tasks?: string[];
   /** Need User Approval for this Rule. */
   needsApproval?: boolean;
+  /** The action applied for the rule when calling the tasks */
+  action?: V1Alpha1RuleAction;
 }
 
 /**
@@ -244,6 +255,8 @@ export interface V1Alpha1Rule {
   policyId?: string;
   /** The tasks that this Rule applies to. */
   tasks?: V1Alpha1Task[];
+  /** The action applied for the rule when calling the specified tasks */
+  action?: V1Alpha1RuleAction;
   /** Need User Approval for this Rule. */
   needsApproval?: boolean;
 }
@@ -590,6 +603,14 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<V1Alpha1Rule, RpcStatus>({
         path: `/v1alpha1/policies/${policyId}/rules/${ruleId}`,
         method: 'PATCH',
+        body: body,
+        type: ContentType.Json,
+        format: 'json',
+        ...params
+      })
+  };
+}
+hod: 'PATCH',
         body: body,
         type: ContentType.Json,
         format: 'json',

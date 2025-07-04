@@ -89,7 +89,7 @@ export const PolicyForm = ({isLoading = false}: {isLoading?: boolean}) => {
               />
             </div>
             <div className="w-[50%]">
-              {isLoadingAgenticServices && isError ? (
+              {isLoadingAgenticServices || isError ? (
                 <Skeleton sx={{marginTop: '14px', height: '60px'}} />
               ) : (
                 <FormField

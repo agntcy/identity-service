@@ -36,9 +36,7 @@ export const CreateIdentityProvider = () => {
           description: 'Identity provider saved successfully.',
           type: 'success'
         });
-        setTimeout(() => {
-          void navigate(PATHS.settings.identityProvider.base);
-        }, 1000);
+        void navigate(PATHS.settings.base);
       },
       onError: () => {
         setIsLoading(false);

@@ -61,3 +61,14 @@ export const useGetAgenticServicesCount = () => {
     }
   });
 };
+
+export const useGetGetTasksAgenticService = (id?: string) => {
+  return useQuery({
+    queryKey: ['get-tasks-agentic-service', id],
+    queryFn: async () => {
+      const {data} = await AgenticServicesAPI.getTasks(id!);
+      return data;
+    },
+    enabled: !!id
+  });
+};

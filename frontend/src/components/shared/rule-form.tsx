@@ -3,16 +3,16 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {Control, useFieldArray, useFormContext} from 'react-hook-form';
+import {useFieldArray, useFormContext} from 'react-hook-form';
 import {FormControl, FormField, FormItem, FormLabel} from '@/components/ui/form';
 import {Input} from '@/components/ui/input';
 import {Button, Tooltip, Typography} from '@outshift/spark-design';
-import {RuleFormValues} from '@/schemas/rule-schema';
 import {useCallback} from 'react';
 import {TaskForm} from './task-form';
 import {PlusIcon, XIcon} from 'lucide-react';
 import {Divider, IconButton} from '@mui/material';
 import {PolicyLogicyFormValues} from '@/schemas/policy-logic-schema';
+import {RuleAction} from '@/types/api/policy';
 
 export const RuleForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; fieldIndex: number}) => {
   const policyForm = useFormContext<PolicyLogicyFormValues>();
@@ -25,16 +25,19 @@ export const RuleForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
     name: `rules.${fieldIndex}.tasks`
   });
 
-  const handleRemoveTask = useCallback((index: number) => {
-    // remove(index);
-  }, []);
+  const handleRemoveTask = useCallback(
+    (index: number) => {
+      removeTask(index);
+    },
+    [removeTask]
+  );
 
   const handleAddTask = useCallback(() => {
-    // append({
-    //   task: '',
-    //   action: ''
-    // });
-  }, []);
+    appendTask({
+      task: '',
+      action: RuleAction.RULE_ACTION_UNSPECIFIED
+    });
+  }, [appendTask]);
 
   return (
     <div className="space-y-4">
@@ -71,12 +74,12 @@ export const RuleForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
           </Typography>
         </div>
         <div>
-          {/* {fields.map((form, index) => {
+          {fields.map((form, index) => {
             return (
               <div key={form.id} className="flex flex-col gap-6">
                 <div className="flex items-center gap-6">
                   <div className="w-full">
-                    <TaskForm isLoading={isLoading} control={policyForm.control} index={index} />
+                    <TaskForm isLoading={isLoading} fieldIndex={fieldIndex} index={index} />
                   </div>
                   <Tooltip title="Remove this rule">
                     <IconButton
@@ -97,7 +100,7 @@ export const RuleForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
                 </div>
               </div>
             );
-          })} */}
+          })}
         </div>
         <div className="flex justify-end">
           <Button

@@ -5,25 +5,16 @@
 
 import {Card, CardContent} from '@/components/ui/card';
 import {Form} from '@/components/ui/form';
-import {cn, validateForm} from '@/lib/utils';
-import {RuleFormValues, RuleSchema} from '@/schemas/rule-schema';
-import {zodResolver} from '@hookform/resolvers/zod';
-import {GripVerticalIcon, PlusIcon, XIcon} from 'lucide-react';
-import {useCallback, useState} from 'react';
-import {useFieldArray, useForm, UseFormReturn} from 'react-hook-form';
-import z from 'zod';
-import lodash from 'lodash';
-import {RuleAccordion} from '@/components/shared/rule-accordion';
-import {DragDropContext, Droppable, Draggable} from '@hello-pangea/dnd';
-import {useStepper} from '../stepper';
+import {PlusIcon, XIcon} from 'lucide-react';
+import {useCallback} from 'react';
+import {useFieldArray, UseFormReturn} from 'react-hook-form';
 import {RuleForm} from '@/components/shared/rule-form';
 import {Button, Divider, IconButton} from '@mui/material';
 import {PolicyLogicyFormValues} from '@/schemas/policy-logic-schema';
 import {Accordion, Tooltip} from '@outshift/spark-design';
+import {RuleAction} from '@/types/api/policy';
 
 export const PolicyLogic = ({isLoading = false, policyForm}: {policyForm: UseFormReturn<PolicyLogicyFormValues>; isLoading?: boolean}) => {
-  const methods = useStepper();
-
   const {
     fields,
     append: appendRule,
@@ -32,42 +23,6 @@ export const PolicyLogic = ({isLoading = false, policyForm}: {policyForm: UseFor
     control: policyForm.control,
     name: 'rules'
   });
-
-  // const ruleForm = useForm<RuleFormValues>({
-  //   resolver: zodResolver(RuleSchema),
-  //   mode: 'all',
-  //   defaultValues: {
-  //     name: '',
-  //     description: '',
-  //     needsApproval: 'no',
-  //     tasks: [
-  //       {
-  //         task: '',
-  //         action: ''
-  //       }
-  //     ]
-  //   }
-  // });
-
-  // const onSubmit = useCallback(() => {
-  //   const values = ruleForm.getValues();
-  //   const validationResult = validateForm(RuleSchema, values);
-  //   if (!validationResult.success) {
-  //     validationResult.errors?.forEach((error) => {
-  //       const fieldName = error.path[0] as keyof z.infer<typeof RuleSchema>;
-  //       ruleForm.setError(fieldName, {type: 'manual', ...error});
-  //     });
-  //     return;
-  //   }
-  //   console.log('onSubmit', values);
-  // }, [ruleForm]);
-
-  // useEffect(() => {
-  //   methods.setMetadata('policyLogic', {
-  //     rules: rules
-  //   });
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [rules]);
 
   const handleRemove = useCallback(
     (fieldIndex: number) => {
@@ -84,7 +39,7 @@ export const PolicyLogic = ({isLoading = false, policyForm}: {policyForm: UseFor
       tasks: [
         {
           task: '',
-          action: ''
+          action: RuleAction.RULE_ACTION_UNSPECIFIED
         }
       ]
     });
@@ -101,9 +56,7 @@ export const PolicyLogic = ({isLoading = false, policyForm}: {policyForm: UseFor
                   <div className="w-full">
                     <Accordion title={'Rule'} defaultValue={field.id}>
                       <div className="mt-4 pl-8">
-                        {/* <Form {...form}>
-                          <RuleForm />
-                        </Form> */}
+                        <RuleForm isLoading={isLoading} fieldIndex={index} />
                       </div>
                     </Accordion>
                   </div>

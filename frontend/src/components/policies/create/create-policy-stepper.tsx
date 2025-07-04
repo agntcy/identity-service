@@ -14,7 +14,7 @@ import {Button, toast, Typography} from '@outshift/spark-design';
 import {validateForm} from '@/lib/utils';
 import {PolicyForm} from './steps/policy-form';
 import {PolicyFormValues, PolicySchema} from '@/schemas/policy-schema';
-import {Policy} from '@/types/api/policy';
+import {Policy, RuleAction} from '@/types/api/policy';
 import {PolicyLogic} from './steps/policy-logic';
 import {useCreatePolicy} from '@/mutations';
 import {PolicyLogicyFormValues, PolicyLogicySchema} from '@/schemas/policy-logic-schema';
@@ -49,7 +49,7 @@ const FormStepperComponent = () => {
           needsApproval: 'no',
           tasks: [
             {
-              action: '',
+              action: RuleAction.RULE_ACTION_UNSPECIFIED,
               task: ''
             }
           ]

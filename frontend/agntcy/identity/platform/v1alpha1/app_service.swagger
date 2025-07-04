@@ -269,6 +269,38 @@
           "App"
         ]
       }
+    },
+    "/v1alpha1/apps/{appId}/tasks": {
+      "get": {
+        "summary": "Get the list of tasks related to an App",
+        "operationId": "GetTasks",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1alpha1GetTasksResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "appId",
+            "description": "App Id to get the tasks for.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      }
     }
   },
   "definitions": {
@@ -472,6 +504,19 @@
         }
       }
     },
+    "v1alpha1GetTasksResponse": {
+      "type": "object",
+      "properties": {
+        "tasks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1alpha1Task"
+          },
+          "title": "The list of tasks related to the App"
+        }
+      }
+    },
     "v1alpha1ListAppsResponse": {
       "type": "object",
       "properties": {
@@ -531,6 +576,32 @@
         }
       },
       "description": "A data integrity proof provides information about the proof mechanism,\nparameters required to verify that proof, and the proof value itself."
+    },
+    "v1alpha1Task": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "A unique identifier for the Task."
+        },
+        "name": {
+          "type": "string",
+          "description": "A human-readable name for the Task."
+        },
+        "description": {
+          "type": "string",
+          "description": "A human-readable description for the Task."
+        },
+        "appId": {
+          "type": "string",
+          "description": "An application ID for the Task."
+        },
+        "toolName": {
+          "type": "string",
+          "description": "A tool name for the Task."
+        }
+      },
+      "title": "Identity Platform Policy Task"
     },
     "v1alpha1VerifiableCredential": {
       "type": "object",

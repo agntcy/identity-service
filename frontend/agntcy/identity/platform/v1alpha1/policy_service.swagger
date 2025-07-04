@@ -434,6 +434,10 @@
         "needsApproval": {
           "type": "boolean",
           "description": "Need User Approval for this Rule."
+        },
+        "action": {
+          "$ref": "#/definitions/v1alpha1RuleAction",
+          "title": "The action applied for the rule when calling the tasks"
         }
       }
     },
@@ -475,6 +479,10 @@
         "needsApproval": {
           "type": "boolean",
           "description": "Need User Approval for this Rule."
+        },
+        "action": {
+          "$ref": "#/definitions/v1alpha1RuleAction",
+          "title": "The action applied for the rule when calling the tasks"
         }
       }
     },
@@ -640,12 +648,25 @@
           },
           "description": "The tasks that this Rule applies to."
         },
+        "action": {
+          "$ref": "#/definitions/v1alpha1RuleAction",
+          "title": "The action applied for the rule when calling the specified tasks"
+        },
         "needsApproval": {
           "type": "boolean",
           "description": "Need User Approval for this Rule."
         }
       },
       "title": "Identity Platform Policy Rule"
+    },
+    "v1alpha1RuleAction": {
+      "type": "string",
+      "enum": [
+        "RULE_ACTION_UNSPECIFIED",
+        "RULE_ACTION_ALLOW",
+        "RULE_ACTION_DENY"
+      ],
+      "default": "RULE_ACTION_UNSPECIFIED"
     },
     "v1alpha1Task": {
       "type": "object",
