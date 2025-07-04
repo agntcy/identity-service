@@ -27,7 +27,7 @@ class BadgeServiceStub(object):
         self.VerifyBadge = channel.unary_unary(
                 '/agntcy.identity.platform.v1alpha1.BadgeService/VerifyBadge',
                 request_serializer=agntcy_dot_identity_dot_platform_dot_v1alpha1_dot_badge__service__pb2.VerifyBadgeRequest.SerializeToString,
-                response_deserializer=agntcy_dot_identity_dot_platform_dot_v1alpha1_dot_badge__pb2.BadgeClaims.FromString,
+                response_deserializer=agntcy_dot_identity_dot_platform_dot_v1alpha1_dot_badge__pb2.VerifiableCredential.FromString,
                 _registered_method=True)
 
 
@@ -60,7 +60,7 @@ def add_BadgeServiceServicer_to_server(servicer, server):
             'VerifyBadge': grpc.unary_unary_rpc_method_handler(
                     servicer.VerifyBadge,
                     request_deserializer=agntcy_dot_identity_dot_platform_dot_v1alpha1_dot_badge__service__pb2.VerifyBadgeRequest.FromString,
-                    response_serializer=agntcy_dot_identity_dot_platform_dot_v1alpha1_dot_badge__pb2.BadgeClaims.SerializeToString,
+                    response_serializer=agntcy_dot_identity_dot_platform_dot_v1alpha1_dot_badge__pb2.VerifiableCredential.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -117,7 +117,7 @@ class BadgeService(object):
             target,
             '/agntcy.identity.platform.v1alpha1.BadgeService/VerifyBadge',
             agntcy_dot_identity_dot_platform_dot_v1alpha1_dot_badge__service__pb2.VerifyBadgeRequest.SerializeToString,
-            agntcy_dot_identity_dot_platform_dot_v1alpha1_dot_badge__pb2.BadgeClaims.FromString,
+            agntcy_dot_identity_dot_platform_dot_v1alpha1_dot_badge__pb2.VerifiableCredential.FromString,
             options,
             channel_credentials,
             insecure,

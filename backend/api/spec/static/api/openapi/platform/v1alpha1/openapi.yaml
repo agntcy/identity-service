@@ -368,7 +368,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/BadgeClaims'
+                                $ref: '#/components/schemas/VerifiableCredential'
                 default:
                     description: Default error response
                     content:

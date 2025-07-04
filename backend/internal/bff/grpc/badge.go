@@ -57,12 +57,12 @@ func (s *BadgeService) IssueBadge(
 func (s *BadgeService) VerifyBadge(
 	ctx context.Context,
 	in *identity_platform_sdk_go.VerifyBadgeRequest,
-) (*identity_platform_sdk_go.BadgeClaims, error) {
+) (*identity_platform_sdk_go.VerifiableCredential, error) {
 	if in.Badge == "" {
 		return nil, grpcutil.BadRequestError(errors.New("badge or verifiable credential is empty"))
 	}
 
-	claims, err := s.badgeService.VerifyBadge(
+	credential, err := s.badgeService.VerifyBadge(
 		ctx,
 		&in.Badge,
 	)
@@ -73,5 +73,5 @@ func (s *BadgeService) VerifyBadge(
 		)))
 	}
 
-	return converters.FromBadgeClaims(claims), nil
+	return converters.FromVerifiableCredential(credential), nil
 }

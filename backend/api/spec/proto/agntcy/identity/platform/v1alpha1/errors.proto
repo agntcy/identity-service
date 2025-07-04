@@ -55,4 +55,6 @@ enum ErrorReason {
   ERROR_REASON_UNKNOWN_IDP = 11;
   // The ID and Resolver Metadata are already registered in the system
   ERROR_REASON_ID_ALREADY_REGISTERED = 12;
+  // The Verifiable Credential is revoked
+  ERROR_REASON_VERIFIABLE_CREDENTIAL_REVOKED = 13;
 }

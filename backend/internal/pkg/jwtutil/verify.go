@@ -4,10 +4,8 @@
 package jwtutil
 
 import (
-	"encoding/json"
-
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
-	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
+	"github.com/agntcy/identity-platform/pkg/log"
 	"github.com/lestrrat-go/jwx/v3/jwt"
 )
 
@@ -39,9 +37,10 @@ func Verify(
 func GetClaim(
 	jwtString *string,
 	claimName string,
-) (*string, error) {
+	claimValue interface{},
+) error {
 	if jwtString == nil || *jwtString == "" {
-		return nil, errutil.Err(
+		return errutil.Err(
 			nil,
 			"JWT string cannot be nil or empty",
 		)
@@ -53,30 +52,21 @@ func GetClaim(
 		jwt.WithValidate(true),
 	)
 	if err != nil {
-		return nil, errutil.Err(
+		return errutil.Err(
 			err,
 			"failed to parse JWT",
 		)
 	}
 
-	var claimValue map[string]any
-
-	err = token.Get(claimName, &claimValue)
+	err = token.Get(claimName, claimValue)
 	if err != nil {
-		return nil, errutil.Err(
+		return errutil.Err(
 			err,
 			"claim not found in JWT",
 		)
 	}
 
-	// Convert the claim value to a string
-	rawClaims, err := json.Marshal(&claimValue)
-	if err != nil {
-		return nil, errutil.Err(
-			err,
-			"failed to marshal claim value to JSON",
-		)
-	}
+	log.Debug("JWT claim: ", claimName, " found with value: ", claimValue)
 
-	return ptrutil.Ptr(string(rawClaims)), nil
+	return nil
 }

@@ -12,6 +12,7 @@ import (
 
 	badgetypes "github.com/agntcy/identity-platform/internal/core/badge/types"
 	idpcore "github.com/agntcy/identity-platform/internal/core/idp"
+	"github.com/agntcy/identity-platform/internal/pkg/convertutil"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 	"github.com/agntcy/identity-platform/internal/pkg/httputil"
 	"github.com/agntcy/identity-platform/internal/pkg/jwtutil"
@@ -58,7 +59,7 @@ type Service interface {
 	VerifyVerifiableCredential(
 		ctx context.Context,
 		vc *string,
-	) (*badgetypes.BadgeClaims, error)
+	) (*badgetypes.VerifiableCredential, error)
 	RevokeVerifiableCredential(
 		ctx context.Context,
 		clientCredentials *idpcore.ClientCredentials,
@@ -313,7 +314,7 @@ func (s *service) generateProof(
 func (s *service) VerifyVerifiableCredential(
 	ctx context.Context,
 	vc *string,
-) (*badgetypes.BadgeClaims, error) {
+) (*badgetypes.VerifiableCredential, error) {
 	if vc == nil || *vc == "" {
 		return nil, errors.New("verifiable credential is empty")
 	}
@@ -339,9 +340,12 @@ func (s *service) VerifyVerifiableCredential(
 	log.Debug("Verifiable credential verified successfully")
 
 	// Parse the verifiable credential to extract claims
-	claimValue, err := jwtutil.GetClaim(
+	var badgeClaims map[string]any
+
+	err = jwtutil.GetClaim(
 		vc,
 		credentialSubject,
+		&badgeClaims,
 	)
 	if err != nil {
 		return nil, errutil.Err(
@@ -350,15 +354,39 @@ func (s *service) VerifyVerifiableCredential(
 		)
 	}
 
-	log.Debug("Extracted credential subject: ", *claimValue)
+	log.Debug("Unmarshalled claims: ", badgeClaims)
 
-	// Unmarshal the claims from the credential subject
-	var claims badgetypes.BadgeClaims
-	err = json.Unmarshal([]byte(*claimValue), &claims)
+	// Parse the issuer
+	var issuerClaim string
 
-	log.Debug("Unmarshalled claims: ", claims)
+	err = jwtutil.GetClaim(vc, "issuer", &issuerClaim)
+	if err != nil {
+		return nil, errutil.Err(
+			err,
+			"error extracting issuer from verifiable credential",
+		)
+	}
 
-	return &claims, err
+	log.Debug("Issuer claim: ", issuerClaim)
+
+	// Parse the issuance date
+	var issuanceDateClaim string
+
+	err = jwtutil.GetClaim(vc, "issuanceDate", &issuanceDateClaim)
+	if err != nil {
+		return nil, errutil.Err(
+			err,
+			"error extracting issuance date from verifiable credential",
+		)
+	}
+
+	log.Debug("Issuance date claim: ", issuanceDateClaim)
+
+	return &badgetypes.VerifiableCredential{
+		CredentialSubject: convertutil.Convert[badgetypes.BadgeClaims](badgeClaims),
+		Issuer:            issuerClaim,
+		IssuanceDate:      issuanceDateClaim,
+	}, nil
 }
 
 func (s *service) RevokeVerifiableCredential(
