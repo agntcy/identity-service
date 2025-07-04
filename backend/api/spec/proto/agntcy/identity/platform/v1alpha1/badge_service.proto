@@ -30,7 +30,7 @@ service BadgeService {
   }
 
   // Verify a badge.
-  rpc VerifyBadge(VerifyBadgeRequest) returns (BadgeClaims) {
+  rpc VerifyBadge(VerifyBadgeRequest) returns (VerifiableCredential) {
     option (google.api.http) = {
       post: "/v1alpha1/badges/verify"
       body: "*"

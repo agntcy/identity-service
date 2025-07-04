@@ -73,7 +73,7 @@ type BadgeService interface {
 	VerifyBadge(
 		ctx context.Context,
 		badge *string,
-	) (*badgetypes.BadgeClaims, error)
+	) (*badgetypes.VerifiableCredential, error)
 	GetBadge(
 		ctx context.Context,
 		appID string,
@@ -305,7 +305,11 @@ func (s *badgeService) createBadgeClaims(
 	return &claims, badgeType, nil
 }
 
-func (s *badgeService) createTasks(ctx context.Context, app *apptypes.App, claims *badgetypes.BadgeClaims) error {
+func (s *badgeService) createTasks(
+	ctx context.Context,
+	app *apptypes.App,
+	claims *badgetypes.BadgeClaims,
+) error {
 	switch app.Type {
 	case apptypes.APP_TYPE_AGENT_A2A, apptypes.APP_TYPE_AGENT_OASF:
 		_, err := s.taskService.CreateForAgent(ctx, app.ID, ptrutil.DerefStr(app.Name))
@@ -325,7 +329,7 @@ func (s *badgeService) createTasks(ctx context.Context, app *apptypes.App, claim
 func (s *badgeService) VerifyBadge(
 	ctx context.Context,
 	badge *string,
-) (*badgetypes.BadgeClaims, error) {
+) (*badgetypes.VerifiableCredential, error) {
 	if badge == nil {
 		return nil, errors.New("badge or verifiable credential is empty")
 	}
