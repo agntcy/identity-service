@@ -17,6 +17,7 @@ import {AppType} from '@/types/api/app';
 import OasfLogo from '@/assets/oasf.svg?react';
 import McpLogo from '@/assets/mcp.svg?react';
 import A2ALogo from '@/assets/a2a.png';
+import {docs} from '@/utils/docs';
 
 export const AgenticServicForm = ({isLoading = false}: {isLoading?: boolean}) => {
   const {control, reset} = useFormContext<AgenticServiceFormValues>();
@@ -64,7 +65,7 @@ export const AgenticServicForm = ({isLoading = false}: {isLoading?: boolean}) =>
             <Typography variant="subtitle1" fontWeight={600}>
               Select Agentic Service Type
             </Typography>
-            <Link href="" openInNewTab>
+            <Link href={docs('agentic-service')} openInNewTab>
               <div className="flex items-center gap-1">
                 View Documentation
                 <ExternalLinkIcon className="w-4 h-4 ml-1" />

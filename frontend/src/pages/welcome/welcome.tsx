@@ -9,6 +9,7 @@ import {CheckIcon} from 'lucide-react';
 import {useAuth} from '@/hooks';
 import {PublicHeader} from '@/components/layout/public-header';
 import {Link as RouterLink} from 'react-router-dom';
+import {docs} from '@/utils/docs';
 import '@/styles/welcome.css';
 import {PATHS} from '@/router/paths';
 
@@ -53,7 +54,7 @@ const Welcome = () => {
                 Servers, OASF).
               </Typography>
               <Link
-                href="https://docs.identity.dev.outshift.ai/"
+                href={docs()}
                 openInNewTab
                 fontStyle={{
                   fontWeight: 400,
