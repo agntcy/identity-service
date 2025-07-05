@@ -11,6 +11,9 @@ import {useAuth} from '@/hooks';
 import {Link as RouterLink} from 'react-router-dom';
 import {useFeatureFlagsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
+import {useGetAgenticServices, useGetPolicies, useGetSettings} from '@/queries';
+import StatsCard from '../ui/stats-card';
+import {ProviderType} from '../shared/provider-type';
 
 export const StatsDashboard = () => {
   const {authInfo} = useAuth();
@@ -20,6 +23,9 @@ export const StatsDashboard = () => {
       isTbacEnable: state.featureFlags.isTbacEnable
     }))
   );
+  const {data: dataSettings, isLoading: isLoadingSettings} = useGetSettings();
+  const {data: dataAgenticServices, isLoading: isLoadingAgenticServices} = useGetAgenticServices();
+  const {data: dataPolicies, isLoading: isLoadingPolicies} = useGetPolicies();
 
   return (
     <ScrollShadowWrapper>
@@ -36,6 +42,28 @@ export const StatsDashboard = () => {
             </div>
           </div>
           <div className="striped-bar" />
+        </div>
+        <div className="px-[24px]">
+          <StatsCard
+            className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 p-4"
+            stats={[
+              {
+                value: <ProviderType type={dataSettings?.issuerSettings?.idpType} />,
+                title: 'Identity Provider',
+                loading: isLoadingSettings
+              },
+              {
+                value: dataAgenticServices?.apps?.length || 0,
+                title: 'Total Agentic Services',
+                loading: isLoadingAgenticServices
+              },
+              {
+                value: dataPolicies?.policies?.length || 0,
+                title: 'Total Policies',
+                loading: isLoadingPolicies
+              }
+            ]}
+          />
         </div>
         <div className="flex card-group px-[24px]">
           <div className="card-flex-group min-w-[384px] bg-[#FBFCFE] rounded-[8px] flex-col flex justify-center items-center px-20 pt-[40px] pb-[24px]">
