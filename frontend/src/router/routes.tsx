@@ -66,11 +66,11 @@ export const generateRoutes = (routes: Route[]): Route[] => {
       element: (
         <SecureRoute redirectPath={PATHS.welcome}>
           <NodeRoute>
-            <BannerProvider>
-              <SettingsProvider>
+            <SettingsProvider>
+              <BannerProvider>
                 <Layout />
-              </SettingsProvider>
-            </BannerProvider>
+              </BannerProvider>
+            </SettingsProvider>
           </NodeRoute>
         </SecureRoute>
       ),

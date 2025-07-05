@@ -139,7 +139,7 @@
   display: flex;
   flex: 0 1 auto;
   flex-flow: wrap;
-  gap: 12px;
+  gap: 16px;
   justify-content: flex-start;
 }
 

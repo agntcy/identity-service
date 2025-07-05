@@ -37,7 +37,7 @@ export const PolicyLogic = ({isLoading = false, policyForm}: {policyForm: UseFor
       description: '',
       needsApproval: 'no',
       tasks: {
-        task: '',
+        tasks: [],
         action: RuleAction.RULE_ACTION_UNSPECIFIED
       }
     });

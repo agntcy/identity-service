@@ -5,7 +5,7 @@
 
 import {useFormContext} from 'react-hook-form';
 import {FormControl, FormField, FormItem, FormLabel} from '@/components/ui/form';
-import {GeneralSize, MenuItem, Select, Skeleton, Tag, Typography} from '@outshift/spark-design';
+import {Box, GeneralSize, MenuItem, Select, Skeleton, Tag, Typography} from '@outshift/spark-design';
 import {PolicyLogicyFormValues} from '@/schemas/policy-logic-schema';
 import {RuleAction} from '@/types/api/policy';
 import {labels} from '@/constants/labels';
@@ -44,6 +44,8 @@ export const TaskForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
     }
   ];
 
+  console.log(policyForm.getValues(`rules.${fieldIndex}.tasks.tasks`));
+
   return (
     <div className="w-full flex gap-8">
       <div className="w-[50%]">
@@ -52,12 +54,13 @@ export const TaskForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
         ) : (
           <FormField
             control={policyForm.control}
-            name={`rules.${fieldIndex}.tasks.task`}
+            name={`rules.${fieldIndex}.tasks.tasks`}
             render={({field}) => (
               <FormItem className="w-full">
                 <FormLabel className="form-label">Task</FormLabel>
                 <FormControl>
                   <Select
+                    multiple
                     disabled={isLoading}
                     fullWidth
                     label="Select tasks"
@@ -72,8 +75,8 @@ export const TaskForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
                         color: 'currentColor'
                       }
                     }}
-                    renderValue={(select: any) => {
-                      if (!select) {
+                    renderValue={(selected: string[]) => {
+                      if (!selected || selected.length === 0) {
                         return (
                           <Typography variant="body1" fontSize={14} sx={(theme) => ({color: theme.palette.vars.baseTextWeak})}>
                             Select task...
@@ -81,9 +84,13 @@ export const TaskForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
                         );
                       }
                       return (
-                        <div className="mb-1">
-                          <Tag size={GeneralSize.Small}>{optionsTasks.find((op) => op.value === select)?.label}</Tag>
-                        </div>
+                        <Box sx={{display: 'flex', flexWrap: 'wrap', gap: 0.5}}>
+                          {selected?.map((value: any) => (
+                            <Tag key={value} size={GeneralSize.Small}>
+                              {optionsTasks.find((option) => option.value === value)?.label || 'Unknown Task'}
+                            </Tag>
+                          ))}
+                        </Box>
                       );
                     }}
                     {...field}

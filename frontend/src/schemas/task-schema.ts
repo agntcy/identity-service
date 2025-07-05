@@ -8,7 +8,7 @@ import {z} from 'zod';
 
 export const TaskSchema = z
   .object({
-    task: z.string().min(1, 'Task is required'),
+    tasks: z.array(z.string()),
     action: z.nativeEnum(RuleAction)
   })
   .superRefine((data, ctx) => {
