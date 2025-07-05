@@ -16,8 +16,8 @@ services:
     restart: always
     depends_on:
       - identity-postgres
-      - identity-node
       - identity-vault
+      - identity-node
     ports:
       - "4000:4000"
       - "4001:4001"
