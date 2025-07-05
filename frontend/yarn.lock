@@ -5716,6 +5716,7 @@ __metadata:
     tw-animate-css: "npm:^1.3.4"
     typescript: "npm:~5.7.2"
     typescript-eslint: "npm:^8.24.1"
+    use-debounce: "npm:^10.0.5"
     vanilla-cookieconsent: "npm:3.1.0"
     vite: "npm:^6.2.0"
     vite-plugin-svgr: "npm:^4.3.0"
@@ -9461,7 +9462,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"use-debounce@npm:^10.0.4":
+"use-debounce@npm:^10.0.4, use-debounce@npm:^10.0.5":
   version: 10.0.5
   resolution: "use-debounce@npm:10.0.5"
   peerDependencies:

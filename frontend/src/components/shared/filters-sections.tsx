@@ -14,7 +14,8 @@ import {
   Typography,
   useDropdownAutocompleteTree
 } from '@outshift/spark-design';
-import {useEffect, useState} from 'react';
+import {useEffect} from 'react';
+import {useDebouncedCallback} from 'use-debounce';
 
 interface CustomDropdownProps<T>
   extends Omit<
@@ -32,25 +33,9 @@ interface FilterSectionProps<T> {
 }
 
 export const FilterSections = <T,>({title, searchFieldProps, dropDowns}: FilterSectionProps<T>) => {
-  function useDebounceCallback(callback: (value: string) => void, delay: number) {
-    const [value, setValue] = useState<string>('');
-
-    useEffect(() => {
-      const handler = setTimeout(() => {
-        callback(value);
-      }, delay);
-
-      return () => {
-        clearTimeout(handler);
-      };
-    }, [value, delay, callback]);
-
-    return setValue;
-  }
-
-  const debouncedOnChange = useDebounceCallback((value: string) => {
+  const debounced = useDebouncedCallback((value) => {
     searchFieldProps?.onChangeCallback?.(value);
-  }, 150);
+  }, 250);
 
   return (
     <Stack marginBottom="16px">
@@ -64,7 +49,7 @@ export const FilterSections = <T,>({title, searchFieldProps, dropDowns}: FilterS
           <SearchField
             sx={{'& .MuiInputBase-root': {marginTop: 0, width: '320px', height: '32px'}}}
             {...searchFieldProps}
-            onChangeCallback={debouncedOnChange}
+            onChangeCallback={debounced}
           />
         )}
         {dropDowns?.map((dropdown, index) => <CustomDropdown<T> key={index} {...dropdown} />)}
