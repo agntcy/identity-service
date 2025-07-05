@@ -4,16 +4,25 @@
  */
 
 import {Card, CardContent} from '@/components/ui/card';
-import {Accordion, Divider, GeneralSize, Tag, Typography} from '@outshift/spark-design';
-import {useMemo} from 'react';
+import {Accordion, Divider, EmptyState, GeneralSize, Table, Tag, Tooltip, Typography} from '@outshift/spark-design';
+import {useMemo, useState} from 'react';
 import KeyValue, {KeyValuePair} from '@/components/ui/key-value';
 import {AgenticServiceType} from '@/components/shared/agentic-service-type';
 import {Policy} from '@/types/api/policy';
 import {useGetAgenticService} from '@/queries';
 import {Separator} from '@/components/ui/separator';
 import {labels} from '@/constants/labels';
+import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
+import {IconButton} from '@mui/material';
+import {InfoIcon} from 'lucide-react';
 
 export const InfoPolicy = ({policy}: {policy?: Policy}) => {
+  const [pagination, setPagination] = useState<MRT_PaginationState>({
+    pageIndex: 0,
+    pageSize: 10
+  });
+  const [sorting, setSorting] = useState<MRT_SortingState>([]);
+
   const {data} = useGetAgenticService(policy?.assignedTo);
 
   const keyValuePairs = useMemo(() => {
@@ -64,21 +73,86 @@ export const InfoPolicy = ({policy}: {policy?: Policy}) => {
             <CardContent className="p-0 space-y-4">
               <div className="pt-4">
                 {policy?.rules?.map((rule, index) => (
-                  <div className="w-full mb-4" key={index}>
-                    <Accordion
-                      title={rule.name || `Rule ${index + 1}`}
-                      subTitle={
-                        (
-                          <div className="flex gap-4 items-center h-[24px]">
-                            <Separator orientation="vertical" />
-                            <Tag size={GeneralSize.Small}>{labels.rulesActions[rule.action ?? 'RULE_ACTION_UNSPECIFIED']}</Tag>
+                  <div className="w-full" key={index}>
+                    <div className="flex justify-between items-start gap-4 mb-4">
+                      <div className="w-full">
+                        <Accordion
+                          title={rule.name || `Rule ${index + 1}`}
+                          subTitle={
+                            (
+                              <div className="flex gap-4 items-center h-[24px]">
+                                <Separator orientation="vertical" />
+                                <Tag size={GeneralSize.Small}>{labels.rulesActions[rule.action ?? 'RULE_ACTION_UNSPECIFIED']}</Tag>
+                              </div>
+                            ) as any
+                          }
+                        >
+                          <div>
+                            <Table
+                              columns={[
+                                {
+                                  accessorKey: 'name',
+                                  header: 'Task Name',
+                                  enableSorting: true
+                                },
+                                {
+                                  accessorKey: 'description',
+                                  header: 'Description',
+                                  enableSorting: false
+                                },
+                                {
+                                  accessorKey: 'toolName',
+                                  header: 'Tool Name'
+                                }
+                              ]}
+                              data={rule.tasks || []}
+                              isLoading={false}
+                              densityCompact
+                              enableRowActions
+                              topToolbarProps={{
+                                enableActions: false
+                              }}
+                              muiTableContainerProps={{
+                                style: {
+                                  border: '1px solid #D5DFF7'
+                                }
+                              }}
+                              onPaginationChange={setPagination}
+                              onSortingChange={setSorting}
+                              rowCount={rule.tasks?.length || 0}
+                              rowsPerPageOptions={[1, 10, 25, 50, 100]}
+                              state={{pagination, sorting}}
+                              title={{label: 'Tasks', count: rule?.tasks?.length || 0}}
+                              muiBottomToolbarProps={{
+                                style: {
+                                  boxShadow: 'none'
+                                }
+                              }}
+                              renderEmptyRowsFallback={() => (
+                                <EmptyState title="No tasks found" containerProps={{paddingBottom: '40px'}} actionTitle="Add Policy" />
+                              )}
+                            />
+                            <div className="pl-[24px]">
+                              <Typography variant="body2">
+                                Needs Approval: <b>{rule.needsApproval ? 'Yes' : 'No'}</b>
+                              </Typography>
+                            </div>
                           </div>
-                        ) as any
-                      }
-                    >
-                      <div className="pl-6">{/* <RuleForm isLoading={isLoading} fieldIndex={index} /> */}</div>
-                    </Accordion>
-                    <div className="mt-4">
+                        </Accordion>
+                      </div>
+                      <Tooltip title="Update Rules and Tasks on the Update Policy page">
+                        <IconButton
+                          sx={(theme) => ({
+                            color: theme.palette.vars.baseTextDefault,
+                            width: '24px',
+                            height: '24px'
+                          })}
+                        >
+                          <InfoIcon className="h-4 w-4" />
+                        </IconButton>
+                      </Tooltip>
+                    </div>
+                    <div className="mt-6">
                       <Divider />
                     </div>
                   </div>
