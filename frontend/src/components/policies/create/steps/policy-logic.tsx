@@ -39,7 +39,7 @@ export const PolicyLogic = ({isLoading = false, policyForm}: {policyForm: UseFor
       description: '',
       needsApproval: 'no',
       tasks: {
-        tasks: [''],
+        tasks: [],
         action: RuleAction.RULE_ACTION_UNSPECIFIED
       }
     });
@@ -88,7 +88,7 @@ export const PolicyLogic = ({isLoading = false, policyForm}: {policyForm: UseFor
                       </div>
                     ) : (
                       <div className="w-full">
-                        {index > 0 && (
+                        {index > 0 && fields.length > 0 && (
                           <div className="flex justify-end">
                             <Tooltip title="Remove this rule">
                               <IconButton
@@ -127,7 +127,7 @@ export const PolicyLogic = ({isLoading = false, policyForm}: {policyForm: UseFor
               startIcon={<PlusIcon className="w-4 h-4" />}
               loading={isLoading}
               loadingPosition="start"
-              disabled={isLoading || !policyForm.formState.isValid}
+              disabled={(isLoading || !policyForm.formState.isValid) && fields.length > 0}
               onClick={handleAddRule}
             >
               Add Logic
