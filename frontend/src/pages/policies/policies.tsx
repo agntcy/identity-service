@@ -33,7 +33,7 @@ const Policies: React.FC = () => {
         !isLoading && (
           <Link to={PATHS.policies.create}>
             <Button startIcon={<PlusIcon className="w-4 h-4" />} variant="primary" sx={{fontWeight: '600 !important'}}>
-              Add Access Policy
+              Add Policy
             </Button>
           </Link>
         )

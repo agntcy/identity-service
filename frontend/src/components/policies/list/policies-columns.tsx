@@ -8,7 +8,7 @@ import {} from '@/components/shared/status-agentic-service';
 import {labels} from '@/constants/labels';
 import {useGetAgenticService} from '@/queries';
 import {Policy} from '@/types/api/policy';
-import {GeneralSize, Skeleton, Tag, TagBackgroundColorVariants, Tags, Typography} from '@outshift/spark-design';
+import {GeneralSize, Skeleton, Tag, TagBackgroundColorVariants, Tags} from '@outshift/spark-design';
 import {MRT_ColumnDef} from 'material-react-table';
 import {useMemo} from 'react';
 
