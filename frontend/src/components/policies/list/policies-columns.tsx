@@ -8,7 +8,7 @@ import {} from '@/components/shared/status-agentic-service';
 import {labels} from '@/constants/labels';
 import {useGetAgenticService} from '@/queries';
 import {Policy} from '@/types/api/policy';
-import {GeneralSize, Skeleton, Tag, TagBackgroundColorVariants, Tags} from '@outshift/spark-design';
+import {GeneralSize, Skeleton, Tag, TagBackgroundColorVariants, Tags, Typography} from '@outshift/spark-design';
 import {MRT_ColumnDef} from 'material-react-table';
 import {useMemo} from 'react';
 
@@ -28,11 +28,9 @@ const CellAgenticService = ({row}: {row: {original: Policy}}) => {
   }
 
   return (
-    <div className="flex items-center gap-4">
-      <AgenticServiceType type={data?.type} />
-      <Tag color={TagBackgroundColorVariants.AccentHWeak} size={GeneralSize.Small}>
-        {data?.name}
-      </Tag>
+    <div className="flex items-center gap-2">
+      <AgenticServiceType type={data?.type} className="h-[20px] w-[20px]" showLabel={false} />
+      <Typography variant="body2">{data?.name ?? 'Not provided'}</Typography>
     </div>
   );
 };

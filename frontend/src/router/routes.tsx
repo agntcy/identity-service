@@ -34,6 +34,7 @@ const Policies = React.lazy(() => import('@/pages/policies/policies'));
 const CreatePolicies = React.lazy(() => import('@/pages/policies/policies-create'));
 const VerifyIdentityPrivate = React.lazy(() => import('@/pages/agentic-services/verify-identity-private'));
 const VerifyIdentityPublic = React.lazy(() => import('@/pages/verify-identity/verify-identity-public'));
+const PolicyInfo = React.lazy(() => import('@/pages/policies/policies-info'));
 
 export const generateRoutes = (routes: Route[]): Route[] => {
   return [
@@ -160,6 +161,10 @@ export const useRoutes = () => {
           {
             path: PATHS.policies.create,
             element: <CreatePolicies />
+          },
+          {
+            path: PATHS.policies.info,
+            element: <PolicyInfo />
           },
           {
             path: '*',

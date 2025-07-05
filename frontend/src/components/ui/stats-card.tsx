@@ -39,7 +39,7 @@ const StatsCard: React.FC<StatsCardProps> = ({stats, vertical, isGrid, loading, 
   const ContainerComponent = useCard ? Card : 'div';
 
   return (
-    <ContainerComponent className="p-0 w-full rounded-[8px]">
+    <ContainerComponent className="p-0 w-full rounded-[8px]  bg-[#FBFCFE]">
       <div className="flex items-center justify-between w-full px-4">
         {title && <CardTitle className="font-semibold tracking-tight">{title}</CardTitle>}
         {callToAction && <div>{callToAction}</div>}

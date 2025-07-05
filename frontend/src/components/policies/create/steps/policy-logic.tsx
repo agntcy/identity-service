@@ -61,7 +61,7 @@ export const PolicyLogic = ({isLoading = false, policyForm}: {policyForm: UseFor
                             title={field.name}
                             subTitle={
                               (
-                                <div className="flex gap-2 items-center h-[24px] mt-1">
+                                <div className="flex gap-4 items-center h-[24px] mt-1">
                                   <Separator orientation="vertical" />
                                   <Tag size={GeneralSize.Small}>{labels.rulesActions[field.tasks.action]}</Tag>
                                 </div>

@@ -82,14 +82,16 @@ export const TaskForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
                         );
                       }
                       return (
-                        <Tags
-                          items={selected.map((value) => ({
-                            valueFormatter: () => optionsTasks.find((option) => option.value === value)?.label || 'Unknown Task',
-                            value
-                          }))}
-                          showOnlyFirst
-                          shouldTruncate
-                        />
+                        <div className="mt-[2px]">
+                          <Tags
+                            items={selected.map((value) => ({
+                              valueFormatter: () => optionsTasks.find((option) => option.value === value)?.label || 'Unknown Task',
+                              value
+                            }))}
+                            showOnlyFirst
+                            shouldTruncate
+                          />
+                        </div>
                       );
                     }}
                     error={policyForm.formState.errors.rules?.[fieldIndex]?.tasks?.tasks ? true : false}
@@ -149,7 +151,7 @@ export const TaskForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
                       );
                     }
                     return (
-                      <div className="mb-1">
+                      <div className="mb-[2px]">
                         <Tag size={GeneralSize.Small}>{labels.rulesActions[select]}</Tag>
                       </div>
                     );

@@ -28,16 +28,16 @@ export const useGetPolicies = (query?: {page?: number; size?: number; query?: st
   });
 };
 
-// export const useGetAgenticService = (id?: string) => {
-//   return useQuery({
-//     queryKey: ['get-agentic-service', id],
-//     queryFn: async () => {
-//       const {data} = await AgenticServicesAPI.getApp(id!);
-//       return data;
-//     },
-//     enabled: !!id
-//   });
-// };
+export const useGetPolicy = (id?: string) => {
+  return useQuery({
+    queryKey: ['get-policy', id],
+    queryFn: async () => {
+      const {data} = await PolicyAPI.getPolicy(id!);
+      return data;
+    },
+    enabled: !!id
+  });
+};
 
 // export const useGetAgenticServiceBadge = (id?: string) => {
 //   return useQuery({

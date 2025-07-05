@@ -96,8 +96,8 @@ export const ListPolicies = () => {
             muiTableBodyRowProps={({row}) => ({
               sx: {cursor: 'pointer', '& .MuiIconButton-root': {color: (theme) => theme.palette.vars.interactiveSecondaryDefaultDefault}},
               onClick: () => {
-                // const path = generatePath(PATHS.policies.info, {id: row.original?.id});
-                // void navigate(path, {replace: true});
+                const path = generatePath(PATHS.policies.info, {id: row.original?.id});
+                void navigate(path, {replace: true});
               }
             })}
             renderTopToolbar={() => (

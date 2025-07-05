@@ -66,7 +66,7 @@ export const StatsDashboard = () => {
           />
         </div>
         <div className="flex card-group px-[24px]">
-          <div className="card-flex-group min-w-[384px] bg-[#FBFCFE] rounded-[8px] flex-col flex justify-center items-center px-20 pt-[40px] pb-[24px]">
+          <div className="card-flex-group min-w-[384px] border shadow-sm  bg-[#FBFCFE] rounded-[8px] flex-col flex justify-center items-center px-20 pt-[40px] pb-[24px]">
             <div>
               <Typography variant="h6" textAlign="center">
                 Verify Identity Badges
@@ -83,7 +83,7 @@ export const StatsDashboard = () => {
               </div>
             </div>
           </div>
-          <div className="card-flex-group min-w-[384px] bg-[#FBFCFE] rounded-[8px] flex-col flex justify-center items-center px-20 pt-[40px] pb-[24px]">
+          <div className="card-flex-group min-w-[384px] border shadow-sm bg-[#FBFCFE] rounded-[8px] flex-col flex justify-center items-center px-20 pt-[40px] pb-[24px]">
             <div>
               <Typography variant="h6" textAlign="center">
                 Create Badges
@@ -101,7 +101,7 @@ export const StatsDashboard = () => {
             </div>
           </div>
           {isTbacEnable && (
-            <div className="card-flex-group min-w-[384px] bg-[#FBFCFE] rounded-[8px] flex-col flex justify-center items-center px-20  pt-[40px] pb-[24px]">
+            <div className="card-flex-group min-w-[384px] shadow-sm border bg-[#FBFCFE] rounded-[8px] flex-col flex justify-center items-center px-20  pt-[40px] pb-[24px]">
               <div>
                 <Typography variant="h6" textAlign="center">
                   Add Policies
