@@ -48,7 +48,8 @@ export const useGetAgenticServiceBadge = (id?: string) => {
       const {data} = await AgenticServicesAPI.getAppBadge(id!);
       return data;
     },
-    enabled: !!id
+    enabled: !!id,
+    retry: 1 // Ensures the query retries only once
   });
 };
 

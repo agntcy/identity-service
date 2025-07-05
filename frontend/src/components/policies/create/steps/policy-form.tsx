@@ -20,7 +20,7 @@ import {useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
 
 export const PolicyForm = ({isLoading = false}: {isLoading?: boolean}) => {
-  const {control, reset} = useFormContext<PolicyFormValues>();
+  const {control, reset, formState} = useFormContext<PolicyFormValues>();
   const methods = useStepper();
 
   const {data, isLoading: isLoadingAgenticServices, isError} = useGetAgenticServices();
@@ -117,7 +117,7 @@ export const PolicyForm = ({isLoading = false}: {isLoading?: boolean}) => {
                           renderValue={(select: any) => {
                             if (!select) {
                               return (
-                                <Typography variant="body1" fontSize={14} sx={(theme) => ({color: theme.palette.vars.baseTextWeak})}>
+                                <Typography variant="body2" fontSize={14} sx={(theme) => ({color: theme.palette.vars.baseTextWeak})}>
                                   Select agentic service...
                                 </Typography>
                               );
@@ -130,13 +130,14 @@ export const PolicyForm = ({isLoading = false}: {isLoading?: boolean}) => {
                               </div>
                             );
                           }}
+                          error={formState.errors.assignedTo ? true : false}
                           {...field}
                         >
                           {optionAgenticServices.length === 0 && (
                             <MenuItem value="" disabled>
                               <div className="flex items-center gap-2">
                                 <Skeleton variant="circular" width={20} height={20} />
-                                <Typography variant="body1" fontSize={14} sx={(theme) => ({color: theme.palette.vars.baseTextWeak})}>
+                                <Typography variant="body2" fontSize={14} sx={(theme) => ({color: theme.palette.vars.baseTextWeak})}>
                                   No agentic services available
                                 </Typography>
                               </div>
@@ -144,10 +145,12 @@ export const PolicyForm = ({isLoading = false}: {isLoading?: boolean}) => {
                           )}
                           {optionAgenticServices.map((option, key) => (
                             <MenuItem key={key} value={option.value}>
-                              <div className="flex items-center gap-2">
-                                {option.icon}
-                                {option.label}
-                              </div>
+                              <Typography variant="body2">
+                                <div className="flex items-center gap-2">
+                                  {option.icon}
+                                  {option.label}
+                                </div>
+                              </Typography>
                             </MenuItem>
                           ))}
                           <Divider />

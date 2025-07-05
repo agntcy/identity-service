@@ -176,19 +176,6 @@ const FormStepperComponent = () => {
                             >
                               Cancel
                             </Button>
-                            {!methods.isFirst && (
-                              <Button
-                                sx={{
-                                  fontWeight: '600 !important'
-                                }}
-                                variant="outlined"
-                                onClick={methods.prev}
-                                disabled={methods.isFirst || isLoading}
-                                className="cursor-pointer"
-                              >
-                                Previous
-                              </Button>
-                            )}
                             <Button
                               loading={isLoading}
                               loadingPosition="start"
@@ -199,7 +186,7 @@ const FormStepperComponent = () => {
                                 fontWeight: '600 !important'
                               }}
                             >
-                              {methods.current.id === 'confirmAgenticService' ? 'Save' : 'Next'}
+                              {methods.current.id === 'confirmAgenticService' ? 'Save Agentic Service' : 'Next'}
                             </Button>
                           </StepperControls>
                         )}

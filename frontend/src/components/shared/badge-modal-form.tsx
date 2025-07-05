@@ -200,8 +200,14 @@ export const BadgeModalForm = ({
             <Button onClick={onCancel} variant="tertariary" disabled={isLoading} sx={{fontWeight: '600 !important'}}>
               Cancel
             </Button>
-            <Button type="submit" disabled={isLoading || !form.formState.isValid} loading={isLoading} loadingPosition="start">
-              {confirmButtonText || 'Continue'}
+            <Button
+              type="submit"
+              disabled={isLoading || !form.formState.isValid}
+              loading={isLoading}
+              loadingPosition="start"
+              sx={{fontWeight: '600 !important'}}
+            >
+              {confirmButtonText ?? 'Continue'}
             </Button>
           </ModalActions>
         </form>

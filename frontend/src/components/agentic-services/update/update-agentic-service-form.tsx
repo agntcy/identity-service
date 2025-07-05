@@ -178,12 +178,18 @@ export const UpdateAgenticServiceForm = ({app}: {app?: App}) => {
           </Card>
           <div className="flex justify-end gap-4">
             <Link to={PATHS.agenticServices.base}>
-              <Button variant="tertariary" disabled={isLoading}>
+              <Button variant="tertariary" disabled={isLoading} sx={{fontWeight: '600 !important'}}>
                 Cancel
               </Button>
             </Link>
-            <Button type="submit" disabled={isLoading || !form.formState.isValid} loading={isLoading} loadingPosition="start">
-              Update
+            <Button
+              type="submit"
+              disabled={isLoading || !form.formState.isValid}
+              loading={isLoading}
+              loadingPosition="start"
+              sx={{fontWeight: '600 !important'}}
+            >
+              Update Agentic Service
             </Button>
           </div>
         </form>

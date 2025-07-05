@@ -5,14 +5,14 @@
 
 import {useFormContext} from 'react-hook-form';
 import {FormControl, FormField, FormItem, FormLabel} from '@/components/ui/form';
-import {Box, GeneralSize, MenuItem, Select, Skeleton, Tag, Typography} from '@outshift/spark-design';
+import {GeneralSize, MenuItem, Select, Skeleton, Tag, Tags, Typography} from '@outshift/spark-design';
 import {PolicyLogicyFormValues} from '@/schemas/policy-logic-schema';
 import {RuleAction} from '@/types/api/policy';
 import {labels} from '@/constants/labels';
-import {useStepper} from '../policies/create/stepper';
 import {PolicyFormValues} from '@/schemas/policy-schema';
 import {useGetGetTasksAgenticService} from '@/queries';
 import {useMemo} from 'react';
+import {useStepper} from '../stepper';
 
 export const TaskForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; fieldIndex: number}) => {
   const policyForm = useFormContext<PolicyLogicyFormValues>();
@@ -43,8 +43,6 @@ export const TaskForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
       value: RuleAction.RULE_ACTION_DENY
     }
   ];
-
-  console.log(policyForm.getValues(`rules.${fieldIndex}.tasks.tasks`));
 
   return (
     <div className="w-full flex gap-8">
@@ -78,33 +76,35 @@ export const TaskForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
                     renderValue={(selected: string[]) => {
                       if (!selected || selected.length === 0) {
                         return (
-                          <Typography variant="body1" fontSize={14} sx={(theme) => ({color: theme.palette.vars.baseTextWeak})}>
+                          <Typography variant="body2" fontSize={14} sx={(theme) => ({color: theme.palette.vars.baseTextWeak})}>
                             Select task...
                           </Typography>
                         );
                       }
                       return (
-                        <Box sx={{display: 'flex', flexWrap: 'wrap', gap: 0.5}}>
-                          {selected?.map((value: any) => (
-                            <Tag key={value} size={GeneralSize.Small}>
-                              {optionsTasks.find((option) => option.value === value)?.label || 'Unknown Task'}
-                            </Tag>
-                          ))}
-                        </Box>
+                        <Tags
+                          items={selected.map((value) => ({
+                            valueFormatter: () => optionsTasks.find((option) => option.value === value)?.label || 'Unknown Task',
+                            value
+                          }))}
+                          showOnlyFirst
+                          shouldTruncate
+                        />
                       );
                     }}
+                    error={policyForm.formState.errors.rules?.[fieldIndex]?.tasks?.tasks ? true : false}
                     {...field}
                   >
                     {optionsTasks.map((option, key) => (
                       <MenuItem key={key} value={option.value}>
-                        {option.label}
+                        <Typography variant="body2">{option.label}</Typography>
                       </MenuItem>
                     ))}
                     {optionsTasks.length === 0 && (
                       <MenuItem value="" disabled>
                         <div className="flex items-center gap-2">
                           <Skeleton variant="circular" width={20} height={20} />
-                          <Typography variant="body1" fontSize={14} sx={(theme) => ({color: theme.palette.vars.baseTextWeak})}>
+                          <Typography variant="body2" fontSize={14} sx={(theme) => ({color: theme.palette.vars.baseTextWeak})}>
                             No tasks available
                           </Typography>
                         </div>
@@ -143,7 +143,7 @@ export const TaskForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
                   renderValue={(select: RuleAction) => {
                     if (!select || select === RuleAction.RULE_ACTION_UNSPECIFIED) {
                       return (
-                        <Typography variant="body1" fontSize={14} sx={(theme) => ({color: theme.palette.vars.baseTextWeak})}>
+                        <Typography variant="body2" fontSize={14} sx={(theme) => ({color: theme.palette.vars.baseTextWeak})}>
                           Select action...
                         </Typography>
                       );
@@ -154,11 +154,12 @@ export const TaskForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
                       </div>
                     );
                   }}
+                  error={policyForm.formState.errors.rules?.[fieldIndex]?.tasks?.action ? true : false}
                   {...field}
                 >
                   {optionsActions.map((option, key) => (
                     <MenuItem key={key} value={option.value}>
-                      {option.label}
+                      <Typography variant="body2">{option.label}</Typography>
                     </MenuItem>
                   ))}
                 </Select>

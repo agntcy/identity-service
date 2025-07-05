@@ -14,7 +14,7 @@ import {Button, toast, Typography} from '@outshift/spark-design';
 import {validateForm} from '@/lib/utils';
 import {PolicyForm} from './steps/policy-form';
 import {PolicyFormValues, PolicySchema} from '@/schemas/policy-schema';
-import {RuleAction} from '@/types/api/policy';
+import {Policy, RuleAction} from '@/types/api/policy';
 import {PolicyLogic} from './steps/policy-logic';
 import {useCreatePolicy, useCreateRule} from '@/mutations';
 import {PolicyLogicyFormValues, PolicyLogicySchema} from '@/schemas/policy-logic-schema';
@@ -31,6 +31,7 @@ export const CreatePolicyStepper = () => {
 
 const FormStepperComponent = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [flagCreatePolicy, setFlagCreatePolicy] = useState(true);
 
   const methods = useStepper();
 
@@ -69,44 +70,11 @@ const FormStepperComponent = () => {
   const mutationCreatePolicy = useCreatePolicy({
     callbacks: {
       onSuccess: (resp) => {
-        const valuesPolicyLogic = policyLogicForm.getValues();
-        if (valuesPolicyLogic.rules.length > 0 && resp.data.id) {
-          valuesPolicyLogic.rules.forEach((rule) => {
-            if (rule.tasks.action !== RuleAction.RULE_ACTION_UNSPECIFIED) {
-              mutationCreateRule
-                .mutateAsync({
-                  id: resp.data.id,
-                  data: {
-                    name: rule.name,
-                    description: rule.description,
-                    needsApproval: rule.needsApproval === 'yes',
-                    tasks: [...rule.tasks.tasks],
-                    action: rule.tasks.action
-                  }
-                })
-                .then(() => {
-                  void navigate(PATHS.policies.base, {replace: true});
-                })
-                .catch(() => {
-                  toast({
-                    title: 'Error',
-                    description: 'An error occurred while creating the rule. Please try again.',
-                    type: 'error'
-                  });
-                })
-                .finally(() => {
-                  setIsLoading(false);
-                  toast({
-                    title: 'Success',
-                    description: `Policy "${resp.data.name}" created successfully.`,
-                    type: 'success'
-                  });
-                });
-            }
-          });
-        }
+        setFlagCreatePolicy(true);
+        void handleCreateRules(resp.data);
       },
       onError: () => {
+        setFlagCreatePolicy(false);
         setIsLoading(false);
         toast({
           title: 'Error',
@@ -116,6 +84,50 @@ const FormStepperComponent = () => {
       }
     }
   });
+
+  const handleCreateRules = useCallback(
+    async (policy: Policy) => {
+      const valuesPolicyLogic = policyLogicForm.getValues();
+      if (valuesPolicyLogic.rules.length > 0 && policy.id) {
+        try {
+          // Execute all rule creation mutations concurrently
+          await Promise.all(
+            valuesPolicyLogic.rules.map((rule) => {
+              if (rule.tasks.action !== RuleAction.RULE_ACTION_UNSPECIFIED) {
+                return mutationCreateRule.mutateAsync({
+                  id: policy.id,
+                  data: {
+                    name: rule.name,
+                    description: rule.description,
+                    needsApproval: rule.needsApproval === 'yes',
+                    tasks: [...rule.tasks.tasks],
+                    action: rule.tasks.action
+                  }
+                });
+              }
+              return Promise.resolve(); // Skip rules with unspecified action
+            })
+          );
+          toast({
+            title: 'Success',
+            description: `All rules for policy "${policy.name}" created successfully.`,
+            type: 'success'
+          });
+          void navigate(PATHS.policies.base, {replace: true});
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (error) {
+          toast({
+            title: 'Error',
+            description: 'An error occurred while creating the rules. Please try again.',
+            type: 'error'
+          });
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    },
+    [policyLogicForm, mutationCreateRule, navigate]
+  );
 
   const handleOnClear = useCallback(() => {
     setIsLoading(false);
@@ -164,12 +176,14 @@ const FormStepperComponent = () => {
   const handleSave = useCallback(() => {
     const valuesPolicy = form.getValues() as PolicyFormValues;
     setIsLoading(true);
-    mutationCreatePolicy.mutate({
-      assignedTo: valuesPolicy.assignedTo,
-      description: valuesPolicy.description,
-      name: valuesPolicy.name
-    });
-  }, [form, mutationCreatePolicy]);
+    if (flagCreatePolicy) {
+      mutationCreatePolicy.mutate({
+        assignedTo: valuesPolicy.assignedTo,
+        description: valuesPolicy.description,
+        name: valuesPolicy.name
+      });
+    }
+  }, [flagCreatePolicy, form, mutationCreatePolicy]);
 
   const onSubmit = useCallback(() => {
     if (methods.current.id === 'policyForm') {
@@ -231,7 +245,7 @@ const FormStepperComponent = () => {
                               fontWeight: '600 !important'
                             }}
                           >
-                            {methods.current.id === 'policyLogic' ? 'Save' : 'Next'}
+                            {methods.current.id === 'policyLogic' ? 'Create Policy' : 'Next'}
                           </Button>
                         </StepperControls>
                       </AccordionContent>

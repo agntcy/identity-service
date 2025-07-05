@@ -55,7 +55,6 @@ const AgenticServiceInfo: React.FC = () => {
   return (
     <BasePage
       title="Agentic Service"
-      description="Check the details of your agentic service."
       useBorder
       breadcrumbs={[
         {
@@ -136,6 +135,7 @@ const AgenticServiceInfo: React.FC = () => {
               setShowBadgeForm(false);
             }}
             navigateTo={false}
+            confirmButtonText="Re-Issue Badge"
           />
         )}
         <ConfirmModal

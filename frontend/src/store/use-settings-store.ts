@@ -12,7 +12,7 @@ type SettingsStore = {
 
 export const useSettingsStore = create<SettingsStore>(
   (set): SettingsStore => ({
-    isEmptyIdp: false,
+    isEmptyIdp: true,
     setIsEmptyIdp: (value: boolean) => set(() => ({isEmptyIdp: value}))
   })
 );

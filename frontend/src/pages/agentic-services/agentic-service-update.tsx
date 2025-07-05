@@ -18,7 +18,6 @@ const AgenticServiceUpdate: React.FC = () => {
   return (
     <BasePage
       title="Update Agentic Service"
-      description="Update your agentic service details."
       useBorder
       breadcrumbs={[
         {

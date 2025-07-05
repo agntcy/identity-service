@@ -18,10 +18,11 @@ interface BadgeCardProps {
   app?: App;
   navigateTo?: boolean;
   showError?: boolean;
+  confirmButtonText?: string;
   onBadgeChanged?: (badge?: Badge) => void;
 }
 
-export const BadgeCard = ({app, navigateTo = true, showError = false, onBadgeChanged}: BadgeCardProps) => {
+export const BadgeCard = ({app, navigateTo = true, confirmButtonText, showError = false, onBadgeChanged}: BadgeCardProps) => {
   const [showBadgeForm, setShowBadgeForm] = useState<boolean>(false);
   const [showBadge, setShowBadge] = useState<boolean>(false);
   const [view, setView] = useState('credential');
@@ -154,7 +155,7 @@ export const BadgeCard = ({app, navigateTo = true, showError = false, onBadgeCha
                 size="sm"
               />
             </div>
-            <ScrollShadowWrapper className="max-h-[50vh] overflow-auto">
+            <ScrollShadowWrapper className="max-h-[60vh] overflow-auto">
               {view === 'credential' && (
                 <CodeBlock containerProps={{maxWidth: '50vw'}} showLineNumbers wrapLongLines text={JSON.stringify(contentToShow, null, 2)} />
               )}
@@ -208,6 +209,7 @@ export const BadgeCard = ({app, navigateTo = true, showError = false, onBadgeCha
           onBadgeCreated={() => {
             setShowBadgeForm(false);
           }}
+          confirmButtonText={confirmButtonText}
           navigateTo={navigateTo}
         />
       )}

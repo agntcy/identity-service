@@ -79,7 +79,7 @@ export const EmptyDashboard = () => {
               <div className="bg-[#FBFCFE] rounded-[8px] flex-col flex justify-center items-center px-20 w-[50%] pt-[40px] pb-[24px]">
                 <div>
                   <Typography variant="h6" textAlign="center">
-                    Create ID badges & policies
+                    Create Badges & Policies
                   </Typography>
                   <Typography variant="body1" marginTop={2} textAlign="center">
                     Connect identity provider to create and manage identities for your AI agents and MCP servers, including those supporting

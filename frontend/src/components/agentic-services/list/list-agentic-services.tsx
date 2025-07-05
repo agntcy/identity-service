@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {useCallback, useMemo, useState} from 'react';
+import {useCallback, useEffect, useMemo, useState} from 'react';
 import {ConditionalQueryRenderer} from '../../ui/conditional-query-renderer';
 import {EmptyState, MenuItem, SelectNodeType, Table, toast, Typography} from '@outshift/spark-design';
 import {useGetAgenticServices} from '@/queries';
@@ -20,7 +20,7 @@ import {ConfirmModal} from '@/components/ui/confirm-modal';
 import {useDeleteAgenticService} from '@/mutations';
 import {BadgeModalForm} from '@/components/shared/badge-modal-form';
 
-export const ListAgenticServices = () => {
+export const ListAgenticServices = ({onEmptyChange}: {onEmptyChange?: (isEmpty: boolean) => void}) => {
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: 0,
     pageSize: 10
@@ -105,6 +105,14 @@ export const ListAgenticServices = () => {
     setTempApp(undefined);
     deleteMutation.mutate(tempApp?.id || '');
   }, [deleteMutation, tempApp]);
+
+  useEffect(() => {
+    if (Number(data?.pagination?.total) === 0) {
+      onEmptyChange?.(true);
+    } else {
+      onEmptyChange?.(false);
+    }
+  }, [data, isLoading, onEmptyChange]);
 
   return (
     <>

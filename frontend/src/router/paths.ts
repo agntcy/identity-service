@@ -14,7 +14,8 @@ export const PATHS = {
     create: '/agentic-services/create',
     info: '/agentic-services/:id',
     update: '/agentic-services/:id/update',
-    verifyIdentity: '/agentic-services/verify-identity'
+    verifyIdentity: '/agentic-services/verify-identity',
+    reIssueBadge: '/agentic-services/:id/re-issue-badge'
   },
   policies: {
     base: '/policies',

@@ -68,8 +68,8 @@ const SettingsIdentityProvider: React.FC = () => {
         emptyListStateProps={{
           title: 'Get started with Agent Identity',
           description:
-            'Register your Identity Provider as an Issuer to create and manage identities for your MCP Servers and Agents with support for TBAC based access control.',
-          actionTitle: 'Register Issuer',
+            'Connect identity provider to Create ID badges (MCP servers, OASF agents, and A2A protocols), manage identities and apply policies',
+          actionTitle: 'Register Identity Provider',
           actionCallback: () => {
             void navigate(PATHS.settings.identityProvider.create);
           },

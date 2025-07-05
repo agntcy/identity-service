@@ -48,7 +48,10 @@ export const IdentityProviderForm = ({isLoading = false}: {isLoading?: boolean})
       imgURI: <OasfLogo />,
       isDisabled: isLoading,
       infoAction: (
-        <Tooltip title="Agntcy is an open-source identity provider that allows you to manage your own identity and access management system." arrow>
+        <Tooltip
+          title="Agntcy is an open-source identity provider that allows you to manage your own identity and access management system."
+          placement="top"
+        >
           <IconButton
             sx={(theme) => ({
               color: theme.palette.vars.baseTextDefault,

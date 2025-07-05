@@ -112,7 +112,13 @@ export const CreateIdentityProvider = () => {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <IdentityProviderForm isLoading={isLoading} />
         <div className="flex justify-end gap-4 items-center">
-          <Button variant="tertariary" onClick={handleOnClear}>
+          <Button
+            variant="tertariary"
+            onClick={handleOnClear}
+            sx={{
+              fontWeight: '600 !important'
+            }}
+          >
             Cancel
           </Button>
           <div>
@@ -122,8 +128,11 @@ export const CreateIdentityProvider = () => {
               loadingPosition="start"
               disabled={isLoading || !form.formState.isValid}
               className="cursor-pointer"
+              sx={{
+                fontWeight: '600 !important'
+              }}
             >
-              Save
+              Save Identity Provider
             </Button>
           </div>
         </div>

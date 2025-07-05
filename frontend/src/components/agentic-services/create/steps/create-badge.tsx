@@ -6,7 +6,7 @@
 import {Card, CardContent} from '@/components/ui/card';
 import {Button, CopyButton, toast, Typography} from '@outshift/spark-design';
 import {useMemo, useState} from 'react';
-import {App} from '@/types/api/app';
+import {App, AppStatus} from '@/types/api/app';
 import KeyValue, {KeyValuePair} from '@/components/ui/key-value';
 import {AgenticServiceType} from '@/components/shared/agentic-service-type';
 import {Badge} from '@/types/api/badge';
@@ -40,11 +40,11 @@ export const CreateBadge = ({app}: {app?: App}) => {
       },
       {
         keyProp: 'Status',
-        value: <StatusAgenticService status={app?.status} />
+        value: <StatusAgenticService status={badge?.verifiableCredential?.issuanceDate ? AppStatus.APP_STATUS_ACTIVE : app?.status} />
       }
     ];
     return temp;
-  }, [app]);
+  }, [app, badge]);
 
   return (
     <div className="space-y-4">
@@ -84,7 +84,7 @@ export const CreateBadge = ({app}: {app?: App}) => {
             </CardContent>
           </Card>
         </div>
-        <div className="w-full">
+        <div className="w-full h-full">
           <BadgeCard
             app={app}
             navigateTo={false}
@@ -100,6 +100,9 @@ export const CreateBadge = ({app}: {app?: App}) => {
           onClick={() => {
             const path = generatePath(PATHS.agenticServices.info, {id: app?.id});
             void navigate(path, {replace: true});
+          }}
+          sx={{
+            fontWeight: '600 !important'
           }}
         >
           {badge ? 'Done' : 'Skip'}

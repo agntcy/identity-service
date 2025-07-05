@@ -8,11 +8,13 @@ import {Form} from '@/components/ui/form';
 import {PlusIcon, XIcon} from 'lucide-react';
 import {useCallback} from 'react';
 import {useFieldArray, UseFormReturn} from 'react-hook-form';
-import {RuleForm} from '@/components/shared/rule-form';
 import {Button, Divider, IconButton} from '@mui/material';
 import {PolicyLogicyFormValues} from '@/schemas/policy-logic-schema';
-import {Accordion, Tooltip} from '@outshift/spark-design';
+import {Accordion, GeneralSize, Tag, Tooltip} from '@outshift/spark-design';
 import {RuleAction} from '@/types/api/policy';
+import {RuleForm} from './rule-form';
+import {labels} from '@/constants/labels';
+import {Separator} from '@/components/ui/separator';
 
 export const PolicyLogic = ({isLoading = false, policyForm}: {policyForm: UseFormReturn<PolicyLogicyFormValues>; isLoading?: boolean}) => {
   const {
@@ -37,7 +39,7 @@ export const PolicyLogic = ({isLoading = false, policyForm}: {policyForm: UseFor
       description: '',
       needsApproval: 'no',
       tasks: {
-        tasks: [],
+        tasks: [''],
         action: RuleAction.RULE_ACTION_UNSPECIFIED
       }
     });
@@ -55,8 +57,20 @@ export const PolicyLogic = ({isLoading = false, policyForm}: {policyForm: UseFor
                     {field.name ? (
                       <div className="w-full flex justify-between items-start gap-4">
                         <div className="w-full">
-                          <Accordion title={field.name}>
-                            <RuleForm isLoading={isLoading} fieldIndex={index} />
+                          <Accordion
+                            title={field.name}
+                            subTitle={
+                              (
+                                <div className="flex gap-2 items-center h-[24px] mt-1">
+                                  <Separator orientation="vertical" />
+                                  <Tag size={GeneralSize.Small}>{labels.rulesActions[field.tasks.action]}</Tag>
+                                </div>
+                              ) as any
+                            }
+                          >
+                            <div className="pl-6">
+                              <RuleForm isLoading={isLoading} fieldIndex={index} />
+                            </div>
                           </Accordion>
                         </div>
                         <Tooltip title="Remove this rule">
@@ -73,7 +87,25 @@ export const PolicyLogic = ({isLoading = false, policyForm}: {policyForm: UseFor
                         </Tooltip>
                       </div>
                     ) : (
-                      <RuleForm isLoading={isLoading} fieldIndex={index} />
+                      <div className="w-full">
+                        {index > 0 && (
+                          <div className="flex justify-end">
+                            <Tooltip title="Remove this rule">
+                              <IconButton
+                                sx={(theme) => ({
+                                  color: theme.palette.vars.baseTextDefault,
+                                  width: '24px',
+                                  height: '24px'
+                                })}
+                                onClick={() => handleRemove(index)}
+                              >
+                                <XIcon className="h-4 w-4" />
+                              </IconButton>
+                            </Tooltip>
+                          </div>
+                        )}
+                        <RuleForm isLoading={isLoading} fieldIndex={index} />
+                      </div>
                     )}
                   </div>
                 </div>
