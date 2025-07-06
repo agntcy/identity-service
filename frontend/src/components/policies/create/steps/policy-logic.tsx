@@ -8,7 +8,7 @@ import {Form} from '@/components/ui/form';
 import {PlusIcon, XIcon} from 'lucide-react';
 import {useCallback} from 'react';
 import {useFieldArray, UseFormReturn} from 'react-hook-form';
-import {Button, Divider, IconButton} from '@mui/material';
+import {Button, Divider, IconButton, Typography} from '@mui/material';
 import {PolicyLogicyFormValues} from '@/schemas/policy-logic-schema';
 import {Accordion, GeneralSize, Tag, Tooltip} from '@outshift/spark-design';
 import {RuleAction} from '@/types/api/policy';
@@ -16,13 +16,13 @@ import {RuleForm} from './rule-form';
 import {labels} from '@/constants/labels';
 import {Separator} from '@/components/ui/separator';
 
-export const PolicyLogic = ({isLoading = false, policyForm}: {policyForm: UseFormReturn<PolicyLogicyFormValues>; isLoading?: boolean}) => {
+export const PolicyLogic = ({isLoading = false, policyLogicForm}: {policyLogicForm: UseFormReturn<PolicyLogicyFormValues>; isLoading?: boolean}) => {
   const {
     fields,
     append: appendRule,
     remove: removeRule
   } = useFieldArray({
-    control: policyForm.control,
+    control: policyLogicForm.control,
     name: 'rules'
   });
 
@@ -46,9 +46,14 @@ export const PolicyLogic = ({isLoading = false, policyForm}: {policyForm: UseFor
   }, [appendRule]);
 
   return (
-    <Card className="text-start py-4 rounded-[8px] p-[24px]" variant="secondary">
+    <Card className="text-start py-4 rounded-[8px] p-[24px] space-y-6" variant="secondary">
+      <div>
+        <Typography variant="subtitle1" fontWeight={600}>
+          Rules
+        </Typography>
+      </div>
       <CardContent className="p-0 space-y-6">
-        <Form {...policyForm}>
+        <Form {...policyLogicForm}>
           {fields.map((field, index) => {
             return (
               <div key={field.id}>
@@ -125,9 +130,7 @@ export const PolicyLogic = ({isLoading = false, policyForm}: {policyForm: UseFor
               variant="tertariary"
               sx={{fontWeight: '600 !important'}}
               startIcon={<PlusIcon className="w-4 h-4" />}
-              loading={isLoading}
-              loadingPosition="start"
-              disabled={(isLoading || !policyForm.formState.isValid) && fields.length > 0}
+              disabled={(isLoading || !policyLogicForm.formState.isValid) && fields.length > 0}
               onClick={handleAddRule}
             >
               Add Logic

@@ -20,15 +20,13 @@ export const useCreateAgenticService = ({callbacks}: PropsSettingsAgenticService
   return useMutation({
     mutationKey: ['create-agentic-service'],
     mutationFn: (data: App) => AgenticServicesAPI.createApp(data),
-    onSettled: async () => {
-      await queryClient.invalidateQueries({queryKey: ['get-agentic-services']});
-    },
     onError: () => {
       if (callbacks?.onError) {
         callbacks.onError();
       }
     },
-    onSuccess: (resp) => {
+    onSuccess: async (resp) => {
+      await queryClient.invalidateQueries({queryKey: ['get-agentic-services']});
       if (callbacks?.onSuccess) {
         callbacks.onSuccess(resp);
       }
@@ -41,15 +39,14 @@ export const useUpdateAgenticService = ({callbacks}: PropsSettingsAgenticService
   return useMutation({
     mutationKey: ['update-agentic-service'],
     mutationFn: ({id, data}: {id: string; data: App}) => AgenticServicesAPI.updateApp(id, data),
-    onSettled: async () => {
-      await queryClient.invalidateQueries({queryKey: ['get-agentic-services']});
-    },
     onError: () => {
       if (callbacks?.onError) {
         callbacks.onError();
       }
     },
-    onSuccess: (resp) => {
+    onSuccess: async (resp) => {
+      await queryClient.invalidateQueries({queryKey: ['get-agentic-services']});
+      await queryClient.invalidateQueries({queryKey: ['get-agentic-service']});
       if (callbacks?.onSuccess) {
         callbacks.onSuccess(resp);
       }
@@ -62,16 +59,14 @@ export const useDeleteAgenticService = ({callbacks}: PropsSettingsAgenticService
   return useMutation({
     mutationKey: ['delete-agentic-service'],
     mutationFn: (id: string) => AgenticServicesAPI.deleteApp(id),
-    onSettled: async () => {
-      await queryClient.invalidateQueries({queryKey: ['get-agentic-services']});
-      await queryClient.invalidateQueries({queryKey: ['get-agentic-service']});
-    },
     onError: () => {
       if (callbacks?.onError) {
         callbacks.onError();
       }
     },
-    onSuccess: (resp) => {
+    onSuccess: async (resp) => {
+      await queryClient.invalidateQueries({queryKey: ['get-agentic-services']});
+      await queryClient.invalidateQueries({queryKey: ['get-agentic-service']});
       if (callbacks?.onSuccess) {
         callbacks.onSuccess(resp);
       }

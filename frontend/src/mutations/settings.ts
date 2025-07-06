@@ -27,15 +27,13 @@ export const useSetApiKey = ({callbacks}: PropsSettingsApiKey) => {
   return useMutation({
     mutationKey: ['set-api-key'],
     mutationFn: () => SettingsAPI.settingsServiceSetApiKey(),
-    onSettled: async () => {
-      await queryClient.invalidateQueries({queryKey: ['get-settings']});
-    },
     onError: () => {
       if (callbacks?.onError) {
         callbacks.onError();
       }
     },
-    onSuccess: (resp) => {
+    onSuccess: async (resp) => {
+      await queryClient.invalidateQueries({queryKey: ['get-settings']});
       if (callbacks?.onSuccess) {
         callbacks.onSuccess(resp);
       }
@@ -54,8 +52,8 @@ export const useSetIdentityProvider = ({callbacks}: PropsSetIdentityProvider) =>
       }
     },
     onSuccess: async (resp) => {
+      await queryClient.invalidateQueries({queryKey: ['get-settings']});
       if (callbacks?.onSuccess) {
-        await queryClient.invalidateQueries({queryKey: ['get-settings']});
         callbacks.onSuccess(resp);
       }
     }

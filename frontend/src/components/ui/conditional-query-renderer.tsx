@@ -111,7 +111,11 @@ export const ConditionalQueryRenderer: React.FC<React.PropsWithChildren<Conditio
   }
 
   if (unreadyResult) {
-    return <div className={cn('flex flex-col gap-2 items-center', classNameContainer, useSkeleton)}>{unreadyResult}</div>;
+    return (
+      <div className={cn('flex flex-col gap-2 items-center', classNameContainer, useSkeleton)}>
+        <div className="bg-[#FBFCFE] p-[24px] rounded-[8px] w-full h-full"> {unreadyResult}</div>
+      </div>
+    );
   }
 
   return <>{children}</>;

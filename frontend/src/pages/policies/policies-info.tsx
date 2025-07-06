@@ -13,7 +13,7 @@ import {PATHS} from '@/router/paths';
 import {Button, toast} from '@outshift/spark-design';
 import {RefreshCcwIcon, Trash2Icon} from 'lucide-react';
 import {useCallback, useState} from 'react';
-import {useNavigate, useParams} from 'react-router-dom';
+import {generatePath, useNavigate, useParams} from 'react-router-dom';
 
 const PolicyInfo: React.FC = () => {
   const [showConfirmDelete, setShowConfirmDelete] = useState<boolean>(false);
@@ -81,10 +81,9 @@ const PolicyInfo: React.FC = () => {
               variant="secondary"
               sx={{fontWeight: '600 !important'}}
               onClick={() => {
-                // const path = generatePath(PATHS.agenticServices.update, {id: id || ''});
-                // void navigate(path, {replace: true});
+                const path = generatePath(PATHS.policies.update, {id: id || ''});
+                void navigate(path, {replace: true});
               }}
-              disabled
             >
               Update
             </Button>
@@ -93,7 +92,7 @@ const PolicyInfo: React.FC = () => {
       }
     >
       <ConditionalQueryRenderer
-        itemName="Agentic Service"
+        itemName="Policy"
         data={data}
         error={error}
         isLoading={isLoading || isFetching}

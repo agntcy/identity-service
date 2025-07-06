@@ -12,8 +12,10 @@ import {Link as RouterLink} from 'react-router-dom';
 import {useFeatureFlagsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
 import {useGetAgenticServices, useGetPolicies, useGetSettings} from '@/queries';
-import StatsCard from '../ui/stats-card';
+import StatsCard, {Stat} from '../ui/stats-card';
 import {ProviderType} from '../shared/provider-type';
+import {useMemo} from 'react';
+import {cn} from '@/lib/utils';
 
 export const StatsDashboard = () => {
   const {authInfo} = useAuth();
@@ -25,7 +27,38 @@ export const StatsDashboard = () => {
   );
   const {data: dataSettings, isLoading: isLoadingSettings} = useGetSettings();
   const {data: dataAgenticServices, isLoading: isLoadingAgenticServices} = useGetAgenticServices();
-  const {data: dataPolicies, isLoading: isLoadingPolicies} = useGetPolicies();
+  const {data: dataPolicies, isLoading: isLoadingPolicies} = useGetPolicies({enable: isTbacEnable});
+
+  const statsInfo: Stat[] = useMemo(() => {
+    const temp = [
+      {
+        value: <ProviderType type={dataSettings?.issuerSettings?.idpType} />,
+        title: 'Identity Provider',
+        loading: isLoadingSettings
+      },
+      {
+        value: dataAgenticServices?.apps?.length || 0,
+        title: 'Total Agentic Services',
+        loading: isLoadingAgenticServices
+      }
+    ];
+    if (isTbacEnable) {
+      temp.push({
+        value: dataPolicies?.policies?.length || 0,
+        title: 'Total Policies',
+        loading: isLoadingPolicies
+      });
+    }
+    return temp;
+  }, [
+    dataAgenticServices?.apps?.length,
+    dataPolicies?.policies?.length,
+    dataSettings?.issuerSettings?.idpType,
+    isLoadingAgenticServices,
+    isLoadingPolicies,
+    isLoadingSettings,
+    isTbacEnable
+  ]);
 
   return (
     <ScrollShadowWrapper>
@@ -45,28 +78,12 @@ export const StatsDashboard = () => {
         </div>
         <div className="px-[24px]">
           <StatsCard
-            className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 p-4"
-            stats={[
-              {
-                value: <ProviderType type={dataSettings?.issuerSettings?.idpType} />,
-                title: 'Identity Provider',
-                loading: isLoadingSettings
-              },
-              {
-                value: dataAgenticServices?.apps?.length || 0,
-                title: 'Total Agentic Services',
-                loading: isLoadingAgenticServices
-              },
-              {
-                value: dataPolicies?.policies?.length || 0,
-                title: 'Total Policies',
-                loading: isLoadingPolicies
-              }
-            ]}
+            className={cn('grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 p-4', !isTbacEnable && 'md:grid-cols-2 lg:grid-cols-2')}
+            stats={statsInfo}
           />
         </div>
         <div className="flex card-group px-[24px]">
-          <div className="card-flex-group min-w-[384px] border shadow-sm  bg-[#FBFCFE] rounded-[8px] flex-col flex justify-center items-center px-20 pt-[40px] pb-[24px]">
+          <div className="card-flex-group min-w-[384px] bg-[#FBFCFE] rounded-[8px] flex-col flex justify-center items-center px-20 pt-[40px] pb-[24px]">
             <div>
               <Typography variant="h6" textAlign="center">
                 Verify Identity Badges
@@ -83,7 +100,7 @@ export const StatsDashboard = () => {
               </div>
             </div>
           </div>
-          <div className="card-flex-group min-w-[384px] border shadow-sm bg-[#FBFCFE] rounded-[8px] flex-col flex justify-center items-center px-20 pt-[40px] pb-[24px]">
+          <div className="card-flex-group min-w-[384px] bg-[#FBFCFE] rounded-[8px] flex-col flex justify-center items-center px-20 pt-[40px] pb-[24px]">
             <div>
               <Typography variant="h6" textAlign="center">
                 Create Badges
@@ -101,7 +118,7 @@ export const StatsDashboard = () => {
             </div>
           </div>
           {isTbacEnable && (
-            <div className="card-flex-group min-w-[384px] shadow-sm border bg-[#FBFCFE] rounded-[8px] flex-col flex justify-center items-center px-20  pt-[40px] pb-[24px]">
+            <div className="card-flex-group min-w-[384px] bg-[#FBFCFE] rounded-[8px] flex-col flex justify-center items-center px-20  pt-[40px] pb-[24px]">
               <div>
                 <Typography variant="h6" textAlign="center">
                   Add Policies

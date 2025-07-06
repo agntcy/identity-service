@@ -27,15 +27,13 @@ export const useCreateTenant = ({callbacks}: PropsSettingsTenant) => {
   return useMutation({
     mutationKey: ['create-tenant'],
     mutationFn: () => IamAPI.createTenant(),
-    onSettled: async () => {
-      await queryClient.invalidateQueries({queryKey: ['get-tenants']});
-    },
     onError: () => {
       if (callbacks?.onError) {
         callbacks.onError();
       }
     },
-    onSuccess: (resp) => {
+    onSuccess: async (resp) => {
+      await queryClient.invalidateQueries({queryKey: ['get-tenants']});
       if (callbacks?.onSuccess) {
         callbacks.onSuccess(resp);
       }
@@ -48,15 +46,14 @@ export const useUpdateTenant = ({callbacks}: PropsSettingsTenant) => {
   return useMutation({
     mutationKey: ['update-tenant'],
     mutationFn: ({id, name}: {id: string; name: string}) => IamAPI.updateTenant(id, name),
-    onSettled: async () => {
-      await queryClient.invalidateQueries({queryKey: ['get-tenants']});
-    },
     onError: () => {
       if (callbacks?.onError) {
         callbacks.onError();
       }
     },
-    onSuccess: (resp) => {
+    onSuccess: async (resp) => {
+      await queryClient.invalidateQueries({queryKey: ['get-tenants']});
+      await queryClient.invalidateQueries({queryKey: ['get-tenant']});
       if (callbacks?.onSuccess) {
         callbacks.onSuccess(resp);
       }
@@ -69,15 +66,14 @@ export const useDeleteTenant = ({callbacks}: PropsSettingsTenant) => {
   return useMutation({
     mutationKey: ['delete-tenant'],
     mutationFn: (id: string) => IamAPI.deleteTenant(id),
-    onSettled: async () => {
-      await queryClient.invalidateQueries({queryKey: ['get-tenants']});
-    },
     onError: () => {
       if (callbacks?.onError) {
         callbacks.onError();
       }
     },
-    onSuccess: (resp) => {
+    onSuccess: async (resp) => {
+      await queryClient.invalidateQueries({queryKey: ['get-tenants']});
+      await queryClient.invalidateQueries({queryKey: ['get-tenant']});
       if (callbacks?.onSuccess) {
         callbacks.onSuccess(resp);
       }
@@ -90,16 +86,14 @@ export const useInviteUser = ({callbacks}: PropsSettingsInviteUser) => {
   return useMutation({
     mutationKey: ['invite-user'],
     mutationFn: ({groupId, data}: {groupId: string; data: InviteUserPayload}) => IamAPI.inviteUser(groupId, data),
-    onSettled: async () => {
-      await queryClient.invalidateQueries({queryKey: ['get-tenant-groups']});
-      await queryClient.invalidateQueries({queryKey: ['get-users-group']});
-    },
     onError: () => {
       if (callbacks?.onError) {
         callbacks.onError();
       }
     },
-    onSuccess: (resp) => {
+    onSuccess: async (resp) => {
+      await queryClient.invalidateQueries({queryKey: ['get-tenant-groups']});
+      await queryClient.invalidateQueries({queryKey: ['get-users-group']});
       if (callbacks?.onSuccess) {
         callbacks.onSuccess(resp);
       }

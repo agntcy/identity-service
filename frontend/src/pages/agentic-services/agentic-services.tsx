@@ -11,14 +11,11 @@ import {PATHS} from '@/router/paths';
 import {useSettingsStore} from '@/store';
 import {Button} from '@outshift/spark-design';
 import {CheckIcon, PlusIcon} from 'lucide-react';
-import {useState} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
 import {useShallow} from 'zustand/react/shallow';
 
 const AgentServices: React.FC = () => {
-  const [isEmpty, setIsEmpty] = useState(false);
-
-  const {data, error, isFetching, isLoading, refetch} = useGetSettings();
+  const {data, error, isLoading, refetch} = useGetSettings();
 
   const {isEmptyIdp} = useSettingsStore(
     useShallow((state) => ({
@@ -38,7 +35,7 @@ const AgentServices: React.FC = () => {
               Verify Identity
             </Button>
           </Link>
-          {!isEmpty && (
+          {!isEmptyIdp && (
             <Link to={PATHS.agenticServices.create}>
               <Button startIcon={<PlusIcon className="w-4 h-4" />} variant="primary" sx={{fontWeight: '600 !important'}}>
                 Add Agentic Service
@@ -52,7 +49,7 @@ const AgentServices: React.FC = () => {
         itemName="Identity Provider"
         data={isEmptyIdp ? undefined : data?.issuerSettings}
         error={error}
-        isLoading={isLoading || isFetching}
+        isLoading={isLoading}
         useRelativeLoader
         useContainer
         errorListStateProps={{
@@ -76,11 +73,7 @@ const AgentServices: React.FC = () => {
           }
         }}
       >
-        <ListAgenticServices
-          onEmptyChange={(empty) => {
-            setIsEmpty(empty);
-          }}
-        />
+        <ListAgenticServices />
       </ConditionalQueryRenderer>
     </BasePage>
   );

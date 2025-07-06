@@ -4,12 +4,20 @@
  */
 
 import {PolicyAPI} from '@/api/services';
-import {useQuery} from '@tanstack/react-query';
+import {keepPreviousData, useQuery} from '@tanstack/react-query';
 import qs from 'qs';
 
-export const useGetPolicies = (query?: {page?: number; size?: number; query?: string}) => {
+export const useGetPolicies = ({query, enable = true}: {query?: {page?: number; size?: number; query?: string}; enable?: boolean}) => {
   return useQuery({
-    queryKey: ['get-policies', query?.page, query?.size, query?.query],
+    queryKey: [
+      'get-policies',
+      {
+        page: query?.page,
+        size: query?.size,
+        query: query?.query
+      },
+      enable
+    ],
     queryFn: async () => {
       const {data} = await PolicyAPI.listPolicies(
         {
@@ -24,7 +32,9 @@ export const useGetPolicies = (query?: {page?: number; size?: number; query?: st
         }
       );
       return data;
-    }
+    },
+    enabled: enable !== false,
+    placeholderData: keepPreviousData
   });
 };
 
@@ -38,24 +48,3 @@ export const useGetPolicy = (id?: string) => {
     enabled: !!id
   });
 };
-
-// export const useGetAgenticServiceBadge = (id?: string) => {
-//   return useQuery({
-//     queryKey: ['get-agentic-service-badge', id],
-//     queryFn: async () => {
-//       const {data} = await AgenticServicesAPI.getAppBadge(id!);
-//       return data;
-//     },
-//     enabled: !!id
-//   });
-// };
-
-// export const useGetAgenticServicesCount = () => {
-//   return useQuery({
-//     queryKey: ['get-agentic-service-count'],
-//     queryFn: async () => {
-//       const {data} = await AgenticServicesAPI.getAppsCount();
-//       return data;
-//     }
-//   });
-// };

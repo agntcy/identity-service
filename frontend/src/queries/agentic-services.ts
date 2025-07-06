@@ -5,12 +5,20 @@
 
 import {AgenticServicesAPI} from '@/api/services';
 import {AppType} from '@/types/api/app';
-import {useQuery} from '@tanstack/react-query';
+import {keepPreviousData, useQuery} from '@tanstack/react-query';
 import qs from 'qs';
 
 export const useGetAgenticServices = (query?: {page?: number; size?: number; query?: string; types?: AppType[]}) => {
   return useQuery({
-    queryKey: ['get-agentic-services', query?.page, query?.size, query?.query, query?.types],
+    queryKey: [
+      'get-agentic-services',
+      {
+        page: query?.page,
+        size: query?.size,
+        query: query?.query,
+        types: query?.types
+      }
+    ],
     queryFn: async () => {
       const {data} = await AgenticServicesAPI.listApps(
         {
@@ -26,7 +34,8 @@ export const useGetAgenticServices = (query?: {page?: number; size?: number; que
         }
       );
       return data;
-    }
+    },
+    placeholderData: keepPreviousData
   });
 };
 
@@ -49,7 +58,7 @@ export const useGetAgenticServiceBadge = (id?: string) => {
       return data;
     },
     enabled: !!id,
-    retry: 1 // Ensures the query retries only once
+    retry: 1
   });
 };
 

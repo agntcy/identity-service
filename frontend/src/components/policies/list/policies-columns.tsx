@@ -4,7 +4,6 @@
  */
 
 import {AgenticServiceType} from '@/components/shared/agentic-service-type';
-import {} from '@/components/shared/status-agentic-service';
 import {labels} from '@/constants/labels';
 import {useGetAgenticService} from '@/queries';
 import {Policy} from '@/types/api/policy';
@@ -47,7 +46,11 @@ export const PoliciesColumns = (): MRT_ColumnDef<Policy, any>[] => {
         header: 'Actions',
         Cell: ({row}) => {
           if (!row.original.rules || row.original.rules.length === 0) {
-            return <Tag size={GeneralSize.Small}>No Actions</Tag>;
+            return (
+              <Tag color={TagBackgroundColorVariants.AccentIWeak} size={GeneralSize.Small}>
+                No Actions
+              </Tag>
+            );
           }
           return (
             <Tags
@@ -59,6 +62,7 @@ export const PoliciesColumns = (): MRT_ColumnDef<Policy, any>[] => {
                     : 'Unknown Action',
                 value: rule.action
               }))}
+              showOnlyFirst={false}
               shouldTruncate
               maxTooltipTags={3}
             />

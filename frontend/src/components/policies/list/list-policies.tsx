@@ -14,7 +14,7 @@ import {cn} from '@/lib/utils';
 import {generatePath, useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
 import {FilterSections} from '@/components/shared/filters-sections';
-import {Edit2Icon, PlusIcon, Trash2Icon} from 'lucide-react';
+import {PlusIcon, RefreshCcwIcon, Trash2Icon} from 'lucide-react';
 import {ConfirmModal} from '@/components/ui/confirm-modal';
 import {Policy} from '@/types/api/policy';
 import {useDeletePolicy} from '@/mutations';
@@ -29,10 +29,12 @@ export const ListPolicies = () => {
   const [tempPolicy, setTempPolicy] = useState<Policy | undefined>(undefined);
   const [showActionsModal, setShowActionsModal] = useState<boolean>(false);
 
-  const {data, isLoading, isFetching, error, refetch} = useGetPolicies({
-    page: pagination.pageIndex + 1,
-    size: pagination.pageSize,
-    query: query
+  const {data, isLoading, error, refetch} = useGetPolicies({
+    query: {
+      page: pagination.pageIndex + 1,
+      size: pagination.pageSize,
+      query: query
+    }
   });
 
   const navigate = useNavigate();
@@ -50,7 +52,7 @@ export const ListPolicies = () => {
       onSuccess: () => {
         toast({
           title: 'Success',
-          description: `Policy deleted successfully.`,
+          description: 'Policy deleted successfully.',
           type: 'success'
         });
       },
@@ -91,7 +93,7 @@ export const ListPolicies = () => {
           <Table
             columns={PoliciesColumns()}
             data={data?.policies || []}
-            isLoading={isLoading || isFetching}
+            isLoading={isLoading}
             densityCompact
             muiTableBodyRowProps={({row}) => ({
               sx: {cursor: 'pointer', '& .MuiIconButton-root': {color: (theme) => theme.palette.vars.interactiveSecondaryDefaultDefault}},
@@ -108,6 +110,7 @@ export const ListPolicies = () => {
                   value: query,
                   onChangeCallback: handleQueryChange
                 }}
+                isLoading={isLoading}
               />
             )}
             enableRowActions
@@ -128,10 +131,17 @@ export const ListPolicies = () => {
             onSortingChange={setSorting}
             renderRowActionMenuItems={({row}) => {
               return [
-                <MenuItem key="edit-policy" disabled sx={{display: 'flex', alignItems: 'center', gap: '8px'}}>
-                  <Edit2Icon className="w-4 h-4" color="#062242" />
+                <MenuItem
+                  key="edit-policy"
+                  sx={{display: 'flex', alignItems: 'center', gap: '8px'}}
+                  onClick={() => {
+                    const path = generatePath(PATHS.policies.update, {id: row.original?.id});
+                    void navigate(path, {replace: true});
+                  }}
+                >
+                  <RefreshCcwIcon className="w-4 h-4" color="#062242" />
                   <Typography variant="body2" color="#1A1F27">
-                    Edit
+                    Update
                   </Typography>
                 </MenuItem>,
                 <MenuItem

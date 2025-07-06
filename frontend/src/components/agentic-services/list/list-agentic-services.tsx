@@ -3,14 +3,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {useCallback, useEffect, useMemo, useState} from 'react';
+import {useCallback, useMemo, useState} from 'react';
 import {ConditionalQueryRenderer} from '../../ui/conditional-query-renderer';
 import {EmptyState, MenuItem, SelectNodeType, Table, toast, Typography} from '@outshift/spark-design';
 import {useGetAgenticServices} from '@/queries';
 import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
 import {AgenticServiceColumns} from './agentic-services-columns';
 import {Card} from '@/components/ui/card';
-import {cn} from '@/lib/utils';
 import {generatePath, useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
 import {FilterSections} from '@/components/shared/filters-sections';
@@ -19,11 +18,12 @@ import {IdCardIcon, PlusIcon, RefreshCcwIcon, Trash2Icon} from 'lucide-react';
 import {ConfirmModal} from '@/components/ui/confirm-modal';
 import {useDeleteAgenticService} from '@/mutations';
 import {BadgeModalForm} from '@/components/shared/badge-modal-form';
+import {cn} from '@/lib/utils';
 
-export const ListAgenticServices = ({onEmptyChange}: {onEmptyChange?: (isEmpty: boolean) => void}) => {
+export const ListAgenticServices = () => {
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: 0,
-    pageSize: 10
+    pageSize: 15
   });
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
   const [query, setQuery] = useState<string | undefined>(undefined);
@@ -36,7 +36,7 @@ export const ListAgenticServices = ({onEmptyChange}: {onEmptyChange?: (isEmpty: 
     AppType.APP_TYPE_MCP_SERVER
   ]);
 
-  const {data, isLoading, isFetching, error, refetch} = useGetAgenticServices({
+  const {data, isLoading, error, refetch} = useGetAgenticServices({
     page: pagination.pageIndex + 1,
     size: pagination.pageSize,
     query: query,
@@ -71,14 +71,12 @@ export const ListAgenticServices = ({onEmptyChange}: {onEmptyChange?: (isEmpty: 
   const handleQueryChange = useCallback(
     (value: string) => {
       setQuery(value);
-      setPagination((prev) => ({...prev, pageIndex: 0}));
     },
-    [setQuery, setPagination]
+    [setQuery]
   );
 
   const handleTypeFilterChange = useCallback((selectedValues: SelectNodeType<AppType>[]) => {
     setAppTypeFilters(selectedValues.map((node) => node.value as AppType));
-    setPagination((prev) => ({...prev, pageIndex: 0}));
   }, []);
 
   const deleteMutation = useDeleteAgenticService({
@@ -106,14 +104,6 @@ export const ListAgenticServices = ({onEmptyChange}: {onEmptyChange?: (isEmpty: 
     deleteMutation.mutate(tempApp?.id || '');
   }, [deleteMutation, tempApp]);
 
-  useEffect(() => {
-    if (Number(data?.pagination?.total) === 0) {
-      onEmptyChange?.(true);
-    } else {
-      onEmptyChange?.(false);
-    }
-  }, [data, isLoading, onEmptyChange]);
-
   return (
     <>
       <ConditionalQueryRenderer
@@ -135,7 +125,7 @@ export const ListAgenticServices = ({onEmptyChange}: {onEmptyChange?: (isEmpty: 
           <Table
             columns={AgenticServiceColumns()}
             data={data?.apps || []}
-            isLoading={isLoading || isFetching}
+            isLoading={isLoading}
             densityCompact
             muiTableBodyRowProps={({row}) => ({
               sx: {cursor: 'pointer', '& .MuiIconButton-root': {color: (theme) => theme.palette.vars.interactiveSecondaryDefaultDefault}},
@@ -160,6 +150,7 @@ export const ListAgenticServices = ({onEmptyChange}: {onEmptyChange?: (isEmpty: 
                     onSelectValues: handleTypeFilterChange
                   }
                 ]}
+                isLoading={isLoading}
               />
             )}
             enableRowActions

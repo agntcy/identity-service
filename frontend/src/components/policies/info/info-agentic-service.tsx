@@ -92,13 +92,8 @@ export const InfoPolicy = ({policy}: {policy?: Policy}) => {
                               columns={[
                                 {
                                   accessorKey: 'name',
-                                  header: 'Task Name',
+                                  header: 'Name',
                                   enableSorting: true
-                                },
-                                {
-                                  accessorKey: 'description',
-                                  header: 'Description',
-                                  enableSorting: false
                                 },
                                 {
                                   accessorKey: 'toolName',

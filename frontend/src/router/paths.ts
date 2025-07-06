@@ -20,7 +20,8 @@ export const PATHS = {
   policies: {
     base: '/policies',
     create: '/policies/add',
-    info: '/policies/:id'
+    info: '/policies/:id',
+    update: '/policies/:id/update'
   },
   settings: {
     base: '/settings',

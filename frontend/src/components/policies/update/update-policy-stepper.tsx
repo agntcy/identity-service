@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {useCallback, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {StepperControls, StepperNavigation, StepperPanel, StepperProvider, StepperStep, useStepper} from './stepper';
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
@@ -15,23 +16,22 @@ import {validateForm} from '@/lib/utils';
 import {PolicyForm} from './steps/policy-form';
 import {PolicyFormValues, PolicySchema} from '@/schemas/policy-schema';
 import {Policy, RuleAction} from '@/types/api/policy';
-import {PolicyLogic} from './steps/policy-logic';
-import {useCreatePolicy, useCreateRule} from '@/mutations';
+import {useCreateRule, useDeleteRule, useUpdatePolicy, useUpdateRule} from '@/mutations';
 import {PolicyLogicyFormValues, PolicyLogicySchema} from '@/schemas/policy-logic-schema';
 import {useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
+import {PolicyLogic} from './steps/policy-logic';
 
-export const CreatePolicyStepper = () => {
+export const UpdatePolicyStepper = ({policy}: {policy?: Policy}) => {
   return (
     <StepperProvider variant="vertical">
-      <FormStepperComponent />
+      <FormStepperComponent policy={policy} />
     </StepperProvider>
   );
 };
 
-const FormStepperComponent = () => {
+const FormStepperComponent = ({policy}: {policy?: Policy}) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [flagCreatePolicy, setFlagCreatePolicy] = useState(true);
   const [flagCreateRules, setFlagCreateRules] = useState(true);
 
   const methods = useStepper();
@@ -40,94 +40,106 @@ const FormStepperComponent = () => {
 
   const form = useForm<z.infer<typeof methods.current.schema>>({
     resolver: zodResolver(methods.current.schema),
-    mode: 'all'
+    mode: 'all',
+    defaultValues: {
+      name: policy?.name || '',
+      description: policy?.description || '',
+      assignedTo: policy?.assignedTo || ''
+    }
   });
 
   const policyLogicForm = useForm<PolicyLogicyFormValues>({
     resolver: zodResolver(PolicyLogicySchema),
     mode: 'all',
     defaultValues: {
-      rules: [
-        {
-          name: '',
-          description: '',
-          needsApproval: 'no',
-          tasks: {
-            action: RuleAction.RULE_ACTION_UNSPECIFIED,
-            tasks: []
-          }
+      rules: policy?.rules?.map((rule) => ({
+        id: rule.id,
+        name: rule.name,
+        description: rule.description || '',
+        needsApproval: rule.needsApproval ? 'yes' : 'no',
+        tasks: {
+          action: rule.action,
+          tasks: rule?.tasks?.map((task) => task.id) || []
         }
-      ]
+      }))
     }
   });
 
-  const mutationCreateRule = useCreateRule({
-    callbacks: {
-      onSuccess: () => {},
-      onError: () => {}
-    }
-  });
+  const mutationDeleteRule = useDeleteRule();
+  const mutationUpdateRule = useUpdateRule();
+  const mutationCreateRule = useCreateRule();
 
-  const mutationCreatePolicy = useCreatePolicy({
+  const mutationUpdatePolicy = useUpdatePolicy({
     callbacks: {
       onSuccess: (resp) => {
-        if (flagCreateRules) {
-          setFlagCreatePolicy(true);
-          void handleCreateRules(resp.data);
-        } else {
-          toast({
-            title: 'Success',
-            description: `Policy "${resp.data.name}" created successfully.`,
-            type: 'success'
-          });
-          void navigate(PATHS.policies.base, {replace: true});
-        }
+        void handleUpdateRules(resp.data);
       },
       onError: () => {
-        setFlagCreatePolicy(false);
         setIsLoading(false);
         toast({
           title: 'Error',
-          description: 'An error occurred while creating the policy. Please try again.',
+          description: 'An error occurred while updating the policy. Please try again.',
           type: 'error'
         });
       }
     }
   });
 
-  const handleCreateRules = useCallback(
+  const handleUpdateRules = useCallback(
     async (policy: Policy) => {
       const valuesPolicyLogic = policyLogicForm.getValues();
-      if (valuesPolicyLogic?.rules?.length > 0 && policy.id) {
+      const rulesIds = (methods.getMetadata('policyLogic')?.rulesIds as string[]) || [];
+      if (valuesPolicyLogic.rules.length > 0 && policy.id && rulesIds) {
         try {
+          await Promise.all(
+            rulesIds?.map((ruleId) => {
+              return mutationDeleteRule.mutateAsync({
+                policyId: policy.id || '',
+                ruleId
+              });
+            })
+          );
           await Promise.all(
             valuesPolicyLogic.rules.map((rule) => {
               if (rule.tasks.action !== RuleAction.RULE_ACTION_UNSPECIFIED) {
-                return mutationCreateRule.mutateAsync({
-                  id: policy.id,
-                  data: {
-                    name: rule.name,
-                    description: rule.description,
-                    needsApproval: rule.needsApproval === 'yes',
-                    tasks: [...rule.tasks.tasks],
-                    action: rule.tasks.action
-                  }
-                });
+                if (rule.id) {
+                  return mutationUpdateRule.mutateAsync({
+                    policyId: policy.id || '',
+                    ruleId: rule.id,
+                    data: {
+                      name: rule.name,
+                      description: rule.description,
+                      needsApproval: rule.needsApproval === 'yes',
+                      tasks: [...rule.tasks.tasks],
+                      action: rule.tasks.action
+                    }
+                  });
+                } else {
+                  return mutationCreateRule.mutateAsync({
+                    id: policy.id,
+                    data: {
+                      name: rule.name,
+                      description: rule.description,
+                      needsApproval: rule.needsApproval === 'yes',
+                      tasks: [...rule.tasks.tasks],
+                      action: rule.tasks.action
+                    }
+                  });
+                }
               }
               return Promise.resolve();
             })
           );
           toast({
             title: 'Success',
-            description: `All rules for policy "${policy.name}" created successfully.`,
+            description: `Policy "${policy.name}" and its rules updated successfully.`,
             type: 'success'
           });
           void navigate(PATHS.policies.base, {replace: true});
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
           toast({
             title: 'Error',
-            description: 'An error occurred while creating the rules. Please try again.',
+            description: 'An error occurred while updating the rules. Please try again.',
             type: 'error'
           });
         } finally {
@@ -135,37 +147,14 @@ const FormStepperComponent = () => {
         }
       }
     },
-    [policyLogicForm, mutationCreateRule, navigate]
+    [policyLogicForm, methods, navigate]
   );
 
-  const handleOnClear = useCallback(() => {
-    setIsLoading(false);
-    setFlagCreatePolicy(true);
-    setFlagCreateRules(true);
-    form.reset({
-      name: '',
-      description: '',
-      assignedTo: ''
-    });
-    policyLogicForm.reset({
-      rules: [
-        {
-          name: '',
-          description: '',
-          needsApproval: 'no',
-          tasks: {
-            action: RuleAction.RULE_ACTION_UNSPECIFIED,
-            tasks: []
-          }
-        }
-      ]
-    });
-    methods.reset();
-    methods.resetMetadata();
-    methods.goTo('policyForm');
-  }, [form, methods, policyLogicForm]);
+  const handleOnCancel = useCallback(() => {
+    void navigate(PATHS.policies.base, {replace: true});
+  }, [navigate]);
 
-  const handleSavePolicyForm = useCallback(() => {
+  const handleUpdatePolicyForm = useCallback(() => {
     const values = form.getValues() as PolicyFormValues;
     const validationResult = validateForm(PolicySchema, values);
     if (!validationResult.success) {
@@ -184,38 +173,49 @@ const FormStepperComponent = () => {
     methods.next();
   }, [form, methods]);
 
-  const handleSave = useCallback(() => {
+  const handleUpdate = useCallback(() => {
     const valuesPolicy = form.getValues() as PolicyFormValues;
-    setFlagCreateRules(true);
     setIsLoading(true);
-    if (flagCreatePolicy) {
-      mutationCreatePolicy.mutate({
-        assignedTo: valuesPolicy.assignedTo,
+    mutationUpdatePolicy.mutate({
+      id: policy?.id || '',
+      data: {
+        name: valuesPolicy.name,
         description: valuesPolicy.description,
-        name: valuesPolicy.name
-      });
-    }
-  }, [flagCreatePolicy, form, mutationCreatePolicy]);
-
-  const handleSkipLogic = useCallback(() => {
-    const valuesPolicy = form.getValues() as PolicyFormValues;
-    setFlagCreateRules(false);
-    setIsLoading(true);
-    mutationCreatePolicy.mutate({
-      assignedTo: valuesPolicy.assignedTo,
-      description: valuesPolicy.description,
-      name: valuesPolicy.name
+        assignedTo: valuesPolicy.assignedTo
+      }
     });
-  }, [form, mutationCreatePolicy]);
+  }, [form, mutationUpdatePolicy, policy?.id]);
 
   const onSubmit = useCallback(() => {
     if (methods.current.id === 'policyForm') {
-      return handleSavePolicyForm();
+      return handleUpdatePolicyForm();
     }
     if (methods.current.id === 'policyLogic') {
-      return handleSave();
+      return handleUpdate();
     }
-  }, [handleSave, handleSavePolicyForm, methods]);
+  }, [handleUpdate, handleUpdatePolicyForm, methods]);
+
+  useEffect(() => {
+    form.reset({
+      name: policy?.name || '',
+      description: policy?.description || '',
+      assignedTo: policy?.assignedTo || ''
+    });
+    policyLogicForm.reset({
+      rules:
+        policy?.rules?.map((rule) => ({
+          id: rule.id,
+          name: rule.name,
+          description: rule.description || '',
+          needsApproval: rule.needsApproval ? 'yes' : 'no',
+          tasks: {
+            action: rule.action,
+            tasks: rule?.tasks?.map((task) => task.id) || []
+          }
+        })) || []
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [policy]);
 
   return (
     <>
@@ -243,12 +243,12 @@ const FormStepperComponent = () => {
                         {step.id === 'policyForm' ? (
                           <PolicyForm isLoading={isLoading} />
                         ) : step.id === 'policyLogic' ? (
-                          <PolicyLogic isLoading={isLoading} policyLogicForm={policyLogicForm} />
+                          <PolicyLogic policyLogicForm={policyLogicForm} isLoading={isLoading} />
                         ) : null}
                         <StepperControls className="pt-4">
                           <Button
                             variant="tertariary"
-                            onClick={handleOnClear}
+                            onClick={handleOnCancel}
                             disabled={isLoading}
                             sx={{
                               fontWeight: '600 !important'
@@ -256,18 +256,16 @@ const FormStepperComponent = () => {
                           >
                             Cancel
                           </Button>
-                          {methods.current.id === 'policyLogic' && (
+                          {!methods.isFirst && (
                             <Button
                               variant="secondary"
-                              loading={isLoading}
-                              loadingPosition="start"
-                              disabled={isLoading || !form.formState.isValid}
+                              onClick={() => methods.prev()}
+                              disabled={isLoading}
                               sx={{
                                 fontWeight: '600 !important'
                               }}
-                              onClick={handleSkipLogic}
                             >
-                              Skip Logic and Create Policy
+                              Previous
                             </Button>
                           )}
                           <Button
@@ -282,7 +280,7 @@ const FormStepperComponent = () => {
                               fontWeight: '600 !important'
                             }}
                           >
-                            {methods.current.id === 'policyLogic' ? 'Create Policy and Rules' : 'Next'}
+                            {methods.current.id === 'policyLogic' ? 'Update Policy and Rules' : 'Next'}
                           </Button>
                         </StepperControls>
                       </AccordionContent>

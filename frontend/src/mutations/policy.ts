@@ -22,20 +22,18 @@ interface PropsSettingsRules {
   };
 }
 
-export const useCreatePolicy = ({callbacks}: PropsSettingsPolicies) => {
+export const useCreatePolicy = ({callbacks}: PropsSettingsPolicies = {}) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ['create-policy'],
     mutationFn: (data: CreatePolicyRequest) => PolicyAPI.createPolicy(data),
-    onSettled: async () => {
-      await queryClient.invalidateQueries({queryKey: ['get-policies']});
-    },
     onError: () => {
       if (callbacks?.onError) {
         callbacks.onError();
       }
     },
-    onSuccess: (resp) => {
+    onSuccess: async (resp) => {
+      await queryClient.invalidateQueries({queryKey: ['get-policies']});
       if (callbacks?.onSuccess) {
         callbacks.onSuccess(resp);
       }
@@ -43,21 +41,37 @@ export const useCreatePolicy = ({callbacks}: PropsSettingsPolicies) => {
   });
 };
 
-export const useDeletePolicy = ({callbacks}: PropsSettingsPolicies) => {
+export const useUpdatePolicy = ({callbacks}: PropsSettingsPolicies = {}) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ['update-policy'],
+    mutationFn: ({id, data}: {id: string; data: CreatePolicyRequest}) => PolicyAPI.updatePolicy(id, data),
+    onError: () => {
+      if (callbacks?.onError) {
+        callbacks.onError();
+      }
+    },
+    onSuccess: async (resp) => {
+      await queryClient.invalidateQueries({queryKey: ['get-policies']});
+      if (callbacks?.onSuccess) {
+        callbacks.onSuccess(resp);
+      }
+    }
+  });
+};
+
+export const useDeletePolicy = ({callbacks}: PropsSettingsPolicies = {}) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ['delete-policy'],
     mutationFn: (id: string) => PolicyAPI.deletePolicy(id),
-    onSettled: async () => {
-      await queryClient.invalidateQueries({queryKey: ['get-policies']});
-      await queryClient.invalidateQueries({queryKey: ['get-policy']});
-    },
     onError: () => {
       if (callbacks?.onError) {
         callbacks.onError();
       }
     },
-    onSuccess: (resp) => {
+    onSuccess: async (resp) => {
+      await queryClient.invalidateQueries({queryKey: ['get-policies']});
       if (callbacks?.onSuccess) {
         callbacks.onSuccess(resp);
       }
@@ -65,21 +79,56 @@ export const useDeletePolicy = ({callbacks}: PropsSettingsPolicies) => {
   });
 };
 
-export const useCreateRule = ({callbacks}: PropsSettingsRules) => {
+export const useCreateRule = ({callbacks}: PropsSettingsRules = {}) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ['create-rule'],
     mutationFn: ({id, data}: {id?: string; data: CreateRuleBody}) => PolicyAPI.createRule(id!, data),
-    onSettled: async () => {
-      await queryClient.invalidateQueries({queryKey: ['get-policies']});
-      await queryClient.invalidateQueries({queryKey: ['get-policy']});
-    },
     onError: () => {
       if (callbacks?.onError) {
         callbacks.onError();
       }
     },
-    onSuccess: (resp) => {
+    onSuccess: async (resp) => {
+      await queryClient.invalidateQueries({queryKey: ['get-policies']});
+      if (callbacks?.onSuccess) {
+        callbacks.onSuccess(resp);
+      }
+    }
+  });
+};
+
+export const useUpdateRule = ({callbacks}: PropsSettingsRules = {}) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ['update-rule'],
+    mutationFn: ({policyId, ruleId, data}: {policyId: string; ruleId: string; data: CreateRuleBody}) => PolicyAPI.updateRule(policyId, ruleId, data),
+    onError: () => {
+      if (callbacks?.onError) {
+        callbacks.onError();
+      }
+    },
+    onSuccess: async (resp) => {
+      await queryClient.invalidateQueries({queryKey: ['get-policies']});
+      if (callbacks?.onSuccess) {
+        callbacks.onSuccess(resp);
+      }
+    }
+  });
+};
+
+export const useDeleteRule = ({callbacks}: PropsSettingsRules = {}) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ['delete-rule'],
+    mutationFn: ({policyId, ruleId}: {policyId: string; ruleId: string}) => PolicyAPI.deleteRule(policyId, ruleId),
+    onError: () => {
+      if (callbacks?.onError) {
+        callbacks.onError();
+      }
+    },
+    onSuccess: async (resp) => {
+      await queryClient.invalidateQueries({queryKey: ['get-policies']});
       if (callbacks?.onSuccess) {
         callbacks.onSuccess(resp);
       }

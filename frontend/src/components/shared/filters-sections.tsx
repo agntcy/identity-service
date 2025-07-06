@@ -10,6 +10,7 @@ import {
   SearchField,
   SearchFieldProps,
   SelectNodeType,
+  Skeleton,
   Stack,
   Typography,
   useDropdownAutocompleteTree
@@ -30,19 +31,24 @@ interface FilterSectionProps<T> {
   searchFieldProps?: SearchFieldProps;
   dropDowns?: CustomDropdownProps<T>[];
   title?: string;
+  isLoading?: boolean;
 }
 
-export const FilterSections = <T,>({title, searchFieldProps, dropDowns}: FilterSectionProps<T>) => {
+export const FilterSections = <T,>({title, isLoading = true, searchFieldProps, dropDowns}: FilterSectionProps<T>) => {
   const debounced = useDebouncedCallback((value) => {
     searchFieldProps?.onChangeCallback?.(value);
   }, 250);
 
   return (
     <Stack marginBottom="16px">
-      {title && (
-        <Typography variant="h6" sx={(theme) => ({color: theme.palette.vars.baseTextStrong})}>
-          {title}
-        </Typography>
+      {isLoading ? (
+        <Skeleton sx={{width: '200px', height: '20px'}} />
+      ) : (
+        title && (
+          <Typography variant="h6" sx={(theme) => ({color: theme.palette.vars.baseTextStrong})}>
+            {title}
+          </Typography>
+        )
       )}
       <Stack direction="row" gap={2} alignItems="center" justifyContent="end">
         {searchFieldProps && (

@@ -2778,6 +2778,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tanstack/eslint-plugin-query@npm:4":
+  version: 4.39.1
+  resolution: "@tanstack/eslint-plugin-query@npm:4.39.1"
+  peerDependencies:
+    eslint: ^6.0.0 || ^7.0.0 || ^8.0.0
+  checksum: 10/242446068fcf6cbb0681c916b6872c838069f28e84ac40f907b0ecaa3135539df95ddc4e495f57ee7ec0c10c9e61e90fb9e84e26ea1c8f07e4d99e1b6796b647
+  languageName: node
+  linkType: hard
+
 "@tanstack/match-sorter-utils@npm:8.19.4":
   version: 8.19.4
   resolution: "@tanstack/match-sorter-utils@npm:8.19.4"
@@ -5669,6 +5678,7 @@ __metadata:
     "@segment/analytics-next": "npm:^1.81.0"
     "@stepperize/react": "npm:^5.1.5"
     "@tailwindcss/vite": "npm:^4.0.14"
+    "@tanstack/eslint-plugin-query": "npm:4"
     "@tanstack/react-query": "npm:^5.81.2"
     "@tanstack/react-query-devtools": "npm:^5.81.2"
     "@tanstack/react-table": "npm:^8.21.3"
