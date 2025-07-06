@@ -55,9 +55,10 @@ export const PolicyLogic = ({isLoading = false, policyLogicForm}: {policyLogicFo
   const handleConfirmRemoveRule = useCallback(() => {
     if (tempRule) {
       handleRemove(tempRule.index);
-      const rulesIdsRaw = methods.getMetadata('policyLogic');
-      const rulesIds = Array.isArray(rulesIdsRaw) ? rulesIdsRaw : [];
-      methods.setMetadata('policyLogic', {rulesIds: [...rulesIds, tempRule.id]});
+      const rulesIds = (methods.getMetadata('policyLogic')?.rulesIds as string[]) || [];
+      methods.setMetadata('policyLogic', {
+        rulesIds: [...rulesIds, tempRule.id]
+      });
       setOpenConfirmModal(false);
       setTempRule(undefined);
     }
@@ -105,8 +106,12 @@ export const PolicyLogic = ({isLoading = false, policyLogicForm}: {policyLogicFo
                                 height: '24px'
                               })}
                               onClick={() => {
-                                setTempRule({index, id: field.id});
-                                setOpenConfirmModal(true);
+                                if (field.ruleId) {
+                                  setTempRule({index, id: field.ruleId});
+                                  setOpenConfirmModal(true);
+                                } else {
+                                  handleRemove(index);
+                                }
                               }}
                             >
                               <XIcon className="h-4 w-4" />
@@ -125,8 +130,12 @@ export const PolicyLogic = ({isLoading = false, policyLogicForm}: {policyLogicFo
                                     height: '24px'
                                   })}
                                   onClick={() => {
-                                    setTempRule({index, id: field.id});
-                                    setOpenConfirmModal(true);
+                                    if (field.ruleId) {
+                                      setTempRule({index, id: field.ruleId});
+                                      setOpenConfirmModal(true);
+                                    } else {
+                                      handleRemove(index);
+                                    }
                                   }}
                                 >
                                   <XIcon className="h-4 w-4" />

@@ -7,7 +7,7 @@ import {z} from 'zod';
 import {TaskSchema} from './task-schema';
 
 export const RuleSchema = z.object({
-  id: z.string().optional(),
+  ruleId: z.string().optional(),
   name: z.string().min(1, 'Name is required'),
   description: z.string().optional(),
   needsApproval: z.enum(['yes', 'no']).optional().default('no'),

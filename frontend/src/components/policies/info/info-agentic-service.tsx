@@ -147,7 +147,7 @@ export const InfoPolicy = ({policy}: {policy?: Policy}) => {
                         </IconButton>
                       </Tooltip>
                     </div>
-                    <div className="mt-6">
+                    <div className="my-6">
                       <Divider />
                     </div>
                   </div>

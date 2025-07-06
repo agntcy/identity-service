@@ -53,7 +53,7 @@ const FormStepperComponent = ({policy}: {policy?: Policy}) => {
     mode: 'all',
     defaultValues: {
       rules: policy?.rules?.map((rule) => ({
-        id: rule.id,
+        ruleId: rule.id,
         name: rule.name,
         description: rule.description || '',
         needsApproval: rule.needsApproval ? 'yes' : 'no',
@@ -102,10 +102,10 @@ const FormStepperComponent = ({policy}: {policy?: Policy}) => {
           await Promise.all(
             valuesPolicyLogic.rules.map((rule) => {
               if (rule.tasks.action !== RuleAction.RULE_ACTION_UNSPECIFIED) {
-                if (rule.id) {
+                if (rule.ruleId) {
                   return mutationUpdateRule.mutateAsync({
                     policyId: policy.id || '',
-                    ruleId: rule.id,
+                    ruleId: rule.ruleId,
                     data: {
                       name: rule.name,
                       description: rule.description,
@@ -147,7 +147,7 @@ const FormStepperComponent = ({policy}: {policy?: Policy}) => {
         }
       }
     },
-    [policyLogicForm, methods, navigate]
+    [policyLogicForm, methods, navigate, mutationDeleteRule, mutationUpdateRule, mutationCreateRule]
   );
 
   const handleOnCancel = useCallback(() => {
@@ -204,7 +204,7 @@ const FormStepperComponent = ({policy}: {policy?: Policy}) => {
     policyLogicForm.reset({
       rules:
         policy?.rules?.map((rule) => ({
-          id: rule.id,
+          ruleId: rule.id,
           name: rule.name,
           description: rule.description || '',
           needsApproval: rule.needsApproval ? 'yes' : 'no',
