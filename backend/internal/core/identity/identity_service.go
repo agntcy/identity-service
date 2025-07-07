@@ -154,8 +154,9 @@ func (s *service) RegisterIssuer(
 			Proof:  proof,
 		},
 	})
-	if err != nil ||
-		(s.uniqueIssuerPerTenant && strings.Contains(err.Error(), issuerExistsError)) {
+
+	if err != nil &&
+		(s.uniqueIssuerPerTenant || !strings.Contains(err.Error(), issuerExistsError)) {
 		return nil, errutil.Err(
 			err,
 			"error registering issuer with identity service",
