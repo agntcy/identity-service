@@ -4,6 +4,7 @@
  */
 
 import {AgenticServiceType} from '@/components/shared/agentic-service-type';
+import DateHover from '@/components/ui/date-hover';
 import {labels} from '@/constants/labels';
 import {useGetAgenticService} from '@/queries';
 import {Policy} from '@/types/api/policy';

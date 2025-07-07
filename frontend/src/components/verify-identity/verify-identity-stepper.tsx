@@ -41,7 +41,7 @@ const FormStepperComponent = () => {
     callbacks: {
       onSuccess: (resp) => {
         methods.setMetadata('verficationResults', {
-          ...resp.data
+          results: resp.data
         });
         toast({
           title: 'Badge verified successfully',

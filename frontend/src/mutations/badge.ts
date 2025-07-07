@@ -5,12 +5,12 @@
 
 import {AxiosResponse} from 'axios';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
-import {Badge, BadgeClaims, IssueBadgeBody, VerifyBadgeRequest} from '@/types/api/badge';
+import {Badge, IssueBadgeBody, VerificationResult, VerifyBadgeRequest} from '@/types/api/badge';
 import {BadgeAPI} from '@/api/services/badge-api';
 
-interface PropsSettingsBadgeClaims {
+interface PropsSettingsVerificationResult {
   callbacks?: {
-    onSuccess?: (props: AxiosResponse<BadgeClaims, any>) => void;
+    onSuccess?: (props: AxiosResponse<VerificationResult, any>) => void;
     onError?: () => void;
   };
 }
@@ -22,7 +22,7 @@ interface PropsSetIdentityBadge {
   };
 }
 
-export const useVerifyBadge = ({callbacks}: PropsSettingsBadgeClaims) => {
+export const useVerifyBadge = ({callbacks}: PropsSettingsVerificationResult) => {
   return useMutation({
     mutationKey: ['verify-badge'],
     mutationFn: (data: VerifyBadgeRequest) => BadgeAPI.verifyBadge(data),

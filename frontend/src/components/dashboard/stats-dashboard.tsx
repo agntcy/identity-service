@@ -109,7 +109,7 @@ export const StatsDashboard = () => {
                 Create Agentic Services and generate Identity badges
               </Typography>
               <div className="flex justify-center items-center mt-8">
-                <RouterLink to={PATHS.agenticServices.base}>
+                <RouterLink to={PATHS.agenticServices.create}>
                   <Button variant="outlined" sx={{fontWeight: '600 !important'}} startIcon={<CheckIcon className="w-4 h-4" />}>
                     Create Agentic Service
                   </Button>

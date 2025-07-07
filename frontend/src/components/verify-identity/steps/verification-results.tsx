@@ -4,81 +4,248 @@
  */
 
 import {Card, CardContent} from '@/components/ui/card';
-import {CheckIcon} from 'lucide-react';
+import {CheckIcon, CircleAlertIcon, DownloadIcon} from 'lucide-react';
 import {useStepper} from '../stepper';
-import {Badge, Typography} from '@outshift/spark-design';
-import {BadgeClaims, VerifiableCredential} from '@/types/api/badge';
+import {
+  Accordion,
+  Badge,
+  Button,
+  CodeBlock,
+  Divider,
+  EmptyState,
+  GeneralSize,
+  Table,
+  Tag,
+  TagBackgroundColorVariants,
+  toast,
+  Typography
+} from '@outshift/spark-design';
+import {VerificationResult} from '@/types/api/badge';
 import KeyValue, {KeyValuePair} from '@/components/ui/key-value';
-import {useMemo} from 'react';
+import {useCallback, useMemo} from 'react';
 import DateHover from '@/components/ui/date-hover';
 import {cn} from '@/lib/utils';
+import ScrollShadowWrapper from '@/components/ui/scroll-shadow-wrapper';
+import {Separator} from '@/components/ui/separator';
 
 export const VerificationResults = () => {
   const methods = useStepper();
-  const metaData = methods.getMetadata('verficationResults') as VerifiableCredential | undefined;
-  console.log(metaData);
-  // const badgeClaims = metaData?.badgeClaims as BadgeClaims | undefined;
+  const metaData = methods.getMetadata('verficationResults');
+  const results = metaData?.results as VerificationResult | undefined;
+  const isEmptyErrors = results?.errors?.length === 0;
+  const isEmptyWarnings = results?.warnings?.length === 0;
 
-  // const badge = JSON.parse(badgeClaims?.badge || '{}');
-
-  // TODO: Check status
   const keyValuePairs = useMemo(() => {
     const temp: KeyValuePair[] = [
       {
         keyProp: 'Identity',
-        value: metaData?.credentialSubject?.id || 'Not provided'
+        value: results?.controlledIdentifierDocument || 'Not provided'
       },
       {
         keyProp: 'Issuer',
-        value: metaData?.issuer || 'Not provided'
+        value: results?.controller || 'Not provided'
       },
       {
-        keyProp: 'Issued At',
-        value: <DateHover date={metaData?.issuanceDate} />
+        keyProp: 'Created At',
+        value: <DateHover date={results?.document?.issuanceDate || 'Not provided'} />
+      },
+      {
+        keyProp: 'Status',
+        value: (
+          <div className="flex items-center gap-2">
+            <Badge
+              content={null}
+              type={isEmptyErrors && isEmptyWarnings ? 'success' : isEmptyErrors ? 'warning' : 'error'}
+              styleBadge={{width: '6px', height: '6px', padding: '0'}}
+            />
+            <Typography color="#272E37" fontSize={14}>
+              {isEmptyErrors && isEmptyWarnings ? 'Active' : isEmptyErrors ? 'Warning' : 'Error'}
+            </Typography>
+          </div>
+        )
       }
-      // {
-      //   keyProp: 'Authors',
-      //   value: badge?.authors?.length ? badge.authors.join(', ') : 'Not provided'
-      // },
-      // {
-      //   keyProp: 'Created At',
-      //   value: <DateHover date={badge?.created_at} />
-      // },
-      // {
-      //   keyProp: 'Signature At',
-      //   value: <DateHover date={badge?.signature?.signed_at} />
-      // },
-      // {
-      //   keyProp: 'Badge Status',
-      //   value: (
-      //     <div className="flex items-center gap-2">
-      //       <Badge content={null} type="success" styleBadge={{width: '6px', height: '6px', padding: '0'}} />
-      //       <Typography color="#272E37" fontSize={14}>
-      //         Active
-      //       </Typography>
-      //     </div>
-      //   )
-      // }
     ];
     return temp;
-  }, []);
+  }, [isEmptyErrors, isEmptyWarnings, results]);
+
+  const handleDownloadBadge = useCallback(() => {
+    if (!results) {
+      toast({
+        title: 'Error',
+        description: 'No results available to download.',
+        type: 'error'
+      });
+      return;
+    }
+    const blob = new Blob([JSON.stringify(results, null, 2)], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `results-${results?.controlledIdentifierDocument || 'unknown'}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+    toast({
+      title: 'Download started',
+      description: 'Your verification results are being downloaded.',
+      type: 'success'
+    });
+  }, [results]);
 
   return (
     <div className="flex gap-4">
-      <div>
+      <div className="min-w-[40%]">
         <Card className={cn('text-start space-y-6')} variant="secondary">
           <div className="flex justify-between items-center">
             <Typography variant="subtitle1" fontWeight={600}>
-              Badge Information
+              Info
             </Typography>
             <div className="flex items-center gap-2">
-              <CheckIcon className="w-[20px] h-[20px] text-[#00B285]" />
-              <Typography variant="body2Semibold">Verification successful</Typography>
+              {results?.status ? (
+                <>
+                  <CheckIcon className="w-[20px] h-[20px] text-[#00B285]" />
+                  <Typography variant="body2Semibold">Verification Successful</Typography>
+                </>
+              ) : (
+                <>
+                  <CircleAlertIcon className="w-[20px] h-[20px] text-[#FF4D4F]" />
+                  <Typography variant="body2Semibold">Verification Failed</Typography>
+                </>
+              )}
             </div>
           </div>
           <CardContent className="p-0 flex justify-between items-center">
-            <KeyValue pairs={keyValuePairs} useCard={false} />
+            <KeyValue pairs={keyValuePairs} useCard={false} orientation="vertical" />
           </CardContent>
+        </Card>
+      </div>
+      <div className="w-full">
+        <Card variant="secondary" className="h-fit flex flex-col gap-4">
+          <div className="flex justify-between items-start">
+            <Typography variant="subtitle1" fontWeight={600}>
+              Result
+            </Typography>
+            {isEmptyErrors && isEmptyWarnings && (
+              <Button
+                variant="tertariary"
+                endIcon={<DownloadIcon className="w-4 h-4" />}
+                sx={{padding: 0, fontWeight: '600 !important'}}
+                onClick={handleDownloadBadge}
+              >
+                Download
+              </Button>
+            )}
+          </div>
+          <div className="mt-2">
+            {isEmptyErrors && isEmptyWarnings ? (
+              <ScrollShadowWrapper className="max-h-[60vh] overflow-auto">
+                <CodeBlock containerProps={{maxWidth: '40vw'}} showLineNumbers wrapLongLines text={JSON.stringify(results || {}, null, 2)} />
+              </ScrollShadowWrapper>
+            ) : (
+              <div className="space-y-6">
+                <Accordion
+                  title="Warnings"
+                  subTitle={
+                    (
+                      <div className="flex gap-4 items-center h-[24px] mt-1">
+                        <Separator orientation="vertical" />
+                        <Tag size={GeneralSize.Small} color={TagBackgroundColorVariants.AccentCWeak}>
+                          {results?.warnings?.length || 0}
+                        </Tag>
+                      </div>
+                    ) as any
+                  }
+                >
+                  <Table
+                    columns={[
+                      {
+                        accessorKey: 'message',
+                        header: 'Message'
+                      }
+                    ]}
+                    data={results?.warnings || []}
+                    isLoading={false}
+                    densityCompact
+                    enableRowActions
+                    topToolbarProps={{
+                      enableActions: false
+                    }}
+                    muiTableContainerProps={{
+                      style: {
+                        border: '1px solid #D5DFF7'
+                      }
+                    }}
+                    rowCount={results?.warnings?.length ?? 0}
+                    rowsPerPageOptions={[1, 10, 25, 50, 100]}
+                    muiBottomToolbarProps={{
+                      style: {
+                        boxShadow: 'none'
+                      }
+                    }}
+                    renderTopToolbar={() => <></>}
+                    renderEmptyRowsFallback={() => (
+                      <EmptyState
+                        title="No Warnings Found"
+                        description="Your verification results did not return any warnings."
+                        containerProps={{paddingBottom: '40px'}}
+                      />
+                    )}
+                  />
+                </Accordion>
+                <div>
+                  <Divider />
+                </div>
+                <Accordion
+                  title="Errors"
+                  subTitle={
+                    (
+                      <div className="flex gap-4 items-center h-[24px] mt-1">
+                        <Separator orientation="vertical" />
+                        <Tag size={GeneralSize.Small} color={TagBackgroundColorVariants.AccentIWeak}>
+                          {results?.errors?.length || 0}
+                        </Tag>
+                      </div>
+                    ) as any
+                  }
+                >
+                  <Table
+                    columns={[
+                      {
+                        accessorKey: 'message',
+                        header: 'Message'
+                      }
+                    ]}
+                    data={results?.errors || []}
+                    isLoading={false}
+                    densityCompact
+                    enableRowActions
+                    topToolbarProps={{
+                      enableActions: false
+                    }}
+                    muiTableContainerProps={{
+                      style: {
+                        border: '1px solid #D5DFF7'
+                      }
+                    }}
+                    rowCount={results?.errors?.length ?? 0}
+                    rowsPerPageOptions={[1, 10, 25, 50, 100]}
+                    muiBottomToolbarProps={{
+                      style: {
+                        boxShadow: 'none'
+                      }
+                    }}
+                    renderTopToolbar={() => <></>}
+                    renderEmptyRowsFallback={() => (
+                      <EmptyState
+                        title="No Errors Found"
+                        description="Your verification results did not return any errors."
+                        containerProps={{paddingBottom: '40px'}}
+                      />
+                    )}
+                  />
+                </Accordion>
+              </div>
+            )}
+          </div>
         </Card>
       </div>
     </div>
