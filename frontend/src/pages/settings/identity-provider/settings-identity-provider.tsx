@@ -27,7 +27,6 @@ const SettingsIdentityProvider: React.FC = () => {
   return (
     <BasePage
       title="Identity Provider"
-      description="Manage your Identity Provider settings. You can register an Identity Provider or view existing settings."
       subNav={[
         {
           label: 'Identity Provider',

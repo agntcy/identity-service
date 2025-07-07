@@ -46,7 +46,6 @@ const SettingsOrganizations: React.FC = () => {
   return (
     <BasePage
       title="Organizations & Users"
-      description="Manage your organizations and users. You can create, view, and delete organizations, as well as manage users within those organizations."
       subNav={[
         {
           label: 'Identity Provider',
