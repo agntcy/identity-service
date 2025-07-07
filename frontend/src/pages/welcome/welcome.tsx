@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {Button, Divider, Link, LinkType, Typography} from '@outshift/spark-design';
+import {Button, Divider, Link, Typography} from '@outshift/spark-design';
 import {CheckIcon} from 'lucide-react';
 import {useAuth} from '@/hooks';
 import {Link as RouterLink} from 'react-router-dom';
