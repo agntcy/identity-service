@@ -220,6 +220,7 @@ func main() {
 		config.IdentityPort,
 		keyStore,
 		oidcAuthenticator,
+		config.UniqueIssuerPerTenant,
 	)
 	taskService := policycore.NewTaskService(mcpClient, policyRepository)
 
