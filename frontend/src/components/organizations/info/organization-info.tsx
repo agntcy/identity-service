@@ -5,7 +5,7 @@
 
 import {useState} from 'react';
 import {ConditionalQueryRenderer} from '../../ui/conditional-query-renderer';
-import {MenuItem, Table, Typography} from '@outshift/spark-design';
+import {Table} from '@outshift/spark-design';
 import {useGetSession, useGetUsersGroup} from '@/queries';
 import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
 import {Card} from '@/components/ui/card';
@@ -13,7 +13,6 @@ import {cn} from '@/lib/utils';
 import {TenantReponse} from '@/types/api/iam';
 import {UsersColumns} from './users-columns';
 import {InviteUserModal} from '@/components/shared/invite-user-modal';
-import {Trash2Icon} from 'lucide-react';
 import {useAuth} from '@/hooks';
 
 export const OrganizationInfo = ({
@@ -80,26 +79,26 @@ export const OrganizationInfo = ({
                 boxShadow: 'none'
               }
             }}
-            renderRowActionMenuItems={() => {
-              if (currentTenantId !== tenant?.id || !isAdmin) {
-                return [];
-              }
-              return [
-                <MenuItem
-                  key="delete-user"
-                  onClick={() => {
-                    // setTenantId(row.original.id);
-                    // setOpenActionsModal(true);
-                  }}
-                  sx={{display: 'flex', alignItems: 'center', gap: '8px'}}
-                >
-                  <Trash2Icon className="w-4 h-4" color="#C62953" />
-                  <Typography variant="body2" color="#C0244C">
-                    Delete
-                  </Typography>
-                </MenuItem>
-              ];
-            }}
+            // renderRowActionMenuItems={() => {
+            //   if (currentTenantId !== tenant?.id || !isAdmin) {
+            //     return [];
+            //   }
+            //   return [
+            //     <MenuItem
+            //       key="delete-user"
+            //       onClick={() => {
+            //         // setTenantId(row.original.id);
+            //         // setOpenActionsModal(true);
+            //       }}
+            //       sx={{display: 'flex', alignItems: 'center', gap: '8px'}}
+            //     >
+            //       <Trash2Icon className="w-4 h-4" color="#C62953" />
+            //       <Typography variant="body2" color="#C0244C">
+            //         Delete
+            //       </Typography>
+            //     </MenuItem>
+            //   ];
+            // }}
           />
         </Card>
       </ConditionalQueryRenderer>
