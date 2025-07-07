@@ -103,15 +103,15 @@ export const StatsDashboard = () => {
           <div className="card-flex-group min-w-[384px] bg-[#FBFCFE] rounded-[8px] flex-col flex justify-center items-center px-20 pt-[40px] pb-[24px]">
             <div>
               <Typography variant="h6" textAlign="center">
-                Create Badges
+                Create Agentic Services
               </Typography>
               <Typography variant="body1" marginTop={2} textAlign="center">
-                Generate Identity badges for your AI agents, MCP servers and A2A protocols
+                Create Agentic Services and generate Identity badges
               </Typography>
               <div className="flex justify-center items-center mt-8">
                 <RouterLink to={PATHS.agenticServices.base}>
                   <Button variant="outlined" sx={{fontWeight: '600 !important'}} startIcon={<CheckIcon className="w-4 h-4" />}>
-                    Create Badge
+                    Create Agentic Service
                   </Button>
                 </RouterLink>
               </div>

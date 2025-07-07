@@ -10,14 +10,12 @@ import {FormControl, FormField, FormItem, FormLabel} from '@/components/ui/form'
 import {useEffect} from 'react';
 import {SharedProvider, SharedProviderProps} from '@/components/shared/shared-provider';
 import {Input} from '@/components/ui/input';
-import {Link, Typography} from '@outshift/spark-design';
-import {ExternalLinkIcon} from 'lucide-react';
+import {Typography} from '@outshift/spark-design';
 import {AgenticServiceFormValues} from '@/schemas/agentic-service-schema';
 import {AppType} from '@/types/api/app';
 import OasfLogo from '@/assets/oasf.svg?react';
 import McpLogo from '@/assets/mcp.svg?react';
 import A2ALogo from '@/assets/a2a.png';
-import {docs} from '@/utils/docs';
 
 export const AgenticServicForm = ({isLoading = false}: {isLoading?: boolean}) => {
   const {control, reset} = useFormContext<AgenticServiceFormValues>();
@@ -61,17 +59,9 @@ export const AgenticServicForm = ({isLoading = false}: {isLoading?: boolean}) =>
     <Card className="text-start py-4 rounded-[8px] p-[24px]" variant="secondary">
       <CardContent className="space-y-6 p-0">
         <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <Typography variant="subtitle1" fontWeight={600}>
-              Select Agentic Service Type
-            </Typography>
-            <Link href={docs('agentic-service')} openInNewTab>
-              <div className="flex items-center gap-1">
-                View Documentation
-                <ExternalLinkIcon className="w-4 h-4 ml-1" />
-              </div>
-            </Link>
-          </div>
+          <Typography variant="subtitle1" fontWeight={600}>
+            Select Agentic Service Type
+          </Typography>
           <FormField
             control={control}
             name="type"
