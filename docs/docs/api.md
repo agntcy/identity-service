@@ -6,19 +6,19 @@ sidebar_position: 5
 
 Welcome to the API Access documentation for Agent Identity. This section provides detailed information on how to interact with the Agent Identity API, including authentication, endpoints, and usage examples.
 
-## Tenant API Key
+## Organization API Key
 
-The Tenant API Key is used to authenticate requests made to the Agent Identity API. This key is essential for accessing protected resources and performing actions on behalf of your tenant.
+The Organization API Key is used to authenticate requests made to the Agent Identity API. This key is essential for accessing protected resources and performing actions on behalf of your organization.
 
-You can obtain your Tenant API Key from the Agent Identity settings page. Ensure that you keep this key secure and do not expose it in public repositories or client-side code.
+You can obtain your Organization API Key from the Agent Identity settings page. Ensure that you keep this key secure and do not expose it in public repositories or client-side code.
 
-![Tenant API Key](/img/tenant-api-key.png)
+![Organization API Key](/img/tenant-api-key.png)
 
 ## Agentic Service API Key
 
 The Agentic Service API Key is used to authenticate requests made by your application to the Agent Identity API. This key is specific to your application and should be included in the headers of your API requests or in the Python SDK configuration.
 
-You can generate an Agentic Service API Key from the Agent Identity settings page. Similar to the Tenant API Key, ensure that this key is kept secure and not exposed in public repositories or client-side code.
+You can generate an Agentic Service API Key from the Agent Identity settings page. Similar to the Organization API Key, ensure that this key is kept secure and not exposed in public repositories or client-side code.
 
 ![Agentic Service API Key](/img/app-api-key.png)
 
