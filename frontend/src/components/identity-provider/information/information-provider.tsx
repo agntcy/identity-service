@@ -76,7 +76,7 @@ export const InformationProvider = ({idpSettings}: {idpSettings?: IssuerSettings
         <Typography variant="subtitle1" fontWeight={600}>
           About
         </Typography>
-        <Link href={docs('register')} openInNewTab>
+        <Link href={docs('idp')} openInNewTab>
           <div className="flex items-center gap-1">
             View documentation
             <ExternalLinkIcon className="w-4 h-4 ml-1" />

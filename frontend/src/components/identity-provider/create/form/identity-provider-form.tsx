@@ -76,7 +76,7 @@ export const IdentityProviderForm = ({isLoading = false}: {isLoading?: boolean})
             <Typography variant="subtitle1" fontWeight={600}>
               Select Identity Provider
             </Typography>
-            <Link href={docs('register')} openInNewTab>
+            <Link href={docs('idp')} openInNewTab>
               <div className="flex items-center gap-1">
                 View Documentation
                 <ExternalLinkIcon className="w-4 h-4 ml-1" />
