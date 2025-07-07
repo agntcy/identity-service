@@ -25,7 +25,7 @@ const AgenticServiceUpdate: React.FC = () => {
           link: PATHS.agenticServices.base
         },
         {
-          text: id || 'Agentic Service',
+          text: data?.name || 'Agentic Service',
           link: generatePath(PATHS.agenticServices.info, {id: id || ''})
         },
         {

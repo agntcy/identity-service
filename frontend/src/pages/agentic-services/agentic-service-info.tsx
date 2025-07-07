@@ -62,7 +62,7 @@ const AgenticServiceInfo: React.FC = () => {
           link: PATHS.agenticServices.base
         },
         {
-          text: id || 'Agentic Service'
+          text: data?.name || 'Agentic Service'
         }
       ]}
       rightSideItems={
@@ -143,7 +143,7 @@ const AgenticServiceInfo: React.FC = () => {
           title="Delete Agentic Service"
           description={
             <>
-              Are you sure you want to delete this agentic service <b>{data?.id}</b>? This action cannot be undone.
+              Are you sure you want to delete this agentic service <b>{data?.name}</b>? This action cannot be undone.
             </>
           }
           confirmButtonText="Delete"

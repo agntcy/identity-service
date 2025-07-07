@@ -59,7 +59,7 @@ const PolicyInfo: React.FC = () => {
           link: PATHS.policies.base
         },
         {
-          text: id || 'Policy'
+          text: data?.name || 'Policy'
         }
       ]}
       rightSideItems={

@@ -15,7 +15,6 @@ const Dashboard: React.FC = () => {
       isEmptyIdp: state.isEmptyIdp
     }))
   );
-
   if (isEmptyIdp) {
     return <EmptyDashboard />;
   }

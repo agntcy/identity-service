@@ -20,5 +20,11 @@ export const {StepperProvider, StepperControls, StepperNavigation, StepperStep, 
       title: 'Policy Logic',
       description: 'Define the logic for the policy',
       schema: z.object({})
+    },
+    {
+      id: 'policyReview',
+      title: 'Review Policy',
+      description: 'Review the policy details before submission',
+      schema: z.object({})
     }
   );

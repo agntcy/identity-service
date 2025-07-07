@@ -32,7 +32,7 @@ const InfoOrganization: React.FC = () => {
           link: PATHS.settings.organizationsAndUsers.base
         },
         {
-          text: id || 'Organization'
+          text: data?.name || 'Organization'
         }
       ]}
       rightSideItems={

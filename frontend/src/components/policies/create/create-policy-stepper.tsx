@@ -20,6 +20,7 @@ import {useCreatePolicy, useCreateRule} from '@/mutations';
 import {PolicyLogicyFormValues, PolicyLogicySchema} from '@/schemas/policy-logic-schema';
 import {useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
+import {PolicyReview} from './steps/policy-review';
 
 export const CreatePolicyStepper = () => {
   return (
@@ -184,6 +185,24 @@ const FormStepperComponent = () => {
     methods.next();
   }, [form, methods]);
 
+  const handleSavePolicyLogicForm = useCallback(() => {
+    const values = policyLogicForm.getValues();
+    const validationResult = validateForm(PolicyLogicySchema, values);
+    if (!validationResult.success) {
+      toast({
+        title: 'Error',
+        description: 'Please fix the errors in the policy logic form.',
+        type: 'error'
+      });
+      return;
+    }
+    methods.setMetadata('policyLogic', {
+      ...methods.getMetadata('policyLogic'),
+      rules: values.rules
+    });
+    methods.next();
+  }, [methods, policyLogicForm]);
+
   const handleSave = useCallback(() => {
     const valuesPolicy = form.getValues() as PolicyFormValues;
     setFlagCreateRules(true);
@@ -197,25 +216,17 @@ const FormStepperComponent = () => {
     }
   }, [flagCreatePolicy, form, mutationCreatePolicy]);
 
-  const handleSkipLogic = useCallback(() => {
-    const valuesPolicy = form.getValues() as PolicyFormValues;
-    setFlagCreateRules(false);
-    setIsLoading(true);
-    mutationCreatePolicy.mutate({
-      assignedTo: valuesPolicy.assignedTo,
-      description: valuesPolicy.description,
-      name: valuesPolicy.name
-    });
-  }, [form, mutationCreatePolicy]);
-
   const onSubmit = useCallback(() => {
     if (methods.current.id === 'policyForm') {
       return handleSavePolicyForm();
     }
     if (methods.current.id === 'policyLogic') {
+      return handleSavePolicyLogicForm();
+    }
+    if (methods.current.id === 'policyReview') {
       return handleSave();
     }
-  }, [handleSave, handleSavePolicyForm, methods]);
+  }, [handleSave, handleSavePolicyForm, handleSavePolicyLogicForm, methods]);
 
   return (
     <>
@@ -244,7 +255,9 @@ const FormStepperComponent = () => {
                           <PolicyForm isLoading={isLoading} />
                         ) : step.id === 'policyLogic' ? (
                           <PolicyLogic isLoading={isLoading} policyLogicForm={policyLogicForm} />
-                        ) : null}
+                        ) : (
+                          step.id === 'policyReview' && <PolicyReview />
+                        )}
                         <StepperControls className="pt-4">
                           <Button
                             variant="tertariary"
@@ -256,20 +269,6 @@ const FormStepperComponent = () => {
                           >
                             Cancel
                           </Button>
-                          {methods.current.id === 'policyLogic' && (
-                            <Button
-                              variant="secondary"
-                              loading={isLoading}
-                              loadingPosition="start"
-                              disabled={isLoading || !form.formState.isValid}
-                              sx={{
-                                fontWeight: '600 !important'
-                              }}
-                              onClick={handleSkipLogic}
-                            >
-                              Skip Logic and Create Policy
-                            </Button>
-                          )}
                           <Button
                             loading={isLoading && flagCreateRules}
                             loadingPosition="start"
@@ -282,7 +281,7 @@ const FormStepperComponent = () => {
                               fontWeight: '600 !important'
                             }}
                           >
-                            {methods.current.id === 'policyLogic' ? 'Create Policy and Rules' : 'Next'}
+                            {methods.current.id === 'policyReview' ? 'Create Policy' : 'Next'}
                           </Button>
                         </StepperControls>
                       </AccordionContent>

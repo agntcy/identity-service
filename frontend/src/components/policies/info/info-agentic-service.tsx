@@ -8,7 +8,7 @@ import {Accordion, Divider, EmptyState, GeneralSize, Table, Tag, Tooltip, Typogr
 import {useMemo, useState} from 'react';
 import KeyValue, {KeyValuePair} from '@/components/ui/key-value';
 import {AgenticServiceType} from '@/components/shared/agentic-service-type';
-import {Policy} from '@/types/api/policy';
+import {Policy, RuleAction} from '@/types/api/policy';
 import {useGetAgenticService} from '@/queries';
 import {Separator} from '@/components/ui/separator';
 import {labels} from '@/constants/labels';
@@ -52,7 +52,7 @@ export const InfoPolicy = ({policy}: {policy?: Policy}) => {
     <>
       <div className="flex gap-4">
         <div className="w-[40%]">
-          <Card className="text-start space-y-4" variant="secondary">
+          <Card className="text-start space-y-6" variant="secondary">
             <div className="flex justify-between items-center">
               <Typography variant="subtitle1" fontWeight={600}>
                 About
@@ -82,7 +82,7 @@ export const InfoPolicy = ({policy}: {policy?: Policy}) => {
                             (
                               <div className="flex gap-4 items-center h-[24px]">
                                 <Separator orientation="vertical" />
-                                <Tag size={GeneralSize.Small}>{labels.rulesActions[rule.action ?? 'RULE_ACTION_UNSPECIFIED']}</Tag>
+                                <Tag size={GeneralSize.Small}>{labels.rulesActions[rule.action ?? RuleAction.RULE_ACTION_UNSPECIFIED]}</Tag>
                               </div>
                             ) as any
                           }

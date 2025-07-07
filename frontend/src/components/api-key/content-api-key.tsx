@@ -68,7 +68,7 @@ export const ContentApiKey: React.FC = () => {
     >
       <Card className="w-full bg-[#F5F8FD] p-6">
         <CardContent>
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-6">
             <Typography variant="body1Semibold">API Key</Typography>
             <div className="bg-[#FBFCFE] border-[2px] border-[#D5DFF7] rounded-[4px] w-fit py-2 px-4 flex justify-between items-center gap-4">
               <Typography variant="body2">

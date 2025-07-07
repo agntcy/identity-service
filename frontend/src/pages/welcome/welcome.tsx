@@ -10,8 +10,8 @@ import {useAuth} from '@/hooks';
 import {PublicHeader} from '@/components/layout/public-header';
 import {Link as RouterLink} from 'react-router-dom';
 import {docs} from '@/utils/docs';
-import '@/styles/welcome.css';
 import {PATHS} from '@/router/paths';
+import '@/styles/welcome.css';
 
 const Welcome = () => {
   const {login, register} = useAuth();

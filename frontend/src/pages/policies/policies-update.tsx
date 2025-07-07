@@ -25,7 +25,7 @@ const UpldatePolicies: React.FC = () => {
           link: PATHS.policies.base
         },
         {
-          text: id || 'Policy',
+          text: data?.name || 'Policy',
           link: generatePath(PATHS.policies.info, {id: id || ''})
         },
         {

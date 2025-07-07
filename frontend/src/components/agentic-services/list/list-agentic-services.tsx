@@ -240,7 +240,7 @@ export const ListAgenticServices = () => {
         title="Delete Agentic Service"
         description={
           <>
-            Are you sure you want to delete this agentic service <b>{tempApp?.id}</b>? This action cannot be undone.
+            Are you sure you want to delete this agentic service <b>{tempApp?.name}</b>? This action cannot be undone.
           </>
         }
         confirmButtonText="Delete"
