@@ -44,11 +44,11 @@ export const VerificationResults = () => {
         value: results?.controller || 'Not provided'
       },
       {
-        keyProp: 'Created At',
+        keyProp: 'Badge Issued At',
         value: <DateHover date={results?.document?.issuanceDate || 'Not provided'} />
       },
       {
-        keyProp: 'Status',
+        keyProp: 'Badge Status',
         value: (
           <div className="flex items-center gap-2">
             <Badge content={null} type={results?.status ? 'success' : 'error'} styleBadge={{width: '6px', height: '6px', padding: '0'}} />

@@ -106,7 +106,7 @@ const UserSection = () => {
       >
         <div className="text-left">
           <Typography variant="subtitle2" sx={(theme) => ({color: theme.palette.vars.baseTextStrong})}>
-            {authInfo?.user?.name || 'User'}
+            <span className="capitalize">{authInfo?.user?.name || 'User'}</span>
           </Typography>
           {!isLoading ? (
             <div className="-mt-[3px]">
@@ -130,7 +130,7 @@ const UserSection = () => {
           </div>
           <div className="text-center">
             <Typography variant="subtitle2" sx={(theme) => ({color: theme.palette.vars.baseTextStrong})}>
-              {authInfo?.user?.name || 'User'}
+              <span className="capitalize">{authInfo?.user?.name || 'User'}</span>
             </Typography>
             {!isLoading ? (
               <div className="-mt-[4px]">

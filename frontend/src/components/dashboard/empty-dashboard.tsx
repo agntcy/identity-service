@@ -22,7 +22,7 @@ export const EmptyDashboard = () => {
           <div className="flex justify-center items-center my-auto">
             <div>
               <Typography variant="h3" textAlign="center" sx={(theme) => ({color: theme.palette.vars.brandIconTertiaryDefault})}>
-                Welcome to Agent Identity, {authInfo?.user?.name || 'User'}!
+                Welcome to Agent Identity, <span className="capitalize">{authInfo?.user?.name || 'User'}!</span>
               </Typography>
               <Typography variant="body1" textAlign="center" sx={(theme) => ({color: theme.palette.vars.baseTextInverse})}>
                 Create and manage identities for your MCP Servers, A2A Agents and OASF
