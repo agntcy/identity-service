@@ -48,7 +48,7 @@ class Client:  # pylint: disable=too-few-public-methods
         ]
 
         # Get credentials type
-        use_ssl = int(os.environ.get("IDENTITY_PLATFORM_USE_SSL", 0))
+        use_ssl = int(os.environ.get("IDENTITY_PLATFORM_USE_SSL", 1))
         use_insecure = int(os.environ.get("IDENTITY_PLATFORM_USE_INSECURE", 0))
 
         logger.debug("Using SSL: %s, Insecure: %s", use_ssl, use_insecure)
