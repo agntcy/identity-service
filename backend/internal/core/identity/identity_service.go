@@ -9,6 +9,7 @@ import (
 	"errors"
 	"fmt"
 	"net"
+	"strings"
 
 	badgetypes "github.com/agntcy/identity-platform/internal/core/badge/types"
 	idpcore "github.com/agntcy/identity-platform/internal/core/idp"
@@ -32,6 +33,7 @@ import (
 const (
 	proofTypeJWT      = "JWT"
 	credentialSubject = "credentialSubject"
+	issuerExistsError = "issuer already exists"
 )
 
 type Issuer struct {
@@ -70,11 +72,12 @@ type Service interface {
 
 // The verificationService struct implements the VerificationService interface
 type service struct {
-	issuerClient      issuersdk.ClientService
-	idClient          idsdk.ClientService
-	vcClient          vcsdk.ClientService
-	oidcAuthenticator oidc.Authenticator
-	keyStore          KeyStore
+	issuerClient          issuersdk.ClientService
+	idClient              idsdk.ClientService
+	vcClient              vcsdk.ClientService
+	oidcAuthenticator     oidc.Authenticator
+	keyStore              KeyStore
+	uniqueIssuerPerTenant bool
 }
 
 // NewVerificationService creates a new instance of the VerificationService
@@ -82,6 +85,7 @@ func NewService(
 	identityHost, identityPort string,
 	keyStore KeyStore,
 	oidcAuthenticator oidc.Authenticator,
+	uniqueIssuerPerTenant bool,
 ) Service {
 	transport := httptransport.New(
 		net.JoinHostPort(identityHost, identityPort),
@@ -90,11 +94,12 @@ func NewService(
 	)
 
 	return &service{
-		issuerClient:      issuersdk.New(transport, strfmt.Default),
-		idClient:          idsdk.New(transport, strfmt.Default),
-		vcClient:          vcsdk.New(transport, strfmt.Default),
-		oidcAuthenticator: oidcAuthenticator,
-		keyStore:          keyStore,
+		issuerClient:          issuersdk.New(transport, strfmt.Default),
+		idClient:              idsdk.New(transport, strfmt.Default),
+		vcClient:              vcsdk.New(transport, strfmt.Default),
+		oidcAuthenticator:     oidcAuthenticator,
+		keyStore:              keyStore,
+		uniqueIssuerPerTenant: uniqueIssuerPerTenant,
 	}
 }
 
@@ -149,7 +154,9 @@ func (s *service) RegisterIssuer(
 			Proof:  proof,
 		},
 	})
-	if err != nil {
+
+	if err != nil &&
+		(s.uniqueIssuerPerTenant || !strings.Contains(err.Error(), issuerExistsError)) {
 		return nil, errutil.Err(
 			err,
 			"error registering issuer with identity service",
