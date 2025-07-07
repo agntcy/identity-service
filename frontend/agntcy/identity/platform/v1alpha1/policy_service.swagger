@@ -618,6 +618,16 @@
             "$ref": "#/definitions/v1alpha1Rule"
           },
           "description": "All the rules that apply to this Policy."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "title": "CreatedAt records the timestamp of when the Policy was initially created"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "title": "UpdatedAt records the timestamp of the last update to the Policy"
         }
       },
       "description": "Identity Platform Policy."
@@ -655,6 +665,16 @@
         "needsApproval": {
           "type": "boolean",
           "description": "Need User Approval for this Rule."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "title": "CreatedAt records the timestamp of when the Rule was initially created"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "title": "UpdatedAt records the timestamp of the last update to the Rule"
         }
       },
       "title": "Identity Platform Policy Rule"

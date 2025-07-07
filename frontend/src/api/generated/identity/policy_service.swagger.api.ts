@@ -242,6 +242,16 @@ export interface V1Alpha1Policy {
   assignedTo?: string;
   /** All the rules that apply to this Policy. */
   rules?: V1Alpha1Rule[];
+  /**
+   * CreatedAt records the timestamp of when the Policy was initially created
+   * @format date-time
+   */
+  createdAt?: string;
+  /**
+   * UpdatedAt records the timestamp of the last update to the Policy
+   * @format date-time
+   */
+  updatedAt?: string;
 }
 
 /** Identity Platform Policy Rule */
@@ -259,6 +269,16 @@ export interface V1Alpha1Rule {
   action?: V1Alpha1RuleAction;
   /** Need User Approval for this Rule. */
   needsApproval?: boolean;
+  /**
+   * CreatedAt records the timestamp of when the Rule was initially created
+   * @format date-time
+   */
+  createdAt?: string;
+  /**
+   * UpdatedAt records the timestamp of the last update to the Rule
+   * @format date-time
+   */
+  updatedAt?: string;
 }
 
 /** Identity Platform Policy Task */
