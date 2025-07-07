@@ -13,6 +13,7 @@ import {Divider, toast, Typography} from '@outshift/spark-design';
 import {FileUpload} from '@/components/ui/file-upload';
 import {VerifyIdentityFormValues} from '@/schemas/verify-identity-schema';
 import {Textarea} from '@/components/ui/textarea';
+import {parseJwt} from '@/utils/utils';
 
 export const VerifyIdentityForm = ({isLoading = false}: {isLoading?: boolean}) => {
   const {control, watch, reset, setValue, setError} = useFormContext<VerifyIdentityFormValues>();
@@ -30,7 +31,8 @@ export const VerifyIdentityForm = ({isLoading = false}: {isLoading?: boolean}) =
           const decodedContent = new TextDecoder().decode(content);
           const VC = JSON.parse(decodedContent);
           const proofValue = (VC.proof?.proofValue || VC?.proofValue || VC) as string | undefined;
-          if (proofValue) {
+          const decodeJwt = parseJwt(proofValue || '');
+          if (proofValue && decodeJwt) {
             setValue('badgeContent', JSON.stringify(decodedContent));
             setValue('proofValue', proofValue);
           } else {
@@ -65,16 +67,17 @@ export const VerifyIdentityForm = ({isLoading = false}: {isLoading?: boolean}) =
       try {
         const VC = JSON.parse(badge);
         const proofValue = (VC.proof?.proofValue || VC?.proofValue || VC) as string | undefined;
-        if (proofValue) {
+        const decodeJwt = parseJwt(proofValue || '');
+        if (proofValue && decodeJwt) {
           setValue('proofValue', proofValue);
         } else {
           setError('badgeContent', {
             type: 'manual',
-            message: 'The uploaded file does not contain a valid badge.'
+            message: 'The field does not contain a valid badge.'
           });
           toast({
             title: 'Invalid Badge',
-            description: 'The uploaded file does not contain a valid badge.',
+            description: 'The field does not contain a valid badge.',
             type: 'error'
           });
         }

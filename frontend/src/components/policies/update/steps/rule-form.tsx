@@ -8,6 +8,7 @@ import {FormControl, FormField, FormItem, FormLabel} from '@/components/ui/form'
 import {Input} from '@/components/ui/input';
 import {PolicyLogicyFormValues} from '@/schemas/policy-logic-schema';
 import {TaskForm} from './task-form';
+import {Checkbox} from '@outshift/spark-design';
 
 export const RuleForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; fieldIndex: number}) => {
   const policyForm = useFormContext<PolicyLogicyFormValues>();
@@ -40,6 +41,20 @@ export const RuleForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
         />
       </div>
       <TaskForm isLoading={isLoading} fieldIndex={fieldIndex} />
+      <FormField
+        control={policyForm.control}
+        name={`rules.${fieldIndex}.needsApproval`}
+        render={({field}) => (
+          <FormItem className="w-full">
+            <FormControl>
+              <div className="flex items-center">
+                <Checkbox id="needs-approval-checkbox" checked={field.value} onChange={(checked) => field.onChange(checked)} />
+                <FormLabel className="form-label">Needs Approval?</FormLabel>
+              </div>
+            </FormControl>
+          </FormItem>
+        )}
+      />
     </div>
   );
 };

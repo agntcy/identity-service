@@ -135,7 +135,8 @@ const AgenticServiceInfo: React.FC = () => {
               setShowBadgeForm(false);
             }}
             navigateTo={false}
-            confirmButtonText="Re-Issue Badge"
+            confirmButtonText="Re-Issue"
+            title="Re-Issue Badge"
           />
         )}
         <ConfirmModal

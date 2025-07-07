@@ -4,7 +4,6 @@
  */
 
 import {Button, Divider, Link, Typography} from '@outshift/spark-design';
-import OutshiftLogo from '@/assets/outshift-logo.svg';
 import {CheckIcon} from 'lucide-react';
 import {useAuth} from '@/hooks';
 import {PublicHeader} from '@/components/layout/public-header';
@@ -113,9 +112,6 @@ const Welcome = () => {
               </div>
             </div>
           </div>
-        </div>
-        <div className="absolute bottom-0 right-0 z-1">
-          <img src={OutshiftLogo} alt="Outshift Logo" className="w-[355px] h-[320px]" />
         </div>
       </div>
     </div>

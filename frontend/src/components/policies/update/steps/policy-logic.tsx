@@ -44,7 +44,7 @@ export const PolicyLogic = ({isLoading = false, policyLogicForm}: {policyLogicFo
     appendRule({
       name: '',
       description: '',
-      needsApproval: 'no',
+      needsApproval: false,
       tasks: {
         tasks: [],
         action: RuleAction.RULE_ACTION_UNSPECIFIED

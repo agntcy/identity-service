@@ -56,7 +56,7 @@ const FormStepperComponent = ({policy}: {policy?: Policy}) => {
         ruleId: rule.id,
         name: rule.name,
         description: rule.description || '',
-        needsApproval: rule.needsApproval ? 'yes' : 'no',
+        needsApproval: rule.needsApproval,
         tasks: {
           action: rule.action,
           tasks: rule?.tasks?.map((task) => task.id) || []
@@ -109,7 +109,7 @@ const FormStepperComponent = ({policy}: {policy?: Policy}) => {
                     data: {
                       name: rule.name,
                       description: rule.description,
-                      needsApproval: rule.needsApproval === 'yes',
+                      needsApproval: rule.needsApproval,
                       tasks: [...rule.tasks.tasks],
                       action: rule.tasks.action
                     }
@@ -120,7 +120,7 @@ const FormStepperComponent = ({policy}: {policy?: Policy}) => {
                     data: {
                       name: rule.name,
                       description: rule.description,
-                      needsApproval: rule.needsApproval === 'yes',
+                      needsApproval: rule.needsApproval,
                       tasks: [...rule.tasks.tasks],
                       action: rule.tasks.action
                     }
@@ -207,7 +207,7 @@ const FormStepperComponent = ({policy}: {policy?: Policy}) => {
           ruleId: rule.id,
           name: rule.name,
           description: rule.description || '',
-          needsApproval: rule.needsApproval ? 'yes' : 'no',
+          needsApproval: rule.needsApproval,
           tasks: {
             action: rule.action,
             tasks: rule?.tasks?.map((task) => task.id) || []

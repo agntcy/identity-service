@@ -52,7 +52,7 @@ const FormStepperComponent = () => {
         {
           name: '',
           description: '',
-          needsApproval: 'no',
+          needsApproval: false,
           tasks: {
             action: RuleAction.RULE_ACTION_UNSPECIFIED,
             tasks: []
@@ -109,7 +109,7 @@ const FormStepperComponent = () => {
                   data: {
                     name: rule.name,
                     description: rule.description,
-                    needsApproval: rule.needsApproval === 'yes',
+                    needsApproval: rule.needsApproval,
                     tasks: [...rule.tasks.tasks],
                     action: rule.tasks.action
                   }
@@ -153,7 +153,7 @@ const FormStepperComponent = () => {
         {
           name: '',
           description: '',
-          needsApproval: 'no',
+          needsApproval: false,
           tasks: {
             action: RuleAction.RULE_ACTION_UNSPECIFIED,
             tasks: []
