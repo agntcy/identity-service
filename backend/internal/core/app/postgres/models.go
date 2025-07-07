@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/agntcy/identity-platform/internal/core/app/types"
+	"github.com/agntcy/identity-platform/internal/pkg/pgutil"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
@@ -32,8 +33,8 @@ func (i *App) ToCoreType() *types.App {
 		Type:               i.Type,
 		ResolverMetadataID: i.ResolverMetadataID,
 		CreatedAt:          i.CreatedAt,
-		UpdatedAt:          SqlNullTimeToTime(i.UpdatedAt),
-		DeletedAt: SqlNullTimeToTime(sql.NullTime{
+		UpdatedAt:          pgutil.SqlNullTimeToTime(i.UpdatedAt),
+		DeletedAt: pgutil.SqlNullTimeToTime(sql.NullTime{
 			Time:  i.DeletedAt.Time,
 			Valid: i.DeletedAt.Valid,
 		}),
@@ -49,23 +50,7 @@ func newAppModel(src *types.App, tenantID string) *App {
 		Type:               src.Type,
 		ResolverMetadataID: src.ResolverMetadataID,
 		CreatedAt:          src.CreatedAt,
-		UpdatedAt:          TimeToSqlNullTime(src.UpdatedAt),
-		DeletedAt:          gorm.DeletedAt(TimeToSqlNullTime(src.DeletedAt)),
+		UpdatedAt:          pgutil.TimeToSqlNullTime(src.UpdatedAt),
+		DeletedAt:          gorm.DeletedAt(pgutil.TimeToSqlNullTime(src.DeletedAt)),
 	}
-}
-
-func SqlNullTimeToTime(t sql.NullTime) *time.Time {
-	if t.Valid {
-		return &t.Time
-	}
-
-	return nil
-}
-
-func TimeToSqlNullTime(t *time.Time) sql.NullTime {
-	if t != nil {
-		return sql.NullTime{Time: *t, Valid: true}
-	}
-
-	return sql.NullTime{Valid: false}
 }

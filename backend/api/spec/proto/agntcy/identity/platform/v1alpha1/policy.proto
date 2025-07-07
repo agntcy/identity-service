@@ -7,6 +7,8 @@ syntax = "proto3";
 
 package agntcy.identity.platform.v1alpha1;
 
+import "google/protobuf/timestamp.proto";
+
 // Package-wide variables from generator "generated".
 option go_package = "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_go";
 
@@ -26,6 +28,12 @@ message Policy {
 
   // All the rules that apply to this Policy.
   repeated Rule rules = 5;
+
+  // CreatedAt records the timestamp of when the Policy was initially created
+  optional .google.protobuf.Timestamp created_at = 6;
+
+  // UpdatedAt records the timestamp of the last update to the Policy
+  optional .google.protobuf.Timestamp updated_at = 7;
 }
 
 // Identity Platform Policy Rule
@@ -49,6 +57,12 @@ message Rule {
 
   // Need User Approval for this Rule.
   optional bool needs_approval = 7;
+
+  // CreatedAt records the timestamp of when the Rule was initially created
+  optional .google.protobuf.Timestamp created_at = 8;
+
+  // UpdatedAt records the timestamp of the last update to the Rule
+  optional .google.protobuf.Timestamp updated_at = 9;
 }
 
 // Identity Platform Policy Task
