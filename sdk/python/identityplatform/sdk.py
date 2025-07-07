@@ -63,7 +63,9 @@ class IdentityPlatformSdk:
     ) -> "agntcy.identity.platform.v1alpha1.AuthService":
         return IdentityPlatformSdk.AuthServiceStub(self.client.channel)
 
-    def verify_badge(self, badge: str) -> "agntcy.identity.platform.v1alpha1.VerificationResult":
+    def verify_badge(
+        self, badge: str
+    ) -> "agntcy.identity.platform.v1alpha1.VerificationResult":
         """Verify a badge."""
         return self.get_badge_service().VerifyBadge(
             request=IdentityPlatformSdk.VerifyBadgeRequest(badge=badge)
