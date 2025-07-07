@@ -6,12 +6,14 @@ package mcp
 import (
 	"context"
 	"encoding/json"
-	"fmt"
+	"strings"
 
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 	"github.com/mark3labs/mcp-go/client"
 	"github.com/mark3labs/mcp-go/mcp"
 )
+
+const mcpSuffix = "/mcp"
 
 // The discoverClient interface defines the core methods for
 // discovering a deployed MCP server
@@ -32,9 +34,14 @@ func (d *discoveryClient) Discover(
 	ctx context.Context,
 	name, url string,
 ) (*McpServer, error) {
+	// Check if the URL already has the mcp path
+	if !strings.HasSuffix(url, mcpSuffix) {
+		url = strings.TrimSuffix(url, "/") + mcpSuffix
+	}
+
 	// Create streameable http client
 	// We only support streamable http client for now
-	mcpClient, err := client.NewStreamableHttpClient(fmt.Sprintf("%s/mcp", url))
+	mcpClient, err := client.NewStreamableHttpClient(url)
 	if err != nil {
 		return nil, errutil.Err(
 			err,
