@@ -8,6 +8,8 @@ from typing import List
 from mcp import ClientSession
 from mcp.client.streamable_http import streamablehttp_client
 
+MCP_SUFFIX = "/mcp"
+
 
 class McpTool:
     """Represents a tool in the MCP server."""
@@ -55,8 +57,12 @@ class McpServer:
 async def discover(name: str, url: str) -> str:
     """Discover MCP server tools and resources."""
     try:
+        # Check if the URL already has a suffix or trailing slash
+        if not url.endswith(MCP_SUFFIX):
+            url = url.rstrip("/") + MCP_SUFFIX
+
         # Connect to a streamable HTTP server
-        async with streamablehttp_client(f"{url}/mcp") as (
+        async with streamablehttp_client(f"{url}") as (
             read_stream,
             write_stream,
             _,

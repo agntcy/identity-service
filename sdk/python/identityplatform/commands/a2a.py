@@ -4,9 +4,15 @@
 
 import requests
 
+A2A_WELL_KNOWN_URL = "/.well-known/agent.json"
+
 
 def discover(well_known_url):
     """Fetch the agent card from the well-known URL."""
+
+    # Ensure the URL ends with a trailing slash
+    if not well_known_url.endswith(A2A_WELL_KNOWN_URL):
+        well_known_url = well_known_url.rstrip("/") + A2A_WELL_KNOWN_URL
 
     try:
         # Perform the GET request
