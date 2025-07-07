@@ -16,4 +16,4 @@ services:
       - "4003:4000"
       - "4004:4001"
     env_file:
-      - .env-node
+      - .env
