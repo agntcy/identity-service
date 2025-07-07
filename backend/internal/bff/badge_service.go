@@ -73,7 +73,7 @@ type BadgeService interface {
 	VerifyBadge(
 		ctx context.Context,
 		badge *string,
-	) (*badgetypes.VerifiableCredential, error)
+	) (*badgetypes.VerificationResult, error)
 	GetBadge(
 		ctx context.Context,
 		appID string,
@@ -329,7 +329,7 @@ func (s *badgeService) createTasks(
 func (s *badgeService) VerifyBadge(
 	ctx context.Context,
 	badge *string,
-) (*badgetypes.VerifiableCredential, error) {
+) (*badgetypes.VerificationResult, error) {
 	if badge == nil {
 		return nil, errors.New("badge or verifiable credential is empty")
 	}

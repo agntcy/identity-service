@@ -35,7 +35,7 @@ type BadgeServiceClient interface {
 	// Create a new Badge.
 	IssueBadge(ctx context.Context, in *IssueBadgeRequest, opts ...grpc.CallOption) (*Badge, error)
 	// Verify a badge.
-	VerifyBadge(ctx context.Context, in *VerifyBadgeRequest, opts ...grpc.CallOption) (*VerifiableCredential, error)
+	VerifyBadge(ctx context.Context, in *VerifyBadgeRequest, opts ...grpc.CallOption) (*VerificationResult, error)
 }
 
 type badgeServiceClient struct {
@@ -56,9 +56,9 @@ func (c *badgeServiceClient) IssueBadge(ctx context.Context, in *IssueBadgeReque
 	return out, nil
 }
 
-func (c *badgeServiceClient) VerifyBadge(ctx context.Context, in *VerifyBadgeRequest, opts ...grpc.CallOption) (*VerifiableCredential, error) {
+func (c *badgeServiceClient) VerifyBadge(ctx context.Context, in *VerifyBadgeRequest, opts ...grpc.CallOption) (*VerificationResult, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(VerifiableCredential)
+	out := new(VerificationResult)
 	err := c.cc.Invoke(ctx, BadgeService_VerifyBadge_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -75,7 +75,7 @@ type BadgeServiceServer interface {
 	// Create a new Badge.
 	IssueBadge(context.Context, *IssueBadgeRequest) (*Badge, error)
 	// Verify a badge.
-	VerifyBadge(context.Context, *VerifyBadgeRequest) (*VerifiableCredential, error)
+	VerifyBadge(context.Context, *VerifyBadgeRequest) (*VerificationResult, error)
 }
 
 // UnimplementedBadgeServiceServer should be embedded to have
@@ -88,7 +88,7 @@ type UnimplementedBadgeServiceServer struct{}
 func (UnimplementedBadgeServiceServer) IssueBadge(context.Context, *IssueBadgeRequest) (*Badge, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method IssueBadge not implemented")
 }
-func (UnimplementedBadgeServiceServer) VerifyBadge(context.Context, *VerifyBadgeRequest) (*VerifiableCredential, error) {
+func (UnimplementedBadgeServiceServer) VerifyBadge(context.Context, *VerifyBadgeRequest) (*VerificationResult, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method VerifyBadge not implemented")
 }
 func (UnimplementedBadgeServiceServer) testEmbeddedByValue() {}

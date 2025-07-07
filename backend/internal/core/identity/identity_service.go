@@ -16,14 +16,12 @@ import (
 	"github.com/agntcy/identity-platform/internal/pkg/convertutil"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 	"github.com/agntcy/identity-platform/internal/pkg/httputil"
-	"github.com/agntcy/identity-platform/internal/pkg/jwtutil"
 	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
 	"github.com/agntcy/identity-platform/pkg/log"
 	idsdk "github.com/agntcy/identity/api/client/client/id_service"
 	issuersdk "github.com/agntcy/identity/api/client/client/issuer_service"
 	vcsdk "github.com/agntcy/identity/api/client/client/vc_service"
 	identitymodels "github.com/agntcy/identity/api/client/models"
-	identitysrv "github.com/agntcy/identity/api/server/agntcy/identity/core/v1alpha1"
 	"github.com/agntcy/identity/pkg/oidc"
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
@@ -61,7 +59,7 @@ type Service interface {
 	VerifyVerifiableCredential(
 		ctx context.Context,
 		vc *string,
-	) (*badgetypes.VerifiableCredential, error)
+	) (*badgetypes.VerificationResult, error)
 	RevokeVerifiableCredential(
 		ctx context.Context,
 		clientCredentials *idpcore.ClientCredentials,
@@ -327,13 +325,13 @@ func (s *service) generateProof(
 func (s *service) VerifyVerifiableCredential(
 	ctx context.Context,
 	vc *string,
-) (*badgetypes.VerifiableCredential, error) {
+) (*badgetypes.VerificationResult, error) {
 	if vc == nil || *vc == "" {
 		return nil, errors.New("verifiable credential is empty")
 	}
 
 	// Verify the proof of the verifiable credential
-	_, err := s.vcClient.VerifyVerifiableCredential(&vcsdk.VerifyVerifiableCredentialParams{
+	resp, err := s.vcClient.VerifyVerifiableCredential(&vcsdk.VerifyVerifiableCredentialParams{
 		Body: &identitymodels.V1alpha1VerifyRequest{
 			Vc: &identitymodels.V1alpha1EnvelopedCredential{
 				EnvelopeType: ptrutil.Ptr(
@@ -350,70 +348,20 @@ func (s *service) VerifyVerifiableCredential(
 		)
 	}
 
-	log.Debug("Verifiable credential verified successfully")
-
-	// Parse the verifiable credential to extract claims
-	var badgeClaims map[string]any
-
-	err = jwtutil.GetClaim(
-		vc,
-		credentialSubject,
-		&badgeClaims,
-	)
-	if err != nil {
-		return nil, errutil.Err(
-			err,
-			"error extracting credential subject from verifiable credential",
-		)
+	if resp == nil || resp.Payload == nil {
+		return nil, errors.New("empty payload")
 	}
 
-	log.Debug("Unmarshalled claims: ", badgeClaims)
+	result := resp.Payload
 
-	// Parse the issuer
-	var issuerClaim string
-
-	err = jwtutil.GetClaim(vc, "issuer", &issuerClaim)
-	if err != nil {
-		return nil, errutil.Err(
-			err,
-			"error extracting issuer from verifiable credential",
-		)
-	}
-
-	log.Debug("Issuer claim: ", issuerClaim)
-
-	// Parse the issuance date
-	var issuanceDateClaim string
-
-	err = jwtutil.GetClaim(vc, "issuanceDate", &issuanceDateClaim)
-	if err != nil {
-		return nil, errutil.Err(
-			err,
-			"error extracting issuance date from verifiable credential",
-		)
-	}
-
-	log.Debug("Issuance date claim: ", issuanceDateClaim)
-
-	// Parse the status claim
-	var credentialStatusClaim []any
-
-	err = jwtutil.GetClaim(vc, "credentialStatus", &credentialStatusClaim)
-	if err != nil {
-		return nil, errutil.Err(
-			err,
-			"error extracting credential status from verifiable credential",
-		)
-	}
-
-	return &badgetypes.VerifiableCredential{
-		Status: convertutil.ConvertSlice(
-			credentialStatusClaim,
-			convertutil.Convert[badgetypes.CredentialStatus],
-		),
-		CredentialSubject: convertutil.Convert[badgetypes.BadgeClaims](badgeClaims),
-		Issuer:            issuerClaim,
-		IssuanceDate:      issuanceDateClaim,
+	return &badgetypes.VerificationResult{
+		Status:                       result.Status,
+		Document:                     convertVerifiableCredential(result.Document),
+		MediaType:                    result.MediaType,
+		Controller:                   result.Controller,
+		ControlledIdentifierDocument: result.ControlledIdentifierDocument,
+		Warnings:                     convertutil.ConvertSlice(result.Warnings, convertErroInfo),
+		Errors:                       convertutil.ConvertSlice(result.Errors, convertErroInfo),
 	}, nil
 }
 
@@ -464,11 +412,10 @@ func (s *service) RevokeVerifiableCredential(
 		},
 	})
 	if err != nil {
-		err := tryGetErrorInfo(err)
+		errInfo, err := tryGetErrorInfo(err)
 
-		var errInfo ErrorInfo
-		if errors.As(err, &errInfo) {
-			if errInfo.Reason == identitysrv.ErrorReason_ERROR_REASON_VERIFIABLE_CREDENTIAL_REVOKED {
+		if errInfo != nil {
+			if *errInfo.Reason == identitymodels.V1alpha1ErrorReasonERRORREASONVERIFIABLECREDENTIALREVOKED {
 				// it's already revoked, not exactly an error
 				return nil
 			}
@@ -480,18 +427,61 @@ func (s *service) RevokeVerifiableCredential(
 	return nil
 }
 
-func tryGetErrorInfo(err error) error {
+func tryGetErrorInfo(err error) (*identitymodels.V1alpha1ErrorInfo, error) {
 	apiErr := vcsdk.NewRevokeVerifiableCredentialDefault(0)
 	if errors.As(err, &apiErr) {
 		payload := apiErr.GetPayload()
 		for _, detail := range payload.Details {
 			if reason, ok := detail.GoogleprotobufAny["reason"]; ok {
-				return ErrorInfo{
-					Reason: identitysrv.ErrorReason(identitysrv.ErrorReason_value[reason.(string)]),
-				}
+				return &identitymodels.V1alpha1ErrorInfo{
+					Reason: identitymodels.NewV1alpha1ErrorReason(identitymodels.V1alpha1ErrorReason(reason.(string))),
+				}, nil
 			}
 		}
 	}
 
-	return err
+	return nil, err
+}
+
+func convertErroInfo(err *identitymodels.V1alpha1ErrorInfo) *badgetypes.ErrorInfo {
+	if err == nil {
+		return nil
+	}
+
+	reason := ptrutil.Derefrence(err.Reason, identitymodels.V1alpha1ErrorReasonERRORREASONIDALREADYREGISTERED)
+
+	return &badgetypes.ErrorInfo{
+		Reason:  string(reason),
+		Message: err.Message,
+	}
+}
+
+func convertVerifiableCredential(
+	src *identitymodels.V1alpha1VerifiableCredential,
+) *badgetypes.VerifiableCredential {
+	if src == nil {
+		return nil
+	}
+
+	var schemas []*badgetypes.CredentialSchema
+	for _, schema := range src.CredentialSchema {
+		schemas = append(schemas, convertutil.Convert[badgetypes.CredentialSchema](schema))
+	}
+
+	var statuses []*badgetypes.CredentialStatus
+	for _, status := range src.CredentialStatus {
+		statuses = append(statuses, convertutil.Convert[badgetypes.CredentialStatus](status))
+	}
+
+	return &badgetypes.VerifiableCredential{
+		Context:           src.Context,
+		Type:              src.Type,
+		Issuer:            src.Issuer,
+		CredentialSubject: convertutil.Convert[badgetypes.BadgeClaims](src.Content),
+		ID:                src.ID,
+		IssuanceDate:      src.IssuanceDate,
+		ExpirationDate:    src.ExpirationDate,
+		CredentialSchema:  schemas,
+		Status:            statuses,
+	}
 }
