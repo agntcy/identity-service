@@ -65,10 +65,6 @@ class IdentityPlatformSdk:
 
     def verify_badge(self, badge: str) -> str:
         """Verify a badge."""
-        return (
-            self.get_badge_service()
-            .VerifyBadge(
-                request=IdentityPlatformSdk.VerifyBadgeRequest(badge=badge)
-            )
-            .badge
+        return self.get_badge_service().VerifyBadge(
+            request=IdentityPlatformSdk.VerifyBadgeRequest(badge=badge)
         )
