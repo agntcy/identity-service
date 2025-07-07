@@ -22,3 +22,39 @@
   border-width: 8px;
   border: 8px solid #FFFFFF33;
 }
+
+.welcome-title {
+  font-family: Sharp Sans;
+  font-weight: 400;
+  font-style: Book;
+  font-size: 60px;
+  line-height: 64px;
+  letter-spacing: 0px;
+  text-align: right;
+  vertical-align: middle;
+  color: #FBAF45;
+}
+
+.welcome-product-name {
+  font-family: Sharp Sans;
+  font-weight: 700;
+  font-style: Bold;
+  font-size: 46.19px;
+  line-height: 56.97px;
+  letter-spacing: 0px;
+  color: #FBFCFE;
+}
+
+.welcome-main-card {
+  box-shadow: 0px 4px 4px 0px #00000040;
+  background: #0D274D;
+  angle: 0 deg;
+  opacity: 1;
+  padding-top: 24px;
+  padding-right: 90px;
+  padding-bottom: 24px;
+  padding-left: 90px;
+  gap: 24px;
+  border-radius: 16px;
+
+}

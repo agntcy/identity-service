@@ -1099,7 +1099,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/x-date-pickers@npm:^7.28.2":
+"@mui/x-date-pickers@npm:^7.26.0":
   version: 7.29.4
   resolution: "@mui/x-date-pickers@npm:7.29.4"
   dependencies:
@@ -1242,18 +1242,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@outshift/spark-design@npm:^4.4.4":
-  version: 4.4.4
-  resolution: "@outshift/spark-design@npm:4.4.4::__archiveUrl=https%3A%2F%2Fartifactory.devhub-cloud.cisco.com%2Fartifactory%2Fapi%2Fnpm%2Foutshift-npm%2F%40outshift%2Fspark-design%2F-%2F%40outshift%2Fspark-design-4.4.4.tgz"
+"@outshift/spark-design@npm:^4.6.2":
+  version: 4.6.2
+  resolution: "@outshift/spark-design@npm:4.6.2::__archiveUrl=https%3A%2F%2Fartifactory.devhub-cloud.cisco.com%2Fartifactory%2Fapi%2Fnpm%2Foutshift-npm%2F%40outshift%2Fspark-design%2F-%2F%40outshift%2Fspark-design-4.6.2.tgz"
   dependencies:
     "@emotion/react": "npm:^11.14.0"
     "@emotion/styled": "npm:^11.14.0"
     "@mui/icons-material": "npm:^7.0.1"
     "@mui/lab": "npm:^7.0.0-beta.10"
     "@mui/material": "npm:^7.0.1"
-    "@mui/x-date-pickers": "npm:^7.28.2"
+    "@mui/x-date-pickers": "npm:^7.26.0"
     copy-to-clipboard: "npm:^3.3.3"
     date-fns: "npm:^4.1.0"
+    dayjs: "npm:^1.11.13"
     framer-motion: "npm:^12.6.2"
     material-react-table: "npm:^3.2.1"
     react-code-blocks: "npm:^0.1.6"
@@ -1269,9 +1270,10 @@ __metadata:
     "@mui/icons-material": ">=7"
     "@mui/lab": ">=7"
     "@mui/material": ">=7"
-    "@mui/x-date-pickers": ">=7"
+    "@mui/x-date-pickers": ^7.26.0
     copy-to-clipboard: ">=3"
     date-fns: ">=2"
+    dayjs: ">=1.11"
     framer-motion: ">=12"
     react: ">=18"
     react-code-blocks: ">=0.1.6"
@@ -1282,7 +1284,7 @@ __metadata:
     sonner: ">=2"
     use-debounce: ">=10"
     zustand: ">=5"
-  checksum: 10/3b1819d81de525c844be0d3f3141074c2ad4cb5f7f9b741f2414640e10ebbe0566405af079026e18d1d0e79857b668bc8adbd94fa3d80bd939d7554d02f0dc7d
+  checksum: 10/1ac2f492aa786e8b83be48f68c8de1c96417936fc4f6c681bc8e5164c78e4649a80eb231481b7706a20d06f72d45f637071590dbf8c1131de3ec926fd4dae068
   languageName: node
   linkType: hard
 
@@ -4214,6 +4216,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dayjs@npm:^1.11.13":
+  version: 1.11.13
+  resolution: "dayjs@npm:1.11.13"
+  checksum: 10/7374d63ab179b8d909a95e74790def25c8986e329ae989840bacb8b1888be116d20e1c4eee75a69ea0dfbae13172efc50ef85619d304ee7ca3c01d5878b704f5
+  languageName: node
+  linkType: hard
+
 "debug@npm:4, debug@npm:^4.0.0, debug@npm:^4.1.0, debug@npm:^4.3.1, debug@npm:^4.3.2, debug@npm:^4.3.4":
   version: 4.4.1
   resolution: "debug@npm:4.4.1"
@@ -5659,7 +5668,7 @@ __metadata:
     "@mui/icons-material": "npm:^7.2.0"
     "@mui/material": "npm:^7.1.1"
     "@okta/okta-auth-js": "npm:^7.12.1"
-    "@outshift/spark-design": "npm:^4.4.4"
+    "@outshift/spark-design": "npm:^4.6.2"
     "@radix-ui/react-accordion": "npm:^1.2.10"
     "@radix-ui/react-avatar": "npm:^1.1.10"
     "@radix-ui/react-checkbox": "npm:^1.1.4"

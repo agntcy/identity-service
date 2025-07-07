@@ -8,7 +8,7 @@ import {FormControl, FormField, FormItem, FormLabel} from '@/components/ui/form'
 import {Input} from '@/components/ui/input';
 import {PolicyLogicyFormValues} from '@/schemas/policy-logic-schema';
 import {TaskForm} from './task-form';
-import {Checkbox, Toggle, Typography} from '@outshift/spark-design';
+import {Checkbox} from '@outshift/spark-design';
 
 export const RuleForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; fieldIndex: number}) => {
   const policyForm = useFormContext<PolicyLogicyFormValues>();
