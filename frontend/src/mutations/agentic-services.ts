@@ -26,10 +26,10 @@ export const useCreateAgenticService = ({callbacks}: PropsSettingsAgenticService
       }
     },
     onSuccess: async (resp) => {
-      await queryClient.invalidateQueries({queryKey: ['get-agentic-services']});
       if (callbacks?.onSuccess) {
         callbacks.onSuccess(resp);
       }
+      await queryClient.invalidateQueries({queryKey: ['get-agentic-services']});
     }
   });
 };
@@ -45,16 +45,16 @@ export const useUpdateAgenticService = ({callbacks}: PropsSettingsAgenticService
       }
     },
     onSuccess: async (resp) => {
-      await queryClient.invalidateQueries({queryKey: ['get-agentic-services']});
-      await queryClient.invalidateQueries({queryKey: ['get-agentic-service']});
       if (callbacks?.onSuccess) {
         callbacks.onSuccess(resp);
       }
+      await queryClient.invalidateQueries({queryKey: ['get-agentic-services']});
+      await queryClient.invalidateQueries({queryKey: ['get-agentic-service']});
     }
   });
 };
 
-export const useDeleteAgenticService = ({callbacks}: PropsSettingsAgenticServices) => {
+export const useDeleteAgenticService = ({callbacks = {}}: PropsSettingsAgenticServices) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ['delete-agentic-service'],
@@ -65,11 +65,10 @@ export const useDeleteAgenticService = ({callbacks}: PropsSettingsAgenticService
       }
     },
     onSuccess: async (resp) => {
-      await queryClient.invalidateQueries({queryKey: ['get-agentic-services']});
-      await queryClient.invalidateQueries({queryKey: ['get-agentic-service']});
       if (callbacks?.onSuccess) {
         callbacks.onSuccess(resp);
       }
+      await queryClient.invalidateQueries({queryKey: ['get-agentic-services']});
     }
   });
 };

@@ -20,7 +20,7 @@ const PolicyInfo: React.FC = () => {
 
   const {id} = useParams<{id: string}>();
 
-  const {data, isLoading, isFetching, error, isError, refetch} = useGetPolicy(id);
+  const {data, isLoading, error, isError, refetch} = useGetPolicy(id);
 
   const navigate = useNavigate();
 
@@ -63,7 +63,7 @@ const PolicyInfo: React.FC = () => {
         }
       ]}
       rightSideItems={
-        isError || isLoading || isFetching ? null : (
+        isError || isLoading ? null : (
           <div className="flex items-center gap-4">
             <Button
               startIcon={<Trash2Icon className="w-4 h-4" />}
@@ -73,6 +73,8 @@ const PolicyInfo: React.FC = () => {
                 setShowConfirmDelete(true);
               }}
               sx={{fontWeight: '600 !important'}}
+              loading={deleteMutation.isPending}
+              loadingPosition="start"
             >
               Delete
             </Button>
@@ -95,7 +97,7 @@ const PolicyInfo: React.FC = () => {
         itemName="Policy"
         data={data}
         error={error}
-        isLoading={isLoading || isFetching}
+        isLoading={isLoading || deleteMutation.isPending}
         useRelativeLoader
         useContainer
         errorListStateProps={{

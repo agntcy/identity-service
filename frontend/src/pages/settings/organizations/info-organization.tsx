@@ -17,7 +17,7 @@ const InfoOrganization: React.FC = () => {
   const {id} = useParams<{id: string}>();
   const [showInviteUserModal, setShowInviteUserModal] = useState<boolean>(false);
 
-  const {data, isLoading, isFetching, error, isError, refetch} = useGetTenant(id!);
+  const {data, isLoading, error, isError, refetch} = useGetTenant(id!);
 
   return (
     <BasePage
@@ -36,7 +36,7 @@ const InfoOrganization: React.FC = () => {
         }
       ]}
       rightSideItems={
-        isError || isLoading || isFetching ? null : (
+        isError || isLoading ? null : (
           <Button
             variant="outlined"
             onClick={() => {
@@ -54,7 +54,7 @@ const InfoOrganization: React.FC = () => {
         itemName="Organization"
         data={data}
         error={error}
-        isLoading={isLoading || isFetching}
+        isLoading={isLoading}
         useRelativeLoader
         useContainer
         errorListStateProps={{

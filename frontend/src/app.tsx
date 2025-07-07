@@ -24,7 +24,7 @@ const App = () => {
             <AnalyticsProvider>
               <ApiProvider>
                 <QueryProvider>
-                  <Toaster offset={{top: '64px', right: '16px'}} expand={false} duration={3500} />
+                  <Toaster offset={{top: '64px', right: '16px'}} expand duration={3500} />
                   <FeatureFlagsProvider>
                     <Router />
                   </FeatureFlagsProvider>

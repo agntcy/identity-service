@@ -23,13 +23,9 @@ interface PropsSetIdentityBadge {
 }
 
 export const useVerifyBadge = ({callbacks}: PropsSettingsBadgeClaims) => {
-  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ['verify-badge'],
     mutationFn: (data: VerifyBadgeRequest) => BadgeAPI.verifyBadge(data),
-    onSettled: async () => {
-      await queryClient.invalidateQueries({queryKey: ['get-agentic-services']});
-    },
     onError: () => {
       if (callbacks?.onError) {
         callbacks.onError();
@@ -48,20 +44,16 @@ export const useIssueBadge = ({callbacks}: PropsSetIdentityBadge) => {
   return useMutation({
     mutationKey: ['issue-badge'],
     mutationFn: ({id, data}: {id: string; data: IssueBadgeBody}) => BadgeAPI.issueBadge(id, data),
-    onSettled: async () => {
-      await queryClient.invalidateQueries({queryKey: ['get-agentic-services']});
-      await queryClient.invalidateQueries({queryKey: ['get-agentic-service']});
-      await queryClient.invalidateQueries({queryKey: ['get-agentic-service-badge']});
-    },
     onError: () => {
       if (callbacks?.onError) {
         callbacks.onError();
       }
     },
-    onSuccess: (resp) => {
+    onSuccess: async (resp) => {
       if (callbacks?.onSuccess) {
         callbacks.onSuccess(resp);
       }
+      await queryClient.invalidateQueries({queryKey: ['get-agentic-service-badge']});
     }
   });
 };

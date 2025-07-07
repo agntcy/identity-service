@@ -59,9 +59,11 @@ export const AgenticServicForm = ({isLoading = false}: {isLoading?: boolean}) =>
     <Card className="text-start py-4 rounded-[8px] p-[24px]" variant="secondary">
       <CardContent className="space-y-6 p-0">
         <div className="space-y-4">
-          <Typography variant="subtitle1" fontWeight={600}>
-            Select Agentic Service Type
-          </Typography>
+          <div>
+            <Typography variant="subtitle1" fontWeight={600}>
+              Select Agentic Service Type
+            </Typography>
+          </div>
           <FormField
             control={control}
             name="type"

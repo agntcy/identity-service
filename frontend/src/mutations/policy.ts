@@ -33,10 +33,10 @@ export const useCreatePolicy = ({callbacks}: PropsSettingsPolicies = {}) => {
       }
     },
     onSuccess: async (resp) => {
-      await queryClient.invalidateQueries({queryKey: ['get-policies']});
       if (callbacks?.onSuccess) {
         callbacks.onSuccess(resp);
       }
+      await queryClient.invalidateQueries({queryKey: ['get-policies']});
     }
   });
 };
@@ -52,10 +52,10 @@ export const useUpdatePolicy = ({callbacks}: PropsSettingsPolicies = {}) => {
       }
     },
     onSuccess: async (resp) => {
-      await queryClient.invalidateQueries({queryKey: ['get-policies']});
       if (callbacks?.onSuccess) {
         callbacks.onSuccess(resp);
       }
+      await queryClient.invalidateQueries({queryKey: ['get-policies']});
     }
   });
 };
@@ -71,10 +71,10 @@ export const useDeletePolicy = ({callbacks}: PropsSettingsPolicies = {}) => {
       }
     },
     onSuccess: async (resp) => {
-      await queryClient.invalidateQueries({queryKey: ['get-policies']});
       if (callbacks?.onSuccess) {
         callbacks.onSuccess(resp);
       }
+      await queryClient.invalidateQueries({queryKey: ['get-policies']});
     }
   });
 };
@@ -90,10 +90,10 @@ export const useCreateRule = ({callbacks}: PropsSettingsRules = {}) => {
       }
     },
     onSuccess: async (resp) => {
-      await queryClient.invalidateQueries({queryKey: ['get-policies']});
       if (callbacks?.onSuccess) {
         callbacks.onSuccess(resp);
       }
+      await queryClient.invalidateQueries({queryKey: ['get-policies']});
     }
   });
 };
@@ -109,10 +109,11 @@ export const useUpdateRule = ({callbacks}: PropsSettingsRules = {}) => {
       }
     },
     onSuccess: async (resp) => {
-      await queryClient.invalidateQueries({queryKey: ['get-policies']});
       if (callbacks?.onSuccess) {
         callbacks.onSuccess(resp);
       }
+      await queryClient.invalidateQueries({queryKey: ['get-policies']});
+      await queryClient.invalidateQueries({queryKey: ['get-policy']});
     }
   });
 };
@@ -128,10 +129,10 @@ export const useDeleteRule = ({callbacks}: PropsSettingsRules = {}) => {
       }
     },
     onSuccess: async (resp) => {
-      await queryClient.invalidateQueries({queryKey: ['get-policies']});
       if (callbacks?.onSuccess) {
         callbacks.onSuccess(resp);
       }
+      await queryClient.invalidateQueries({queryKey: ['get-policies']});
     }
   });
 };

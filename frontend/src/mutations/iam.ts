@@ -33,10 +33,10 @@ export const useCreateTenant = ({callbacks}: PropsSettingsTenant) => {
       }
     },
     onSuccess: async (resp) => {
-      await queryClient.invalidateQueries({queryKey: ['get-tenants']});
       if (callbacks?.onSuccess) {
         callbacks.onSuccess(resp);
       }
+      await queryClient.invalidateQueries({queryKey: ['get-tenants']});
     }
   });
 };
@@ -52,11 +52,11 @@ export const useUpdateTenant = ({callbacks}: PropsSettingsTenant) => {
       }
     },
     onSuccess: async (resp) => {
-      await queryClient.invalidateQueries({queryKey: ['get-tenants']});
-      await queryClient.invalidateQueries({queryKey: ['get-tenant']});
       if (callbacks?.onSuccess) {
         callbacks.onSuccess(resp);
       }
+      await queryClient.invalidateQueries({queryKey: ['get-tenants']});
+      await queryClient.invalidateQueries({queryKey: ['get-tenant']});
     }
   });
 };
@@ -72,11 +72,10 @@ export const useDeleteTenant = ({callbacks}: PropsSettingsTenant) => {
       }
     },
     onSuccess: async (resp) => {
-      await queryClient.invalidateQueries({queryKey: ['get-tenants']});
-      await queryClient.invalidateQueries({queryKey: ['get-tenant']});
       if (callbacks?.onSuccess) {
         callbacks.onSuccess(resp);
       }
+      await queryClient.invalidateQueries({queryKey: ['get-tenants']});
     }
   });
 };
@@ -92,11 +91,11 @@ export const useInviteUser = ({callbacks}: PropsSettingsInviteUser) => {
       }
     },
     onSuccess: async (resp) => {
-      await queryClient.invalidateQueries({queryKey: ['get-tenant-groups']});
-      await queryClient.invalidateQueries({queryKey: ['get-users-group']});
       if (callbacks?.onSuccess) {
         callbacks.onSuccess(resp);
       }
+      await queryClient.invalidateQueries({queryKey: ['get-tenant-groups']});
+      await queryClient.invalidateQueries({queryKey: ['get-users-group']});
     }
   });
 };

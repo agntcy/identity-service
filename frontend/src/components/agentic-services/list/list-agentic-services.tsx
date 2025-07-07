@@ -125,7 +125,7 @@ export const ListAgenticServices = () => {
           <Table
             columns={AgenticServiceColumns()}
             data={data?.apps || []}
-            isLoading={isLoading}
+            isLoading={isLoading || deleteMutation.isPending}
             densityCompact
             muiTableBodyRowProps={({row}) => ({
               sx: {cursor: 'pointer', '& .MuiIconButton-root': {color: (theme) => theme.palette.vars.interactiveSecondaryDefaultDefault}},
@@ -255,6 +255,7 @@ export const ListAgenticServices = () => {
       />
       {tempApp && (
         <BadgeModalForm
+          title="Re-Issue Badge"
           app={tempApp}
           open={showBadgeForm}
           onClose={() => {
@@ -265,6 +266,7 @@ export const ListAgenticServices = () => {
             setShowBadgeForm(false);
             setTempApp(undefined);
           }}
+          confirmButtonText="Re-Issue"
         />
       )}
     </>

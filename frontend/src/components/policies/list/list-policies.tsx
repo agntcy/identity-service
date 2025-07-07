@@ -93,7 +93,7 @@ export const ListPolicies = () => {
           <Table
             columns={PoliciesColumns()}
             data={data?.policies || []}
-            isLoading={isLoading}
+            isLoading={isLoading || deleteMutation.isPending}
             densityCompact
             muiTableBodyRowProps={({row}) => ({
               sx: {cursor: 'pointer', '& .MuiIconButton-root': {color: (theme) => theme.palette.vars.interactiveSecondaryDefaultDefault}},

@@ -23,7 +23,7 @@ const AgenticServiceInfo: React.FC = () => {
 
   const {id} = useParams<{id: string}>();
 
-  const {data, isLoading, isFetching, error, isError, refetch} = useGetAgenticService(id);
+  const {data, isLoading, error, isError, refetch} = useGetAgenticService(id);
 
   const navigate = useNavigate();
 
@@ -66,7 +66,7 @@ const AgenticServiceInfo: React.FC = () => {
         }
       ]}
       rightSideItems={
-        isError || isLoading || isFetching ? null : (
+        isError || isLoading ? null : (
           <div className="flex items-center gap-4">
             <Button
               startIcon={<Trash2Icon className="w-4 h-4" />}
@@ -76,6 +76,8 @@ const AgenticServiceInfo: React.FC = () => {
                 setShowConfirmDelete(true);
               }}
               sx={{fontWeight: '600 !important'}}
+              loading={deleteMutation.isPending}
+              loadingPosition="start"
             >
               Delete
             </Button>
@@ -110,7 +112,7 @@ const AgenticServiceInfo: React.FC = () => {
         itemName="Agentic Service"
         data={data}
         error={error}
-        isLoading={isLoading || isFetching}
+        isLoading={isLoading || deleteMutation.isPending}
         useRelativeLoader
         useContainer
         errorListStateProps={{

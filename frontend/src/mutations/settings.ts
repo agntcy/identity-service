@@ -33,10 +33,10 @@ export const useSetApiKey = ({callbacks}: PropsSettingsApiKey) => {
       }
     },
     onSuccess: async (resp) => {
-      await queryClient.invalidateQueries({queryKey: ['get-settings']});
       if (callbacks?.onSuccess) {
         callbacks.onSuccess(resp);
       }
+      await queryClient.invalidateQueries({queryKey: ['get-settings']});
     }
   });
 };
@@ -52,10 +52,10 @@ export const useSetIdentityProvider = ({callbacks}: PropsSetIdentityProvider) =>
       }
     },
     onSuccess: async (resp) => {
-      await queryClient.invalidateQueries({queryKey: ['get-settings']});
       if (callbacks?.onSuccess) {
         callbacks.onSuccess(resp);
       }
+      await queryClient.invalidateQueries({queryKey: ['get-settings']});
     }
   });
 };
