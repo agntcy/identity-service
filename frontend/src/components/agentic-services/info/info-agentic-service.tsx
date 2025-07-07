@@ -38,7 +38,7 @@ export const InfoAgenticService = ({app, onChangeReissueBadge}: {app?: App; onCh
       },
       {
         keyProp: 'Created At',
-        value: <DateHover date={app?.createdAt} />
+        value: <DateHover date={app?.createdAt || 'Not provided'} />
       }
     ];
     return temp;

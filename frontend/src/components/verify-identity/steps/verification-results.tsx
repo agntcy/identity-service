@@ -11,7 +11,6 @@ import {
   Badge,
   Button,
   CodeBlock,
-  Divider,
   EmptyState,
   GeneralSize,
   Table,
@@ -32,8 +31,6 @@ export const VerificationResults = () => {
   const methods = useStepper();
   const metaData = methods.getMetadata('verficationResults');
   const results = metaData?.results as VerificationResult | undefined;
-  const isEmptyErrors = results?.errors?.length === 0;
-  const isEmptyWarnings = results?.warnings?.length === 0;
 
   const keyValuePairs = useMemo(() => {
     const temp: KeyValuePair[] = [
@@ -53,20 +50,16 @@ export const VerificationResults = () => {
         keyProp: 'Status',
         value: (
           <div className="flex items-center gap-2">
-            <Badge
-              content={null}
-              type={isEmptyErrors && isEmptyWarnings ? 'success' : isEmptyErrors ? 'warning' : 'error'}
-              styleBadge={{width: '6px', height: '6px', padding: '0'}}
-            />
+            <Badge content={null} type={results?.status ? 'success' : 'error'} styleBadge={{width: '6px', height: '6px', padding: '0'}} />
             <Typography color="#272E37" fontSize={14}>
-              {isEmptyErrors && isEmptyWarnings ? 'Active' : isEmptyErrors ? 'Warning' : 'Error'}
+              {results?.status ? 'Active' : 'Revoked'}
             </Typography>
           </div>
         )
       }
     ];
     return temp;
-  }, [isEmptyErrors, isEmptyWarnings, results]);
+  }, [results]);
 
   const handleDownloadBadge = useCallback(() => {
     if (!results) {
@@ -77,7 +70,7 @@ export const VerificationResults = () => {
       });
       return;
     }
-    const blob = new Blob([JSON.stringify(results, null, 2)], {type: 'application/json'});
+    const blob = new Blob([JSON.stringify(results?.document, null, 2)], {type: 'application/json'});
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
@@ -124,7 +117,7 @@ export const VerificationResults = () => {
             <Typography variant="subtitle1" fontWeight={600}>
               Result
             </Typography>
-            {isEmptyErrors && isEmptyWarnings && (
+            {results?.status && (
               <Button
                 variant="tertariary"
                 endIcon={<DownloadIcon className="w-4 h-4" />}
@@ -136,64 +129,17 @@ export const VerificationResults = () => {
             )}
           </div>
           <div className="mt-2">
-            {isEmptyErrors && isEmptyWarnings ? (
+            {results?.status ? (
               <ScrollShadowWrapper className="max-h-[60vh] overflow-auto">
-                <CodeBlock containerProps={{maxWidth: '40vw'}} showLineNumbers wrapLongLines text={JSON.stringify(results || {}, null, 2)} />
+                <CodeBlock
+                  containerProps={{maxWidth: '40vw'}}
+                  showLineNumbers
+                  wrapLongLines
+                  text={JSON.stringify(results?.document || {}, null, 2)}
+                />
               </ScrollShadowWrapper>
             ) : (
-              <div className="space-y-6">
-                <Accordion
-                  title="Warnings"
-                  subTitle={
-                    (
-                      <div className="flex gap-4 items-center h-[24px] mt-1">
-                        <Separator orientation="vertical" />
-                        <Tag size={GeneralSize.Small} color={TagBackgroundColorVariants.AccentCWeak}>
-                          {results?.warnings?.length || 0}
-                        </Tag>
-                      </div>
-                    ) as any
-                  }
-                >
-                  <Table
-                    columns={[
-                      {
-                        accessorKey: 'message',
-                        header: 'Message'
-                      }
-                    ]}
-                    data={results?.warnings || []}
-                    isLoading={false}
-                    densityCompact
-                    enableRowActions
-                    topToolbarProps={{
-                      enableActions: false
-                    }}
-                    muiTableContainerProps={{
-                      style: {
-                        border: '1px solid #D5DFF7'
-                      }
-                    }}
-                    rowCount={results?.warnings?.length ?? 0}
-                    rowsPerPageOptions={[1, 10, 25, 50, 100]}
-                    muiBottomToolbarProps={{
-                      style: {
-                        boxShadow: 'none'
-                      }
-                    }}
-                    renderTopToolbar={() => <></>}
-                    renderEmptyRowsFallback={() => (
-                      <EmptyState
-                        title="No Warnings Found"
-                        description="Your verification results did not return any warnings."
-                        containerProps={{paddingBottom: '40px'}}
-                      />
-                    )}
-                  />
-                </Accordion>
-                <div>
-                  <Divider />
-                </div>
+              <div>
                 <Accordion
                   title="Errors"
                   subTitle={

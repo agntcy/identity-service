@@ -37,7 +37,7 @@ export const AgenticServiceColumns = (): MRT_ColumnDef<App, any>[] => {
       accessorKey: 'createdAt',
       header: 'Created At',
       Cell: ({row}) => {
-        return <DateHover date={row.original.createdAt} />;
+        return <DateHover date={row.original.createdAt || 'Not provided'} />;
       }
     }
   ];

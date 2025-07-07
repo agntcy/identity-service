@@ -6,14 +6,13 @@
 import {useState} from 'react';
 import {ConditionalQueryRenderer} from '../../ui/conditional-query-renderer';
 import {Table} from '@outshift/spark-design';
-import {useGetSession, useGetUsersGroup} from '@/queries';
+import {useGetUsersGroup} from '@/queries';
 import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
 import {Card} from '@/components/ui/card';
 import {cn} from '@/lib/utils';
 import {TenantReponse} from '@/types/api/iam';
 import {UsersColumns} from './users-columns';
 import {InviteUserModal} from '@/components/shared/invite-user-modal';
-import {useAuth} from '@/hooks';
 
 export const OrganizationInfo = ({
   tenant,
@@ -34,11 +33,6 @@ export const OrganizationInfo = ({
   const [errorGroups, setErrorGroups] = useState<Error | null>(null);
 
   const {data: dataUsers, isLoading: isLoadingUsers, error: errorUsers} = useGetUsersGroup(groupId || '');
-  const {data: dataSession} = useGetSession();
-  const isAdmin = dataSession?.groups[0].role === 'ADMIN' || false;
-
-  const {authInfo} = useAuth();
-  const currentTenantId = authInfo?.user?.tenant?.id;
 
   return (
     <>
@@ -79,26 +73,6 @@ export const OrganizationInfo = ({
                 boxShadow: 'none'
               }
             }}
-            // renderRowActionMenuItems={() => {
-            //   if (currentTenantId !== tenant?.id || !isAdmin) {
-            //     return [];
-            //   }
-            //   return [
-            //     <MenuItem
-            //       key="delete-user"
-            //       onClick={() => {
-            //         // setTenantId(row.original.id);
-            //         // setOpenActionsModal(true);
-            //       }}
-            //       sx={{display: 'flex', alignItems: 'center', gap: '8px'}}
-            //     >
-            //       <Trash2Icon className="w-4 h-4" color="#C62953" />
-            //       <Typography variant="body2" color="#C0244C">
-            //         Delete
-            //       </Typography>
-            //     </MenuItem>
-            //   ];
-            // }}
           />
         </Card>
       </ConditionalQueryRenderer>
