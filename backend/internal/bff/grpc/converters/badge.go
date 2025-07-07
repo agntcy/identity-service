@@ -168,3 +168,30 @@ func ToBadgeClaims(src *identity_platform_sdk_go.BadgeClaims) *badgetypes.BadgeC
 		Badge: ptrutil.DerefStr(src.Badge),
 	}
 }
+
+func FromVerificationResult(src *badgetypes.VerificationResult) *identity_platform_sdk_go.VerificationResult {
+	if src == nil {
+		return nil
+	}
+
+	return &identity_platform_sdk_go.VerificationResult{
+		Status:                       ptrutil.Ptr(src.Status),
+		Document:                     FromVerifiableCredential(src.Document),
+		MediaType:                    ptrutil.Ptr(src.MediaType),
+		Controller:                   ptrutil.Ptr(src.Controller),
+		ControlledIdentifierDocument: ptrutil.Ptr(src.ControlledIdentifierDocument),
+		Warnings:                     convertutil.ConvertSlice(src.Warnings, FromErrorInfo),
+		Errors:                       convertutil.ConvertSlice(src.Errors, FromErrorInfo),
+	}
+}
+
+func FromErrorInfo(src *badgetypes.ErrorInfo) *identity_platform_sdk_go.ErrorInfo {
+	if src == nil {
+		return nil
+	}
+
+	return &identity_platform_sdk_go.ErrorInfo{
+		Reason:  ptrutil.Ptr(src.Reason),
+		Message: ptrutil.Ptr(src.Message),
+	}
+}

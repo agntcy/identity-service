@@ -330,12 +330,12 @@ const file_agntcy_identity_platform_v1alpha1_badge_service_proto_rawDesc = "" +
 	"\x15IssueOASFBadgeRequest\x12#\n" +
 	"\rschema_base64\x18\x01 \x01(\tR\fschemaBase64\"*\n" +
 	"\x12VerifyBadgeRequest\x12\x14\n" +
-	"\x05badge\x18\x01 \x01(\tR\x05badge2\x96\x03\n" +
+	"\x05badge\x18\x01 \x01(\tR\x05badge2\x94\x03\n" +
 	"\fBadgeService\x12\xb5\x01\n" +
 	"\n" +
 	"IssueBadge\x124.agntcy.identity.platform.v1alpha1.IssueBadgeRequest\x1a(.agntcy.identity.platform.v1alpha1.Badge\"G\x92A\x1b\x12\rIssue a badge*\n" +
-	"IssueBadge\x82\xd3\xe4\x93\x02#:\x01*\"\x1e/v1alpha1/apps/{app_id}/badges\x12\xc1\x01\n" +
-	"\vVerifyBadge\x125.agntcy.identity.platform.v1alpha1.VerifyBadgeRequest\x1a7.agntcy.identity.platform.v1alpha1.VerifiableCredential\"B\x92A\x1d\x12\x0eVerify a badge*\vVerifyBadge\x82\xd3\xe4\x93\x02\x1c:\x01*\"\x17/v1alpha1/badges/verify\x1a\n" +
+	"IssueBadge\x82\xd3\xe4\x93\x02#:\x01*\"\x1e/v1alpha1/apps/{app_id}/badges\x12\xbf\x01\n" +
+	"\vVerifyBadge\x125.agntcy.identity.platform.v1alpha1.VerifyBadgeRequest\x1a5.agntcy.identity.platform.v1alpha1.VerificationResult\"B\x92A\x1d\x12\x0eVerify a badge*\vVerifyBadge\x82\xd3\xe4\x93\x02\x1c:\x01*\"\x17/v1alpha1/badges/verify\x1a\n" +
 	"\x92A\a\n" +
 	"\x05BadgeBkZigithub.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_gob\x06proto3"
 
@@ -359,7 +359,7 @@ var file_agntcy_identity_platform_v1alpha1_badge_service_proto_goTypes = []any{
 	(*IssueOASFBadgeRequest)(nil), // 3: agntcy.identity.platform.v1alpha1.IssueOASFBadgeRequest
 	(*VerifyBadgeRequest)(nil),    // 4: agntcy.identity.platform.v1alpha1.VerifyBadgeRequest
 	(*Badge)(nil),                 // 5: agntcy.identity.platform.v1alpha1.Badge
-	(*VerifiableCredential)(nil),  // 6: agntcy.identity.platform.v1alpha1.VerifiableCredential
+	(*VerificationResult)(nil),    // 6: agntcy.identity.platform.v1alpha1.VerificationResult
 }
 var file_agntcy_identity_platform_v1alpha1_badge_service_proto_depIdxs = []int32{
 	2, // 0: agntcy.identity.platform.v1alpha1.IssueBadgeRequest.a2a:type_name -> agntcy.identity.platform.v1alpha1.IssueA2ABadgeRequest
@@ -368,7 +368,7 @@ var file_agntcy_identity_platform_v1alpha1_badge_service_proto_depIdxs = []int32
 	0, // 3: agntcy.identity.platform.v1alpha1.BadgeService.IssueBadge:input_type -> agntcy.identity.platform.v1alpha1.IssueBadgeRequest
 	4, // 4: agntcy.identity.platform.v1alpha1.BadgeService.VerifyBadge:input_type -> agntcy.identity.platform.v1alpha1.VerifyBadgeRequest
 	5, // 5: agntcy.identity.platform.v1alpha1.BadgeService.IssueBadge:output_type -> agntcy.identity.platform.v1alpha1.Badge
-	6, // 6: agntcy.identity.platform.v1alpha1.BadgeService.VerifyBadge:output_type -> agntcy.identity.platform.v1alpha1.VerifiableCredential
+	6, // 6: agntcy.identity.platform.v1alpha1.BadgeService.VerifyBadge:output_type -> agntcy.identity.platform.v1alpha1.VerificationResult
 	5, // [5:7] is the sub-list for method output_type
 	3, // [3:5] is the sub-list for method input_type
 	3, // [3:3] is the sub-list for extension type_name

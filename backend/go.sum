@@ -1,9 +1,9 @@
 github.com/SherClockHolmes/webpush-go v1.4.0 h1:ocnzNKWN23T9nvHi6IfyrQjkIc0oJWv1B1pULsf9i3s=
 github.com/SherClockHolmes/webpush-go v1.4.0/go.mod h1:XSq8pKX11vNV8MJEMwjrlTkxhAj1zKfxmyhdV7Pd6UA=
-github.com/agntcy/identity v0.0.6 h1:hzRy0gRuI7wundrwBNxuUBI5o1tvtDl3ZaawFVSYZsQ=
-github.com/agntcy/identity v0.0.6/go.mod h1:/4m4pa2WhJ4dQVAK2UvjyelLW3acnTtaXSUIf3uRK1Q=
-github.com/agntcy/identity/api/client v0.0.0-20250702091224-99beb9b677dd h1:taUSaBOyM/Is4G262rU1StmRiezABS8Z2zHGbPg8qLg=
-github.com/agntcy/identity/api/client v0.0.0-20250702091224-99beb9b677dd/go.mod h1:hpLI3UidcyPaOee9xtj7h4bsxUY7eEaX9E/DLLJKvGo=
+github.com/agntcy/identity v0.0.8 h1:niwkF9YyPtoluk4O1cAU/PXV+rl05iXzEbaG7nrZbS8=
+github.com/agntcy/identity v0.0.8/go.mod h1:/4m4pa2WhJ4dQVAK2UvjyelLW3acnTtaXSUIf3uRK1Q=
+github.com/agntcy/identity/api/client v0.0.0-20250707161608-d99524fa2b3c h1:kGfJ6+67iYBNXHf/rttgZmUC4+Cn11yi9YdYd5MhcQk=
+github.com/agntcy/identity/api/client v0.0.0-20250707161608-d99524fa2b3c/go.mod h1:hpLI3UidcyPaOee9xtj7h4bsxUY7eEaX9E/DLLJKvGo=
 github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 h1:DklsrG3dyBCFEj5IhUbnKptjxatkF07cF2ak3yi77so=
 github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2/go.mod h1:WaHUgvxTVq04UNunO+XhnAqY/wQc+bxr74GqbsZ/Jqw=
 github.com/beorn7/perks v1.0.1 h1:VlbKKnNfV8bJzeqoa4cOKqO6bYr3WgKZxO8Z16+hsOM=
