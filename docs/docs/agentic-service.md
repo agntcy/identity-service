@@ -69,4 +69,8 @@ This command will facilitate the offline registration and badge issuance for you
 Once the badge is successfully issued, it will be associated with your Agentic Service, allowing it to be discovered and utilized within the AGNTCY ecosystem.
 You can view the details of your newly created Agentic Service, including its API Key and badge status, in the Agentic Services dashboard:
 
+![All Agentic Services](/img/agentic-service-all.png)
+
+And the details of the Agentic Service you just created:
+
 ![Create Agentic Service MCP Server](/img/agentic-service-mcp-badge.png)

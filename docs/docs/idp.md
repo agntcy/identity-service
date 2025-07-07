@@ -2,15 +2,15 @@
 sidebar_position: 2
 ---
 
-# Registering an Issuer
+# Connecting an Identity Provider (IdP)
 
-This document provides a comprehensive guide on how to register an Identity Provider (IdP) within the Agent Identity application. Registering an IdP is a crucial step for integrating external authentication and authorization services, such as Client Credentials, with your Agent Identity environment. This guide specifically details the process for configuring Duo as an issuer.
+This document provides a comprehensive guide on how to register a new issuer by connecting an Identity Provider (IdP) within the Agent Identity application. Connecting an IdP is a crucial step for integrating external authentication and authorization services, such as Client Credentials, with your Agent Identity environment. This guide specifically details the process for configuring Duo as an issuer.
 
 ## Prerequisites
 
-Before you begin the Identity Provider creation process, ensure you have the following:
+Before you begin the Identity Provider connection process, ensure you have the following:
 
-- **Access to Agent Identity:** You must have an administrator role or sufficient permissions within the Agent Identity application to access the Settings and create Identity Providers.
+- **Access to Agent Identity:** You must have an administrator role or sufficient permissions within the Agent Identity application to access the Settings and connect Identity Providers.
 - **Duo Security Account:** An active Duo Security account is required.
 - **Duo Application Details:** You must have an existing Duo application configured within your Duo Admin Panel. From this application, you will need to retrieve:
   - Your Duo **API Hostname**
@@ -31,19 +31,19 @@ To access the Identity Provider creation page within the Agent Identity applicat
 
 1.  From the main dashboard, locate and click on **Settings** in the left-hand navigation menu.
 2.  Within the Settings section, select **Identity Provider**.
-3.  On the Identity Provider management page, click the **Create** button to initiate the creation wizard.
+3.  On the Identity Provider management page, click the **Connect** button to initiate the creation wizard.
 
-This will direct you to the "Identity Provider Creation" page, where you can begin configuring your new IdP.
+This will direct you to the "Identity Provider Connection" page, where you can begin configuring your new IdP.
 
 ![Register Issuer](/img/register-issuer.png)
 
-## Identity Provider Creation Steps
+## Identity Provider Connection Steps
 
 Follow these steps to configure and register your Identity Provider:
 
 1.  **Select Identity Provider:**
 
-    - On the "Identity Provider Creation" page, you will be presented with a selection of supported Identity Providers.
+    - On the "Identity Provider Connection" page, you will be presented with a selection of supported Identity Providers.
     - Carefully choose the provider you intend to integrate. Options typically include:
       - **Duo** (as shown in the example, for Duo Security integration)
       - **Okta**

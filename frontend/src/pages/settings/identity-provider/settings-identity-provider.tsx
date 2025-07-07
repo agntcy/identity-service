@@ -67,8 +67,8 @@ const SettingsIdentityProvider: React.FC = () => {
         emptyListStateProps={{
           title: 'Get started with Agent Identity',
           description:
-            'Connect identity provider to Create ID badges (MCP servers, OASF agents, and A2A protocols), manage identities and apply policies',
-          actionTitle: 'Register Identity Provider',
+            'Connect your identity provider to create and manage identities for your AI agents and MCP servers, including those supporting A2A-compatible protocols like Google A2A, with support for policies and access controls.',
+          actionTitle: 'Connect Identity Provider',
           actionCallback: () => {
             void navigate(PATHS.settings.identityProvider.create);
           },

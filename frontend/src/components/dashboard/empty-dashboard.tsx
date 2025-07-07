@@ -82,7 +82,7 @@ export const EmptyDashboard = () => {
                     Create Badges & Policies
                   </Typography>
                   <Typography variant="body1" marginTop={2} textAlign="center">
-                    Connect identity provider to create and manage identities for your AI agents and MCP servers, including those supporting
+                    Connect your identity provider to create and manage identities for your AI agents and MCP servers, including those supporting
                     A2A-compatible protocols like Google A2A, with support for policies and access controls.
                   </Typography>
                   <div className="flex justify-center items-center mt-8">

@@ -6,6 +6,7 @@
 import {BasePage} from '@/components/layout/base-page';
 import {CreatePolicyStepper} from '@/components/policies/create/create-policy-stepper';
 import {PATHS} from '@/router/paths';
+import {docs} from '@/utils/docs';
 import {Link} from '@outshift/spark-design';
 import {ExternalLinkIcon} from 'lucide-react';
 
@@ -24,7 +25,7 @@ const CreatePolicies: React.FC = () => {
         }
       ]}
       rightSideItems={
-        <Link href="" openInNewTab>
+        <Link href={docs('policies')} openInNewTab>
           <div className="flex items-center gap-1">
             View Documentation
             <ExternalLinkIcon className="w-4 h-4 ml-1" />
