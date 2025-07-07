@@ -11,6 +11,7 @@ import {
   Badge,
   Button,
   CodeBlock,
+  Divider,
   EmptyState,
   GeneralSize,
   Table,
@@ -189,6 +190,9 @@ export const VerificationResults = () => {
                     )}
                   />
                 </Accordion>
+                <div className="mt-4">
+                  <Divider />
+                </div>
               </div>
             )}
           </div>
