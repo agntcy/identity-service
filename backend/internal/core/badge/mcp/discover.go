@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
+	"github.com/agntcy/identity-platform/pkg/log"
 	"github.com/mark3labs/mcp-go/client"
 	"github.com/mark3labs/mcp-go/mcp"
 )
@@ -38,6 +39,8 @@ func (d *discoveryClient) Discover(
 	if !strings.HasSuffix(url, mcpSuffix) {
 		url = strings.TrimSuffix(url, "/") + mcpSuffix
 	}
+
+	log.Debug("Using MCP URL for discovery: ", url)
 
 	// Create streameable http client
 	// We only support streamable http client for now

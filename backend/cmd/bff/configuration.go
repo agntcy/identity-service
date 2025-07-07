@@ -37,7 +37,7 @@ type Configuration struct {
 	WebApprovalEmail                                        string        `split_words:"true"                                              required:"true"`
 	WebApprovalPubKey                                       string        `split_words:"true"                                              required:"true"`
 	WebApprovalPrivKey                                      string        `split_words:"true"                                              required:"true"`
-	UniqueIssuerPerTenant                                   bool          `split_words:"true" default:"false"`
+	UniqueIssuerPerTenant                                   bool          `split_words:"true" default:"true"`
 	ServerGrpcKeepAliveEnvorcementPolicyMinTime             int           `split_words:"true" default:"300"`
 	ServerGrpcKeepAliveEnvorcementPolicyPermitWithoutStream bool          `split_words:"true" default:"false"`
 	ServerGrpcKeepAliveServerParametersMaxConnectionIdle    int           `split_words:"true" default:"100"`
