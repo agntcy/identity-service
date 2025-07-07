@@ -51,9 +51,9 @@
   angle: 0 deg;
   opacity: 1;
   padding-top: 24px;
-  padding-right: 90px;
+  /* padding-right: 90px; */
   padding-bottom: 24px;
-  padding-left: 90px;
+  /* padding-left: 90px; */
   gap: 24px;
   border-radius: 16px;
 
