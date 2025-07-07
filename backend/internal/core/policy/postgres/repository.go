@@ -153,7 +153,13 @@ func (r *repository) DeletePolicies(ctx context.Context, policies ...*types.Poli
 		for _, policy := range policies {
 			model := newPolicyModel(policy, tenantID)
 
-			err := r.dbContext.Client().Select(clause.Associations).Delete(model).Error
+			err := r.dbContext.Client().
+				Exec("DELETE FROM rule_tasks WHERE rule_id IN (SELECT id from rules where policy_id = ?)", model.ID).Error
+			if err != nil {
+				return err
+			}
+
+			err = r.dbContext.Client().Select(clause.Associations).Delete(model).Error
 			if err != nil {
 				return err
 			}
