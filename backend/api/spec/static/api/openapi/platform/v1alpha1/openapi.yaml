@@ -1241,6 +1241,14 @@ components:
                     items:
                         $ref: '#/components/schemas/Rule'
                     description: All the rules that apply to this Policy.
+                createdAt:
+                    type: string
+                    description: CreatedAt records the timestamp of when the Policy was initially created
+                    format: date-time
+                updatedAt:
+                    type: string
+                    description: UpdatedAt records the timestamp of the last update to the Policy
+                    format: date-time
             description: Identity Platform Policy.
         Proof:
             type: object
@@ -1287,6 +1295,14 @@ components:
                 needsApproval:
                     type: boolean
                     description: Need User Approval for this Rule.
+                createdAt:
+                    type: string
+                    description: CreatedAt records the timestamp of when the Rule was initially created
+                    format: date-time
+                updatedAt:
+                    type: string
+                    description: UpdatedAt records the timestamp of the last update to the Rule
+                    format: date-time
             description: Identity Platform Policy Rule
         SetIssuerRequest:
             required:

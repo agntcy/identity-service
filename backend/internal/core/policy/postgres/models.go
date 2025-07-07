@@ -4,9 +4,13 @@
 package postgres
 
 import (
+	"database/sql"
+	"time"
+
 	app "github.com/agntcy/identity-platform/internal/core/app/postgres"
 	"github.com/agntcy/identity-platform/internal/core/policy/types"
 	"github.com/agntcy/identity-platform/internal/pkg/convertutil"
+	"github.com/agntcy/identity-platform/internal/pkg/pgutil"
 )
 
 type Task struct {
@@ -39,6 +43,8 @@ type Rule struct {
 	Tasks         []*Task          `gorm:"many2many:rule_tasks;"`
 	Action        types.RuleAction `json:"action,omitempty"`
 	NeedsApproval bool
+	CreatedAt     time.Time
+	UpdatedAt     sql.NullTime
 }
 
 func (r *Rule) ToCoreType() *types.Rule {
@@ -52,6 +58,8 @@ func (r *Rule) ToCoreType() *types.Rule {
 		Tasks: convertutil.ConvertSlice(r.Tasks, func(task *Task) *types.Task {
 			return task.ToCoreType()
 		}),
+		CreatedAt: r.CreatedAt,
+		UpdatedAt: pgutil.SqlNullTimeToTime(r.UpdatedAt),
 	}
 }
 
@@ -63,6 +71,8 @@ type Policy struct {
 	AssignedTo  string
 	App         app.App `gorm:"foreignKey:AssignedTo"`
 	Rules       []*Rule
+	CreatedAt   time.Time
+	UpdatedAt   sql.NullTime
 }
 
 func (p *Policy) ToCoreType() *types.Policy {
@@ -74,6 +84,8 @@ func (p *Policy) ToCoreType() *types.Policy {
 		Rules: convertutil.ConvertSlice(p.Rules, func(rule *Rule) *types.Rule {
 			return rule.ToCoreType()
 		}),
+		CreatedAt: p.CreatedAt,
+		UpdatedAt: pgutil.SqlNullTimeToTime(p.UpdatedAt),
 	}
 }
 
@@ -87,6 +99,8 @@ func newPolicyModel(src *types.Policy, tenantID string) *Policy {
 		Rules: convertutil.ConvertSlice(src.Rules, func(rule *types.Rule) *Rule {
 			return NewRuleModel(rule, tenantID)
 		}),
+		CreatedAt: src.CreatedAt,
+		UpdatedAt: pgutil.TimeToSqlNullTime(src.UpdatedAt),
 	}
 }
 
@@ -102,6 +116,8 @@ func NewRuleModel(src *types.Rule, tenantID string) *Rule {
 		Tasks: convertutil.ConvertSlice(src.Tasks, func(task *types.Task) *Task {
 			return newTaskModel(task, tenantID)
 		}),
+		CreatedAt: src.CreatedAt,
+		UpdatedAt: pgutil.TimeToSqlNullTime(src.UpdatedAt),
 	}
 }
 

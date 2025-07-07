@@ -5,6 +5,8 @@
 
 package types
 
+import "time"
+
 // Identity Platform Policy Task
 type Task struct {
 	// A unique identifier for the Task.
@@ -51,40 +53,52 @@ func (a RuleAction) MarshalText() ([]byte, error) {
 // Identity Platform Policy Rule
 type Rule struct {
 	// A unique identifier for the Rule.
-	ID string `json:"id,omitempty"`
+	ID string `json:"id,omitempty" protobuf:"bytes,1,opt,name=id"`
 
 	// A human-readable name for the Rule.
-	Name string `json:"name,omitempty"`
+	Name string `json:"name,omitempty" protobuf:"bytes,2,opt,name=name"`
 
 	// A human-readable description for the Rule.
-	Description string `json:"description,omitempty"`
+	Description string `json:"description,omitempty" protobuf:"bytes,3,opt,name=description"`
 
-	PolicyID string `json:"policy_id,omitempty"`
+	PolicyID string `json:"policy_id,omitempty" protobuf:"bytes,4,opt,name=policy_id"`
 
 	// The tasks that this Rule applies to.
-	Tasks []*Task `json:"tasks,omitempty"`
+	Tasks []*Task `json:"tasks,omitempty" protobuf:"bytes,5,opt,name=tasks"`
 
 	// The action applied for the rule when calling the specified tasks
-	Action RuleAction `json:"action,omitempty"`
+	Action RuleAction `json:"action,omitempty" protobuf:"bytes,6,opt,name=action"`
 
 	// Need User Approval for this Rule.
-	NeedsApproval bool `json:"needs_approval,omitempty"`
+	NeedsApproval bool `json:"needs_approval,omitempty" protobuf:"bytes,7,opt,name=needs_approval"`
+
+	// CreatedAt records the timestamp of when the Rule was initially created
+	CreatedAt time.Time `json:"created_at" protobuf:"google.protobuf.Timestamp,8,opt,name=created_at"`
+
+	// UpdatedAt records the timestamp of the last update to the Rule
+	UpdatedAt *time.Time `json:"updated_at,omitempty" protobuf:"google.protobuf.Timestamp,9,opt,name=updated_at"`
 }
 
 // Identity Platform Policy.
 type Policy struct {
 	// A unique identifier for the Policy.
-	ID string `json:"id,omitempty"`
+	ID string `json:"id,omitempty" protobuf:"bytes,1,opt,name=id"`
 
 	// A human-readable name for the Policy.
-	Name string `json:"name,omitempty"`
+	Name string `json:"name,omitempty" protobuf:"bytes,2,opt,name=name"`
 
 	// A human-readable description for the Policy.
-	Description string `json:"description,omitempty"`
+	Description string `json:"description,omitempty" protobuf:"bytes,3,opt,name=description"`
 
 	// The requester application that this Policy applies to.
-	AssignedTo string `json:"assigned_to,omitempty"`
+	AssignedTo string `json:"assigned_to,omitempty" protobuf:"bytes,4,opt,name=assigned_to"`
 
 	// All the rules that apply to this Policy.
-	Rules []*Rule `json:"rules,omitempty"`
+	Rules []*Rule `json:"rules,omitempty" protobuf:"bytes,5,opt,name=rules"`
+
+	// CreatedAt records the timestamp of when the Policy was initially created
+	CreatedAt time.Time `json:"created_at" protobuf:"google.protobuf.Timestamp,6,opt,name=created_at"`
+
+	// UpdatedAt records the timestamp of the last update to the Policy
+	UpdatedAt *time.Time `json:"updated_at,omitempty" protobuf:"google.protobuf.Timestamp,7,opt,name=updated_at"`
 }

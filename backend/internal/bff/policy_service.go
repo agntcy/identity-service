@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"slices"
 	"strings"
+	"time"
 
 	appcore "github.com/agntcy/identity-platform/internal/core/app"
 	apptypes "github.com/agntcy/identity-platform/internal/core/app/types"
@@ -16,6 +17,7 @@ import (
 	policytypes "github.com/agntcy/identity-platform/internal/core/policy/types"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 	"github.com/agntcy/identity-platform/internal/pkg/pagination"
+	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
 	"github.com/google/uuid"
 )
 
@@ -95,6 +97,7 @@ func (s *policyService) CreatePolicy(
 		Name:        name,
 		Description: description,
 		AssignedTo:  assignedTo,
+		CreatedAt:   time.Now().UTC(),
 	}
 
 	err = s.policyRepository.Create(ctx, policy)
@@ -138,6 +141,7 @@ func (s *policyService) CreateRule(
 		Tasks:         tasks,
 		NeedsApproval: needsApproval,
 		Action:        action,
+		CreatedAt:     time.Now().UTC(),
 	}
 
 	err = s.policyRepository.CreateRule(ctx, rule)
@@ -238,6 +242,7 @@ func (s *policyService) UpdatePolicy(
 	policy.Name = name
 	policy.Description = description
 	policy.AssignedTo = assignedTo
+	policy.UpdatedAt = ptrutil.Ptr(time.Now().UTC())
 
 	err = s.policyRepository.UpdatePolicy(ctx, policy)
 	if err != nil {
@@ -280,6 +285,7 @@ func (s *policyService) UpdateRule(
 	rule.NeedsApproval = needsApproval
 	rule.Tasks = tasks
 	rule.Action = action
+	rule.UpdatedAt = ptrutil.Ptr(time.Now().UTC())
 
 	err = s.policyRepository.UpdateRule(ctx, rule)
 	if err != nil {

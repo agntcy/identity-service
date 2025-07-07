@@ -11,6 +11,7 @@ package identity_platform_sdk_go
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -84,7 +85,11 @@ type Policy struct {
 	// The requester application that this Policy applies to.
 	AssignedTo *string `protobuf:"bytes,4,opt,name=assigned_to,json=assignedTo,proto3,oneof" json:"assigned_to,omitempty"`
 	// All the rules that apply to this Policy.
-	Rules         []*Rule `protobuf:"bytes,5,rep,name=rules,proto3" json:"rules,omitempty"`
+	Rules []*Rule `protobuf:"bytes,5,rep,name=rules,proto3" json:"rules,omitempty"`
+	// CreatedAt records the timestamp of when the Policy was initially created
+	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
+	// UpdatedAt records the timestamp of the last update to the Policy
+	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=updated_at,json=updatedAt,proto3,oneof" json:"updated_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -154,6 +159,20 @@ func (x *Policy) GetRules() []*Rule {
 	return nil
 }
 
+func (x *Policy) GetCreatedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.CreatedAt
+	}
+	return nil
+}
+
+func (x *Policy) GetUpdatedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.UpdatedAt
+	}
+	return nil
+}
+
 // Identity Platform Policy Rule
 type Rule struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -170,6 +189,10 @@ type Rule struct {
 	Action *RuleAction `protobuf:"varint,6,opt,name=action,proto3,enum=agntcy.identity.platform.v1alpha1.RuleAction,oneof" json:"action,omitempty"`
 	// Need User Approval for this Rule.
 	NeedsApproval *bool `protobuf:"varint,7,opt,name=needs_approval,json=needsApproval,proto3,oneof" json:"needs_approval,omitempty"`
+	// CreatedAt records the timestamp of when the Rule was initially created
+	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
+	// UpdatedAt records the timestamp of the last update to the Rule
+	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=updated_at,json=updatedAt,proto3,oneof" json:"updated_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -251,6 +274,20 @@ func (x *Rule) GetNeedsApproval() bool {
 		return *x.NeedsApproval
 	}
 	return false
+}
+
+func (x *Rule) GetCreatedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.CreatedAt
+	}
+	return nil
+}
+
+func (x *Rule) GetUpdatedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.UpdatedAt
+	}
+	return nil
 }
 
 // Identity Platform Policy Task
@@ -339,18 +376,24 @@ var File_agntcy_identity_platform_v1alpha1_policy_proto protoreflect.FileDescrip
 
 const file_agntcy_identity_platform_v1alpha1_policy_proto_rawDesc = "" +
 	"\n" +
-	".agntcy/identity/platform/v1alpha1/policy.proto\x12!agntcy.identity.platform.v1alpha1\"\xf2\x01\n" +
+	".agntcy/identity/platform/v1alpha1/policy.proto\x12!agntcy.identity.platform.v1alpha1\x1a\x1fgoogle/protobuf/timestamp.proto\"\x90\x03\n" +
 	"\x06Policy\x12\x13\n" +
 	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x17\n" +
 	"\x04name\x18\x02 \x01(\tH\x01R\x04name\x88\x01\x01\x12%\n" +
 	"\vdescription\x18\x03 \x01(\tH\x02R\vdescription\x88\x01\x01\x12$\n" +
 	"\vassigned_to\x18\x04 \x01(\tH\x03R\n" +
 	"assignedTo\x88\x01\x01\x12=\n" +
-	"\x05rules\x18\x05 \x03(\v2'.agntcy.identity.platform.v1alpha1.RuleR\x05rulesB\x05\n" +
+	"\x05rules\x18\x05 \x03(\v2'.agntcy.identity.platform.v1alpha1.RuleR\x05rules\x12>\n" +
+	"\n" +
+	"created_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampH\x04R\tcreatedAt\x88\x01\x01\x12>\n" +
+	"\n" +
+	"updated_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampH\x05R\tupdatedAt\x88\x01\x01B\x05\n" +
 	"\x03_idB\a\n" +
 	"\x05_nameB\x0e\n" +
 	"\f_descriptionB\x0e\n" +
-	"\f_assigned_to\"\x80\x03\n" +
+	"\f_assigned_toB\r\n" +
+	"\v_created_atB\r\n" +
+	"\v_updated_at\"\x9e\x04\n" +
 	"\x04Rule\x12\x13\n" +
 	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x17\n" +
 	"\x04name\x18\x02 \x01(\tH\x01R\x04name\x88\x01\x01\x12%\n" +
@@ -358,14 +401,20 @@ const file_agntcy_identity_platform_v1alpha1_policy_proto_rawDesc = "" +
 	"\tpolicy_id\x18\x04 \x01(\tH\x03R\bpolicyId\x88\x01\x01\x12=\n" +
 	"\x05tasks\x18\x05 \x03(\v2'.agntcy.identity.platform.v1alpha1.TaskR\x05tasks\x12J\n" +
 	"\x06action\x18\x06 \x01(\x0e2-.agntcy.identity.platform.v1alpha1.RuleActionH\x04R\x06action\x88\x01\x01\x12*\n" +
-	"\x0eneeds_approval\x18\a \x01(\bH\x05R\rneedsApproval\x88\x01\x01B\x05\n" +
+	"\x0eneeds_approval\x18\a \x01(\bH\x05R\rneedsApproval\x88\x01\x01\x12>\n" +
+	"\n" +
+	"created_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampH\x06R\tcreatedAt\x88\x01\x01\x12>\n" +
+	"\n" +
+	"updated_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampH\aR\tupdatedAt\x88\x01\x01B\x05\n" +
 	"\x03_idB\a\n" +
 	"\x05_nameB\x0e\n" +
 	"\f_descriptionB\f\n" +
 	"\n" +
 	"_policy_idB\t\n" +
 	"\a_actionB\x11\n" +
-	"\x0f_needs_approval\"\xd2\x01\n" +
+	"\x0f_needs_approvalB\r\n" +
+	"\v_created_atB\r\n" +
+	"\v_updated_at\"\xd2\x01\n" +
 	"\x04Task\x12\x13\n" +
 	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x17\n" +
 	"\x04name\x18\x02 \x01(\tH\x01R\x04name\x88\x01\x01\x12%\n" +
@@ -399,20 +448,25 @@ func file_agntcy_identity_platform_v1alpha1_policy_proto_rawDescGZIP() []byte {
 var file_agntcy_identity_platform_v1alpha1_policy_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_agntcy_identity_platform_v1alpha1_policy_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_agntcy_identity_platform_v1alpha1_policy_proto_goTypes = []any{
-	(RuleAction)(0), // 0: agntcy.identity.platform.v1alpha1.RuleAction
-	(*Policy)(nil),  // 1: agntcy.identity.platform.v1alpha1.Policy
-	(*Rule)(nil),    // 2: agntcy.identity.platform.v1alpha1.Rule
-	(*Task)(nil),    // 3: agntcy.identity.platform.v1alpha1.Task
+	(RuleAction)(0),               // 0: agntcy.identity.platform.v1alpha1.RuleAction
+	(*Policy)(nil),                // 1: agntcy.identity.platform.v1alpha1.Policy
+	(*Rule)(nil),                  // 2: agntcy.identity.platform.v1alpha1.Rule
+	(*Task)(nil),                  // 3: agntcy.identity.platform.v1alpha1.Task
+	(*timestamppb.Timestamp)(nil), // 4: google.protobuf.Timestamp
 }
 var file_agntcy_identity_platform_v1alpha1_policy_proto_depIdxs = []int32{
 	2, // 0: agntcy.identity.platform.v1alpha1.Policy.rules:type_name -> agntcy.identity.platform.v1alpha1.Rule
-	3, // 1: agntcy.identity.platform.v1alpha1.Rule.tasks:type_name -> agntcy.identity.platform.v1alpha1.Task
-	0, // 2: agntcy.identity.platform.v1alpha1.Rule.action:type_name -> agntcy.identity.platform.v1alpha1.RuleAction
-	3, // [3:3] is the sub-list for method output_type
-	3, // [3:3] is the sub-list for method input_type
-	3, // [3:3] is the sub-list for extension type_name
-	3, // [3:3] is the sub-list for extension extendee
-	0, // [0:3] is the sub-list for field type_name
+	4, // 1: agntcy.identity.platform.v1alpha1.Policy.created_at:type_name -> google.protobuf.Timestamp
+	4, // 2: agntcy.identity.platform.v1alpha1.Policy.updated_at:type_name -> google.protobuf.Timestamp
+	3, // 3: agntcy.identity.platform.v1alpha1.Rule.tasks:type_name -> agntcy.identity.platform.v1alpha1.Task
+	0, // 4: agntcy.identity.platform.v1alpha1.Rule.action:type_name -> agntcy.identity.platform.v1alpha1.RuleAction
+	4, // 5: agntcy.identity.platform.v1alpha1.Rule.created_at:type_name -> google.protobuf.Timestamp
+	4, // 6: agntcy.identity.platform.v1alpha1.Rule.updated_at:type_name -> google.protobuf.Timestamp
+	7, // [7:7] is the sub-list for method output_type
+	7, // [7:7] is the sub-list for method input_type
+	7, // [7:7] is the sub-list for extension type_name
+	7, // [7:7] is the sub-list for extension extendee
+	0, // [0:7] is the sub-list for field type_name
 }
 
 func init() { file_agntcy_identity_platform_v1alpha1_policy_proto_init() }
