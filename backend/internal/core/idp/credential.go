@@ -6,6 +6,7 @@ package idp
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 
 	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
@@ -15,6 +16,8 @@ import (
 const (
 	mountPath = "credentials"
 )
+
+var ErrCredentialNotFound = errors.New("credential not found")
 
 type CredentialStore interface {
 	Get(
@@ -57,7 +60,7 @@ func (s *VaultCredentialStore) Get(
 	}
 
 	if data == nil {
-		return nil, nil
+		return nil, ErrCredentialNotFound
 	}
 
 	raw, err := json.Marshal(data)
