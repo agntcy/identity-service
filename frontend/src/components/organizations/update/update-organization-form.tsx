@@ -25,7 +25,7 @@ export const UpdateOrganizationForm = ({tenant}: {tenant?: TenantReponse}) => {
     resolver: zodResolver(OrganizationSchema),
     mode: 'all',
     defaultValues: {
-      name: ''
+      name: tenant?.name || ''
     }
   });
 
