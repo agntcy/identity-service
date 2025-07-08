@@ -40,7 +40,7 @@ export const OrganizationInfo = ({
   const [openActionsModal, setOpenActionsModal] = useState<boolean>(false);
   const [userId, setUserId] = useState<string | undefined>(undefined);
 
-  const {data: dataUsers, isLoading: isLoadingUsers, error: errorUsers} = useGetUsersGroup(groupId || '');
+  const {data: dataUsers, isLoading: isLoadingUsers, error: errorUsers, refetch} = useGetUsersGroup(groupId || '');
 
   const {authInfo} = useAuth();
   const currentUserName = authInfo?.user?.username;
@@ -88,6 +88,11 @@ export const OrganizationInfo = ({
         isLoading={isLoadingGroups || isLoadingUsers}
         useRelativeLoader
         useContainer
+        errorListStateProps={{
+          actionCallback: () => {
+            void refetch();
+          }
+        }}
       >
         <Card className={cn(!(isLoadingGroups || isLoadingUsers) && 'p-0')} variant="secondary">
           <Table

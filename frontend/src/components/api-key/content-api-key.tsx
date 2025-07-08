@@ -47,7 +47,7 @@ export const ContentApiKey: React.FC = () => {
 
   return (
     <ConditionalQueryRenderer
-      itemName="Api Key"
+      itemName="API Key"
       data={data?.apiKey?.apiKey}
       error={error}
       isLoading={isLoading || isFetching}
@@ -62,8 +62,7 @@ export const ContentApiKey: React.FC = () => {
       errorListStateProps={{
         actionCallback: () => {
           void refetch();
-        },
-        actionTitle: 'Retry'
+        }
       }}
     >
       <Card className="w-full bg-[#F5F8FD] p-6">
@@ -90,7 +89,7 @@ export const ContentApiKey: React.FC = () => {
         </CardContent>
       </Card>
       <div className="flex justify-end mt-4">
-        <Button onClick={() => handleChangeActionsModal(true)} startIcon={<RefreshCcwIcon className="w-4 h-4" />}>
+        <Button onClick={() => handleChangeActionsModal(true)} startIcon={<RefreshCcwIcon className="w-4 h-4" />} sx={{fontWeight: '600 !important'}}>
           Refresh
         </Button>
       </div>

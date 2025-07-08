@@ -49,8 +49,7 @@ const EditOrganization: React.FC = () => {
         errorListStateProps={{
           actionCallback: () => {
             void refetch();
-          },
-          actionTitle: 'Retry'
+          }
         }}
       >
         <EditOrganizationForm tenant={data} />

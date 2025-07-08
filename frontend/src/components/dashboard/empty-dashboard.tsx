@@ -86,7 +86,7 @@ export const EmptyDashboard = () => {
                     A2A-compatible protocols like Google A2A, with support for policies and access controls.
                   </Typography>
                   <div className="flex justify-center items-center mt-8">
-                    <RouterLink to={PATHS.settings.identityProvider.create}>
+                    <RouterLink to={PATHS.settings.identityProvider.connection}>
                       <Button variant="outlined" sx={{fontWeight: '600 !important'}} startIcon={<PlusIcon className="w-4 h-4" />}>
                         Connect Identity Provider
                       </Button>

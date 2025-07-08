@@ -41,8 +41,6 @@ export const BadgeModalForm = ({
   onBadgeCreated,
   ...props
 }: BadgeModalFormProps) => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
   const form = useForm<BadgeFormValues>({
     resolver: zodResolver(BadgeSchema),
     mode: 'all',
@@ -60,7 +58,6 @@ export const BadgeModalForm = ({
   const createBadge = useIssueBadge({
     callbacks: {
       onSuccess: (resp) => {
-        setIsLoading(false);
         toast({
           title: 'Badge created successfully',
           description: 'You can now use this badge in your applications.',
@@ -73,7 +70,6 @@ export const BadgeModalForm = ({
         }
       },
       onError: () => {
-        setIsLoading(false);
         toast({
           title: 'Error creating badge',
           description: 'There was an error while trying to create the badge. Please try again later.',
@@ -93,7 +89,6 @@ export const BadgeModalForm = ({
       });
       return;
     }
-    setIsLoading(true);
     const data: IssueBadgeBody = {};
     if (app?.type === AppType.APP_TYPE_AGENT_OASF) {
       data.oasf = {
@@ -142,7 +137,7 @@ export const BadgeModalForm = ({
                     <FormLabel className="form-label">OASF specs</FormLabel>
                     <FormControl>
                       <FileUpload
-                        disabled={isLoading}
+                        disabled={createBadge.isPending}
                         ref={field.ref}
                         name={field.name}
                         onChange={(e) => {
@@ -175,7 +170,7 @@ export const BadgeModalForm = ({
                   <FormItem>
                     <FormLabel className="form-label">URL</FormLabel>
                     <FormControl>
-                      <Input placeholder="Type the URL of the mcp server..." {...field} disabled={isLoading} />
+                      <Input placeholder="Type the URL of the mcp server..." {...field} disabled={createBadge.isPending} />
                     </FormControl>
                   </FormItem>
                 )}
@@ -189,7 +184,7 @@ export const BadgeModalForm = ({
                   <FormItem>
                     <FormLabel className="form-label">Well Know Server</FormLabel>
                     <FormControl>
-                      <Input placeholder="Type the URL of the well know server..." {...field} disabled={isLoading} />
+                      <Input placeholder="Type the URL of the well know server..." {...field} disabled={createBadge.isPending} />
                     </FormControl>
                   </FormItem>
                 )}
@@ -197,13 +192,13 @@ export const BadgeModalForm = ({
             )}
           </ModalContent>
           <ModalActions>
-            <Button onClick={onCancel} variant="tertariary" disabled={isLoading} sx={{fontWeight: '600 !important'}}>
+            <Button onClick={onCancel} variant="tertariary" disabled={createBadge.isPending} sx={{fontWeight: '600 !important'}}>
               Cancel
             </Button>
             <Button
               type="submit"
-              disabled={isLoading || !form.formState.isValid}
-              loading={isLoading}
+              disabled={createBadge.isPending || !form.formState.isValid}
+              loading={createBadge.isPending}
               loadingPosition="start"
               sx={{fontWeight: '600 !important'}}
             >

@@ -64,7 +64,7 @@ const AgentServices: React.FC = () => {
             'Connect your identity provider to create and manage identities for your AI agents and MCP servers, including those supporting A2A-compatible protocols like Google A2A, with support for policies and access controls.',
           actionTitle: 'Connect Identity Provider',
           actionCallback: () => {
-            void navigate(PATHS.settings.identityProvider.create);
+            void navigate(PATHS.settings.identityProvider.connection);
           },
           actionButtonProps: {
             variant: 'outlined',

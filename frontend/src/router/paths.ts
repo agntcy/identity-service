@@ -27,7 +27,7 @@ export const PATHS = {
     base: '/settings',
     identityProvider: {
       base: '/settings/identity-provider',
-      create: '/settings/identity-provider/create'
+      connection: '/settings/identity-provider/connection'
     },
     apiKey: '/settings/api-key',
     organizationsAndUsers: {

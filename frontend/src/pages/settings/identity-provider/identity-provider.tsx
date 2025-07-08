@@ -9,11 +9,10 @@ import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-render
 import {useGetSettings} from '@/queries';
 import {PATHS} from '@/router/paths';
 import {useSettingsStore} from '@/store';
-import {PlusIcon} from 'lucide-react';
 import {useNavigate} from 'react-router-dom';
 import {useShallow} from 'zustand/react/shallow';
 
-const SettingsIdentityProvider: React.FC = () => {
+const IdentityProvider: React.FC = () => {
   const {data, error, isLoading, isFetching, refetch} = useGetSettings();
 
   const navigate = useNavigate();
@@ -61,8 +60,7 @@ const SettingsIdentityProvider: React.FC = () => {
         errorListStateProps={{
           actionCallback: () => {
             void refetch();
-          },
-          actionTitle: 'Retry'
+          }
         }}
         emptyListStateProps={{
           title: 'Get started with Agent Identity',
@@ -70,12 +68,7 @@ const SettingsIdentityProvider: React.FC = () => {
             'Connect your identity provider to create and manage identities for your AI agents and MCP servers, including those supporting A2A-compatible protocols like Google A2A, with support for policies and access controls.',
           actionTitle: 'Connect Identity Provider',
           actionCallback: () => {
-            void navigate(PATHS.settings.identityProvider.create);
-          },
-          actionButtonProps: {
-            variant: 'outlined',
-            startIcon: <PlusIcon className="w-4 h-4" />,
-            sx: {fontWeight: '600 !important'}
+            void navigate(PATHS.settings.identityProvider.connection);
           }
         }}
       >
@@ -85,4 +78,4 @@ const SettingsIdentityProvider: React.FC = () => {
   );
 };
 
-export default SettingsIdentityProvider;
+export default IdentityProvider;

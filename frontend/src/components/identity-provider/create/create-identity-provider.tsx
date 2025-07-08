@@ -18,7 +18,7 @@ import {useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
 
 export const CreateIdentityProvider = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [navigateToAgenticServices, setNavigateToAgenticServices] = useState(false);
 
   const form = useForm<IdentityProvidersFormValues>({
     resolver: zodResolver(IdentityProvidersSchema),
@@ -30,19 +30,21 @@ export const CreateIdentityProvider = () => {
   const mutationSetIdentityProvider = useSetIdentityProvider({
     callbacks: {
       onSuccess: () => {
-        setIsLoading(false);
         toast({
           title: 'Success',
-          description: 'Identity provider saved successfully.',
+          description: 'Identity provider connected successfully.',
           type: 'success'
         });
-        void navigate(PATHS.settings.base);
+        if (navigateToAgenticServices) {
+          void navigate(PATHS.agenticServices.create, {replace: true});
+        } else {
+          void navigate(PATHS.settings.base, {replace: true});
+        }
       },
       onError: () => {
-        setIsLoading(false);
         toast({
           title: 'Error',
-          description: 'An error occurred while saving the identity provider. Please try again.',
+          description: 'Failed to connect identity provider. Please try again.',
           type: 'error'
         });
       }
@@ -50,7 +52,6 @@ export const CreateIdentityProvider = () => {
   });
 
   const handleOnClear = useCallback(() => {
-    setIsLoading(false);
     form.reset({
       provider: undefined,
       orgUrl: undefined,
@@ -64,53 +65,60 @@ export const CreateIdentityProvider = () => {
     });
   }, [form]);
 
-  const handleSave = useCallback(() => {
-    const values = form.getValues();
-    const validationResult = validateForm(IdentityProvidersSchema, values);
-    if (!validationResult.success) {
-      validationResult.errors?.forEach((error) => {
-        const fieldName = error.path[0] as keyof z.infer<typeof IdentityProvidersSchema>;
-        form.setError(fieldName, {type: 'manual', ...error});
-      });
-      return;
-    }
-    setIsLoading(true);
-    const data: IssuerSettings = {
-      idpType: values.provider
-    };
-    if (values.provider === IdpType.IDP_TYPE_DUO) {
-      data.duoIdpSettings = {
-        hostname: values.hostname,
-        integrationKey: values.integrationKey,
-        secretKey: values.secretKey
-      };
-    } else if (values.provider === IdpType.IDP_TYPE_OKTA) {
-      data.oktaIdpSettings = {
-        orgUrl: values.orgUrl?.replace(/\/$/, ''),
-        clientId: values.clientId,
-        privateKey: values.privateKey
-      };
-    } else if (values.provider === IdpType.IDP_TYPE_ORY) {
-      data.oryIdpSettings = {
-        apiKey: values.apiKey,
-        projectSlug: values.projectSlug
-      };
-    }
-    mutationSetIdentityProvider.mutate({
-      issuerSettings: {
-        ...data
+  const handleSave = useCallback(
+    (navigateToCreate = false) => {
+      const values = form.getValues();
+      const validationResult = validateForm(IdentityProvidersSchema, values);
+      if (!validationResult.success) {
+        validationResult.errors?.forEach((error) => {
+          const fieldName = error.path[0] as keyof z.infer<typeof IdentityProvidersSchema>;
+          form.setError(fieldName, {type: 'manual', ...error});
+        });
+        return;
       }
-    });
-  }, [form, mutationSetIdentityProvider]);
+      const data: IssuerSettings = {
+        idpType: values.provider
+      };
+      if (values.provider === IdpType.IDP_TYPE_DUO) {
+        data.duoIdpSettings = {
+          hostname: values.hostname,
+          integrationKey: values.integrationKey,
+          secretKey: values.secretKey
+        };
+      } else if (values.provider === IdpType.IDP_TYPE_OKTA) {
+        data.oktaIdpSettings = {
+          orgUrl: values.orgUrl?.replace(/\/$/, ''),
+          clientId: values.clientId,
+          privateKey: values.privateKey
+        };
+      } else if (values.provider === IdpType.IDP_TYPE_ORY) {
+        data.oryIdpSettings = {
+          apiKey: values.apiKey,
+          projectSlug: values.projectSlug
+        };
+      }
+      setNavigateToAgenticServices(navigateToCreate);
+      mutationSetIdentityProvider.mutate({
+        issuerSettings: {
+          ...data
+        }
+      });
+    },
+    [form, mutationSetIdentityProvider]
+  );
 
   const onSubmit = useCallback(() => {
-    handleSave();
+    handleSave(false);
+  }, [handleSave]);
+
+  const onSubmitAndNavigate = useCallback(() => {
+    handleSave(true);
   }, [handleSave]);
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <IdentityProviderForm isLoading={isLoading} />
+        <IdentityProviderForm isLoading={mutationSetIdentityProvider.isPending} />
         <div className="flex justify-end gap-4 items-center">
           <Button
             variant="tertariary"
@@ -118,23 +126,35 @@ export const CreateIdentityProvider = () => {
             sx={{
               fontWeight: '600 !important'
             }}
+            disabled={mutationSetIdentityProvider.isPending}
           >
             Cancel
           </Button>
-          <div>
-            <Button
-              type="submit"
-              loading={isLoading}
-              loadingPosition="start"
-              disabled={isLoading || !form.formState.isValid}
-              className="cursor-pointer"
-              sx={{
-                fontWeight: '600 !important'
-              }}
-            >
-              Save Identity Provider
-            </Button>
-          </div>
+          <Button
+            type="submit"
+            loading={mutationSetIdentityProvider.isPending && !navigateToAgenticServices}
+            loadingPosition="start"
+            disabled={mutationSetIdentityProvider.isPending || !form.formState.isValid}
+            className="cursor-pointer"
+            sx={{
+              fontWeight: '600 !important'
+            }}
+            variant="secondary"
+          >
+            Save
+          </Button>
+          <Button
+            loading={mutationSetIdentityProvider.isPending && navigateToAgenticServices}
+            loadingPosition="start"
+            disabled={mutationSetIdentityProvider.isPending || !form.formState.isValid}
+            className="cursor-pointer"
+            sx={{
+              fontWeight: '600 !important'
+            }}
+            onClick={onSubmitAndNavigate}
+          >
+            Save and Add Agentic Service
+          </Button>
         </div>
       </form>
     </Form>

@@ -22,17 +22,17 @@ import {useShallow} from 'zustand/react/shallow';
 const Welcome = React.lazy(() => import('@/pages/welcome/welcome'));
 
 // Settings Identity Provider
-const SettingsIdentityProvider = React.lazy(() => import('@/pages/settings/identity-provider/settings-identity-provider'));
-const SettingsCreateIdentityProvider = React.lazy(() => import('@/pages/settings/identity-provider/settings-create-identity-provider'));
+const IdentityProvider = React.lazy(() => import('@/pages/settings/identity-provider/identity-provider'));
+const ConnectionIdentityProvider = React.lazy(() => import('@/pages/settings/identity-provider/connection-identity-provider'));
 
 // Dashboard
 const Dashboard = React.lazy(() => import('@/pages/dashboard/dashboard'));
 
 // Settings API Key
-const SettingsApiKey = React.lazy(() => import('@/pages/settings/api-key/settings-api-key'));
+const ApiKey = React.lazy(() => import('@/pages/settings/api-key/api-key'));
 
 // Settings Organizations
-const SettingsOrganizations = React.lazy(() => import('@/pages/settings/organizations/settings-organizations'));
+const Organizations = React.lazy(() => import('@/pages/settings/organizations/organizations'));
 const EditOrganization = React.lazy(() => import('@/pages/settings/organizations/edit-organization'));
 const OrganizationInfo = React.lazy(() => import('@/pages/settings/organizations/info-organization'));
 
@@ -205,11 +205,11 @@ export const useRoutes = () => {
             children: [
               {
                 index: true,
-                element: <SettingsIdentityProvider />
+                element: <IdentityProvider />
               },
               {
-                path: PATHS.settings.identityProvider.create,
-                element: <SettingsCreateIdentityProvider />,
+                path: PATHS.settings.identityProvider.connection,
+                element: <ConnectionIdentityProvider />,
                 disabled: !isEmptyIdp
               },
               {
@@ -220,14 +220,14 @@ export const useRoutes = () => {
           },
           {
             path: PATHS.settings.apiKey,
-            element: <SettingsApiKey />
+            element: <ApiKey />
           },
           {
             path: PATHS.settings.organizationsAndUsers.base,
             children: [
               {
                 index: true,
-                element: <SettingsOrganizations />
+                element: <Organizations />
               },
               {
                 path: PATHS.settings.organizationsAndUsers.edit,

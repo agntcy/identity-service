@@ -10,12 +10,12 @@ import {IconButton} from '@mui/material';
 import {Tooltip} from '@outshift/spark-design';
 import {InfoIcon} from 'lucide-react';
 
-const SettingsCreateIdentityProvider: React.FC = () => {
+const ConnectionIdentityProvider: React.FC = () => {
   return (
     <BasePage
       title={
         <div className="flex items-center gap-2">
-          <span>Identity Provider Creation</span>
+          <span>Identity Provider Connection</span>
           <Tooltip
             title={
               <div className="text-center">
@@ -46,7 +46,7 @@ const SettingsCreateIdentityProvider: React.FC = () => {
           link: PATHS.settings.identityProvider.base
         },
         {
-          text: 'Create'
+          text: 'Connection'
         }
       ]}
     >
@@ -55,4 +55,4 @@ const SettingsCreateIdentityProvider: React.FC = () => {
   );
 };
 
-export default SettingsCreateIdentityProvider;
+export default ConnectionIdentityProvider;

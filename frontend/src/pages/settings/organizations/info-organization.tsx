@@ -60,8 +60,7 @@ const InfoOrganization: React.FC = () => {
         errorListStateProps={{
           actionCallback: () => {
             void refetch();
-          },
-          actionTitle: 'Retry'
+          }
         }}
       >
         <OrganizationInfo tenant={data} showInviteUserModal={showInviteUserModal} onChangeInviteUser={(value) => setShowInviteUserModal(value)} />

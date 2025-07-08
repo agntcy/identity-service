@@ -12,7 +12,7 @@ import {Button, toast} from '@outshift/spark-design';
 import {PlusIcon} from 'lucide-react';
 import {useCallback, useState} from 'react';
 
-const SettingsOrganizations: React.FC = () => {
+const Organizations: React.FC = () => {
   const [openCreateModal, setOpenCreateModal] = useState(false);
 
   const createOrganizationMutation = useCreateTenant({
@@ -95,4 +95,4 @@ const SettingsOrganizations: React.FC = () => {
   );
 };
 
-export default SettingsOrganizations;
+export default Organizations;

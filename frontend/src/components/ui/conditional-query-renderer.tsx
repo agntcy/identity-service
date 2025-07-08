@@ -10,6 +10,7 @@ import {parseError} from '@/utils/api';
 import {EmptyState, EmptyStateProps} from '@outshift/spark-design';
 import {cn} from '@/lib/utils';
 import {Card} from './card';
+import {PlusIcon, RefreshCwIcon} from 'lucide-react';
 
 interface UnreadyStateType {
   nothingtoFetch: boolean;
@@ -41,31 +42,6 @@ export const ConditionalQueryRenderer: React.FC<React.PropsWithChildren<Conditio
   if (!enable) {
     return <>{children}</>;
   }
-  const defaultErrorListStateProps: EmptyStateProps = {
-    title: `Could not load ${itemName}`,
-    description: parseError(error) || error,
-    variant: 'negative',
-    actionButtonProps: {
-      sx: {fontWeight: '600 !important'}
-    },
-    containerProps: {
-      sx: {
-        paddingBottom: '32px'
-      }
-    }
-  };
-
-  const defaultEmptyListStateProps: EmptyStateProps = {
-    title: `No ${itemName} found.`,
-    description: `There are no ${itemName} available at the moment.`,
-    variant: 'info',
-    actionButtonProps: {
-      sx: {fontWeight: '600 !important'}
-    },
-    containerProps: {
-      paddingBottom: '32px'
-    }
-  };
 
   const empty = !data || (Array.isArray(data) && data.length === 0) || isEmpty;
   const unreadyStates: UnreadyStateType = {
@@ -87,7 +63,28 @@ export const ConditionalQueryRenderer: React.FC<React.PropsWithChildren<Conditio
       if (customError) {
         return customError;
       }
-      return <EmptyState {...{...defaultErrorListStateProps, ...errorListStateProps}} />;
+      return (
+        <EmptyState
+          title={`Could not load ${itemName}`}
+          description={parseError(error) || error}
+          variant="negative"
+          actionTitle="Retry"
+          {...errorListStateProps}
+          actionButtonProps={{
+            startIcon: <RefreshCwIcon className="w-4 h-4" />,
+            variant: 'primary',
+            ...errorListStateProps?.actionButtonProps,
+            sx: {
+              fontWeight: '600 !important',
+              ...errorListStateProps?.actionButtonProps?.sx
+            }
+          }}
+          containerProps={{
+            sx: {paddingBottom: '32px', ...errorListStateProps?.containerProps?.sx},
+            ...errorListStateProps?.containerProps
+          }}
+        />
+      );
     } else if (unreadyStates.fetching && useLoading) {
       // We are fetching
       return customLoader ? customLoader : useRelativeLoader ? <LoaderRelative /> : <Loading />;
@@ -95,7 +92,27 @@ export const ConditionalQueryRenderer: React.FC<React.PropsWithChildren<Conditio
       if (customEmpty) {
         return customEmpty;
       }
-      return <EmptyState {...{...defaultEmptyListStateProps, ...emptyListStateProps}} />;
+      return (
+        <EmptyState
+          title={`No ${itemName} found.`}
+          description={`There are no ${itemName} available at the moment.`}
+          variant="info"
+          {...emptyListStateProps}
+          actionButtonProps={{
+            startIcon: <PlusIcon className="w-4 h-4" />,
+            variant: 'outlined',
+            ...emptyListStateProps?.actionButtonProps,
+            sx: {
+              fontWeight: '600 !important',
+              ...emptyListStateProps?.actionButtonProps?.sx
+            }
+          }}
+          containerProps={{
+            sx: {paddingBottom: '32px', ...emptyListStateProps?.containerProps?.sx},
+            ...emptyListStateProps?.containerProps
+          }}
+        />
+      );
     }
     return null;
   };

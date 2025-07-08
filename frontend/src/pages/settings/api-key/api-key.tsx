@@ -8,7 +8,7 @@ import {BasePage} from '@/components/layout/base-page';
 import {PATHS} from '@/router/paths';
 import React from 'react';
 
-const SettingsIdentityProvider: React.FC = () => {
+const ApiKey: React.FC = () => {
   return (
     <BasePage
       title="API Key"
@@ -41,4 +41,4 @@ const SettingsIdentityProvider: React.FC = () => {
   );
 };
 
-export default SettingsIdentityProvider;
+export default ApiKey;

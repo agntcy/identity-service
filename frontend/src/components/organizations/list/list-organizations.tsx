@@ -86,8 +86,7 @@ export const ListOrganizations = () => {
         errorListStateProps={{
           actionCallback: () => {
             void refetch();
-          },
-          actionTitle: 'Retry'
+          }
         }}
         useContainer
       >

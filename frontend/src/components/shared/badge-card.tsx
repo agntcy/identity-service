@@ -9,7 +9,7 @@ import {App} from '@/types/api/app';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {Button, CodeBlock, CopyButton, Modal, ModalContent, ModalTitle, toast, Typography, ViewSwitcher} from '@outshift/spark-design';
 import {ConditionalQueryRenderer} from '../ui/conditional-query-renderer';
-import {DownloadIcon, ExpandIcon, PlusIcon} from 'lucide-react';
+import {DownloadIcon, ExpandIcon} from 'lucide-react';
 import {BadgeModalForm} from './badge-modal-form';
 import {Badge} from '@/types/api/badge';
 import ScrollShadowWrapper from '../ui/scroll-shadow-wrapper';
@@ -113,10 +113,6 @@ export const BadgeCard = ({app, navigateTo = true, confirmButtonText, showError 
           actionTitle: 'Create Badge',
           actionCallback: () => {
             setShowBadgeForm(true);
-          },
-          actionButtonProps: {
-            sx: {fontWeight: '600 !important'},
-            startIcon: <PlusIcon className="w-4 h-4" />
           }
         }}
       >
