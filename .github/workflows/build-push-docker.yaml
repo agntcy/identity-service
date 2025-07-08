@@ -538,7 +538,7 @@
           - name: Login to Amazon Public ECR
             if: ${{ inputs.ecr-public-login }}
             id: login-public-ecr-custom
-            uses: aws-actions/amazon-ecr-login@2fc7aceee09e9e4a7105c0d060c656fad0b4f63d #v1.7.0
+            uses: aws-actions/amazon-ecr-login@062b18b96a7aff071d4dc91bc00c4c1a7945b076 #v2.0.1
             with:
               # Recommeded
               mask-password: 'true'
@@ -662,7 +662,7 @@
           - name: Login to Amazon Public ECR
             if: ${{ inputs.ecr-public-enabled }}
             id: login-public-ecr
-            uses: aws-actions/amazon-ecr-login@2fc7aceee09e9e4a7105c0d060c656fad0b4f63d #v1.7.0
+            uses: aws-actions/amazon-ecr-login@062b18b96a7aff071d4dc91bc00c4c1a7945b076 #v2.0.1
             with:
               # Recommeded
               mask-password: 'true'
