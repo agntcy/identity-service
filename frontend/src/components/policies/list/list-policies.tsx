@@ -176,7 +176,7 @@ export const ListPolicies = () => {
                 containerProps={{paddingBottom: '40px'}}
                 actionTitle="Add Policy"
                 actionCallback={() => {
-                  void navigate(PATHS.policies.create);
+                  void navigate(PATHS.policies.create, {replace: true});
                 }}
                 actionButtonProps={{
                   sx: {fontWeight: '600 !important'},

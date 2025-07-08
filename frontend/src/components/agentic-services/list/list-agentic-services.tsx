@@ -14,7 +14,7 @@ import {generatePath, useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
 import {FilterSections} from '@/components/shared/filters-sections';
 import {App, AppType} from '@/types/api/app';
-import {IdCardIcon, PlusIcon, RefreshCcwIcon, Trash2Icon} from 'lucide-react';
+import {IdCardIcon, PencilIcon, PlusIcon, Trash2Icon} from 'lucide-react';
 import {ConfirmModal} from '@/components/ui/confirm-modal';
 import {useDeleteAgenticService} from '@/mutations';
 import {BadgeModalForm} from '@/components/shared/badge-modal-form';
@@ -190,16 +190,16 @@ export const ListAgenticServices = () => {
                   </Typography>
                 </MenuItem>,
                 <MenuItem
-                  key="update-app"
+                  key="edit-app"
                   onClick={() => {
                     const path = generatePath(PATHS.agenticServices.update, {id: row.original.id});
                     void navigate(path, {replace: true});
                   }}
                   sx={{display: 'flex', alignItems: 'center', gap: '8px'}}
                 >
-                  <RefreshCcwIcon className="w-4 h-4" color="#062242" />
+                  <PencilIcon className="w-4 h-4" color="#062242" />
                   <Typography variant="body2" color="#1A1F27">
-                    Update
+                    Edit
                   </Typography>
                 </MenuItem>,
                 <MenuItem
@@ -227,13 +227,14 @@ export const ListAgenticServices = () => {
                 title="No Agentic Services"
                 description="Currently, there are no agentic services available."
                 containerProps={{paddingBottom: '40px'}}
-                actionTitle="Create Agentic Service"
+                actionTitle="Add Agentic Service"
                 actionCallback={() => {
-                  void navigate(PATHS.agenticServices.create);
+                  void navigate(PATHS.agenticServices.add, {replace: true});
                 }}
                 actionButtonProps={{
                   sx: {fontWeight: '600 !important'},
-                  startIcon: <PlusIcon className="w-4 h-4" />
+                  startIcon: <PlusIcon className="w-4 h-4" />,
+                  variant: 'outlined'
                 }}
               />
             )}

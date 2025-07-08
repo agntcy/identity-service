@@ -48,8 +48,8 @@ export const CreateBadge = ({app}: {app?: App}) => {
 
   return (
     <div className="space-y-4">
-      <div className="flex gap-4">
-        <div className="w-[50%] space-y-4">
+      <div className="card-group gap-4">
+        <div className="card-flex-group-custom space-y-4 max-w-[30vw]">
           <Card className="text-start space-y-4" variant="secondary">
             <div className="flex justify-between items-center">
               <Typography variant="subtitle1" fontWeight={600}>
@@ -84,7 +84,7 @@ export const CreateBadge = ({app}: {app?: App}) => {
             </CardContent>
           </Card>
         </div>
-        <div className="w-full h-full">
+        <div className="card-flex-group-custom ">
           <BadgeCard
             app={app}
             navigateTo={false}

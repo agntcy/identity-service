@@ -37,9 +37,9 @@ export const StatusAgenticService = ({status}: {status?: AppStatus}) => {
   }
   return (
     <div className="flex items-center gap-2">
-      <Badge content={null} type="neutral" styleBadge={{width: '6px', height: '6px', padding: '0'}} />
+      <Badge content={null} type="warning" styleBadge={{width: '6px', height: '6px', padding: '0'}} />
       <Typography color="#272E37" fontSize={14}>
-        Unknown
+        Pending
       </Typography>
     </div>
   );

@@ -21,7 +21,7 @@ import {InfoIcon} from 'lucide-react';
 import {App} from '@/types/api/app';
 import {CreateBadge} from './steps/create-badge';
 
-export const CreateAgenticServiceStepper = () => {
+export const AddAgenticServiceStepper = () => {
   return (
     <StepperProvider variant="vertical">
       <FormStepperComponent />
@@ -30,7 +30,6 @@ export const CreateAgenticServiceStepper = () => {
 };
 
 const FormStepperComponent = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [app, setApp] = useState<App | undefined>(undefined);
 
   const methods = useStepper();
@@ -43,20 +42,18 @@ const FormStepperComponent = () => {
   const mutationCreate = useCreateAgenticService({
     callbacks: {
       onSuccess: (resp) => {
-        setIsLoading(false);
         toast({
           title: 'Success',
-          description: 'Agentic service created successfully.',
+          description: 'Agentic service added successfully.',
           type: 'success'
         });
         setApp(resp.data);
         methods.next();
       },
       onError: () => {
-        setIsLoading(false);
         toast({
           title: 'Error',
-          description: 'Failed to create agentic service. Please check the details and try again.',
+          description: 'Failed to add agentic service. Please check the details and try again.',
           type: 'error'
         });
       }
@@ -64,7 +61,6 @@ const FormStepperComponent = () => {
   });
 
   const handleOnClear = useCallback(() => {
-    setIsLoading(false);
     setApp(undefined);
     form.reset({
       type: undefined,
@@ -100,7 +96,6 @@ const FormStepperComponent = () => {
   }, [form, methods]);
 
   const handleSave = useCallback(() => {
-    setIsLoading(true);
     const values = form.getValues() as AgenticServiceFormValues;
     mutationCreate.mutate({
       type: values.type,
@@ -128,7 +123,7 @@ const FormStepperComponent = () => {
                 return (
                   <div className="flex gap-2 items-top -ml-1" key={step.id}>
                     <StepperNavigation>
-                      <StepperStep of={step.id} onlyIcon isLoading={methods.current.id === step.id && isLoading} />
+                      <StepperStep of={step.id} onlyIcon isLoading={methods.current.id === step.id && mutationCreate.isPending} />
                     </StepperNavigation>
                     <AccordionItem value={step.id} className="border-b-0 w-full">
                       <AccordionTrigger className="pt-0 w-full cursor-default" useArrow={false}>
@@ -139,7 +134,7 @@ const FormStepperComponent = () => {
                             </Typography>
                             {step.id === 'createBadge' && (
                               <div className="flex gap-1 items-center">
-                                <Tooltip title="Create a Badge for your Agentic Service" arrow placement="top">
+                                <Tooltip title="You must be the Agentic service owner to create badges." arrow placement="top">
                                   <IconButton
                                     sx={(theme) => ({
                                       color: theme.palette.vars.baseTextDefault,
@@ -158,7 +153,7 @@ const FormStepperComponent = () => {
                       </AccordionTrigger>
                       <AccordionContent>
                         {step.id === 'agenticServiceForm' ? (
-                          <AgenticServicForm isLoading={isLoading} />
+                          <AgenticServicForm isLoading={mutationCreate.isPending} />
                         ) : step.id === 'confirmAgenticService' ? (
                           <ConfirmAgenticProvider />
                         ) : (
@@ -172,15 +167,15 @@ const FormStepperComponent = () => {
                               }}
                               variant="tertariary"
                               onClick={handleOnClear}
-                              disabled={isLoading}
+                              disabled={mutationCreate.isPending}
                             >
                               Cancel
                             </Button>
                             <Button
-                              loading={isLoading}
+                              loading={mutationCreate.isPending}
                               loadingPosition="start"
                               type="submit"
-                              disabled={isLoading || !form.formState.isValid}
+                              disabled={mutationCreate.isPending || !form.formState.isValid}
                               className="cursor-pointer"
                               sx={{
                                 fontWeight: '600 !important'

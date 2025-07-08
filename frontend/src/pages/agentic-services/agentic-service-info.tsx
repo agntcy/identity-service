@@ -35,7 +35,7 @@ const AgenticServiceInfo: React.FC = () => {
           description: 'Agentic service deleted successfully.',
           type: 'success'
         });
-        void navigate(PATHS.agenticServices.base);
+        void navigate(PATHS.agenticServices.base, {replace: true});
       },
       onError: () => {
         toast({

@@ -11,7 +11,7 @@ export const PATHS = {
   dashboard: '/dashboard',
   agenticServices: {
     base: '/agentic-services',
-    create: '/agentic-services/create',
+    add: '/agentic-services/add',
     info: '/agentic-services/:id',
     update: '/agentic-services/:id/update',
     verifyIdentity: '/agentic-services/verify-identity',

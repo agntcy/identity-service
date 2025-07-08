@@ -106,7 +106,7 @@ export const BadgeCard = ({app, navigateTo = true, confirmButtonText, showError 
         error={undefined}
         isLoading={isLoading}
         useRelativeLoader
-        useContainer
+        useContainer={false}
         emptyListStateProps={{
           title: 'No Badge',
           description: 'Create a badge for your agentic service to enable verifiable credentials.',
@@ -116,7 +116,7 @@ export const BadgeCard = ({app, navigateTo = true, confirmButtonText, showError 
           }
         }}
       >
-        <Card variant="secondary" className="h-full flex flex-col gap-4">
+        <Card variant="secondary" className="flex flex-col gap-4 h-full">
           <div className="flex justify-between items-start">
             <Typography variant="subtitle1" fontWeight={600}>
               Badge
@@ -151,12 +151,12 @@ export const BadgeCard = ({app, navigateTo = true, confirmButtonText, showError 
                 size="sm"
               />
             </div>
-            <ScrollShadowWrapper className="max-h-[60vh] overflow-auto">
+            <ScrollShadowWrapper className="max-h-[50vh] overflow-auto">
               {view === 'credential' && (
-                <CodeBlock containerProps={{maxWidth: '50vw'}} showLineNumbers wrapLongLines text={JSON.stringify(contentToShow, null, 2)} />
+                <CodeBlock containerProps={{maxWidth: '40vw'}} showLineNumbers wrapLongLines text={JSON.stringify(contentToShow, null, 2)} />
               )}
               {view === 'claims' && (
-                <CodeBlock containerProps={{maxWidth: '50vw'}} showLineNumbers wrapLongLines text={JSON.stringify(contentToShow, null, 2)} />
+                <CodeBlock containerProps={{maxWidth: '40vw'}} showLineNumbers wrapLongLines text={JSON.stringify(contentToShow, null, 2)} />
               )}
               {view === 'jose' && (
                 <div className="border border-solid border-[#d5dff7] p-4 w-full rounded-[6px] bg-[#fbfcfe] relative">

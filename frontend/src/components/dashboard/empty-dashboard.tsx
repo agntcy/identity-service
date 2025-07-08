@@ -14,7 +14,6 @@ import {docs} from '@/utils/docs';
 
 export const EmptyDashboard = () => {
   const {authInfo} = useAuth();
-
   return (
     <ScrollShadowWrapper>
       <div className="flex flex-col h-full gap-[16px]">

@@ -82,7 +82,9 @@ const UserSection = () => {
       revokeRefreshToken: true,
       clearTokensBeforeRedirect: true
     });
-    void navigate(`${PATHS.callBackLoading}`);
+    void navigate(PATHS.callBackLoading, {
+      replace: true
+    });
     handleClose();
   };
 

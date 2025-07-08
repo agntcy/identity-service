@@ -52,7 +52,7 @@ const Policies: React.FC = () => {
             'Connect your identity provider to create and manage identities for your AI agents and MCP servers, including those supporting A2A-compatible protocols like Google A2A, with support for policies and access controls.',
           actionTitle: 'Connect Identity Provider',
           actionCallback: () => {
-            void navigate(PATHS.settings.identityProvider.connection);
+            void navigate(PATHS.settings.identityProvider.connection, {replace: true});
           },
           actionButtonProps: {
             variant: 'outlined',
@@ -70,10 +70,10 @@ const Policies: React.FC = () => {
           useContainer
           emptyListStateProps={{
             title: 'Get started with Agent Identity',
-            description: 'Create an Agentic Service to manage identities and apply TBAC based access control.',
-            actionTitle: 'Create Agentic Service',
+            description: 'Add an Agentic Service to manage identities and apply TBAC based access control.',
+            actionTitle: 'Add Agentic Service',
             actionCallback: () => {
-              void navigate(PATHS.agenticServices.create);
+              void navigate(PATHS.agenticServices.add);
             },
             actionButtonProps: {
               variant: 'outlined',

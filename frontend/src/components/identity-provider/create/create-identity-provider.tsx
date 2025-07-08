@@ -36,7 +36,7 @@ export const CreateIdentityProvider = () => {
           type: 'success'
         });
         if (navigateToAgenticServices) {
-          void navigate(PATHS.agenticServices.create, {replace: true});
+          void navigate(PATHS.agenticServices.add, {replace: true});
         } else {
           void navigate(PATHS.settings.base, {replace: true});
         }

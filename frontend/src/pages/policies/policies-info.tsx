@@ -32,7 +32,7 @@ const PolicyInfo: React.FC = () => {
           description: 'Policy deleted successfully.',
           type: 'success'
         });
-        void navigate(PATHS.policies.base);
+        void navigate(PATHS.policies.base, {replace: true});
       },
       onError: () => {
         toast({
