@@ -14,7 +14,7 @@ import {cn} from '@/lib/utils';
 import {generatePath, useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
 import {FilterSections} from '@/components/shared/filters-sections';
-import {PlusIcon, RefreshCcwIcon, Trash2Icon} from 'lucide-react';
+import {PencilIcon, PlusIcon, Trash2Icon} from 'lucide-react';
 import {ConfirmModal} from '@/components/ui/confirm-modal';
 import {Policy} from '@/types/api/policy';
 import {useDeletePolicy} from '@/mutations';
@@ -22,7 +22,7 @@ import {useDeletePolicy} from '@/mutations';
 export const ListPolicies = () => {
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: 0,
-    pageSize: 10
+    pageSize: 15
   });
   const [sorting, setSorting] = useState<MRT_SortingState>([
     {
@@ -88,10 +88,8 @@ export const ListPolicies = () => {
         errorListStateProps={{
           actionCallback: () => {
             void refetch();
-          },
-          actionTitle: 'Retry'
+          }
         }}
-        useContainer
         useLoading={false}
       >
         <Card className={cn(!isLoading && 'p-0')} variant="secondary">
@@ -131,7 +129,7 @@ export const ListPolicies = () => {
             manualFiltering={true}
             onPaginationChange={setPagination}
             rowCount={Number(data?.pagination?.total) || 0}
-            rowsPerPageOptions={[1, 10, 25, 50, 100]}
+            rowsPerPageOptions={[1, 15, 25, 50, 100]}
             state={{pagination, sorting}}
             onSortingChange={setSorting}
             renderRowActionMenuItems={({row}) => {
@@ -140,13 +138,13 @@ export const ListPolicies = () => {
                   key="edit-policy"
                   sx={{display: 'flex', alignItems: 'center', gap: '8px'}}
                   onClick={() => {
-                    const path = generatePath(PATHS.policies.update, {id: row.original?.id});
+                    const path = generatePath(PATHS.policies.edit, {id: row.original?.id});
                     void navigate(path, {replace: true});
                   }}
                 >
-                  <RefreshCcwIcon className="w-4 h-4" color="#062242" />
+                  <PencilIcon className="w-4 h-4" color="#062242" />
                   <Typography variant="body2" color="#1A1F27">
-                    Update
+                    Edit
                   </Typography>
                 </MenuItem>,
                 <MenuItem

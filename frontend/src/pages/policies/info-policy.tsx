@@ -3,44 +3,41 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {InfoAgenticService} from '@/components/agentic-services/info/info-agentic-service';
 import {BasePage} from '@/components/layout/base-page';
-import {BadgeModalForm} from '@/components/shared/badge-modal-form';
+import {PolicyContent} from '@/components/policies/info/policy-content';
 import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-renderer';
 import {ConfirmModal} from '@/components/ui/confirm-modal';
-import {useDeleteAgenticService} from '@/mutations';
-import {useGetAgenticService} from '@/queries';
+import {useDeletePolicy} from '@/mutations';
+import {useGetPolicy} from '@/queries';
 import {PATHS} from '@/router/paths';
 import {Button, toast} from '@outshift/spark-design';
-import {IdCardIcon, RefreshCcwIcon, Trash2Icon} from 'lucide-react';
+import {PencilIcon, Trash2Icon} from 'lucide-react';
 import {useCallback, useState} from 'react';
 import {generatePath, useNavigate, useParams} from 'react-router-dom';
 
-const AgenticServiceInfo: React.FC = () => {
-  const [showReissueBadge, setShowReissueBadge] = useState<boolean>(false);
-  const [showBadgeForm, setShowBadgeForm] = useState<boolean>(false);
+const InfoPolicy: React.FC = () => {
   const [showConfirmDelete, setShowConfirmDelete] = useState<boolean>(false);
 
   const {id} = useParams<{id: string}>();
 
-  const {data, isLoading, error, isError, refetch} = useGetAgenticService(id);
+  const {data, isLoading, error, isError, refetch} = useGetPolicy(id);
 
   const navigate = useNavigate();
 
-  const deleteMutation = useDeleteAgenticService({
+  const deleteMutation = useDeletePolicy({
     callbacks: {
       onSuccess: () => {
         toast({
           title: 'Success',
-          description: 'Agentic service deleted successfully.',
+          description: 'Policy deleted successfully.',
           type: 'success'
         });
-        void navigate(PATHS.agenticServices.base, {replace: true});
+        void navigate(PATHS.policies.base, {replace: true});
       },
       onError: () => {
         toast({
           title: 'Error',
-          description: 'An error occurred while deleting the agentic service. Please try again.',
+          description: 'An error occurred while deleting the policy. Please try again.',
           type: 'error'
         });
       }
@@ -54,15 +51,15 @@ const AgenticServiceInfo: React.FC = () => {
 
   return (
     <BasePage
-      title="Agentic Service"
+      title="Policy"
       useBorder
       breadcrumbs={[
         {
-          text: 'Agentic Services',
-          link: PATHS.agenticServices.base
+          text: 'Policies',
+          link: PATHS.policies.base
         },
         {
-          text: data?.name || 'Agentic Service'
+          text: data?.name || 'Policy'
         }
       ]}
       rightSideItems={
@@ -82,71 +79,42 @@ const AgenticServiceInfo: React.FC = () => {
               Delete
             </Button>
             <Button
-              startIcon={<RefreshCcwIcon className="h-4 w-4" />}
+              startIcon={<PencilIcon className="h-4 w-4" />}
               variant="secondary"
               sx={{fontWeight: '600 !important'}}
               onClick={() => {
-                const path = generatePath(PATHS.agenticServices.update, {id: id || ''});
+                const path = generatePath(PATHS.policies.edit, {id: id || ''});
                 void navigate(path, {replace: true});
               }}
             >
-              Update
+              Edit
             </Button>
-            {showReissueBadge && (
-              <Button
-                onClick={() => {
-                  setShowBadgeForm(true);
-                }}
-                startIcon={<IdCardIcon className="w-4 h-4" />}
-                variant="primary"
-                sx={{fontWeight: '600 !important'}}
-              >
-                Re-Issue Badge
-              </Button>
-            )}
           </div>
         )
       }
     >
       <ConditionalQueryRenderer
-        itemName="Agentic Service"
+        itemName="Policy"
         data={data}
         error={error}
         isLoading={isLoading || deleteMutation.isPending}
         useRelativeLoader
-        useContainer
         errorListStateProps={{
           actionCallback: () => {
             void refetch();
-          },
-          actionTitle: 'Retry'
+          }
         }}
       >
-        <InfoAgenticService app={data} onChangeReissueBadge={(value) => setShowReissueBadge(value)} />
-        {data && (
-          <BadgeModalForm
-            app={data}
-            open={showBadgeForm}
-            onClose={() => {
-              setShowBadgeForm(false);
-            }}
-            onCancel={() => {
-              setShowBadgeForm(false);
-            }}
-            onBadgeCreated={() => {
-              setShowBadgeForm(false);
-            }}
-            navigateTo={false}
-            confirmButtonText="Re-Issue"
-            title="Re-Issue Badge"
-          />
-        )}
+        <PolicyContent policy={data} />
         <ConfirmModal
           open={showConfirmDelete}
-          title="Delete Agentic Service"
+          title="Delete Policy"
           description={
             <>
-              Are you sure you want to delete this agentic service <b>{data?.name}</b>? This action cannot be undone.
+              Are you sure you want to delete this policy? This action cannot be undone.
+              <br />
+              <br />
+              <strong>Note:</strong> Deleting a policy will remove it from all associated agentic services.
             </>
           }
           confirmButtonText="Delete"
@@ -163,4 +131,4 @@ const AgenticServiceInfo: React.FC = () => {
   );
 };
 
-export default AgenticServiceInfo;
+export default InfoPolicy;

@@ -14,7 +14,7 @@ import {AgenticServiceFormValues, AgenticServiceSchema} from '@/schemas/agentic-
 import {App, AppType} from '@/types/api/app';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {Button, toast, Typography} from '@outshift/spark-design';
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect} from 'react';
 import {useForm} from 'react-hook-form';
 import {generatePath, Link, useNavigate} from 'react-router-dom';
 import z from 'zod';
@@ -22,9 +22,7 @@ import OasfLogo from '@/assets/oasf.svg?react';
 import McpLogo from '@/assets/mcp.svg?react';
 import A2ALogo from '@/assets/a2a.png';
 
-export const UpdateAgenticServiceForm = ({app}: {app?: App}) => {
-  const [isLoading, setIsLoading] = useState(false);
-
+export const EditAgenticServiceForm = ({app}: {app?: App}) => {
   const appTypes: SharedProviderProps<AppType>[] = [
     {
       type: AppType.APP_TYPE_AGENT_OASF,
@@ -64,20 +62,18 @@ export const UpdateAgenticServiceForm = ({app}: {app?: App}) => {
   const updateMutation = useUpdateAgenticService({
     callbacks: {
       onSuccess: () => {
-        setIsLoading(false);
         toast({
           title: 'Success',
-          description: 'Agentic service updated successfully.',
+          description: 'Agentic service edited successfully.',
           type: 'success'
         });
         const path = generatePath(PATHS.agenticServices.info, {id: app?.id ?? ''});
         void navigate(path, {replace: true});
       },
       onError: () => {
-        setIsLoading(false);
         toast({
           title: 'Error',
-          description: 'An error occurred while updating the agentic service. Please try again.',
+          description: 'An error occurred while editing the agentic service. Please try again.',
           type: 'error'
         });
       }
@@ -94,7 +90,6 @@ export const UpdateAgenticServiceForm = ({app}: {app?: App}) => {
       });
       return;
     }
-    setIsLoading(true);
     updateMutation.mutate({
       id: app?.id ?? '',
       data: {
@@ -155,7 +150,7 @@ export const UpdateAgenticServiceForm = ({app}: {app?: App}) => {
                       <FormItem className="w-[50%]">
                         <FormLabel className="form-label">Name</FormLabel>
                         <FormControl>
-                          <Input placeholder="Type the name..." {...field} disabled={isLoading} />
+                          <Input placeholder="Type the name..." {...field} disabled={updateMutation.isPending} />
                         </FormControl>
                       </FormItem>
                     )}
@@ -167,7 +162,7 @@ export const UpdateAgenticServiceForm = ({app}: {app?: App}) => {
                       <FormItem className="w-[50%]">
                         <FormLabel className="form-label">Description</FormLabel>
                         <FormControl>
-                          <Input placeholder="Type the description..." {...field} disabled={isLoading} />
+                          <Input placeholder="Type the description..." {...field} disabled={updateMutation.isPending} />
                         </FormControl>
                       </FormItem>
                     )}
@@ -178,18 +173,18 @@ export const UpdateAgenticServiceForm = ({app}: {app?: App}) => {
           </Card>
           <div className="flex justify-end gap-4">
             <Link to={PATHS.agenticServices.base}>
-              <Button variant="tertariary" disabled={isLoading} sx={{fontWeight: '600 !important'}}>
+              <Button variant="tertariary" disabled={updateMutation.isPending} sx={{fontWeight: '600 !important'}}>
                 Cancel
               </Button>
             </Link>
             <Button
               type="submit"
-              disabled={isLoading || !form.formState.isValid}
-              loading={isLoading}
+              disabled={updateMutation.isPending || !form.formState.isValid}
+              loading={updateMutation.isPending}
               loadingPosition="start"
               sx={{fontWeight: '600 !important'}}
             >
-              Update Agentic Service
+              Save
             </Button>
           </div>
         </form>

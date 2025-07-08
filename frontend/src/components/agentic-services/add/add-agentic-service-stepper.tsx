@@ -12,7 +12,7 @@ import {Form} from '@/components/ui/form';
 import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from '@/components/ui/accordion';
 import {Button, toast, Tooltip, Typography} from '@outshift/spark-design';
 import {AgenticServicForm} from './steps/agentic-service-form';
-import {ConfirmAgenticProvider} from './steps/confirm-agentic-provider-info';
+import {ConfirmInfo} from './steps/confirm-info';
 import {AgenticServiceFormValues, AgenticServiceSchema} from '@/schemas/agentic-service-schema';
 import {validateForm} from '@/lib/utils';
 import {useCreateAgenticService} from '@/mutations';
@@ -155,7 +155,7 @@ const FormStepperComponent = () => {
                         {step.id === 'agenticServiceForm' ? (
                           <AgenticServicForm isLoading={mutationCreate.isPending} />
                         ) : step.id === 'confirmAgenticService' ? (
-                          <ConfirmAgenticProvider />
+                          <ConfirmInfo />
                         ) : (
                           step.id === 'createBadge' && <CreateBadge app={app} />
                         )}

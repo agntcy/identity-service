@@ -120,7 +120,7 @@ export const EditOrganizationForm = ({tenant}: {tenant?: TenantReponse}) => {
               loading={updateOrganizationMutation.isPending}
               loadingPosition="start"
             >
-              Edit
+              Save
             </Button>
           </div>
         </form>

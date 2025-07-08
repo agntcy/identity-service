@@ -56,7 +56,6 @@ const IdentityProvider: React.FC = () => {
         error={error}
         isLoading={isLoading || isFetching}
         useRelativeLoader
-        useContainer
         errorListStateProps={{
           actionCallback: () => {
             void refetch();

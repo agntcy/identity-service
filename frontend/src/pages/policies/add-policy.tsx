@@ -4,13 +4,13 @@
  */
 
 import {BasePage} from '@/components/layout/base-page';
-import {CreatePolicyStepper} from '@/components/policies/create/create-policy-stepper';
+import {AddPolicyStepper} from '@/components/policies/add/add-policy-stepper';
 import {PATHS} from '@/router/paths';
 import {docs} from '@/utils/docs';
 import {Link} from '@outshift/spark-design';
 import {ExternalLinkIcon} from 'lucide-react';
 
-const CreatePolicies: React.FC = () => {
+const AddPolicy: React.FC = () => {
   return (
     <BasePage
       title="Add Policy"
@@ -33,9 +33,9 @@ const CreatePolicies: React.FC = () => {
         </Link>
       }
     >
-      <CreatePolicyStepper />
+      <AddPolicyStepper />
     </BasePage>
   );
 };
 
-export default CreatePolicies;
+export default AddPolicy;

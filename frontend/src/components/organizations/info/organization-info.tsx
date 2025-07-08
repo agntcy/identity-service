@@ -87,7 +87,6 @@ export const OrganizationInfo = ({
         error={errorGroups || errorUsers}
         isLoading={isLoadingGroups || isLoadingUsers}
         useRelativeLoader
-        useContainer
         errorListStateProps={{
           actionCallback: () => {
             void refetch();

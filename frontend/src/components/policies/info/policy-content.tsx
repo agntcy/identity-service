@@ -16,7 +16,7 @@ import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
 import {IconButton} from '@mui/material';
 import {InfoIcon} from 'lucide-react';
 
-export const InfoPolicy = ({policy}: {policy?: Policy}) => {
+export const PolicyContent = ({policy}: {policy?: Policy}) => {
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: 0,
     pageSize: 10

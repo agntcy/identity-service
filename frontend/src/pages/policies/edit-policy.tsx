@@ -3,54 +3,52 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {UpdateAgenticServiceForm} from '@/components/agentic-services/update/update-agentic-service-form';
 import {BasePage} from '@/components/layout/base-page';
+import {EditPolicyStepper} from '@/components/policies/edit/edit-policy-stepper';
 import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-renderer';
-import {useGetAgenticService} from '@/queries';
+import {useGetPolicy} from '@/queries';
 import {PATHS} from '@/router/paths';
 import {generatePath, useParams} from 'react-router-dom';
 
-const AgenticServiceUpdate: React.FC = () => {
+const EditPolicy: React.FC = () => {
   const {id} = useParams<{id: string}>();
 
-  const {data, isLoading, isFetching, error, refetch} = useGetAgenticService(id);
+  const {data, isLoading, isFetching, error, refetch} = useGetPolicy(id);
 
   return (
     <BasePage
-      title="Update Agentic Service"
+      title="Edit Policy"
       useBorder
       breadcrumbs={[
         {
-          text: 'Agentic Services',
-          link: PATHS.agenticServices.base
+          text: 'Policies',
+          link: PATHS.policies.base
         },
         {
-          text: data?.name || 'Agentic Service',
-          link: generatePath(PATHS.agenticServices.info, {id: id || ''})
+          text: data?.name || 'Policy',
+          link: generatePath(PATHS.policies.info, {id: id || ''})
         },
         {
-          text: 'Update'
+          text: 'Edit'
         }
       ]}
     >
       <ConditionalQueryRenderer
-        itemName="Agentic Service"
+        itemName="Policy"
         data={data}
         error={error}
         isLoading={isLoading || isFetching}
         useRelativeLoader
-        useContainer
         errorListStateProps={{
           actionCallback: () => {
             void refetch();
-          },
-          actionTitle: 'Retry'
+          }
         }}
       >
-        <UpdateAgenticServiceForm app={data} />
+        <EditPolicyStepper policy={data} />
       </ConditionalQueryRenderer>
     </BasePage>
   );
 };
 
-export default AgenticServiceUpdate;
+export default EditPolicy;

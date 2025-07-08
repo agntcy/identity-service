@@ -52,7 +52,6 @@ export const ContentApiKey: React.FC = () => {
       error={error}
       isLoading={isLoading || isFetching}
       useRelativeLoader
-      useContainer
       emptyListStateProps={{
         actionCallback: () => {
           setApiKeyMutation.mutate();
@@ -65,7 +64,7 @@ export const ContentApiKey: React.FC = () => {
         }
       }}
     >
-      <Card className="w-full bg-[#F5F8FD] p-6">
+      <Card variant="secondary">
         <CardContent>
           <div className="flex flex-col gap-6">
             <Typography variant="body1Semibold">API Key</Typography>

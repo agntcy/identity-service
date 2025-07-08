@@ -45,7 +45,6 @@ const EditOrganization: React.FC = () => {
         error={error}
         isLoading={isLoading}
         useRelativeLoader
-        useContainer
         errorListStateProps={{
           actionCallback: () => {
             void refetch();

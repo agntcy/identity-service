@@ -45,7 +45,6 @@ const Policies: React.FC = () => {
         error={null}
         isLoading={false}
         useRelativeLoader
-        useContainer
         emptyListStateProps={{
           title: 'Get started with Agent Identity',
           description:
@@ -53,11 +52,6 @@ const Policies: React.FC = () => {
           actionTitle: 'Connect Identity Provider',
           actionCallback: () => {
             void navigate(PATHS.settings.identityProvider.connection, {replace: true});
-          },
-          actionButtonProps: {
-            variant: 'outlined',
-            startIcon: <PlusIcon className="w-4 h-4" />,
-            sx: {fontWeight: '600 !important'}
           }
         }}
       >
@@ -67,18 +61,12 @@ const Policies: React.FC = () => {
           error={error}
           isLoading={isLoading}
           useRelativeLoader
-          useContainer
           emptyListStateProps={{
             title: 'Get started with Agent Identity',
             description: 'Add an Agentic Service to manage identities and apply TBAC based access control.',
             actionTitle: 'Add Agentic Service',
             actionCallback: () => {
               void navigate(PATHS.agenticServices.add);
-            },
-            actionButtonProps: {
-              variant: 'outlined',
-              startIcon: <PlusIcon className="w-4 h-4" />,
-              sx: {fontWeight: '600 !important'}
             }
           }}
         >

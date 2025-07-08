@@ -106,7 +106,6 @@ export const BadgeCard = ({app, navigateTo = true, confirmButtonText, showError 
         error={undefined}
         isLoading={isLoading}
         useRelativeLoader
-        useContainer={false}
         emptyListStateProps={{
           title: 'No Badge',
           description: 'Create a badge for your agentic service to enable verifiable credentials.',

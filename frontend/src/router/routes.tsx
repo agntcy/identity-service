@@ -34,19 +34,19 @@ const ApiKey = React.lazy(() => import('@/pages/settings/api-key/api-key'));
 // Settings Organizations
 const Organizations = React.lazy(() => import('@/pages/settings/organizations/organizations'));
 const EditOrganization = React.lazy(() => import('@/pages/settings/organizations/edit-organization'));
-const OrganizationInfo = React.lazy(() => import('@/pages/settings/organizations/info-organization'));
+const InfoOrganization = React.lazy(() => import('@/pages/settings/organizations/info-organization'));
 
 // Agentic Services
 const AgenticServices = React.lazy(() => import('@/pages/agentic-services/agentic-services'));
 const AddAgenticService = React.lazy(() => import('@/pages/agentic-services/add-agentic-service'));
-const UpdateAgenticService = React.lazy(() => import('@/pages/agentic-services/agentic-service-update'));
-const AgenticServiceInfo = React.lazy(() => import('@/pages/agentic-services/agentic-service-info'));
+const EditAgenticService = React.lazy(() => import('@/pages/agentic-services/edit-agentic-service'));
+const InfoAgenticService = React.lazy(() => import('@/pages/agentic-services/info-agentic-service'));
 
 // Policies
 const Policies = React.lazy(() => import('@/pages/policies/policies'));
-const CreatePolicies = React.lazy(() => import('@/pages/policies/policies-create'));
-const PolicyInfo = React.lazy(() => import('@/pages/policies/policies-info'));
-const UpldatePolicies = React.lazy(() => import('@/pages/policies/policies-update'));
+const AddPolicy = React.lazy(() => import('@/pages/policies/add-policy'));
+const InfoPolicy = React.lazy(() => import('@/pages/policies/info-policy'));
+const EditPolicy = React.lazy(() => import('@/pages/policies/edit-policy'));
 
 // Verify Identity
 const VerifyIdentityPrivate = React.lazy(() => import('@/pages/agentic-services/verify-identity-private'));
@@ -149,13 +149,13 @@ export const useRoutes = () => {
             disabled: isEmptyIdp
           },
           {
-            path: PATHS.agenticServices.update,
-            element: <UpdateAgenticService />,
+            path: PATHS.agenticServices.edit,
+            element: <EditAgenticService />,
             disabled: isEmptyIdp
           },
           {
             path: PATHS.agenticServices.info,
-            element: <AgenticServiceInfo />,
+            element: <InfoAgenticService />,
             disabled: isEmptyIdp
           },
           {
@@ -178,15 +178,15 @@ export const useRoutes = () => {
           },
           {
             path: PATHS.policies.create,
-            element: <CreatePolicies />
+            element: <AddPolicy />
           },
           {
             path: PATHS.policies.info,
-            element: <PolicyInfo />
+            element: <InfoPolicy />
           },
           {
-            path: PATHS.policies.update,
-            element: <UpldatePolicies />
+            path: PATHS.policies.edit,
+            element: <EditPolicy />
           },
           {
             path: '*',
@@ -237,7 +237,7 @@ export const useRoutes = () => {
               },
               {
                 path: PATHS.settings.organizationsAndUsers.info,
-                element: <OrganizationInfo />,
+                element: <InfoOrganization />,
                 disabled: !isAdmin
               },
               {

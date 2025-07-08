@@ -120,10 +120,8 @@ export const ListAgenticServices = () => {
         errorListStateProps={{
           actionCallback: () => {
             void refetch();
-          },
-          actionTitle: 'Retry'
+          }
         }}
-        useContainer
         useLoading={false}
       >
         <Card className={cn(!isLoading && 'p-0')} variant="secondary">
@@ -171,7 +169,7 @@ export const ListAgenticServices = () => {
             manualFiltering={true}
             onPaginationChange={setPagination}
             rowCount={Number(data?.pagination?.total) || 0}
-            rowsPerPageOptions={[1, 10, 25, 50, 100]}
+            rowsPerPageOptions={[1, 15, 25, 50, 100]}
             state={{pagination, sorting}}
             onSortingChange={setSorting}
             renderRowActionMenuItems={({row}) => {
@@ -192,7 +190,7 @@ export const ListAgenticServices = () => {
                 <MenuItem
                   key="edit-app"
                   onClick={() => {
-                    const path = generatePath(PATHS.agenticServices.update, {id: row.original.id});
+                    const path = generatePath(PATHS.agenticServices.edit, {id: row.original.id});
                     void navigate(path, {replace: true});
                   }}
                   sx={{display: 'flex', alignItems: 'center', gap: '8px'}}
