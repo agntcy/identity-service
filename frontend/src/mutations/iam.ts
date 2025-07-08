@@ -99,3 +99,23 @@ export const useInviteUser = ({callbacks}: PropsSettingsInviteUser) => {
     }
   });
 };
+
+export const useDeleteUser = ({callbacks}: PropsSettingsInviteUser) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ['delete-user'],
+    mutationFn: ({userId, tenantId}: {userId: string; tenantId: string}) => IamAPI.deleteUser(userId, tenantId),
+    onError: () => {
+      if (callbacks?.onError) {
+        callbacks.onError();
+      }
+    },
+    onSuccess: async (resp) => {
+      if (callbacks?.onSuccess) {
+        callbacks.onSuccess(resp);
+      }
+      await queryClient.invalidateQueries({queryKey: ['get-tenant-groups']});
+      await queryClient.invalidateQueries({queryKey: ['get-users-group']});
+    }
+  });
+};

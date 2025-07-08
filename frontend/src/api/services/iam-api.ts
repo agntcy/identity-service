@@ -86,6 +86,11 @@ class IamAPIClass {
     });
   };
 
+  public deleteUser = (userId: string, tenantId: string) => {
+    const payload = {username: userId};
+    return this.instance.delete(`/tenant/${tenantId}/user`, {data: payload});
+  };
+
   protected handleLogout = () => {
     this.logout?.({
       revokeAccessToken: true,
