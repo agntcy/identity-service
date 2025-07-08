@@ -312,7 +312,7 @@ func (s *badgeService) createTasks(
 ) error {
 	switch app.Type {
 	case apptypes.APP_TYPE_AGENT_A2A, apptypes.APP_TYPE_AGENT_OASF:
-		_, err := s.taskService.CreateForAgent(ctx, app.ID, ptrutil.DerefStr(app.Name))
+		_, err := s.taskService.UpdateOrCreateForAgent(ctx, app.ID, ptrutil.DerefStr(app.Name))
 		if err != nil {
 			return fmt.Errorf("error trying to create tasks: %w", err)
 		}
