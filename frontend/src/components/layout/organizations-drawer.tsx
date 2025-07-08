@@ -130,7 +130,7 @@ export const OrganizationsDrawer: React.FC<{
               New Organization
             </Button>
           </div>
-          {!isLoading || createOrganizationMutation.isPending ? (
+          {isLoading || createOrganizationMutation.isPending ? (
             <LoaderRelative spinnerProps={{size: '32px'}} />
           ) : (
             <div className="flex flex-col gap-4 px-4">
