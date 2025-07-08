@@ -1,0 +1,108 @@
+{
+  "schema_version": "v1.0.0",
+  "name": "agntcy/financial-assistant",
+  "version": "v1.0.0",
+  "description": "A multi-functional financial assistant designed help with currency conversion.",
+  "authors": ["Cisco Systems Inc."],
+  "created_at": "2025-04-24T12:00:00Z",
+  "annotations": {
+    "type": "langgraph"
+  },
+  "skills": [
+    {
+      "category_uid": 1,
+      "class_uid": 10204,
+      "category_name": "Natural Language Processing",
+      "class_name": "Dialogue Generation"
+    },
+    {
+      "category_uid": 1,
+      "class_uid": 10201,
+      "category_name": "Natural Language Processing",
+      "class_name": "Text Completion"
+    },
+    {
+      "category_uid": 1,
+      "class_uid": 10203,
+      "category_name": "Natural Language Processing",
+      "class_name": "Text Paraphrasing"
+    },
+    {
+      "category_uid": 1,
+      "class_uid": 10303,
+      "category_name": "Natural Language Processing",
+      "class_name": "Knowledge Synthesis"
+    },
+    {
+      "category_uid": 1,
+      "class_uid": 10206,
+      "category_name": "Natural Language Processing",
+      "class_name": "Text Style Transfer"
+    },
+    {
+      "category_uid": 1,
+      "class_uid": 10602,
+      "category_name": "Natural Language Processing",
+      "class_name": "Tone and Style Adjustment"
+    }
+  ],
+  "locators": [
+    {
+      "type": "source-code",
+      "url": "https://github.com/agntcy/agentic-apps/tree/main/financial-assistant"
+    },
+    {
+      "type": "python-package",
+      "url": "https://github.com/agntcy/agentic-apps/tree/main/financial-assistant/pyproject.toml"
+    }
+  ],
+  "extensions": [
+    {
+      "name": "schema.oasf.agntcy.org/features/runtime/framework",
+      "version": "v0.0.0",
+      "data": {
+        "sbom": {
+          "name": "financial_assistant",
+          "packages": [
+            {
+              "name": "python-dotenv",
+              "version": "^1.0.1"
+            },
+            {
+              "name": "langgraph",
+              "version": "^0.3.5"
+            },
+            {
+              "name": "langchain-openai",
+              "version": "^0.3.8"
+            },
+            {
+              "name": "langchain",
+              "version": "^0.3.20"
+            },
+            {
+              "name": "agntcy-acp",
+              "version": "1.1.2"
+            },
+            {
+              "name": "gradio",
+              "version": "^5.23.1"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "schema.oasf.agntcy.org/features/runtime/language",
+      "version": "v0.0.0",
+      "data": {
+        "type": "python",
+        "version": ">=3.10,<4.0"
+      }
+    }
+  ],
+  "signature": {
+    "algorithm": "SHA2_256",
+    "signature": "MEUCIGVXnprUIl1xDpSATd0In/tm8Zk+nfsgs8BDr0+SBWYjAiEAwAZI7dPMGX0c4LP3Gi2xgl0HV0h4QTw8fOJcQdf3lwI="
+  }
+}
