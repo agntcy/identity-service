@@ -377,7 +377,7 @@
             # Approle strategy: create single/multiple ? less privilige
             # For now, we defined single vault secret that contains all secrets but we can split and import by job
           - name: Import Vault Secrets
-            uses: hashicorp/vault-action@e3d5714d59e151ca80233142880b9da9d983a48c #v2.7.5
+            uses: hashicorp/vault-action@4c06c5ccf5c0761b6029f56cfb1dcf5565918a3b #v3.4.0
             with:
               url:  ${{ vars.KEEPER_URL }}
               method: approle
@@ -483,7 +483,7 @@
             # websites Config
           - name: Import Websites Vault Secrets
             if: ${{ inputs.research-websites || inputs.outshift-websites }}
-            uses: hashicorp/vault-action@e3d5714d59e151ca80233142880b9da9d983a48c #v2.7.5
+            uses: hashicorp/vault-action@4c06c5ccf5c0761b6029f56cfb1dcf5565918a3b #v3.4.0
             with:
               url:  ${{ vars.KEEPER_URL }}
               method: approle
