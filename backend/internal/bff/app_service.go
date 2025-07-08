@@ -5,6 +5,7 @@ package bff
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
@@ -255,11 +256,7 @@ func (s *appService) DeleteApp(ctx context.Context, appID string) error {
 	}
 
 	clientCredentials, err := s.credentialStore.Get(ctx, app.ID)
-	if err != nil {
-		return fmt.Errorf("unable to fetch client credentials: %w", err)
-	}
-
-	if clientCredentials != nil {
+	if err == nil {
 		privKey, err := s.keyStore.RetrievePrivKey(ctx, issSettings.KeyID)
 		if err != nil {
 			return fmt.Errorf("unable to retrieve private key: %w", err)
@@ -279,6 +276,8 @@ func (s *appService) DeleteApp(ctx context.Context, appID string) error {
 		if err != nil {
 			return fmt.Errorf("unable to delete client credentials: %w", err)
 		}
+	} else if !errors.Is(err, idpcore.ErrCredentialNotFound) {
+		return fmt.Errorf("unable to fetch client credentials: %w", err)
 	}
 
 	err = s.credentialStore.Delete(ctx, app.ID)
