@@ -462,12 +462,12 @@ func convertVerifiableCredential(
 		return nil
 	}
 
-	var schemas []*badgetypes.CredentialSchema
+	schemas := make([]*badgetypes.CredentialSchema, 0)
 	for _, schema := range src.CredentialSchema {
 		schemas = append(schemas, convertutil.Convert[badgetypes.CredentialSchema](schema))
 	}
 
-	var statuses []*badgetypes.CredentialStatus
+	statuses := make([]*badgetypes.CredentialStatus, 0)
 	for _, status := range src.CredentialStatus {
 		statuses = append(statuses, convertutil.Convert[badgetypes.CredentialStatus](status))
 	}

@@ -15,7 +15,7 @@ import (
 )
 
 type TaskService interface {
-	CreateForAgent(ctx context.Context, appID, name string) (*types.Task, error)
+	UpdateOrCreateForAgent(ctx context.Context, appID, name string) (*types.Task, error)
 	CreateForMCP(ctx context.Context, appID string, mcpSchema string) ([]*types.Task, error)
 }
 
@@ -34,7 +34,7 @@ func NewTaskService(
 	}
 }
 
-func (s *taskService) CreateForAgent(
+func (s *taskService) UpdateOrCreateForAgent(
 	ctx context.Context,
 	appID, name string,
 ) (*types.Task, error) {
@@ -44,6 +44,15 @@ func (s *taskService) CreateForAgent(
 	}
 
 	if len(tasks) > 0 {
+		for _, task := range tasks {
+			task.Name = fmt.Sprintf("Invoke Agent %s", name)
+		}
+
+		err = s.policyRepository.UpdateTasks(ctx, tasks...)
+		if err != nil {
+			return nil, err
+		}
+
 		return tasks[0], nil
 	}
 

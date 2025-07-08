@@ -51,6 +51,7 @@ type appService struct {
 	badgeRevoker       badgecore.Revoker
 	keyStore           identitycore.KeyStore
 	policyRepository   policycore.Repository
+	taskService        policycore.TaskService
 }
 
 func NewAppService(
@@ -63,6 +64,7 @@ func NewAppService(
 	badgeRevoker badgecore.Revoker,
 	keyStore identitycore.KeyStore,
 	policyRepository policycore.Repository,
+	taskService policycore.TaskService,
 ) AppService {
 	return &appService{
 		appRepository:      appRepository,
@@ -74,6 +76,7 @@ func NewAppService(
 		badgeRevoker:       badgeRevoker,
 		keyStore:           keyStore,
 		policyRepository:   policyRepository,
+		taskService:        taskService,
 	}
 }
 
@@ -166,6 +169,11 @@ func (s *appService) UpdateApp(
 	err = s.appRepository.UpdateApp(ctx, storedApp)
 	if err != nil {
 		return nil, err
+	}
+
+	_, err = s.taskService.UpdateOrCreateForAgent(ctx, app.ID, ptrutil.DerefStr(app.Name))
+	if err != nil {
+		return nil, fmt.Errorf("error trying to update tasks: %w", err)
 	}
 
 	apiKey, err := s.iamClient.GetAppApiKey(ctx, app.ID)
