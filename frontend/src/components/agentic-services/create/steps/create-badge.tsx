@@ -91,6 +91,7 @@ export const CreateBadge = ({app}: {app?: App}) => {
             onBadgeChanged={(badge) => {
               setBadge(badge);
             }}
+            showError={false}
           />
         </div>
       </div>

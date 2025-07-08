@@ -24,7 +24,12 @@ export const ListPolicies = () => {
     pageIndex: 0,
     pageSize: 10
   });
-  const [sorting, setSorting] = useState<MRT_SortingState>([]);
+  const [sorting, setSorting] = useState<MRT_SortingState>([
+    {
+      id: 'createdAt',
+      desc: true
+    }
+  ]);
   const [query, setQuery] = useState<string | undefined>(undefined);
   const [tempPolicy, setTempPolicy] = useState<Policy | undefined>(undefined);
   const [showActionsModal, setShowActionsModal] = useState<boolean>(false);

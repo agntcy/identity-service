@@ -25,7 +25,12 @@ export const ListAgenticServices = () => {
     pageIndex: 0,
     pageSize: 15
   });
-  const [sorting, setSorting] = useState<MRT_SortingState>([]);
+  const [sorting, setSorting] = useState<MRT_SortingState>([
+    {
+      id: 'createdAt',
+      desc: true
+    }
+  ]);
   const [query, setQuery] = useState<string | undefined>(undefined);
   const [tempApp, setTempApp] = useState<App | undefined>(undefined);
   const [showBadgeForm, setShowBadgeForm] = useState<boolean>(false);
