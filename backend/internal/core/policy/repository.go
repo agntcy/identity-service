@@ -18,9 +18,12 @@ type Repository interface {
 	UpdateRule(ctx context.Context, rule *types.Rule) error
 	UpdateTasks(ctx context.Context, tasks ...*types.Task) error
 	DeletePolicies(ctx context.Context, policies ...*types.Policy) error
+	DeletePoliciesByAppID(ctx context.Context, appID string) error
 	DeleteRules(ctx context.Context, rules ...*types.Rule) error
 	DeleteTasks(ctx context.Context, tasks ...*types.Task) error
+	DeleteTasksByAppID(ctx context.Context, appID string) error
 	GetPolicyByID(ctx context.Context, id string) (*types.Policy, error)
+	GetPoliciesByAppID(ctx context.Context, appID string) ([]*types.Policy, error)
 	GetRuleByID(ctx context.Context, ruleID string, policyID string) (*types.Rule, error)
 	GetTasksByAppID(ctx context.Context, appID string) ([]*types.Task, error)
 	GetAllTasks(ctx context.Context, excludeAppIDs ...string) ([]*types.Task, error)
