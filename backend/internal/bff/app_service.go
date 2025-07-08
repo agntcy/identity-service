@@ -259,29 +259,39 @@ func (s *appService) DeleteApp(ctx context.Context, appID string) error {
 		return fmt.Errorf("unable to fetch client credentials: %w", err)
 	}
 
-	privKey, err := s.keyStore.RetrievePrivKey(ctx, issSettings.KeyID)
-	if err != nil {
-		return fmt.Errorf("unable to retrieve private key: %w", err)
-	}
-
-	issuer := identitycore.Issuer{
-		CommonName: issSettings.IssuerID,
-		KeyID:      issSettings.KeyID,
-	}
-
-	err = s.badgeRevoker.RevokeAll(ctx, app.ID, clientCredentials, &issuer, privKey)
-	if err != nil {
-		return err
-	}
-
 	if clientCredentials != nil {
-		err := idp.DeleteClientCredentialsPair(ctx, clientCredentials)
+		privKey, err := s.keyStore.RetrievePrivKey(ctx, issSettings.KeyID)
+		if err != nil {
+			return fmt.Errorf("unable to retrieve private key: %w", err)
+		}
+
+		issuer := identitycore.Issuer{
+			CommonName: issSettings.IssuerID,
+			KeyID:      issSettings.KeyID,
+		}
+
+		err = s.badgeRevoker.RevokeAll(ctx, app.ID, clientCredentials, &issuer, privKey)
+		if err != nil {
+			return err
+		}
+
+		err = idp.DeleteClientCredentialsPair(ctx, clientCredentials)
 		if err != nil {
 			return fmt.Errorf("unable to delete client credentials: %w", err)
 		}
 	}
 
 	err = s.credentialStore.Delete(ctx, app.ID)
+	if err != nil {
+		return err
+	}
+
+	err = s.policyRepository.DeletePoliciesByAppID(ctx, app.ID)
+	if err != nil {
+		return err
+	}
+
+	err = s.policyRepository.DeleteTasksByAppID(ctx, app.ID)
 	if err != nil {
 		return err
 	}

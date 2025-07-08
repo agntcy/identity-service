@@ -56,6 +56,10 @@ func (s *VaultCredentialStore) Get(
 		return nil, fmt.Errorf("unable to get client credentials from vault: %w", err)
 	}
 
+	if data == nil {
+		return nil, nil
+	}
+
 	raw, err := json.Marshal(data)
 	if err != nil {
 		return nil, fmt.Errorf("unable to marshal raw client credentials: %w", err)

@@ -176,6 +176,15 @@ func (r *repository) DeletePolicies(ctx context.Context, policies ...*types.Poli
 	return nil
 }
 
+func (r *repository) DeletePoliciesByAppID(ctx context.Context, appID string) error {
+	policies, err := r.GetPoliciesByAppID(ctx, appID)
+	if err != nil {
+		return err
+	}
+
+	return r.DeletePolicies(ctx, policies...)
+}
+
 func (r *repository) DeleteRules(ctx context.Context, rules ...*types.Rule) error {
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
@@ -230,6 +239,15 @@ func (r *repository) DeleteTasks(ctx context.Context, tasks ...*types.Task) erro
 	return nil
 }
 
+func (r *repository) DeleteTasksByAppID(ctx context.Context, appID string) error {
+	tasks, err := r.GetTasksByAppID(ctx, appID)
+	if err != nil {
+		return err
+	}
+
+	return r.DeleteTasks(ctx, tasks...)
+}
+
 func (r *repository) GetPolicyByID(ctx context.Context, id string) (*types.Policy, error) {
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
@@ -252,6 +270,32 @@ func (r *repository) GetPolicyByID(ctx context.Context, id string) (*types.Polic
 	}
 
 	return policy.ToCoreType(), nil
+}
+
+func (r *repository) GetPoliciesByAppID(ctx context.Context, appID string) ([]*types.Policy, error) {
+	tenantID, ok := identitycontext.GetTenantID(ctx)
+	if !ok {
+		return nil, identitycontext.ErrTenantNotFound
+	}
+
+	policies := make([]*Policy, 0)
+
+	err := r.dbContext.Client().
+		Preload("Rules").
+		Preload("Rules.Tasks").
+		Where("policies.assigned_to = ? AND policies.tenant_id = ?", appID, tenantID).
+		Find(&policies).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errutil.Err(err, "no policy was found")
+		}
+
+		return nil, fmt.Errorf("unable to fetch policies: %w", err)
+	}
+
+	return convertutil.ConvertSlice(policies, func(policy *Policy) *types.Policy {
+		return policy.ToCoreType()
+	}), nil
 }
 
 func (r *repository) GetRuleByID(
