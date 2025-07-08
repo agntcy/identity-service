@@ -13,13 +13,11 @@ import {PlusIcon} from 'lucide-react';
 import {useCallback, useState} from 'react';
 
 const SettingsOrganizations: React.FC = () => {
-  const [isLoading, setIsLoading] = useState(false);
   const [openCreateModal, setOpenCreateModal] = useState(false);
 
   const createOrganizationMutation = useCreateTenant({
     callbacks: {
       onSuccess: (resp) => {
-        setIsLoading(false);
         toast({
           title: 'Success',
           description: `Organization "${resp.data.name}" created successfully.`,
@@ -27,7 +25,6 @@ const SettingsOrganizations: React.FC = () => {
         });
       },
       onError: () => {
-        setIsLoading(false);
         toast({
           title: 'Error',
           description: 'An error occurred while creating the organization. Please try again.',
@@ -39,7 +36,6 @@ const SettingsOrganizations: React.FC = () => {
 
   const handleCreateOrganization = useCallback(() => {
     setOpenCreateModal(false);
-    setIsLoading(true);
     createOrganizationMutation.mutate();
   }, [createOrganizationMutation]);
 
@@ -71,7 +67,7 @@ const SettingsOrganizations: React.FC = () => {
       ]}
       rightSideItems={
         <Button
-          loading={isLoading}
+          loading={createOrganizationMutation.isPending}
           loadingPosition="start"
           onClick={() => {
             setOpenCreateModal(true);

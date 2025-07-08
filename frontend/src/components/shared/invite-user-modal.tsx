@@ -8,7 +8,7 @@ import {Modal, ModalActions, ModalContent, ModalProps, ModalTitle, toast} from '
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {Form, FormControl, FormField, FormItem, FormLabel} from '../ui/form';
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect} from 'react';
 import {Input} from '../ui/input';
 import {useInviteUser} from '@/mutations';
 import {InviteUserFormValues, InviteUserSchema} from '@/schemas/invite-user-schema';
@@ -34,8 +34,6 @@ export const InviteUserModal = ({
   onGroupIdChange,
   ...props
 }: InviteUserModalProps) => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
   const {data: dataGroups, isLoading: isLoadingGroups, error: errorGroups} = useGetGroupsTenant(tenantId || '');
   const groupId = dataGroups?.groups?.[0]?.id || '';
 
@@ -47,7 +45,6 @@ export const InviteUserModal = ({
   const inviteUser = useInviteUser({
     callbacks: {
       onSuccess: () => {
-        setIsLoading(false);
         toast({
           title: 'User invited successfully',
           description: 'The user has been invited to the group.',
@@ -56,7 +53,6 @@ export const InviteUserModal = ({
         onUserInvited?.();
       },
       onError: () => {
-        setIsLoading(false);
         toast({
           title: 'Error inviting user',
           description: 'An error occurred while inviting the user. Please try again.',
@@ -76,7 +72,6 @@ export const InviteUserModal = ({
       });
       return;
     }
-    setIsLoading(true);
     inviteUser.mutate({
       groupId: groupId,
       data: {
@@ -109,20 +104,20 @@ export const InviteUserModal = ({
                 <FormItem>
                   <FormLabel className="form-label">Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="Type the email of the user..." {...field} disabled={isLoading} />
+                    <Input placeholder="Type the email of the user..." {...field} disabled={inviteUser.isPending} />
                   </FormControl>
                 </FormItem>
               )}
             />
           </ModalContent>
           <ModalActions>
-            <Button onClick={onCancel} variant="tertariary" disabled={isLoading} sx={{fontWeight: '600 !important'}}>
+            <Button onClick={onCancel} variant="tertariary" disabled={inviteUser.isPending} sx={{fontWeight: '600 !important'}}>
               Cancel
             </Button>
             <Button
               type="submit"
-              disabled={isLoading || !form.formState.isValid}
-              loading={isLoading}
+              disabled={inviteUser.isPending || !form.formState.isValid}
+              loading={inviteUser.isPending}
               loadingPosition="start"
               sx={{fontWeight: '600 !important'}}
             >
