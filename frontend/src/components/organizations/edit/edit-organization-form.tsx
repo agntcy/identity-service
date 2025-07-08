@@ -13,14 +13,12 @@ import {OrganizationFormValues, OrganizationSchema} from '@/schemas/organization
 import {TenantReponse} from '@/types/api/iam';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {Button, toast, Typography} from '@outshift/spark-design';
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect} from 'react';
 import {useForm} from 'react-hook-form';
 import {Link, useNavigate} from 'react-router-dom';
 import z from 'zod';
 
-export const UpdateOrganizationForm = ({tenant}: {tenant?: TenantReponse}) => {
-  const [isLoading, setIsLoading] = useState(false);
-
+export const EditOrganizationForm = ({tenant}: {tenant?: TenantReponse}) => {
   const form = useForm<OrganizationFormValues>({
     resolver: zodResolver(OrganizationSchema),
     mode: 'all',
@@ -31,22 +29,20 @@ export const UpdateOrganizationForm = ({tenant}: {tenant?: TenantReponse}) => {
 
   const navigate = useNavigate();
 
-  const updateOrganizatioMutations = useUpdateTenant({
+  const updateOrganizationMutation = useUpdateTenant({
     callbacks: {
       onSuccess: () => {
-        setIsLoading(false);
         toast({
           title: 'Success',
-          description: 'Organization updated successfully.',
+          description: 'Organization edited successfully.',
           type: 'success'
         });
         void navigate(PATHS.settings.organizationsAndUsers.base, {replace: true});
       },
       onError: () => {
-        setIsLoading(false);
         toast({
           title: 'Error',
-          description: 'An error occurred while updating the organization. Please try again.',
+          description: 'An error occurred while editing the organization. Please try again.',
           type: 'error'
         });
       }
@@ -63,12 +59,11 @@ export const UpdateOrganizationForm = ({tenant}: {tenant?: TenantReponse}) => {
       });
       return;
     }
-    setIsLoading(true);
-    updateOrganizatioMutations.mutate({
+    updateOrganizationMutation.mutate({
       id: tenant?.id || '',
       name: values.name
     });
-  }, [form, tenant?.id, updateOrganizatioMutations]);
+  }, [form, tenant?.id, updateOrganizationMutation]);
 
   useEffect(() => {
     form.reset({
@@ -96,7 +91,7 @@ export const UpdateOrganizationForm = ({tenant}: {tenant?: TenantReponse}) => {
                     <FormItem className="w-[50%]">
                       <FormLabel className="form-label">Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="Type the name of your organization..." {...field} disabled={isLoading} />
+                        <Input placeholder="Type the name of your organization..." {...field} disabled={updateOrganizationMutation.isPending} />
                       </FormControl>
                     </FormItem>
                   )}
@@ -106,12 +101,26 @@ export const UpdateOrganizationForm = ({tenant}: {tenant?: TenantReponse}) => {
           </Card>
           <div className="flex justify-end gap-4">
             <Link to={PATHS.settings.organizationsAndUsers.base}>
-              <Button variant="tertariary" disabled={isLoading}>
+              <Button
+                variant="tertariary"
+                disabled={updateOrganizationMutation.isPending}
+                sx={{
+                  fontWeight: '600 !important'
+                }}
+              >
                 Cancel
               </Button>
             </Link>
-            <Button type="submit" disabled={isLoading || !form.formState.isValid} loading={isLoading} loadingPosition="start">
-              Update
+            <Button
+              sx={{
+                fontWeight: '600 !important'
+              }}
+              type="submit"
+              disabled={updateOrganizationMutation.isPending || !form.formState.isValid}
+              loading={updateOrganizationMutation.isPending}
+              loadingPosition="start"
+            >
+              Edit
             </Button>
           </div>
         </form>

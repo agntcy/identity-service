@@ -7,15 +7,16 @@ import React, {useMemo, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
 import {ChevronDownIcon, ChevronUpIcon, LogOutIcon} from 'lucide-react';
-import {Avatar, Button, Divider, Header as SparkHeader, Menu, MenuItem, Typography, Skeleton} from '@outshift/spark-design';
+import {Avatar, Button, Divider, Header as SparkHeader, Menu, MenuItem, Typography} from '@outshift/spark-design';
 import Logo from '@/assets/logo-app-bar.svg';
 import BookLogo from '@/assets/union.svg?react';
 import GitLogo from '@/assets/git.svg?react';
 import UserIcon from '@/assets/user.svg';
 import {Link} from 'react-router-dom';
 import {useAuth} from '@/hooks';
-import {useGetSession} from '@/queries';
 import {docs} from '@/utils/docs';
+import {useSettingsStore} from '@/store';
+import {useShallow} from 'zustand/react/shallow';
 
 export const Header = () => {
   return (
@@ -60,12 +61,17 @@ const UserSection = () => {
 
   const navigate = useNavigate();
   const {authInfo, logout} = useAuth();
-  const {data: dataSession, isLoading} = useGetSession();
+
+  const {session} = useSettingsStore(
+    useShallow((state) => ({
+      session: state.session
+    }))
+  );
 
   const role = useMemo(() => {
-    const temp = dataSession?.groups[0]?.role || 'VIEWER';
+    const temp = session?.groups[0]?.role || 'VIEWER';
     return temp.toLowerCase();
-  }, [dataSession?.groups]);
+  }, [session?.groups]);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => setAnchorEl(event.currentTarget);
   const handleClose = () => setAnchorEl(null);
@@ -108,19 +114,11 @@ const UserSection = () => {
           <Typography variant="subtitle2" sx={(theme) => ({color: theme.palette.vars.baseTextStrong})}>
             <span className="capitalize">{authInfo?.user?.name || 'User'}</span>
           </Typography>
-          {!isLoading ? (
-            <div className="-mt-[3px]">
-              <Typography
-                textAlign="left"
-                variant="caption"
-                sx={(theme) => ({color: theme.palette.vars.baseTextStrong, textTransform: 'capitalize'})}
-              >
-                {role}
-              </Typography>
-            </div>
-          ) : (
-            <Skeleton />
-          )}
+          <div className="-mt-[3px]">
+            <Typography textAlign="left" variant="caption" sx={(theme) => ({color: theme.palette.vars.baseTextStrong, textTransform: 'capitalize'})}>
+              {role}
+            </Typography>
+          </div>
         </div>
       </Button>
       <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
@@ -132,17 +130,11 @@ const UserSection = () => {
             <Typography variant="subtitle2" sx={(theme) => ({color: theme.palette.vars.baseTextStrong})}>
               <span className="capitalize">{authInfo?.user?.name || 'User'}</span>
             </Typography>
-            {!isLoading ? (
-              <div className="-mt-[4px]">
-                <Typography variant="caption" sx={(theme) => ({color: theme.palette.vars.baseTextStrong, textTransform: 'capitalize'})}>
-                  {role}
-                </Typography>
-              </div>
-            ) : (
-              <div className="mx-12">
-                <Skeleton />
-              </div>
-            )}
+            <div className="-mt-[4px]">
+              <Typography variant="caption" sx={(theme) => ({color: theme.palette.vars.baseTextStrong, textTransform: 'capitalize'})}>
+                {role}
+              </Typography>
+            </div>
           </div>
         </div>
         <Divider />

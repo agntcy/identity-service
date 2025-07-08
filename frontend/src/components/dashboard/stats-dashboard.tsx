@@ -62,7 +62,7 @@ export const StatsDashboard = () => {
 
   return (
     <ScrollShadowWrapper>
-      <div className="flex flex-col h-full gap-[24px]">
+      <div className="flex flex-col h-full gap-[16px]">
         <div className="w-full h-[184px] bg-[#00142B] flex flex-col justify-between sticky top-0 z-10">
           <div className="flex justify-center items-center my-auto">
             <div>

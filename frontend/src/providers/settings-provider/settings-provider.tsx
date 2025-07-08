@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {useGetSettings} from '@/queries';
+import {useGetSession, useGetSettings} from '@/queries';
 import {IdpType} from '@/types/api/settings';
 import {toast} from '@outshift/spark-design';
 import {useEffect, useMemo} from 'react';
@@ -13,14 +13,21 @@ import {Loading} from '@/components/ui/loading';
 
 export const SettingsProvider = ({children}: {children: React.ReactNode}) => {
   const {data: dataSettings, isError: isErrorSettings, isLoading: isLoadingSettings} = useGetSettings();
+  const {data: dataSession, isError: isErrorSession, isLoading: isLoadingSession} = useGetSession();
+
+  const isAdmin = useMemo(() => {
+    return dataSession?.groups[0].role === 'ADMIN' || false;
+  }, [dataSession?.groups]);
 
   const isEmptyIdp = useMemo(() => {
     return !dataSettings?.issuerSettings || dataSettings.issuerSettings.idpType === IdpType.IDP_TYPE_UNSPECIFIED;
   }, [dataSettings?.issuerSettings]);
 
-  const {setIsEmptyIdp} = useSettingsStore(
+  const {setIsEmptyIdp, setSession, setIsAdmin} = useSettingsStore(
     useShallow((state) => ({
-      setIsEmptyIdp: state.setIsEmptyIdp
+      setIsEmptyIdp: state.setIsEmptyIdp,
+      setSession: state.setSession,
+      setIsAdmin: state.setIsAdmin
     }))
   );
 
@@ -35,10 +42,27 @@ export const SettingsProvider = ({children}: {children: React.ReactNode}) => {
   }, [isErrorSettings]);
 
   useEffect(() => {
+    if (isErrorSession) {
+      toast({
+        title: 'Error fetching session',
+        description: 'There was an error fetching the session. Please try again later.',
+        type: 'error'
+      });
+    }
+  }, [isErrorSession]);
+
+  useEffect(() => {
+    if (dataSession) {
+      setSession(dataSession);
+      setIsAdmin(isAdmin);
+    }
+  }, [dataSession, isAdmin, setSession, setIsAdmin]);
+
+  useEffect(() => {
     setIsEmptyIdp(isEmptyIdp);
   }, [isEmptyIdp, setIsEmptyIdp]);
 
-  if (isLoadingSettings) {
+  if (isLoadingSettings || isLoadingSession) {
     return <Loading />;
   }
 

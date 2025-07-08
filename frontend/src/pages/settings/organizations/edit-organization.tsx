@@ -4,13 +4,13 @@
  */
 
 import {BasePage} from '@/components/layout/base-page';
-import {UpdateOrganizationForm} from '@/components/organizations/update/update-organization-form';
+import {EditOrganizationForm} from '@/components/organizations/edit/edit-organization-form';
 import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-renderer';
 import {useGetTenant} from '@/queries';
 import {PATHS} from '@/router/paths';
 import {generatePath, useParams} from 'react-router-dom';
 
-const UpdateOrganization: React.FC = () => {
+const EditOrganization: React.FC = () => {
   const {id} = useParams<{id: string}>();
 
   const {data, isLoading, error, refetch} = useGetTenant(id!);
@@ -19,7 +19,7 @@ const UpdateOrganization: React.FC = () => {
 
   return (
     <BasePage
-      title="Update Organization"
+      title="Edit Organization"
       breadcrumbs={[
         {
           text: 'Settings',
@@ -34,7 +34,7 @@ const UpdateOrganization: React.FC = () => {
           link: link
         },
         {
-          text: 'Update'
+          text: 'Edit'
         }
       ]}
       useBorder
@@ -53,10 +53,10 @@ const UpdateOrganization: React.FC = () => {
           actionTitle: 'Retry'
         }}
       >
-        <UpdateOrganizationForm tenant={data} />
+        <EditOrganizationForm tenant={data} />
       </ConditionalQueryRenderer>
     </BasePage>
   );
 };
 
-export default UpdateOrganization;
+export default EditOrganization;

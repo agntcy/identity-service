@@ -6,12 +6,12 @@
 import {useCallback, useState} from 'react';
 import {ConditionalQueryRenderer} from '../../ui/conditional-query-renderer';
 import {MenuItem, Table, toast} from '@outshift/spark-design';
-import {useGetSession, useGetTenants} from '@/queries';
+import {useGetTenants} from '@/queries';
 import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
 import {OrganizationsColumns} from './organizations-columns';
 import {Card} from '@/components/ui/card';
 import {Typography} from '@mui/material';
-import {RefreshCcwIcon, Trash2Icon, UserRoundPlusIcon} from 'lucide-react';
+import {PencilIcon, Trash2Icon, UserRoundPlusIcon} from 'lucide-react';
 import {cn} from '@/lib/utils';
 import {useAuth} from '@/hooks';
 import {generatePath, useNavigate} from 'react-router-dom';
@@ -19,6 +19,8 @@ import {PATHS} from '@/router/paths';
 import {useDeleteTenant} from '@/mutations';
 import {ConfirmModal} from '@/components/ui/confirm-modal';
 import {InviteUserModal} from '@/components/shared/invite-user-modal';
+import {useSettingsStore} from '@/store';
+import {useShallow} from 'zustand/react/shallow';
 
 export const ListOrganizations = () => {
   const [pagination, setPagination] = useState<MRT_PaginationState>({
@@ -30,11 +32,15 @@ export const ListOrganizations = () => {
   const [openActionsModal, setOpenActionsModal] = useState<boolean>(false);
   const [showInviteUserModal, setShowInviteUserModal] = useState<boolean>(false);
 
-  const {data: dataSession} = useGetSession();
   const {data, isLoading, isFetching, refetch, error} = useGetTenants();
   const {authInfo, logout} = useAuth();
   const currentTenantId = authInfo?.user?.tenant?.id;
-  const isAdmin = dataSession?.groups[0].role === 'ADMIN' || false;
+
+  const {isAdmin} = useSettingsStore(
+    useShallow((state) => ({
+      isAdmin: state.isAdmin
+    }))
+  );
 
   const navigate = useNavigate();
 
@@ -143,16 +149,16 @@ export const ListOrganizations = () => {
                   </Typography>
                 </MenuItem>,
                 <MenuItem
-                  key="update-org"
+                  key="edit-org"
                   onClick={() => {
-                    const path = generatePath(PATHS.settings.organizationsAndUsers.update, {id: row.original.id});
+                    const path = generatePath(PATHS.settings.organizationsAndUsers.edit, {id: row.original.id});
                     void navigate(path, {replace: true});
                   }}
                   sx={{display: 'flex', alignItems: 'center', gap: '8px'}}
                 >
-                  <RefreshCcwIcon className="w-4 h-4" color="#062242" />
+                  <PencilIcon className="w-4 h-4" color="#062242" />
                   <Typography variant="body2" color="#1A1F27">
-                    Update
+                    Edit
                   </Typography>
                 </MenuItem>,
                 <MenuItem

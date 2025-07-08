@@ -18,24 +18,39 @@ import {SettingsProvider} from '@/providers/settings-provider/settings-provider'
 import {useFeatureFlagsStore, useSettingsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
 
+// Welcome
 const Welcome = React.lazy(() => import('@/pages/welcome/welcome'));
+
+// Settings Identity Provider
 const SettingsIdentityProvider = React.lazy(() => import('@/pages/settings/identity-provider/settings-identity-provider'));
 const SettingsCreateIdentityProvider = React.lazy(() => import('@/pages/settings/identity-provider/settings-create-identity-provider'));
+
+// Dashboard
 const Dashboard = React.lazy(() => import('@/pages/dashboard/dashboard'));
+
+// Settings API Key
 const SettingsApiKey = React.lazy(() => import('@/pages/settings/api-key/settings-api-key'));
+
+// Settings Organizations
 const SettingsOrganizations = React.lazy(() => import('@/pages/settings/organizations/settings-organizations'));
-const UpdateOrganization = React.lazy(() => import('@/pages/settings/organizations/update-organization'));
+const EditOrganization = React.lazy(() => import('@/pages/settings/organizations/edit-organization'));
 const OrganizationInfo = React.lazy(() => import('@/pages/settings/organizations/info-organization'));
+
+// Agentic Services
 const AgenticServices = React.lazy(() => import('@/pages/agentic-services/agentic-services'));
 const CreateAgenticService = React.lazy(() => import('@/pages/agentic-services/agentic-service-create'));
 const UpdateAgenticService = React.lazy(() => import('@/pages/agentic-services/agentic-service-update'));
 const AgenticServiceInfo = React.lazy(() => import('@/pages/agentic-services/agentic-service-info'));
+
+// Policies
 const Policies = React.lazy(() => import('@/pages/policies/policies'));
 const CreatePolicies = React.lazy(() => import('@/pages/policies/policies-create'));
-const VerifyIdentityPrivate = React.lazy(() => import('@/pages/agentic-services/verify-identity-private'));
-const VerifyIdentityPublic = React.lazy(() => import('@/pages/verify-identity/verify-identity-public'));
 const PolicyInfo = React.lazy(() => import('@/pages/policies/policies-info'));
 const UpldatePolicies = React.lazy(() => import('@/pages/policies/policies-update'));
+
+// Verify Identity
+const VerifyIdentityPrivate = React.lazy(() => import('@/pages/agentic-services/verify-identity-private'));
+const VerifyIdentityPublic = React.lazy(() => import('@/pages/verify-identity/verify-identity-public'));
 
 export const generateRoutes = (routes: Route[]): Route[] => {
   return [
@@ -92,9 +107,10 @@ export const generateRoutes = (routes: Route[]): Route[] => {
 };
 
 export const useRoutes = () => {
-  const {isEmptyIdp} = useSettingsStore(
+  const {isEmptyIdp, isAdmin} = useSettingsStore(
     useShallow((state) => ({
-      isEmptyIdp: state.isEmptyIdp
+      isEmptyIdp: state.isEmptyIdp,
+      isAdmin: state.isAdmin
     }))
   );
 
@@ -214,12 +230,14 @@ export const useRoutes = () => {
                 element: <SettingsOrganizations />
               },
               {
-                path: PATHS.settings.organizationsAndUsers.update,
-                element: <UpdateOrganization />
+                path: PATHS.settings.organizationsAndUsers.edit,
+                element: <EditOrganization />,
+                disabled: !isAdmin
               },
               {
                 path: PATHS.settings.organizationsAndUsers.info,
-                element: <OrganizationInfo />
+                element: <OrganizationInfo />,
+                disabled: !isAdmin
               },
               {
                 path: '*',
@@ -234,7 +252,7 @@ export const useRoutes = () => {
         ]
       }
     ];
-  }, [isEmptyIdp, isTbacEnable]);
+  }, [isAdmin, isEmptyIdp, isTbacEnable]);
 
   const removeDisabledRoutes = useCallback((routes: Route[]): Route[] => {
     return routes

@@ -32,7 +32,7 @@ export const PATHS = {
     apiKey: '/settings/api-key',
     organizationsAndUsers: {
       base: '/settings/organizations-users',
-      update: '/settings/organizations-users/:id/update',
+      edit: '/settings/organizations-users/:id/edit',
       info: '/settings/organizations-users/:id'
     }
   }

@@ -12,8 +12,7 @@ import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useAuth} from '@/hooks';
 import {ConfirmModal} from '../ui/confirm-modal';
 import {PlusIcon} from 'lucide-react';
-import {Link} from 'react-router-dom';
-import {PATHS} from '@/router/paths';
+import {useCreateTenant} from '@/mutations';
 
 export const OrganizationsDrawer: React.FC<{
   isOpen: boolean;
@@ -22,19 +21,61 @@ export const OrganizationsDrawer: React.FC<{
 }> = ({isOpen, isCollapsed, onChange}) => {
   const [tenant, setTenant] = useState<undefined | {id: string; name: string}>();
   const openConfirmation = Boolean(tenant?.id);
+  const [openCreateModal, setOpenCreateModal] = useState(false);
 
   const {authInfo, switchTenant} = useAuth();
 
   const {data, isLoading, isError} = useGetTenants();
 
+  const createOrganizationMutation = useCreateTenant({
+    callbacks: {
+      onSuccess: (resp) => {
+        toast({
+          title: 'Success',
+          description: `Organization "${resp.data.name}" created successfully.`,
+          type: 'success'
+        });
+      },
+      onError: () => {
+        toast({
+          title: 'Error',
+          description: 'An error occurred while creating the organization. Please try again.',
+          type: 'error'
+        });
+      }
+    }
+  });
+
+  const handleCreateOrganization = useCallback(() => {
+    setOpenCreateModal(false);
+    onChange(true);
+    createOrganizationMutation.mutate();
+  }, [createOrganizationMutation, onChange]);
+
   const handleConfirmationChange = useCallback(
     (value?: {id: string; name: string}) => {
-      setTenant(value);
-      if (value) {
+      if (authInfo?.user?.tenant?.id === value?.id) {
+        handleConfirmationChange(undefined);
+        toast({
+          title: 'Already in this organization',
+          description: 'You are already logged into this organization.',
+          type: 'info'
+        });
+      } else {
+        if (value) {
+          setTenant(value);
+        }
         onChange(false);
       }
     },
-    [onChange]
+    [authInfo?.user?.tenant?.id, onChange]
+  );
+
+  const handleSwitchTenant = useCallback(
+    (tenantId: string) => {
+      switchTenant?.(tenantId);
+    },
+    [switchTenant]
   );
 
   useEffect(() => {
@@ -65,27 +106,34 @@ export const OrganizationsDrawer: React.FC<{
             <SheetTitle>Organizations</SheetTitle>
           </SheetHeader>
           <Divider sx={{marginTop: '-16px'}} />
-          {isLoading ? (
-            <LoaderRelative />
+          <div className="flex flex-col gap-4 px-4">
+            <Button
+              variant="outlined"
+              startIcon={<PlusIcon className="w-4 h-4" />}
+              fullWidth
+              sx={{
+                fontWeight: '600 !important',
+                '&.MuiButton-outlined': {
+                  '&:focus': {
+                    outline: 'none !important'
+                  }
+                }
+              }}
+              onClick={() => {
+                setOpenCreateModal(true);
+                onChange(false);
+              }}
+              disabled={isLoading || createOrganizationMutation.isPending}
+              loading={isLoading || createOrganizationMutation.isPending}
+              loadingPosition="start"
+            >
+              New Organization
+            </Button>
+          </div>
+          {!isLoading || createOrganizationMutation.isPending ? (
+            <LoaderRelative spinnerProps={{size: '32px'}} />
           ) : (
             <div className="flex flex-col gap-4 px-4">
-              <Link to={PATHS.settings.organizationsAndUsers.base}>
-                <Button
-                  variant="outlined"
-                  startIcon={<PlusIcon className="w-4 h-4" />}
-                  fullWidth
-                  sx={{
-                    fontWeight: '600 !important',
-                    '&.MuiButton-outlined': {
-                      '&:focus': {
-                        outline: 'none !important'
-                      }
-                    }
-                  }}
-                >
-                  New Organization
-                </Button>
-              </Link>
               <div className="flex flex-col gap-2 overflow-y-auto">
                 {sortedTenants?.map((tenant) => (
                   <div
@@ -110,19 +158,35 @@ export const OrganizationsDrawer: React.FC<{
       </Sheet>
       <ConfirmModal
         open={openConfirmation}
-        title="Change organization"
+        title="Change Organization"
         description={
           <>
             This will log you out of your current organization so that you can log into <b>{tenant?.name}</b>. Do you still want to continue?
           </>
         }
         confirmButtonText="Continue"
-        onCancel={() => handleConfirmationChange(undefined)}
+        onCancel={() => {
+          onChange(true);
+          setTenant(undefined);
+        }}
         onConfirm={() => {
           if (tenant?.id) {
-            switchTenant?.(tenant.id);
+            handleSwitchTenant(tenant.id);
           }
         }}
+      />
+      <ConfirmModal
+        open={openCreateModal}
+        onCancel={() => {
+          setOpenCreateModal(false);
+          onChange(true);
+        }}
+        onConfirm={() => {
+          handleCreateOrganization();
+          onChange(true);
+        }}
+        title="Creating Organization"
+        description="Are you sure you want to create a new organization? This action will create a new organization with default settings."
       />
     </>
   );
