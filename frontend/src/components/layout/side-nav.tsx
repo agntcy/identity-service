@@ -79,7 +79,7 @@ export const SideNav: React.FC<{isCollapsed?: boolean; onChangeCollapsed?: (valu
     <>
       <nav
         style={{zIndex: 20, position: 'relative'}}
-        className="flex relative flex-col justify-between gap-1 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2 bg-[#EFF3FC] h-full side-bar pl-4 mt-[56px]"
+        className="flex relative flex-col justify-between gap-1 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2 bg-[#EFF3FC] h-full side-bar pl-4"
       >
         <div>
           <div className={cn('pr-4', isCollapsed && 'pr-4', isOrgOpen && 'pr-0')}>

@@ -76,7 +76,7 @@ const Layout = () => {
           <SideNav isCollapsed={isCollapsed} onChangeCollapsed={(value) => setIsCollapsed(value as boolean)} />
         </ResizablePanel>
         <ResizablePanel defaultSize={defaultLayout[1]} collapsible={false} minSize={30}>
-          <main className="pt-[56px] h-full">
+          <main className="h-full">
             <Outlet />
           </main>
         </ResizablePanel>
