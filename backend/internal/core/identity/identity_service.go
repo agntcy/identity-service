@@ -25,7 +25,6 @@ import (
 	"github.com/agntcy/identity/pkg/oidc"
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
-	"github.com/google/uuid"
 )
 
 const (
@@ -304,7 +303,7 @@ func (s *service) generateProof(
 		// Issue a self-signed JWT proof
 		proofValue, err = oidc.SelfIssueJWT(
 			clientCredentials.Issuer,
-			uuid.NewString(), // TODO: This needs to be configurable when creating VCs
+			clientCredentials.ClientID,
 			privKey,
 		)
 	}
