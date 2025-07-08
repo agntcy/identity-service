@@ -76,7 +76,8 @@ export const generateRoutes = (routes: Route[]): Route[] => {
         <NodeRoute>
           <VerifyIdentityPublic />
         </NodeRoute>
-      )
+      ),
+      disabled: true // This route is disabled by default, can be enabled later
     },
     {
       path: PATHS.basePath,
