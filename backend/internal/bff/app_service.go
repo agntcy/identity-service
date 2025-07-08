@@ -295,7 +295,7 @@ func (s *appService) GetTasks(
 		return nil, err
 	}
 
-	tasks, err := s.policyRepository.GetTasksByAppID(ctx, app.ID)
+	tasks, err := s.policyRepository.GetAllTasks(ctx, app.ID)
 	if err != nil {
 		return nil, err
 	}

@@ -23,6 +23,7 @@ type Repository interface {
 	GetPolicyByID(ctx context.Context, id string) (*types.Policy, error)
 	GetRuleByID(ctx context.Context, ruleID string, policyID string) (*types.Rule, error)
 	GetTasksByAppID(ctx context.Context, appID string) ([]*types.Task, error)
+	GetAllTasks(ctx context.Context, excludeAppIDs ...string) ([]*types.Task, error)
 	GetTasksByID(ctx context.Context, ids []string) ([]*types.Task, error)
 	GetAllPolicies(
 		ctx context.Context,
