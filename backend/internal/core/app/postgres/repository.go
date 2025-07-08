@@ -207,7 +207,7 @@ func (r *repository) DeleteApp(ctx context.Context, app *types.App) error {
 
 func (r *repository) GetAppStatuses(
 	ctx context.Context,
-	excludeIDs ...string,
+	appIDs ...string,
 ) (map[string]types.AppStatus, error) {
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
@@ -231,9 +231,9 @@ func (r *repository) GetAppStatuses(
 			FROM apps AS a
 			LEFT JOIN badges AS b ON b.app_id = a.id
 			LEFT JOIN credential_statuses AS cs ON cs.verifiable_credential_id = b.id
-			WHERE a.tenant_id = ? AND a.id NOT IN (?)
+			WHERE a.tenant_id = ? AND a.id IN (?)
 			GROUP BY a.id
-		`, tenantID, excludeIDs).
+		`, tenantID, appIDs).
 		Scan(&rows).Error
 	if err != nil {
 		return nil, err

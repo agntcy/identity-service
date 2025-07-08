@@ -30,6 +30,6 @@ type Repository interface {
 	DeleteApp(ctx context.Context, app *types.App) error
 	GetAppStatuses(
 		ctx context.Context,
-		excludeIDs ...string,
+		appIDs ...string,
 	) (map[string]types.AppStatus, error)
 }
