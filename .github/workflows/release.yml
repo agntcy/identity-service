@@ -296,7 +296,7 @@ jobs:
     needs: [call-docker-build-push-ui, call-helm-publish-ui]
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/trigger-deploy.yaml@production
     with:
-      deployment-repo: "pyramid-deployment"
+      deployment-repo: "cisco-eti/pyramid-deployment"
       client-payload: '{"app-repository": "${{ github.repository }}", "values-file-path": "applications/identity-pyramid-ui", "property-path": "image.tag", "deployment-stage": "dev", "default-deployment": true, "value": ""}'
     secrets:
       ghcr-username: ${{ secrets.GHCR_USERNAME }}
@@ -312,7 +312,7 @@ jobs:
     needs: [call-docker-build-push-backend, call-helm-publish-backend]
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/trigger-deploy.yaml@production
     with:
-      deployment-repo: "pyramid-deployment"
+      deployment-repo: "cisco-eti/pyramid-deployment"
       client-payload: '{"app-repository": "${{ github.repository }}", "values-file-path": "applications/identity-pyramid-backend", "property-path": "image.tag", "deployment-stage": "dev", "default-deployment": true, "value": ""}'
     secrets:
       ghcr-username: ${{ secrets.GHCR_USERNAME }}
@@ -328,7 +328,7 @@ jobs:
     needs: [call-docker-build-push-docs, call-helm-publish-docs]
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/trigger-deploy.yaml@production
     with:
-      deployment-repo: "pyramid-deployment"
+      deployment-repo: "cisco-eti/pyramid-deployment"
       client-payload: '{"app-repository": "${{ github.repository }}", "values-file-path": "applications/identity-docs", "property-path": "image.tag", "deployment-stage": "dev", "default-deployment": true, "value": ""}'
     secrets:
       ghcr-username: ${{ secrets.GHCR_USERNAME }}
