@@ -11,8 +11,6 @@ from langgraph.checkpoint.memory import MemorySaver
 from langgraph.prebuilt import create_react_agent
 from pydantic import BaseModel
 
-from currency_exchange_agent import CurrencyExchangeAgent
-
 memory = MemorySaver()
 
 
@@ -91,11 +89,12 @@ class FinancialAssistantAgent:
         # Create the agent graph with the tools
         self.graph = create_react_agent(
             model=self.model,
-            tools=[
-                CurrencyExchangeAgent(
-                    self.currency_exchange_agent_url
-                ).get_invoke_tool()
-            ],
+            # tools=[
+            #     CurrencyExchangeAgent(
+            #         self.currency_exchange_agent_url
+            #     ).get_invoke_tool()
+            # ],
+            tools=tools,
             prompt=self.SYSTEM_INSTRUCTION,
             response_format=ResponseFormat,
         )

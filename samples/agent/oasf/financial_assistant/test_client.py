@@ -20,7 +20,7 @@ async def main() -> None:
         timeout = httpx.Timeout(connect=None, read=None, write=None, pool=None)
         async with httpx.AsyncClient(timeout=timeout) as httpx_client:
             res = await httpx_client.post(
-                AGENT_URL, json={"prompt": "Please exchange 900 USD to EUR"}
+                AGENT_URL, json={"prompt": "Please convert 900 USD to EUR"}
             )
 
             print(res.json())
