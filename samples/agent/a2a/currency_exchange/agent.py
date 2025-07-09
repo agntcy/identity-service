@@ -2,17 +2,19 @@
 # SPDX-License-Identifier: Apache-2.0
 """A2A agent."""
 
+import logging
 from collections.abc import AsyncIterable
 from typing import Any, Dict, Literal
 
 from langchain_core.messages import AIMessage, ToolMessage
-from langchain_mcp_adapters.tools import load_mcp_tools
+from langchain_mcp_adapters.client import MultiServerMCPClient
 from langchain_ollama import ChatOllama
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.prebuilt import create_react_agent
-from mcp import ClientSession
-from mcp.client.streamable_http import streamablehttp_client
 from pydantic import BaseModel
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 memory = MemorySaver()
 
@@ -31,11 +33,14 @@ class CurrencyAgent:
     # pylint: disable=line-too-long
     SYSTEM_INSTRUCTION = (
         "You are a specialized assistant for currency conversions. "
-        "Your sole purpose is to use the 'get_exchange_rate' tool to answer questions about currency exchange rates and 'execute_exchange' tool to perform currency exchanges."
+        "Your sole purpose is to use the 'get_exchange_rate' tool to answer questions about currency exchange rates and 'convert_currency' tool to perform currency conversion."
         "If the user asks about anything other than currency conversion or exchange rates, "
         "politely state that you cannot help with that topic and can only assist with currency-related queries. "
         "Do not attempt to answer unrelated questions or use tools for other purposes."
-        "Set response status to input_required if the user needs to provide more information."
+    )
+
+    FORMAT_INSTRUCTION = (
+        "Set response status to input_required if the user needs to provide more information to complete the request."
         "Set response status to error if there is an error while processing the request."
         "Set response status to completed if the request is complete."
     )
@@ -44,12 +49,12 @@ class CurrencyAgent:
         self,
         ollama_base_url,
         ollama_model,
-        mcp_server_url,
+        currency_exchange_mcp_server_url,
     ) -> None:
         """Initialize the agent with the Ollama model and tools."""
         self.ollama_base_url = ollama_base_url
         self.ollama_model = ollama_model
-        self.mcp_server_url = mcp_server_url
+        self.currency_exchange_mcp_server_url = currency_exchange_mcp_server_url
 
         self.model = None
         self.tools = None
@@ -63,37 +68,32 @@ class CurrencyAgent:
         )
 
         # Load tools from the MCP Server
-        # Connect to a streamable HTTP server
-        async with streamablehttp_client(self.mcp_server_url) as (
-            read_stream,
-            write_stream,
-            _,
-        ):
-            # Create a session using the client streams
-            async with ClientSession(read_stream, write_stream) as session:
-                # Initialize the connection
-                await session.initialize()
+        client = MultiServerMCPClient(
+            {
+                "currency_exchange": {
+                    "url": self.currency_exchange_mcp_server_url,
+                    "transport": "streamable_http",
+                },
+            }
+        )
+        tools = await client.get_tools()
 
-                result = await session.list_tools()
-                print(f"List of tools: {result}")
+        self.graph = create_react_agent(
+            self.model,
+            tools=tools,
+            checkpointer=memory,
+            prompt=self.SYSTEM_INSTRUCTION,
+            response_format=(self.FORMAT_INSTRUCTION, ResponseFormat),
+        )
 
-                self.tools = await load_mcp_tools(session)
-
-                self.graph = create_react_agent(
-                    self.model,
-                    tools=self.tools,
-                    checkpointer=memory,
-                    prompt=self.SYSTEM_INSTRUCTION,
-                    response_format=ResponseFormat,
-                )
-
-    def invoke(self, query, session_id) -> str:
+    async def invoke(self, query, session_id) -> AsyncIterable[Dict[str, Any]]:
         """Invoke the agent with a query and session ID."""
         config = {"configurable": {"thread_id": session_id}}
         if not self.graph:
             raise ValueError("Agent not initialized. Call init_model_and_tools first.")
 
-        self.graph.invoke({"messages": [("user", query)]}, config)
+        await self.graph.ainvoke({"messages": [("user", query)]}, config)
+
         return self.get_agent_response(config)
 
     async def stream(self, query, session_id) -> AsyncIterable[Dict[str, Any]]:
@@ -103,7 +103,7 @@ class CurrencyAgent:
         if not self.graph:
             raise ValueError("Agent not initialized. Call init_model_and_tools first.")
 
-        for item in self.graph.stream(inputs, config, stream_mode="values"):
+        async for item in self.graph.astream(inputs, config, stream_mode="values"):
             message = item["messages"][-1]
             if (
                 isinstance(message, AIMessage)
@@ -113,13 +113,13 @@ class CurrencyAgent:
                 yield {
                     "is_task_complete": False,
                     "require_user_input": False,
-                    "content": "Looking up the exchange rates...",
+                    "content": message.content,
                 }
             elif isinstance(message, ToolMessage):
                 yield {
                     "is_task_complete": False,
                     "require_user_input": False,
-                    "content": "Processing the exchange rates..",
+                    "content": message.content,
                 }
 
         yield self.get_agent_response(config)
@@ -129,6 +129,8 @@ class CurrencyAgent:
         current_state = self.graph.get_state(config)
         structured_response = current_state.values.get("structured_response")
         if structured_response and isinstance(structured_response, ResponseFormat):
+            logger.info("Structured response: %s", structured_response)
+
             if structured_response.status == "input_required":
                 return {
                     "is_task_complete": False,
