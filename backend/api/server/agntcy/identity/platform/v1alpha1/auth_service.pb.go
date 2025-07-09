@@ -275,7 +275,11 @@ func (x *TokenResponse) GetAccessToken() string {
 type ExtAuthzRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// The access token to be authorized.
-	AccessToken   string `protobuf:"bytes,1,opt,name=access_token,json=accessToken,proto3" json:"access_token,omitempty"`
+	AccessToken string `protobuf:"bytes,1,opt,name=access_token,json=accessToken,proto3" json:"access_token,omitempty"`
+	// The app id for which the access token is being authorized.
+	AppId *string `protobuf:"bytes,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
+	// The tool name of the MCP Server or Agent making the request.
+	ToolName      *string `protobuf:"bytes,3,opt,name=tool_name,json=toolName,proto3,oneof" json:"tool_name,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -317,6 +321,20 @@ func (x *ExtAuthzRequest) GetAccessToken() string {
 	return ""
 }
 
+func (x *ExtAuthzRequest) GetAppId() string {
+	if x != nil && x.AppId != nil {
+		return *x.AppId
+	}
+	return ""
+}
+
+func (x *ExtAuthzRequest) GetToolName() string {
+	if x != nil && x.ToolName != nil {
+		return *x.ToolName
+	}
+	return ""
+}
+
 var File_agntcy_identity_platform_v1alpha1_auth_service_proto protoreflect.FileDescriptor
 
 const file_agntcy_identity_platform_v1alpha1_auth_service_proto_rawDesc = "" +
@@ -337,9 +355,14 @@ const file_agntcy_identity_platform_v1alpha1_auth_service_proto_rawDesc = "" +
 	"\fTokenRequest\x12-\n" +
 	"\x12authorization_code\x18\x01 \x01(\tR\x11authorizationCode\"2\n" +
 	"\rTokenResponse\x12!\n" +
-	"\faccess_token\x18\x01 \x01(\tR\vaccessToken\"4\n" +
+	"\faccess_token\x18\x01 \x01(\tR\vaccessToken\"\x8b\x01\n" +
 	"\x0fExtAuthzRequest\x12!\n" +
-	"\faccess_token\x18\x01 \x01(\tR\vaccessToken2\xfb\x05\n" +
+	"\faccess_token\x18\x01 \x01(\tR\vaccessToken\x12\x1a\n" +
+	"\x06app_id\x18\x02 \x01(\tH\x00R\x05appId\x88\x01\x01\x12 \n" +
+	"\ttool_name\x18\x03 \x01(\tH\x01R\btoolName\x88\x01\x01B\t\n" +
+	"\a_app_idB\f\n" +
+	"\n" +
+	"_tool_name2\xfb\x05\n" +
 	"\vAuthService\x12\x90\x01\n" +
 	"\aAppInfo\x12\x16.google.protobuf.Empty\x1a2.agntcy.identity.platform.v1alpha1.AppInfoResponse\"9\x92A\x17\x12\fGet App Info*\aAppInfo\x82\xd3\xe4\x93\x02\x19\x12\x17/v1alpha1/auth/app_info\x12\xd7\x01\n" +
 	"\tAuthorize\x123.agntcy.identity.platform.v1alpha1.AuthorizeRequest\x1a4.agntcy.identity.platform.v1alpha1.AuthorizeResponse\"_\x92A<\x12/Authorize a request from an Agent or MCP Server*\tAuthorize\x82\xd3\xe4\x93\x02\x1a\x12\x18/v1alpha1/auth/authorize\x12\xc3\x01\n" +
@@ -394,6 +417,7 @@ func file_agntcy_identity_platform_v1alpha1_auth_service_proto_init() {
 	}
 	file_agntcy_identity_platform_v1alpha1_app_proto_init()
 	file_agntcy_identity_platform_v1alpha1_auth_service_proto_msgTypes[1].OneofWrappers = []any{}
+	file_agntcy_identity_platform_v1alpha1_auth_service_proto_msgTypes[5].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

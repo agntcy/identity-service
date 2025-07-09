@@ -341,6 +341,16 @@ paths:
                   description: The access token to be authorized.
                   schema:
                     type: string
+                - name: appId
+                  in: query
+                  description: The app id for which the access token is being authorized.
+                  schema:
+                    type: string
+                - name: toolName
+                  in: query
+                  description: The tool name of the MCP Server or Agent making the request.
+                  schema:
+                    type: string
             responses:
                 "200":
                     description: OK

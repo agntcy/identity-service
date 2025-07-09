@@ -1923,7 +1923,7 @@
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
-          "hasOneofs": false,
+          "hasOneofs": true,
           "extensions": [],
           "fields": [
             {
@@ -1936,6 +1936,30 @@
               "ismap": false,
               "isoneof": false,
               "oneofdecl": "",
+              "defaultValue": ""
+            },
+            {
+              "name": "app_id",
+              "description": "The app id for which the access token is being authorized.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_app_id",
+              "defaultValue": ""
+            },
+            {
+              "name": "tool_name",
+              "description": "The tool name of the MCP Server or Agent making the request.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_tool_name",
               "defaultValue": ""
             }
           ]
