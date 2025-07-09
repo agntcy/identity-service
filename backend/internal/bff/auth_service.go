@@ -179,6 +179,8 @@ func (s *authService) ExtAuthZ(
 		)
 	}
 
+	// If the session appID is provided (in the authorize call)
+	// we cannot specify another appID in the ext-authz request
 	if session.AppID != nil && appID != nil && *session.AppID != *appID {
 		return errutil.Err(
 			nil,
@@ -186,6 +188,8 @@ func (s *authService) ExtAuthZ(
 		)
 	}
 
+	// If the session toolName is provided (in the authorize call)
+	// we cannot specify another toolName in the ext-authz request
 	if session.ToolName != nil && toolName != nil && *session.ToolName != *toolName {
 		return errutil.Err(
 			nil,
@@ -193,6 +197,7 @@ func (s *authService) ExtAuthZ(
 		)
 	}
 
+	// Both session appID and appID cannot be nil
 	if session.AppID == nil && appID == nil {
 		return errutil.Err(
 			nil,
