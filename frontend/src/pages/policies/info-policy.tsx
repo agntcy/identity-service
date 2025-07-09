@@ -4,18 +4,18 @@
  */
 
 import {BasePage} from '@/components/layout/base-page';
-import {InfoPolicy} from '@/components/policies/info/info-agentic-service';
+import {PolicyContent} from '@/components/policies/info/policy-content';
 import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-renderer';
 import {ConfirmModal} from '@/components/ui/confirm-modal';
 import {useDeletePolicy} from '@/mutations';
 import {useGetPolicy} from '@/queries';
 import {PATHS} from '@/router/paths';
 import {Button, toast} from '@outshift/spark-design';
-import {RefreshCcwIcon, Trash2Icon} from 'lucide-react';
+import {PencilIcon, Trash2Icon} from 'lucide-react';
 import {useCallback, useState} from 'react';
 import {generatePath, useNavigate, useParams} from 'react-router-dom';
 
-const PolicyInfo: React.FC = () => {
+const InfoPolicy: React.FC = () => {
   const [showConfirmDelete, setShowConfirmDelete] = useState<boolean>(false);
 
   const {id} = useParams<{id: string}>();
@@ -32,7 +32,7 @@ const PolicyInfo: React.FC = () => {
           description: 'Policy deleted successfully.',
           type: 'success'
         });
-        void navigate(PATHS.policies.base);
+        void navigate(PATHS.policies.base, {replace: true});
       },
       onError: () => {
         toast({
@@ -79,15 +79,15 @@ const PolicyInfo: React.FC = () => {
               Delete
             </Button>
             <Button
-              startIcon={<RefreshCcwIcon className="h-4 w-4" />}
+              startIcon={<PencilIcon className="h-4 w-4" />}
               variant="secondary"
               sx={{fontWeight: '600 !important'}}
               onClick={() => {
-                const path = generatePath(PATHS.policies.update, {id: id || ''});
+                const path = generatePath(PATHS.policies.edit, {id: id || ''});
                 void navigate(path, {replace: true});
               }}
             >
-              Update
+              Edit
             </Button>
           </div>
         )
@@ -99,15 +99,13 @@ const PolicyInfo: React.FC = () => {
         error={error}
         isLoading={isLoading || deleteMutation.isPending}
         useRelativeLoader
-        useContainer
         errorListStateProps={{
           actionCallback: () => {
             void refetch();
-          },
-          actionTitle: 'Retry'
+          }
         }}
       >
-        <InfoPolicy policy={data} />
+        <PolicyContent policy={data} />
         <ConfirmModal
           open={showConfirmDelete}
           title="Delete Policy"
@@ -133,4 +131,4 @@ const PolicyInfo: React.FC = () => {
   );
 };
 
-export default PolicyInfo;
+export default InfoPolicy;

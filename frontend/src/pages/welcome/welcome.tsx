@@ -4,11 +4,8 @@
  */
 
 import {Button, Divider, Link, Typography} from '@outshift/spark-design';
-import {CheckIcon} from 'lucide-react';
 import {useAuth} from '@/hooks';
-import {Link as RouterLink} from 'react-router-dom';
 import {docs} from '@/utils/docs';
-import {PATHS} from '@/router/paths';
 import AgntcyLogo from '@/assets/agntcy-logo.svg?react';
 import '@/styles/welcome.css';
 

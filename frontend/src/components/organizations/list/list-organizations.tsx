@@ -88,7 +88,6 @@ export const ListOrganizations = () => {
             void refetch();
           }
         }}
-        useContainer
       >
         <Card className={cn(!(isFetching || isLoading) && 'p-0')} variant="secondary">
           <Table

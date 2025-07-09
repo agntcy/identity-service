@@ -11,7 +11,7 @@ import {AgenticServiceFormValues} from '@/schemas/agentic-service-schema';
 import KeyValue, {KeyValuePair} from '@/components/ui/key-value';
 import {AgenticServiceType} from '@/components/shared/agentic-service-type';
 
-export const ConfirmAgenticProvider = () => {
+export const ConfirmInfo = () => {
   const methods = useStepper();
   const metaData = methods.getMetadata('agenticServiceForm') as AgenticServiceFormValues | undefined;
 

@@ -12,7 +12,7 @@ import {useDeleteAgenticService} from '@/mutations';
 import {useGetAgenticService} from '@/queries';
 import {PATHS} from '@/router/paths';
 import {Button, toast} from '@outshift/spark-design';
-import {IdCardIcon, RefreshCcwIcon, Trash2Icon} from 'lucide-react';
+import {IdCardIcon, PencilIcon, Trash2Icon} from 'lucide-react';
 import {useCallback, useState} from 'react';
 import {generatePath, useNavigate, useParams} from 'react-router-dom';
 
@@ -35,7 +35,7 @@ const AgenticServiceInfo: React.FC = () => {
           description: 'Agentic service deleted successfully.',
           type: 'success'
         });
-        void navigate(PATHS.agenticServices.base);
+        void navigate(PATHS.agenticServices.base, {replace: true});
       },
       onError: () => {
         toast({
@@ -82,15 +82,15 @@ const AgenticServiceInfo: React.FC = () => {
               Delete
             </Button>
             <Button
-              startIcon={<RefreshCcwIcon className="h-4 w-4" />}
+              startIcon={<PencilIcon className="h-4 w-4" />}
               variant="secondary"
               sx={{fontWeight: '600 !important'}}
               onClick={() => {
-                const path = generatePath(PATHS.agenticServices.update, {id: id || ''});
+                const path = generatePath(PATHS.agenticServices.edit, {id: id || ''});
                 void navigate(path, {replace: true});
               }}
             >
-              Update
+              Edit
             </Button>
             {showReissueBadge && (
               <Button
@@ -114,12 +114,10 @@ const AgenticServiceInfo: React.FC = () => {
         error={error}
         isLoading={isLoading || deleteMutation.isPending}
         useRelativeLoader
-        useContainer
         errorListStateProps={{
           actionCallback: () => {
             void refetch();
-          },
-          actionTitle: 'Retry'
+          }
         }}
       >
         <InfoAgenticService app={data} onChangeReissueBadge={(value) => setShowReissueBadge(value)} />

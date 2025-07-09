@@ -3,54 +3,52 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import {EditAgenticServiceForm} from '@/components/agentic-services/edit/edit-agentic-service-form';
 import {BasePage} from '@/components/layout/base-page';
-import {UpdatePolicyStepper} from '@/components/policies/update/update-policy-stepper';
 import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-renderer';
-import {useGetPolicy} from '@/queries';
+import {useGetAgenticService} from '@/queries';
 import {PATHS} from '@/router/paths';
 import {generatePath, useParams} from 'react-router-dom';
 
-const UpldatePolicies: React.FC = () => {
+const EditAgenticService: React.FC = () => {
   const {id} = useParams<{id: string}>();
 
-  const {data, isLoading, isFetching, error, refetch} = useGetPolicy(id);
+  const {data, isLoading, isFetching, error, refetch} = useGetAgenticService(id);
 
   return (
     <BasePage
-      title="Update Policy"
+      title="Edit Agentic Service"
       useBorder
       breadcrumbs={[
         {
-          text: 'Policies',
-          link: PATHS.policies.base
+          text: 'Agentic Services',
+          link: PATHS.agenticServices.base
         },
         {
-          text: data?.name || 'Policy',
-          link: generatePath(PATHS.policies.info, {id: id || ''})
+          text: data?.name || 'Agentic Service',
+          link: generatePath(PATHS.agenticServices.info, {id: id || ''})
         },
         {
-          text: 'Update'
+          text: 'Edit'
         }
       ]}
     >
       <ConditionalQueryRenderer
-        itemName="Policy"
+        itemName="Agentic Service"
         data={data}
         error={error}
         isLoading={isLoading || isFetching}
         useRelativeLoader
-        useContainer
         errorListStateProps={{
           actionCallback: () => {
             void refetch();
-          },
-          actionTitle: 'Retry'
+          }
         }}
       >
-        <UpdatePolicyStepper policy={data} />
+        <EditAgenticServiceForm app={data} />
       </ConditionalQueryRenderer>
     </BasePage>
   );
 };
 
-export default UpldatePolicies;
+export default EditAgenticService;

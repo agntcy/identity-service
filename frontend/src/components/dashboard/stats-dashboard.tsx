@@ -4,7 +4,7 @@
  */
 
 import {Button, Typography} from '@outshift/spark-design';
-import {CheckIcon} from 'lucide-react';
+import {CheckIcon, PlusIcon} from 'lucide-react';
 import ScrollShadowWrapper from '@/components/ui/scroll-shadow-wrapper';
 import {PATHS} from '@/router/paths';
 import {useAuth} from '@/hooks';
@@ -103,15 +103,15 @@ export const StatsDashboard = () => {
           <div className="card-flex-group min-w-[384px] bg-[#FBFCFE] rounded-[8px] flex-col flex justify-center items-center px-20 pt-[40px] pb-[24px]">
             <div>
               <Typography variant="h6" textAlign="center">
-                Create Agentic Services
+                Add Agentic Services
               </Typography>
               <Typography variant="body1" marginTop={2} textAlign="center">
-                Create Agentic Services and generate Identity badges
+                Add Agentic Services and generate Identity badges
               </Typography>
               <div className="flex justify-center items-center mt-8">
-                <RouterLink to={PATHS.agenticServices.create}>
-                  <Button variant="outlined" sx={{fontWeight: '600 !important'}} startIcon={<CheckIcon className="w-4 h-4" />}>
-                    Create Agentic Service
+                <RouterLink to={PATHS.agenticServices.add}>
+                  <Button variant="outlined" sx={{fontWeight: '600 !important'}} startIcon={<PlusIcon className="w-4 h-4" />}>
+                    Add Agentic Service
                   </Button>
                 </RouterLink>
               </div>
@@ -128,7 +128,7 @@ export const StatsDashboard = () => {
                 </Typography>
                 <div className="flex justify-center items-center mt-8">
                   <RouterLink to={PATHS.policies.create}>
-                    <Button variant="outlined" sx={{fontWeight: '600 !important'}} startIcon={<CheckIcon className="w-4 h-4" />}>
+                    <Button variant="outlined" sx={{fontWeight: '600 !important'}} startIcon={<PlusIcon className="w-4 h-4" />}>
                       Add Policy
                     </Button>
                   </RouterLink>

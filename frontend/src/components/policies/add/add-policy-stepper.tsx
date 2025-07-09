@@ -22,7 +22,7 @@ import {useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
 import {PolicyReview} from './steps/policy-review';
 
-export const CreatePolicyStepper = () => {
+export const AddPolicyStepper = () => {
   return (
     <StepperProvider variant="vertical">
       <FormStepperComponent />
@@ -78,7 +78,7 @@ const FormStepperComponent = () => {
         } else {
           toast({
             title: 'Success',
-            description: `Policy "${resp.data.name}" created successfully.`,
+            description: `Policy "${resp.data.name}" added successfully.`,
             type: 'success'
           });
           void navigate(PATHS.policies.base, {replace: true});
@@ -89,7 +89,7 @@ const FormStepperComponent = () => {
         setIsLoading(false);
         toast({
           title: 'Error',
-          description: 'An error occurred while creating the policy. Please try again.',
+          description: 'An error occurred while adding the policy. Please try again.',
           type: 'error'
         });
       }
@@ -120,7 +120,7 @@ const FormStepperComponent = () => {
           );
           toast({
             title: 'Success',
-            description: `All rules for policy "${policy.name}" created successfully.`,
+            description: `All rules for policy "${policy.name}" added successfully.`,
             type: 'success'
           });
           void navigate(PATHS.policies.base, {replace: true});
@@ -128,7 +128,7 @@ const FormStepperComponent = () => {
         } catch (error) {
           toast({
             title: 'Error',
-            description: 'An error occurred while creating the rules. Please try again.',
+            description: 'An error occurred while adding the rules. Please try again.',
             type: 'error'
           });
         } finally {
@@ -281,7 +281,7 @@ const FormStepperComponent = () => {
                               fontWeight: '600 !important'
                             }}
                           >
-                            {methods.current.id === 'policyReview' ? 'Create Policy' : 'Next'}
+                            {methods.current.id === 'policyReview' ? 'Add Policy' : 'Next'}
                           </Button>
                         </StepperControls>
                       </AccordionContent>

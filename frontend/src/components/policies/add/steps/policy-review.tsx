@@ -22,7 +22,7 @@ import {RuleFormValues} from '@/schemas/rule-schema';
 export const PolicyReview = () => {
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: 0,
-    pageSize: 10
+    pageSize: 15
   });
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
 
@@ -114,7 +114,7 @@ export const PolicyReview = () => {
         onPaginationChange={setPagination}
         onSortingChange={setSorting}
         rowCount={dataTask.length}
-        rowsPerPageOptions={[1, 10, 25, 50, 100]}
+        rowsPerPageOptions={[1, 15, 25, 50, 100]}
         state={{pagination, sorting}}
         title={{label: 'Tasks', count: dataTask.length}}
         muiBottomToolbarProps={{

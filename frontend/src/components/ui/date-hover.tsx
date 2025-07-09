@@ -10,7 +10,7 @@ import {format, formatDistanceToNow} from 'date-fns';
 import {safeGetDate} from '@/utils/date';
 import {Tooltip} from '@outshift/spark-design';
 
-const dateHoverStyles = cva(['_date-hover inline underline decoration-dotted decoration-text-foreground cursor-default']);
+const dateHoverStyles = cva(['_date-hover inline cursor-default']);
 
 const DateHover: React.FC<DateHoverProps> = ({className, date, ...props}) => {
   const dateObj = useMemo(() => {

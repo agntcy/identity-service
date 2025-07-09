@@ -3,29 +3,29 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import {AddAgenticServiceStepper} from '@/components/agentic-services/add/add-agentic-service-stepper';
 import {BasePage} from '@/components/layout/base-page';
-import {CreatePolicyStepper} from '@/components/policies/create/create-policy-stepper';
 import {PATHS} from '@/router/paths';
 import {docs} from '@/utils/docs';
 import {Link} from '@outshift/spark-design';
 import {ExternalLinkIcon} from 'lucide-react';
 
-const CreatePolicies: React.FC = () => {
+const AddAgenticService: React.FC = () => {
   return (
     <BasePage
-      title="Add Policy"
+      title="Add Agentic Service"
       useBorder
       breadcrumbs={[
         {
-          text: 'Policies',
-          link: PATHS.policies.base
+          text: 'Agentic Services',
+          link: PATHS.agenticServices.base
         },
         {
-          text: 'Add Policy'
+          text: 'Add Agentic Service'
         }
       ]}
       rightSideItems={
-        <Link href={docs('policies')} openInNewTab>
+        <Link href={docs('agentic-service')} openInNewTab>
           <div className="flex items-center gap-1">
             View Documentation
             <ExternalLinkIcon className="w-4 h-4 ml-1" />
@@ -33,9 +33,9 @@ const CreatePolicies: React.FC = () => {
         </Link>
       }
     >
-      <CreatePolicyStepper />
+      <AddAgenticServiceStepper />
     </BasePage>
   );
 };
 
-export default CreatePolicies;
+export default AddAgenticService;

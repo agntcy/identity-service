@@ -22,7 +22,7 @@ import {useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
 import {PolicyLogic} from './steps/policy-logic';
 
-export const UpdatePolicyStepper = ({policy}: {policy?: Policy}) => {
+export const EditPolicyStepper = ({policy}: {policy?: Policy}) => {
   return (
     <StepperProvider variant="vertical">
       <FormStepperComponent policy={policy} />
@@ -280,7 +280,7 @@ const FormStepperComponent = ({policy}: {policy?: Policy}) => {
                               fontWeight: '600 !important'
                             }}
                           >
-                            {methods.current.id === 'policyLogic' ? 'Update Policy and Rules' : 'Next'}
+                            {methods.current.id === 'policyLogic' ? 'Edit Policy and Rules' : 'Next'}
                           </Button>
                         </StepperControls>
                       </AccordionContent>

@@ -10,7 +10,7 @@ import {cva, type VariantProps} from 'class-variance-authority';
 
 import {cn} from '@/lib/utils';
 import {Button} from './button';
-import {CheckIcon} from 'lucide-react';
+import CheckIcon from '@/assets/check.svg?react';
 
 //#region Types
 type StepperVariant = 'horizontal' | 'vertical' | 'circle';
@@ -184,7 +184,7 @@ const defineStepper = <const Steps extends Stepperize.Step[]>(...steps: Steps): 
               {!onlyIcon ? (
                 (icon ?? stepIndex + 1)
               ) : dataState === 'completed' ? (
-                <CheckIcon className="text-[#0051AF]" style={{width: '12px', height: '12px'}} />
+                <CheckIcon className="text-[#0051AF]" style={{width: '16px', height: '16px'}} />
               ) : null}
             </Button>
             {variant === 'horizontal' && labelOrientation === 'vertical' && (

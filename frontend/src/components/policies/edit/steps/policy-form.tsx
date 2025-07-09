@@ -159,7 +159,7 @@ export const PolicyForm = ({isLoading = false}: {isLoading?: boolean}) => {
                               startIcon={<PlusIcon className="h-4 w-4" />}
                               variant="tertariary"
                               onClick={() => {
-                                void navigate(PATHS.agenticServices.create, {replace: true});
+                                void navigate(PATHS.agenticServices.add, {replace: true});
                               }}
                             >
                               Add Agentic Service

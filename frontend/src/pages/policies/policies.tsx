@@ -45,19 +45,13 @@ const Policies: React.FC = () => {
         error={null}
         isLoading={false}
         useRelativeLoader
-        useContainer
         emptyListStateProps={{
           title: 'Get started with Agent Identity',
           description:
             'Connect your identity provider to create and manage identities for your AI agents and MCP servers, including those supporting A2A-compatible protocols like Google A2A, with support for policies and access controls.',
           actionTitle: 'Connect Identity Provider',
           actionCallback: () => {
-            void navigate(PATHS.settings.identityProvider.connection);
-          },
-          actionButtonProps: {
-            variant: 'outlined',
-            startIcon: <PlusIcon className="w-4 h-4" />,
-            sx: {fontWeight: '600 !important'}
+            void navigate(PATHS.settings.identityProvider.connection, {replace: true});
           }
         }}
       >
@@ -67,18 +61,12 @@ const Policies: React.FC = () => {
           error={error}
           isLoading={isLoading}
           useRelativeLoader
-          useContainer
           emptyListStateProps={{
             title: 'Get started with Agent Identity',
-            description: 'Create an Agentic Service to manage identities and apply TBAC based access control.',
-            actionTitle: 'Create Agentic Service',
+            description: 'Add an Agentic Service to manage identities and apply TBAC based access control.',
+            actionTitle: 'Add Agentic Service',
             actionCallback: () => {
-              void navigate(PATHS.agenticServices.create);
-            },
-            actionButtonProps: {
-              variant: 'outlined',
-              startIcon: <PlusIcon className="w-4 h-4" />,
-              sx: {fontWeight: '600 !important'}
+              void navigate(PATHS.agenticServices.add);
             }
           }}
         >

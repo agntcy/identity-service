@@ -36,7 +36,7 @@ const AgentServices: React.FC = () => {
             </Button>
           </Link>
           {!isEmptyIdp && (
-            <Link to={PATHS.agenticServices.create}>
+            <Link to={PATHS.agenticServices.add}>
               <Button startIcon={<PlusIcon className="w-4 h-4" />} variant="primary" sx={{fontWeight: '600 !important'}}>
                 Add Agentic Service
               </Button>
@@ -51,12 +51,10 @@ const AgentServices: React.FC = () => {
         error={error}
         isLoading={isLoading}
         useRelativeLoader
-        useContainer
         errorListStateProps={{
           actionCallback: () => {
             void refetch();
-          },
-          actionTitle: 'Retry'
+          }
         }}
         emptyListStateProps={{
           title: 'Get started with Agent Identity',
@@ -64,12 +62,7 @@ const AgentServices: React.FC = () => {
             'Connect your identity provider to create and manage identities for your AI agents and MCP servers, including those supporting A2A-compatible protocols like Google A2A, with support for policies and access controls.',
           actionTitle: 'Connect Identity Provider',
           actionCallback: () => {
-            void navigate(PATHS.settings.identityProvider.connection);
-          },
-          actionButtonProps: {
-            variant: 'outlined',
-            startIcon: <PlusIcon className="w-4 h-4" />,
-            sx: {fontWeight: '600 !important'}
+            void navigate(PATHS.settings.identityProvider.connection, {replace: true});
           }
         }}
       >
