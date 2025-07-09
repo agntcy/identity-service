@@ -162,7 +162,7 @@ func (s *authService) Token(
 func (s *authService) ExtAuthZ(
 	ctx context.Context,
 	accessToken string,
-	appID, toolName *string,
+	toolName *string,
 ) error {
 	if accessToken == "" {
 		return errutil.Err(
@@ -179,9 +179,11 @@ func (s *authService) ExtAuthZ(
 		)
 	}
 
+	appID, _ := identitycontext.GetAppID(ctx)
+
 	// If the session appID is provided (in the authorize call)
-	// we cannot specify another appID in the ext-authz request
-	if session.AppID != nil && appID != nil && *session.AppID != *appID {
+	// it needs to match the current context appID
+	if session.AppID != nil && appID != "" && *session.AppID != appID {
 		return errutil.Err(
 			nil,
 			"access token is not valid for the specified app",
@@ -194,14 +196,6 @@ func (s *authService) ExtAuthZ(
 		return errutil.Err(
 			nil,
 			"access token is not valid for the specified tool",
-		)
-	}
-
-	// Both session appID and appID cannot be nil
-	if session.AppID == nil && appID == nil {
-		return errutil.Err(
-			nil,
-			"app ID is required for external authorization",
 		)
 	}
 

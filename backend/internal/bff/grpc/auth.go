@@ -126,7 +126,6 @@ func (s *authService) ExtAuthz(
 	err := s.authSrv.ExtAuthZ(
 		ctx,
 		req.AccessToken,
-		req.AppId,
 		req.ToolName,
 	)
 	if err != nil {
