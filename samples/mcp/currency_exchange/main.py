@@ -9,37 +9,31 @@ import uvicorn
 from fastapi import FastAPI
 from mcp.server.fastmcp import FastMCP
 
-
 logging.basicConfig(level=logging.INFO)
 
 mcp = FastMCP("GitHub", stateless_http=True)
 
 
 @mcp.tool()
-def execute_exchange(
+def trade_currency(
     currency_from: str = "USD",
     currency_to: str = "EUR",
     amount: float = 1.0,
-    currency_date: str = "latest",
 ):
-    """Use this to perform a currency exchange.
+    """Use this to trade currency for the specified amount.
 
     Args:
-        currency_from: The currency to convert from (e.g., "USD").
-        currency_to: The currency to convert to (e.g., "EUR").
-        amount: The amount of money to convert.
-        currency_date: The date for the exchange rate or "latest". Defaults to "latest".
+        currency_from: The currency to trade from (e.g., "USD").
+        currency_to: The currency to trade to (e.g., "EUR").
+        amount: The amount of money to trade.
 
     Returns:
         A dictionary containing the converted amount and exchange rate, or an error message if the request fails.
     """
     try:
         response = httpx.get(
-            f"https://api.frankfurter.app/{currency_date}",
-            params={
-                "from": currency_from,
-                "to": currency_to
-            },
+            "https://api.frankfurter.app/latest",
+            params={"from": currency_from, "to": currency_to},
         )
         response.raise_for_status()
 
@@ -57,7 +51,7 @@ def execute_exchange(
             "from_currency": currency_from,
             "to_currency": currency_to,
             "rate": rate,
-            "converted_amount": converted_amount
+            "converted_amount": converted_amount,
         }
     except httpx.HTTPError as e:
         return {"error": f"API request failed: {e}"}
@@ -84,10 +78,7 @@ def get_exchange_rate(
     try:
         response = httpx.get(
             f"https://api.frankfurter.app/{currency_date}",
-            params={
-                "from": currency_from,
-                "to": currency_to
-            },
+            params={"from": currency_from, "to": currency_to},
         )
         response.raise_for_status()
 
