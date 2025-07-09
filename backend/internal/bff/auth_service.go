@@ -20,8 +20,7 @@ import (
 type AuthService interface {
 	Authorize(
 		ctx context.Context,
-		appID string,
-		toolName, userToken *string,
+		appID, toolName, userToken *string,
 	) (*authtypes.Session, error)
 	Token(
 		ctx context.Context,
@@ -53,16 +52,8 @@ func NewAuthService(
 
 func (s *authService) Authorize(
 	ctx context.Context,
-	appID string,
-	toolName, _ *string,
+	appID, toolName, _ *string,
 ) (*authtypes.Session, error) {
-	if appID == "" {
-		return nil, errutil.Err(
-			nil,
-			"app ID cannot be empty",
-		)
-	}
-
 	// Get calling identity from context
 	ownerAppID, ok := identitycontext.GetAppID(ctx)
 	if !ok || ownerAppID == "" {
@@ -72,15 +63,19 @@ func (s *authService) Authorize(
 		)
 	}
 
-	if appID == ownerAppID {
+	if appID != nil && *appID == ownerAppID {
 		return nil, errutil.Err(
 			nil,
 			"cannot authorize the same app",
 		)
 	}
 
-	// Evaluate the session based on existing policies
-	// TODO: Implement policy evaluation logic here
+	// When appID is not provided, it means the session is for all apps
+	// Policy will be ebvaluated on the external authorization step
+	if appID != nil && *appID != "" {
+		// Evaluate the session based on existing policies
+		// TODO: Implement policy evaluation logic here
+	}
 
 	// Create new session
 	session, err := s.authRepository.Create(ctx, &authtypes.Session{
