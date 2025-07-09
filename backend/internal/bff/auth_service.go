@@ -29,7 +29,7 @@ type AuthService interface {
 	ExtAuthZ(
 		ctx context.Context,
 		accessToken string,
-		appID, toolName *string,
+		toolName *string,
 	) error
 }
 
