@@ -61,7 +61,7 @@ func (d *discoveryClient) Discover(
 ) (*McpServer, error) {
 	// Check if the URL already has the mcp path
 	if !strings.HasSuffix(url, mcpSuffix) {
-		url = strings.TrimSuffix(url, "/") + mcpSuffix
+		url = strings.TrimSuffix(url, "/")
 	}
 
 	log.Debug("Using MCP URL for discovery: ", url)
@@ -74,7 +74,7 @@ func (d *discoveryClient) Discover(
 		log.Debug("Using streamable HTTP client for MCP discovery")
 
 		mcpClient, err = client.NewStreamableHttpClient(
-			url,
+			url + mcpSuffix,
 		)
 	case McpClientTypeSSE:
 		log.Debug("Using SSE client for MCP discovery")
