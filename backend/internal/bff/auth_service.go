@@ -29,6 +29,7 @@ type AuthService interface {
 	ExtAuthZ(
 		ctx context.Context,
 		accessToken string,
+		appID, toolName *string,
 	) error
 }
 
@@ -161,6 +162,7 @@ func (s *authService) Token(
 func (s *authService) ExtAuthZ(
 	ctx context.Context,
 	accessToken string,
+	appID, toolName *string,
 ) error {
 	if accessToken == "" {
 		return errutil.Err(
@@ -177,10 +179,32 @@ func (s *authService) ExtAuthZ(
 		)
 	}
 
+	if session.AppID != nil && appID != nil && *session.AppID != *appID {
+		return errutil.Err(
+			nil,
+			"access token is not valid for the specified app",
+		)
+	}
+
+	if session.ToolName != nil && toolName != nil && *session.ToolName != *toolName {
+		return errutil.Err(
+			nil,
+			"access token is not valid for the specified tool",
+		)
+	}
+
+	if session.AppID == nil && appID == nil {
+		return errutil.Err(
+			nil,
+			"app ID is required for external authorization",
+		)
+	}
+
 	// Validate expiration of the access token
 	err = jwtutil.Verify(accessToken)
 
 	// Evaluate the session based on existing policies
+	// Evaluate based on provided appID and toolName and the session appID, toolName
 	// TODO: Implement policy evaluation logic here
 
 	// Expire the session
