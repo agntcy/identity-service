@@ -63,7 +63,7 @@ message AppInfoResponse {
 
 message AuthorizeRequest {
   // The app id for which authorization is requested.
-  string app_id = 1;
+  optional string app_id = 1;
 
   // The MCP Server tool name.
   optional string tool_name = 2;
@@ -92,4 +92,7 @@ message TokenResponse {
 message ExtAuthzRequest {
   // The access token to be authorized.
   string access_token = 1;
+
+  // The tool name that will be invoked
+  optional string tool_name = 2;
 }

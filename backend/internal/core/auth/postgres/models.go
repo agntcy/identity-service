@@ -7,6 +7,7 @@ import (
 	apptypes "github.com/agntcy/identity-platform/internal/core/app/types"
 	types "github.com/agntcy/identity-platform/internal/core/auth/types"
 	"github.com/agntcy/identity-platform/internal/pkg/secrets"
+	"github.com/agntcy/identity-platform/internal/pkg/strutil"
 	"github.com/google/uuid"
 )
 
@@ -16,7 +17,7 @@ type Session struct {
 	ExpiresAt         *int64
 	OwnerAppID        uuid.UUID `gorm:"foreignKey:ID"`
 	OwnerApp          *apptypes.App
-	AppID             uuid.UUID `gorm:"foreignKey:ID"`
+	AppID             *uuid.UUID `gorm:"foreignKey:ID"`
 	App               *apptypes.App
 	ToolName          *string
 	UserID            *string
@@ -28,7 +29,7 @@ func (i *Session) ToCoreType() *types.Session {
 	return &types.Session{
 		ID:                i.ID.String(),
 		OwnerAppID:        i.OwnerAppID.String(),
-		AppID:             i.AppID.String(),
+		AppID:             strutil.SafeUuidString(i.AppID),
 		ToolName:          i.ToolName,
 		UserID:            i.UserID,
 		AuthorizationCode: i.AuthorizationCode,
@@ -41,7 +42,7 @@ func (i *Session) ToCoreType() *types.Session {
 func newSessionModel(src *types.Session) *Session {
 	return &Session{
 		OwnerAppID:        uuid.MustParse(src.OwnerAppID),
-		AppID:             uuid.MustParse(src.AppID),
+		AppID:             strutil.SafeUuid(src.AppID),
 		ToolName:          src.ToolName,
 		UserID:            src.UserID,
 		AccessToken:       secrets.FromString(src.AccessToken),

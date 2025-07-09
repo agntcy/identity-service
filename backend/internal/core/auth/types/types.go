@@ -12,7 +12,7 @@ type Session struct {
 	OwnerAppID string `json:"owner_app_id,omitempty" protobuf:"bytes,2,opt,name=owner_app_id"`
 
 	// The application ID associated with the Session.
-	AppID string `json:"app_id,omitempty" protobuf:"bytes,3,opt,name=app_id"`
+	AppID *string `json:"app_id,omitempty" protobuf:"bytes,3,opt,name=app_id"`
 
 	// The tool name associated with the Session.
 	ToolName *string `json:"tool_name,omitempty" protobuf:"bytes,4,opt,name=tool_name"`
