@@ -263,7 +263,7 @@ func (s *badgeService) createBadgeClaims(
 		var mcpClaims string
 
 		if in.mcp.Name != nil && in.mcp.Url != nil {
-			mcpServer, err := s.mcpClient.Discover(ctx, *in.mcp.Name, *in.mcp.Url)
+			mcpServer, err := s.mcpClient.AutoDiscover(ctx, *in.mcp.Name, *in.mcp.Url)
 			if err != nil {
 				return nil,
 					badgetypes.BADGE_TYPE_UNSPECIFIED,
