@@ -37,7 +37,10 @@ service AuthService {
 
   // Request token for an Agent or MCP Server
   rpc Token(TokenRequest) returns (TokenResponse) {
-    option (google.api.http) = {post: "/v1alpha1/auth/token"};
+    option (google.api.http) = {
+      post: "/v1alpha1/auth/token"
+      body: "*"
+    };
 
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       operation_id: "RequestToken";
@@ -47,7 +50,10 @@ service AuthService {
 
   // Handle external authorization requests
   rpc ExtAuthz(ExtAuthzRequest) returns (google.protobuf.Empty) {
-    option (google.api.http) = {post: "/v1alpha1/auth/ext_authz"};
+    option (google.api.http) = {
+      post: "/v1alpha1/auth/ext_authz"
+      body: "*"
+    };
 
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       operation_id: "ExtAuthz";

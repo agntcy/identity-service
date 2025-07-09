@@ -335,22 +335,12 @@ paths:
                 - AuthService
             description: Handle external authorization requests
             operationId: AuthService_ExtAuthz
-            parameters:
-                - name: accessToken
-                  in: query
-                  description: The access token to be authorized.
-                  schema:
-                    type: string
-                - name: appId
-                  in: query
-                  description: The app id for which the access token is being authorized.
-                  schema:
-                    type: string
-                - name: toolName
-                  in: query
-                  description: The tool name of the MCP Server or Agent making the request.
-                  schema:
-                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ExtAuthzRequest'
+                required: true
             responses:
                 "200":
                     description: OK
@@ -367,12 +357,12 @@ paths:
                 - AuthService
             description: Request token for an Agent or MCP Server
             operationId: AuthService_Token
-            parameters:
-                - name: authorizationCode
-                  in: query
-                  description: Pass the code received from the authorization endpoint.
-                  schema:
-                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/TokenRequest'
+                required: true
             responses:
                 "200":
                     description: OK
@@ -1054,6 +1044,15 @@ components:
                     type: string
                 message:
                     type: string
+        ExtAuthzRequest:
+            type: object
+            properties:
+                accessToken:
+                    type: string
+                    description: The access token to be authorized.
+                toolName:
+                    type: string
+                    description: The tool name that will be invoked
         GetAppsCountResponse:
             type: object
             properties:
@@ -1370,6 +1369,12 @@ components:
                     type: string
                     description: A tool name for the Task.
             description: Identity Platform Policy Task
+        TokenRequest:
+            type: object
+            properties:
+                authorizationCode:
+                    type: string
+                    description: Pass the code received from the authorization endpoint.
         TokenResponse:
             type: object
             properties:

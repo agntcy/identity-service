@@ -21,7 +21,7 @@ from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 from protoc_gen_openapiv2.options import annotations_pb2 as protoc__gen__openapiv2_dot_options_dot_annotations__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n4agntcy/identity/platform/v1alpha1/auth_service.proto\x12!agntcy.identity.platform.v1alpha1\x1a+agntcy/identity/platform/v1alpha1/app.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\"K\n\x0f\x41ppInfoResponse\x12\x38\n\x03\x61pp\x18\x01 \x01(\x0b\x32&.agntcy.identity.platform.v1alpha1.AppR\x03\x61pp\"\x8c\x01\n\x10\x41uthorizeRequest\x12\x15\n\x06\x61pp_id\x18\x01 \x01(\tR\x05\x61ppId\x12 \n\ttool_name\x18\x02 \x01(\tH\x00R\x08toolName\x88\x01\x01\x12\"\n\nuser_token\x18\x03 \x01(\tH\x01R\tuserToken\x88\x01\x01\x42\x0c\n\n_tool_nameB\r\n\x0b_user_token\"B\n\x11\x41uthorizeResponse\x12-\n\x12\x61uthorization_code\x18\x01 \x01(\tR\x11\x61uthorizationCode\"=\n\x0cTokenRequest\x12-\n\x12\x61uthorization_code\x18\x01 \x01(\tR\x11\x61uthorizationCode\"2\n\rTokenResponse\x12!\n\x0c\x61\x63\x63\x65ss_token\x18\x01 \x01(\tR\x0b\x61\x63\x63\x65ssToken\"\x8b\x01\n\x0f\x45xtAuthzRequest\x12!\n\x0c\x61\x63\x63\x65ss_token\x18\x01 \x01(\tR\x0b\x61\x63\x63\x65ssToken\x12\x1a\n\x06\x61pp_id\x18\x02 \x01(\tH\x00R\x05\x61ppId\x88\x01\x01\x12 \n\ttool_name\x18\x03 \x01(\tH\x01R\x08toolName\x88\x01\x01\x42\t\n\x07_app_idB\x0c\n\n_tool_name2\xfb\x05\n\x0b\x41uthService\x12\x90\x01\n\x07\x41ppInfo\x12\x16.google.protobuf.Empty\x1a\x32.agntcy.identity.platform.v1alpha1.AppInfoResponse\"9\x92\x41\x17\x12\x0cGet App Info*\x07\x41ppInfo\x82\xd3\xe4\x93\x02\x19\x12\x17/v1alpha1/auth/app_info\x12\xd7\x01\n\tAuthorize\x12\x33.agntcy.identity.platform.v1alpha1.AuthorizeRequest\x1a\x34.agntcy.identity.platform.v1alpha1.AuthorizeResponse\"_\x92\x41<\x12/Authorize a request from an Agent or MCP Server*\tAuthorize\x82\xd3\xe4\x93\x02\x1a\x12\x18/v1alpha1/auth/authorize\x12\xc3\x01\n\x05Token\x12/.agntcy.identity.platform.v1alpha1.TokenRequest\x1a\x30.agntcy.identity.platform.v1alpha1.TokenResponse\"W\x92\x41\x38\x12(Request token for an Agent or MCP Server*\x0cRequestToken\x82\xd3\xe4\x93\x02\x16\"\x14/v1alpha1/auth/token\x12\xad\x01\n\x08\x45xtAuthz\x12\x32.agntcy.identity.platform.v1alpha1.ExtAuthzRequest\x1a\x16.google.protobuf.Empty\"U\x92\x41\x32\x12&Handle external authorization requests*\x08\x45xtAuthz\x82\xd3\xe4\x93\x02\x1a\"\x18/v1alpha1/auth/ext_authz\x1a\t\x92\x41\x06\n\x04\x41uthB\xcb\x02\n%com.agntcy.identity.platform.v1alpha1B\x10\x41uthServiceProtoP\x01Zigithub.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_go\xa2\x02\x03\x41IP\xaa\x02!Agntcy.Identity.Platform.V1alpha1\xca\x02!Agntcy\\Identity\\Platform\\V1alpha1\xe2\x02-Agntcy\\Identity\\Platform\\V1alpha1\\GPBMetadata\xea\x02$Agntcy::Identity::Platform::V1alpha1b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n4agntcy/identity/platform/v1alpha1/auth_service.proto\x12!agntcy.identity.platform.v1alpha1\x1a+agntcy/identity/platform/v1alpha1/app.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\"K\n\x0f\x41ppInfoResponse\x12\x38\n\x03\x61pp\x18\x01 \x01(\x0b\x32&.agntcy.identity.platform.v1alpha1.AppR\x03\x61pp\"\x9c\x01\n\x10\x41uthorizeRequest\x12\x1a\n\x06\x61pp_id\x18\x01 \x01(\tH\x00R\x05\x61ppId\x88\x01\x01\x12 \n\ttool_name\x18\x02 \x01(\tH\x01R\x08toolName\x88\x01\x01\x12\"\n\nuser_token\x18\x03 \x01(\tH\x02R\tuserToken\x88\x01\x01\x42\t\n\x07_app_idB\x0c\n\n_tool_nameB\r\n\x0b_user_token\"B\n\x11\x41uthorizeResponse\x12-\n\x12\x61uthorization_code\x18\x01 \x01(\tR\x11\x61uthorizationCode\"=\n\x0cTokenRequest\x12-\n\x12\x61uthorization_code\x18\x01 \x01(\tR\x11\x61uthorizationCode\"2\n\rTokenResponse\x12!\n\x0c\x61\x63\x63\x65ss_token\x18\x01 \x01(\tR\x0b\x61\x63\x63\x65ssToken\"d\n\x0f\x45xtAuthzRequest\x12!\n\x0c\x61\x63\x63\x65ss_token\x18\x01 \x01(\tR\x0b\x61\x63\x63\x65ssToken\x12 \n\ttool_name\x18\x02 \x01(\tH\x00R\x08toolName\x88\x01\x01\x42\x0c\n\n_tool_name2\x81\x06\n\x0b\x41uthService\x12\x90\x01\n\x07\x41ppInfo\x12\x16.google.protobuf.Empty\x1a\x32.agntcy.identity.platform.v1alpha1.AppInfoResponse\"9\x92\x41\x17\x12\x0cGet App Info*\x07\x41ppInfo\x82\xd3\xe4\x93\x02\x19\x12\x17/v1alpha1/auth/app_info\x12\xd7\x01\n\tAuthorize\x12\x33.agntcy.identity.platform.v1alpha1.AuthorizeRequest\x1a\x34.agntcy.identity.platform.v1alpha1.AuthorizeResponse\"_\x92\x41<\x12/Authorize a request from an Agent or MCP Server*\tAuthorize\x82\xd3\xe4\x93\x02\x1a\x12\x18/v1alpha1/auth/authorize\x12\xc6\x01\n\x05Token\x12/.agntcy.identity.platform.v1alpha1.TokenRequest\x1a\x30.agntcy.identity.platform.v1alpha1.TokenResponse\"Z\x92\x41\x38\x12(Request token for an Agent or MCP Server*\x0cRequestToken\x82\xd3\xe4\x93\x02\x19\"\x14/v1alpha1/auth/token:\x01*\x12\xb0\x01\n\x08\x45xtAuthz\x12\x32.agntcy.identity.platform.v1alpha1.ExtAuthzRequest\x1a\x16.google.protobuf.Empty\"X\x92\x41\x32\x12&Handle external authorization requests*\x08\x45xtAuthz\x82\xd3\xe4\x93\x02\x1d\"\x18/v1alpha1/auth/ext_authz:\x01*\x1a\t\x92\x41\x06\n\x04\x41uthB\xcb\x02\n%com.agntcy.identity.platform.v1alpha1B\x10\x41uthServiceProtoP\x01Zigithub.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_go\xa2\x02\x03\x41IP\xaa\x02!Agntcy.Identity.Platform.V1alpha1\xca\x02!Agntcy\\Identity\\Platform\\V1alpha1\xe2\x02-Agntcy\\Identity\\Platform\\V1alpha1\\GPBMetadata\xea\x02$Agntcy::Identity::Platform::V1alpha1b\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -36,21 +36,21 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _globals['_AUTHSERVICE'].methods_by_name['Authorize']._options = None
   _globals['_AUTHSERVICE'].methods_by_name['Authorize']._serialized_options = b'\222A<\022/Authorize a request from an Agent or MCP Server*\tAuthorize\202\323\344\223\002\032\022\030/v1alpha1/auth/authorize'
   _globals['_AUTHSERVICE'].methods_by_name['Token']._options = None
-  _globals['_AUTHSERVICE'].methods_by_name['Token']._serialized_options = b'\222A8\022(Request token for an Agent or MCP Server*\014RequestToken\202\323\344\223\002\026\"\024/v1alpha1/auth/token'
+  _globals['_AUTHSERVICE'].methods_by_name['Token']._serialized_options = b'\222A8\022(Request token for an Agent or MCP Server*\014RequestToken\202\323\344\223\002\031\"\024/v1alpha1/auth/token:\001*'
   _globals['_AUTHSERVICE'].methods_by_name['ExtAuthz']._options = None
-  _globals['_AUTHSERVICE'].methods_by_name['ExtAuthz']._serialized_options = b'\222A2\022&Handle external authorization requests*\010ExtAuthz\202\323\344\223\002\032\"\030/v1alpha1/auth/ext_authz'
+  _globals['_AUTHSERVICE'].methods_by_name['ExtAuthz']._serialized_options = b'\222A2\022&Handle external authorization requests*\010ExtAuthz\202\323\344\223\002\035\"\030/v1alpha1/auth/ext_authz:\001*'
   _globals['_APPINFORESPONSE']._serialized_start=243
   _globals['_APPINFORESPONSE']._serialized_end=318
   _globals['_AUTHORIZEREQUEST']._serialized_start=321
-  _globals['_AUTHORIZEREQUEST']._serialized_end=461
-  _globals['_AUTHORIZERESPONSE']._serialized_start=463
-  _globals['_AUTHORIZERESPONSE']._serialized_end=529
-  _globals['_TOKENREQUEST']._serialized_start=531
-  _globals['_TOKENREQUEST']._serialized_end=592
-  _globals['_TOKENRESPONSE']._serialized_start=594
-  _globals['_TOKENRESPONSE']._serialized_end=644
-  _globals['_EXTAUTHZREQUEST']._serialized_start=647
-  _globals['_EXTAUTHZREQUEST']._serialized_end=786
-  _globals['_AUTHSERVICE']._serialized_start=789
-  _globals['_AUTHSERVICE']._serialized_end=1552
+  _globals['_AUTHORIZEREQUEST']._serialized_end=477
+  _globals['_AUTHORIZERESPONSE']._serialized_start=479
+  _globals['_AUTHORIZERESPONSE']._serialized_end=545
+  _globals['_TOKENREQUEST']._serialized_start=547
+  _globals['_TOKENREQUEST']._serialized_end=608
+  _globals['_TOKENRESPONSE']._serialized_start=610
+  _globals['_TOKENRESPONSE']._serialized_end=660
+  _globals['_EXTAUTHZREQUEST']._serialized_start=662
+  _globals['_EXTAUTHZREQUEST']._serialized_end=762
+  _globals['_AUTHSERVICE']._serialized_start=765
+  _globals['_AUTHSERVICE']._serialized_end=1534
 # @@protoc_insertion_point(module_scope)

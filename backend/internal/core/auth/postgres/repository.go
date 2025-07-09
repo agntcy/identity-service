@@ -104,7 +104,7 @@ func (r *postgresRepository) GetByAccessToken(
 	}
 
 	result := r.dbContext.Client().
-		Where("app_id = ?", appID).
+		Where("(app_id = ? OR app_id IS NULL)", appID).
 		Where("access_token = ?", secrets.Encrypt(accessToken)).
 		First(model)
 	if result.Error != nil {
