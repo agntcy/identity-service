@@ -42,9 +42,17 @@ func (d *discoveryClient) Discover(
 
 	log.Debug("Using MCP URL for discovery: ", url)
 
+	var mcpClient *client.Client
+	var err error
+
 	// Create streameable http client
-	// We only support streamable http client for now
-	mcpClient, err := client.NewStreamableHttpClient(url)
+	// Try streamable http first
+	mcpClient, err = client.NewStreamableHttpClient(url)
+	if err != nil {
+		// Try sse next
+		mcpClient, err = client.NewSSEMCPClient(url)
+	}
+
 	if err != nil {
 		return nil, errutil.Err(
 			err,
