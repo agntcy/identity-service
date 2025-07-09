@@ -9,6 +9,7 @@ on:
       - "v[0-9]+.[0-9]+.[0-9]+"
     branches:
       - "main"
+      - "release-latest-on-push-main"
   workflow_dispatch:
 
 
@@ -286,3 +287,53 @@ jobs:
       vault-approle-role-id: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
       vault-approle-secret-id: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
 
+  ################################## Trigger Deployment ###########################
+  #################################################################################
+
+  # UI Deployment
+  call-trigger-cd-ui:
+    name: Trigger CD UI
+    needs: [call-docker-build-push-ui, call-helm-publish-ui]
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/trigger-deploy.yaml@production
+    with:
+      deployment-repo: "pyramid-deployment"
+      client-payload: '{"app-repository": "${{ github.repository }}", "values-file-path": "applications/identity-pyramid-ui", "property-path": "image.tag", "deployment-stage": "dev", "default-deployment": true, "value": ""}'
+    secrets:
+      ghcr-username: ${{ secrets.GHCR_USERNAME }}
+      ghcr-token: ${{ secrets.GHCR_TOKEN }}
+      ghcr-org-username: ${{ secrets.GHCR_USERNAME }}
+      ghcr-org-token: ${{ secrets.GHCR_TOKEN }}
+      vault-approle-role-id: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
+      vault-approle-secret-id: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
+
+  # Backend Deployment
+  call-trigger-cd-backend:
+    name: Trigger CD Backend
+    needs: [call-docker-build-push-backend, call-helm-publish-backend]
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/trigger-deploy.yaml@production
+    with:
+      deployment-repo: "pyramid-deployment"
+      client-payload: '{"app-repository": "${{ github.repository }}", "values-file-path": "applications/identity-pyramid-backend", "property-path": "image.tag", "deployment-stage": "dev", "default-deployment": true, "value": ""}'
+    secrets:
+      ghcr-username: ${{ secrets.GHCR_USERNAME }}
+      ghcr-token: ${{ secrets.GHCR_TOKEN }}
+      ghcr-org-username: ${{ secrets.GHCR_USERNAME }}
+      ghcr-org-token: ${{ secrets.GHCR_TOKEN }}
+      vault-approle-role-id: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
+      vault-approle-secret-id: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
+
+  # Docs Deployment
+  call-trigger-cd-docs:
+    name: Trigger CD Docs
+    needs: [call-docker-build-push-docs, call-helm-publish-docs]
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/trigger-deploy.yaml@production
+    with:
+      deployment-repo: "pyramid-deployment"
+      client-payload: '{"app-repository": "${{ github.repository }}", "values-file-path": "applications/identity-docs", "property-path": "image.tag", "deployment-stage": "dev", "default-deployment": true, "value": ""}'
+    secrets:
+      ghcr-username: ${{ secrets.GHCR_USERNAME }}
+      ghcr-token: ${{ secrets.GHCR_TOKEN }}
+      ghcr-org-username: ${{ secrets.GHCR_USERNAME }}
+      ghcr-org-token: ${{ secrets.GHCR_TOKEN }}
+      vault-approle-role-id: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
+      vault-approle-secret-id: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
