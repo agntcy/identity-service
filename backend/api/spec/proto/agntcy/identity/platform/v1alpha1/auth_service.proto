@@ -92,4 +92,10 @@ message TokenResponse {
 message ExtAuthzRequest {
   // The access token to be authorized.
   string access_token = 1;
+
+  // The app id for which the access token is being authorized.
+  optional string app_id = 2;
+
+  // The tool name of the MCP Server or Agent making the request.
+  optional string tool_name = 3;
 }
