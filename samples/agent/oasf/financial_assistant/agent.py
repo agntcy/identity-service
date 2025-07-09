@@ -3,16 +3,15 @@
 """Main entry point for the Financial Assistant Agent server."""
 
 import uuid
-from typing import Annotated, Literal
+from typing import Literal
 
-from langchain_core.tools import InjectedToolCallId, tool
 from langchain_mcp_adapters.client import MultiServerMCPClient
 from langchain_ollama import ChatOllama
 from langgraph.checkpoint.memory import MemorySaver
-from langgraph.graph import MessagesState
-from langgraph.prebuilt import InjectedState, create_react_agent
-from langgraph.types import Command
+from langgraph.prebuilt import create_react_agent
 from pydantic import BaseModel
+
+from currency_exchange_agent import CurrencyExchangeAgent
 
 memory = MemorySaver()
 
@@ -32,7 +31,7 @@ class FinancialAssistantAgent:
     SYSTEM_INSTRUCTION = (
         "You are a specialized assistant for assisting the user with currency exchanges. "
         "You can answer about rates but you cannot execute exchanges. "
-        "For all currency exchange operations use the Currency Exchange agent and do not, "
+        "For all currency exchange trades use the currency_exchange agent and do not, "
         "execute currency exchanges by your own. "
         "If the user asks about anything other than financial information, "
         "politely state that you cannot help with that topic and can only assist with financial-related queries. "
@@ -46,12 +45,14 @@ class FinancialAssistantAgent:
         self,
         ollama_base_url,
         ollama_model,
-        mcp_server_url,
+        currency_exchange_mcp_server_url,
+        currency_exchange_agent_url,
     ) -> None:
         """Initialize the agent with the Ollama model and tools."""
         self.ollama_base_url = ollama_base_url
         self.ollama_model = ollama_model
-        self.mcp_server_url = mcp_server_url
+        self.currency_exchange_mcp_server_url = currency_exchange_mcp_server_url
+        self.currency_exchange_agent_url = currency_exchange_agent_url
 
         self.model = None
         self.graph = None
@@ -76,73 +77,25 @@ class FinancialAssistantAgent:
             base_url=self.ollama_base_url, model=self.ollama_model, temperature=0.2
         )
 
-        def create_handoff_tool(*, agent_name: str, description: str | None = None):
-            name = f"transfer_to_{agent_name}"
-            description = description or f"Ask {agent_name} for help."
-
-            @tool(name, description=description)
-            def handoff_tool(
-                state: Annotated[MessagesState, InjectedState],
-                tool_call_id: Annotated[str, InjectedToolCallId],
-            ) -> Command:
-                tool_message = {
-                    "role": "tool",
-                    "content": f"Successfully transferred to {agent_name}",
-                    "name": name,
-                    "tool_call_id": tool_call_id,
-                }
-
-                return Command(
-                    goto=agent_name,
-                    update={
-                        **state,
-                        "messages": state["messages"] + [tool_message],
-                    },
-                    graph=Command.PARENT,
-                )
-
-            return handoff_tool
-
-        # Create handoff tool for currency exchange agent
-        assign_to_currency_echange_agent = create_handoff_tool(
-            agent_name="currency_echange_agent",
-            description="Assign all currency exchange operations to the currency exchange agent.",
-        )
-
         # Load tools from the MCP Server
         client = MultiServerMCPClient(
             {
                 "currency_exchange": {
-                    "url": self.mcp_server_url,
+                    "url": self.currency_exchange_mcp_server_url,
                     "transport": "streamable_http",
                 },
             }
         )
         tools = await client.get_tools()
 
-        # Add the handoff tool to the list of tools
-        tools.append(assign_to_currency_echange_agent)
-
+        # Create the agent graph with the tools
         self.graph = create_react_agent(
-            self.model,
-            tools=[assign_to_currency_echange_agent],
-            checkpointer=memory,
+            model=self.model,
+            tools=[
+                CurrencyExchangeAgent(
+                    self.currency_exchange_agent_url
+                ).get_invoke_tool()
+            ],
             prompt=self.SYSTEM_INSTRUCTION,
             response_format=ResponseFormat,
         )
-
-        # def call_model(state: MessagesState):
-        #     response = self.model.bind_tools(self.tools).invoke(state["messages"])
-        #     return {"messages": response}
-        #
-        # builder = StateGraph(MessagesState)
-        # builder.add_node(call_model)
-        # builder.add_node(ToolNode(self.tools))
-        # builder.add_edge(START, "call_model")
-        # builder.add_conditional_edges(
-        #     "call_model",
-        #     tools_condition,
-        # )
-        # builder.add_edge("tools", "call_model")
-        #
-        # self.graph = builder.compile()

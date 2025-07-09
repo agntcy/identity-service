@@ -27,9 +27,21 @@ logger = logging.getLogger(__name__)
 )
 @click.option("--ollama-model", default=os.getenv("OLLAMA_MODEL", "llama3.2"))
 @click.option(
-    "--mcp-server-url", default=os.getenv("MCP_SERVER_URL", "http://localhost:9090/mcp")
+    "--currency-exchange-mcp-server-url",
+    default=os.getenv("CURRENCY_EXCHANGE_MCP_SERVER_URL", "http://localhost:9090/mcp"),
 )
-def main(host, port, ollama_host, ollama_model, mcp_server_url):
+@click.option(
+    "--currency-exchange-agent-url",
+    default=os.getenv("CURRENCY_EXCHANGE_AGENT_URL", "http://localhost:9091"),
+)
+def main(
+    host,
+    port,
+    ollama_host,
+    ollama_model,
+    currency_exchange_mcp_server_url,
+    currency_exchange_agent_url,
+):
     """Starts the Financial Assistant Agent server."""
 
     # pylint: disable=broad-exception-caught
@@ -38,7 +50,8 @@ def main(host, port, ollama_host, ollama_model, mcp_server_url):
         agent = FinancialAssistantAgent(
             ollama_base_url=ollama_host,
             ollama_model=ollama_model,
-            mcp_server_url=mcp_server_url,
+            currency_exchange_mcp_server_url=currency_exchange_mcp_server_url,
+            currency_exchange_agent_url=currency_exchange_agent_url,
         )
 
         # Initialize the HTTP client and request handler
