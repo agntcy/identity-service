@@ -276,10 +276,8 @@ type ExtAuthzRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// The access token to be authorized.
 	AccessToken string `protobuf:"bytes,1,opt,name=access_token,json=accessToken,proto3" json:"access_token,omitempty"`
-	// The app id for which the access token is being authorized.
-	AppId *string `protobuf:"bytes,2,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
-	// The tool name of the MCP Server or Agent making the request.
-	ToolName      *string `protobuf:"bytes,3,opt,name=tool_name,json=toolName,proto3,oneof" json:"tool_name,omitempty"`
+	// The tool name that will be invoked
+	ToolName      *string `protobuf:"bytes,2,opt,name=tool_name,json=toolName,proto3,oneof" json:"tool_name,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -321,13 +319,6 @@ func (x *ExtAuthzRequest) GetAccessToken() string {
 	return ""
 }
 
-func (x *ExtAuthzRequest) GetAppId() string {
-	if x != nil && x.AppId != nil {
-		return *x.AppId
-	}
-	return ""
-}
-
 func (x *ExtAuthzRequest) GetToolName() string {
 	if x != nil && x.ToolName != nil {
 		return *x.ToolName
@@ -355,12 +346,10 @@ const file_agntcy_identity_platform_v1alpha1_auth_service_proto_rawDesc = "" +
 	"\fTokenRequest\x12-\n" +
 	"\x12authorization_code\x18\x01 \x01(\tR\x11authorizationCode\"2\n" +
 	"\rTokenResponse\x12!\n" +
-	"\faccess_token\x18\x01 \x01(\tR\vaccessToken\"\x8b\x01\n" +
+	"\faccess_token\x18\x01 \x01(\tR\vaccessToken\"d\n" +
 	"\x0fExtAuthzRequest\x12!\n" +
-	"\faccess_token\x18\x01 \x01(\tR\vaccessToken\x12\x1a\n" +
-	"\x06app_id\x18\x02 \x01(\tH\x00R\x05appId\x88\x01\x01\x12 \n" +
-	"\ttool_name\x18\x03 \x01(\tH\x01R\btoolName\x88\x01\x01B\t\n" +
-	"\a_app_idB\f\n" +
+	"\faccess_token\x18\x01 \x01(\tR\vaccessToken\x12 \n" +
+	"\ttool_name\x18\x02 \x01(\tH\x00R\btoolName\x88\x01\x01B\f\n" +
 	"\n" +
 	"_tool_name2\xfb\x05\n" +
 	"\vAuthService\x12\x90\x01\n" +
