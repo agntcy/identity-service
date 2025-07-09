@@ -75,7 +75,7 @@ func (x *AppInfoResponse) GetApp() *App {
 type AuthorizeRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// The app id for which authorization is requested.
-	AppId string `protobuf:"bytes,1,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
+	AppId *string `protobuf:"bytes,1,opt,name=app_id,json=appId,proto3,oneof" json:"app_id,omitempty"`
 	// The MCP Server tool name.
 	ToolName *string `protobuf:"bytes,2,opt,name=tool_name,json=toolName,proto3,oneof" json:"tool_name,omitempty"`
 	// The User context in the form of an id or access token.
@@ -116,8 +116,8 @@ func (*AuthorizeRequest) Descriptor() ([]byte, []int) {
 }
 
 func (x *AuthorizeRequest) GetAppId() string {
-	if x != nil {
-		return x.AppId
+	if x != nil && x.AppId != nil {
+		return *x.AppId
 	}
 	return ""
 }
