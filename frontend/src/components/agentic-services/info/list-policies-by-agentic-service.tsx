@@ -4,23 +4,20 @@
  */
 
 import {useCallback, useMemo, useState} from 'react';
-import {ConditionalQueryRenderer} from '../../ui/conditional-query-renderer';
-import {Box, EmptyState, MenuItem, Table, toast, Typography} from '@outshift/spark-design';
+import {Box, EmptyState, Table} from '@outshift/spark-design';
 import {useGetPolicies} from '@/queries';
 import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
-import {PoliciesColumns} from './policies-columns';
 import {Card} from '@/components/ui/card';
 import {cn} from '@/lib/utils';
 import {generatePath, useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
 import {FilterSections} from '@/components/shared/filters-sections';
-import {PencilIcon, PlusIcon, Trash2Icon} from 'lucide-react';
-import {ConfirmModal} from '@/components/ui/confirm-modal';
-import {Policy} from '@/types/api/policy';
-import {useDeletePolicy} from '@/mutations';
+import {PlusIcon} from 'lucide-react';
 import {ListRules} from '@/components/shared/list-rules/list-rules';
+import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-renderer';
+import {PoliciesColumns} from './policies-columns';
 
-export const ListPolicies = () => {
+export const ListPoliciesByAgenticService = ({appId}: {appId?: string}) => {
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: 0,
     pageSize: 15
@@ -32,14 +29,13 @@ export const ListPolicies = () => {
     }
   ]);
   const [query, setQuery] = useState<string | undefined>(undefined);
-  const [tempPolicy, setTempPolicy] = useState<Policy | undefined>(undefined);
-  const [showActionsModal, setShowActionsModal] = useState<boolean>(false);
 
   const {data, isLoading, error, refetch} = useGetPolicies({
     query: {
       page: pagination.pageIndex + 1,
       size: pagination.pageSize,
-      query: query
+      query: query,
+      appIds: appId ? [appId] : undefined
     }
   });
 
@@ -62,31 +58,6 @@ export const ListPolicies = () => {
     [setQuery, setPagination]
   );
 
-  const deleteMutation = useDeletePolicy({
-    callbacks: {
-      onSuccess: () => {
-        toast({
-          title: 'Success',
-          description: 'Policy deleted successfully.',
-          type: 'success'
-        });
-      },
-      onError: () => {
-        toast({
-          title: 'Error',
-          description: 'An error occurred while deleting the policy. Please try again.',
-          type: 'error'
-        });
-      }
-    }
-  });
-
-  const handleClickOnDelete = useCallback(() => {
-    setShowActionsModal(false);
-    setTempPolicy(undefined);
-    deleteMutation.mutate(tempPolicy?.id || '');
-  }, [deleteMutation, tempPolicy]);
-
   return (
     <>
       <ConditionalQueryRenderer
@@ -106,7 +77,7 @@ export const ListPolicies = () => {
           <Table
             columns={PoliciesColumns()}
             data={dataPolicies}
-            isLoading={isLoading || deleteMutation.isPending}
+            isLoading={isLoading}
             muiTableBodyRowProps={({row, isDetailPanel}) => ({
               sx: {cursor: 'pointer', '& .MuiIconButton-root': {color: (theme) => theme.palette.vars.interactiveSecondaryDefaultDefault}},
               onClick: () => {
@@ -146,36 +117,6 @@ export const ListPolicies = () => {
             rowsPerPageOptions={[1, 15, 25, 50, 100]}
             state={{pagination, sorting}}
             onSortingChange={setSorting}
-            renderRowActionMenuItems={({row}) => {
-              return [
-                <MenuItem
-                  key="edit-policy"
-                  sx={{display: 'flex', alignItems: 'center', gap: '8px'}}
-                  onClick={() => {
-                    const path = generatePath(PATHS.policies.edit, {id: row.original?.id});
-                    void navigate(path, {replace: true});
-                  }}
-                >
-                  <PencilIcon className="w-4 h-4" color="#062242" />
-                  <Typography variant="body2" color="#1A1F27">
-                    Edit
-                  </Typography>
-                </MenuItem>,
-                <MenuItem
-                  key="delete-policy"
-                  onClick={() => {
-                    setTempPolicy(row.original);
-                    setShowActionsModal(true);
-                  }}
-                  sx={{display: 'flex', alignItems: 'center', gap: '8px'}}
-                >
-                  <Trash2Icon className="w-4 h-4" color="#C62953" />
-                  <Typography variant="body2" color="#C0244C">
-                    Delete
-                  </Typography>
-                </MenuItem>
-              ];
-            }}
             muiBottomToolbarProps={{
               style: {
                 boxShadow: 'none'
@@ -205,27 +146,6 @@ export const ListPolicies = () => {
           />
         </Card>
       </ConditionalQueryRenderer>
-      <ConfirmModal
-        open={showActionsModal}
-        title="Delete Policy"
-        description={
-          <>
-            Are you sure you want to delete this policy? This action cannot be undone.
-            <br />
-            <br />
-            <strong>Note:</strong> Deleting a policy will remove it from all associated agentic services.
-          </>
-        }
-        confirmButtonText="Delete"
-        onCancel={() => {
-          setShowActionsModal(false);
-          setTempPolicy(undefined);
-        }}
-        onConfirm={handleClickOnDelete}
-        buttonConfirmProps={{
-          color: 'negative'
-        }}
-      />
     </>
   );
 };

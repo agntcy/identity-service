@@ -18,7 +18,7 @@ function Textarea({className, ...props}: TextareaProps) {
         'focus-visible:border-[2px] focus-visible:border-[#0051AF]',
         'aria-invalid:border-[2px] aria-invalid:border-destructive',
         'bg-[#FBFCFE]',
-        'border-[#E8EEFB] border-solid border-[2px]',
+        'border-[#D5DFF7] border-solid border-[2px]',
         className
       )}
       autoComplete="off"

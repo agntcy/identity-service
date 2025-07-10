@@ -57,10 +57,8 @@ const FormStepperComponent = ({policy}: {policy?: Policy}) => {
         name: rule.name,
         description: rule.description || '',
         needsApproval: rule.needsApproval,
-        tasks: {
-          action: rule.action,
-          tasks: rule?.tasks?.map((task) => task.id) || []
-        }
+        action: rule.action,
+        tasks: rule?.tasks?.map((task) => task.id) || []
       }))
     }
   });
@@ -101,7 +99,7 @@ const FormStepperComponent = ({policy}: {policy?: Policy}) => {
           );
           await Promise.all(
             valuesPolicyLogic.rules.map((rule) => {
-              if (rule.tasks.action !== RuleAction.RULE_ACTION_UNSPECIFIED) {
+              if (rule.action !== RuleAction.RULE_ACTION_UNSPECIFIED) {
                 if (rule.ruleId) {
                   return mutationUpdateRule.mutateAsync({
                     policyId: policy.id || '',
@@ -110,8 +108,8 @@ const FormStepperComponent = ({policy}: {policy?: Policy}) => {
                       name: rule.name,
                       description: rule.description,
                       needsApproval: rule.needsApproval,
-                      tasks: [...rule.tasks.tasks],
-                      action: rule.tasks.action
+                      tasks: [...rule.tasks],
+                      action: rule.action
                     }
                   });
                 } else {
@@ -121,8 +119,8 @@ const FormStepperComponent = ({policy}: {policy?: Policy}) => {
                       name: rule.name,
                       description: rule.description,
                       needsApproval: rule.needsApproval,
-                      tasks: [...rule.tasks.tasks],
-                      action: rule.tasks.action
+                      tasks: [...rule.tasks],
+                      action: rule.action
                     }
                   });
                 }
@@ -208,10 +206,8 @@ const FormStepperComponent = ({policy}: {policy?: Policy}) => {
           name: rule.name,
           description: rule.description || '',
           needsApproval: rule.needsApproval,
-          tasks: {
-            action: rule.action,
-            tasks: rule?.tasks?.map((task) => task.id) || []
-          }
+          action: rule.action,
+          tasks: rule?.tasks?.map((task) => task.id) || []
         })) || []
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
