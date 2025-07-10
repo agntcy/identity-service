@@ -4,7 +4,7 @@
  */
 
 import {Card, CardContent} from '@/components/ui/card';
-import {Accordion, Divider, EmptyState, GeneralSize, Table, Tag, Typography} from '@outshift/spark-design';
+import {Accordion, Divider, EmptyState, GeneralSize, Table, Tag, TagStatus, Typography} from '@outshift/spark-design';
 import {useMemo, useState} from 'react';
 import KeyValue, {KeyValuePair} from '@/components/ui/key-value';
 import {AgenticServiceType} from '@/components/shared/agentic-service-type';
@@ -18,6 +18,7 @@ import {PolicyFormValues} from '@/schemas/policy-schema';
 import {PolicyLogicyFormValues} from '@/schemas/policy-logic-schema';
 import {RuleAction} from '@/types/api/policy';
 import {RuleFormValues} from '@/schemas/rule-schema';
+import {TagActionTask} from '@/components/shared/tag-action-task';
 
 export const PolicyReview = () => {
   const [pagination, setPagination] = useState<MRT_PaginationState>({
@@ -94,10 +95,6 @@ export const PolicyReview = () => {
             accessorKey: 'name',
             header: 'Name',
             enableSorting: true
-          },
-          {
-            accessorKey: 'toolName',
-            header: 'Tool Name'
           }
         ]}
         data={dataTask}
@@ -145,7 +142,7 @@ export const PolicyReview = () => {
           <Card className="text-start space-y-4" variant="secondary">
             <div className="flex justify-between items-center">
               <Typography variant="subtitle1" fontWeight={600}>
-                Policy Rules
+                {rules?.length} Policy {rules?.length && rules?.length > 1 ? 'Rules' : 'Rule'}
               </Typography>
             </div>
             <CardContent className="p-0 space-y-4">
@@ -158,7 +155,18 @@ export const PolicyReview = () => {
                         (
                           <div className="flex gap-4 items-center h-[24px]">
                             <Separator orientation="vertical" />
-                            <Tag size={GeneralSize.Small}>{labels.rulesActions[rule.tasks?.action ?? RuleAction.RULE_ACTION_UNSPECIFIED]}</Tag>
+                            <TagActionTask
+                              action={rule.tasks.action}
+                              text={labels.rulesActions[rule.tasks.action ?? RuleAction.RULE_ACTION_UNSPECIFIED]}
+                            />
+                            <Tag size={GeneralSize.Medium}>
+                              {rule.tasks?.tasks?.length || 0} {rule?.tasks?.tasks?.length && rule?.tasks?.tasks?.length > 1 ? 'Tasks' : 'Task'}
+                            </Tag>
+                            <Tag status={TagStatus.Info} size={GeneralSize.Medium}>
+                              <Typography variant="captionSemibold">
+                                Approval: <b>{rule.needsApproval ? 'Yes' : 'No'}</b>
+                              </Typography>
+                            </Tag>
                           </div>
                         ) as any
                       }

@@ -4,8 +4,8 @@
  */
 
 import {Card, CardContent} from '@/components/ui/card';
-import {Accordion, Divider, EmptyState, GeneralSize, Table, Tag, Tooltip, Typography} from '@outshift/spark-design';
-import {useMemo, useState} from 'react';
+import {Accordion, Divider, EmptyState, GeneralSize, Link, Pagination, Table, Tag, TagStatus, Tooltip, Typography} from '@outshift/spark-design';
+import {useCallback, useMemo, useState} from 'react';
 import KeyValue, {KeyValuePair} from '@/components/ui/key-value';
 import {AgenticServiceType} from '@/components/shared/agentic-service-type';
 import {Policy, RuleAction} from '@/types/api/policy';
@@ -15,8 +15,15 @@ import {labels} from '@/constants/labels';
 import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
 import {IconButton} from '@mui/material';
 import {InfoIcon} from 'lucide-react';
+import {generatePath} from 'react-router-dom';
+import {PATHS} from '@/router/paths';
+import {TagActionTask} from '@/components/shared/tag-action-task';
+import {TasksColumns} from './tasks-columns';
+
+const PAGE_SIZE = 5;
 
 export const PolicyContent = ({policy}: {policy?: Policy}) => {
+  const [pageRules, setPageRules] = useState(1);
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: 0,
     pageSize: 10
@@ -24,6 +31,10 @@ export const PolicyContent = ({policy}: {policy?: Policy}) => {
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
 
   const {data} = useGetAgenticService(policy?.assignedTo);
+
+  const handlePaginationRulesChange = useCallback((event: React.ChangeEvent<unknown>, value: number) => {
+    setPageRules(value);
+  }, []);
 
   const keyValuePairs = useMemo(() => {
     const temp: KeyValuePair[] = [
@@ -34,10 +45,12 @@ export const PolicyContent = ({policy}: {policy?: Policy}) => {
       {
         keyProp: 'Assigned To',
         value: (
-          <div className="flex items-center gap-2">
-            <AgenticServiceType type={data?.type} className="h-[20px] w-[20px]" showLabel={false} />
-            <Typography variant="body2">{data?.name ?? 'Not provided'}</Typography>
-          </div>
+          <Link href={generatePath(PATHS.agenticServices.info, {id: policy?.assignedTo || ''})}>
+            <div className="flex items-center gap-2">
+              <AgenticServiceType type={data?.type} className="h-[20px] w-[20px]" showLabel={false} />
+              <Typography variant="body2">{data?.name ?? 'Not provided'}</Typography>
+            </div>
+          </Link>
         )
       },
       {
@@ -46,7 +59,13 @@ export const PolicyContent = ({policy}: {policy?: Policy}) => {
       }
     ];
     return temp;
-  }, [data?.name, data?.type, policy?.description, policy?.name]);
+  }, [data?.name, data?.type, policy?.assignedTo, policy?.description, policy?.name]);
+
+  const paginatedRules = useMemo(() => {
+    const startIndex = (pageRules - 1) * PAGE_SIZE;
+    const endIndex = startIndex + PAGE_SIZE;
+    return policy?.rules?.slice(startIndex, endIndex) || [];
+  }, [policy?.rules, pageRules]);
 
   return (
     <>
@@ -67,12 +86,12 @@ export const PolicyContent = ({policy}: {policy?: Policy}) => {
           <Card className="text-start space-y-4" variant="secondary">
             <div className="flex justify-between items-center">
               <Typography variant="subtitle1" fontWeight={600}>
-                Policy Logic
+                {policy?.rules?.length} Policy {policy?.rules?.length && policy?.rules?.length > 1 ? 'Rules' : 'Rule'}
               </Typography>
             </div>
             <CardContent className="p-0 space-y-4">
               <div className="pt-4">
-                {policy?.rules?.map((rule, index) => (
+                {paginatedRules?.map((rule, index) => (
                   <div className="w-full" key={index}>
                     <div className="flex justify-between items-start gap-4 mb-4">
                       <div className="w-full">
@@ -82,24 +101,23 @@ export const PolicyContent = ({policy}: {policy?: Policy}) => {
                             (
                               <div className="flex gap-4 items-center h-[24px]">
                                 <Separator orientation="vertical" />
-                                <Tag size={GeneralSize.Small}>{labels.rulesActions[rule.action ?? RuleAction.RULE_ACTION_UNSPECIFIED]}</Tag>
+                                <TagActionTask action={rule.action} text={labels.rulesActions[rule.action ?? RuleAction.RULE_ACTION_UNSPECIFIED]} />
+                                <Tag size={GeneralSize.Medium}>
+                                  {rule.tasks?.length || 0} {rule.tasks?.length && rule.tasks?.length > 1 ? 'Tasks' : 'Task'}
+                                </Tag>
+                                <Tag status={TagStatus.Info} size={GeneralSize.Medium}>
+                                  <Typography variant="captionSemibold">
+                                    Approval: <b>{rule.needsApproval ? 'Yes' : 'No'}</b>
+                                  </Typography>
+                                </Tag>
                               </div>
                             ) as any
                           }
                         >
                           <div>
                             <Table
-                              columns={[
-                                {
-                                  accessorKey: 'name',
-                                  header: 'Name',
-                                  enableSorting: true
-                                },
-                                {
-                                  accessorKey: 'toolName',
-                                  header: 'Tool Name'
-                                }
-                              ]}
+                              columns={TasksColumns()}
+                              densityCompact
                               data={rule.tasks || []}
                               isLoading={false}
                               enableRowActions
@@ -151,6 +169,14 @@ export const PolicyContent = ({policy}: {policy?: Policy}) => {
                     </div>
                   </div>
                 ))}
+                <div className="flex justify-end">
+                  <Pagination
+                    size="small"
+                    count={Math.ceil((policy?.rules?.length || 0) / PAGE_SIZE)}
+                    page={pageRules}
+                    onChange={handlePaginationRulesChange}
+                  />
+                </div>
               </div>
             </CardContent>
           </Card>

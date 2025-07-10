@@ -3,28 +3,32 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {Tag, TagProps} from '@outshift/spark-design';
+import {GeneralSize, Tag, TagProps, TagStatus, Typography} from '@outshift/spark-design';
 import {RuleAction} from '@/types/api/policy';
-import {BanIcon, CheckIcon} from 'lucide-react';
+import React from 'react';
 
-interface TagActionTaskProps extends TagProps {
-  action: RuleAction;
-  task: string;
+interface TagActionTaskProps extends Omit<TagProps, 'children'> {
+  action?: RuleAction;
+  text?: React.ReactNode;
 }
 
-export const TagActionTask = ({action, task, ...props}: TagActionTaskProps) => {
+export const TagActionTask = ({action, text, ...props}: TagActionTaskProps) => {
   if (action === RuleAction.RULE_ACTION_ALLOW) {
     return (
-      <Tag {...props} icon={<CheckIcon className="w-4 h-4" />}>
-        {task}
+      <Tag size={GeneralSize.Medium} status={TagStatus.Allow} {...props}>
+        <Typography variant="captionSemibold">{text}</Typography>
       </Tag>
     );
   } else if (action === RuleAction.RULE_ACTION_DENY) {
     return (
-      <Tag {...props} icon={<BanIcon className="w-4 h-4" />}>
-        {task}
+      <Tag size={GeneralSize.Medium} status={TagStatus.Deny} {...props}>
+        <Typography variant="captionSemibold">{text}</Typography>
       </Tag>
     );
   }
-  return <Tag {...props}>{task}</Tag>;
+  return (
+    <Tag size={GeneralSize.Medium} {...props}>
+      {text}
+    </Tag>
+  );
 };

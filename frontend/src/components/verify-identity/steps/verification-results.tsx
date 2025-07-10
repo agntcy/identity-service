@@ -16,7 +16,7 @@ import {
   GeneralSize,
   Table,
   Tag,
-  TagBackgroundColorVariants,
+  TagStatus,
   toast,
   Typography
 } from '@outshift/spark-design';
@@ -147,7 +147,7 @@ export const VerificationResults = () => {
                     (
                       <div className="flex gap-4 items-center h-[24px] mt-1">
                         <Separator orientation="vertical" />
-                        <Tag size={GeneralSize.Small} color={TagBackgroundColorVariants.AccentIWeak}>
+                        <Tag size={GeneralSize.Small} status={TagStatus.Negative}>
                           {results?.errors?.length || 0}
                         </Tag>
                       </div>

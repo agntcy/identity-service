@@ -245,44 +245,48 @@ const FormStepperComponent = ({policy}: {policy?: Policy}) => {
                         ) : step.id === 'policyLogic' ? (
                           <PolicyLogic policyLogicForm={policyLogicForm} isLoading={isLoading} />
                         ) : null}
-                        <StepperControls className="pt-4">
-                          <Button
-                            variant="tertariary"
-                            onClick={handleOnCancel}
-                            disabled={isLoading}
-                            sx={{
-                              fontWeight: '600 !important'
-                            }}
-                          >
-                            Cancel
-                          </Button>
-                          {!methods.isFirst && (
+                        <div className="mt-4 flex justify-between items-center">
+                          <div>
                             <Button
-                              variant="secondary"
-                              onClick={() => methods.prev()}
+                              variant="tertariary"
+                              onClick={handleOnCancel}
                               disabled={isLoading}
                               sx={{
                                 fontWeight: '600 !important'
                               }}
                             >
-                              Previous
+                              Cancel
                             </Button>
-                          )}
-                          <Button
-                            loading={isLoading && flagCreateRules}
-                            loadingPosition="start"
-                            type="submit"
-                            disabled={
-                              isLoading || !form.formState.isValid || (methods.current.id === 'policyLogic' && !policyLogicForm.formState.isValid)
-                            }
-                            className="cursor-pointer"
-                            sx={{
-                              fontWeight: '600 !important'
-                            }}
-                          >
-                            {methods.current.id === 'policyLogic' ? 'Edit Policy and Rules' : 'Next'}
-                          </Button>
-                        </StepperControls>
+                          </div>
+                          <StepperControls>
+                            {!methods.isFirst && (
+                              <Button
+                                variant="outlined"
+                                onClick={methods.prev}
+                                disabled={isLoading}
+                                sx={{
+                                  fontWeight: '600 !important'
+                                }}
+                              >
+                                Previous
+                              </Button>
+                            )}
+                            <Button
+                              loading={isLoading && flagCreateRules}
+                              loadingPosition="start"
+                              type="submit"
+                              disabled={
+                                isLoading || !form.formState.isValid || (methods.current.id === 'policyLogic' && !policyLogicForm.formState.isValid)
+                              }
+                              className="cursor-pointer"
+                              sx={{
+                                fontWeight: '600 !important'
+                              }}
+                            >
+                              {methods.current.id === 'policyLogic' ? 'Save' : 'Next'}
+                            </Button>
+                          </StepperControls>
+                        </div>
                       </AccordionContent>
                     </AccordionItem>
                   </div>

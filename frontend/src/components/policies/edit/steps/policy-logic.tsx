@@ -10,13 +10,14 @@ import {useCallback, useState} from 'react';
 import {useFieldArray, UseFormReturn} from 'react-hook-form';
 import {Button, Divider, IconButton, Typography} from '@mui/material';
 import {PolicyLogicyFormValues} from '@/schemas/policy-logic-schema';
-import {Accordion, GeneralSize, Tag, Tooltip} from '@outshift/spark-design';
+import {Accordion, GeneralSize, Tag, TagStatus, Tooltip} from '@outshift/spark-design';
 import {RuleAction} from '@/types/api/policy';
 import {RuleForm} from './rule-form';
 import {labels} from '@/constants/labels';
 import {Separator} from '@/components/ui/separator';
 import {useStepper} from '../stepper';
 import {ConfirmModal} from '@/components/ui/confirm-modal';
+import {TagActionTask} from '@/components/shared/tag-action-task';
 
 export const PolicyLogic = ({isLoading = false, policyLogicForm}: {policyLogicForm: UseFormReturn<PolicyLogicyFormValues>; isLoading?: boolean}) => {
   const [openConfirmModal, setOpenConfirmModal] = useState(false);
@@ -86,9 +87,21 @@ export const PolicyLogic = ({isLoading = false, policyLogicForm}: {policyLogicFo
                               title={field.name}
                               subTitle={
                                 (
-                                  <div className="flex gap-4 items-center h-[24px] mt-1">
+                                  <div className="flex gap-4 items-center h-[24px]">
                                     <Separator orientation="vertical" />
-                                    <Tag size={GeneralSize.Small}>{labels.rulesActions[field.tasks.action]}</Tag>
+                                    <TagActionTask
+                                      action={field.tasks?.action}
+                                      text={labels.rulesActions[field.tasks?.action ?? RuleAction.RULE_ACTION_UNSPECIFIED]}
+                                    />
+                                    <Tag size={GeneralSize.Medium}>
+                                      {field?.tasks?.tasks?.length || 0}{' '}
+                                      {field?.tasks?.tasks?.length && field?.tasks?.tasks?.length > 1 ? 'Tasks' : 'Task'}
+                                    </Tag>
+                                    <Tag status={TagStatus.Info} size={GeneralSize.Medium}>
+                                      <Typography variant="captionSemibold">
+                                        Approval: <b>{field.needsApproval ? 'Yes' : 'No'}</b>
+                                      </Typography>
+                                    </Tag>
                                   </div>
                                 ) as any
                               }
