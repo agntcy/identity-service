@@ -131,7 +131,12 @@ func (s *PolicyService) ListPolicies(
 		DefaultSize: defaultPageSize,
 	}
 
-	policies, err := s.policyService.ListPolicies(ctx, paginationFilter, in.Query)
+	policies, err := s.policyService.ListPolicies(
+		ctx,
+		paginationFilter,
+		in.Query,
+		in.GetAppIds(),
+	)
 	if err != nil {
 		return nil, grpcutil.BadRequestError(err)
 	}

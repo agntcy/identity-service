@@ -479,6 +479,13 @@ paths:
                   description: The search query
                   schema:
                     type: string
+                - name: appIds
+                  in: query
+                  description: A filter used to fetch policies only for the specified Agentic Services
+                  schema:
+                    type: array
+                    items:
+                        type: string
             responses:
                 "200":
                     description: OK
