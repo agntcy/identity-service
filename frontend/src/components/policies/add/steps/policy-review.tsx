@@ -4,8 +4,8 @@
  */
 
 import {Card, CardContent} from '@/components/ui/card';
-import {Accordion, Divider, EmptyState, GeneralSize, Table, Tag, TagStatus, Typography} from '@outshift/spark-design';
-import {useMemo, useState} from 'react';
+import {Accordion, Divider, EmptyState, GeneralSize, Pagination, Table, Tag, TagStatus, Typography} from '@outshift/spark-design';
+import {useCallback, useMemo, useState} from 'react';
 import KeyValue, {KeyValuePair} from '@/components/ui/key-value';
 import {AgenticServiceType} from '@/components/shared/agentic-service-type';
 import {useGetAgenticService, useGetGetTasksAgenticService} from '@/queries';
@@ -20,18 +20,28 @@ import {RuleAction} from '@/types/api/policy';
 import {RuleFormValues} from '@/schemas/rule-schema';
 import {TagActionTask} from '@/components/shared/tag-action-task';
 
+const PAGE_SIZE = 5;
+
 export const PolicyReview = () => {
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: 0,
     pageSize: 15
   });
+  const [pageRules, setPageRules] = useState(1);
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
 
   const methods = useStepper();
   const policy = methods.getMetadata('policyForm') as PolicyFormValues | undefined;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const rules = (methods.getMetadata('policyLogic')?.rules || []) as PolicyLogicyFormValues['rules'] | undefined;
 
   const {data: data, isLoading, isError} = useGetAgenticService(policy?.assignedTo);
+
+  const paginatedRules = useMemo(() => {
+    const startIndex = (pageRules - 1) * PAGE_SIZE;
+    const endIndex = startIndex + PAGE_SIZE;
+    return rules?.slice(startIndex, endIndex) || [];
+  }, [rules, pageRules]);
 
   const keyValuePairs = useMemo(() => {
     const temp: KeyValuePair[] = [
@@ -123,6 +133,10 @@ export const PolicyReview = () => {
     );
   };
 
+  const handlePaginationRulesChange = useCallback((event: React.ChangeEvent<unknown>, value: number) => {
+    setPageRules(value);
+  }, []);
+
   return (
     <>
       <div className="flex gap-4">
@@ -147,7 +161,7 @@ export const PolicyReview = () => {
             </div>
             <CardContent className="p-0 space-y-4">
               <div className="pt-4">
-                {rules?.map((rule, index) => (
+                {paginatedRules?.map((rule, index) => (
                   <div className="w-full" key={index}>
                     <Accordion
                       title={rule.name || `Rule ${index + 1}`}
@@ -185,6 +199,14 @@ export const PolicyReview = () => {
                     </div>
                   </div>
                 ))}
+                <div className="flex justify-end">
+                  <Pagination
+                    size="small"
+                    count={Math.ceil((rules?.length || 0) / PAGE_SIZE)}
+                    page={pageRules}
+                    onChange={handlePaginationRulesChange}
+                  />
+                </div>
               </div>
             </CardContent>
           </Card>

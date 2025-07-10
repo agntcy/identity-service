@@ -10,7 +10,7 @@ import {useGetPolicyRules} from '@/queries';
 import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
 import {Card} from '@/components/ui/card';
 import {cn} from '@/lib/utils';
-import {generatePath, useNavigate} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
 import {FilterSections} from '@/components/shared/filters-sections';
 import {PlusIcon} from 'lucide-react';
