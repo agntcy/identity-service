@@ -32,6 +32,10 @@ const IdentityProvider: React.FC = () => {
           href: PATHS.settings.identityProvider.base
         },
         {
+          label: 'Devices',
+          href: PATHS.settings.devices.base
+        },
+        {
           label: 'API Key',
           href: PATHS.settings.apiKey
         },

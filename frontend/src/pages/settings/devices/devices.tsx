@@ -3,15 +3,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {ContentApiKey} from '@/components/api-key/content-api-key';
 import {BasePage} from '@/components/layout/base-page';
 import {PATHS} from '@/router/paths';
 import React from 'react';
 
-const ApiKey: React.FC = () => {
+const Devices: React.FC = () => {
   return (
     <BasePage
-      title="API Key"
+      title="Devices"
       subNav={[
         {
           label: 'Identity Provider',
@@ -36,13 +35,13 @@ const ApiKey: React.FC = () => {
           link: PATHS.settings.base
         },
         {
-          text: 'API Key'
+          text: 'Devices'
         }
       ]}
     >
-      <ContentApiKey />
+      <></>
     </BasePage>
   );
 };
 
-export default ApiKey;
+export default Devices;

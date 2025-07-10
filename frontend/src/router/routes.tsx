@@ -52,6 +52,9 @@ const EditPolicy = React.lazy(() => import('@/pages/policies/edit-policy'));
 const VerifyIdentityPrivate = React.lazy(() => import('@/pages/agentic-services/verify-identity-private'));
 const VerifyIdentityPublic = React.lazy(() => import('@/pages/verify-identity/verify-identity-public'));
 
+// Devices
+const Devices = React.lazy(() => import('@/pages/settings/devices/devices'));
+
 export const generateRoutes = (routes: Route[]): Route[] => {
   return [
     {
@@ -212,6 +215,19 @@ export const useRoutes = () => {
                 path: PATHS.settings.identityProvider.connection,
                 element: <ConnectionIdentityProvider />,
                 disabled: !isEmptyIdp
+              },
+              {
+                path: '*',
+                element: <NotFound />
+              }
+            ]
+          },
+          {
+            path: PATHS.settings.devices.base,
+            children: [
+              {
+                index: true,
+                element: <Devices />
               },
               {
                 path: '*',

@@ -106,11 +106,12 @@
         },
         "parameters": [
           {
-            "name": "accessToken",
-            "description": "The access token to be authorized.",
-            "in": "query",
-            "required": false,
-            "type": "string"
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1alpha1ExtAuthzRequest"
+            }
           }
         ],
         "tags": [
@@ -138,11 +139,12 @@
         },
         "parameters": [
           {
-            "name": "authorizationCode",
-            "description": "Pass the code received from the authorization endpoint.",
-            "in": "query",
-            "required": false,
-            "type": "string"
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1alpha1TokenRequest"
+            }
           }
         ],
         "tags": [
@@ -264,6 +266,28 @@
         "authorizationCode": {
           "type": "string",
           "description": "If authorization is successful, return a code to be used for\nthe token endpoint."
+        }
+      }
+    },
+    "v1alpha1ExtAuthzRequest": {
+      "type": "object",
+      "properties": {
+        "accessToken": {
+          "type": "string",
+          "description": "The access token to be authorized."
+        },
+        "toolName": {
+          "type": "string",
+          "title": "The tool name that will be invoked"
+        }
+      }
+    },
+    "v1alpha1TokenRequest": {
+      "type": "object",
+      "properties": {
+        "authorizationCode": {
+          "type": "string",
+          "description": "Pass the code received from the authorization endpoint."
         }
       }
     },
