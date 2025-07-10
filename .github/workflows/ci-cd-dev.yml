@@ -89,7 +89,7 @@ jobs:
 
   call-docker-build-push-mcp-server-currency-exchange:
     name: Call Docker Build mcp server currency exchange
-    needs: [checkout]
+    needs: [checkout-unit-tests]
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/build-push-docker.yaml@production
 
     secrets:
@@ -122,7 +122,7 @@ jobs:
 
   call-docker-build-push-a2a-agent-currency-exchange:
     name: Call Docker Build a2a agent currency exchange
-    needs: [checkout]
+    needs: [checkout-unit-tests]
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/build-push-docker.yaml@production
 
     secrets:
@@ -279,7 +279,7 @@ jobs:
 
   call-helm-publish-mcp-server-currency-exchange:
     name: Helm publish mcp-server-currency-exchange
-    needs: [checkout]
+    needs: [checkout-unit-tests]
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@a663a51a68f4158da24f29d7859dabb891586d5c #main
     with:
       runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
@@ -298,7 +298,7 @@ jobs:
 
   call-helm-publish-identity-sample-currency-exchange-a2a:
     name: Helm publish identity-sample-currency-exchange-a2a
-    needs: [checkout]
+    needs: [checkout-unit-tests]
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@a663a51a68f4158da24f29d7859dabb891586d5c #main
     with:
       runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
