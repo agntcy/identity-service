@@ -55,10 +55,10 @@ const StatsCard: React.FC<StatsCardProps> = ({stats, vertical, isGrid, loading, 
 
 export const StatDisplay: React.FC<Stat> = ({icon, title, value, description, badge, loading}) => {
   return (
-    <div className="flex items-center gap-2 py-3 px-4">
+    <div className="flex items-center gap-2 py-3 px-4 justify-center">
       {icon && <div className="flex-shrink-0 p-2 bg-background-secondary rounded-full">{icon}</div>}
       <div className="flex flex-col space-y-1">
-        <Typography variant="body2Semibold">{title}</Typography>
+        <Typography variant="body1Semibold">{title}</Typography>
         {loading ? (
           <div className="flex flex-col gap-1">
             <Skeleton className="w-14 h-6" />
@@ -66,8 +66,8 @@ export const StatDisplay: React.FC<Stat> = ({icon, title, value, description, ba
           </div>
         ) : (
           <>
-            <div className="flex flex-wrap items-center gap-2">
-              <Typography variant="body2">
+            <div className="flex flex-wrap justify-center items-center gap-2">
+              <Typography variant="body1">
                 <OverflowTooltip value={value} someLongText={value} />
               </Typography>
               {badge}

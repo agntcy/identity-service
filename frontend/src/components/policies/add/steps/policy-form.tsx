@@ -10,14 +10,11 @@ import {FormControl, FormField, FormItem, FormLabel} from '@/components/ui/form'
 import {useEffect, useMemo} from 'react';
 import {Input} from '@/components/ui/input';
 import {GeneralSize, MenuItem, Select, Tag, Typography} from '@outshift/spark-design';
-import {PlusIcon} from 'lucide-react';
 import {PolicyFormValues} from '@/schemas/policy-schema';
 import {Textarea} from '@/components/ui/textarea';
 import {useGetAgenticServices} from '@/queries';
-import {Button, Divider, Skeleton} from '@mui/material';
+import {Skeleton} from '@mui/material';
 import {AgenticServiceType} from '@/components/shared/agentic-service-type';
-import {useNavigate} from 'react-router-dom';
-import {PATHS} from '@/router/paths';
 
 export const PolicyForm = ({isLoading = false}: {isLoading?: boolean}) => {
   const {control, reset, formState} = useFormContext<PolicyFormValues>();
@@ -26,8 +23,6 @@ export const PolicyForm = ({isLoading = false}: {isLoading?: boolean}) => {
   const {data, isLoading: isLoadingAgenticServices, isError} = useGetAgenticServices();
 
   const metaData = methods.getMetadata('policyForm') as PolicyFormValues | undefined;
-
-  const navigate = useNavigate();
 
   const agenticServices = useMemo(() => {
     return data?.apps ?? [];
@@ -153,18 +148,6 @@ export const PolicyForm = ({isLoading = false}: {isLoading?: boolean}) => {
                               </Typography>
                             </MenuItem>
                           ))}
-                          <Divider />
-                          <div className="px-4">
-                            <Button
-                              startIcon={<PlusIcon className="h-4 w-4" />}
-                              variant="tertariary"
-                              onClick={() => {
-                                void navigate(PATHS.agenticServices.add, {replace: true});
-                              }}
-                            >
-                              Add Agentic Service
-                            </Button>
-                          </div>
                         </Select>
                       </FormControl>
                     </FormItem>

@@ -94,7 +94,6 @@ export const ListOrganizations = () => {
             columns={OrganizationsColumns()}
             data={data?.tenants || []}
             isLoading={isLoading || isFetching}
-            densityCompact
             muiTableBodyRowProps={({row}) => ({
               sx: {cursor: 'pointer', '& .MuiIconButton-root': {color: (theme) => theme.palette.vars.interactiveSecondaryDefaultDefault}},
               onClick: () => {

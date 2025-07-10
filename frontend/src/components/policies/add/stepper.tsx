@@ -17,7 +17,7 @@ export const {StepperProvider, StepperControls, StepperNavigation, StepperStep, 
     },
     {
       id: 'policyLogic',
-      title: 'Policy Logic',
+      title: 'Policy Rules',
       description: 'Define the logic for the policy',
       schema: z.object({})
     },

@@ -20,6 +20,8 @@ import {IconButton} from '@mui/material';
 import {InfoIcon} from 'lucide-react';
 import {App} from '@/types/api/app';
 import {CreateBadge} from './steps/create-badge';
+import {useNavigate} from 'react-router-dom';
+import {PATHS} from '@/router/paths';
 
 export const AddAgenticServiceStepper = () => {
   return (
@@ -33,6 +35,8 @@ const FormStepperComponent = () => {
   const [app, setApp] = useState<App | undefined>(undefined);
 
   const methods = useStepper();
+
+  const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof methods.current.schema>>({
     resolver: zodResolver(methods.current.schema),
@@ -73,8 +77,8 @@ const FormStepperComponent = () => {
     });
     methods.reset();
     methods.resetMetadata();
-    methods.goTo('agenticServiceForm');
-  }, [form, methods]);
+    void navigate(PATHS.agenticServices.base, {replace: true});
+  }, [form, methods, navigate]);
 
   const handleSelectAgenticService = useCallback(() => {
     const values = form.getValues() as AgenticServiceFormValues;
@@ -160,30 +164,47 @@ const FormStepperComponent = () => {
                           step.id === 'createBadge' && <CreateBadge app={app} />
                         )}
                         {methods.current.id !== 'createBadge' && (
-                          <StepperControls className="pt-4">
-                            <Button
-                              sx={{
-                                fontWeight: '600 !important'
-                              }}
-                              variant="tertariary"
-                              onClick={handleOnClear}
-                              disabled={mutationCreate.isPending}
-                            >
-                              Cancel
-                            </Button>
-                            <Button
-                              loading={mutationCreate.isPending}
-                              loadingPosition="start"
-                              type="submit"
-                              disabled={mutationCreate.isPending || !form.formState.isValid}
-                              className="cursor-pointer"
-                              sx={{
-                                fontWeight: '600 !important'
-                              }}
-                            >
-                              {methods.current.id === 'confirmAgenticService' ? 'Save Agentic Service' : 'Next'}
-                            </Button>
-                          </StepperControls>
+                          <div className="flex justify-between items-center mt-4">
+                            <div>
+                              <Button
+                                sx={{
+                                  fontWeight: '600 !important'
+                                }}
+                                variant="tertariary"
+                                onClick={handleOnClear}
+                                disabled={mutationCreate.isPending}
+                              >
+                                Cancel
+                              </Button>
+                            </div>
+                            <StepperControls>
+                              {!methods.isFirst && (
+                                <Button
+                                  sx={{
+                                    fontWeight: '600 !important'
+                                  }}
+                                  variant="outlined"
+                                  // onClick={handleOnClear}
+                                  onClick={methods.prev}
+                                  disabled={mutationCreate.isPending}
+                                >
+                                  Previous
+                                </Button>
+                              )}
+                              <Button
+                                loading={mutationCreate.isPending}
+                                loadingPosition="start"
+                                type="submit"
+                                disabled={mutationCreate.isPending || !form.formState.isValid}
+                                className="cursor-pointer"
+                                sx={{
+                                  fontWeight: '600 !important'
+                                }}
+                              >
+                                {methods.current.id === 'confirmAgenticService' ? 'Save' : 'Next'}
+                              </Button>
+                            </StepperControls>
+                          </div>
                         )}
                       </AccordionContent>
                     </AccordionItem>

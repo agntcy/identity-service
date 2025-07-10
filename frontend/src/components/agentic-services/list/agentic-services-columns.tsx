@@ -12,10 +12,6 @@ import {MRT_ColumnDef} from 'material-react-table';
 export const AgenticServiceColumns = (): MRT_ColumnDef<App, any>[] => {
   const columns: MRT_ColumnDef<App, any>[] = [
     {
-      accessorKey: 'resolverMetadataId',
-      header: 'Identity'
-    },
-    {
       accessorKey: 'name',
       header: 'Name'
     },
@@ -32,6 +28,10 @@ export const AgenticServiceColumns = (): MRT_ColumnDef<App, any>[] => {
       Cell: ({row}) => {
         return <StatusAgenticService status={row.original.status} />;
       }
+    },
+    {
+      accessorKey: 'resolverMetadataId',
+      header: 'Identity'
     },
     {
       accessorKey: 'createdAt',

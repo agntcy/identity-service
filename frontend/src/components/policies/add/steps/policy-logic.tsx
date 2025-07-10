@@ -133,7 +133,7 @@ export const PolicyLogic = ({isLoading = false, policyLogicForm}: {policyLogicFo
               disabled={(isLoading || !policyLogicForm.formState.isValid) && fields.length > 0}
               onClick={handleAddRule}
             >
-              Add Logic
+              Add Rule
             </Button>
           </div>
         </Form>

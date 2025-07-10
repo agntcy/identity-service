@@ -11,7 +11,7 @@ export const {StepperProvider, StepperControls, StepperNavigation, StepperStep, 
   defineStepper(
     {
       id: 'agenticServiceForm',
-      title: 'Agentic Service Type & Source',
+      title: 'Agentic Service Type & Details',
       description: 'Select the agentic service type you want to use and enter the service information',
       schema: AgenticServiceSchema
     },

@@ -163,7 +163,6 @@ export const VerificationResults = () => {
                     ]}
                     data={results?.errors || []}
                     isLoading={false}
-                    densityCompact
                     enableRowActions
                     topToolbarProps={{
                       enableActions: false

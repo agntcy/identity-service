@@ -102,7 +102,6 @@ export const PolicyContent = ({policy}: {policy?: Policy}) => {
                               ]}
                               data={rule.tasks || []}
                               isLoading={false}
-                              densityCompact
                               enableRowActions
                               topToolbarProps={{
                                 enableActions: false

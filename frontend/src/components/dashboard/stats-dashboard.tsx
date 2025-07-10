@@ -82,16 +82,18 @@ export const StatsDashboard = () => {
             stats={statsInfo}
           />
         </div>
-        <div className="flex card-group px-[24px]">
-          <div className="card-flex-group min-w-[384px] bg-[#FBFCFE] rounded-[8px] flex-col flex justify-center items-center px-20 pt-[40px] pb-[24px]">
-            <div>
-              <Typography variant="h6" textAlign="center">
-                Verify Identity Badges
-              </Typography>
-              <Typography variant="body1" marginTop={2} textAlign="center">
-                Ensure secure communication and authentication by verifying identities
-              </Typography>
-              <div className="flex justify-center items-center mt-8">
+        <div className="card-group px-[24px]">
+          <div className="card-flex-group min-w-[384px] bg-[#FBFCFE] rounded-[8px] flex-col flex justify-start items-center px-20 py-12">
+            <div className="flex flex-col justify-between h-full">
+              <div>
+                <Typography variant="h6" textAlign="center">
+                  Verify Identity Badges
+                </Typography>
+                <Typography variant="body1" marginTop={1} textAlign="center">
+                  Ensure secure communication and authentication by verifying identities
+                </Typography>
+              </div>
+              <div className="flex justify-center items-center">
                 <RouterLink to={PATHS.agenticServices.verifyIdentity}>
                   <Button variant="outlined" sx={{fontWeight: '600 !important'}} startIcon={<CheckIcon className="w-4 h-4" />}>
                     Verify Identity
@@ -100,15 +102,17 @@ export const StatsDashboard = () => {
               </div>
             </div>
           </div>
-          <div className="card-flex-group min-w-[384px] bg-[#FBFCFE] rounded-[8px] flex-col flex justify-center items-center px-20 pt-[40px] pb-[24px]">
-            <div>
-              <Typography variant="h6" textAlign="center">
-                Add Agentic Services
-              </Typography>
-              <Typography variant="body1" marginTop={2} textAlign="center">
-                Add Agentic Services and generate Identity badges
-              </Typography>
-              <div className="flex justify-center items-center mt-8">
+          <div className="card-flex-group min-w-[384px] bg-[#FBFCFE] rounded-[8px] flex-col flex justify-start items-center px-20 py-12">
+            <div className="flex flex-col justify-between h-full">
+              <div>
+                <Typography variant="h6" textAlign="center">
+                  Add Agentic Services
+                </Typography>
+                <Typography variant="body1" marginTop={1} textAlign="center">
+                  Add Agentic Services and generate Identity badges
+                </Typography>
+              </div>
+              <div className="flex justify-center items-center">
                 <RouterLink to={PATHS.agenticServices.add}>
                   <Button variant="outlined" sx={{fontWeight: '600 !important'}} startIcon={<PlusIcon className="w-4 h-4" />}>
                     Add Agentic Service
@@ -118,14 +122,16 @@ export const StatsDashboard = () => {
             </div>
           </div>
           {isTbacEnable && (
-            <div className="card-flex-group min-w-[384px] bg-[#FBFCFE] rounded-[8px] flex-col flex justify-center items-center px-20  pt-[40px] pb-[24px]">
-              <div>
-                <Typography variant="h6" textAlign="center">
-                  Add Policies
-                </Typography>
-                <Typography variant="body1" marginTop={2} textAlign="center">
-                  Manage access and permissions for secure agentic interactions
-                </Typography>
+            <div className="card-flex-group min-w-[384px] bg-[#FBFCFE] rounded-[8px] flex-col flex justify-start items-center px-20 py-12">
+              <div className="flex flex-col justify-between h-full">
+                <div>
+                  <Typography variant="h6" textAlign="center">
+                    Add Policies
+                  </Typography>
+                  <Typography variant="body1" marginTop={1} textAlign="center">
+                    Manage access and permissions for secure agentic interactions
+                  </Typography>
+                </div>
                 <div className="flex justify-center items-center mt-8">
                   <RouterLink to={PATHS.policies.create}>
                     <Button variant="outlined" sx={{fontWeight: '600 !important'}} startIcon={<PlusIcon className="w-4 h-4" />}>

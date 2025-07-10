@@ -102,7 +102,6 @@ export const PolicyReview = () => {
         ]}
         data={dataTask}
         isLoading={isLoading}
-        densityCompact
         topToolbarProps={{
           enableActions: false
         }}
@@ -146,7 +145,7 @@ export const PolicyReview = () => {
           <Card className="text-start space-y-4" variant="secondary">
             <div className="flex justify-between items-center">
               <Typography variant="subtitle1" fontWeight={600}>
-                Policy Logic
+                Policy Rules
               </Typography>
             </div>
             <CardContent className="p-0 space-y-4">

@@ -18,6 +18,12 @@ export const TaskSchema = z
         message: 'Action is required'
       });
     }
+    if (data.tasks.length === 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'At least one task is required'
+      });
+    }
   });
 
 export type TaskFormValues = z.infer<typeof TaskSchema>;

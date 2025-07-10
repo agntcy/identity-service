@@ -53,6 +53,7 @@ export const PoliciesColumns = (): MRT_ColumnDef<Policy, any>[] => {
               </Tag>
             );
           }
+          // TODO: add here action and tasks - due a map by task and link to action
           return (
             <Tags
               size={GeneralSize.Small}

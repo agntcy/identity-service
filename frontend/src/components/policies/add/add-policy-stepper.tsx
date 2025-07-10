@@ -163,8 +163,8 @@ const FormStepperComponent = () => {
     });
     methods.reset();
     methods.resetMetadata();
-    methods.goTo('policyForm');
-  }, [form, methods, policyLogicForm]);
+    void navigate(PATHS.policies.base, {replace: true});
+  }, [form, methods, navigate, policyLogicForm]);
 
   const handleSavePolicyForm = useCallback(() => {
     const values = form.getValues() as PolicyFormValues;
@@ -258,32 +258,48 @@ const FormStepperComponent = () => {
                         ) : (
                           step.id === 'policyReview' && <PolicyReview />
                         )}
-                        <StepperControls className="pt-4">
-                          <Button
-                            variant="tertariary"
-                            onClick={handleOnClear}
-                            disabled={isLoading}
-                            sx={{
-                              fontWeight: '600 !important'
-                            }}
-                          >
-                            Cancel
-                          </Button>
-                          <Button
-                            loading={isLoading && flagCreateRules}
-                            loadingPosition="start"
-                            type="submit"
-                            disabled={
-                              isLoading || !form.formState.isValid || (methods.current.id === 'policyLogic' && !policyLogicForm.formState.isValid)
-                            }
-                            className="cursor-pointer"
-                            sx={{
-                              fontWeight: '600 !important'
-                            }}
-                          >
-                            {methods.current.id === 'policyReview' ? 'Add Policy' : 'Next'}
-                          </Button>
-                        </StepperControls>
+                        <div className="mt-4 flex justify-between items-center">
+                          <div>
+                            <Button
+                              variant="tertariary"
+                              onClick={handleOnClear}
+                              disabled={isLoading}
+                              sx={{
+                                fontWeight: '600 !important'
+                              }}
+                            >
+                              Cancel
+                            </Button>
+                          </div>
+                          <StepperControls>
+                            {!methods.isFirst && (
+                              <Button
+                                variant="outlined"
+                                onClick={methods.prev}
+                                disabled={isLoading}
+                                sx={{
+                                  fontWeight: '600 !important'
+                                }}
+                              >
+                                Previous
+                              </Button>
+                            )}
+                            <Button
+                              loading={isLoading && flagCreateRules}
+                              loadingPosition="start"
+                              type="submit"
+                              disabled={
+                                isLoading || !form.formState.isValid || (methods.current.id === 'policyLogic' && !policyLogicForm.formState.isValid)
+                              }
+                              className="cursor-pointer"
+                              sx={{
+                                fontWeight: '600 !important'
+                              }}
+                            >
+                              {methods.current.id === 'policyReview' ? 'Save' : 'Next'}
+                            </Button>
+                          </StepperControls>
+                        </div>
                       </AccordionContent>
                     </AccordionItem>
                   </div>

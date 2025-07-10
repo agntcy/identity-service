@@ -19,6 +19,8 @@ import {ConfirmModal} from '@/components/ui/confirm-modal';
 import {useDeleteAgenticService} from '@/mutations';
 import {BadgeModalForm} from '@/components/shared/badge-modal-form';
 import {cn} from '@/lib/utils';
+import {useFeatureFlagsStore} from '@/store';
+import {useShallow} from 'zustand/react/shallow';
 
 export const ListAgenticServices = () => {
   const [pagination, setPagination] = useState<MRT_PaginationState>({
@@ -47,6 +49,12 @@ export const ListAgenticServices = () => {
     query: query,
     types: appTypeFilters
   });
+
+  const {isTbacEnable} = useFeatureFlagsStore(
+    useShallow((state) => ({
+      isTbacEnable: state.featureFlags.isTbacEnable
+    }))
+  );
 
   const navigate = useNavigate();
 
@@ -129,7 +137,6 @@ export const ListAgenticServices = () => {
             columns={AgenticServiceColumns()}
             data={data?.apps || []}
             isLoading={isLoading || deleteMutation.isPending}
-            densityCompact
             muiTableBodyRowProps={({row}) => ({
               sx: {cursor: 'pointer', '& .MuiIconButton-root': {color: (theme) => theme.palette.vars.interactiveSecondaryDefaultDefault}},
               onClick: () => {
@@ -245,6 +252,13 @@ export const ListAgenticServices = () => {
         description={
           <>
             Are you sure you want to delete this agentic service <b>{tempApp?.name}</b>? This action cannot be undone.
+            {isTbacEnable && (
+              <>
+                <br />
+                <br />
+                <strong>Note:</strong> If this agentic service is a TBAC service, it will also remove the associated TBAC policies.
+              </>
+            )}
           </>
         }
         confirmButtonText="Delete"

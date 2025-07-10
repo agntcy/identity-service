@@ -98,7 +98,6 @@ export const OrganizationInfo = ({
             columns={UsersColumns()}
             data={dataUsers?.users || []}
             isLoading={isLoadingGroups || isLoadingUsers || deleteUserMutation.isPending}
-            densityCompact
             enableRowActions
             topToolbarProps={{
               enableActions: false
