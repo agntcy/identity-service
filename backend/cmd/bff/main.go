@@ -226,6 +226,8 @@ func main() {
 
 	badgeRevoker := badgecore.NewRevoker(badgeRepository, identityService)
 
+	policyEvaluator := policycore.NewEvaluator(policyRepository)
+
 	// Create internal services
 	appSrv := bff.NewAppService(
 		appRepository,
@@ -265,6 +267,8 @@ func main() {
 		authRepository,
 		credentialStore,
 		oidcAuthenticator,
+		appRepository,
+		policyEvaluator,
 	)
 	policySrv := bff.NewPolicyService(appRepository, policyRepository)
 	notificationSrv := bff.NewNotificationService(

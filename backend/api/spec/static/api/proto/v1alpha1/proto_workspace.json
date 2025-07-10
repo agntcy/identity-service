@@ -1857,13 +1857,13 @@
             {
               "name": "app_id",
               "description": "The app id for which authorization is requested.",
-              "label": "",
+              "label": "optional",
               "type": "string",
               "longType": "string",
               "fullType": "string",
               "ismap": false,
-              "isoneof": false,
-              "oneofdecl": "",
+              "isoneof": true,
+              "oneofdecl": "_app_id",
               "defaultValue": ""
             },
             {
@@ -1939,20 +1939,8 @@
               "defaultValue": ""
             },
             {
-              "name": "app_id",
-              "description": "The app id for which the access token is being authorized.",
-              "label": "optional",
-              "type": "string",
-              "longType": "string",
-              "fullType": "string",
-              "ismap": false,
-              "isoneof": true,
-              "oneofdecl": "_app_id",
-              "defaultValue": ""
-            },
-            {
               "name": "tool_name",
-              "description": "The tool name of the MCP Server or Agent making the request.",
+              "description": "The tool name that will be invoked",
               "label": "optional",
               "type": "string",
               "longType": "string",
@@ -2080,7 +2068,8 @@
                   "rules": [
                     {
                       "method": "POST",
-                      "pattern": "/v1alpha1/auth/token"
+                      "pattern": "/v1alpha1/auth/token",
+                      "body": "*"
                     }
                   ]
                 }
@@ -2102,7 +2091,8 @@
                   "rules": [
                     {
                       "method": "POST",
-                      "pattern": "/v1alpha1/auth/ext_authz"
+                      "pattern": "/v1alpha1/auth/ext_authz",
+                      "body": "*"
                     }
                   ]
                 }

@@ -5,7 +5,10 @@
 
 package types
 
-import "time"
+import (
+	"strings"
+	"time"
+)
 
 // Identity Platform Policy Task
 type Task struct {
@@ -79,6 +82,26 @@ type Rule struct {
 	UpdatedAt *time.Time `json:"updated_at,omitempty" protobuf:"google.protobuf.Timestamp,9,opt,name=updated_at"`
 }
 
+// This function checks whether a Rule is allowing appID to be called.
+// If the app is an MCP server than a check agains a specific toolName
+// is made.
+func (r *Rule) CanInvoke(appID, toolName string) bool {
+	for _, task := range r.Tasks {
+		if r.Action != RULE_ACTION_ALLOW {
+			continue
+		}
+
+		if task.AppID == appID {
+			if task.ToolName == "" ||
+				strings.EqualFold(task.ToolName, toolName) {
+				return true
+			}
+		}
+	}
+
+	return false
+}
+
 // Identity Platform Policy.
 type Policy struct {
 	// A unique identifier for the Policy.
@@ -101,4 +124,14 @@ type Policy struct {
 
 	// UpdatedAt records the timestamp of the last update to the Policy
 	UpdatedAt *time.Time `json:"updated_at,omitempty" protobuf:"google.protobuf.Timestamp,7,opt,name=updated_at"`
+}
+
+func (p *Policy) CanInvoke(appID, toolName string) bool {
+	for _, rule := range p.Rules {
+		if rule.CanInvoke(appID, toolName) {
+			return true
+		}
+	}
+
+	return false
 }
