@@ -15,12 +15,12 @@ mcp = FastMCP("GitHub", stateless_http=True)
 
 
 @mcp.tool()
-def trade_currency(
+def trade_currency_exchange(
     currency_from: str = "USD",
     currency_to: str = "EUR",
     amount: float = 1.0,
 ):
-    """Use this to trade currency for the specified amount.
+    """Use this to trade currency exchange for the specified amount.
 
     Args:
         currency_from: The currency to trade from (e.g., "USD").
@@ -60,12 +60,12 @@ def trade_currency(
 
 
 @mcp.tool()
-def get_exchange_rate(
+def get_currency_exchange_rate(
     currency_from: str = "USD",
     currency_to: str = "EUR",
     currency_date: str = "latest",
 ):
-    """Use this to get current exchange rate.
+    """Use this to get the current currency exchange rate.
 
     Args:
         currency_from: The currency to convert from (e.g., "USD").
