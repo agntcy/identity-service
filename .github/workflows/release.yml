@@ -294,7 +294,7 @@ jobs:
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/trigger-deploy.yaml@production
     with:
       deployment-repo: "cisco-eti/pyramid-deployment"
-      client-payload: '{"app-repository": "${{ github.repository }}", "values-file-path": "applications/identity-pyramid-ui", "property-path": "image.tag", "deployment-stage": "staging", "default-deployment": true, "value": "${{ github.ref_name }}"}'
+      client-payload: '{"app-repository": "${{ github.repository }}", "values-file-path": "applications/identity-ui", "property-path": "image.tag", "deployment-stage": "staging", "default-deployment": true, "value": "${{ github.ref_name }}"}'
     secrets:
       ghcr-username: ${{ secrets.GHCR_USERNAME }}
       ghcr-token: ${{ secrets.GHCR_TOKEN }}
@@ -310,7 +310,7 @@ jobs:
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/trigger-deploy.yaml@production
     with:
       deployment-repo: "cisco-eti/pyramid-deployment"
-      client-payload: '{"app-repository": "${{ github.repository }}", "values-file-path": "applications/identity-pyramid-backend", "property-path": "image.tag", "deployment-stage": "staging", "default-deployment": true, "value": "${{ github.ref_name }}"}'
+      client-payload: '{"app-repository": "${{ github.repository }}", "values-file-path": "applications/identity-backend", "property-path": "image.tag", "deployment-stage": "staging", "default-deployment": true, "value": "${{ github.ref_name }}"}'
     secrets:
       ghcr-username: ${{ secrets.GHCR_USERNAME }}
       ghcr-token: ${{ secrets.GHCR_TOKEN }}
