@@ -91,8 +91,9 @@ export const TaskForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
                               valueFormatter: () => optionsTasks.find((option) => option.value === value)?.label || 'Unknown Task',
                               value
                             }))}
-                            showOnlyFirst
+                            showOnlyFirst={false}
                             shouldTruncate
+                            maxTooltipTags={2}
                           />
                         </div>
                       );
