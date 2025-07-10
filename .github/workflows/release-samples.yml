@@ -119,6 +119,46 @@ jobs:
 
   ################################## Helm Publish #################################
   #################################################################################
+  call-helm-publish-mcp-server-currency-exchange:
+    name: Helm publish mcp-server-currency-exchange
+    needs: [checkout]
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@a663a51a68f4158da24f29d7859dabb891586d5c #main
+    with:
+      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      enable-chartmuseum: true
+      enable-private-ecr: false
+      enable-public-ecr: false
+      chart-path: charts/samples/identity-sample-currency-exchange-mcp
+      # override-chart-version: ${{ needs.calculate-tags.outputs.chart_version }}
+      #ecr-public-registry-alias: ${{ vars.ECR_PUBLIC_REGISTRY_ALIAS}}
+    secrets:
+      # GHCR Login for docker build runner
+      ghcr-username: ${{ secrets.GHCR_USERNAME }}
+      ghcr-token: ${{ secrets.GHCR_TOKEN }}
+      vault-approle-role-id: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
+      vault-approle-secret-id: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
+
+  call-helm-publish-identity-sample-currency-exchange-a2a:
+    name: Helm publish identity-sample-currency-exchange-a2a
+    needs: [checkout]
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@a663a51a68f4158da24f29d7859dabb891586d5c #main
+    with:
+      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      enable-chartmuseum: true
+      enable-private-ecr: false
+      enable-public-ecr: false
+      chart-path: charts/samples/identity-sample-currency-exchange-a2a
+      # override-chart-version: ${{ needs.calculate-tags.outputs.chart_version }}
+      #ecr-public-registry-alias: ${{ vars.ECR_PUBLIC_REGISTRY_ALIAS}}
+    secrets:
+      # GHCR Login for docker build runner
+      ghcr-username: ${{ secrets.GHCR_USERNAME }}
+      ghcr-token: ${{ secrets.GHCR_TOKEN }}
+      vault-approle-role-id: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
+      vault-approle-secret-id: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
+
+  ################################## Trigger Deployments ##########################
+  #################################################################################
   # MCP Server Currency Exchange Deployment
   call-trigger-cd-mcp-server-currency-exchange:
     name: Trigger CD MCP Server Currency Exchange
