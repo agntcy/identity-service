@@ -57,7 +57,7 @@ async def print_agent_card() -> None:
 async def run_single_turn_test(client: A2AClient) -> None:
     """Runs a single-turn non-streaming test."""
 
-    send_payload = create_send_message_payload(text="how much is 100 USD in CAD?")
+    send_payload = create_send_message_payload(text="How much is 1020 CAD in EUR")
     request = SendMessageRequest(params=MessageSendParams(**send_payload))
 
     print("--- Single Turn Request ---")

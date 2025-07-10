@@ -1,0 +1,30 @@
+# Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
+[project]
+name = "identity-financial-assistant-oasf-sample-agent"
+version = "0.0.1"
+description = "Sample LangGraph Financial Assistant"
+requires-python = ">=3.12"
+dependencies = [
+    "a2a-sdk",
+    "httpx",
+    "uvicorn",
+    "click>=8.1.8",
+    "httpx>=0.28.1",
+    "langchain>=0.3.23",
+    "langchain-core>=0.3.51",
+    "langchain-mcp-adapters>=0.0.7",
+    "langchain-ollama>=0.3.1",
+    "langgraph>=0.3.29",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["."]
+
+[tool.uv.sources]
+a2a-samples = { workspace = true }
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

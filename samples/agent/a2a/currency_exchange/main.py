@@ -3,12 +3,12 @@
 """Main entry point for the Currency Agent server."""
 
 import logging
+import os
 import sys
 
 import click
 import httpx
 import uvicorn
-import os
 from a2a.server.apps import A2AStarletteApplication
 from a2a.server.request_handlers import DefaultRequestHandler
 from a2a.server.tasks import InMemoryPushNotifier, InMemoryTaskStore
@@ -27,10 +27,15 @@ logger = logging.getLogger(__name__)
 @click.command()
 @click.option("--host", "host", default="0.0.0.0")
 @click.option("--port", "port", default=9091)
-@click.option("--ollama-host", default=os.getenv("OLLAMA_HOST", "http://localhost:11434"))
+@click.option(
+    "--ollama-host", default=os.getenv("OLLAMA_HOST", "http://localhost:11434")
+)
 @click.option("--ollama-model", default=os.getenv("OLLAMA_MODEL", "llama3.2"))
-@click.option("--mcp-server-url", default=os.getenv("MCP_SERVER_URL", "http://localhost:9090/mcp"))
-def main(host, port, ollama_host, ollama_model, mcp_server_url):
+@click.option(
+    "--currency_exchange_mcp_server_url",
+    default=os.getenv("MCP_SERVER_URL", "http://localhost:9090/mcp"),
+)
+def main(host, port, ollama_host, ollama_model, currency_exchange_mcp_server_url):
     """Starts the Currency Agent server."""
 
     # pylint: disable=broad-exception-caught
@@ -59,7 +64,7 @@ def main(host, port, ollama_host, ollama_model, mcp_server_url):
         httpx_client = httpx.AsyncClient(timeout=timeout)
         request_handler = DefaultRequestHandler(
             agent_executor=CurrencyAgentExecutor(
-                ollama_host, ollama_model, mcp_server_url
+                ollama_host, ollama_model, currency_exchange_mcp_server_url
             ),
             task_store=InMemoryTaskStore(),
             push_notifier=InMemoryPushNotifier(httpx_client),
