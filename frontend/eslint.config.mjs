@@ -36,7 +36,8 @@ export default defineConfig([globalIgnores([
     "**/vite.config.ts",
     "**/tailwind.config.js",
     "utils/**/*",
-    ".yarn/**/*"
+    ".yarn/**/*",
+    "dev-dist/**/*"
 ]), {
     extends: fixupConfigRules(compat.extends(
         "eslint:recommended",
