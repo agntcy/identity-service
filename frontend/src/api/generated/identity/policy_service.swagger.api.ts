@@ -448,6 +448,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         size?: number;
         /** The search query */
         query?: string;
+        /** A filter used to fetch policies only for the specified Agentic Services */
+        appIds?: string[];
       },
       params: RequestParams = {}
     ) =>

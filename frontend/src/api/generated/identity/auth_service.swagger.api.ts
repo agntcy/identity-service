@@ -214,6 +214,18 @@ export interface V1Alpha1AuthorizeResponse {
   authorizationCode?: string;
 }
 
+export interface V1Alpha1ExtAuthzRequest {
+  /** The access token to be authorized. */
+  accessToken?: string;
+  /** The tool name that will be invoked */
+  toolName?: string;
+}
+
+export interface V1Alpha1TokenRequest {
+  /** Pass the code received from the authorization endpoint. */
+  authorizationCode?: string;
+}
+
 export interface V1Alpha1TokenResponse {
   /** The access token issued to the Agent or MCP Server. */
   accessToken?: string;
@@ -404,17 +416,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @summary Handle external authorization requests
      * @request POST:/v1alpha1/auth/ext_authz
      */
-    extAuthz: (
-      query?: {
-        /** The access token to be authorized. */
-        accessToken?: string;
-      },
-      params: RequestParams = {}
-    ) =>
+    extAuthz: (body: V1Alpha1ExtAuthzRequest, params: RequestParams = {}) =>
       this.request<object, RpcStatus>({
         path: `/v1alpha1/auth/ext_authz`,
         method: 'POST',
-        query: query,
+        body: body,
+        type: ContentType.Json,
         format: 'json',
         ...params
       }),
@@ -427,17 +434,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @summary Request token for an Agent or MCP Server
      * @request POST:/v1alpha1/auth/token
      */
-    requestToken: (
-      query?: {
-        /** Pass the code received from the authorization endpoint. */
-        authorizationCode?: string;
-      },
-      params: RequestParams = {}
-    ) =>
+    requestToken: (body: V1Alpha1TokenRequest, params: RequestParams = {}) =>
       this.request<V1Alpha1TokenResponse, RpcStatus>({
         path: `/v1alpha1/auth/token`,
         method: 'POST',
-        query: query,
+        body: body,
+        type: ContentType.Json,
         format: 'json',
         ...params
       })

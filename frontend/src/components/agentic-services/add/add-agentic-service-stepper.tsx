@@ -3,24 +3,20 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {useCallback, useState} from 'react';
+import {useCallback} from 'react';
 import {StepperControls, StepperNavigation, StepperPanel, StepperProvider, StepperStep, useStepper} from './stepper';
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {z} from 'zod';
 import {Form} from '@/components/ui/form';
 import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from '@/components/ui/accordion';
-import {Button, toast, Tooltip, Typography} from '@outshift/spark-design';
+import {Button, toast, Typography} from '@outshift/spark-design';
 import {AgenticServicForm} from './steps/agentic-service-form';
 import {ConfirmInfo} from './steps/confirm-info';
 import {AgenticServiceFormValues, AgenticServiceSchema} from '@/schemas/agentic-service-schema';
 import {validateForm} from '@/lib/utils';
 import {useCreateAgenticService} from '@/mutations';
-import {IconButton} from '@mui/material';
-import {InfoIcon} from 'lucide-react';
-import {App} from '@/types/api/app';
-import {CreateBadge} from './steps/create-badge';
-import {useNavigate} from 'react-router-dom';
+import {generatePath, useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
 
 export const AddAgenticServiceStepper = () => {
@@ -32,8 +28,6 @@ export const AddAgenticServiceStepper = () => {
 };
 
 const FormStepperComponent = () => {
-  const [app, setApp] = useState<App | undefined>(undefined);
-
   const methods = useStepper();
 
   const navigate = useNavigate();
@@ -51,8 +45,10 @@ const FormStepperComponent = () => {
           description: 'Agentic service added successfully.',
           type: 'success'
         });
-        setApp(resp.data);
-        methods.next();
+        const path = generatePath(PATHS.agenticServices.info, {
+          id: resp.data.id
+        });
+        void navigate(path, {replace: true});
       },
       onError: () => {
         toast({
@@ -65,7 +61,6 @@ const FormStepperComponent = () => {
   });
 
   const handleOnClear = useCallback(() => {
-    setApp(undefined);
     form.reset({
       type: undefined,
       name: undefined,
@@ -136,22 +131,6 @@ const FormStepperComponent = () => {
                             <Typography variant="h6" fontSize={18} sx={(theme) => ({color: theme.palette.vars.baseTextStrong})}>
                               {step.title}
                             </Typography>
-                            {step.id === 'createBadge' && (
-                              <div className="flex gap-1 items-center">
-                                <Tooltip title="You must be the Agentic service owner to create badges." arrow placement="top">
-                                  <IconButton
-                                    sx={(theme) => ({
-                                      color: theme.palette.vars.baseTextDefault,
-                                      width: '24px',
-                                      height: '24px'
-                                    })}
-                                  >
-                                    <InfoIcon className="w-4 h-4" />
-                                  </IconButton>
-                                </Tooltip>
-                                <Typography variant="caption">| Optional</Typography>
-                              </div>
-                            )}
                           </div>
                         </div>
                       </AccordionTrigger>
@@ -160,52 +139,47 @@ const FormStepperComponent = () => {
                           <AgenticServicForm isLoading={mutationCreate.isPending} />
                         ) : step.id === 'confirmAgenticService' ? (
                           <ConfirmInfo />
-                        ) : (
-                          step.id === 'createBadge' && <CreateBadge app={app} />
-                        )}
-                        {methods.current.id !== 'createBadge' && (
-                          <div className="flex justify-between items-center mt-4">
-                            <div>
+                        ) : null}
+                        <div className="flex justify-between items-center mt-4">
+                          <div>
+                            <Button
+                              sx={{
+                                fontWeight: '600 !important'
+                              }}
+                              variant="tertariary"
+                              onClick={handleOnClear}
+                              disabled={mutationCreate.isPending}
+                            >
+                              Cancel
+                            </Button>
+                          </div>
+                          <StepperControls>
+                            {!methods.isFirst && (
                               <Button
                                 sx={{
                                   fontWeight: '600 !important'
                                 }}
-                                variant="tertariary"
-                                onClick={handleOnClear}
+                                variant="outlined"
+                                onClick={methods.prev}
                                 disabled={mutationCreate.isPending}
                               >
-                                Cancel
+                                Previous
                               </Button>
-                            </div>
-                            <StepperControls>
-                              {!methods.isFirst && (
-                                <Button
-                                  sx={{
-                                    fontWeight: '600 !important'
-                                  }}
-                                  variant="outlined"
-                                  // onClick={handleOnClear}
-                                  onClick={methods.prev}
-                                  disabled={mutationCreate.isPending}
-                                >
-                                  Previous
-                                </Button>
-                              )}
-                              <Button
-                                loading={mutationCreate.isPending}
-                                loadingPosition="start"
-                                type="submit"
-                                disabled={mutationCreate.isPending || !form.formState.isValid}
-                                className="cursor-pointer"
-                                sx={{
-                                  fontWeight: '600 !important'
-                                }}
-                              >
-                                {methods.current.id === 'confirmAgenticService' ? 'Save' : 'Next'}
-                              </Button>
-                            </StepperControls>
-                          </div>
-                        )}
+                            )}
+                            <Button
+                              loading={mutationCreate.isPending}
+                              loadingPosition="start"
+                              type="submit"
+                              disabled={mutationCreate.isPending || !form.formState.isValid}
+                              className="cursor-pointer"
+                              sx={{
+                                fontWeight: '600 !important'
+                              }}
+                            >
+                              {methods.current.id === 'confirmAgenticService' ? 'Save' : 'Next'}
+                            </Button>
+                          </StepperControls>
+                        </div>
                       </AccordionContent>
                     </AccordionItem>
                   </div>
