@@ -64,15 +64,8 @@ export const ListRules = ({policyId}: {policyId?: string}) => {
             columns={RulesColumns()}
             data={data?.rules || []}
             isLoading={isLoading}
-            muiTableBodyRowProps={({row, isDetailPanel}) => ({
-              sx: {cursor: 'pointer', '& .MuiIconButton-root': {color: (theme) => theme.palette.vars.interactiveSecondaryDefaultDefault}},
-              onClick: () => {
-                if (isDetailPanel) {
-                  return;
-                }
-                const path = generatePath(PATHS.policies.info, {id: row.original?.id});
-                void navigate(path, {replace: true});
-              }
+            muiTableBodyRowProps={() => ({
+              sx: {cursor: 'default'}
             })}
             renderTopToolbar={() => (
               <FilterSections
