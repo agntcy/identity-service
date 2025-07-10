@@ -7,14 +7,21 @@ import {PolicyAPI} from '@/api/services';
 import {keepPreviousData, useQuery} from '@tanstack/react-query';
 import qs from 'qs';
 
-export const useGetPolicies = ({query, enable = true}: {query?: {page?: number; size?: number; query?: string}; enable?: boolean}) => {
+export const useGetPolicies = ({
+  query,
+  enable = true
+}: {
+  query?: {page?: number; size?: number; query?: string; appIds?: string[]};
+  enable?: boolean;
+}) => {
   return useQuery({
     queryKey: [
       'get-policies',
       {
         page: query?.page,
         size: query?.size,
-        query: query?.query
+        query: query?.query,
+        appIds: query?.appIds
       },
       enable
     ],
@@ -23,7 +30,8 @@ export const useGetPolicies = ({query, enable = true}: {query?: {page?: number; 
         {
           page: query?.page,
           size: query?.size,
-          query: query?.query
+          query: query?.query,
+          appIds: query?.appIds
         },
         {
           paramsSerializer: (params) => {

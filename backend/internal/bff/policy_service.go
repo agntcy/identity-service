@@ -41,6 +41,7 @@ type PolicyService interface {
 		ctx context.Context,
 		paginationFilter pagination.PaginationFilter,
 		query *string,
+		appIDs []string,
 	) (*pagination.Pageable[policytypes.Policy], error)
 	ListRules(
 		ctx context.Context,
@@ -205,8 +206,9 @@ func (s *policyService) ListPolicies(
 	ctx context.Context,
 	paginationFilter pagination.PaginationFilter,
 	query *string,
+	appIDs []string,
 ) (*pagination.Pageable[policytypes.Policy], error) {
-	return s.policyRepository.GetAllPolicies(ctx, paginationFilter, query)
+	return s.policyRepository.GetAllPolicies(ctx, paginationFilter, query, appIDs)
 }
 
 func (s *policyService) ListRules(

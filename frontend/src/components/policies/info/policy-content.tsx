@@ -105,7 +105,7 @@ export const PolicyContent = ({policy}: {policy?: Policy}) => {
                                 <Tag size={GeneralSize.Medium}>
                                   {rule.tasks?.length || 0} {rule.tasks?.length && rule.tasks?.length > 1 ? 'Tasks' : 'Task'}
                                 </Tag>
-                                <Tag status={TagStatus.Info} size={GeneralSize.Medium}>
+                                <Tag status={rule.needsApproval ? TagStatus.Positive : TagStatus.Negative} size={GeneralSize.Small}>
                                   <Typography variant="captionSemibold">
                                     Approval: <b>{rule.needsApproval ? 'Yes' : 'No'}</b>
                                   </Typography>

@@ -145,6 +145,9 @@ message ListPoliciesRequest {
 
   // The search query
   optional string query = 3;
+
+  // A filter used to fetch policies only for the specified Agentic Services
+  repeated string app_ids = 4;
 }
 
 message CreatePolicyRequest {

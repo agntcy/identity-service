@@ -53,10 +53,8 @@ const FormStepperComponent = () => {
           name: '',
           description: '',
           needsApproval: false,
-          tasks: {
-            action: RuleAction.RULE_ACTION_UNSPECIFIED,
-            tasks: []
-          }
+          action: RuleAction.RULE_ACTION_UNSPECIFIED,
+          tasks: []
         }
       ]
     }
@@ -103,15 +101,15 @@ const FormStepperComponent = () => {
         try {
           await Promise.all(
             valuesPolicyLogic.rules.map((rule) => {
-              if (rule.tasks.action !== RuleAction.RULE_ACTION_UNSPECIFIED) {
+              if (rule.action !== RuleAction.RULE_ACTION_UNSPECIFIED) {
                 return mutationCreateRule.mutateAsync({
                   id: policy.id,
                   data: {
                     name: rule.name,
                     description: rule.description,
                     needsApproval: rule.needsApproval,
-                    tasks: [...rule.tasks.tasks],
-                    action: rule.tasks.action
+                    tasks: [...rule.tasks],
+                    action: rule.action
                   }
                 });
               }
@@ -154,10 +152,8 @@ const FormStepperComponent = () => {
           name: '',
           description: '',
           needsApproval: false,
-          tasks: {
-            action: RuleAction.RULE_ACTION_UNSPECIFIED,
-            tasks: []
-          }
+          action: RuleAction.RULE_ACTION_UNSPECIFIED,
+          tasks: []
         }
       ]
     });

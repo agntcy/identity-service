@@ -57,6 +57,17 @@
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "appIds",
+            "description": "A filter used to fetch policies only for the specified Agentic Services",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
           }
         ],
         "tags": [

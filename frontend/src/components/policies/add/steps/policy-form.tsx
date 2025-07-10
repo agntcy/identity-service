@@ -103,7 +103,7 @@ export const PolicyForm = ({isLoading = false}: {isLoading?: boolean}) => {
                           sx={{
                             height: '36px',
                             marginTop: 0,
-                            '&.MuiInputBase-root': {backgroundColor: '#FBFCFE', marginTop: 0, border: '2px solid #E8EEFB'},
+                            '&.MuiInputBase-root': {backgroundColor: '#FBFCFE', marginTop: 0, border: '2px solid #D5DFF7', height: '32px'},
                             '& .MuiSelect-select': {backgroundColor: '#fbfcfe', color: '#777D85'},
                             '& .MuiSelect-icon': {
                               color: 'currentColor'

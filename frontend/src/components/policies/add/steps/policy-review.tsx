@@ -79,14 +79,14 @@ export const PolicyReview = () => {
       if (!data || !rule.tasks) {
         return [];
       }
-      return rule.tasks.tasks.map((taskId) => {
+      return rule?.tasks?.map((taskId) => {
         const task = data.tasks?.find((t) => t.id === taskId);
         return {
           name: task?.name || '',
           toolName: task?.toolName || ''
         };
       });
-    }, [data, rule.tasks]);
+    }, [data, rule?.tasks]);
 
     if (isError) {
       return (
@@ -170,12 +170,9 @@ export const PolicyReview = () => {
                         (
                           <div className="flex gap-4 items-center h-[24px]">
                             <Separator orientation="vertical" />
-                            <TagActionTask
-                              action={rule.tasks.action}
-                              text={labels.rulesActions[rule.tasks.action ?? RuleAction.RULE_ACTION_UNSPECIFIED]}
-                            />
+                            <TagActionTask action={rule.action} text={labels.rulesActions[rule.action ?? RuleAction.RULE_ACTION_UNSPECIFIED]} />
                             <Tag size={GeneralSize.Medium}>
-                              {rule.tasks?.tasks?.length || 0} {rule?.tasks?.tasks?.length && rule?.tasks?.tasks?.length > 1 ? 'Tasks' : 'Task'}
+                              {rule.tasks?.length || 0} {rule?.tasks?.length && rule?.tasks?.length > 1 ? 'Tasks' : 'Task'}
                             </Tag>
                             <Tag status={TagStatus.Info} size={GeneralSize.Medium}>
                               <Typography variant="captionSemibold">

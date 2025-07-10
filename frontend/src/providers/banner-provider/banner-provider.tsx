@@ -34,9 +34,11 @@ export const BannerProvider: React.FC<{children: ReactNode}> = ({children}) => {
   return (
     <BannerContext.Provider value={{banners, addBanner, removeBanner}}>
       {/* Ensure the banners are displayed at the top of the page */}
-      <div className="pt-[56px]">
+      <div className="fixed top-0 left-0 w-full z-50">
         {banners.map((banner) => (
-          <Banner key={banner.id} text={banner.text} onClose={() => removeBanner(banner.id)} />
+          <div key={banner.id} className="mt-[56px]">
+            <Banner text={banner.text} onClose={() => removeBanner(banner.id)} />
+          </div>
         ))}
       </div>
       {children}

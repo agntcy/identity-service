@@ -7,7 +7,7 @@ import {Card, CardContent} from '@/components/ui/card';
 import {Form} from '@/components/ui/form';
 import {PlusIcon, XIcon} from 'lucide-react';
 import {useCallback} from 'react';
-import {useFieldArray, UseFormReturn} from 'react-hook-form';
+import {useFieldArray, UseFormReturn, useWatch} from 'react-hook-form';
 import {Button, Divider, IconButton, Typography} from '@mui/material';
 import {PolicyLogicyFormValues} from '@/schemas/policy-logic-schema';
 import {Accordion, GeneralSize, Tag, TagStatus, Tooltip} from '@outshift/spark-design';
@@ -39,12 +39,39 @@ export const PolicyLogic = ({isLoading = false, policyLogicForm}: {policyLogicFo
       name: '',
       description: '',
       needsApproval: false,
-      tasks: {
-        tasks: [],
-        action: RuleAction.RULE_ACTION_UNSPECIFIED
-      }
+      action: RuleAction.RULE_ACTION_UNSPECIFIED,
+      tasks: []
     });
   }, [appendRule]);
+
+  const Title = ({index}: {index: number}) => {
+    const name = useWatch({
+      control: policyLogicForm.control,
+      name: `rules.${index}.name`
+    });
+    return name;
+  };
+
+  const SubTitle = ({index}: {index: number}) => {
+    const rule = useWatch({
+      control: policyLogicForm.control,
+      name: `rules.${index}`
+    });
+    return (
+      <div className="flex gap-4 items-center h-[24px]">
+        <Separator orientation="vertical" />
+        <TagActionTask action={rule?.action} text={labels.rulesActions[rule?.action ?? RuleAction.RULE_ACTION_UNSPECIFIED]} />
+        <Tag size={GeneralSize.Medium}>
+          {rule?.tasks?.length || 0} {rule?.tasks?.length && rule?.tasks?.length > 1 ? 'Tasks' : 'Task'}
+        </Tag>
+        <Tag status={rule.needsApproval ? TagStatus.Positive : TagStatus.Negative} size={GeneralSize.Small}>
+          <Typography variant="captionSemibold">
+            Approval: <b>{rule.needsApproval ? 'Yes' : 'No'}</b>
+          </Typography>
+        </Tag>
+      </div>
+    );
+  };
 
   return (
     <Card className="text-start py-4 rounded-[8px] p-[24px] space-y-6" variant="secondary">
@@ -63,29 +90,7 @@ export const PolicyLogic = ({isLoading = false, policyLogicForm}: {policyLogicFo
                     {field.name ? (
                       <div className="w-full flex justify-between items-start gap-4">
                         <div className="w-full">
-                          <Accordion
-                            title={field.name}
-                            subTitle={
-                              (
-                                <div className="flex gap-4 items-center h-[24px]">
-                                  <Separator orientation="vertical" />
-                                  <TagActionTask
-                                    action={field.tasks?.action}
-                                    text={labels.rulesActions[field.tasks?.action ?? RuleAction.RULE_ACTION_UNSPECIFIED]}
-                                  />
-                                  <Tag size={GeneralSize.Medium}>
-                                    {field?.tasks?.tasks?.length || 0}{' '}
-                                    {field?.tasks?.tasks?.length && field?.tasks?.tasks?.length > 1 ? 'Tasks' : 'Task'}
-                                  </Tag>
-                                  <Tag status={TagStatus.Info} size={GeneralSize.Medium}>
-                                    <Typography variant="captionSemibold">
-                                      Approval: <b>{field.needsApproval ? 'Yes' : 'No'}</b>
-                                    </Typography>
-                                  </Tag>
-                                </div>
-                              ) as any
-                            }
-                          >
+                          <Accordion title={(<Title index={index} />) as any} subTitle={(<SubTitle index={index} />) as any}>
                             <div className="pl-6">
                               <RuleForm isLoading={isLoading} fieldIndex={index} />
                             </div>

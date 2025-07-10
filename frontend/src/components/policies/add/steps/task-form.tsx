@@ -55,7 +55,7 @@ export const TaskForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
         ) : (
           <FormField
             control={policyForm.control}
-            name={`rules.${fieldIndex}.tasks.tasks`}
+            name={`rules.${fieldIndex}.tasks`}
             render={({field}) => (
               <FormItem className="w-full">
                 <FormLabel className="form-label">Tasks</FormLabel>
@@ -98,7 +98,7 @@ export const TaskForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
                         </div>
                       );
                     }}
-                    error={policyForm.formState.errors.rules?.[fieldIndex]?.tasks?.tasks ? true : false}
+                    error={policyForm.formState.errors.rules?.[fieldIndex]?.tasks ? true : false}
                     {...field}
                   >
                     {optionsTasks.map((option, key) => (
@@ -126,7 +126,7 @@ export const TaskForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
       <div className="w-[50%]">
         <FormField
           control={policyForm.control}
-          name={`rules.${fieldIndex}.tasks.action`}
+          name={`rules.${fieldIndex}.action`}
           render={({field}) => (
             <FormItem className="w-full">
               <FormLabel className="form-label">Action</FormLabel>
@@ -160,7 +160,7 @@ export const TaskForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
                       </div>
                     );
                   }}
-                  error={policyForm.formState.errors.rules?.[fieldIndex]?.tasks?.action ? true : false}
+                  error={policyForm.formState.errors.rules?.[fieldIndex]?.action ? true : false}
                   {...field}
                 >
                   {optionsActions.map((option, key) => (

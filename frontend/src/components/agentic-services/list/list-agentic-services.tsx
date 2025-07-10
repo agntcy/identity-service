@@ -5,7 +5,7 @@
 
 import {useCallback, useMemo, useState} from 'react';
 import {ConditionalQueryRenderer} from '../../ui/conditional-query-renderer';
-import {Box, EmptyState, MenuItem, SelectNodeType, Table, toast, Typography} from '@outshift/spark-design';
+import {Box, EmptyState, Link, MenuItem, SelectNodeType, Table, toast, Typography} from '@outshift/spark-design';
 import {useGetAgenticServices} from '@/queries';
 import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
 import {AgenticServiceColumns} from './agentic-services-columns';
@@ -263,6 +263,21 @@ export const ListAgenticServices = () => {
                 <br />
                 <br />
                 <strong>Note:</strong> If this agentic service is a TBAC service, it will also remove the associated TBAC policies.
+                <br />
+                <br />
+                Confirm policies{' '}
+                <Link
+                  href={(() => {
+                    const basePath = generatePath(PATHS.agenticServices.info, {id: tempApp?.id || ''});
+                    const searchParams = new URLSearchParams();
+                    searchParams.set('view', 'policies-assigned');
+                    return `${basePath}?${searchParams.toString()}`;
+                  })()}
+                >
+                  here
+                </Link>
+                .
+                <br />
               </>
             )}
           </>
