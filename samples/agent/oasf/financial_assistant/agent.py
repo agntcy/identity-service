@@ -2,8 +2,6 @@
 # SPDX-License-Identifier: Apache-2.0
 """Main entry point for the Financial Assistant Agent server."""
 
-import uuid
-
 from langchain_mcp_adapters.client import MultiServerMCPClient
 from langchain_ollama import ChatOllama
 from langgraph.checkpoint.memory import MemorySaver
@@ -19,11 +17,10 @@ class FinancialAssistantAgent:
 
     # pylint: disable=line-too-long
     SYSTEM_INSTRUCTION = (
-        "You are a specialized assistant for assisting the user with financial decisions. "
-        "Your primary role is to use the 'currency_exchange_agent' to perform currency trades. "
-        "If the user asks about anything other than financial information, "
-        "politely state that you cannot help with that topic and can only assist with financial-related queries. "
-        "Do not attempt to answer unrelated questions or use tools for other purposes. "
+        "You are a supervisor financial assistant.\n"
+        "You should invoke the get_exchange_rate for any currency rate information.\n"
+        "Use the invoke_currency_exchange_agent tool to perform currency conversions.\n"
+        "DO NOT call the trade_currency_exchange tool directly.\n"
     )
 
     def __init__(
@@ -47,11 +44,10 @@ class FinancialAssistantAgent:
         if self.graph is None:
             await self.init_graph()
 
-        config = {"configurable": {"thread_id": uuid.uuid4()}}
         if not self.graph:
             raise ValueError("Agent not initialized. Call init_model_and_tools first.")
 
-        response = await self.graph.ainvoke({"messages": [("user", prompt)]}, config)
+        response = await self.graph.ainvoke({"messages": [("user", prompt)]})
 
         return response
 
@@ -73,14 +69,14 @@ class FinancialAssistantAgent:
         )
         tools = await client.get_tools()
 
-        # Create the agent graph with the tools
+        # Create the currency exchange agent
+        invoke_currency_exchange_agent = CurrencyExchangeAgent(
+            self.currency_exchange_agent_url
+        ).get_invoke_tool()
+
+        # Create the agent with the tools
         self.graph = create_react_agent(
             model=self.model,
-            tools=[
-                *tools,
-                CurrencyExchangeAgent(
-                    self.currency_exchange_agent_url
-                ).get_invoke_tool(),
-            ],
+            tools=[invoke_currency_exchange_agent] + tools,
             prompt=self.SYSTEM_INSTRUCTION,
         )

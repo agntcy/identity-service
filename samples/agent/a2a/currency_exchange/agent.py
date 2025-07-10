@@ -119,7 +119,7 @@ class CurrencyAgent:
                 yield {
                     "is_task_complete": False,
                     "require_user_input": False,
-                    "content": f"Currency trade done with: {message.content}",
+                    "content": f"Currency trade executed successfully. Conversion details: {message.content}",
                 }
 
         yield self.get_agent_response(config)

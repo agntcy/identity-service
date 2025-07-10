@@ -11,7 +11,6 @@ from a2a.client import A2AClient
 from a2a.types import (GetTaskRequest, GetTaskResponse, MessageSendParams,
                        SendMessageRequest, SendMessageResponse,
                        SendMessageSuccessResponse, Task, TaskQueryParams)
-from langchain_core.tools import tool
 from langgraph.prebuilt import InjectedState
 
 logging.basicConfig(level=logging.INFO)
@@ -47,7 +46,7 @@ def print_json_response(response: Any, description: str) -> None:
         print(f"{response.model_dump(mode='json', exclude_none=True)}\n")
 
 
-async def run_single_turn_test(client: A2AClient, state: dict) -> None:
+async def run_single_turn_test(client: A2AClient, state: dict) -> str:
     """Runs a single-turn non-streaming test."""
 
     text = state["messages"][0].content
@@ -61,21 +60,26 @@ async def run_single_turn_test(client: A2AClient, state: dict) -> None:
     print("--- Single Turn Request ---")
     # Send Message
     send_response: SendMessageResponse = await client.send_message(request)
-    print_json_response(send_response, "Single Turn Request Response")
+    logger.info("Send message response: %s", send_response)
+
     if not isinstance(send_response.root, SendMessageSuccessResponse):
         print("received non-success response. Aborting get task ")
-        return
+        return ""
 
     if not isinstance(send_response.root.result, Task):
         print("received non-task response. Aborting get task ")
-        return
+        return ""
 
     task_id: str = send_response.root.result.id
     print("---Query Task---")
     # query the task
     get_request = GetTaskRequest(params=TaskQueryParams(id=task_id))
     get_response: GetTaskResponse = await client.get_task(get_request)
-    print_json_response(get_response, "Query Task Response")
+    logger.info("Get task response: %s", get_response)
+
+    history = get_response.root.result.history
+
+    return history[len(history) - 1].parts[0].root.text if len(history) > 0 else ""
 
 
 class CurrencyExchangeAgent:
@@ -87,11 +91,17 @@ class CurrencyExchangeAgent:
     def get_invoke_tool(self):
         """Create a tool to hand off to the currency exchange agent."""
 
-        @tool
-        async def invoke_currency_exchange_agent(state: Annotated[dict, InjectedState]):
-            """Invoke the currency exchange agent to execute currency exchange trades."""
+        async def invoke_currency_exchange_agent(
+            task_description: Annotated[
+                str,
+                "Description of what the next agent should do, including all of the relevant context.",
+            ],
+            state: Annotated[dict, InjectedState],
+        ):
+            """Executes currency exchange sells, orders, trades."""
 
             logger.info("Invoking currency exchange agent with state: %s", state)
+            logger.info("Task description: %s", task_description)
 
             # Connect to the agent
             try:
@@ -104,7 +114,7 @@ class CurrencyExchangeAgent:
                     print("Connection successful.")
 
                     # Test the agent with a simple query
-                    await run_single_turn_test(client, state)
+                    return await run_single_turn_test(client, state)
 
             except Exception as e:
                 logger.error("An error occurred while connecting to the agent: %s", e)
