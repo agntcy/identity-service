@@ -190,4 +190,3 @@ jobs:
       ghcr-org-token: ${{ secrets.GHCR_TOKEN }}
       vault-approle-role-id: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
       vault-approle-secret-id: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
-
