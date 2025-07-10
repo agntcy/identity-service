@@ -27,10 +27,13 @@ export const TaskForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
   }, [dataTasks]);
 
   const optionsTasks = useMemo(() => {
-    return tasks.map((task) => ({
-      label: task.name ?? 'Unknown Task',
-      value: task.id ?? ''
-    }));
+    return tasks.map((task) => {
+      return {
+        label: task.name || 'Unknown Task',
+        value: task.id || '',
+        appId: task.appId || ''
+      };
+    });
   }, [tasks]);
 
   const optionsActions = [
@@ -56,7 +59,7 @@ export const TaskForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
             render={({field}) => (
               <FormItem className="w-full">
                 <FormLabel className="form-label">Tasks</FormLabel>
-                <FormControl>
+                <FormControl className="w-full">
                   <Select
                     multiple
                     disabled={isLoading}
@@ -67,7 +70,7 @@ export const TaskForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
                     sx={{
                       height: '36px',
                       marginTop: 0,
-                      '&.MuiInputBase-root': {backgroundColor: '#FBFCFE', marginTop: 0, border: '2px solid #E8EEFB'},
+                      '&.MuiInputBase-root': {backgroundColor: '#FBFCFE', marginTop: 0, border: '2px solid #D5DFF7', height: '32px'},
                       '& .MuiSelect-select': {backgroundColor: '#fbfcfe', color: '#777D85'},
                       '& .MuiSelect-icon': {
                         color: 'currentColor'
@@ -82,7 +85,7 @@ export const TaskForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
                         );
                       }
                       return (
-                        <div className="mt-[2px]">
+                        <div className="mt-[1px]">
                           <Tags
                             items={selected.map((value) => ({
                               valueFormatter: () => optionsTasks.find((option) => option.value === value)?.label || 'Unknown Task',
@@ -136,7 +139,7 @@ export const TaskForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
                   sx={{
                     height: '36px',
                     marginTop: 0,
-                    '&.MuiInputBase-root': {backgroundColor: '#FBFCFE', marginTop: 0, border: '2px solid #E8EEFB'},
+                    '&.MuiInputBase-root': {backgroundColor: '#FBFCFE', marginTop: 0, border: '2px solid #D5DFF7', height: '32px'},
                     '& .MuiSelect-select': {backgroundColor: '#fbfcfe', color: '#777D85'},
                     '& .MuiSelect-icon': {
                       color: 'currentColor'
@@ -151,7 +154,7 @@ export const TaskForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
                       );
                     }
                     return (
-                      <div className="mb-[2px]">
+                      <div className="mb-[4px]">
                         <Tag size={GeneralSize.Small}>{labels.rulesActions[select]}</Tag>
                       </div>
                     );
