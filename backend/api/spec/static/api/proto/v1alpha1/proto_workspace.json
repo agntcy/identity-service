@@ -2862,6 +2862,18 @@
               "isoneof": true,
               "oneofdecl": "_query",
               "defaultValue": ""
+            },
+            {
+              "name": "app_ids",
+              "description": "A filter used to fetch policies only for the specified Agentic Services",
+              "label": "repeated",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
             }
           ]
         },

@@ -403,6 +403,7 @@ func (r *repository) GetAllPolicies(
 	ctx context.Context,
 	paginationFilter pagination.PaginationFilter,
 	query *string,
+	appIDs []string,
 ) (*pagination.Pageable[types.Policy], error) {
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
@@ -416,6 +417,10 @@ func (r *repository) GetAllPolicies(
 			"id ILIKE @query OR name ILIKE @query OR description ILIKE @query",
 			sql.Named("query", "%"+*query+"%"),
 		)
+	}
+
+	if len(appIDs) > 0 {
+		dbQuery = dbQuery.Where("assigned_to IN (?)", appIDs)
 	}
 
 	dbQuery = dbQuery.Session(&gorm.Session{})
