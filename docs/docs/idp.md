@@ -18,7 +18,7 @@ Before you begin the Identity Provider connection process, ensure you have the f
   - The **Secret Key** for your Duo application
 
 :::tip[NOTE]
-Youn can follow the [Duo Admin API documentation](https://duo.com/docs/adminapi) for detailed instructions on how to create and manage applications within Duo Security.
+You can follow the [Duo Admin API documentation](https://duo.com/docs/adminapi) for detailed instructions on how to create and manage applications within Duo Security.
 
 Below you can find a screenshot of the Duo Admin API interface, with all the necessary permissions and the necessary fields for your integration.
 :::
@@ -46,8 +46,9 @@ Follow these steps to configure and register your Identity Provider:
     - On the "Identity Provider Connection" page, you will be presented with a selection of supported Identity Providers.
     - Carefully choose the provider you intend to integrate. Options typically include:
       - **Duo** (as shown in the example, for Duo Security integration)
+      - **Ory**
       - **Okta**
-      - **Agntcy** (potentially for internal or specific Agntcy identity services)
+      - **AGNTCY** (potentially for internal or specific AGNTCY identity services)
     - **Critical Note:** The selection of an Identity Provider is a **one-time** action. Once saved, this choice cannot be modified later. Ensure you select the correct provider before proceeding.
 
 2.  **Enter Provider Details:**

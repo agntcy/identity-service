@@ -4,7 +4,7 @@ sidebar_position: 3
 
 # Creating Agentic Service Identities
 
-This guide outlines the process of creating and registering Agentic Services within the AGNTICY platform, which involves establishing a unique identity for your service and subsequently issuing a badge for its discovery.
+This guide outlines the process of creating and registering Agentic Services within the AGNTCY platform, which involves establishing a unique identity for your service and subsequently issuing a badge for its discovery.
 
 ## 1. Create Agentic Service (Identity Creation)
 
@@ -16,8 +16,8 @@ The first step involves defining your Agentic Service, which automatically creat
 2.  Click on **Create Agentic Service**.
 3.  **Select Agentic Service Type & Source:**
     - Choose the appropriate type for your service:
-      - **OASF:** For Open Agent Service Framework services.
-      - **MCP Server:** For services running on an MCP (Message Control Protocol) Server. _(As shown in the screenshot, this is the selected option.)_
+      - **OASF:** For Open Agent Schema defined services.
+      - **MCP Server:** For services running on an MCP (Model Context Protocol) Server. _(As shown in the screenshot, this is the selected option.)_
       - **A2A Protocol:** For Application-to-Application protocol services.
 
 ![Create Agentic Service MCP Server](/img/agentic-service-mcp.png)
@@ -52,7 +52,7 @@ For services that are not directly accessible from the public internet (e.g., se
 **Steps:**
 
 1.  **Install the Python SDK:**
-    - Ensure you have the AGNTICY Python SDK installed. Refer to [this API section](/docs/api#python-sdk) of the documentation for detailed installation instructions.
+    - Ensure you have the AGNTCY Python SDK installed. Refer to [this API section](/docs/api#python-sdk) of the documentation for detailed installation instructions.
 2.  **Perform the Badge Creation Command:**
     - Open your terminal or command prompt.
     - Execute the following command:
