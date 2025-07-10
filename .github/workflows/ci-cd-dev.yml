@@ -5,8 +5,8 @@
 name: workflow CI/CD
 on:
   push:
-    tags:
-      - "v[0-9]+.[0-9]+.[0-9]+"
+    branches:
+      - "main"
   workflow_dispatch:
 
 
@@ -87,41 +87,72 @@ jobs:
       ghcr-enabled: true
       ghcr-org-registry: ${{ vars.GHCR_REGISTRY }}
 
-  ################################# Corona & blackduck ###########################
-  ################################################################################
-  call-corona-blackduck-scan-backend:
-    name: Call Corona & Blackduck scan backend
-    needs: [call-docker-build-push-backend]
-    uses: cisco-eti/gh-reusable-workflows/.github/workflows/corona-blackduck-scan.yaml@production
+  call-docker-build-push-mcp-server-currency-exchange:
+    name: Call Docker Build mcp server currency exchange
+    needs: [checkout-unit-tests]
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/build-push-docker.yaml@production
 
     secrets:
+      # Only needed if with:ecr-enabled or with:gar-enabled is true below
       vault-approle-role-id: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
       vault-approle-secret-id: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
-      # GHCR Login for docker build runner
       ghcr-username: ${{ secrets.GHCR_USERNAME }}
       ghcr-token: ${{ secrets.GHCR_TOKEN }}
-      # GHCR Login for docker scan
-      ghcr-org-username: ${{ secrets.GHCR_USERNAME }}
       ghcr-org-token: ${{ secrets.GHCR_TOKEN }}
 
     with:
       runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
-      enable-corona: true
-      enable-blackduck: false
-      corona-product-name: ${{ vars.CORONA_PRODUCT_NAME }}
-      corona-product-id: ${{ vars.CORONA_PRODUCT_ID }}
-      corona-release-id: ${{ vars.CORONA_RELEASE_ID }}
-      corona-csdl-id: ${{ vars.CORONA_CSDL_ID }}
-      corona-security-contact: ${{ vars.CORONA_SECURITY_CONTACT }}
-      corona-engineering-contact: ${{ vars.CORONA_ENGINEERING_CONTACT }}
-      corona-image-admins: ${{ vars.CORONA_IMAGE_ADMINS }}
-      ghcr-org-registry: ${{ vars.GHCR_REGISTRY }}
-      # optional
-      image-name: "${{ github.event.repository.name }}"
-      #image-tag: "" # By default it will get latest docker tag built
+      ### REQUIRED
+      ### Docker image name
+      image-name: "${{ github.event.repository.name }}-mcp-server-currency-exchange"
 
-  ################################## Docker build & push ##########################
-  #################################################################################
+      ### path to where docker should copy files into image
+      ### defaults to root of repository (.)
+      context: ./samples/mcp/currency_exchange
+
+      ### Dockerfile alternate name. Default is Dockerfile (relative to context path)
+      dockerfile: samples/mcp/currency_exchange/Dockerfile
+      ### REQUIRED
+      ### ENABLE ONE OR BOTH REGISTRIES
+      ### tell docker where to push.
+      ecr-enabled: true
+      artifactory-devhub-enabled: false
+      ghcr-enabled: true
+      ghcr-org-registry: ${{ vars.GHCR_REGISTRY }}
+
+  call-docker-build-push-a2a-agent-currency-exchange:
+    name: Call Docker Build a2a agent currency exchange
+    needs: [checkout-unit-tests]
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/build-push-docker.yaml@production
+
+    secrets:
+      # Only needed if with:ecr-enabled or with:gar-enabled is true below
+      vault-approle-role-id: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
+      vault-approle-secret-id: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
+      ghcr-username: ${{ secrets.GHCR_USERNAME }}
+      ghcr-token: ${{ secrets.GHCR_TOKEN }}
+      ghcr-org-token: ${{ secrets.GHCR_TOKEN }}
+
+    with:
+      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      ### REQUIRED
+      ### Docker image name
+      image-name: "${{ github.event.repository.name }}-a2a-agent-currency-exchange"
+
+      ### path to where docker should copy files into image
+      ### defaults to root of repository (.)
+      context: ./samples/agent/a2a/currency_exchange
+
+      ### Dockerfile alternate name. Default is Dockerfile (relative to context path)
+      dockerfile: samples/agent/a2a/currency_exchange/Dockerfile
+      ### REQUIRED
+      ### ENABLE ONE OR BOTH REGISTRIES
+      ### tell docker where to push.
+      ecr-enabled: true
+      artifactory-devhub-enabled: false
+      ghcr-enabled: true
+      ghcr-org-registry: ${{ vars.GHCR_REGISTRY }}
+
   call-docker-build-push-ui:
     name: Call Docker Build ui
     needs: [checkout-unit-tests]
@@ -156,47 +187,10 @@ jobs:
       ghcr-enabled: true
       ghcr-org-registry: ${{ vars.GHCR_REGISTRY }}
 
-  ################################# Corona & blackduck ###########################
-  ################################################################################
-  call-corona-blackduck-scan-ui:
-    name: Call Corona & Blackduck scan ui
-    needs: [call-docker-build-push-ui]
-    uses: cisco-eti/gh-reusable-workflows/.github/workflows/corona-blackduck-scan.yaml@production
-
-    secrets:
-      vault-approle-role-id: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
-      vault-approle-secret-id: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
-      # GHCR Login for docker build runner
-      ghcr-username: ${{ secrets.GHCR_USERNAME }}
-      ghcr-token: ${{ secrets.GHCR_TOKEN }}
-      # GHCR Login for docker scan
-      ghcr-org-username: ${{ secrets.GHCR_USERNAME }}
-      ghcr-org-token: ${{ secrets.GHCR_TOKEN }}
-
-    with:
-      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
-      enable-corona: true
-      enable-blackduck: false
-      corona-product-name: ${{ vars.CORONA_PRODUCT_NAME }}
-      corona-product-id: ${{ vars.CORONA_PRODUCT_ID }}
-      corona-release-id: ${{ vars.CORONA_RELEASE_ID }}
-      corona-csdl-id: ${{ vars.CORONA_CSDL_ID }}
-      corona-security-contact: ${{ vars.CORONA_SECURITY_CONTACT }}
-      corona-engineering-contact: ${{ vars.CORONA_ENGINEERING_CONTACT }}
-      corona-image-admins: ${{ vars.CORONA_IMAGE_ADMINS }}
-      ghcr-org-registry: ${{ vars.GHCR_REGISTRY }}
-      # optional
-      image-name: "${{ github.event.repository.name }}-ui"
-      #image-tag: "" # By default it will get latest docker tag built
-
-  ################################## Docker build & push ##########################
-  #################################################################################
   call-docker-build-push-docs:
     name: Call Docker Build docs
     needs: [checkout-unit-tests]
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/build-push-docker.yaml@production
-
-
     secrets:
       # Only needed if with:ecr-enabled or with:gar-enabled is true below
       vault-approle-role-id: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
@@ -204,7 +198,6 @@ jobs:
       ghcr-username: ${{ secrets.GHCR_USERNAME }}
       ghcr-token: ${{ secrets.GHCR_TOKEN }}
       ghcr-org-token: ${{ secrets.GHCR_TOKEN }}
-
     with:
       runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
       ### REQUIRED
@@ -284,6 +277,44 @@ jobs:
       vault-approle-role-id: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
       vault-approle-secret-id: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
 
+  call-helm-publish-mcp-server-currency-exchange:
+    name: Helm publish mcp-server-currency-exchange
+    needs: [checkout-unit-tests]
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@a663a51a68f4158da24f29d7859dabb891586d5c #main
+    with:
+      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      enable-chartmuseum: true
+      enable-private-ecr: false
+      enable-public-ecr: false
+      chart-path: charts/samples/identity-sample-currency-exchange-mcp
+      # override-chart-version: ${{ needs.calculate-tags.outputs.chart_version }}
+      #ecr-public-registry-alias: ${{ vars.ECR_PUBLIC_REGISTRY_ALIAS}}
+    secrets:
+      # GHCR Login for docker build runner
+      ghcr-username: ${{ secrets.GHCR_USERNAME }}
+      ghcr-token: ${{ secrets.GHCR_TOKEN }}
+      vault-approle-role-id: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
+      vault-approle-secret-id: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
+
+  call-helm-publish-identity-sample-currency-exchange-a2a:
+    name: Helm publish identity-sample-currency-exchange-a2a
+    needs: [checkout-unit-tests]
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@a663a51a68f4158da24f29d7859dabb891586d5c #main
+    with:
+      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      enable-chartmuseum: true
+      enable-private-ecr: false
+      enable-public-ecr: false
+      chart-path: charts/samples/identity-sample-currency-exchange-a2a
+      # override-chart-version: ${{ needs.calculate-tags.outputs.chart_version }}
+      #ecr-public-registry-alias: ${{ vars.ECR_PUBLIC_REGISTRY_ALIAS}}
+    secrets:
+      # GHCR Login for docker build runner
+      ghcr-username: ${{ secrets.GHCR_USERNAME }}
+      ghcr-token: ${{ secrets.GHCR_TOKEN }}
+      vault-approle-role-id: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
+      vault-approle-secret-id: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
+
   ################################## Trigger Deployment ###########################
   #################################################################################
 
@@ -294,7 +325,7 @@ jobs:
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/trigger-deploy.yaml@production
     with:
       deployment-repo: "cisco-eti/pyramid-deployment"
-      client-payload: '{"app-repository": "${{ github.repository }}", "values-file-path": "applications/identity-pyramid-ui", "property-path": "image.tag", "deployment-stage": "staging", "default-deployment": true, "value": "${{ github.ref_name }}"}'
+      client-payload: '{"app-repository": "${{ github.repository }}", "values-file-path": "applications/identity-pyramid-ui", "property-path": "image.tag", "deployment-stage": "dev", "default-deployment": true, "value": ""}'
     secrets:
       ghcr-username: ${{ secrets.GHCR_USERNAME }}
       ghcr-token: ${{ secrets.GHCR_TOKEN }}
@@ -310,7 +341,7 @@ jobs:
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/trigger-deploy.yaml@production
     with:
       deployment-repo: "cisco-eti/pyramid-deployment"
-      client-payload: '{"app-repository": "${{ github.repository }}", "values-file-path": "applications/identity-pyramid-backend", "property-path": "image.tag", "deployment-stage": "staging", "default-deployment": true, "value": "${{ github.ref_name }}"}'
+      client-payload: '{"app-repository": "${{ github.repository }}", "values-file-path": "applications/identity-pyramid-backend", "property-path": "image.tag", "deployment-stage": "dev", "default-deployment": true, "value": ""}'
     secrets:
       ghcr-username: ${{ secrets.GHCR_USERNAME }}
       ghcr-token: ${{ secrets.GHCR_TOKEN }}
@@ -326,7 +357,39 @@ jobs:
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/trigger-deploy.yaml@production
     with:
       deployment-repo: "cisco-eti/pyramid-deployment"
-      client-payload: '{"app-repository": "${{ github.repository }}", "values-file-path": "applications/identity-docs", "property-path": "image.tag", "deployment-stage": "staging", "default-deployment": true, "value": "${{ github.ref_name }}"}'
+      client-payload: '{"app-repository": "${{ github.repository }}", "values-file-path": "applications/identity-docs", "property-path": "image.tag", "deployment-stage": "dev", "default-deployment": true, "value": ""}'
+    secrets:
+      ghcr-username: ${{ secrets.GHCR_USERNAME }}
+      ghcr-token: ${{ secrets.GHCR_TOKEN }}
+      ghcr-org-username: ${{ secrets.GHCR_USERNAME }}
+      ghcr-org-token: ${{ secrets.GHCR_TOKEN }}
+      vault-approle-role-id: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
+      vault-approle-secret-id: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
+
+  # MCP Server Currency Exchange Deployment
+  call-trigger-cd-mcp-server-currency-exchange:
+    name: Trigger CD MCP Server Currency Exchange
+    needs: [call-docker-build-push-mcp-server-currency-exchange, call-helm-publish-mcp-server-currency-exchange]
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/trigger-deploy.yaml@production
+    with:
+      deployment-repo: "cisco-eti/pyramid-deployment"
+      client-payload: '{"app-repository": "${{ github.repository }}", "values-file-path": "applications/identity-sample-currency-exchange-mcp", "property-path": "image.tag", "deployment-stage": "dev", "default-deployment": true, "value": ""}'
+    secrets:
+      ghcr-username: ${{ secrets.GHCR_USERNAME }}
+      ghcr-token: ${{ secrets.GHCR_TOKEN }}
+      ghcr-org-username: ${{ secrets.GHCR_USERNAME }}
+      ghcr-org-token: ${{ secrets.GHCR_TOKEN }}
+      vault-approle-role-id: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
+      vault-approle-secret-id: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
+
+  # A2A Agent Currency Exchange Deployment
+  call-trigger-cd-a2a-agent-currency-exchange:
+    name: Trigger CD A2A Agent Currency Exchange
+    needs: [call-docker-build-push-a2a-agent-currency-exchange, call-helm-publish-identity-sample-currency-exchange-a2a]
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/trigger-deploy.yaml@production
+    with:
+      deployment-repo: "cisco-eti/pyramid-deployment"
+      client-payload: '{"app-repository": "${{ github.repository }}", "values-file-path": "applications/identity-sample-currency-exchange-a2a", "property-path": "image.tag", "deployment-stage": "dev", "default-deployment": true, "value": ""}'
     secrets:
       ghcr-username: ${{ secrets.GHCR_USERNAME }}
       ghcr-token: ${{ secrets.GHCR_TOKEN }}

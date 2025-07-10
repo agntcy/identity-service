@@ -7,8 +7,6 @@ on:
   push:
     tags:
       - "v[0-9]+.[0-9]+.[0-9]+"
-    branches:
-      - "main"
   workflow_dispatch:
 
 
@@ -166,7 +164,7 @@ jobs:
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/trigger-deploy.yaml@production
     with:
       deployment-repo: "cisco-eti/pyramid-deployment"
-      client-payload: '{"app-repository": "${{ github.repository }}", "values-file-path": "applications/identity-sample-currency-exchange-mcp", "property-path": "image.tag", "deployment-stage": "dev", "default-deployment": true, "value": ""}'
+      client-payload: '{"app-repository": "${{ github.repository }}", "values-file-path": "applications/identity-sample-currency-exchange-mcp", "property-path": "image.tag", "deployment-stage": "staging", "default-deployment": true, "value": "${{ github.ref_name }}"}'
     secrets:
       ghcr-username: ${{ secrets.GHCR_USERNAME }}
       ghcr-token: ${{ secrets.GHCR_TOKEN }}
@@ -182,7 +180,7 @@ jobs:
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/trigger-deploy.yaml@production
     with:
       deployment-repo: "cisco-eti/pyramid-deployment"
-      client-payload: '{"app-repository": "${{ github.repository }}", "values-file-path": "applications/identity-sample-currency-exchange-a2a", "property-path": "image.tag", "deployment-stage": "dev", "default-deployment": true, "value": ""}'
+      client-payload: '{"app-repository": "${{ github.repository }}", "values-file-path": "applications/identity-sample-currency-exchange-a2a", "property-path": "image.tag", "deployment-stage": "staging", "default-deployment": true, "value": "${{ github.ref_name }}"}'
     secrets:
       ghcr-username: ${{ secrets.GHCR_USERNAME }}
       ghcr-token: ${{ secrets.GHCR_TOKEN }}
