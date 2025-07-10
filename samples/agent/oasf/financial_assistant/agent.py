@@ -3,23 +3,15 @@
 """Main entry point for the Financial Assistant Agent server."""
 
 import uuid
-from typing import Literal
 
 from langchain_mcp_adapters.client import MultiServerMCPClient
 from langchain_ollama import ChatOllama
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.prebuilt import create_react_agent
-from pydantic import BaseModel
+
+from currency_exchange_agent import CurrencyExchangeAgent
 
 memory = MemorySaver()
-
-
-# pylint: disable=too-few-public-methods
-class ResponseFormat(BaseModel):
-    """Respond to the user in this format."""
-
-    status: Literal["input_required", "completed", "error"] = "input_required"
-    message: str
 
 
 class FinancialAssistantAgent:
@@ -27,16 +19,11 @@ class FinancialAssistantAgent:
 
     # pylint: disable=line-too-long
     SYSTEM_INSTRUCTION = (
-        "You are a specialized assistant for assisting the user with currency exchanges. "
-        "You can answer about rates but you cannot execute exchanges. "
-        "For all currency exchange trades use the currency_exchange agent and do not, "
-        "execute currency exchanges by your own. "
+        "You are a specialized assistant for assisting the user with financial decisions. "
+        "Your primary role is to use the 'currency_exchange_agent' to perform currency trades. "
         "If the user asks about anything other than financial information, "
         "politely state that you cannot help with that topic and can only assist with financial-related queries. "
-        "Do not attempt to answer unrelated questions or use tools for other purposes."
-        "Set response status to input_required if the user needs to provide more information."
-        "Set response status to error if there is an error while processing the request."
-        "Set response status to completed if the request is complete."
+        "Do not attempt to answer unrelated questions or use tools for other purposes. "
     )
 
     def __init__(
@@ -89,12 +76,11 @@ class FinancialAssistantAgent:
         # Create the agent graph with the tools
         self.graph = create_react_agent(
             model=self.model,
-            # tools=[
-            #     CurrencyExchangeAgent(
-            #         self.currency_exchange_agent_url
-            #     ).get_invoke_tool()
-            # ],
-            tools=tools,
+            tools=[
+                *tools,
+                CurrencyExchangeAgent(
+                    self.currency_exchange_agent_url
+                ).get_invoke_tool(),
+            ],
             prompt=self.SYSTEM_INSTRUCTION,
-            response_format=ResponseFormat,
         )

@@ -11,6 +11,7 @@ from a2a.client import A2AClient
 from a2a.types import (GetTaskRequest, GetTaskResponse, MessageSendParams,
                        SendMessageRequest, SendMessageResponse,
                        SendMessageSuccessResponse, Task, TaskQueryParams)
+from langchain_core.tools import tool
 from langgraph.prebuilt import InjectedState
 
 logging.basicConfig(level=logging.INFO)
@@ -86,8 +87,9 @@ class CurrencyExchangeAgent:
     def get_invoke_tool(self):
         """Create a tool to hand off to the currency exchange agent."""
 
-        async def invoke_agent(state: Annotated[dict, InjectedState]):
-            """Invoke the currency exchange agent."""
+        @tool
+        async def invoke_currency_exchange_agent(state: Annotated[dict, InjectedState]):
+            """Invoke the currency exchange agent to execute currency exchange trades."""
 
             logger.info("Invoking currency exchange agent with state: %s", state)
 
@@ -107,4 +109,4 @@ class CurrencyExchangeAgent:
             except Exception as e:
                 logger.error("An error occurred while connecting to the agent: %s", e)
 
-        return invoke_agent
+        return invoke_currency_exchange_agent
