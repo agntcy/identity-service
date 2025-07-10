@@ -35,9 +35,7 @@ export const RulesColumns = (): MRT_ColumnDef<Rule, any>[] => {
               items={row.original.tasks.map((task) => ({
                 valueFormatter: () => task.name || 'Unknown Task'
               }))}
-              showOnlyFirst={false}
-              shouldTruncate
-              maxTooltipTags={3}
+              showOnlyFirst
             />
           );
         }

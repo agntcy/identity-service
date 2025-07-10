@@ -112,6 +112,7 @@ export const PolicyReview = () => {
         topToolbarProps={{
           enableActions: false
         }}
+        densityCompact
         muiTableContainerProps={{
           style: {
             border: '1px solid #D5DFF7'
