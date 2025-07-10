@@ -44,30 +44,19 @@ export const PoliciesColumns = (): MRT_ColumnDef<Policy, any>[] => {
       },
       {
         accessorKey: 'rules',
-        header: 'Actions',
+        header: 'Rules',
         Cell: ({row}) => {
           if (!row.original.rules || row.original.rules.length === 0) {
             return (
               <Tag status={TagStatus.Info} size={GeneralSize.Small}>
-                No Actions
+                No Rules
               </Tag>
             );
           }
-          // TODO: add here action and tasks - due a map by task and link to action
           return (
-            <Tags
-              size={GeneralSize.Small}
-              items={row.original.rules.map((rule) => ({
-                valueFormatter: () =>
-                  rule.action && labels.rulesActions[rule.action as keyof typeof labels.rulesActions]
-                    ? labels.rulesActions[rule.action as keyof typeof labels.rulesActions]
-                    : 'Unknown Action',
-                value: rule.action
-              }))}
-              showOnlyFirst={false}
-              shouldTruncate
-              maxTooltipTags={3}
-            />
+            <Tag status={TagStatus.Info} size={GeneralSize.Small}>
+              {row.original.rules.length} Rule{row.original.rules.length > 1 ? 's' : ''}
+            </Tag>
           );
         }
       },

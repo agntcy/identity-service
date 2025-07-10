@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {useCallback, useState} from 'react';
+import {useCallback, useMemo, useState} from 'react';
 import {ConditionalQueryRenderer} from '../../ui/conditional-query-renderer';
-import {EmptyState, MenuItem, Table, toast, Typography} from '@outshift/spark-design';
+import {Box, EmptyState, MenuItem, Table, toast, Typography} from '@outshift/spark-design';
 import {useGetPolicies} from '@/queries';
 import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
 import {PoliciesColumns} from './policies-columns';
@@ -18,6 +18,7 @@ import {PencilIcon, PlusIcon, Trash2Icon} from 'lucide-react';
 import {ConfirmModal} from '@/components/ui/confirm-modal';
 import {Policy} from '@/types/api/policy';
 import {useDeletePolicy} from '@/mutations';
+import {ListRules} from '@/components/shared/list-rules/list-rules';
 
 export const ListPolicies = () => {
   const [pagination, setPagination] = useState<MRT_PaginationState>({
@@ -41,6 +42,15 @@ export const ListPolicies = () => {
       query: query
     }
   });
+
+  const dataPolicies = useMemo(() => {
+    return (
+      data?.policies?.map((policy) => ({
+        ...policy,
+        subRows: <ListRules policyId={policy.id} />
+      })) || []
+    );
+  }, [data]);
 
   const navigate = useNavigate();
 
@@ -95,11 +105,14 @@ export const ListPolicies = () => {
         <Card className={cn(!isLoading && 'p-0')} variant="secondary">
           <Table
             columns={PoliciesColumns()}
-            data={data?.policies || []}
+            data={dataPolicies}
             isLoading={isLoading || deleteMutation.isPending}
-            muiTableBodyRowProps={({row}) => ({
+            muiTableBodyRowProps={({row, isDetailPanel}) => ({
               sx: {cursor: 'pointer', '& .MuiIconButton-root': {color: (theme) => theme.palette.vars.interactiveSecondaryDefaultDefault}},
               onClick: () => {
+                if (isDetailPanel) {
+                  return;
+                }
                 const path = generatePath(PATHS.policies.info, {id: row.original?.id});
                 void navigate(path, {replace: true});
               }
@@ -119,6 +132,8 @@ export const ListPolicies = () => {
             topToolbarProps={{
               enableActions: false
             }}
+            enableExpanding={true}
+            enableExpandAll={true}
             muiTableContainerProps={{
               style: {
                 border: '1px solid #D5DFF7'
@@ -167,19 +182,25 @@ export const ListPolicies = () => {
               }
             }}
             renderEmptyRowsFallback={() => (
-              <EmptyState
-                title="No policies found"
-                description="No policies are currently in place. Click 'Add Policy' to create and apply one to your registered agentic services."
-                containerProps={{paddingBottom: '40px'}}
-                actionTitle="Add Policy"
-                actionCallback={() => {
-                  void navigate(PATHS.policies.create, {replace: true});
-                }}
-                actionButtonProps={{
-                  sx: {fontWeight: '600 !important'},
-                  startIcon: <PlusIcon className="w-4 h-4" />
-                }}
-              />
+              <Box
+                sx={(theme) => ({
+                  backgroundColor: theme.palette.vars.controlBackgroundDefault
+                })}
+              >
+                <EmptyState
+                  title="No policies found"
+                  description="No policies are currently in place. Click 'Add Policy' to create and apply one to your registered agentic services."
+                  containerProps={{paddingBottom: '40px'}}
+                  actionTitle="Add Policy"
+                  actionCallback={() => {
+                    void navigate(PATHS.policies.create, {replace: true});
+                  }}
+                  actionButtonProps={{
+                    sx: {fontWeight: '600 !important'},
+                    startIcon: <PlusIcon className="w-4 h-4" />
+                  }}
+                />
+              </Box>
             )}
           />
         </Card>

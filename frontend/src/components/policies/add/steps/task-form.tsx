@@ -55,7 +55,7 @@ export const TaskForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
             name={`rules.${fieldIndex}.tasks.tasks`}
             render={({field}) => (
               <FormItem className="w-full">
-                <FormLabel className="form-label">Task</FormLabel>
+                <FormLabel className="form-label">Tasks</FormLabel>
                 <FormControl>
                   <Select
                     multiple
@@ -77,7 +77,7 @@ export const TaskForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
                       if (!selected || selected.length === 0) {
                         return (
                           <Typography variant="body2" fontSize={14} sx={(theme) => ({color: theme.palette.vars.baseTextWeak})}>
-                            Select task...
+                            Select tasks...
                           </Typography>
                         );
                       }

@@ -5,7 +5,7 @@
 
 import {useCallback, useMemo, useState} from 'react';
 import {ConditionalQueryRenderer} from '../../ui/conditional-query-renderer';
-import {EmptyState, MenuItem, SelectNodeType, Table, toast, Typography} from '@outshift/spark-design';
+import {Box, EmptyState, MenuItem, SelectNodeType, Table, toast, Typography} from '@outshift/spark-design';
 import {useGetAgenticServices} from '@/queries';
 import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
 import {AgenticServiceColumns} from './agentic-services-columns';
@@ -228,20 +228,26 @@ export const ListAgenticServices = () => {
               }
             }}
             renderEmptyRowsFallback={() => (
-              <EmptyState
-                title="No Agentic Services"
-                description="Currently, there are no agentic services available."
-                containerProps={{paddingBottom: '40px'}}
-                actionTitle="Add Agentic Service"
-                actionCallback={() => {
-                  void navigate(PATHS.agenticServices.add, {replace: true});
-                }}
-                actionButtonProps={{
-                  sx: {fontWeight: '600 !important'},
-                  startIcon: <PlusIcon className="w-4 h-4" />,
-                  variant: 'outlined'
-                }}
-              />
+              <Box
+                sx={(theme) => ({
+                  backgroundColor: theme.palette.vars.controlBackgroundDefault
+                })}
+              >
+                <EmptyState
+                  title="No Agentic Services"
+                  description="Currently, there are no agentic services available."
+                  containerProps={{paddingBottom: '40px'}}
+                  actionTitle="Add Agentic Service"
+                  actionCallback={() => {
+                    void navigate(PATHS.agenticServices.add, {replace: true});
+                  }}
+                  actionButtonProps={{
+                    sx: {fontWeight: '600 !important'},
+                    startIcon: <PlusIcon className="w-4 h-4" />,
+                    variant: 'outlined'
+                  }}
+                />
+              </Box>
             )}
           />
         </Card>

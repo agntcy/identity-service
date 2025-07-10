@@ -48,3 +48,44 @@ export const useGetPolicy = (id?: string) => {
     enabled: !!id
   });
 };
+
+export const useGetPolicyRules = ({
+  query,
+  policyId,
+  enable = true
+}: {
+  policyId?: string;
+  query?: {page?: number; size?: number; query?: string};
+  enable?: boolean;
+}) => {
+  return useQuery({
+    queryKey: [
+      'get-policy-rules',
+      {
+        page: query?.page,
+        size: query?.size,
+        query: query?.query
+      },
+      enable,
+      policyId
+    ],
+    queryFn: async () => {
+      const {data} = await PolicyAPI.listRules(
+        policyId!,
+        {
+          page: query?.page,
+          size: query?.size,
+          query: query?.query
+        },
+        {
+          paramsSerializer: (params) => {
+            return qs.stringify(params);
+          }
+        }
+      );
+      return data;
+    },
+    enabled: enable !== false && !!policyId,
+    placeholderData: keepPreviousData
+  });
+};
