@@ -5,10 +5,9 @@
 
 import {AgenticServiceType} from '@/components/shared/agentic-service-type';
 import DateHover from '@/components/ui/date-hover';
-import {labels} from '@/constants/labels';
 import {useGetAgenticService} from '@/queries';
 import {Policy} from '@/types/api/policy';
-import {GeneralSize, Skeleton, Tag, Tags, TagStatus, Typography} from '@outshift/spark-design';
+import {GeneralSize, Skeleton, Tag, TagStatus, Typography} from '@outshift/spark-design';
 import {MRT_ColumnDef} from 'material-react-table';
 import {useMemo} from 'react';
 
