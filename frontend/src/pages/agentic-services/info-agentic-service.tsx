@@ -11,10 +11,12 @@ import {ConfirmModal} from '@/components/ui/confirm-modal';
 import {useDeleteAgenticService} from '@/mutations';
 import {useGetAgenticService} from '@/queries';
 import {PATHS} from '@/router/paths';
+import {useFeatureFlagsStore} from '@/store';
 import {Button, toast} from '@outshift/spark-design';
 import {IdCardIcon, PencilIcon, Trash2Icon} from 'lucide-react';
 import {useCallback, useState} from 'react';
 import {generatePath, useNavigate, useParams} from 'react-router-dom';
+import {useShallow} from 'zustand/react/shallow';
 
 const AgenticServiceInfo: React.FC = () => {
   const [showReissueBadge, setShowReissueBadge] = useState<boolean>(false);
@@ -26,6 +28,12 @@ const AgenticServiceInfo: React.FC = () => {
   const {data, isLoading, error, isError, refetch} = useGetAgenticService(id);
 
   const navigate = useNavigate();
+
+  const {isTbacEnable} = useFeatureFlagsStore(
+    useShallow((state) => ({
+      isTbacEnable: state.featureFlags.isTbacEnable
+    }))
+  );
 
   const deleteMutation = useDeleteAgenticService({
     callbacks: {
@@ -145,6 +153,13 @@ const AgenticServiceInfo: React.FC = () => {
           description={
             <>
               Are you sure you want to delete this agentic service <b>{data?.name}</b>? This action cannot be undone.
+              {isTbacEnable && (
+                <>
+                  <br />
+                  <br />
+                  <strong>Note:</strong> If this agentic service is a TBAC service, it will also remove the associated TBAC policies.
+                </>
+              )}
             </>
           }
           confirmButtonText="Delete"
