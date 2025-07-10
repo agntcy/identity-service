@@ -1,8 +1,8 @@
 {
-  "schema_version": "v0.3.1",
-  "name": "agntcy/marketing-campaign",
+  "schema_version": "v1.0.0",
+  "name": "agntcy/financial-assistant",
   "version": "v1.0.0",
-  "description": "A multi-agent application to compose, review, and send marketing campaign emails.",
+  "description": "A multi-functional financial assistant designed help with currency conversion.",
   "authors": ["Cisco Systems Inc."],
   "created_at": "2025-04-24T12:00:00Z",
   "annotations": {
@@ -49,11 +49,11 @@
   "locators": [
     {
       "type": "source-code",
-      "url": "https://github.com/agntcy/agentic-apps/tree/main/marketing-campaign"
+      "url": "https://github.com/agntcy/agentic-apps/tree/main/financial-assistant"
     },
     {
       "type": "python-package",
-      "url": "https://github.com/agntcy/agentic-apps/tree/main/marketing-campaign/pyproject.toml"
+      "url": "https://github.com/agntcy/agentic-apps/tree/main/financial-assistant/pyproject.toml"
     }
   ],
   "extensions": [
@@ -62,7 +62,7 @@
       "version": "v0.0.0",
       "data": {
         "sbom": {
-          "name": "marketing_campaign_manager",
+          "name": "financial_assistant",
           "packages": [
             {
               "name": "python-dotenv",

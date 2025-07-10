@@ -19,7 +19,8 @@ function Input({className, type, ...props}: React.ComponentProps<'input'>) {
         'focus-visible:border-[2px] focus-visible:border-[#0051AF] focus-visible:border-[2px]',
         'aria-invalid:ring-destructive/20 aria-invalid:border-destructive',
         'bg-[#FBFCFE]',
-        'border-[#E8EEFB] border-solid border-[2px]',
+        'border-[#D5DFF7] border-solid border-[2px]',
+        'h-[32px]',
         className
       )}
       autoComplete="off"

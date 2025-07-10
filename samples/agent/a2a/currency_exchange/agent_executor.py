@@ -21,11 +21,11 @@ logger = logging.getLogger(__name__)
 class CurrencyAgentExecutor(AgentExecutor):
     """Currency Conversion AgentExecutor Example."""
 
-    def __init__(self, ollama_host, ollama_model, mcp_server_url) -> None:
+    def __init__(self, ollama_host, ollama_model, currency_exchange_mcp_server_url):
         self.agent = CurrencyAgent(
             ollama_base_url=ollama_host,
             ollama_model=ollama_model,
-            mcp_server_url=mcp_server_url,
+            currency_exchange_mcp_server_url=currency_exchange_mcp_server_url,
         )
 
     async def execute(
@@ -33,7 +33,6 @@ class CurrencyAgentExecutor(AgentExecutor):
         context: RequestContext,
         event_queue: EventQueue,
     ) -> None:
-        """Executes the agent with the given context and event queue."""
         error = self._validate_request(context)
         if error:
             raise ServerError(error=InvalidParamsError())

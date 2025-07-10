@@ -13,7 +13,7 @@ import {useGetAgenticService} from '@/queries';
 import {Separator} from '@/components/ui/separator';
 import {labels} from '@/constants/labels';
 import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
-import {IconButton} from '@mui/material';
+import {Box, IconButton} from '@mui/material';
 import {InfoIcon} from 'lucide-react';
 import {generatePath} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
@@ -141,7 +141,13 @@ export const PolicyContent = ({policy}: {policy?: Policy}) => {
                                 }
                               }}
                               renderEmptyRowsFallback={() => (
-                                <EmptyState title="No tasks found" containerProps={{paddingBottom: '40px'}} actionTitle="Add Policy" />
+                                <Box
+                                  sx={(theme) => ({
+                                    backgroundColor: theme.palette.vars.controlBackgroundDefault
+                                  })}
+                                >
+                                  <EmptyState title="No tasks found" containerProps={{paddingBottom: '40px'}} actionTitle="Add Policy" />
+                                </Box>
                               )}
                             />
                             <div className="pl-[24px]">

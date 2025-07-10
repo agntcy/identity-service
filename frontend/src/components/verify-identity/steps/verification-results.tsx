@@ -9,6 +9,7 @@ import {useStepper} from '../stepper';
 import {
   Accordion,
   Badge,
+  Box,
   Button,
   CodeBlock,
   Divider,
@@ -181,11 +182,17 @@ export const VerificationResults = () => {
                     }}
                     renderTopToolbar={() => <></>}
                     renderEmptyRowsFallback={() => (
-                      <EmptyState
-                        title="No Errors Found"
-                        description="Your verification results did not return any errors."
-                        containerProps={{paddingBottom: '40px'}}
-                      />
+                      <Box
+                        sx={(theme) => ({
+                          backgroundColor: theme.palette.vars.controlBackgroundDefault
+                        })}
+                      >
+                        <EmptyState
+                          title="No Errors Found"
+                          description="Your verification results did not return any errors."
+                          containerProps={{paddingBottom: '40px'}}
+                        />
+                      </Box>
                     )}
                   />
                 </Accordion>
