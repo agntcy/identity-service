@@ -32,7 +32,7 @@ require (
 	github.com/hashicorp/vault/api v1.20.0
 	github.com/lestrrat-go/jwx/v3 v3.0.8
 	github.com/lib/pq v1.10.9
-	github.com/mark3labs/mcp-go v0.33.0
+	github.com/mark3labs/mcp-go v0.32.0
 	github.com/okta/okta-jwt-verifier-golang v1.3.1
 	github.com/okta/okta-sdk-golang/v5 v5.0.6
 	github.com/ory/client-go v1.20.11
