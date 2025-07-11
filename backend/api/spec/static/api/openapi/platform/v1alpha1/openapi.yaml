@@ -247,32 +247,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-    /v1alpha1/apps/{appId}/tasks:
-        get:
-            tags:
-                - AppService
-            description: Get the list of tasks related to an App
-            operationId: AppService_GetTasks
-            parameters:
-                - name: appId
-                  in: path
-                  description: App Id to get the tasks for.
-                  required: true
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/GetTasksResponse'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
     /v1alpha1/auth/app_info:
         get:
             tags:
@@ -843,6 +817,33 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /v1alpha1/tasks:
+        get:
+            tags:
+                - AppService
+            description: Get the list of tasks of all apps
+            operationId: AppService_GetTasks
+            parameters:
+                - name: excludeAppIds
+                  in: query
+                  description: A filter to exclude fetching tasks for the specified app ids
+                  schema:
+                    type: array
+                    items:
+                        type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetTasksResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
 components:
     schemas:
         ApiKey:
@@ -1078,11 +1079,18 @@ components:
         GetTasksResponse:
             type: object
             properties:
+                result:
+                    type: object
+                    additionalProperties:
+                        $ref: '#/components/schemas/GetTasksResponse_TaskList'
+                    description: The list of tasks per Agentic Service type
+        GetTasksResponse_TaskList:
+            type: object
+            properties:
                 tasks:
                     type: array
                     items:
                         $ref: '#/components/schemas/Task'
-                    description: The list of tasks related to the App
         GoogleProtobufAny:
             type: object
             properties:

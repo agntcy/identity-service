@@ -1316,9 +1316,9 @@
           "extensions": [],
           "fields": [
             {
-              "name": "app_id",
-              "description": "App Id to get the tasks for.",
-              "label": "",
+              "name": "exclude_app_ids",
+              "description": "A filter to exclude fetching tasks for the specified app ids",
+              "label": "repeated",
               "type": "string",
               "longType": "string",
               "fullType": "string",
@@ -1340,8 +1340,68 @@
           "extensions": [],
           "fields": [
             {
+              "name": "result",
+              "description": "The list of tasks per Agentic Service type",
+              "label": "repeated",
+              "type": "ResultEntry",
+              "longType": "GetTasksResponse.ResultEntry",
+              "fullType": "agntcy.identity.platform.v1alpha1.GetTasksResponse.ResultEntry",
+              "ismap": true,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "ResultEntry",
+          "longName": "GetTasksResponse.ResultEntry",
+          "fullName": "agntcy.identity.platform.v1alpha1.GetTasksResponse.ResultEntry",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "key",
+              "description": "",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            },
+            {
+              "name": "value",
+              "description": "",
+              "label": "",
+              "type": "TaskList",
+              "longType": "GetTasksResponse.TaskList",
+              "fullType": "agntcy.identity.platform.v1alpha1.GetTasksResponse.TaskList",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "TaskList",
+          "longName": "GetTasksResponse.TaskList",
+          "fullName": "agntcy.identity.platform.v1alpha1.GetTasksResponse.TaskList",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
               "name": "tasks",
-              "description": "The list of tasks related to the App",
+              "description": "",
               "label": "repeated",
               "type": "Task",
               "longType": "Task",
@@ -1651,7 +1711,7 @@
             },
             {
               "name": "GetTasks",
-              "description": "Get the list of tasks related to an App",
+              "description": "Get the list of tasks of all apps",
               "requestType": "GetTasksRequest",
               "requestLongType": "GetTasksRequest",
               "requestFullType": "agntcy.identity.platform.v1alpha1.GetTasksRequest",
@@ -1665,7 +1725,7 @@
                   "rules": [
                     {
                       "method": "GET",
-                      "pattern": "/v1alpha1/apps/{app_id}/tasks"
+                      "pattern": "/v1alpha1/tasks"
                     }
                   ]
                 }
