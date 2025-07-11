@@ -5,7 +5,6 @@
 import inspect
 import logging
 import os
-import time
 from importlib import import_module
 from pkgutil import iter_modules
 
@@ -116,9 +115,6 @@ class IdentityPlatformSdk:
                     user_token=user_token,
                 )
             )
-
-            # Small delay to ensure the authorization code is ready
-            time.sleep(0.3)
 
             token_response = self._get_auth_service().Token(
                 IdentityPlatformSdk.TokenRequest(
