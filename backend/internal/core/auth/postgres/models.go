@@ -21,7 +21,7 @@ type Session struct {
 	App               *apptypes.App
 	ToolName          *string
 	UserID            *string
-	AccessToken       *secrets.EncryptedString `gorm:"type:varchar;unique;"`
+	AccessToken       *secrets.EncryptedString `gorm:"type:varchar(16384);index:at_idx,unique;"`
 	AuthorizationCode *string                  `gorm:"type:varchar(256);index:ac_idx,unique;"`
 }
 
