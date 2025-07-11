@@ -16,17 +16,10 @@
     <meta name="theme-color" content="#eff3fc">
     <link rel="manifest" href="/manifest.webmanifest">
     <script>
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker
-          .register('/sw.js', { scope: '/' })
-          .then((registration) => {
-            console.log('Service Worker registered successfully:', registration.scope);
-          })
-          .catch((error) => {
-            console.error('Service Worker registration failed:', error);
-          });
-      } else {
-        console.warn('Service Worker is not supported in this browser.');
+      if('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js', { scope: '/' })
+        })
       }
     </script>
   </head>

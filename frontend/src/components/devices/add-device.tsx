@@ -48,8 +48,6 @@ export const AddDevice = () => {
     return '';
   }, [device]);
 
-  console.log('Device link:', link);
-
   const handleOnAddDevice = useCallback(() => {
     addDeviceMutation.mutate({});
   }, [addDeviceMutation]);

@@ -32,7 +32,7 @@ export const useAddDevice = ({callbacks}: PropsSettingsDevices) => {
   });
 };
 
-export const useRegisterDevice = ({callbacks}: PropsSettingsDevices) => {
+export const useRegisterDevice = ({callbacks = {}}: PropsSettingsDevices) => {
   return useMutation({
     mutationKey: ['register-device'],
     mutationFn: ({id, data}: {id: string; data: Device}) => DevicesAPI.registerDevice(id, data),

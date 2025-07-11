@@ -5,6 +5,43 @@
 
 import {arrayBufferToBase64, urlBase64ToUint8Array} from './utils';
 
+export const inspectNotifications = async () => {
+  if (!('Notification' in window)) {
+    console.log('This browser does not support notifications');
+    return false;
+  }
+
+  if (!('serviceWorker' in navigator)) {
+    console.log('This browser does not support service workers');
+    return false;
+  }
+
+  if (!('PushManager' in window)) {
+    console.log('This browser does not support push messaging');
+    return false;
+  }
+
+  if (Notification.permission !== 'granted') {
+    return false;
+  }
+
+  try {
+    // Get service worker registration
+    const registration = await navigator.serviceWorker.ready;
+
+    // Check if already subscribed
+    const existingSubscription = await registration.pushManager.getSubscription();
+    if (existingSubscription) {
+      return true;
+    }
+
+    return false;
+  } catch (error) {
+    console.error('Failed to subscribe to push notifications:', error);
+    return undefined;
+  }
+};
+
 export const subscribeToNotifications = async () => {
   if (!('Notification' in window)) {
     console.log('This browser does not support notifications');
@@ -54,23 +91,6 @@ export const subscribeToNotifications = async () => {
     };
 
     return subscriptionData;
-
-    // await apiRequest(
-    //   "POST",
-    //   "https://api.pyramid-platform.staging.outshift.ai/v1alpha1/device/fcb274aa-76d5-4bc5-8f88-af3f72627b3a",
-    //   {
-    //     subscriptionToken: JSON.stringify(subscriptionData),
-    //   }
-    // )
-    //   .then((res) => {
-    //     if (!res.ok) {
-    //       throw new Error("Failed to subscribe to push notifications");
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error sending subscription to server:", error);
-    //     throw error;
-    //   });
   } catch (error) {
     console.error('Failed to subscribe to push notifications:', error);
     return undefined;
