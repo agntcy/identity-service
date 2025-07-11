@@ -38,13 +38,44 @@ export default defineConfig(({mode}) => {
       svgr(),
       VitePWA({
         registerType: 'autoUpdate',
+        injectRegister: 'auto',
         manifest: {
-          name: 'Identity Agntcy',
-          short_name: 'Identity',
-          description: 'Identity management platform for AGNTCY',
-          theme_color: '#eff3fc'
+          name: 'Agent Identity | AGNTCY',
+          short_name: 'Agent Identity',
+          icons: [
+            {
+              src: '/pwa-192x192.png',
+              sizes: '192x192',
+              type: 'image/png',
+              purpose: 'any'
+            },
+            {
+              src: '/pwa-512x512.png',
+              sizes: '512x512',
+              type: 'image/png',
+              purpose: 'any'
+            },
+            {
+              src: '/pwa-maskable-192x192.png',
+              sizes: '192x192',
+              type: 'image/png',
+              purpose: 'maskable'
+            },
+            {
+              src: '/pwa-maskable-512x512.png',
+              sizes: '512x512',
+              type: 'image/png',
+              purpose: 'maskable'
+            }
+          ],
+          start_url: '/',
+          display: 'standalone',
+          background_color: '#eff3fc',
+          theme_color: '#eff3fc',
+          description: 'AGNTCY Identity management system with push notifications and offline capabilities'
         },
         workbox: {
+          globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
           cleanupOutdatedCaches: true,
           skipWaiting: true,
           maximumFileSizeToCacheInBytes: 4 * 1024 * 1024 // Increase limit to 4 MiB

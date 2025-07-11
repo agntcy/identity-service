@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import {AddDevice} from '@/components/devices/add-device';
 import {BasePage} from '@/components/layout/base-page';
 import {PATHS} from '@/router/paths';
 import React from 'react';
@@ -39,7 +40,7 @@ const Devices: React.FC = () => {
         }
       ]}
     >
-      <></>
+      <AddDevice />
     </BasePage>
   );
 };

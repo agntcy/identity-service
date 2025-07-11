@@ -54,6 +54,7 @@ const VerifyIdentityPublic = React.lazy(() => import('@/pages/verify-identity/ve
 
 // Devices
 const Devices = React.lazy(() => import('@/pages/settings/devices/devices'));
+const OnBoardDevice = React.lazy(() => import('@/pages/onboard-device/onboard-device'));
 
 export const generateRoutes = (routes: Route[]): Route[] => {
   return [
@@ -81,6 +82,14 @@ export const generateRoutes = (routes: Route[]): Route[] => {
         </NodeRoute>
       ),
       disabled: true // This route is disabled by default, can be enabled later
+    },
+    {
+      path: PATHS.onboardDevice,
+      element: (
+        <NodeRoute>
+          <OnBoardDevice />
+        </NodeRoute>
+      )
     },
     {
       path: PATHS.basePath,
