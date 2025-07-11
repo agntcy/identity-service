@@ -91,9 +91,11 @@ type ListPoliciesRequest struct {
 	// The search query
 	Query *string `protobuf:"bytes,3,opt,name=query,proto3,oneof" json:"query,omitempty"`
 	// A filter used to fetch policies only for the specified Agentic Services
-	AppIds        []string `protobuf:"bytes,4,rep,name=app_ids,json=appIds,proto3" json:"app_ids,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	AppIds []string `protobuf:"bytes,4,rep,name=app_ids,json=appIds,proto3" json:"app_ids,omitempty"`
+	// A filter used to fetch policies where the rules applies for the specified Agentic Services
+	RulesForAppIds []string `protobuf:"bytes,5,rep,name=rules_for_app_ids,json=rulesForAppIds,proto3" json:"rules_for_app_ids,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *ListPoliciesRequest) Reset() {
@@ -150,6 +152,13 @@ func (x *ListPoliciesRequest) GetQuery() string {
 func (x *ListPoliciesRequest) GetAppIds() []string {
 	if x != nil {
 		return x.AppIds
+	}
+	return nil
+}
+
+func (x *ListPoliciesRequest) GetRulesForAppIds() []string {
+	if x != nil {
+		return x.RulesForAppIds
 	}
 	return nil
 }
@@ -812,12 +821,13 @@ const file_agntcy_identity_platform_v1alpha1_policy_service_proto_rawDesc = "" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v27.agntcy.identity.platform.shared.v1alpha1.PagedResponseH\x00R\n" +
 	"pagination\x88\x01\x01B\r\n" +
-	"\v_pagination\"\x97\x01\n" +
+	"\v_pagination\"\xc2\x01\n" +
 	"\x13ListPoliciesRequest\x12\x17\n" +
 	"\x04page\x18\x01 \x01(\x05H\x00R\x04page\x88\x01\x01\x12\x17\n" +
 	"\x04size\x18\x02 \x01(\x05H\x01R\x04size\x88\x01\x01\x12\x19\n" +
 	"\x05query\x18\x03 \x01(\tH\x02R\x05query\x88\x01\x01\x12\x17\n" +
-	"\aapp_ids\x18\x04 \x03(\tR\x06appIdsB\a\n" +
+	"\aapp_ids\x18\x04 \x03(\tR\x06appIds\x12)\n" +
+	"\x11rules_for_app_ids\x18\x05 \x03(\tR\x0erulesForAppIdsB\a\n" +
 	"\x05_pageB\a\n" +
 	"\x05_sizeB\b\n" +
 	"\x06_query\"\x81\x01\n" +

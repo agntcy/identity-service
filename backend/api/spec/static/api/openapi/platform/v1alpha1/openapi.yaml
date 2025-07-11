@@ -486,6 +486,13 @@ paths:
                     type: array
                     items:
                         type: string
+                - name: rulesForAppIds
+                  in: query
+                  description: A filter used to fetch policies where the rules applies for the specified Agentic Services
+                  schema:
+                    type: array
+                    items:
+                        type: string
             responses:
                 "200":
                     description: OK
