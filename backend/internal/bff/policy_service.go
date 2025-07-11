@@ -18,6 +18,7 @@ import (
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 	"github.com/agntcy/identity-platform/internal/pkg/pagination"
 	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
+	"github.com/agntcy/identity-platform/internal/pkg/strutil"
 	"github.com/google/uuid"
 )
 
@@ -42,6 +43,7 @@ type PolicyService interface {
 		paginationFilter pagination.PaginationFilter,
 		query *string,
 		appIDs []string,
+		rulesForAppIDs []string,
 	) (*pagination.Pageable[policytypes.Policy], error)
 	ListRules(
 		ctx context.Context,
@@ -207,8 +209,12 @@ func (s *policyService) ListPolicies(
 	paginationFilter pagination.PaginationFilter,
 	query *string,
 	appIDs []string,
+	rulesForAppIDs []string,
 ) (*pagination.Pageable[policytypes.Policy], error) {
-	return s.policyRepository.GetAllPolicies(ctx, paginationFilter, query, appIDs)
+	appIDs = strutil.TrimSlice(appIDs)
+	rulesForAppIDs = strutil.TrimSlice(rulesForAppIDs)
+
+	return s.policyRepository.GetAllPolicies(ctx, paginationFilter, query, appIDs, rulesForAppIDs)
 }
 
 func (s *policyService) ListRules(

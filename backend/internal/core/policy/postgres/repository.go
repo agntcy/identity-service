@@ -8,6 +8,8 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"slices"
+	"time"
 
 	policycore "github.com/agntcy/identity-platform/internal/core/policy"
 	"github.com/agntcy/identity-platform/internal/core/policy/types"
@@ -16,6 +18,7 @@ import (
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 	"github.com/agntcy/identity-platform/internal/pkg/gormutil"
 	"github.com/agntcy/identity-platform/internal/pkg/pagination"
+	"github.com/agntcy/identity-platform/internal/pkg/pgutil"
 	"github.com/agntcy/identity-platform/pkg/db"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -404,32 +407,67 @@ func (r *repository) GetAllPolicies(
 	paginationFilter pagination.PaginationFilter,
 	query *string,
 	appIDs []string,
+	rulesForAppIDs []string,
 ) (*pagination.Pageable[types.Policy], error) {
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
 		return nil, identitycontext.ErrTenantNotFound
 	}
 
-	dbQuery := r.dbContext.Client().Where("tenant_id = ?", tenantID)
+	dbQuery := r.dbContext.Client().
+		Joins("LEFT JOIN rules ON rules.policy_id = policies.id").
+		Joins("LEFT JOIN rule_tasks ON rule_tasks.rule_id = rules.id").
+		Joins("LEFT JOIN tasks ON tasks.id = rule_tasks.task_id").
+		Where("policies.tenant_id = ?", tenantID)
 
 	if query != nil && *query != "" {
 		dbQuery = dbQuery.Where(
-			"id ILIKE @query OR name ILIKE @query OR description ILIKE @query",
+			"policies.id ILIKE @query OR policies.name ILIKE @query OR policies.description ILIKE @query",
 			sql.Named("query", "%"+*query+"%"),
 		)
 	}
 
 	if len(appIDs) > 0 {
-		dbQuery = dbQuery.Where("assigned_to IN (?)", appIDs)
+		dbQuery = dbQuery.Where("policies.assigned_to IN (?)", appIDs)
+	}
+
+	if len(rulesForAppIDs) > 0 {
+		dbQuery = dbQuery.Where("tasks.app_id IN (?)", rulesForAppIDs)
 	}
 
 	dbQuery = dbQuery.Session(&gorm.Session{})
 
-	var policies []*Policy
+	var rows []*struct {
+		ID                string
+		Name              string
+		Description       string
+		AssignedTo        string
+		CreatedAt         time.Time
+		UpdatedAt         sql.NullTime
+		RuleID            string           `gorm:"column:r__id"`
+		RuleName          string           `gorm:"column:r__name"`
+		RuleDescription   string           `gorm:"column:r__description"`
+		RulePolicyID      string           `gorm:"column:r__policy_id"`
+		RuleAction        types.RuleAction `gorm:"column:r__action"`
+		RuleNeedsApproval bool             `gorm:"column:r__needs_approval"`
+		RuleCreatedAt     time.Time        `gorm:"column:r__created_at"`
+		RuleUpdatedAt     sql.NullTime     `gorm:"column:r__updated_at"`
+	}
 
 	err := dbQuery.Scopes(gormutil.Paginate(paginationFilter)).
-		Preload("Rules").
-		Find(&policies).Error
+		Table("policies").
+		Select(`
+			policies.*,
+			rules.id as r__id,
+			rules.name as r__name,
+			rules.description as r__description,
+			rules.policy_id as r__policy_id,
+			rules.action as r__action,
+			rules.needs_approval as r__needs_approval,
+			rules.created_at as r__created_at,
+			rules.updated_at as r__updated_at
+		`).
+		Find(&rows).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errutil.Err(err, "no policies found")
@@ -440,15 +478,48 @@ func (r *repository) GetAllPolicies(
 
 	var totalPolicies int64
 
-	err = dbQuery.Model(&Policy{}).Count(&totalPolicies).Error
+	err = dbQuery.Model(&Policy{}).Distinct("policies.id").Count(&totalPolicies).Error
 	if err != nil {
 		return nil, errutil.Err(err, "there was an error fetching the policies")
 	}
 
+	policies := make([]*types.Policy, 0)
+	for _, row := range rows {
+		var policy *types.Policy
+
+		if idx := slices.IndexFunc(policies, func(p *types.Policy) bool {
+			return p.ID == row.ID
+		}); idx > -1 {
+			policy = policies[idx]
+		} else {
+			policy = &types.Policy{
+				ID:          row.ID,
+				Name:        row.Name,
+				Description: row.Description,
+				AssignedTo:  row.AssignedTo,
+				Rules:       []*types.Rule{},
+				CreatedAt:   row.CreatedAt,
+				UpdatedAt:   pgutil.SqlNullTimeToTime(row.UpdatedAt),
+			}
+
+			policies = append(policies, policy)
+		}
+
+		policy.Rules = append(policy.Rules, &types.Rule{
+			ID:            row.RuleID,
+			Name:          row.RuleName,
+			Description:   row.RuleDescription,
+			PolicyID:      row.RulePolicyID,
+			Action:        row.RuleAction,
+			NeedsApproval: row.RuleNeedsApproval,
+			Tasks:         []*types.Task{},
+			CreatedAt:     row.RuleCreatedAt,
+			UpdatedAt:     pgutil.SqlNullTimeToTime(row.RuleUpdatedAt),
+		})
+	}
+
 	return &pagination.Pageable[types.Policy]{
-		Items: convertutil.ConvertSlice(policies, func(p *Policy) *types.Policy {
-			return p.ToCoreType()
-		}),
+		Items: policies,
 		Total: totalPolicies,
 		Page:  paginationFilter.GetPage(),
 		Size:  int32(len(policies)),

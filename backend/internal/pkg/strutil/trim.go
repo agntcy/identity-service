@@ -3,7 +3,10 @@
 
 package strutil
 
-import "strings"
+import (
+	"slices"
+	"strings"
+)
 
 func TrimSpaceAndNewline(s string) string {
 	if s == "" {
@@ -16,4 +19,8 @@ func TrimSpaceAndNewline(s string) string {
 	s = strings.ReplaceAll(s, "\t", "")
 
 	return s
+}
+
+func TrimSlice(s []string) []string {
+	return slices.DeleteFunc(s, func(s string) bool { return s == "" })
 }
