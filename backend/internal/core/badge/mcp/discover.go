@@ -6,6 +6,7 @@ package mcp
 import (
 	"context"
 	"encoding/json"
+	urllib "net/url"
 	"strings"
 
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
@@ -181,9 +182,25 @@ func (d *discoveryClient) Discover(
 		}
 	}
 
+	urlObj, err := urllib.Parse(url)
+	if err != nil {
+		return nil, errutil.Err(
+			err,
+			"failed to parse MCP URL",
+		)
+	}
+
+	safeUrl, err := urllib.JoinPath(urlObj.Scheme, urlObj.Host)
+	if err != nil {
+		return nil, errutil.Err(
+			err,
+			"failed to join MCP URL",
+		)
+	}
+
 	return &McpServer{
 		Name:      name,
-		URL:       url,
+		URL:       safeUrl,
 		Tools:     availableTools,
 		Resources: availableResources,
 	}, nil
