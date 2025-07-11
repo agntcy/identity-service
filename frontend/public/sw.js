@@ -62,9 +62,19 @@ self.addEventListener('push', (event) => {
     notificationData.body = 'You have a new notification!';
   }
 
+  // Send notification data to the client
+  self.clients.matchAll({type: 'window', includeUncontrolled: true}).then((clients) => {
+    clients.forEach((client) => {
+      client.postMessage({
+        type: 'PUSH_NOTIFICATION',
+        payload: notificationData
+      });
+    });
+  });
+
   const options = getNotificationOptions(notificationData);
 
-  event.waitUntil(self.registration.showNotification(notificationData.title || 'AGNTCY Identity', options));
+  event.waitUntil(self.registration.showNotification(notificationData.title || 'Agent Identity | AGNTCY', options));
 });
 
 self.addEventListener('notificationclick', (event) => {

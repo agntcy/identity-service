@@ -9,19 +9,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Agent Identity | AGNTCY</title>
     <meta name="description" content="AGNTCY Identity management system with push notifications and offline capabilities" />
-
     <link rel="icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" href="/apple-touch-icon-180x180.png" sizes="180x180" />
     <link rel="mask-icon" href="/mask-icon.svg" color="#eff3fc">
     <meta name="theme-color" content="#eff3fc">
     <link rel="manifest" href="/manifest.webmanifest">
-    <script>
-      if('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js', { scope: '/' })
-        })
-      }
-    </script>
   </head>
   <body>
     <div id="root"></div>

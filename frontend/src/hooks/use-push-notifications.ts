@@ -23,9 +23,8 @@ export const usePushNotifications = (id?: string) => {
               subscriptionToken: JSON.stringify(granted)
             }
           })
-          .then((resp) => {
+          .then(() => {
             setNotificationsEnabled(true);
-            console.log('Device registered successfully:', resp);
             return true;
           })
           .catch((error) => {
@@ -54,25 +53,27 @@ export const usePushNotifications = (id?: string) => {
     }
   }, []);
 
-  useEffect(() => {
-    const handleInitialization = async () => {
-      try {
-        const granted = await inspectNotifications();
-        if (granted === true) {
-          setNotificationsEnabled(true);
-        } else if (granted === false) {
-          setNotificationsEnabled(false);
-        }
-      } catch (error) {
-        console.error('Failed to inspect notifications:', error);
+  const handleInitialization = async () => {
+    try {
+      const granted = await inspectNotifications();
+      if (granted === true) {
+        setNotificationsEnabled(true);
+      } else if (granted === false) {
         setNotificationsEnabled(false);
       }
-    };
+    } catch (error) {
+      console.error('Failed to inspect notifications:', error);
+      setNotificationsEnabled(false);
+    }
+  };
+
+  useEffect(() => {
     void handleInitialization();
   }, []);
 
   return {
     notificationsEnabled,
+    handleInitialization,
     requestPermission,
     disableNotifications
   };
