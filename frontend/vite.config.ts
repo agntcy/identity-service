@@ -38,41 +38,36 @@ export default defineConfig(({mode}) => {
       svgr(),
       VitePWA({
         registerType: 'autoUpdate',
-        injectRegister: 'auto',
+        includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
         manifest: {
           name: 'Agent Identity | AGNTCY',
           short_name: 'Agent Identity',
+          description: 'AGNTCY Identity management system with push notifications and offline capabilities',
+          theme_color: '#eff3fc',
           icons: [
             {
-              src: '/pwa-192x192.png',
-              sizes: '192x192',
-              type: 'image/png',
-              purpose: 'any'
+              src: 'pwa-64x64.png',
+              sizes: '64x64',
+              type: 'image/png'
             },
             {
-              src: '/pwa-512x512.png',
+              src: 'pwa-192x192.png',
+              sizes: '192x192',
+              type: 'image/png'
+            },
+            {
+              src: 'pwa-512x512.png',
               sizes: '512x512',
               type: 'image/png',
               purpose: 'any'
             },
             {
-              src: '/pwa-maskable-192x192.png',
-              sizes: '192x192',
-              type: 'image/png',
-              purpose: 'maskable'
-            },
-            {
-              src: '/pwa-maskable-512x512.png',
+              src: 'maskable-icon-512x512.png',
               sizes: '512x512',
               type: 'image/png',
               purpose: 'maskable'
             }
-          ],
-          start_url: '/',
-          display: 'standalone',
-          background_color: '#eff3fc',
-          theme_color: '#eff3fc',
-          description: 'AGNTCY Identity management system with push notifications and offline capabilities'
+          ]
         },
         workbox: {
           globPatterns: ['**/*.{js,css,html,ico,png,svg}'],

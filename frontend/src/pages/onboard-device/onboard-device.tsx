@@ -29,7 +29,7 @@ const OnBoardDevice = () => {
       <div className="flex flex-col justify-between h-full">
         <PublicHeader
           userSection={
-            <Link href={docs('agentic-service')} openInNewTab>
+            <Link href={docs()} openInNewTab>
               <div className="flex items-center gap-1">
                 Explore
                 <ExternalLinkIcon className="w-4 h-4 ml-1" />

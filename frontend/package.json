@@ -11,7 +11,8 @@
     "lint:check": "eslint . && prettier \"**/*.+(ts*|js*)\" --check",
     "lint": "eslint . --fix && prettier \"**/*.+(ts*|js*)\" --write",
     "format": "prettier \"**/*.+(ts*|js*)\" --write",
-    "generate-bff": "yarn workspace utils generate-bff"
+    "generate-bff": "yarn workspace utils generate-bff",
+    "generate-pwa-assets": "pwa-assets-generator --preset minimal public/logo.svg"
   },
   "dependencies": {
     "@hello-pangea/dnd": "^18.0.1",
@@ -75,6 +76,7 @@
     "@types/react": "^18.2.56",
     "@types/react-dom": "^18.2.19",
     "@types/react-router-dom": "^5.3.3",
+    "@vite-pwa/assets-generator": "^1.0.0",
     "@vitejs/plugin-react": "^4.3.4",
     "copy-to-clipboard": "^3.3.3",
     "date-fns": "^4.1.0",
