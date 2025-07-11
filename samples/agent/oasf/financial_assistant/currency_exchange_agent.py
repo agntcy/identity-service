@@ -11,6 +11,7 @@ from a2a.client import A2AClient
 from a2a.types import (GetTaskRequest, GetTaskResponse, MessageSendParams,
                        SendMessageRequest, SendMessageResponse,
                        SendMessageSuccessResponse, Task, TaskQueryParams)
+from identityplatform.auth.httpx import IdentityPlatformAuth
 from langgraph.prebuilt import InjectedState
 
 logging.basicConfig(level=logging.INFO)
@@ -106,7 +107,10 @@ class CurrencyExchangeAgent:
             # Connect to the agent
             try:
                 timeout = httpx.Timeout(connect=None, read=None, write=None, pool=None)
-                async with httpx.AsyncClient(timeout=timeout) as httpx_client:
+                auth = IdentityPlatformAuth()
+                async with httpx.AsyncClient(
+                    timeout=timeout, auth=auth
+                ) as httpx_client:
                     client = await A2AClient.get_client_from_agent_card_url(
                         httpx_client,
                         self.url,
