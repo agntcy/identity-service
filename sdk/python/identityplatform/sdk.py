@@ -16,7 +16,7 @@ from identityplatform import client, log
 
 logger = logging.getLogger("identity")
 
-if os.getenv("IDENTITY_ENABLE_LOGS", "0") == "1":
+if int(os.getenv("IDENTITY_PLATFORM_ENABLE_LOGS", "0")) == 1:
     load_dotenv()
     log.configure()
 
@@ -34,8 +34,36 @@ def _load_grpc_objects(module, path):
 class IdentityPlatformSdk:
     """Identity Platform SDK for Python."""
 
-    def __init__(self, api_key, async_mode=False):
-        """Initialize the Identity Platform SDK."""
+    def __init__(
+        self,
+        api_key: str | None = None,
+        async_mode=False,
+    ):
+        """Initialize the Identity Platform SDK.
+
+        Parameters:
+            api_key (str | None): The API key to use for authentication.
+            async_mode (bool): Whether to use async mode or not. Defaults to False.
+
+        """
+
+        # Try to get the API Key from the environment variable
+        if api_key is None:
+            load_dotenv()
+            api_key = os.environ.get("IDENTITY_PLATFORM_API_KEY")
+
+        # Validate API Key
+        if not api_key:
+            raise ValueError(
+                "An Organization or Agentic Service API Key is required for Identity Platform SDK."
+            )
+
+        logger.debug(
+            "Initializing Identity Platform SDK with API Key: %s, Async Mode: %s",
+            api_key,
+            async_mode,
+        )
+
         # Load dynamically all objects
         _load_grpc_objects(
             agntcy.identity.platform.v1alpha1,
@@ -130,4 +158,19 @@ class IdentityPlatformSdk:
         """
         return self._get_badge_service().VerifyBadge(
             request=IdentityPlatformSdk.VerifyBadgeRequest(badge=badge)
+        )
+
+    async def averify_badge(
+        self, badge: str
+    ) -> "agntcy.identity.platform.v1alpha1.VerificationResult":
+        """Verify a badge using async method.
+
+        Parameters:
+            badge (str): The badge to verify.
+
+        Returns:
+            VerificationResult: The result of the verification.
+        """
+        return await self._get_badge_service().VerifyBadge(
+            IdentityPlatformSdk.VerifyBadgeRequest(badge=badge)
         )
