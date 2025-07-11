@@ -7,13 +7,14 @@ import os
 import sys
 
 import click
-import httpx
 import uvicorn
 from a2a.server.apps import A2AStarletteApplication
 from a2a.server.request_handlers import DefaultRequestHandler
-from a2a.server.tasks import InMemoryPushNotifier, InMemoryTaskStore
-from a2a.types import AgentCapabilities, AgentCard, AgentSkill
+from a2a.server.tasks import InMemoryTaskStore
+from a2a.types import (AgentCapabilities, AgentCard, AgentSkill,
+                       HTTPAuthSecurityScheme, SecurityScheme)
 from dotenv import load_dotenv
+from identityplatform.auth.starlette import IdentityPlatformA2AMiddleware
 
 from agent import CurrencyAgent
 from agent_executor import CurrencyAgentExecutor
@@ -38,6 +39,13 @@ logger = logging.getLogger(__name__)
 def main(host, port, ollama_host, ollama_model, currency_exchange_mcp_server_url):
     """Starts the Currency Agent server."""
 
+    # Define auth scheme
+    AUTH_SCHEME = "IdentityPlatformAuthScheme"
+    auth_scheme = HTTPAuthSecurityScheme(
+        scheme="bearer",
+        bearerFormat="JWT",
+    )
+
     # pylint: disable=broad-exception-caught
     try:
         capabilities = AgentCapabilities(streaming=True, pushNotifications=True)
@@ -57,23 +65,36 @@ def main(host, port, ollama_host, ollama_model, currency_exchange_mcp_server_url
             defaultOutputModes=CurrencyAgent.SUPPORTED_CONTENT_TYPES,
             capabilities=capabilities,
             skills=[skill],
+            securitySchemes={AUTH_SCHEME: SecurityScheme(root=auth_scheme)},
+            security=[
+                {
+                    AUTH_SCHEME: ["*"],
+                }
+            ],
         )
 
         # Initialize the HTTP client and request handler
-        timeout = httpx.Timeout(connect=None, read=None, write=None, pool=None)
-        httpx_client = httpx.AsyncClient(timeout=timeout)
         request_handler = DefaultRequestHandler(
             agent_executor=CurrencyAgentExecutor(
                 ollama_host, ollama_model, currency_exchange_mcp_server_url
             ),
             task_store=InMemoryTaskStore(),
-            push_notifier=InMemoryPushNotifier(httpx_client),
         )
         server = A2AStarletteApplication(
             agent_card=agent_card, http_handler=request_handler
         )
 
-        uvicorn.run(server.build(), host=host, port=port)
+        # Start server
+        app = server.build()
+
+        # Add IdentityPlatformMiddleware for authentication
+        app.add_middleware(
+            IdentityPlatformA2AMiddleware,
+            agent_card=agent_card,
+            public_paths=["/.well-known/agent.json"],
+        )
+
+        uvicorn.run(app, host=host, port=port)
     except Exception as e:
         logger.error("An error occurred during server startup: %e", e)
         sys.exit(1)
