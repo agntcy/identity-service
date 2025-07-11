@@ -53,7 +53,7 @@ type AppServiceClient interface {
 	DeleteApp(ctx context.Context, in *DeleteAppRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// Get the current badge issued for the App.
 	GetBadge(ctx context.Context, in *GetBadgeRequest, opts ...grpc.CallOption) (*Badge, error)
-	// Get the list of tasks related to an App
+	// Get the list of tasks of all apps
 	GetTasks(ctx context.Context, in *GetTasksRequest, opts ...grpc.CallOption) (*GetTasksResponse, error)
 }
 
@@ -165,7 +165,7 @@ type AppServiceServer interface {
 	DeleteApp(context.Context, *DeleteAppRequest) (*emptypb.Empty, error)
 	// Get the current badge issued for the App.
 	GetBadge(context.Context, *GetBadgeRequest) (*Badge, error)
-	// Get the list of tasks related to an App
+	// Get the list of tasks of all apps
 	GetTasks(context.Context, *GetTasksRequest) (*GetTasksResponse, error)
 }
 

@@ -6,6 +6,7 @@ package policy
 import (
 	"context"
 
+	apptypes "github.com/agntcy/identity-platform/internal/core/app/types"
 	"github.com/agntcy/identity-platform/internal/core/policy/types"
 	"github.com/agntcy/identity-platform/internal/pkg/pagination"
 )
@@ -26,7 +27,10 @@ type Repository interface {
 	GetPoliciesByAppID(ctx context.Context, appID string) ([]*types.Policy, error)
 	GetRuleByID(ctx context.Context, ruleID string, policyID string) (*types.Rule, error)
 	GetTasksByAppID(ctx context.Context, appID string) ([]*types.Task, error)
-	GetAllTasks(ctx context.Context, excludeAppIDs ...string) ([]*types.Task, error)
+	GetTasksPerAppType(
+		ctx context.Context,
+		excludeAppIDs ...string,
+	) (map[apptypes.AppType][]*types.Task, error)
 	GetTasksByID(ctx context.Context, ids []string) ([]*types.Task, error)
 	GetAllPolicies(
 		ctx context.Context,

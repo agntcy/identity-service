@@ -525,8 +525,8 @@ func (x *GetBadgeRequest) GetAppId() string {
 
 type GetTasksRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// App Id to get the tasks for.
-	AppId         string `protobuf:"bytes,1,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
+	// A filter to exclude fetching tasks for the specified app ids
+	ExcludeAppIds []string `protobuf:"bytes,1,rep,name=exclude_app_ids,json=excludeAppIds,proto3" json:"exclude_app_ids,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -561,17 +561,17 @@ func (*GetTasksRequest) Descriptor() ([]byte, []int) {
 	return file_agntcy_identity_platform_v1alpha1_app_service_proto_rawDescGZIP(), []int{10}
 }
 
-func (x *GetTasksRequest) GetAppId() string {
+func (x *GetTasksRequest) GetExcludeAppIds() []string {
 	if x != nil {
-		return x.AppId
+		return x.ExcludeAppIds
 	}
-	return ""
+	return nil
 }
 
 type GetTasksResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// The list of tasks related to the App
-	Tasks         []*Task `protobuf:"bytes,1,rep,name=tasks,proto3" json:"tasks,omitempty"`
+	// The list of tasks per Agentic Service type
+	Result        map[string]*GetTasksResponse_TaskList `protobuf:"bytes,1,rep,name=result,proto3" json:"result,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -606,7 +606,51 @@ func (*GetTasksResponse) Descriptor() ([]byte, []int) {
 	return file_agntcy_identity_platform_v1alpha1_app_service_proto_rawDescGZIP(), []int{11}
 }
 
-func (x *GetTasksResponse) GetTasks() []*Task {
+func (x *GetTasksResponse) GetResult() map[string]*GetTasksResponse_TaskList {
+	if x != nil {
+		return x.Result
+	}
+	return nil
+}
+
+type GetTasksResponse_TaskList struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Tasks         []*Task                `protobuf:"bytes,1,rep,name=tasks,proto3" json:"tasks,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetTasksResponse_TaskList) Reset() {
+	*x = GetTasksResponse_TaskList{}
+	mi := &file_agntcy_identity_platform_v1alpha1_app_service_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetTasksResponse_TaskList) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetTasksResponse_TaskList) ProtoMessage() {}
+
+func (x *GetTasksResponse_TaskList) ProtoReflect() protoreflect.Message {
+	mi := &file_agntcy_identity_platform_v1alpha1_app_service_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetTasksResponse_TaskList.ProtoReflect.Descriptor instead.
+func (*GetTasksResponse_TaskList) Descriptor() ([]byte, []int) {
+	return file_agntcy_identity_platform_v1alpha1_app_service_proto_rawDescGZIP(), []int{11, 0}
+}
+
+func (x *GetTasksResponse_TaskList) GetTasks() []*Task {
 	if x != nil {
 		return x.Tasks
 	}
@@ -648,11 +692,16 @@ const file_agntcy_identity_platform_v1alpha1_app_service_proto_rawDesc = "" +
 	"\x10DeleteAppRequest\x12\x15\n" +
 	"\x06app_id\x18\x01 \x01(\tR\x05appId\"(\n" +
 	"\x0fGetBadgeRequest\x12\x15\n" +
-	"\x06app_id\x18\x01 \x01(\tR\x05appId\"(\n" +
-	"\x0fGetTasksRequest\x12\x15\n" +
-	"\x06app_id\x18\x01 \x01(\tR\x05appId\"Q\n" +
-	"\x10GetTasksResponse\x12=\n" +
-	"\x05tasks\x18\x01 \x03(\v2'.agntcy.identity.platform.v1alpha1.TaskR\x05tasks2\xbf\v\n" +
+	"\x06app_id\x18\x01 \x01(\tR\x05appId\"9\n" +
+	"\x0fGetTasksRequest\x12&\n" +
+	"\x0fexclude_app_ids\x18\x01 \x03(\tR\rexcludeAppIds\"\xaf\x02\n" +
+	"\x10GetTasksResponse\x12W\n" +
+	"\x06result\x18\x01 \x03(\v2?.agntcy.identity.platform.v1alpha1.GetTasksResponse.ResultEntryR\x06result\x1aI\n" +
+	"\bTaskList\x12=\n" +
+	"\x05tasks\x18\x01 \x03(\v2'.agntcy.identity.platform.v1alpha1.TaskR\x05tasks\x1aw\n" +
+	"\vResultEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12R\n" +
+	"\x05value\x18\x02 \x01(\v2<.agntcy.identity.platform.v1alpha1.GetTasksResponse.TaskListR\x05value:\x028\x012\xab\v\n" +
 	"\n" +
 	"AppService\x12\xa3\x01\n" +
 	"\bListApps\x122.agntcy.identity.platform.v1alpha1.ListAppsRequest\x1a3.agntcy.identity.platform.v1alpha1.ListAppsResponse\".\x92A\x15\x12\tList Apps*\bListApps\x82\xd3\xe4\x93\x02\x10\x12\x0e/v1alpha1/apps\x12\xcb\x01\n" +
@@ -664,8 +713,8 @@ const file_agntcy_identity_platform_v1alpha1_app_service_proto_rawDesc = "" +
 	"Update App*\tUpdateApp\xdaA\x10name,description\x82\xd3\xe4\x93\x02\x1e:\x03app2\x17/v1alpha1/apps/{app_id}\x12\x93\x01\n" +
 	"\tDeleteApp\x123.agntcy.identity.platform.v1alpha1.DeleteAppRequest\x1a\x16.google.protobuf.Empty\"9\x92A\x17\x12\n" +
 	"Delete App*\tDeleteApp\x82\xd3\xe4\x93\x02\x19*\x17/v1alpha1/apps/{app_id}\x12\xc9\x01\n" +
-	"\bGetBadge\x122.agntcy.identity.platform.v1alpha1.GetBadgeRequest\x1a(.agntcy.identity.platform.v1alpha1.Badge\"_\x92A7\x12(Get the current badge issued for the App*\vGetAppBadge\x82\xd3\xe4\x93\x02\x1f\x12\x1d/v1alpha1/apps/{app_id}/badge\x12\xd0\x01\n" +
-	"\bGetTasks\x122.agntcy.identity.platform.v1alpha1.GetTasksRequest\x1a3.agntcy.identity.platform.v1alpha1.GetTasksResponse\"[\x92A3\x12'Get the list of tasks related to an App*\bGetTasks\x82\xd3\xe4\x93\x02\x1f\x12\x1d/v1alpha1/apps/{app_id}/tasks\x1a\b\x92A\x05\n" +
+	"\bGetBadge\x122.agntcy.identity.platform.v1alpha1.GetBadgeRequest\x1a(.agntcy.identity.platform.v1alpha1.Badge\"_\x92A7\x12(Get the current badge issued for the App*\vGetAppBadge\x82\xd3\xe4\x93\x02\x1f\x12\x1d/v1alpha1/apps/{app_id}/badge\x12\xbc\x01\n" +
+	"\bGetTasks\x122.agntcy.identity.platform.v1alpha1.GetTasksRequest\x1a3.agntcy.identity.platform.v1alpha1.GetTasksResponse\"G\x92A-\x12!Get the list of tasks of all apps*\bGetTasks\x82\xd3\xe4\x93\x02\x11\x12\x0f/v1alpha1/tasks\x1a\b\x92A\x05\n" +
 	"\x03AppBkZigithub.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_gob\x06proto3"
 
 var (
@@ -680,57 +729,61 @@ func file_agntcy_identity_platform_v1alpha1_app_service_proto_rawDescGZIP() []by
 	return file_agntcy_identity_platform_v1alpha1_app_service_proto_rawDescData
 }
 
-var file_agntcy_identity_platform_v1alpha1_app_service_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
+var file_agntcy_identity_platform_v1alpha1_app_service_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
 var file_agntcy_identity_platform_v1alpha1_app_service_proto_goTypes = []any{
-	(*ListAppsResponse)(nil),       // 0: agntcy.identity.platform.v1alpha1.ListAppsResponse
-	(*ListAppsRequest)(nil),        // 1: agntcy.identity.platform.v1alpha1.ListAppsRequest
-	(*CreateAppRequest)(nil),       // 2: agntcy.identity.platform.v1alpha1.CreateAppRequest
-	(*GetAppsCountRequest)(nil),    // 3: agntcy.identity.platform.v1alpha1.GetAppsCountRequest
-	(*AppTypeCountEntry)(nil),      // 4: agntcy.identity.platform.v1alpha1.AppTypeCountEntry
-	(*GetAppsCountResponse)(nil),   // 5: agntcy.identity.platform.v1alpha1.GetAppsCountResponse
-	(*GetAppRequest)(nil),          // 6: agntcy.identity.platform.v1alpha1.GetAppRequest
-	(*UpdateAppRequest)(nil),       // 7: agntcy.identity.platform.v1alpha1.UpdateAppRequest
-	(*DeleteAppRequest)(nil),       // 8: agntcy.identity.platform.v1alpha1.DeleteAppRequest
-	(*GetBadgeRequest)(nil),        // 9: agntcy.identity.platform.v1alpha1.GetBadgeRequest
-	(*GetTasksRequest)(nil),        // 10: agntcy.identity.platform.v1alpha1.GetTasksRequest
-	(*GetTasksResponse)(nil),       // 11: agntcy.identity.platform.v1alpha1.GetTasksResponse
-	(*App)(nil),                    // 12: agntcy.identity.platform.v1alpha1.App
-	(*v1alpha1.PagedResponse)(nil), // 13: agntcy.identity.platform.shared.v1alpha1.PagedResponse
-	(AppType)(0),                   // 14: agntcy.identity.platform.v1alpha1.AppType
-	(*Task)(nil),                   // 15: agntcy.identity.platform.v1alpha1.Task
-	(*emptypb.Empty)(nil),          // 16: google.protobuf.Empty
-	(*Badge)(nil),                  // 17: agntcy.identity.platform.v1alpha1.Badge
+	(*ListAppsResponse)(nil),          // 0: agntcy.identity.platform.v1alpha1.ListAppsResponse
+	(*ListAppsRequest)(nil),           // 1: agntcy.identity.platform.v1alpha1.ListAppsRequest
+	(*CreateAppRequest)(nil),          // 2: agntcy.identity.platform.v1alpha1.CreateAppRequest
+	(*GetAppsCountRequest)(nil),       // 3: agntcy.identity.platform.v1alpha1.GetAppsCountRequest
+	(*AppTypeCountEntry)(nil),         // 4: agntcy.identity.platform.v1alpha1.AppTypeCountEntry
+	(*GetAppsCountResponse)(nil),      // 5: agntcy.identity.platform.v1alpha1.GetAppsCountResponse
+	(*GetAppRequest)(nil),             // 6: agntcy.identity.platform.v1alpha1.GetAppRequest
+	(*UpdateAppRequest)(nil),          // 7: agntcy.identity.platform.v1alpha1.UpdateAppRequest
+	(*DeleteAppRequest)(nil),          // 8: agntcy.identity.platform.v1alpha1.DeleteAppRequest
+	(*GetBadgeRequest)(nil),           // 9: agntcy.identity.platform.v1alpha1.GetBadgeRequest
+	(*GetTasksRequest)(nil),           // 10: agntcy.identity.platform.v1alpha1.GetTasksRequest
+	(*GetTasksResponse)(nil),          // 11: agntcy.identity.platform.v1alpha1.GetTasksResponse
+	(*GetTasksResponse_TaskList)(nil), // 12: agntcy.identity.platform.v1alpha1.GetTasksResponse.TaskList
+	nil,                               // 13: agntcy.identity.platform.v1alpha1.GetTasksResponse.ResultEntry
+	(*App)(nil),                       // 14: agntcy.identity.platform.v1alpha1.App
+	(*v1alpha1.PagedResponse)(nil),    // 15: agntcy.identity.platform.shared.v1alpha1.PagedResponse
+	(AppType)(0),                      // 16: agntcy.identity.platform.v1alpha1.AppType
+	(*Task)(nil),                      // 17: agntcy.identity.platform.v1alpha1.Task
+	(*emptypb.Empty)(nil),             // 18: google.protobuf.Empty
+	(*Badge)(nil),                     // 19: agntcy.identity.platform.v1alpha1.Badge
 }
 var file_agntcy_identity_platform_v1alpha1_app_service_proto_depIdxs = []int32{
-	12, // 0: agntcy.identity.platform.v1alpha1.ListAppsResponse.apps:type_name -> agntcy.identity.platform.v1alpha1.App
-	13, // 1: agntcy.identity.platform.v1alpha1.ListAppsResponse.pagination:type_name -> agntcy.identity.platform.shared.v1alpha1.PagedResponse
-	14, // 2: agntcy.identity.platform.v1alpha1.ListAppsRequest.types:type_name -> agntcy.identity.platform.v1alpha1.AppType
-	12, // 3: agntcy.identity.platform.v1alpha1.CreateAppRequest.app:type_name -> agntcy.identity.platform.v1alpha1.App
-	14, // 4: agntcy.identity.platform.v1alpha1.AppTypeCountEntry.key:type_name -> agntcy.identity.platform.v1alpha1.AppType
+	14, // 0: agntcy.identity.platform.v1alpha1.ListAppsResponse.apps:type_name -> agntcy.identity.platform.v1alpha1.App
+	15, // 1: agntcy.identity.platform.v1alpha1.ListAppsResponse.pagination:type_name -> agntcy.identity.platform.shared.v1alpha1.PagedResponse
+	16, // 2: agntcy.identity.platform.v1alpha1.ListAppsRequest.types:type_name -> agntcy.identity.platform.v1alpha1.AppType
+	14, // 3: agntcy.identity.platform.v1alpha1.CreateAppRequest.app:type_name -> agntcy.identity.platform.v1alpha1.App
+	16, // 4: agntcy.identity.platform.v1alpha1.AppTypeCountEntry.key:type_name -> agntcy.identity.platform.v1alpha1.AppType
 	4,  // 5: agntcy.identity.platform.v1alpha1.GetAppsCountResponse.counts:type_name -> agntcy.identity.platform.v1alpha1.AppTypeCountEntry
-	12, // 6: agntcy.identity.platform.v1alpha1.UpdateAppRequest.app:type_name -> agntcy.identity.platform.v1alpha1.App
-	15, // 7: agntcy.identity.platform.v1alpha1.GetTasksResponse.tasks:type_name -> agntcy.identity.platform.v1alpha1.Task
-	1,  // 8: agntcy.identity.platform.v1alpha1.AppService.ListApps:input_type -> agntcy.identity.platform.v1alpha1.ListAppsRequest
-	3,  // 9: agntcy.identity.platform.v1alpha1.AppService.GetAppsCount:input_type -> agntcy.identity.platform.v1alpha1.GetAppsCountRequest
-	6,  // 10: agntcy.identity.platform.v1alpha1.AppService.GetApp:input_type -> agntcy.identity.platform.v1alpha1.GetAppRequest
-	2,  // 11: agntcy.identity.platform.v1alpha1.AppService.CreateApp:input_type -> agntcy.identity.platform.v1alpha1.CreateAppRequest
-	7,  // 12: agntcy.identity.platform.v1alpha1.AppService.UpdateApp:input_type -> agntcy.identity.platform.v1alpha1.UpdateAppRequest
-	8,  // 13: agntcy.identity.platform.v1alpha1.AppService.DeleteApp:input_type -> agntcy.identity.platform.v1alpha1.DeleteAppRequest
-	9,  // 14: agntcy.identity.platform.v1alpha1.AppService.GetBadge:input_type -> agntcy.identity.platform.v1alpha1.GetBadgeRequest
-	10, // 15: agntcy.identity.platform.v1alpha1.AppService.GetTasks:input_type -> agntcy.identity.platform.v1alpha1.GetTasksRequest
-	0,  // 16: agntcy.identity.platform.v1alpha1.AppService.ListApps:output_type -> agntcy.identity.platform.v1alpha1.ListAppsResponse
-	5,  // 17: agntcy.identity.platform.v1alpha1.AppService.GetAppsCount:output_type -> agntcy.identity.platform.v1alpha1.GetAppsCountResponse
-	12, // 18: agntcy.identity.platform.v1alpha1.AppService.GetApp:output_type -> agntcy.identity.platform.v1alpha1.App
-	12, // 19: agntcy.identity.platform.v1alpha1.AppService.CreateApp:output_type -> agntcy.identity.platform.v1alpha1.App
-	12, // 20: agntcy.identity.platform.v1alpha1.AppService.UpdateApp:output_type -> agntcy.identity.platform.v1alpha1.App
-	16, // 21: agntcy.identity.platform.v1alpha1.AppService.DeleteApp:output_type -> google.protobuf.Empty
-	17, // 22: agntcy.identity.platform.v1alpha1.AppService.GetBadge:output_type -> agntcy.identity.platform.v1alpha1.Badge
-	11, // 23: agntcy.identity.platform.v1alpha1.AppService.GetTasks:output_type -> agntcy.identity.platform.v1alpha1.GetTasksResponse
-	16, // [16:24] is the sub-list for method output_type
-	8,  // [8:16] is the sub-list for method input_type
-	8,  // [8:8] is the sub-list for extension type_name
-	8,  // [8:8] is the sub-list for extension extendee
-	0,  // [0:8] is the sub-list for field type_name
+	14, // 6: agntcy.identity.platform.v1alpha1.UpdateAppRequest.app:type_name -> agntcy.identity.platform.v1alpha1.App
+	13, // 7: agntcy.identity.platform.v1alpha1.GetTasksResponse.result:type_name -> agntcy.identity.platform.v1alpha1.GetTasksResponse.ResultEntry
+	17, // 8: agntcy.identity.platform.v1alpha1.GetTasksResponse.TaskList.tasks:type_name -> agntcy.identity.platform.v1alpha1.Task
+	12, // 9: agntcy.identity.platform.v1alpha1.GetTasksResponse.ResultEntry.value:type_name -> agntcy.identity.platform.v1alpha1.GetTasksResponse.TaskList
+	1,  // 10: agntcy.identity.platform.v1alpha1.AppService.ListApps:input_type -> agntcy.identity.platform.v1alpha1.ListAppsRequest
+	3,  // 11: agntcy.identity.platform.v1alpha1.AppService.GetAppsCount:input_type -> agntcy.identity.platform.v1alpha1.GetAppsCountRequest
+	6,  // 12: agntcy.identity.platform.v1alpha1.AppService.GetApp:input_type -> agntcy.identity.platform.v1alpha1.GetAppRequest
+	2,  // 13: agntcy.identity.platform.v1alpha1.AppService.CreateApp:input_type -> agntcy.identity.platform.v1alpha1.CreateAppRequest
+	7,  // 14: agntcy.identity.platform.v1alpha1.AppService.UpdateApp:input_type -> agntcy.identity.platform.v1alpha1.UpdateAppRequest
+	8,  // 15: agntcy.identity.platform.v1alpha1.AppService.DeleteApp:input_type -> agntcy.identity.platform.v1alpha1.DeleteAppRequest
+	9,  // 16: agntcy.identity.platform.v1alpha1.AppService.GetBadge:input_type -> agntcy.identity.platform.v1alpha1.GetBadgeRequest
+	10, // 17: agntcy.identity.platform.v1alpha1.AppService.GetTasks:input_type -> agntcy.identity.platform.v1alpha1.GetTasksRequest
+	0,  // 18: agntcy.identity.platform.v1alpha1.AppService.ListApps:output_type -> agntcy.identity.platform.v1alpha1.ListAppsResponse
+	5,  // 19: agntcy.identity.platform.v1alpha1.AppService.GetAppsCount:output_type -> agntcy.identity.platform.v1alpha1.GetAppsCountResponse
+	14, // 20: agntcy.identity.platform.v1alpha1.AppService.GetApp:output_type -> agntcy.identity.platform.v1alpha1.App
+	14, // 21: agntcy.identity.platform.v1alpha1.AppService.CreateApp:output_type -> agntcy.identity.platform.v1alpha1.App
+	14, // 22: agntcy.identity.platform.v1alpha1.AppService.UpdateApp:output_type -> agntcy.identity.platform.v1alpha1.App
+	18, // 23: agntcy.identity.platform.v1alpha1.AppService.DeleteApp:output_type -> google.protobuf.Empty
+	19, // 24: agntcy.identity.platform.v1alpha1.AppService.GetBadge:output_type -> agntcy.identity.platform.v1alpha1.Badge
+	11, // 25: agntcy.identity.platform.v1alpha1.AppService.GetTasks:output_type -> agntcy.identity.platform.v1alpha1.GetTasksResponse
+	18, // [18:26] is the sub-list for method output_type
+	10, // [10:18] is the sub-list for method input_type
+	10, // [10:10] is the sub-list for extension type_name
+	10, // [10:10] is the sub-list for extension extendee
+	0,  // [0:10] is the sub-list for field type_name
 }
 
 func init() { file_agntcy_identity_platform_v1alpha1_app_service_proto_init() }
@@ -749,7 +802,7 @@ func file_agntcy_identity_platform_v1alpha1_app_service_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_agntcy_identity_platform_v1alpha1_app_service_proto_rawDesc), len(file_agntcy_identity_platform_v1alpha1_app_service_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   12,
+			NumMessages:   14,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
