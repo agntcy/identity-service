@@ -5,10 +5,14 @@ package db
 
 import (
 	"fmt"
+	golog "log"
+	"os"
+	"time"
 
 	"github.com/agntcy/identity-platform/pkg/log"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 type Context interface {
@@ -55,7 +59,18 @@ func (d *context) Connect() error {
 
 	log.Debug("Connecting to DB:", dsn)
 
-	client, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	newLogger := logger.New(
+		golog.New(os.Stdout, "\r\n", golog.LstdFlags), // io writer
+		logger.Config{
+			SlowThreshold:             time.Millisecond * 0, // Slow SQL threshold
+			LogLevel:                  logger.Info,          // Log level
+			IgnoreRecordNotFoundError: true,                 // Ignore ErrRecordNotFound error for logger
+			ParameterizedQueries:      false,                // Don't include params in the SQL log
+			Colorful:                  true,                 // Disable color
+		},
+	)
+
+	client, err := gorm.Open(postgres.Open(dsn), &gorm.Config{Logger: newLogger})
 	if err != nil {
 		return err
 	}

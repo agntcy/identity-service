@@ -33,6 +33,7 @@ type Repository interface {
 		paginationFilter pagination.PaginationFilter,
 		query *string,
 		appIDs []string,
+		rulesForAppIDs []string,
 	) (*pagination.Pageable[types.Policy], error)
 	GetAllRules(
 		ctx context.Context,

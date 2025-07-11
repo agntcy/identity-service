@@ -136,6 +136,7 @@ func (s *PolicyService) ListPolicies(
 		paginationFilter,
 		in.Query,
 		in.GetAppIds(),
+		in.GetRulesForAppIds(),
 	)
 	if err != nil {
 		return nil, grpcutil.BadRequestError(err)

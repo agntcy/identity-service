@@ -450,6 +450,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         query?: string;
         /** A filter used to fetch policies only for the specified Agentic Services */
         appIds?: string[];
+        /** A filter used to fetch policies where the rules applies for the specified Agentic Services */
+        rulesForAppIds?: string[];
       },
       params: RequestParams = {}
     ) =>

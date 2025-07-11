@@ -148,6 +148,9 @@ message ListPoliciesRequest {
 
   // A filter used to fetch policies only for the specified Agentic Services
   repeated string app_ids = 4;
+
+  // A filter used to fetch policies where the rules applies for the specified Agentic Services
+  repeated string rules_for_app_ids = 5;
 }
 
 message CreatePolicyRequest {

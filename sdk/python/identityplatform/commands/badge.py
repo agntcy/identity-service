@@ -41,7 +41,7 @@ def create(
     identity_sdk = Sdk(api_key=key)
 
     # Fetch the agentic service
-    app_info = identity_sdk.get_auth_service().AppInfo(
+    app_info = identity_sdk._get_auth_service().AppInfo(
         identity_sdk.empty_request()
     )
 
@@ -87,7 +87,7 @@ def create(
     )
 
     # Issue the badge
-    identity_sdk.get_badge_service().IssueBadge(
+    identity_sdk._get_badge_service().IssueBadge(
         request=Sdk.IssueBadgeRequest(app_id=service_id, **claims)
     )
 

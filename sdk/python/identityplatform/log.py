@@ -8,7 +8,7 @@ import os
 
 def configure():
     """Configure the logging for the application."""
-    level = os.getenv("LOG_LEVEL", "DEBUG")
+    level = os.getenv("IDENTITY_PLATFORM_LOG_LEVEL", "DEBUG")
     if level == "INFO":
         logging.basicConfig(format="%(name)s: %(message)s", level=level)
     else:

@@ -18,7 +18,7 @@ license = "Apache-2.0"
 classifiers = [
     "Programming Language :: Python :: 3",
 ]
-dependencies = ["grpcio", "protobuf", "grpcio-tools", "protoc_gen_openapiv2", "python-dotenv", "mcp", "typer", "requests"]
+dependencies = ["grpcio", "protobuf", "grpcio-tools", "protoc_gen_openapiv2", "python-dotenv", "mcp", "typer", "requests", "httpx", "starlette", "a2a-sdk"]
 
 [project.urls]
 "Homepage" = "https://github.com/agntcy/identity-platform"
@@ -28,7 +28,7 @@ dependencies = ["grpcio", "protobuf", "grpcio-tools", "protoc_gen_openapiv2", "p
 identity-cli = "identityplatform.cli:app"
 
 [tool.setuptools]
-packages = ["identityplatform", "identityplatform.commands", "openapiv3", "google.api", "agntcy.identity.platform.v1alpha1", "agntcy.identity.platform.shared"]
+packages = ["identityplatform", "identityplatform.commands", "identityplatform.auth", "openapiv3", "google.api", "agntcy.identity.platform.v1alpha1", "agntcy.identity.platform.shared"]
 
 [tool.pytest.ini_options]
 minversion = "8.0.0"
