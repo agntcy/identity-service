@@ -9,6 +9,8 @@ import {App} from '@/types/api/app';
 import {AboutAgenticService} from './about-agentic-service';
 import {ListPoliciesByAgenticService} from './list-policies-by-agentic-service';
 import {useSearchParams} from 'react-router-dom';
+import {useFeatureFlagsStore} from '@/store';
+import {useShallow} from 'zustand/react/shallow';
 
 export const InfoAgenticService = ({app, onChangeReissueBadge}: {app?: App; onChangeReissueBadge?: (value: boolean) => void}) => {
   const [searchParams] = useSearchParams();
@@ -30,6 +32,16 @@ export const InfoAgenticService = ({app, onChangeReissueBadge}: {app?: App; onCh
       disabled: true
     }
   ];
+
+  const {isTbacEnable} = useFeatureFlagsStore(
+    useShallow((state) => ({
+      isTbacEnable: state.featureFlags.isTbacEnable
+    }))
+  );
+
+  if (!isTbacEnable) {
+    return <AboutAgenticService app={app} onChangeReissueBadge={onChangeReissueBadge} />;
+  }
 
   return (
     <div className="space-y-4">
