@@ -166,7 +166,7 @@ func (d *discoveryClient) Discover(
 	// Get the first batch of resources
 	availableResources := make([]*McpResource, 0)
 
-	if resourcesList != nil && len(resourcesList.Resources) >= 0 {
+	if resourcesList != nil && len(resourcesList.Resources) > 0 {
 		for index := range resourcesList.Resources {
 			resource := resourcesList.Resources[index]
 
