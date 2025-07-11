@@ -103,6 +103,8 @@
     "typescript-eslint": "^8.24.1",
     "vite": "^6.2.0",
     "vite-plugin-svgr": "^4.3.0",
+    "workbox-core": "^7.3.0",
+    "workbox-precaching": "^7.3.0",
     "zod": "^3.24.2"
   },
   "engines": {

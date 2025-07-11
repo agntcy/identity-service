@@ -39,11 +39,23 @@ export default defineConfig(({mode}) => {
       VitePWA({
         registerType: 'autoUpdate',
         includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
+        strategies: 'injectManifest',
+        srcDir: 'public',
+        filename: 'sw.js',
+        injectRegister: 'inline',
+        injectManifest: {
+          maximumFileSizeToCacheInBytes: 4 * 1024 * 1024
+        },
         manifest: {
           name: 'Agent Identity | AGNTCY',
           short_name: 'Agent Identity',
           description: 'AGNTCY Identity management system with push notifications and offline capabilities',
           theme_color: '#eff3fc',
+          background_color: '#eff3fc',
+          display: 'standalone',
+          orientation: 'portrait',
+          scope: '/',
+          start_url: '/',
           icons: [
             {
               src: 'pwa-64x64.png',
@@ -70,10 +82,25 @@ export default defineConfig(({mode}) => {
           ]
         },
         workbox: {
-          globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+          globPatterns: ['**/*.{js,css,html,ico,png,svg,json,vue,txt,woff2}'],
+          navigateFallback: undefined,
           cleanupOutdatedCaches: true,
           skipWaiting: true,
-          maximumFileSizeToCacheInBytes: 4 * 1024 * 1024 // Increase limit to 4 MiB
+          clientsClaim: true,
+          maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
+          runtimeCaching: [
+            {
+              urlPattern: /^\/api\/.*$/,
+              handler: 'NetworkFirst',
+              options: {
+                cacheName: 'api-cache',
+                expiration: {
+                  maxEntries: 50,
+                  maxAgeSeconds: 60 * 60 * 24
+                }
+              }
+            }
+          ]
         },
         devOptions: {
           enabled: mode === 'development',

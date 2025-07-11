@@ -5,3 +5,4 @@
 
 export * from './use-auth';
 export * from './use-analytics';
+export * from './use-push-notifications';

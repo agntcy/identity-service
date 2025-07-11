@@ -7599,6 +7599,8 @@ __metadata:
     vite: "npm:^6.2.0"
     vite-plugin-pwa: "npm:^1.0.1"
     vite-plugin-svgr: "npm:^4.3.0"
+    workbox-core: "npm:^7.3.0"
+    workbox-precaching: "npm:^7.3.0"
     zod: "npm:^3.24.2"
     zustand: "npm:^5.0.5"
   languageName: unknown
@@ -12370,7 +12372,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"workbox-core@npm:7.3.0":
+"workbox-core@npm:7.3.0, workbox-core@npm:^7.3.0":
   version: 7.3.0
   resolution: "workbox-core@npm:7.3.0"
   checksum: 10/228fb7018a0568c329e21d47d84980f93ebfef9b1eb3f40ddc3516ca6ae58d51dc7ca4dddc829332775b59a3079e62d105c5e1c5c312805d177b963f8bf54393
@@ -12408,7 +12410,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"workbox-precaching@npm:7.3.0":
+"workbox-precaching@npm:7.3.0, workbox-precaching@npm:^7.3.0":
   version: 7.3.0
   resolution: "workbox-precaching@npm:7.3.0"
   dependencies:

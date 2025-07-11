@@ -5,13 +5,17 @@
 
 import {createRoot} from 'react-dom/client';
 import App from './app';
-// import {registerSW} from './lib/pwa';
+import {initPWA} from './lib/pwa';
 
 import '@outshift/spark-design/typography.css';
 import './styles/typography.css';
 import './styles/index.css';
 
-// Register service worker for PWA functionality
-// registerSW();
+// Initialize PWA with error handling
+try {
+  initPWA();
+} catch (error) {
+  console.error('Failed to initialize PWA:', error);
+}
 
 createRoot(document.getElementById('root')!).render(<App />);

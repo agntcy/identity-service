@@ -37,7 +37,8 @@ export default defineConfig([globalIgnores([
     "**/tailwind.config.js",
     "utils/**/*",
     ".yarn/**/*",
-    "dev-dist/**/*"
+    "dev-dist/**/*",
+    "public/**/*",
 ]), {
     extends: fixupConfigRules(compat.extends(
         "eslint:recommended",
