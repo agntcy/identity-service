@@ -56,7 +56,9 @@ async def run_single_turn_test(client: A2AClient, state: dict) -> str:
     )
 
     send_payload = create_send_message_payload(text=text)
-    request = SendMessageRequest(params=MessageSendParams(**send_payload))
+    request = SendMessageRequest(
+        id=str(uuid4()), params=MessageSendParams(**send_payload)
+    )
 
     print("--- Single Turn Request ---")
     # Send Message
@@ -74,7 +76,7 @@ async def run_single_turn_test(client: A2AClient, state: dict) -> str:
     task_id: str = send_response.root.result.id
     print("---Query Task---")
     # query the task
-    get_request = GetTaskRequest(params=TaskQueryParams(id=task_id))
+    get_request = GetTaskRequest(id=str(uuid4()), params=TaskQueryParams(id=task_id))
     get_response: GetTaskResponse = await client.get_task(get_request)
     logger.info("Get task response: %s", get_response)
 
