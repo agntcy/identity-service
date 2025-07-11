@@ -66,21 +66,21 @@ class IdentityPlatformSdk:
         """Return the AuthService stub."""
         return IdentityPlatformSdk.AuthServiceStub(self.client.channel)
 
-    def token(
+    def access_token(
         self,
         agentic_service_id: str | None = None,
         tool_name: str | None = None,
         user_token: str | None = None,
     ) -> str | None:
-        """Authorizes an agentic service and returns a token.
+        """Authorizes an agentic service and returns an access token.
 
         Parameters:
-            app_id (string): The ID of the app to authorize for.
-            tool_name (string): The name of the tool to authorize for.
-            user_token (string): The user token to use for the token.
+            app_id (str | None): The ID of the app to authorize for.
+            tool_name (str | None): The name of the tool to authorize for.
+            user_token (str | None): The user token to use for the token.
 
         Returns:
-            str: The issued token.
+            str: The issued access token.
         """
         try:
             auth_response = self._get_auth_service().Authorize(
@@ -91,7 +91,7 @@ class IdentityPlatformSdk:
                 )
             )
 
-            token_response = IdentityPlatformSdk.Token(
+            token_response = self._get_auth_service().Token(
                 IdentityPlatformSdk.TokenRequest(
                     authorization_code=auth_response.authorization_code,
                 )
@@ -103,9 +103,23 @@ class IdentityPlatformSdk:
                 f"Failed to authorize agentic service {agentic_service_id} with tool {tool_name}: {e}"
             ) from e
 
-    def verify_badge(
-        self, badge: str
-    ) -> "agntcy.identity.platform.v1alpha1.VerificationResult":
+    def authorize(self, access_token: str, tool_name: str | None = None):
+        """Authorize an agentic service with an access token.
+
+        Parameters:
+            access_token (str): The access token to authorize with.
+            tool_name (str | None): The name of the tool to authorize for.
+        """
+        return self._get_auth_service().ExtAuthz(
+            IdentityPlatformSdk.ExtAuthzRequest(
+                access_token=access_token,
+                tool_name=tool_name,
+            )
+        )
+
+    def verify_badge() -> (
+        "agntcy.identity.platform.v1alpha1.VerificationResult"
+    ):
         """Verify a badge.
 
         Parameters:
