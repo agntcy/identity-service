@@ -44,6 +44,9 @@ func (d *discoveryClient) AutoDiscover(
 	var mcpServer *McpServer
 	var err error
 
+	log.Debug("Auto-discovering MCP server at URL: ", url)
+	log.Debug("Using name for MCP server: ", name)
+
 	// Attempt to discover the MCP server using the streamable HTTP client first
 	mcpServer, err = d.Discover(ctx, name, url, McpClientTypeStreamableHTTP)
 	if err != nil {
@@ -59,10 +62,8 @@ func (d *discoveryClient) Discover(
 	name, url string,
 	clientType string,
 ) (*McpServer, error) {
-	// Check if the URL already has the mcp path
-	if !strings.HasSuffix(url, mcpSuffix) {
-		url = strings.TrimSuffix(url, "/")
-	}
+	// Trim the last path "/" from the URL if it exists
+	url = strings.TrimSuffix(url, "/")
 
 	log.Debug("Using MCP URL for discovery: ", url)
 
@@ -73,12 +74,14 @@ func (d *discoveryClient) Discover(
 	case McpClientTypeStreamableHTTP:
 		log.Debug("Using streamable HTTP client for MCP discovery")
 
+		url = strings.TrimSuffix(url, mcpSuffix)
 		mcpClient, err = client.NewStreamableHttpClient(
 			url + mcpSuffix,
 		)
 	case McpClientTypeSSE:
 		log.Debug("Using SSE client for MCP discovery")
 
+		url = strings.TrimSuffix(url, sseSuffix)
 		mcpClient, err = client.NewSSEMCPClient(url + sseSuffix)
 	}
 
