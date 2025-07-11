@@ -16,6 +16,7 @@ import (
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 	"github.com/agntcy/identity-platform/internal/pkg/jwtutil"
 	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
+	"github.com/agntcy/identity-platform/pkg/log"
 	"github.com/agntcy/identity/pkg/oidc"
 )
 
@@ -112,6 +113,9 @@ func (s *authService) Authorize(
 		)
 	}
 
+	log.Debug("Created new session: ", session.ID)
+	log.Debug("Session auth code: ", session.AuthorizationCode)
+
 	return session, nil
 }
 
@@ -134,6 +138,8 @@ func (s *authService) Token(
 			"invalid session",
 		)
 	}
+
+	log.Debug("Got session by authorization code: ", session.ID)
 
 	// Check if session already has an access token
 	if session.AccessToken != nil {
@@ -166,8 +172,22 @@ func (s *authService) Token(
 		)
 	}
 
+	// Look if a session exists
+	existingSession, err := s.authRepository.GetByAccessToken(ctx, accessToken)
+	if err == nil {
+		// Expire current session
+		session.ExpiresAt = ptrutil.Ptr(time.Now().Add(-time.Hour).Unix())
+		_ = s.authRepository.Update(ctx, session)
+
+		// Return existing session if it exists
+		return existingSession, nil
+	}
+
 	// Update session with token ID
 	session.AccessToken = ptrutil.Ptr(accessToken)
+
+	log.Debug("Updating: ", session.ID)
+	log.Debug("Access token: ", *session.AccessToken)
 
 	err = s.authRepository.Update(ctx, session)
 	if err != nil {
@@ -204,12 +224,18 @@ func (s *authService) ExtAuthZ(
 		)
 	}
 
+	log.Debug("Got session by access token: ", session.ID)
+
 	appID, _ := identitycontext.GetAppID(ctx)
+
+	log.Debug("Session appID: ", appID)
 
 	app, err := s.appRepository.GetApp(ctx, appID)
 	if err != nil {
 		return errutil.Err(err, "app not found")
 	}
+
+	log.Debug("Got app info: ", app.ID)
 
 	// If the session appID is provided (in the authorize call)
 	// it needs to match the current context appID
@@ -229,6 +255,8 @@ func (s *authService) ExtAuthZ(
 		)
 	}
 
+	log.Debug("Verifying access token: ", accessToken)
+
 	// Validate expiration of the access token
 	err = jwtutil.Verify(accessToken)
 	if err != nil {
@@ -243,6 +271,8 @@ func (s *authService) ExtAuthZ(
 	// Evaluate based on provided appID and toolName and the session appID, toolName
 	err = s.policyEvaluator.Evaluate(ctx, app, session.OwnerAppID, toolName)
 	if err != nil {
+		log.Error("Policy evaluation failed: ", err)
+
 		return err
 	}
 

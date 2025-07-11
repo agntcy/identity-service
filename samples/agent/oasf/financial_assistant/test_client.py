@@ -3,16 +3,21 @@
 """Test client for the A2A agent."""
 
 import asyncio
+import os
+import sys
 import traceback
 
 import httpx
+from dotenv import load_dotenv
 
-AGENT_URL = "http://0.0.0.0:9092/invoke"
+load_dotenv()
 
 
 # pylint: disable=broad-exception-caught
 async def main() -> None:
     """Main function to run the tests."""
+
+    AGENT_URL = os.getenv("AGENT_URL", "http://0.0.0:9092/invoke")
 
     # Connect to the agent
     print(f"Connecting to agent at {AGENT_URL}...")
@@ -20,7 +25,12 @@ async def main() -> None:
         timeout = httpx.Timeout(connect=None, read=None, write=None, pool=None)
         async with httpx.AsyncClient(timeout=timeout) as httpx_client:
             res = await httpx_client.post(
-                AGENT_URL, json={"prompt": "Exchange 1000 USD to EUR"}
+                AGENT_URL,
+                json={
+                    "prompt": sys.argv[1]
+                    if len(sys.argv) > 1
+                    else "How much is 1020 CAD in EUR"
+                },
             )
 
             print(res.json())

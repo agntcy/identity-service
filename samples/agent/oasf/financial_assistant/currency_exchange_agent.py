@@ -11,6 +11,7 @@ from a2a.client import A2AClient
 from a2a.types import (GetTaskRequest, GetTaskResponse, MessageSendParams,
                        SendMessageRequest, SendMessageResponse,
                        SendMessageSuccessResponse, Task, TaskQueryParams)
+from identityplatform.auth.httpx import IdentityPlatformAuth
 from langgraph.prebuilt import InjectedState
 
 logging.basicConfig(level=logging.INFO)
@@ -55,7 +56,9 @@ async def run_single_turn_test(client: A2AClient, state: dict) -> str:
     )
 
     send_payload = create_send_message_payload(text=text)
-    request = SendMessageRequest(params=MessageSendParams(**send_payload))
+    request = SendMessageRequest(
+        id=str(uuid4()), params=MessageSendParams(**send_payload)
+    )
 
     print("--- Single Turn Request ---")
     # Send Message
@@ -73,7 +76,7 @@ async def run_single_turn_test(client: A2AClient, state: dict) -> str:
     task_id: str = send_response.root.result.id
     print("---Query Task---")
     # query the task
-    get_request = GetTaskRequest(params=TaskQueryParams(id=task_id))
+    get_request = GetTaskRequest(id=str(uuid4()), params=TaskQueryParams(id=task_id))
     get_response: GetTaskResponse = await client.get_task(get_request)
     logger.info("Get task response: %s", get_response)
 
@@ -106,7 +109,10 @@ class CurrencyExchangeAgent:
             # Connect to the agent
             try:
                 timeout = httpx.Timeout(connect=None, read=None, write=None, pool=None)
-                async with httpx.AsyncClient(timeout=timeout) as httpx_client:
+                auth = IdentityPlatformAuth()
+                async with httpx.AsyncClient(
+                    timeout=timeout, auth=auth
+                ) as httpx_client:
                     client = await A2AClient.get_client_from_agent_card_url(
                         httpx_client,
                         self.url,

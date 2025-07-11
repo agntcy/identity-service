@@ -8,6 +8,7 @@ import (
 	"errors"
 
 	apptypes "github.com/agntcy/identity-platform/internal/core/app/types"
+	"github.com/agntcy/identity/pkg/log"
 )
 
 type Evaluator interface {
@@ -38,6 +39,9 @@ func (e *evaluator) Evaluate(
 	if calledApp.Type == apptypes.APP_TYPE_MCP_SERVER && toolName == "" {
 		return errors.New("please provide a tool name")
 	}
+
+	log.Debug("Evaluating policies for app: ", calledApp.ID,
+		", calling app ID: ", callingAppID, ", tool name: ", toolName)
 
 	policies, err := e.policyRepository.GetPoliciesByAppID(ctx, callingAppID)
 	if err != nil {
