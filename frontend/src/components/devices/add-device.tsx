@@ -3,7 +3,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-
 import {Button, EmptyState, Modal, ModalActions, ModalContent, ModalSubtitle, ModalTitle, toast} from '@outshift/spark-design';
 import {Card} from '../ui/card';
 import {PlusIcon} from 'lucide-react';
