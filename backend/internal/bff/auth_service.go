@@ -224,12 +224,18 @@ func (s *authService) ExtAuthZ(
 		)
 	}
 
+	log.Debug("Got session by access token: ", session.ID)
+
 	appID, _ := identitycontext.GetAppID(ctx)
+
+	log.Debug("Session appID: ", appID)
 
 	app, err := s.appRepository.GetApp(ctx, appID)
 	if err != nil {
 		return errutil.Err(err, "app not found")
 	}
+
+	log.Debug("Got app info: ", app.ID)
 
 	// If the session appID is provided (in the authorize call)
 	// it needs to match the current context appID
@@ -249,6 +255,8 @@ func (s *authService) ExtAuthZ(
 		)
 	}
 
+	log.Debug("Verifying access token: ", accessToken)
+
 	// Validate expiration of the access token
 	err = jwtutil.Verify(accessToken)
 	if err != nil {
@@ -263,6 +271,8 @@ func (s *authService) ExtAuthZ(
 	// Evaluate based on provided appID and toolName and the session appID, toolName
 	err = s.policyEvaluator.Evaluate(ctx, app, session.OwnerAppID, toolName)
 	if err != nil {
+		log.Error("Policy evaluation failed: ", err)
+
 		return err
 	}
 
