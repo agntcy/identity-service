@@ -7,7 +7,7 @@ import {ViewSwitcher} from '@outshift/spark-design';
 import {useState} from 'react';
 import {App} from '@/types/api/app';
 import {AboutAgenticService} from './about-agentic-service';
-import {ListPoliciesByAgenticService} from './list-policies-by-agentic-service';
+import {ListPoliciesAgenticService} from './list-policies-agentic-service';
 import {useSearchParams} from 'react-router-dom';
 import {useFeatureFlagsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
@@ -28,8 +28,7 @@ export const InfoAgenticService = ({app, onChangeReissueBadge}: {app?: App; onCh
     },
     {
       value: 'policies-used-by',
-      label: 'Policies Used By',
-      disabled: true
+      label: 'Policies Used By'
     }
   ];
 
@@ -56,7 +55,8 @@ export const InfoAgenticService = ({app, onChangeReissueBadge}: {app?: App; onCh
         />
       </div>
       {view === 'about' && <AboutAgenticService app={app} onChangeReissueBadge={onChangeReissueBadge} />}
-      {view === 'policies-assigned' && <ListPoliciesByAgenticService appId={app?.id} />}
+      {view === 'policies-assigned' && <ListPoliciesAgenticService appId={app?.id} mode="assinged" />}
+      {view === 'policies-used-by' && <ListPoliciesAgenticService appId={app?.id} mode="used-by" />}
     </div>
   );
 };

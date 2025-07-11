@@ -68,6 +68,17 @@
               "type": "string"
             },
             "collectionFormat": "multi"
+          },
+          {
+            "name": "rulesForAppIds",
+            "description": "A filter used to fetch policies where the rules applies for the specified Agentic Services",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
           }
         ],
         "tags": [

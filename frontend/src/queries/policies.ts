@@ -11,7 +11,7 @@ export const useGetPolicies = ({
   query,
   enable = true
 }: {
-  query?: {page?: number; size?: number; query?: string; appIds?: string[]};
+  query?: {page?: number; size?: number; query?: string; appIds?: string[]; rulesForAppIds?: string[]};
   enable?: boolean;
 }) => {
   return useQuery({
@@ -21,7 +21,8 @@ export const useGetPolicies = ({
         page: query?.page,
         size: query?.size,
         query: query?.query,
-        appIds: query?.appIds
+        appIds: query?.appIds,
+        rulesForAppIds: query?.rulesForAppIds
       },
       enable
     ],
@@ -31,7 +32,8 @@ export const useGetPolicies = ({
           page: query?.page,
           size: query?.size,
           query: query?.query,
-          appIds: query?.appIds
+          appIds: query?.appIds,
+          rulesForAppIds: query?.rulesForAppIds
         },
         {
           paramsSerializer: (params) => {
