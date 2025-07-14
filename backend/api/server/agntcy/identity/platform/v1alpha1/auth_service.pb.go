@@ -352,10 +352,10 @@ const file_agntcy_identity_platform_v1alpha1_auth_service_proto_rawDesc = "" +
 	"\faccess_token\x18\x01 \x01(\tR\vaccessToken\x12 \n" +
 	"\ttool_name\x18\x02 \x01(\tH\x00R\btoolName\x88\x01\x01B\f\n" +
 	"\n" +
-	"_tool_name2\x81\x06\n" +
+	"_tool_name2\x84\x06\n" +
 	"\vAuthService\x12\x90\x01\n" +
-	"\aAppInfo\x12\x16.google.protobuf.Empty\x1a2.agntcy.identity.platform.v1alpha1.AppInfoResponse\"9\x92A\x17\x12\fGet App Info*\aAppInfo\x82\xd3\xe4\x93\x02\x19\x12\x17/v1alpha1/auth/app_info\x12\xd7\x01\n" +
-	"\tAuthorize\x123.agntcy.identity.platform.v1alpha1.AuthorizeRequest\x1a4.agntcy.identity.platform.v1alpha1.AuthorizeResponse\"_\x92A<\x12/Authorize a request from an Agent or MCP Server*\tAuthorize\x82\xd3\xe4\x93\x02\x1a\x12\x18/v1alpha1/auth/authorize\x12\xc6\x01\n" +
+	"\aAppInfo\x12\x16.google.protobuf.Empty\x1a2.agntcy.identity.platform.v1alpha1.AppInfoResponse\"9\x92A\x17\x12\fGet App Info*\aAppInfo\x82\xd3\xe4\x93\x02\x19\x12\x17/v1alpha1/auth/app_info\x12\xda\x01\n" +
+	"\tAuthorize\x123.agntcy.identity.platform.v1alpha1.AuthorizeRequest\x1a4.agntcy.identity.platform.v1alpha1.AuthorizeResponse\"b\x92A<\x12/Authorize a request from an Agent or MCP Server*\tAuthorize\x82\xd3\xe4\x93\x02\x1d:\x01*\"\x18/v1alpha1/auth/authorize\x12\xc6\x01\n" +
 	"\x05Token\x12/.agntcy.identity.platform.v1alpha1.TokenRequest\x1a0.agntcy.identity.platform.v1alpha1.TokenResponse\"Z\x92A8\x12(Request token for an Agent or MCP Server*\fRequestToken\x82\xd3\xe4\x93\x02\x19:\x01*\"\x14/v1alpha1/auth/token\x12\xb0\x01\n" +
 	"\bExtAuthz\x122.agntcy.identity.platform.v1alpha1.ExtAuthzRequest\x1a\x16.google.protobuf.Empty\"X\x92A2\x12&Handle external authorization requests*\bExtAuthz\x82\xd3\xe4\x93\x02\x1d:\x01*\"\x18/v1alpha1/auth/ext_authz\x1a\t\x92A\x06\n" +
 	"\x04AuthBkZigithub.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_gob\x06proto3"

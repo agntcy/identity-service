@@ -267,29 +267,17 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/Status'
     /v1alpha1/auth/authorize:
-        get:
+        post:
             tags:
                 - AuthService
             description: Authorize a request from an Agent or MCP Server
             operationId: AuthService_Authorize
-            parameters:
-                - name: appId
-                  in: query
-                  description: The app id for which authorization is requested.
-                  schema:
-                    type: string
-                - name: toolName
-                  in: query
-                  description: The MCP Server tool name.
-                  schema:
-                    type: string
-                - name: userToken
-                  in: query
-                  description: |-
-                    The User context in the form of an id or access token.
-                     Mandatory for User Approval Flows.
-                  schema:
-                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/AuthorizeRequest'
+                required: true
             responses:
                 "200":
                     description: OK
@@ -919,6 +907,20 @@ components:
                 value:
                     type: string
                     description: The count of apps of the given type
+        AuthorizeRequest:
+            type: object
+            properties:
+                appId:
+                    type: string
+                    description: The app id for which authorization is requested.
+                toolName:
+                    type: string
+                    description: The MCP Server tool name.
+                userToken:
+                    type: string
+                    description: |-
+                        The User context in the form of an id or access token.
+                         Mandatory for User Approval Flows.
         AuthorizeResponse:
             type: object
             properties:

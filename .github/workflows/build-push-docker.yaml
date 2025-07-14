@@ -338,7 +338,7 @@
         steps:
           -
             name: Checkout repository
-            uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+            uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
             with:
               repository: ${{ inputs.repository }}
               # The branch, tag or SHA to checkout, otherwise, uses the default branch.
@@ -377,7 +377,7 @@
             # Approle strategy: create single/multiple ? less privilige
             # For now, we defined single vault secret that contains all secrets but we can split and import by job
           - name: Import Vault Secrets
-            uses: hashicorp/vault-action@e3d5714d59e151ca80233142880b9da9d983a48c #v2.7.5
+            uses: hashicorp/vault-action@4c06c5ccf5c0761b6029f56cfb1dcf5565918a3b #v3.4.0
             with:
               url:  ${{ vars.KEEPER_URL }}
               method: approle
@@ -404,7 +404,7 @@
           #region ECR LOGIN
           #region: PRIVATE ECR
           - name: Configure Private ECR AWS Credentials
-            uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502 #v4.0.2
+            uses: aws-actions/configure-aws-credentials@b47578312673ae6fa5b5096b330d9fbac3d116df #v4.2.1
             with:
               role-to-assume: ${{ env.AWS_ROLE_GH_ACTIONS_ACCESS_ECR }}
               aws-region: ${{ inputs.private-ecr-region != '' && inputs.private-ecr-region || env.AWS_ECR_REGION }}
@@ -472,7 +472,7 @@
 
           - name: Cache Local Maven Dependencies
             if: ${{ inputs.use-maven-cache }}
-            uses: actions/cache@2f8e54208210a422b2efd51efaa6bd6d7ca8920f #v3
+            uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 #v3
             with:
               path: ~/.m2/repository
               key: ${{ runner.os }}-maven-${{ hashFiles(inputs.cache-dependency-path) }}
@@ -483,7 +483,7 @@
             # websites Config
           - name: Import Websites Vault Secrets
             if: ${{ inputs.research-websites || inputs.outshift-websites }}
-            uses: hashicorp/vault-action@e3d5714d59e151ca80233142880b9da9d983a48c #v2.7.5
+            uses: hashicorp/vault-action@4c06c5ccf5c0761b6029f56cfb1dcf5565918a3b #v3.4.0
             with:
               url:  ${{ vars.KEEPER_URL }}
               method: approle
@@ -529,7 +529,7 @@
 
           #region: PUBLIC ECR
           - name: Configure Public ECR AWS Credentials
-            uses: aws-actions/configure-aws-credentials@5fd3084fc36e372ff1fff382a39b10d03659f355 #v2
+            uses: aws-actions/configure-aws-credentials@b47578312673ae6fa5b5096b330d9fbac3d116df #v2
             if: ${{ inputs.ecr-public-login }}
             with:
               role-to-assume: ${{ env.AWS_ROLE_GH_ACTIONS_ACCESS_ECR }}
@@ -653,7 +653,7 @@
 
           #region: PUBLIC ECR
           - name: Configure Public ECR AWS Credentials
-            uses: aws-actions/configure-aws-credentials@5fd3084fc36e372ff1fff382a39b10d03659f355 #v2
+            uses: aws-actions/configure-aws-credentials@b47578312673ae6fa5b5096b330d9fbac3d116df #v2
             if: ${{ inputs.ecr-public-enabled }}
             with:
               role-to-assume: ${{ env.AWS_ROLE_GH_ACTIONS_ACCESS_ECR }}

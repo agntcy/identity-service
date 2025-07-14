@@ -99,7 +99,7 @@ class IdentityPlatformSdk:
         """Authorizes an agentic service and returns an access token.
 
         Parameters:
-            app_id (str | None): The ID of the app to authorize for.
+            agentic_service_id (str | None): The ID of the Agentic Service to authorize for.
             tool_name (str | None): The name of the tool to authorize for.
             user_token (str | None): The user token to use for the token.
 
@@ -141,9 +141,9 @@ class IdentityPlatformSdk:
             )
         )
 
-    def verify_badge() -> (
-        "agntcy.identity.platform.v1alpha1.VerificationResult"
-    ):
+    def verify_badge(
+        self, badge: str
+    ) -> "agntcy.identity.platform.v1alpha1.VerificationResult":
         """Verify a badge.
 
         Parameters:
