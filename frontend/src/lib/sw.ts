@@ -6,7 +6,50 @@
 import {cleanupOutdatedCaches, createHandlerBoundToURL, precacheAndRoute} from 'workbox-precaching';
 import {NavigationRoute, registerRoute} from 'workbox-routing';
 
+const ICON_PATH = '/pwa-192x192.png';
+const BADGE_PATH = '/pwa-64x64.png';
+
 declare let self: ServiceWorkerGlobalScope;
+
+const sendNotification = async (payload: any) => {
+  try {
+    await self.clients.matchAll({type: 'window', includeUncontrolled: true}).then((clients) => {
+      clients.forEach((client) => {
+        client.postMessage({
+          type: 'PUSH_NOTIFICATION',
+          payload: payload
+        });
+      });
+    });
+  } catch (error) {
+    console.error('Error sending notification:', error);
+  }
+};
+
+const getNotificationOptions = (data: any) => {
+  try {
+    const options = {
+      body: data.body || 'You have a new notification.',
+      icon: data.icon || ICON_PATH,
+      badge: data.badge || BADGE_PATH,
+      tag: data.tag || 'agntcy-notification',
+      actions: data.actions || [],
+      vibrate: [200, 100, 200],
+      requireInteraction: data.requireInteraction ?? true,
+      silent: data.silent ?? false,
+      timestamp: Date.now(),
+      data: {
+        id: data.id || Date.now().toString(),
+        ...data.data
+      }
+    };
+
+    return options;
+  } catch (error) {
+    console.error('Error creating notification options:', error);
+    return null;
+  }
+};
 
 self.addEventListener('message', async (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
@@ -18,70 +61,32 @@ self.addEventListener('message', async (event) => {
   }
 });
 
-self.addEventListener('push', (event) => {
+self.addEventListener('push', async (event) => {
   try {
     if (event.data) {
       const notificationData = event.data.text();
-      console.log('Push event data:', notificationData);
-      // const options = {
-      //   body: notificationData.body || '',
-      //   icon: notificationData.icon || '/icon.png',
-      //   badge: notificationData.badge || '/badge.png',
-      //   data: notificationData.data || {}
-      // };
+      let parsedData;
+      try {
+        parsedData = JSON.parse(notificationData);
+      } catch (jsonError) {
+        parsedData = notificationData; // Fallback to raw text if JSON parsing fails
+        console.error('Failed to parse JSON from push event data:', jsonError);
+      }
+      if (parsedData) {
+        await sendNotification(parsedData);
 
-      // event.waitUntil(
-      //   self.registration.showNotification(notificationData.title || 'New Notification', options)
-      // );
+        const options = getNotificationOptions(parsedData);
+        if (!options) {
+          console.error('Invalid notification options, cannot display notification');
+          return;
+        }
+
+        await self.registration.showNotification((parsedData?.title as string) || 'Agent Identity | AGNTCY', options);
+      }
     }
   } catch (error) {
     console.error('Error handling push event:', error);
   }
-  // let notificationData;
-  // try {
-  //   if (event.data) {
-  //     try {
-  //       notificationData = JSON.parse(event.data.text());
-  //     } catch (jsonError) {
-  //       console.error('Failed to parse JSON from push event data:', jsonError);
-  //       notificationData = event.data.text();
-  //     }
-  //   }
-  // } catch (error) {
-  //   handleError(error, 'push event data parsing');
-  //   return;
-  // }
-
-  // console.log(notificationData);
-
-  // // console.log(notificationData)
-  // // // Send notification data to the client
-  // // self.clients.matchAll({type: 'window', includeUncontrolled: true}).then((clients) => {
-  // //   clients.forEach((client) => {
-  // //     client.postMessage({
-  // //       type: 'PUSH_NOTIFICATION',
-  // //       payload: notificationData
-  // //     });
-  // //   });
-  // // });
-
-  // const options = getNotificationOptions(notificationData);
-  // if (!options) {
-  //   console.error('Invalid notification options, cannot display notification');
-  //   return;
-  // }
-
-  // try {
-  //   event.waitUntil(showNotification(notificationData.title || 'Agent Identity | AGNTCY', options));
-  // } catch (error) {
-  //   console.error('Error processing notification data:', error);
-  //   return;
-  // }
-
-  // console.log('Notification options:', options);
-  // console.log('Notification options:', options);
-  // event.waitUntil(self.registration.showNotification('Agent Identity | AGNTCY', options));
-  // console.log('Notification displayed:', options.title || 'New Notification', options.body || '');
 });
 
 // self.__WB_MANIFEST is default injection point

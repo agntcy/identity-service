@@ -88,19 +88,6 @@ export default defineConfig(({mode}) => {
           skipWaiting: true,
           clientsClaim: true,
           maximumFileSizeToCacheInBytes: 4 * 1024 * 1024
-          // runtimeCaching: [
-          //   {
-          //     urlPattern: /^\/api\/.*$/,
-          //     handler: 'NetworkFirst',
-          //     options: {
-          //       cacheName: 'api-cache',
-          //       expiration: {
-          //         maxEntries: 50,
-          //         maxAgeSeconds: 60 * 60 * 24
-          //       }
-          //     }
-          //   }
-          // ]
         },
         devOptions: {
           enabled: mode === 'development',
