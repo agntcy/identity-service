@@ -6,7 +6,7 @@ sidebar_position: 6
 
 ## Python SDK
 
-Agent Identity offers a [Python SDK](https://github.com/cisco-eti/pyramid-platform/tree/main/sdk/python).
+Agent Identity offers a [Python SDK](https://github.com/cisco-eti/identity-platform/tree/main/sdk/python).
 
 The SDK allows developers to use it as a:
 

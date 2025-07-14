@@ -6,8 +6,8 @@ sidebar_position: 6
 
 :::info[Endpoints]
 
-- **REST API Endpoint**: https://api.pyramid-platform.staging.outshift.ai
-- **gRPC API Endpoint**: api.grpc.pyramid-platform.staging.outshift.ai
+- **REST API Endpoint**: https://api.identity-platform.staging.outshift.ai
+- **gRPC API Endpoint**: api.grpc.identity-platform.staging.outshift.ai
 - **UI Endpoint**: https://identity.staging.outshift.ai
 
 :::
