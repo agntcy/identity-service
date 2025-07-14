@@ -26,7 +26,7 @@ const OnBoardDevice = () => {
   }, []);
 
   return (
-    <div className="h-screen w-screen fixed top-0 left-0 z-50 no-doc-scroll relative">
+    <div className="h-screen w-screen fixed top-0 left-0 z-50 no-doc-scroll relative overflow-hidden h-dvh">
       <div className="flex flex-col justify-between h-full">
         <PublicHeader
           userSection={
@@ -41,7 +41,7 @@ const OnBoardDevice = () => {
         <div className="flex flex-col justify-center h-full">
           <ContentOnBoardDevice id={id} />
         </div>
-        {/* <SparkFooter
+        <SparkFooter
           productName="Cisco Systems, Inc."
           productLink="https://www.cisco.com/"
           links={[
@@ -51,7 +51,7 @@ const OnBoardDevice = () => {
               onClick: () => CookieConsentVanilla.showPreferences()
             }
           ]}
-        /> */}
+        />
       </div>
     </div>
   );

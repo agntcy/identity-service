@@ -15,9 +15,17 @@ export const PublicHeader = ({userSection}: {userSection?: ReactNode}) => {
   return (
     <Header
       title={
-        <Typography variant="h1" fontWeight={700} fontSize="18px" lineHeight="18px" sx={(theme) => ({color: theme.palette.vars.brandTextSecondary})}>
-          Agent Identity
-        </Typography>
+        <div className="mt-1 md:mt-0">
+          <Typography
+            variant="h1"
+            fontWeight={700}
+            fontSize="18px"
+            lineHeight="18px"
+            sx={(theme) => ({color: theme.palette.vars.brandTextSecondary})}
+          >
+            Agent Identity
+          </Typography>
+        </div>
       }
       logo={
         <Link to="https://agntcy.org/" target="_blank" rel="noopener noreferrer">

@@ -43,7 +43,6 @@ const getNotificationOptions = (data: any) => {
         ...data.data
       }
     };
-
     return options;
   } catch (error) {
     console.error('Error creating notification options:', error);
@@ -74,19 +73,22 @@ self.addEventListener('push', async (event) => {
       }
       if (parsedData) {
         await sendNotification(parsedData);
-
         const options = getNotificationOptions(parsedData);
         if (!options) {
           console.error('Invalid notification options, cannot display notification');
           return;
         }
-
         await self.registration.showNotification((parsedData?.title as string) || 'Agent Identity | AGNTCY', options);
       }
     }
   } catch (error) {
     console.error('Error handling push event:', error);
   }
+});
+
+self.addEventListener('notificationclick', (event) => {
+  const {action, notification} = event;
+  console.log('Notification click event:', event);
 });
 
 // self.__WB_MANIFEST is default injection point

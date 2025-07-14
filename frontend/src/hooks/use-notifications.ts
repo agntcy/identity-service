@@ -158,6 +158,13 @@ export const useNotifications = (id?: string) => {
   const init = async () => {
     try {
       const supported = checkNotifications();
+      if (!supported) {
+        toast({
+          title: 'Notifications Not Supported',
+          description: 'Your browser does not support push notifications.',
+          type: 'error'
+        });
+      }
       setSupported(supported);
       const permission = await getNotificationPermissionState();
       if (permission === 'granted') {
