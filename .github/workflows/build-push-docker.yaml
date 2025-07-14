@@ -338,7 +338,7 @@
         steps:
           -
             name: Checkout repository
-            uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+            uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
             with:
               repository: ${{ inputs.repository }}
               # The branch, tag or SHA to checkout, otherwise, uses the default branch.
@@ -472,7 +472,7 @@
 
           - name: Cache Local Maven Dependencies
             if: ${{ inputs.use-maven-cache }}
-            uses: actions/cache@2f8e54208210a422b2efd51efaa6bd6d7ca8920f #v3
+            uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 #v3
             with:
               path: ~/.m2/repository
               key: ${{ runner.os }}-maven-${{ hashFiles(inputs.cache-dependency-path) }}
