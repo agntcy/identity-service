@@ -14,6 +14,7 @@ import {ApiProvider} from './providers/api-provider/api-provider';
 import {QueryProvider} from './providers/query-provider/query-provider';
 import {FeatureFlagsProvider} from './providers/feature-flags-provider/feature-flags-provider';
 import {AnalyticsProvider} from './providers/analytics-provider/analytics-provider';
+import {PwaProvider} from './providers/pwa-provider/pwa-provider';
 
 const App = () => {
   return (
@@ -24,9 +25,11 @@ const App = () => {
             <AnalyticsProvider>
               <ApiProvider>
                 <QueryProvider>
-                  <Toaster offset={{top: '64px', right: '16px'}} expand duration={3500} />
+                  <Toaster offset={{top: '64px', right: '16px'}} expand={false} duration={3500} />
                   <FeatureFlagsProvider>
-                    <Router />
+                    <PwaProvider>
+                      <Router />
+                    </PwaProvider>
                   </FeatureFlagsProvider>
                 </QueryProvider>
               </ApiProvider>

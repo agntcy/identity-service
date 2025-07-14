@@ -52,6 +52,8 @@ export const AddDevice = () => {
     addDeviceMutation.mutate({});
   }, [addDeviceMutation]);
 
+  console.log('link:', link);
+
   return (
     <>
       <Card variant="secondary">

@@ -6,6 +6,7 @@
 import {Button, Header, Typography} from '@outshift/spark-design';
 import {Link} from 'react-router-dom';
 import Logo from '@/assets/logo-app-bar.svg';
+import LogoIcon from '@/assets/icon-agntcy.svg';
 import {useAuth} from '@/hooks';
 import {ReactNode} from 'react';
 
@@ -20,7 +21,8 @@ export const PublicHeader = ({userSection}: {userSection?: ReactNode}) => {
       }
       logo={
         <Link to="https://agntcy.org/" target="_blank" rel="noopener noreferrer">
-          <img src={Logo} alt="Identity" />
+          <img src={Logo} alt="Identity" className="hidden md:block" />
+          <img src={LogoIcon} alt="AGNTCY" className="w-8 h-8 md:hidden" />
         </Link>
       }
       position="fixed"

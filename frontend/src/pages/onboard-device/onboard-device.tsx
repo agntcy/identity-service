@@ -41,7 +41,7 @@ const OnBoardDevice = () => {
         <div className="flex flex-col justify-center h-full">
           <ContentOnBoardDevice id={id} />
         </div>
-        <SparkFooter
+        {/* <SparkFooter
           productName="Cisco Systems, Inc."
           productLink="https://www.cisco.com/"
           links={[
@@ -51,7 +51,7 @@ const OnBoardDevice = () => {
               onClick: () => CookieConsentVanilla.showPreferences()
             }
           ]}
-        />
+        /> */}
       </div>
     </div>
   );

@@ -51,11 +51,12 @@ export const Notifications = () => {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.addEventListener('message', (event) => {
         if (event.data && event.data.type === 'PUSH_NOTIFICATION') {
-          setNotification({
-            notificationId: event.data.payload.notificationId,
-            title: event.data.payload.title,
-            message: event.data.payload.message
-          });
+          // setNotification({
+          //   notificationId: event.data.payload.notificationId,
+          //   title: event.data.payload.title,
+          //   message: event.data.payload.message
+          // });
+          console.log('Received notification from service worker:', event.data);
         }
       });
     }

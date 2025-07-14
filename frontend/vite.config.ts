@@ -37,25 +37,25 @@ export default defineConfig(({mode}) => {
       tailwindcss(),
       svgr(),
       VitePWA({
+        mode: mode === 'development' ? 'development' : 'production',
         registerType: 'autoUpdate',
-        includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
+        includeAssets: ['favicon.ico', 'apple-touch-icon-180x180.png', 'maskable-icon-512x512.png'],
         strategies: 'injectManifest',
-        srcDir: 'public',
-        filename: 'sw.js',
+        srcDir: 'src/lib',
+        filename: 'sw.ts',
         injectRegister: 'inline',
         injectManifest: {
-          maximumFileSizeToCacheInBytes: 4 * 1024 * 1024
+          maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
+          minify: false,
+          enableWorkboxModulesLogs: true
         },
+        base: '/',
         manifest: {
           name: 'Agent Identity | AGNTCY',
           short_name: 'Agent Identity',
           description: 'AGNTCY Identity management system with push notifications and offline capabilities',
           theme_color: '#eff3fc',
           background_color: '#eff3fc',
-          display: 'standalone',
-          orientation: 'portrait',
-          scope: '/',
-          start_url: '/',
           icons: [
             {
               src: 'pwa-64x64.png',
@@ -87,20 +87,20 @@ export default defineConfig(({mode}) => {
           cleanupOutdatedCaches: true,
           skipWaiting: true,
           clientsClaim: true,
-          maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
-          runtimeCaching: [
-            {
-              urlPattern: /^\/api\/.*$/,
-              handler: 'NetworkFirst',
-              options: {
-                cacheName: 'api-cache',
-                expiration: {
-                  maxEntries: 50,
-                  maxAgeSeconds: 60 * 60 * 24
-                }
-              }
-            }
-          ]
+          maximumFileSizeToCacheInBytes: 4 * 1024 * 1024
+          // runtimeCaching: [
+          //   {
+          //     urlPattern: /^\/api\/.*$/,
+          //     handler: 'NetworkFirst',
+          //     options: {
+          //       cacheName: 'api-cache',
+          //       expiration: {
+          //         maxEntries: 50,
+          //         maxAgeSeconds: 60 * 60 * 24
+          //       }
+          //     }
+          //   }
+          // ]
         },
         devOptions: {
           enabled: mode === 'development',
