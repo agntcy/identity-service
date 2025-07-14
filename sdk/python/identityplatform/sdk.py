@@ -141,9 +141,9 @@ class IdentityPlatformSdk:
             )
         )
 
-    def verify_badge() -> (
-        "agntcy.identity.platform.v1alpha1.VerificationResult"
-    ):
+    def verify_badge(
+        self, badge: str
+    ) -> "agntcy.identity.platform.v1alpha1.VerificationResult":
         """Verify a badge.
 
         Parameters:
