@@ -88,7 +88,7 @@ export const StatsDashboard = () => {
         </div>
         <div className="card-group px-[24px]">
           <div className="card-flex-group min-w-[384px] bg-[#FBFCFE] rounded-[8px] flex-col flex justify-start items-center px-20 py-12">
-            <div className="flex flex-col justify-between h-full">
+            <div className="flex flex-col justify-between h-full gap-4">
               <div>
                 <Typography variant="h6" textAlign="center">
                   Verify Identity Badges
@@ -107,7 +107,7 @@ export const StatsDashboard = () => {
             </div>
           </div>
           <div className="card-flex-group min-w-[384px] bg-[#FBFCFE] rounded-[8px] flex-col flex justify-start items-center px-20 py-12">
-            <div className="flex flex-col justify-between h-full">
+            <div className="flex flex-col justify-between h-full gap-4">
               <div>
                 <Typography variant="h6" textAlign="center">
                   Add Agentic Services
@@ -127,7 +127,7 @@ export const StatsDashboard = () => {
           </div>
           {isTbacEnable && (
             <div className="card-flex-group min-w-[384px] bg-[#FBFCFE] rounded-[8px] flex-col flex justify-start items-center px-20 py-12">
-              <div className="flex flex-col justify-between h-full">
+              <div className="flex flex-col justify-between h-full gap-4">
                 <div>
                   <Typography variant="h6" textAlign="center">
                     Add Policies
