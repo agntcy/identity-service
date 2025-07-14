@@ -1,5 +1,7 @@
 ---
 sidebar_position: 8
+toc_min_heading_level: 2
+toc_max_heading_level: 5
 ---
 
 # Development Guide
@@ -78,7 +80,7 @@ curl https://{REST_API_ENDPOINT}/badges/verify \
 }'
 ```
 
-## Task-Based Access Control (TBAC)
+## Task-Based Access Control (TBAC) (Preview)
 
 The Agent Identity platform uses Task-Based Access Control (TBAC) to manage access between the agentic services. TBAC allows you to define the tasks that can be performed by each service and the permissions required to perform those tasks.
 
@@ -99,7 +101,7 @@ The tasks available for TBAC are automatically discovered from the Agentic Servi
 
 3. **Integrate TBAC in your application** following one of the methods below.
 
-### **Using the Python SDK**
+### Using the Python SDK
 
 :::warning[IMPORTANT]
 When using the Python SDK for TBAC, you need to provide in your environment the following variables:
@@ -108,11 +110,11 @@ When using the Python SDK for TBAC, you need to provide in your environment the 
 
 :::
 
-#### **Using the easy plug-in integrations**
+#### **Using the easy plug-in A2A and MCP integrations**
 
 For easy plug-in integrations, you can use the following extensions and plugins:
 
-##### **HTTPX Auth Class**
+##### HTTPX Auth Class
 
 For HTTPX-based applications, you can use the `IdentityPlatformAuth` class to integrate TBAC. This class provides an easy way to authorize Agentic Services and manage access tokens.
 
@@ -130,7 +132,7 @@ timeout=timeout, auth=auth
 
 You can see this class fully implemented in our [Financial Agentic Service](https://github.com/cisco-eti/pyramid-platform/blob/main/samples/agent/oasf/financial_assistant/currency_exchange_agent.py#L112).
 
-##### **A2A Starlette auth middleware**
+##### A2A Starlette auth middleware
 
 For A2A (Agent-to-Agent) based applications using Starlette, you can use the `IdentityPlatformA2AAuthMiddleware` to integrate TBAC. This middleware automatically handles authorization for incoming requests:
 
@@ -178,7 +180,7 @@ uvicorn.run(app, host=host, port=port)
 
 You can see this class fully implemented in our [Currency Exchange Agentic Service](https://github.com/cisco-eti/pyramid-platform/blob/main/samples/agent/a2a/currency_exchange/main.py#L91).
 
-##### **Standard Starlette/FastAPI auth middleware**
+##### Standard Starlette/FastAPI auth middleware
 
 We also support standard Starlette or FastAPI applications, you can use the `IdentityPlatformAuthMiddleware` to integrate TBAC. This middleware automatically handles authorization for incoming requests.
 
@@ -197,7 +199,7 @@ middleware = [
 app = Starlette(routes=routes, middleware=middleware)
 ```
 
-#### **Using a custom implementation**
+#### Using a custom implementation
 
 The Python SDK provides two functions to integrate TBAC in your application:
 
@@ -220,7 +222,7 @@ authorize(self, access_token: str, tool_name: str | None = None)
 
 You can use these functions to integrate TBAC in your application and manage access control for your Agentic Services.
 
-### **Using the REST APIs**
+### Using the REST APIs
 
 :::warning[IMPORTANT]
 When using the REST APIs for TBAC, you need to replace the following variables in the code snippets:
