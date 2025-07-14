@@ -130,7 +130,7 @@ timeout=timeout, auth=auth
 # Do your HTTPX requests here
 ```
 
-You can see this class fully implemented in our [Financial Agentic Service](https://github.com/cisco-eti/pyramid-platform/blob/main/samples/agent/oasf/financial_assistant/currency_exchange_agent.py#L112).
+You can see this class fully implemented in our [Financial Agentic Service](https://github.com/cisco-eti/identity-platform/blob/main/samples/agent/oasf/financial_assistant/currency_exchange_agent.py#L112).
 
 ##### A2A Starlette auth middleware
 
@@ -178,7 +178,7 @@ app.add_middleware(
 uvicorn.run(app, host=host, port=port)
 ```
 
-You can see this class fully implemented in our [Currency Exchange Agentic Service](https://github.com/cisco-eti/pyramid-platform/blob/main/samples/agent/a2a/currency_exchange/main.py#L91).
+You can see this class fully implemented in our [Currency Exchange Agentic Service](https://github.com/cisco-eti/identity-platform/blob/main/samples/agent/a2a/currency_exchange/main.py#L91).
 
 ##### Standard Starlette/FastAPI auth middleware
 

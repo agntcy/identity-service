@@ -18,7 +18,7 @@ in any real-time space e.g., Slack, Discord, etc.
 
 Before reporting a new issue, please ensure that the issue was not already
 reported or fixed by searching through our [issues
-list](https://github.com/cisco-eti/pyramid-saas/issues).
+list](https://github.com/cisco-eti/identity-platform/issues).
 
 When creating a new issue, please be sure to include a **title and clear
 description**, as much relevant information as possible, and, if possible, a
@@ -47,7 +47,7 @@ you can do:
   _[Reporting Issues](#reporting-issues)_ section, providing feedback to the
   issue's author on what might be missing.
 - Review and update the existing content of our
-  [Wiki](https://github.com/cisco-eti/pyramid-saas/wiki) with up-to-date
+  [Wiki](https://github.com/cisco-eti/identity-platform/wiki) with up-to-date
   instructions and code samples.
 - Review existing pull requests, and testing patches against real existing
   applications that use `Identity SaaS`.

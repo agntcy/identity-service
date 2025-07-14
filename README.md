@@ -1,6 +1,6 @@
 # Identity Platform
 
-[![Lint](https://github.com/cisco-eti/pyramid-saas/actions/workflows/lint.yml/badge.svg?branch=main)](https://github.com/marketplace/actions/super-linter)
+[![Lint](https://github.com/cisco-eti/identity-platform/actions/workflows/lint.yml/badge.svg?branch=main)](https://github.com/marketplace/actions/super-linter)
 [![Contributor-Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-fbab2c.svg)](CODE_OF_CONDUCT.md)
 
 <p align="center">
@@ -18,7 +18,7 @@
 
 ## Roadmap
 
-See the [open issues](https://github.com/cisco-eti/pyramid-saas/issues) for a list
+See the [open issues](https://github.com/cisco-eti/identity-platform/issues) for a list
 of proposed features (and known issues).
 
 ## Contributing

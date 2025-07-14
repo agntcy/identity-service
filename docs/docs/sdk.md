@@ -6,7 +6,7 @@ sidebar_position: 6
 
 ## Python SDK
 
-Agent Identity offers a [Python SDK](https://github.com/cisco-eti/pyramid-platform/tree/main/sdk/python).
+Agent Identity offers a [Python SDK](https://github.com/cisco-eti/identity-platform/tree/main/sdk/python).
 
 The SDK allows developers to use it as a:
 
@@ -24,7 +24,7 @@ To see more details about the development integration, you can refer to the [Dev
 To install the Python SDK for Agent Identity, you can use pip:
 
 ```bash
-pip install git+https://github.com/cisco-eti/pyramid-platform@main#subdirectory=sdk/python
+pip install git+https://github.com/cisco-eti/identity-platform@main#subdirectory=sdk/python
 ```
 
 ### Example Usage
