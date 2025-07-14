@@ -6,6 +6,7 @@ import logging
 from collections.abc import AsyncIterable
 from typing import Any, Dict, Literal
 
+from identityplatform.auth.httpx import IdentityPlatformAuth
 from langchain_core.messages import AIMessage, ToolMessage
 from langchain_mcp_adapters.client import MultiServerMCPClient
 from langchain_ollama import ChatOllama
@@ -67,12 +68,16 @@ class CurrencyAgent:
             base_url=self.ollama_base_url, model=self.ollama_model, temperature=0.2
         )
 
+        # Init auth
+        auth = IdentityPlatformAuth()
+
         # Load tools from the MCP Server
         client = MultiServerMCPClient(
             {
                 "currency_exchange": {
                     "url": self.currency_exchange_mcp_server_url,
                     "transport": "streamable_http",
+                    "auth": auth,
                 },
             }
         )
