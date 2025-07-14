@@ -2105,8 +2105,9 @@
                 "google.api.http": {
                   "rules": [
                     {
-                      "method": "GET",
-                      "pattern": "/v1alpha1/auth/authorize"
+                      "method": "POST",
+                      "pattern": "/v1alpha1/auth/authorize",
+                      "body": "*"
                     }
                   ]
                 }
