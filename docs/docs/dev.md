@@ -134,6 +134,37 @@ You can use these functions to integrate TBAC in your application and manage acc
 
 3.2 **Using the REST APIs**
 
+:::warning[IMPORTANT]
+When using the REST APIs for TBAC, you need to replace the following variables in the code snippets:
+
+- `REST_API_ENDPOINT`: The endpoint of the Agent Identity REST API. This can be obtained from the [API Access documentation](/docs/api).
+- `YOUR_AGENTIC_SERVICE_API_KEY`: Your Agentic Service API Key. You can obtain this key from the Agent Services details page.
+
+:::
+
+The REST API provides endpoints to integrate TBAC in your application. You can follow these steps to authorize and verify Agentic Services:
+
+3.2.1 **Authorize an Agentic Service**
+
+- **Perform an authoriation request**
+
+```curl
+curl https://{REST_API_ENDPOINT}/auth/authorize \
+  --header 'X-Id-Api-Key: {YOUR_AGENTIC_SERVICE_API_KEY}' \
 ```
 
+- **Exchange the authorization code for an access token**
+
+```curl
+curl https://{REST_API_ENDPOINT}/auth/token \
+  --request POST \
+  --header 'Content-Type: application/json' \
+  --header 'X-Id-Api-Key: {YOUR_AGENTIC_SERVICE_API_KEY}' \
+  --data '{
+  "authorizationCode": "{AUTHORIZATION_CODE}",
+}'
 ```
+
+where `{AUTHORIZATION_CODE}` is the code received from the authorization request.
+
+3.2.2 **Verify an Agentic Service**
