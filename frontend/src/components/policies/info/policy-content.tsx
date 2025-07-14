@@ -26,7 +26,7 @@ import {useGetAgenticService} from '@/queries';
 import {Separator} from '@/components/ui/separator';
 import {labels} from '@/constants/labels';
 import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
-import {Box, IconButton, Menu} from '@mui/material';
+import {Box, Button, IconButton, Menu} from '@mui/material';
 import {EllipsisVerticalIcon, PencilIcon, PlusIcon, Trash2Icon} from 'lucide-react';
 import {generatePath} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
@@ -117,6 +117,18 @@ export const PolicyContent = ({policy}: {policy?: Policy}) => {
                   <Typography variant="subtitle1" fontWeight={600}>
                     {policy?.rules?.length} Policy {policy?.rules?.length && policy?.rules?.length > 1 ? 'Rules' : 'Rule'}
                   </Typography>
+                  <Button
+                    onClick={() => {
+                      setTempRule(undefined);
+                      setIsAdd(true);
+                    }}
+                    variant="primary"
+                    startIcon={<PlusIcon className="w-4 h-4" />}
+                    sx={{fontWeight: '600 !important'}}
+                    size="small"
+                  >
+                    Add Rule
+                  </Button>
                 </div>
                 <CardContent className="p-0 space-y-4">
                   <div className="pt-4">
@@ -190,7 +202,7 @@ export const PolicyContent = ({policy}: {policy?: Policy}) => {
                               </div>
                             </Accordion>
                           </div>
-                          <Tooltip title="View Rule Actions">
+                          <Tooltip title="Actions">
                             <IconButton
                               sx={(theme) => ({
                                 color: theme.palette.vars.baseTextDefault,
