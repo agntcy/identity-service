@@ -99,7 +99,7 @@ class IdentityPlatformSdk:
         """Authorizes an agentic service and returns an access token.
 
         Parameters:
-            app_id (str | None): The ID of the app to authorize for.
+            agentic_service_id (str | None): The ID of the Agentic Service to authorize for.
             tool_name (str | None): The name of the tool to authorize for.
             user_token (str | None): The user token to use for the token.
 
