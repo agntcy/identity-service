@@ -9,6 +9,16 @@ The Policies section in the AGNTCY Agent Identity SaaS allows administrators to 
 This guide will walk you through the process of creating, editing, and managing policies,
 ensuring your Agentic Services operate within the desired constraints and capabilities.
 
+## Introducing Task-Based Access Control (TBAC)
+
+The AGNTCY Agent Identity platform leverages Task-Based Access Control (TBAC) to enhance the management and security of Agentic Services. TBAC allows administrators to define specific tasks that can be performed by each service and the permissions required to execute these tasks. By integrating TBAC into your policies, you can ensure that each Agentic Service adheres to organizational security standards and operational requirements.
+
+### Benefits of TBAC
+
+- **Enhanced Security:** TBAC provides a granular level of security by defining task-specific permissions, reducing the risk of unauthorized access.
+- **Flexibility:** Easily adjust permissions as organizational needs change, ensuring your Agentic Services remain adaptable to evolving requirements.
+- **Centralized Management:** Administer all task permissions from a single interface within the Policies section, simplifying oversight and updates.
+
 ## 1. Accessing the Policies Section
 
 1. **Navigate to Policies:**
