@@ -23,7 +23,7 @@ class Client:  # pylint: disable=too-few-public-methods
             "IDENTITY_PLATFORM_GRPC_SERVER_URL", constant.DEFAULT_GRPC_URL
         )
         call_credentials = grpc.metadata_call_credentials(
-            lambda context, callback: callback(
+            lambda _, callback: callback(
                 ((constant.API_KEY_KEY, api_key),), None
             )
         )

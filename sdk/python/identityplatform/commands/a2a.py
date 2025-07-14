@@ -2,7 +2,8 @@
 # SPDX-License-Identifier: Apache-2.0
 """MCP Discover for the Identity Platform Python SDK."""
 
-import requests
+import httpx
+
 
 A2A_WELL_KNOWN_URL = "/.well-known/agent.json"
 
@@ -16,7 +17,7 @@ def discover(well_known_url):
 
     try:
         # Perform the GET request
-        response = requests.get(well_known_url)
+        response = httpx.get(well_known_url)
 
         # Check if the status code is OK
         if response.status_code != 200:

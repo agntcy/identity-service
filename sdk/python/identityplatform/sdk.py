@@ -44,7 +44,6 @@ class IdentityPlatformSdk:
             async_mode (bool): Whether to use async mode or not. Defaults to False.
 
         """
-
         # Try to get the API Key from the environment variable
         if api_key is None:
             api_key = os.environ.get("IDENTITY_PLATFORM_API_KEY")
