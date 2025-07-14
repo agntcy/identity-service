@@ -117,7 +117,7 @@ class AppServiceServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def GetTasks(self, request, context):
-        """Get the list of tasks related to an App
+        """Get the list of tasks of all apps
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')

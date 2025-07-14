@@ -3,7 +3,7 @@
 """Constants for the Identity Platform Python SDK."""
 
 
-DEFAULT_GRPC_URL = "api.grpc.pyramid-platform.staging.outshift.ai"
+DEFAULT_GRPC_URL = "api.grpc.identity-platform.staging.outshift.ai"
 GRPC_MAX_MESSAGE_LENGTH = 1024 * 1024 * 1024
 GRPC_KEEP_ALIVE_TIME_MS = 100000
 GRPC_HTTP2_MAX_PINGS_WITHOUT_DATA = 1000

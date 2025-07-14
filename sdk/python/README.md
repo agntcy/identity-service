@@ -2,7 +2,7 @@
 
 The `Python SDK` provides:
 
-- A cli to interact with local Agentic Services.
+- A CLI to interact with local Agentic Services.
 - A SDK to integrate with Agentic Services in your Python applications.
 
 ## Prerequisites
@@ -16,5 +16,5 @@ To use the `Python SDK`, you need to have the following installed:
 To install the `Python SDK`, you can use `pip`:
 
 ```bash
-pip install identity-sdk
+pip install .
 ```

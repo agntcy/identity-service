@@ -206,6 +206,18 @@ export interface V1Alpha1AppInfoResponse {
   app?: V1Alpha1App;
 }
 
+export interface V1Alpha1AuthorizeRequest {
+  /** The app id for which authorization is requested. */
+  appId?: string;
+  /** The MCP Server tool name. */
+  toolName?: string;
+  /**
+   * The User context in the form of an id or access token.
+   * Mandatory for User Approval Flows.
+   */
+  userToken?: string;
+}
+
 export interface V1Alpha1AuthorizeResponse {
   /**
    * If authorization is successful, return a code to be used for
@@ -384,26 +396,14 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @tags Auth
      * @name Authorize
      * @summary Authorize a request from an Agent or MCP Server
-     * @request GET:/v1alpha1/auth/authorize
+     * @request POST:/v1alpha1/auth/authorize
      */
-    authorize: (
-      query?: {
-        /** The app id for which authorization is requested. */
-        appId?: string;
-        /** The MCP Server tool name. */
-        toolName?: string;
-        /**
-         * The User context in the form of an id or access token.
-         * Mandatory for User Approval Flows.
-         */
-        userToken?: string;
-      },
-      params: RequestParams = {}
-    ) =>
+    authorize: (body: V1Alpha1AuthorizeRequest, params: RequestParams = {}) =>
       this.request<V1Alpha1AuthorizeResponse, RpcStatus>({
         path: `/v1alpha1/auth/authorize`,
-        method: 'GET',
-        query: query,
+        method: 'POST',
+        body: body,
+        type: ContentType.Json,
         format: 'json',
         ...params
       }),

@@ -1,0 +1,67 @@
+/**
+ * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import {ConfirmModal} from '@/components/ui/confirm-modal';
+import {useDeleteRule} from '@/mutations';
+import {Policy, Rule} from '@/types/api/policy';
+import {toast} from '@outshift/spark-design';
+import {useCallback} from 'react';
+
+interface DeleteRuleProps {
+  open: boolean;
+  policy?: Policy;
+  rule?: Rule;
+  onClose?: () => void;
+}
+
+export const DeleteRule = ({policy, rule, open, onClose}: DeleteRuleProps) => {
+  const mutationDeleteRule = useDeleteRule({
+    callbacks: {
+      onSuccess: () => {
+        toast({
+          title: 'Rule deleted successfully',
+          description: 'The rule has been deleted.',
+          type: 'success'
+        });
+        onClose?.();
+      },
+      onError: () => {
+        toast({
+          title: 'Error deleting rule',
+          description: 'There was an error deleting the rule. Please try again.',
+          type: 'error'
+        });
+        onClose?.();
+      }
+    }
+  });
+
+  const handleConfirm = useCallback(() => {
+    if (rule?.id && policy?.id) {
+      mutationDeleteRule.mutate({
+        policyId: policy.id,
+        ruleId: rule.id
+      });
+    }
+  }, [rule?.id, policy?.id, mutationDeleteRule]);
+
+  return (
+    <ConfirmModal
+      open={open}
+      title="Delete Rule"
+      description="Are you sure you want to delete this rule? This action cannot be undone."
+      confirmButtonText="Delete"
+      onCancel={() => {
+        onClose?.();
+      }}
+      onConfirm={handleConfirm}
+      buttonConfirmProps={{
+        loading: mutationDeleteRule.isPending,
+        loadingPosition: 'start',
+        color: 'negative'
+      }}
+    />
+  );
+};

@@ -6,18 +6,19 @@
 import {useFormContext} from 'react-hook-form';
 import {FormControl, FormField, FormItem, FormLabel} from '@/components/ui/form';
 import {Input} from '@/components/ui/input';
-import {PolicyLogicyFormValues} from '@/schemas/policy-logic-schema';
-import {TaskForm} from './task-form';
 import {Checkbox} from '@outshift/spark-design';
+import {TaskForm} from './task-form';
+import {RuleFormValues} from '@/schemas/rule-schema';
+import {Policy} from '@/types/api/policy';
 
-export const RuleForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; fieldIndex: number}) => {
-  const policyForm = useFormContext<PolicyLogicyFormValues>();
+export const RuleForm = ({isLoading = false, policy}: {isLoading?: boolean; policy?: Policy}) => {
+  const policyForm = useFormContext<RuleFormValues>();
   return (
     <div className="space-y-6 w-full">
       <div className="w-full flex gap-8">
         <FormField
           control={policyForm.control}
-          name={`rules.${fieldIndex}.name`}
+          name={'name'}
           render={({field}) => (
             <FormItem className="w-full">
               <FormLabel className="form-label">Name</FormLabel>
@@ -29,7 +30,7 @@ export const RuleForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
         />
         <FormField
           control={policyForm.control}
-          name={`rules.${fieldIndex}.description`}
+          name={'description'}
           render={({field}) => (
             <FormItem className="w-full">
               <FormLabel className="form-label">Description</FormLabel>
@@ -40,10 +41,10 @@ export const RuleForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
           )}
         />
       </div>
-      <TaskForm isLoading={isLoading} fieldIndex={fieldIndex} />
+      <TaskForm isLoading={isLoading} policy={policy} />
       <FormField
         control={policyForm.control}
-        name={`rules.${fieldIndex}.needsApproval`}
+        name={'needsApproval'}
         render={({field}) => (
           <FormItem className="w-full">
             <FormControl>

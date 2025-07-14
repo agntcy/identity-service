@@ -8,7 +8,7 @@ import {CheckIcon, PlusIcon} from 'lucide-react';
 import ScrollShadowWrapper from '@/components/ui/scroll-shadow-wrapper';
 import {PATHS} from '@/router/paths';
 import {useAuth} from '@/hooks';
-import {Link as RouterLink} from 'react-router-dom';
+import {Link, Link as RouterLink} from 'react-router-dom';
 import {useFeatureFlagsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
 import {useGetAgenticServices, useGetPolicies, useGetSettings} from '@/queries';
@@ -32,19 +32,23 @@ export const StatsDashboard = () => {
   const statsInfo: Stat[] = useMemo(() => {
     const temp = [
       {
-        value: <ProviderType type={dataSettings?.issuerSettings?.idpType} />,
+        value: (
+          <Link to={PATHS.settings.identityProvider.base}>
+            <ProviderType type={dataSettings?.issuerSettings?.idpType} />
+          </Link>
+        ),
         title: 'Identity Provider',
         loading: isLoadingSettings
       },
       {
-        value: dataAgenticServices?.apps?.length || 0,
+        value: <Link to={PATHS.agenticServices.base}>{dataAgenticServices?.apps?.length || 0}</Link>,
         title: 'Total Agentic Services',
         loading: isLoadingAgenticServices
       }
     ];
     if (isTbacEnable) {
       temp.push({
-        value: dataPolicies?.policies?.length || 0,
+        value: <Link to={PATHS.policies.base}>{dataPolicies?.policies?.length || 0}</Link>,
         title: 'Total Policies',
         loading: isLoadingPolicies
       });
@@ -84,7 +88,7 @@ export const StatsDashboard = () => {
         </div>
         <div className="card-group px-[24px]">
           <div className="card-flex-group min-w-[384px] bg-[#FBFCFE] rounded-[8px] flex-col flex justify-start items-center px-20 py-12">
-            <div className="flex flex-col justify-between h-full">
+            <div className="flex flex-col justify-between h-full gap-4">
               <div>
                 <Typography variant="h6" textAlign="center">
                   Verify Identity Badges
@@ -103,7 +107,7 @@ export const StatsDashboard = () => {
             </div>
           </div>
           <div className="card-flex-group min-w-[384px] bg-[#FBFCFE] rounded-[8px] flex-col flex justify-start items-center px-20 py-12">
-            <div className="flex flex-col justify-between h-full">
+            <div className="flex flex-col justify-between h-full gap-4">
               <div>
                 <Typography variant="h6" textAlign="center">
                   Add Agentic Services
@@ -123,7 +127,7 @@ export const StatsDashboard = () => {
           </div>
           {isTbacEnable && (
             <div className="card-flex-group min-w-[384px] bg-[#FBFCFE] rounded-[8px] flex-col flex justify-start items-center px-20 py-12">
-              <div className="flex flex-col justify-between h-full">
+              <div className="flex flex-col justify-between h-full gap-4">
                 <div>
                   <Typography variant="h6" textAlign="center">
                     Add Policies

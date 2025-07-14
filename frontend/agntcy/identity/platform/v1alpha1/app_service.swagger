@@ -270,9 +270,9 @@
         ]
       }
     },
-    "/v1alpha1/apps/{appId}/tasks": {
+    "/v1alpha1/tasks": {
       "get": {
-        "summary": "Get the list of tasks related to an App",
+        "summary": "Get the list of tasks of all apps",
         "operationId": "GetTasks",
         "responses": {
           "200": {
@@ -290,11 +290,15 @@
         },
         "parameters": [
           {
-            "name": "appId",
-            "description": "App Id to get the tasks for.",
-            "in": "path",
-            "required": true,
-            "type": "string"
+            "name": "excludeAppIds",
+            "description": "A filter to exclude fetching tasks for the specified app ids",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
           }
         ],
         "tags": [
@@ -304,6 +308,18 @@
     }
   },
   "definitions": {
+    "GetTasksResponseTaskList": {
+      "type": "object",
+      "properties": {
+        "tasks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1alpha1Task"
+          }
+        }
+      }
+    },
     "googleprotobufAny": {
       "type": "object",
       "properties": {
@@ -507,13 +523,12 @@
     "v1alpha1GetTasksResponse": {
       "type": "object",
       "properties": {
-        "tasks": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/v1alpha1Task"
+        "result": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/GetTasksResponseTaskList"
           },
-          "title": "The list of tasks related to the App"
+          "title": "The list of tasks per Agentic Service type"
         }
       }
     },

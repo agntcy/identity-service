@@ -72,13 +72,27 @@ export const useGetAgenticServicesCount = () => {
   });
 };
 
-export const useGetGetTasksAgenticService = (id?: string) => {
+export const useGetGetTasksAgenticService = (query?: {excludeAppIds?: string[]}) => {
   return useQuery({
-    queryKey: ['get-tasks-agentic-service', id],
+    queryKey: [
+      'get-tasks-agentic-service',
+      {
+        excludeAppIds: query?.excludeAppIds
+      }
+    ],
     queryFn: async () => {
-      const {data} = await AgenticServicesAPI.getTasks(id!);
+      const {data} = await AgenticServicesAPI.getTasks(
+        {
+          excludeAppIds: query?.excludeAppIds
+        },
+        {
+          paramsSerializer: (params) => {
+            return qs.stringify(params);
+          }
+        }
+      );
       return data;
     },
-    enabled: !!id
+    enabled: !!query
   });
 };

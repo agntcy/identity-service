@@ -94,6 +94,8 @@ export const useCreateRule = ({callbacks}: PropsSettingsRules = {}) => {
         callbacks.onSuccess(resp);
       }
       await queryClient.invalidateQueries({queryKey: ['get-policies']});
+      await queryClient.invalidateQueries({queryKey: ['get-policy']});
+      await queryClient.invalidateQueries({queryKey: ['get-policy-rules']});
     }
   });
 };
@@ -114,6 +116,7 @@ export const useUpdateRule = ({callbacks}: PropsSettingsRules = {}) => {
       }
       await queryClient.invalidateQueries({queryKey: ['get-policies']});
       await queryClient.invalidateQueries({queryKey: ['get-policy']});
+      await queryClient.invalidateQueries({queryKey: ['get-policy-rules']});
     }
   });
 };
@@ -133,6 +136,8 @@ export const useDeleteRule = ({callbacks}: PropsSettingsRules = {}) => {
         callbacks.onSuccess(resp);
       }
       await queryClient.invalidateQueries({queryKey: ['get-policies']});
+      await queryClient.invalidateQueries({queryKey: ['get-policy']});
+      await queryClient.invalidateQueries({queryKey: ['get-policy-rules']});
     }
   });
 };

@@ -11,6 +11,7 @@ import (
 	"slices"
 	"time"
 
+	apptypes "github.com/agntcy/identity-platform/internal/core/app/types"
 	policycore "github.com/agntcy/identity-platform/internal/core/policy"
 	"github.com/agntcy/identity-platform/internal/core/policy/types"
 	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
@@ -356,7 +357,10 @@ func (r *repository) GetTasksByAppID(ctx context.Context, appID string) ([]*type
 	}), nil
 }
 
-func (r *repository) GetAllTasks(ctx context.Context, excludeAppIDs ...string) ([]*types.Task, error) {
+func (r *repository) GetTasksPerAppType(
+	ctx context.Context,
+	excludeAppIDs ...string,
+) (map[apptypes.AppType][]*types.Task, error) {
 	var tasks []*Task
 
 	tenantID, ok := identitycontext.GetTenantID(ctx)
@@ -364,9 +368,13 @@ func (r *repository) GetAllTasks(ctx context.Context, excludeAppIDs ...string) (
 		return nil, identitycontext.ErrTenantNotFound
 	}
 
-	result := r.dbContext.Client().
-		Where("app_id NOT IN (?) AND tenant_id = ?", excludeAppIDs, tenantID).
-		Find(&tasks)
+	dbQuery := r.dbContext.Client().Where("tasks.tenant_id = ?", tenantID)
+
+	if len(excludeAppIDs) > 0 {
+		dbQuery = dbQuery.Where("tasks.app_id NOT IN (?)", excludeAppIDs)
+	}
+
+	result := dbQuery.Joins("App").Find(&tasks)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 			return nil, errutil.Err(result.Error, "tasks not found")
@@ -375,9 +383,12 @@ func (r *repository) GetAllTasks(ctx context.Context, excludeAppIDs ...string) (
 		return nil, errutil.Err(result.Error, "there was an error fetching the tasks")
 	}
 
-	return convertutil.ConvertSlice(tasks, func(task *Task) *types.Task {
-		return task.ToCoreType()
-	}), nil
+	tasksPerAppType := make(map[apptypes.AppType][]*types.Task)
+	for _, task := range tasks {
+		tasksPerAppType[task.App.Type] = append(tasksPerAppType[task.App.Type], task.ToCoreType())
+	}
+
+	return tasksPerAppType, nil
 }
 
 func (r *repository) GetTasksByID(ctx context.Context, ids []string) ([]*types.Task, error) {

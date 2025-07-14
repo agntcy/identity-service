@@ -21,6 +21,7 @@ import (
 	outshiftiam "github.com/agntcy/identity-platform/internal/pkg/iam"
 	"github.com/agntcy/identity-platform/internal/pkg/pagination"
 	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
+	"github.com/agntcy/identity-platform/internal/pkg/strutil"
 	"github.com/agntcy/identity-platform/pkg/log"
 	"github.com/google/uuid"
 )
@@ -36,10 +37,10 @@ type AppService interface {
 		appTypes []apptypes.AppType,
 	) (*pagination.Pageable[apptypes.App], error)
 	DeleteApp(ctx context.Context, appID string) error
-	GetTasks(
+	GetTasksPerAppType(
 		ctx context.Context,
-		appID string,
-	) ([]*policytypes.Task, error)
+		excludeAppIDs []string,
+	) (map[apptypes.AppType][]*policytypes.Task, error)
 }
 
 type appService struct {
@@ -303,16 +304,11 @@ func (s *appService) DeleteApp(ctx context.Context, appID string) error {
 	return nil
 }
 
-func (s *appService) GetTasks(
+func (s *appService) GetTasksPerAppType(
 	ctx context.Context,
-	appID string,
-) ([]*policytypes.Task, error) {
-	app, err := s.appRepository.GetApp(ctx, appID)
-	if err != nil {
-		return nil, err
-	}
-
-	tasks, err := s.policyRepository.GetAllTasks(ctx, app.ID)
+	excludeAppIDs []string,
+) (map[apptypes.AppType][]*policytypes.Task, error) {
+	tasks, err := s.policyRepository.GetTasksPerAppType(ctx, strutil.TrimSlice(excludeAppIDs)...)
 	if err != nil {
 		return nil, err
 	}

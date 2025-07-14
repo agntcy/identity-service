@@ -151,15 +151,23 @@ func (s *appService) GetTasks(
 	ctx context.Context,
 	in *identity_platform_sdk_go.GetTasksRequest,
 ) (*identity_platform_sdk_go.GetTasksResponse, error) {
-	tasks, err := s.appSrv.GetTasks(ctx, in.AppId)
+	tasksPerAppType, err := s.appSrv.GetTasksPerAppType(ctx, in.GetExcludeAppIds())
 	if err != nil {
 		return nil, grpcutil.BadRequestError(err)
 	}
 
+	result := make(map[string]*identity_platform_sdk_go.GetTasksResponse_TaskList)
+
+	for appType, tasks := range tasksPerAppType {
+		result[appType.String()] = &identity_platform_sdk_go.GetTasksResponse_TaskList{
+			Tasks: convertutil.ConvertSlice(
+				tasks,
+				converters.FromTask,
+			),
+		}
+	}
+
 	return &identity_platform_sdk_go.GetTasksResponse{
-		Tasks: convertutil.ConvertSlice(
-			tasks,
-			converters.FromTask,
-		),
+		Result: result,
 	}, nil
 }

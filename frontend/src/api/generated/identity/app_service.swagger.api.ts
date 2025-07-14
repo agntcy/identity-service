@@ -56,6 +56,10 @@ export enum V1Alpha1AppStatus {
   APP_STATUS_REVOKED = 'APP_STATUS_REVOKED'
 }
 
+export interface GetTasksResponseTaskList {
+  tasks?: V1Alpha1Task[];
+}
+
 /**
  * `Any` contains an arbitrary serialized protocol buffer message along with a
  * URL that describes the type of the serialized message.
@@ -291,8 +295,8 @@ export interface V1Alpha1GetAppsCountResponse {
 }
 
 export interface V1Alpha1GetTasksResponse {
-  /** The list of tasks related to the App */
-  tasks?: V1Alpha1Task[];
+  /** The list of tasks per Agentic Service type */
+  result?: Record<string, GetTasksResponseTaskList>;
 }
 
 export interface V1Alpha1ListAppsResponse {
@@ -662,13 +666,20 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags App
      * @name GetTasks
-     * @summary Get the list of tasks related to an App
-     * @request GET:/v1alpha1/apps/{appId}/tasks
+     * @summary Get the list of tasks of all apps
+     * @request GET:/v1alpha1/tasks
      */
-    getTasks: (appId: string, params: RequestParams = {}) =>
+    getTasks: (
+      query?: {
+        /** A filter to exclude fetching tasks for the specified app ids */
+        excludeAppIds?: string[];
+      },
+      params: RequestParams = {}
+    ) =>
       this.request<V1Alpha1GetTasksResponse, RpcStatus>({
-        path: `/v1alpha1/apps/${appId}/tasks`,
+        path: `/v1alpha1/tasks`,
         method: 'GET',
+        query: query,
         format: 'json',
         ...params
       })

@@ -36,6 +36,7 @@ export const RulesColumns = (): MRT_ColumnDef<Rule, any>[] => {
                 valueFormatter: () => task.name || 'Unknown Task'
               }))}
               showOnlyFirst
+              shouldTruncate
             />
           );
         }

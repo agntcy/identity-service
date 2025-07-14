@@ -40,7 +40,7 @@
       }
     },
     "/v1alpha1/auth/authorize": {
-      "get": {
+      "post": {
         "summary": "Authorize a request from an Agent or MCP Server",
         "operationId": "Authorize",
         "responses": {
@@ -59,25 +59,12 @@
         },
         "parameters": [
           {
-            "name": "appId",
-            "description": "The app id for which authorization is requested.",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "toolName",
-            "description": "The MCP Server tool name.",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "userToken",
-            "description": "The User context in the form of an id or access token.\nMandatory for User Approval Flows.",
-            "in": "query",
-            "required": false,
-            "type": "string"
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1alpha1AuthorizeRequest"
+            }
           }
         ],
         "tags": [
@@ -259,6 +246,23 @@
       "default": "APP_TYPE_UNSPECIFIED",
       "description": "- APP_TYPE_UNSPECIFIED: Unspecified Envelope Type.\n - APP_TYPE_AGENT_A2A: Agent A2A App Type.\n - APP_TYPE_AGENT_OASF: Agent OASF App Type.\n - APP_TYPE_MCP_SERVER: Agent MCP Server App Type.",
       "title": "App Type"
+    },
+    "v1alpha1AuthorizeRequest": {
+      "type": "object",
+      "properties": {
+        "appId": {
+          "type": "string",
+          "description": "The app id for which authorization is requested."
+        },
+        "toolName": {
+          "type": "string",
+          "description": "The MCP Server tool name."
+        },
+        "userToken": {
+          "type": "string",
+          "description": "The User context in the form of an id or access token.\nMandatory for User Approval Flows."
+        }
+      }
     },
     "v1alpha1AuthorizeResponse": {
       "type": "object",

@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 /**
  * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
  * SPDX-License-Identifier: Apache-2.0
@@ -19,6 +20,7 @@ import {PolicyLogicyFormValues} from '@/schemas/policy-logic-schema';
 import {RuleAction} from '@/types/api/policy';
 import {RuleFormValues} from '@/schemas/rule-schema';
 import {TagActionTask} from '@/components/shared/tag-action-task';
+import {AppType} from '@/types/api/app';
 
 const PAGE_SIZE = 5;
 
@@ -57,7 +59,7 @@ export const PolicyReview = () => {
               <Skeleton width={60} height={20} />
             ) : (
               <>
-                <AgenticServiceType type={data?.type} className="h-[20px] w-[20px]" showLabel={false} />
+                <AgenticServiceType type={data?.type} showLabel={false} />
                 <Typography variant="body2">{data?.name ?? 'Not provided'}</Typography>
               </>
             )}
@@ -73,20 +75,57 @@ export const PolicyReview = () => {
   }, [data?.name, data?.type, isError, isLoading, policy?.description, policy?.name]);
 
   const TasksTable = ({rule}: {rule: RuleFormValues}) => {
-    const {data, isError, isLoading} = useGetGetTasksAgenticService(policy?.assignedTo);
+    const {data, isError, isLoading} = useGetGetTasksAgenticService(
+      policy?.assignedTo
+        ? {
+            excludeAppIds: [policy?.assignedTo]
+          }
+        : undefined
+    );
+
+    const optionsTasks = useMemo(() => {
+      if (!data?.result) {
+        return [];
+      }
+      return Object.entries(data.result).map(([key, value]) => {
+        return {
+          groupBy: key,
+          label: labels.appTypes[key as keyof typeof labels.appTypes] || key,
+          values:
+            value.tasks?.map((task) => ({
+              label: task.name || 'Unknown Task',
+              value: task.id || '',
+              appId: task.appId || ''
+            })) || []
+        };
+      });
+    }, [data?.result]);
+
+    const optionsTasksValues = useMemo(() => {
+      return optionsTasks.flatMap((group) =>
+        group.values.map((task) => {
+          return {
+            label: task.label,
+            value: task.value,
+            appId: task.appId,
+            type: group.groupBy
+          };
+        })
+      );
+    }, [optionsTasks]);
 
     const dataTask = useMemo(() => {
-      if (!data || !rule.tasks) {
+      if (!optionsTasksValues || !rule.tasks) {
         return [];
       }
       return rule?.tasks?.map((taskId) => {
-        const task = data.tasks?.find((t) => t.id === taskId);
+        const task = optionsTasksValues?.find((t) => t.value === taskId);
         return {
-          name: task?.name || '',
-          toolName: task?.toolName || ''
+          name: task?.label || '',
+          type: task?.type || ''
         };
       });
-    }, [data, rule?.tasks]);
+    }, [optionsTasksValues, rule.tasks]);
 
     if (isError) {
       return (
@@ -103,8 +142,12 @@ export const PolicyReview = () => {
         columns={[
           {
             accessorKey: 'name',
-            header: 'Name',
-            enableSorting: true
+            header: 'Name'
+          },
+          {
+            accessorKey: 'type',
+            header: 'Type',
+            Cell: ({cell}) => <AgenticServiceType type={cell.getValue<string>() as AppType} />
           }
         ]}
         data={dataTask}

@@ -280,22 +280,21 @@ func local_request_AppService_GetBadge_0(ctx context.Context, marshaler runtime.
 	return msg, metadata, err
 }
 
+var filter_AppService_GetTasks_0 = &utilities.DoubleArray{Encoding: map[string]int{}, Base: []int(nil), Check: []int(nil)}
+
 func request_AppService_GetTasks_0(ctx context.Context, marshaler runtime.Marshaler, client AppServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
 		protoReq GetTasksRequest
 		metadata runtime.ServerMetadata
-		err      error
 	)
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
 	}
-	val, ok := pathParams["app_id"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "app_id")
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	protoReq.AppId, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "app_id", err)
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_AppService_GetTasks_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 	msg, err := client.GetTasks(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
@@ -305,15 +304,12 @@ func local_request_AppService_GetTasks_0(ctx context.Context, marshaler runtime.
 	var (
 		protoReq GetTasksRequest
 		metadata runtime.ServerMetadata
-		err      error
 	)
-	val, ok := pathParams["app_id"]
-	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "app_id")
+	if err := req.ParseForm(); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	protoReq.AppId, err = runtime.String(val)
-	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "app_id", err)
+	if err := runtime.PopulateQueryParameters(&protoReq, req.Form, filter_AppService_GetTasks_0); err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
 	msg, err := server.GetTasks(ctx, &protoReq)
 	return msg, metadata, err
@@ -471,7 +467,7 @@ func RegisterAppServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/agntcy.identity.platform.v1alpha1.AppService/GetTasks", runtime.WithHTTPPathPattern("/v1alpha1/apps/{app_id}/tasks"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/agntcy.identity.platform.v1alpha1.AppService/GetTasks", runtime.WithHTTPPathPattern("/v1alpha1/tasks"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -648,7 +644,7 @@ func RegisterAppServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/agntcy.identity.platform.v1alpha1.AppService/GetTasks", runtime.WithHTTPPathPattern("/v1alpha1/apps/{app_id}/tasks"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/agntcy.identity.platform.v1alpha1.AppService/GetTasks", runtime.WithHTTPPathPattern("/v1alpha1/tasks"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -672,7 +668,7 @@ var (
 	pattern_AppService_UpdateApp_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v1alpha1", "apps", "app_id"}, ""))
 	pattern_AppService_DeleteApp_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v1alpha1", "apps", "app_id"}, ""))
 	pattern_AppService_GetBadge_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"v1alpha1", "apps", "app_id", "badge"}, ""))
-	pattern_AppService_GetTasks_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"v1alpha1", "apps", "app_id", "tasks"}, ""))
+	pattern_AppService_GetTasks_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1alpha1", "tasks"}, ""))
 )
 
 var (

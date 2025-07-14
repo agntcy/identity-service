@@ -95,12 +95,12 @@ service AppService {
     };
   }
 
-  // Get the list of tasks related to an App
+  // Get the list of tasks of all apps
   rpc GetTasks(GetTasksRequest) returns (GetTasksResponse) {
-    option (google.api.http) = {get: "/v1alpha1/apps/{app_id}/tasks"};
+    option (google.api.http) = {get: "/v1alpha1/tasks"};
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       operation_id: "GetTasks";
-      summary: "Get the list of tasks related to an App";
+      summary: "Get the list of tasks of all apps";
     };
   }
 }
@@ -171,11 +171,15 @@ message GetBadgeRequest {
 }
 
 message GetTasksRequest {
-  // App Id to get the tasks for.
-  string app_id = 1;
+  // A filter to exclude fetching tasks for the specified app ids
+  repeated string exclude_app_ids = 1;
 }
 
 message GetTasksResponse {
-  // The list of tasks related to the App
-  repeated Task tasks = 1;
+  message TaskList {
+    repeated Task tasks = 1;
+  }
+
+  // The list of tasks per Agentic Service type
+  map<string, TaskList> result = 1;
 }
