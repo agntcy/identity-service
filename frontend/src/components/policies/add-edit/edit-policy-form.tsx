@@ -5,7 +5,7 @@
  */
 
 import {useCallback, useEffect, useState} from 'react';
-import {StepperControls, StepperNavigation, StepperPanel, StepperProvider, StepperStep, useStepper} from './stepper';
+import {StepperControls, StepperNavigation, StepperPanel, StepperStep, useStepper} from './stepper';
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {z} from 'zod';
@@ -22,15 +22,7 @@ import {useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
 import {PolicyLogic} from './steps/policy-logic';
 
-export const EditPolicyStepper = ({policy}: {policy?: Policy}) => {
-  return (
-    <StepperProvider variant="vertical">
-      <FormStepperComponent policy={policy} />
-    </StepperProvider>
-  );
-};
-
-const FormStepperComponent = ({policy}: {policy?: Policy}) => {
+export const EditPolicyForm = ({policy}: {policy?: Policy}) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [flagCreateRules, setFlagCreateRules] = useState(true);
 

@@ -445,3 +445,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       })
   };
 }
+thod: 'POST',
+        body: body,
+        type: ContentType.Json,
+        format: 'json',
+        ...params
+      })
+  };
+}

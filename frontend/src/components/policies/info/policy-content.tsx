@@ -47,7 +47,7 @@ export const PolicyContent = ({policy}: {policy?: Policy}) => {
         value: (
           <Link href={generatePath(PATHS.agenticServices.info, {id: policy?.assignedTo || ''})}>
             <div className="flex items-center gap-2">
-              <AgenticServiceType type={data?.type} className="h-[20px] w-[20px]" showLabel={false} />
+              <AgenticServiceType type={data?.type} showLabel={false} />
               <Typography variant="body2">{data?.name ?? 'Not provided'}</Typography>
             </div>
           </Link>
@@ -116,7 +116,7 @@ export const PolicyContent = ({policy}: {policy?: Policy}) => {
                         >
                           <div>
                             <Table
-                              columns={TasksColumns()}
+                              columns={TasksColumns}
                               densityCompact
                               data={rule.tasks || []}
                               isLoading={false}

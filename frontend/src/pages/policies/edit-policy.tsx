@@ -4,7 +4,7 @@
  */
 
 import {BasePage} from '@/components/layout/base-page';
-import {EditPolicyStepper} from '@/components/policies/edit/edit-policy-stepper';
+import {AddEditPolicyStepper} from '@/components/policies/add-edit/add-edit-stepper';
 import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-renderer';
 import {useGetPolicy} from '@/queries';
 import {PATHS} from '@/router/paths';
@@ -45,7 +45,7 @@ const EditPolicy: React.FC = () => {
           }
         }}
       >
-        <EditPolicyStepper policy={data} />
+        <AddEditPolicyStepper mode="edit" policy={data} />
       </ConditionalQueryRenderer>
     </BasePage>
   );

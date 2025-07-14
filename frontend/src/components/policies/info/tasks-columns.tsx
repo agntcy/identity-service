@@ -30,24 +30,21 @@ const CellAgenticService = ({row}: {row: {original: Task}}) => {
   return (
     <Link href={generatePath(PATHS.agenticServices.info, {id: row.original.appId || ''})}>
       <div className="flex items-center gap-2">
-        <AgenticServiceType type={data?.type} className="h-[20px] w-[20px]" showLabel={false} />
+        <AgenticServiceType type={data?.type} showLabel={false} />
         <Typography variant="body2">{data?.name ?? 'Not provided'}</Typography>
       </div>
     </Link>
   );
 };
 
-export const TasksColumns = (): MRT_ColumnDef<Task, any>[] => {
-  const columns: MRT_ColumnDef<Task, any>[] = [
-    {
-      accessorKey: 'name',
-      header: 'Name'
-    },
-    {
-      accessorKey: 'appId',
-      header: 'Agentic Service',
-      Cell: CellAgenticService
-    }
-  ];
-  return columns;
-};
+export const TasksColumns: MRT_ColumnDef<Task, any>[] = [
+  {
+    accessorKey: 'name',
+    header: 'Name'
+  },
+  {
+    accessorKey: 'appId',
+    header: 'Agentic Service',
+    Cell: CellAgenticService
+  }
+];
