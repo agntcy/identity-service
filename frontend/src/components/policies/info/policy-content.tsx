@@ -4,21 +4,35 @@
  */
 
 import {Card, CardContent} from '@/components/ui/card';
-import {Accordion, Divider, EmptyState, GeneralSize, Link, Pagination, Table, Tag, TagStatus, Tooltip, Typography} from '@outshift/spark-design';
+import {
+  Accordion,
+  Divider,
+  EmptyState,
+  GeneralSize,
+  Link,
+  MenuItem,
+  Pagination,
+  Table,
+  Tag,
+  TagStatus,
+  Tooltip,
+  Typography
+} from '@outshift/spark-design';
 import {useCallback, useMemo, useState} from 'react';
 import KeyValue, {KeyValuePair} from '@/components/ui/key-value';
 import {AgenticServiceType} from '@/components/shared/agentic-service-type';
-import {Policy, RuleAction} from '@/types/api/policy';
+import {Policy, Rule, RuleAction} from '@/types/api/policy';
 import {useGetAgenticService} from '@/queries';
 import {Separator} from '@/components/ui/separator';
 import {labels} from '@/constants/labels';
 import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
-import {Box, IconButton} from '@mui/material';
-import {InfoIcon} from 'lucide-react';
+import {Box, IconButton, Menu} from '@mui/material';
+import {EllipsisVerticalIcon, PencilIcon, PlusIcon, Trash2Icon} from 'lucide-react';
 import {generatePath} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
 import {TagActionTask} from '@/components/shared/tag-action-task';
 import {TasksColumns} from './tasks-columns';
+import {OpsRule} from '@/components/shared/ops-rules/ops-rule';
 
 const PAGE_SIZE = 5;
 
@@ -29,7 +43,20 @@ export const PolicyContent = ({policy}: {policy?: Policy}) => {
     pageSize: 10
   });
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
+  const [tempRule, setTempRule] = useState<Rule | undefined>(undefined);
+  const [isDelete, setIsDelete] = useState<boolean>(false);
+  const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [isAdd, setIsAdd] = useState<boolean>(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
 
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   const {data} = useGetAgenticService(policy?.assignedTo);
 
   const handlePaginationRulesChange = useCallback((event: React.ChangeEvent<unknown>, value: number) => {
@@ -84,108 +111,178 @@ export const PolicyContent = ({policy}: {policy?: Policy}) => {
         </div>
         <div className="w-full">
           <Card className="text-start space-y-4" variant="secondary">
-            <div className="flex justify-between items-center">
-              <Typography variant="subtitle1" fontWeight={600}>
-                {policy?.rules?.length} Policy {policy?.rules?.length && policy?.rules?.length > 1 ? 'Rules' : 'Rule'}
-              </Typography>
-            </div>
-            <CardContent className="p-0 space-y-4">
-              <div className="pt-4">
-                {paginatedRules?.map((rule, index) => (
-                  <div className="w-full" key={index}>
-                    <div className="flex justify-between items-start gap-4 mb-4">
-                      <div className="w-full">
-                        <Accordion
-                          title={rule.name || `Rule ${index + 1}`}
-                          subTitle={
-                            (
-                              <div className="flex gap-4 items-center h-[24px]">
-                                <Separator orientation="vertical" />
-                                <TagActionTask action={rule.action} text={labels.rulesActions[rule.action ?? RuleAction.RULE_ACTION_UNSPECIFIED]} />
-                                <Tag size={GeneralSize.Medium}>
-                                  {rule.tasks?.length || 0} {rule.tasks?.length && rule.tasks?.length > 1 ? 'Tasks' : 'Task'}
-                                </Tag>
-                                <Tag status={rule.needsApproval ? TagStatus.Positive : TagStatus.Negative} size={GeneralSize.Small}>
-                                  <Typography variant="captionSemibold">
-                                    Approval: <b>{rule.needsApproval ? 'Yes' : 'No'}</b>
+            {policy?.rules?.length && policy.rules.length > 0 ? (
+              <>
+                <div className="flex justify-between items-center">
+                  <Typography variant="subtitle1" fontWeight={600}>
+                    {policy?.rules?.length} Policy {policy?.rules?.length && policy?.rules?.length > 1 ? 'Rules' : 'Rule'}
+                  </Typography>
+                </div>
+                <CardContent className="p-0 space-y-4">
+                  <div className="pt-4">
+                    {paginatedRules?.map((rule, index) => (
+                      <div className="w-full" key={index}>
+                        <div className="flex justify-between items-start gap-4 mb-4">
+                          <div className="w-full">
+                            <Accordion
+                              title={rule.name || `Rule ${index + 1}`}
+                              subTitle={
+                                (
+                                  <div className="flex gap-4 items-center h-[24px]">
+                                    <Separator orientation="vertical" />
+                                    <TagActionTask
+                                      action={rule.action}
+                                      text={labels.rulesActions[rule.action ?? RuleAction.RULE_ACTION_UNSPECIFIED]}
+                                    />
+                                    <Tag size={GeneralSize.Medium}>
+                                      {rule.tasks?.length || 0} {rule.tasks?.length && rule.tasks?.length > 1 ? 'Tasks' : 'Task'}
+                                    </Tag>
+                                    <Tag status={rule.needsApproval ? TagStatus.Positive : TagStatus.Negative} size={GeneralSize.Small}>
+                                      <Typography variant="captionSemibold">
+                                        Approval: <b>{rule.needsApproval ? 'Yes' : 'No'}</b>
+                                      </Typography>
+                                    </Tag>
+                                  </div>
+                                ) as any
+                              }
+                            >
+                              <div>
+                                <Table
+                                  columns={TasksColumns}
+                                  densityCompact
+                                  data={rule.tasks || []}
+                                  isLoading={false}
+                                  enableRowActions
+                                  topToolbarProps={{
+                                    enableActions: false
+                                  }}
+                                  muiTableContainerProps={{
+                                    style: {
+                                      border: '1px solid #D5DFF7'
+                                    }
+                                  }}
+                                  onPaginationChange={setPagination}
+                                  onSortingChange={setSorting}
+                                  rowCount={rule.tasks?.length || 0}
+                                  rowsPerPageOptions={[1, 10, 25, 50, 100]}
+                                  state={{pagination, sorting}}
+                                  title={{label: 'Tasks', count: rule?.tasks?.length || 0}}
+                                  muiBottomToolbarProps={{
+                                    style: {
+                                      boxShadow: 'none'
+                                    }
+                                  }}
+                                  renderEmptyRowsFallback={() => (
+                                    <Box
+                                      sx={(theme) => ({
+                                        backgroundColor: theme.palette.vars.controlBackgroundDefault
+                                      })}
+                                    >
+                                      <EmptyState title="No tasks found" containerProps={{paddingBottom: '40px'}} actionTitle="Add Policy" />
+                                    </Box>
+                                  )}
+                                />
+                                <div className="pl-[24px]">
+                                  <Typography variant="body2">
+                                    Needs Approval: <b>{rule.needsApproval ? 'Yes' : 'No'}</b>
                                   </Typography>
-                                </Tag>
+                                </div>
                               </div>
-                            ) as any
-                          }
-                        >
-                          <div>
-                            <Table
-                              columns={TasksColumns}
-                              densityCompact
-                              data={rule.tasks || []}
-                              isLoading={false}
-                              enableRowActions
-                              topToolbarProps={{
-                                enableActions: false
-                              }}
-                              muiTableContainerProps={{
-                                style: {
-                                  border: '1px solid #D5DFF7'
-                                }
-                              }}
-                              onPaginationChange={setPagination}
-                              onSortingChange={setSorting}
-                              rowCount={rule.tasks?.length || 0}
-                              rowsPerPageOptions={[1, 10, 25, 50, 100]}
-                              state={{pagination, sorting}}
-                              title={{label: 'Tasks', count: rule?.tasks?.length || 0}}
-                              muiBottomToolbarProps={{
-                                style: {
-                                  boxShadow: 'none'
-                                }
-                              }}
-                              renderEmptyRowsFallback={() => (
-                                <Box
-                                  sx={(theme) => ({
-                                    backgroundColor: theme.palette.vars.controlBackgroundDefault
-                                  })}
-                                >
-                                  <EmptyState title="No tasks found" containerProps={{paddingBottom: '40px'}} actionTitle="Add Policy" />
-                                </Box>
-                              )}
-                            />
-                            <div className="pl-[24px]">
-                              <Typography variant="body2">
-                                Needs Approval: <b>{rule.needsApproval ? 'Yes' : 'No'}</b>
-                              </Typography>
-                            </div>
+                            </Accordion>
                           </div>
-                        </Accordion>
+                          <Tooltip title="View Rule Actions">
+                            <IconButton
+                              sx={(theme) => ({
+                                color: theme.palette.vars.baseTextDefault,
+                                width: '24px',
+                                height: '24px'
+                              })}
+                              onClick={handleClick}
+                            >
+                              <EllipsisVerticalIcon className="h-4 w-4" />
+                            </IconButton>
+                          </Tooltip>
+                          <Menu
+                            transformOrigin={{horizontal: 'right', vertical: 'top'}}
+                            anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
+                            anchorEl={anchorEl}
+                            open={open}
+                            onClose={handleClose}
+                            onClick={handleClose}
+                          >
+                            <MenuItem
+                              key="edit-rule"
+                              sx={{display: 'flex', alignItems: 'center', gap: '8px'}}
+                              onClick={() => {
+                                setTempRule(rule);
+                                setIsEdit(true);
+                              }}
+                            >
+                              <PencilIcon className="w-4 h-4" color="#062242" />
+                              <Typography variant="body2" color="#1A1F27">
+                                Edit
+                              </Typography>
+                            </MenuItem>
+                            <MenuItem
+                              key="delete-rule"
+                              onClick={() => {
+                                setTempRule(rule);
+                                setIsDelete(true);
+                              }}
+                              sx={{display: 'flex', alignItems: 'center', gap: '8px'}}
+                            >
+                              <Trash2Icon className="w-4 h-4" color="#C62953" />
+                              <Typography variant="body2" color="#C0244C">
+                                Delete
+                              </Typography>
+                            </MenuItem>
+                          </Menu>
+                        </div>
+                        <div className="my-6">
+                          <Divider />
+                        </div>
                       </div>
-                      <Tooltip title="Update Rules and Tasks on the Update Policy page">
-                        <IconButton
-                          sx={(theme) => ({
-                            color: theme.palette.vars.baseTextDefault,
-                            width: '24px',
-                            height: '24px'
-                          })}
-                        >
-                          <InfoIcon className="h-4 w-4" />
-                        </IconButton>
-                      </Tooltip>
-                    </div>
-                    <div className="my-6">
-                      <Divider />
+                    ))}
+                    <div className="flex justify-end">
+                      <Pagination
+                        size="small"
+                        count={Math.ceil((policy?.rules?.length || 0) / PAGE_SIZE)}
+                        page={pageRules}
+                        onChange={handlePaginationRulesChange}
+                      />
                     </div>
                   </div>
-                ))}
-                <div className="flex justify-end">
-                  <Pagination
-                    size="small"
-                    count={Math.ceil((policy?.rules?.length || 0) / PAGE_SIZE)}
-                    page={pageRules}
-                    onChange={handlePaginationRulesChange}
-                  />
-                </div>
-              </div>
-            </CardContent>
+                </CardContent>
+              </>
+            ) : (
+              <EmptyState
+                title="No Rules Found"
+                description="Create a new rule associated with this policy to get started."
+                containerProps={{paddingBottom: '40px'}}
+                actionTitle="Add Rule"
+                actionCallback={() => {
+                  setIsAdd(true);
+                }}
+                actionButtonProps={{
+                  sx: {fontWeight: '600 !important'},
+                  startIcon: <PlusIcon className="w-4 h-4" />
+                }}
+              />
+            )}
           </Card>
+          <OpsRule
+            policy={policy}
+            rule={tempRule}
+            isDelete={isDelete}
+            isEdit={isEdit}
+            isAdd={isAdd}
+            onClose={() => {
+              setTempRule(undefined);
+              setIsDelete(false);
+              setIsEdit(false);
+              setIsAdd(false);
+            }}
+          />
         </div>
       </div>
     </>

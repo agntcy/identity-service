@@ -44,7 +44,7 @@ export const ListPoliciesAgenticService = ({appId, mode = 'assinged'}: {appId?: 
     return (
       data?.policies?.map((policy) => ({
         ...policy,
-        subRows: <ListRules policyId={policy.id} />
+        subRows: <ListRules policy={policy} />
       })) || []
     );
   }, [data]);

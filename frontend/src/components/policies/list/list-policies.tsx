@@ -47,7 +47,7 @@ export const ListPolicies = () => {
     return (
       data?.policies?.map((policy) => ({
         ...policy,
-        subRows: <ListRules policyId={policy.id} />
+        subRows: <ListRules policy={policy} showRulesOps={true} />
       })) || []
     );
   }, [data]);
