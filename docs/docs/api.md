@@ -4,6 +4,14 @@ sidebar_position: 6
 
 # API Access
 
+:::info[Endpoints]
+
+- **REST API Endpoint**: https://api.pyramid-platform.staging.outshift.ai
+- **gRPC API Endpoint**: api.grpc.pyramid-platform.staging.outshift.ai
+- **UI Endpoint**: https://identity.staging.outshift.ai
+
+:::
+
 Welcome to the API Access documentation for Agent Identity. This section provides detailed information on how to interact with the Agent Identity API, including authentication, endpoints, and usage examples.
 
 ## Organization API Key
@@ -31,13 +39,3 @@ The Protodocs definition can be accessed [here](/protodocs/agntcy/identity/platf
 The OpenAPI Client provides a way to interact with the Agent Identity API using standard HTTP requests. You can use any HTTP client library to make requests to the API endpoints defined in the OpenAPI specification.
 
 The OpenAPI specification for the Agent Identity API can be found [here](/openapi/platform/v1alpha1).
-
-## Python SDK
-
-To install the Python SDK for Agent Identity, you can use pip:
-
-```bash
-pip install git+https://github.com/cisco-eti/pyramid-platform@main#subdirectory=sdk/python
-```
-
-The Python SDK provides a cli tool for interacting with the Agent Identity API. You can use it to perform various actions such as verifying and managing identities.
