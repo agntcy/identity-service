@@ -13,7 +13,6 @@ from google.protobuf import empty_pb2
 
 from identityplatform import client, log
 
-
 logger = logging.getLogger("identity")
 
 if int(os.getenv("IDENTITY_PLATFORM_ENABLE_LOGS", "0")) == 1:
@@ -75,17 +74,20 @@ class IdentityPlatformSdk:
         return empty_pb2.Empty()
 
     def _get_app_service(
-        self, ) -> "agntcy.identity.platform.v1alpha1.AppsService":
+        self,
+    ) -> "agntcy.identity.platform.v1alpha1.AppsService":
         """Return the AppService stub."""
         return IdentityPlatformSdk.AppServiceStub(self.client.channel)
 
     def _get_badge_service(
-        self, ) -> "agntcy.identity.platform.v1alpha1.BadgeService":
+        self,
+    ) -> "agntcy.identity.platform.v1alpha1.BadgeService":
         """Return the BadgeService stub."""
         return IdentityPlatformSdk.BadgeServiceStub(self.client.channel)
 
     def _get_auth_service(
-        self, ) -> "agntcy.identity.platform.v1alpha1.AuthService":
+        self,
+    ) -> "agntcy.identity.platform.v1alpha1.AuthService":
         """Return the AuthService stub."""
         return IdentityPlatformSdk.AuthServiceStub(self.client.channel)
 
@@ -111,11 +113,14 @@ class IdentityPlatformSdk:
                     app_id=agentic_service_id,
                     tool_name=tool_name,
                     user_token=user_token,
-                ))
+                )
+            )
 
             token_response = self._get_auth_service().Token(
                 IdentityPlatformSdk.TokenRequest(
-                    authorization_code=auth_response.authorization_code, ))
+                    authorization_code=auth_response.authorization_code,
+                )
+            )
 
             return token_response.access_token
         except Exception as e:
@@ -134,10 +139,12 @@ class IdentityPlatformSdk:
             IdentityPlatformSdk.ExtAuthzRequest(
                 access_token=access_token,
                 tool_name=tool_name,
-            ))
+            )
+        )
 
-    def verify_badge(
-    ) -> ("agntcy.identity.platform.v1alpha1.VerificationResult"):
+    def verify_badge() -> (
+        "agntcy.identity.platform.v1alpha1.VerificationResult"
+    ):
         """Verify a badge.
 
         Parameters:
@@ -147,10 +154,11 @@ class IdentityPlatformSdk:
             VerificationResult: The result of the verification.
         """
         return self._get_badge_service().VerifyBadge(
-            request=IdentityPlatformSdk.VerifyBadgeRequest(badge=badge))
+            request=IdentityPlatformSdk.VerifyBadgeRequest(badge=badge)
+        )
 
     async def averify_badge(
-            self, badge: str
+        self, badge: str
     ) -> "agntcy.identity.platform.v1alpha1.VerificationResult":
         """Verify a badge using async method.
 
@@ -161,4 +169,5 @@ class IdentityPlatformSdk:
             VerificationResult: The result of the verification.
         """
         return await self._get_badge_service().VerifyBadge(
-            IdentityPlatformSdk.VerifyBadgeRequest(badge=badge))
+            IdentityPlatformSdk.VerifyBadgeRequest(badge=badge)
+        )
