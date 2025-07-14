@@ -27,7 +27,7 @@ service AuthService {
 
   // Authorize a request from an Agent or MCP Server
   rpc Authorize(AuthorizeRequest) returns (AuthorizeResponse) {
-    option (google.api.http) = {get: "/v1alpha1/auth/authorize"};
+    option (google.api.http) = {post: "/v1alpha1/auth/authorize", body: "*"};
 
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       operation_id: "Authorize";
