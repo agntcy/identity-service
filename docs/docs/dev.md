@@ -97,9 +97,9 @@ The tasks available for TBAC are automatically discovered from the Agentic Servi
 
 - To integrate TBAC in your application, you can use the UI to define policies and rules for your Agentic Services. Please follow the detailed instructions in the [Policies and Rules Documentation](/docs/policies) to set up and manage access control for your services.
 
-3. **Integrate TBAC in your application.**
+3. **Integrate TBAC in your application** following one of the methods below.
 
-3.1 **Using the Python SDK**
+### **Using the Python SDK**
 
 :::warning[IMPORTANT]
 When using the Python SDK for TBAC, you need to provide in your environment the following variables:
@@ -107,9 +107,97 @@ When using the Python SDK for TBAC, you need to provide in your environment the 
 - `IDENTITY_PLATFORM_API_KEY`: Your Agentic Service API Key. You can obtain this key from the Agent Services details page.
 
 :::
-3.1.1 **Using the easy plug-in integrations**
 
-3.1.2 **Using a custom implementation**
+#### **Using the easy plug-in integrations**
+
+For easy plug-in integrations, you can use the following extensions and plugins:
+
+##### **HTTPX Auth Class**
+
+For HTTPX-based applications, you can use the `IdentityPlatformAuth` class to integrate TBAC. This class provides an easy way to authorize Agentic Services and manage access tokens.
+
+```python
+from identityplatform.auth.httpx import IdentityPlatformAuth
+
+timeout = httpx.Timeout(connect=None, read=None, write=None, pool=None)
+auth = IdentityPlatformAuth() # Instantiate the auth class
+async with httpx.AsyncClient(
+timeout=timeout, auth=auth
+) as httpx_client:
+
+# Do your HTTPX requests here
+```
+
+You can see this class fully implemented in our [Financial Agentic Service](https://github.com/cisco-eti/pyramid-platform/blob/main/samples/agent/oasf/financial_assistant/currency_exchange_agent.py#L112).
+
+##### **A2A Starlette auth middleware**
+
+For A2A (Agent-to-Agent) based applications using Starlette, you can use the `IdentityPlatformA2AAuthMiddleware` to integrate TBAC. This middleware automatically handles authorization for incoming requests:
+
+- **Define a security scheme in your A2A Card**
+
+```python
+# Define auth scheme
+AUTH_SCHEME = "IdentityPlatformAuthScheme"
+auth_scheme = HTTPAuthSecurityScheme(
+  scheme="bearer",
+  bearerFormat="JWT",
+)
+
+try:
+  # Define the Agent Card with the security scheme
+  agent_card = AgentCard(
+      ...
+      securitySchemes={AUTH_SCHEME: SecurityScheme(root=auth_scheme)},
+      security=[
+          {
+              AUTH_SCHEME: ["*"],
+          }
+      ],
+  )
+```
+
+- **Add the middleware to your A2A Starlette application**
+
+```python
+from identityplatform.auth.starlette import IdentityPlatformA2AMiddleware
+
+# Start server
+app = server.build()
+
+# Add IdentityPlatformMiddleware for authentication
+app.add_middleware(
+    IdentityPlatformA2AMiddleware, # Define the middleware
+    agent_card=agent_card,
+    public_paths=["/.well-known/agent.json"],
+)
+
+# Run the application
+uvicorn.run(app, host=host, port=port)
+```
+
+You can see this class fully implemented in our [Currency Exchange Agentic Service](https://github.com/cisco-eti/pyramid-platform/blob/main/samples/agent/a2a/currency_exchange/main.py#L91).
+
+##### **Standard Starlette/FastAPI auth middleware**
+
+We also support standard Starlette or FastAPI applications, you can use the `IdentityPlatformAuthMiddleware` to integrate TBAC. This middleware automatically handles authorization for incoming requests.
+
+```python
+from starlette.applications import Starlette
+from starlette.middleware import Middleware
+
+from identityplatform.auth.starlette import IdentityPlatformAuthMiddleware
+
+routes = ...
+
+middleware = [
+  IdentityPlatformAuthMiddleware(public_paths=[])
+]
+
+app = Starlette(routes=routes, middleware=middleware)
+```
+
+#### **Using a custom implementation**
 
 The Python SDK provides two functions to integrate TBAC in your application:
 
@@ -132,7 +220,7 @@ authorize(self, access_token: str, tool_name: str | None = None)
 
 You can use these functions to integrate TBAC in your application and manage access control for your Agentic Services.
 
-3.2 **Using the REST APIs**
+### **Using the REST APIs**
 
 :::warning[IMPORTANT]
 When using the REST APIs for TBAC, you need to replace the following variables in the code snippets:
@@ -144,14 +232,25 @@ When using the REST APIs for TBAC, you need to replace the following variables i
 
 The REST API provides endpoints to integrate TBAC in your application. You can follow these steps to authorize and verify Agentic Services:
 
-3.2.1 **Authorize an Agentic Service**
+1. **Authorize an Agentic Service**
+
+Below are the different endpoints you can use to authorize an Agentic Service:
 
 - **Perform an authoriation request**
 
 ```curl
 curl https://{REST_API_ENDPOINT}/auth/authorize \
+  --request POST \
+  --header 'Content-Type: application/json' \
   --header 'X-Id-Api-Key: {YOUR_AGENTIC_SERVICE_API_KEY}' \
+  --data '{
+  "appId": "",
+  "toolName": "",
+  "userToken": ""
+}'
 ```
+
+Optionally, you can specify the `appId`, `toolName`, and `userToken` to customize the authorization process for Zero Trust environments.
 
 - **Exchange the authorization code for an access token**
 
@@ -167,4 +266,19 @@ curl https://{REST_API_ENDPOINT}/auth/token \
 
 where `{AUTHORIZATION_CODE}` is the code received from the authorization request.
 
-3.2.2 **Verify an Agentic Service**
+2 **Verify an Agentic Service**
+
+To verify an Agentic Service, you can use the following external authorization endpoint:
+
+```curl
+curl https://{REST_API_ENDPOINT}/auth/ext_authz \
+  --request POST \
+  --header 'Content-Type: application/json' \
+  --header 'X-Id-Api-Key: {YOUR_AGENTIC_SERVICE_API_KEY}' \
+  --data '{
+  "accessToken": "{ACCESS_TOKEN}",
+  "toolName": ""
+}'
+```
+
+where `{ACCESS_TOKEN}` is the access token received from the authorization request, and `toolName` is optionally the name of the tool you want to verify.
