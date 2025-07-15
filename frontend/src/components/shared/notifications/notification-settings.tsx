@@ -34,8 +34,13 @@ export const NotificationSettings = (props: NotificationSettingsProps) => {
   });
 
   const handler = useCallback(() => {
-    addDeviceMutation.mutate({});
-  }, [addDeviceMutation]);
+    if (enabled) {
+      handleToggleNotifications();
+      return;
+    } else if (supported) {
+      addDeviceMutation.mutate({});
+    }
+  }, [addDeviceMutation, enabled, handleToggleNotifications, supported]);
 
   return (
     <Modal {...props} maxWidth="md" fullWidth>

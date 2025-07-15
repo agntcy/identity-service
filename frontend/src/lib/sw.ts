@@ -11,6 +11,34 @@ const BADGE_PATH = '/pwa-64x64.png';
 
 declare let self: ServiceWorkerGlobalScope;
 
+self.addEventListener('message', async (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    try {
+      await self.skipWaiting();
+    } catch (error) {
+      console.error('Error during service worker skipWaiting:', error);
+    }
+  }
+});
+
+// self.__WB_MANIFEST is default injection point
+precacheAndRoute(self.__WB_MANIFEST);
+
+// clean old assets
+cleanupOutdatedCaches();
+
+/** @type {RegExp[] | undefined} */
+let allowlist;
+// in dev mode, we disable precaching to avoid caching issues
+if (import.meta.env.DEV) {
+  allowlist = [/^\/$/];
+}
+
+// to allow work offline
+registerRoute(new NavigationRoute(createHandlerBoundToURL('index.html'), {allowlist}));
+
+// SW logic for push notifications //
+
 const sendNotification = async (payload: any) => {
   try {
     await self.clients.matchAll({type: 'window', includeUncontrolled: true}).then((clients) => {
@@ -50,17 +78,8 @@ const getNotificationOptions = (data: any) => {
   }
 };
 
-self.addEventListener('message', async (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
-    try {
-      await self.skipWaiting();
-    } catch (error) {
-      console.error('Error during service worker skipWaiting:', error);
-    }
-  }
-});
-
 self.addEventListener('push', async (event) => {
+  console.log('Push event received:', event);
   try {
     if (event.data) {
       const notificationData = event.data.text();
@@ -90,19 +109,3 @@ self.addEventListener('notificationclick', (event) => {
   const {action, notification} = event;
   console.log('Notification click event:', event);
 });
-
-// self.__WB_MANIFEST is default injection point
-precacheAndRoute(self.__WB_MANIFEST);
-
-// clean old assets
-cleanupOutdatedCaches();
-
-/** @type {RegExp[] | undefined} */
-let allowlist;
-// in dev mode, we disable precaching to avoid caching issues
-if (import.meta.env.DEV) {
-  allowlist = [/^\/$/];
-}
-
-// to allow work offline
-registerRoute(new NavigationRoute(createHandlerBoundToURL('index.html'), {allowlist}));

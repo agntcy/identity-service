@@ -7,5 +7,5 @@ export * from './settings';
 export * from './agentic-services';
 export * from './iam';
 export * from './badge';
-export * from './policy';
+export * from './policies';
 export * from './devices';

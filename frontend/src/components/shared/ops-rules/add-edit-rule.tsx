@@ -114,7 +114,7 @@ export const AddEditRule = ({policy, open, rule, mode = 'add', onClose}: AddEdit
   }, [createRule, form, mode, policy?.id, rule?.id, updateRule]);
 
   useEffect(() => {
-    if (rule && mode === 'edit') {
+    if (rule?.id && mode === 'edit') {
       form.reset({
         name: rule.name,
         description: rule.description,

@@ -117,6 +117,7 @@ export const useUpdateRule = ({callbacks}: PropsSettingsRules = {}) => {
       await queryClient.invalidateQueries({queryKey: ['get-policies']});
       await queryClient.invalidateQueries({queryKey: ['get-policy']});
       await queryClient.invalidateQueries({queryKey: ['get-policy-rules']});
+      await queryClient.invalidateQueries({queryKey: ['get-rule']});
     }
   });
 };
@@ -138,6 +139,7 @@ export const useDeleteRule = ({callbacks}: PropsSettingsRules = {}) => {
       await queryClient.invalidateQueries({queryKey: ['get-policies']});
       await queryClient.invalidateQueries({queryKey: ['get-policy']});
       await queryClient.invalidateQueries({queryKey: ['get-policy-rules']});
+      await queryClient.invalidateQueries({queryKey: ['get-rule']});
     }
   });
 };

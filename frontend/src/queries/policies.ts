@@ -99,3 +99,14 @@ export const useGetPolicyRules = ({
     placeholderData: keepPreviousData
   });
 };
+
+export const useGetRule = (policyId?: string, ruleId?: string) => {
+  return useQuery({
+    queryKey: ['get-rule', policyId, ruleId],
+    queryFn: async () => {
+      const {data} = await PolicyAPI.getRule(policyId!, ruleId!);
+      return data;
+    },
+    enabled: !!policyId && !!ruleId
+  });
+};

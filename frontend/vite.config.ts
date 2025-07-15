@@ -44,13 +44,13 @@ export default defineConfig(({mode}) => {
         srcDir: 'src/lib',
         filename: 'sw.ts',
         injectRegister: 'inline',
+        base: '/',
         injectManifest: {
           maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
           minify: false,
           enableWorkboxModulesLogs: true,
           globPatterns: ['**/*.{js,css,html,svg,png,svg,ico}']
         },
-        base: '/',
         manifest: {
           name: 'Agent Identity | AGNTCY',
           short_name: 'Agent Identity',
