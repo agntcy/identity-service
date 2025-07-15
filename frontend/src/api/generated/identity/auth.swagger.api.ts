@@ -274,7 +274,3 @@ export class HttpClient<SecurityDataType = unknown> {
  * @version version not set
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {}
-
- * @version version not set
- */
-export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {}
