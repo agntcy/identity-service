@@ -12,59 +12,65 @@ import '@/styles/welcome.css';
 const Welcome = () => {
   const {login, register} = useAuth();
   return (
-    <div className="h-screen w-screen fixed top-0 left-0 z-50 no-doc-scroll h-screen bg-[#00142B] relative">
-      <div className="flex items-center justify-center h-screen">
-        <div className="space-y-12">
-          <div className="flex gap-12 justify-center">
-            <div className="welcome-title w-[394px] font-[400]">Get started with</div>
-            <div className="px-1">
-              <Divider orientation="vertical" sx={{margin: '0 auto'}} />
-            </div>
-            <div className="space-y-2">
-              <AgntcyLogo className="w-[416px] h-[94px]" />
-              <div className="welcome-product-name">Agent Identity</div>
-            </div>
-          </div>
-          <div className="welcome-main-card mx-auto max-w-[914px] h-[350px] px-[80px] flex flex-col justify-center items-center">
-            <div className="space-y-8">
-              <div className="text-center mx-auto">
-                <Typography variant="h5" color="#FBFCFE" paddingBottom={1}>
-                  Create Badges & Policies
-                </Typography>
-                <Typography textAlign="center" variant="body1" paddingTop={2} color="#FBFCFE" maxWidth={'80%'} sx={{margin: '0 auto'}}>
-                  Register your AI agents and MCP servers, including those supporting A2A-compatible protocols like Google A2A, to create and manage
-                  identities with support for policies and access controls.
-                </Typography>
-                <Link
-                  href={docs()}
-                  openInNewTab
-                  fontStyle={{
-                    fontWeight: 400,
-                    fontSize: '16px',
-                    lineHeight: '24px',
-                    letterSpacing: '0.01em',
-                    color: '#FBAF45'
-                  }}
-                  style={{color: '#FBAF45'}}
-                >
-                  Learn more in our documentation.
-                </Link>
+    <div className="h-screen w-screen fixed top-0 left-0 z-50 bg-[#00142B] relative">
+      <div>
+        <div className="flex items-center justify-center h-screen">
+          <div className="space-y-12">
+            <div className="flex gap-6 md:gap-12 justify-center px-4 md:px-0">
+              <div className="welcome-title md:max-w-[200px] lg:max-w-[394px] font-[400] leading-[34px] md:leading-[64px] text-[30px] md:text-[50px] lg:text-[60px]">
+                Get started with
               </div>
-              <div className="flex justify-center items-center gap-4">
-                <Button
-                  variant="outlined"
-                  onClick={() => login?.()}
-                  sx={{fontWeight: '600 !important', color: '#FBFCFE !important', borderRadius: '1000px !important'}}
-                >
-                  <span className="text-[#FBAF45]">Log In</span>
-                </Button>
-                <Button
-                  onClick={() => register?.()}
-                  sx={{fontWeight: '600 !important', background: '#FBAF45 !important', color: '#00142B', borderRadius: '1000px !important'}}
-                  variant="primary"
-                >
-                  Sign Up
-                </Button>
+              <div className="px-1">
+                <Divider orientation="vertical" sx={{margin: '0 auto'}} />
+              </div>
+              <div className="md:space-y-2">
+                <AgntcyLogo className="w-[170px] md:w-[300px] lg:w-[416px] h-fit md:h-[94px]" />
+                <div className="welcome-product-name text-[20px] md:text-[40px] lg:text-[46.19px]">Agent Identity</div>
+              </div>
+            </div>
+            <div className="welcome-main-card mx-auto max-w-[350px] md:max-w-[700px] lg:max-w-[914px] h-fit md:h-[350px] px-[80px] flex flex-col justify-center items-center">
+              <div className="space-y-8">
+                <div className="text-center mx-auto">
+                  <Typography variant="h5" color="#FBFCFE" paddingBottom={1}>
+                    Create Badges & Policies
+                  </Typography>
+                  <div className="hidden md:block">
+                    <Typography textAlign="center" variant="body1" paddingTop={2} color="#FBFCFE" maxWidth={'80%'} sx={{margin: '0 auto'}}>
+                      Register your AI agents and MCP servers, including those supporting A2A-compatible protocols like Google A2A, to create and
+                      manage identities with support for policies and access controls.
+                    </Typography>
+                  </div>
+                  <Link
+                    href={docs()}
+                    openInNewTab
+                    fontStyle={{
+                      fontWeight: 400,
+                      fontSize: '16px',
+                      lineHeight: '24px',
+                      letterSpacing: '0.01em',
+                      color: '#FBAF45'
+                    }}
+                    style={{color: '#FBAF45'}}
+                  >
+                    Learn more in our documentation.
+                  </Link>
+                </div>
+                <div className="flex justify-center items-center gap-4">
+                  <Button
+                    variant="outlined"
+                    onClick={() => login?.()}
+                    sx={{fontWeight: '600 !important', color: '#FBFCFE !important', borderRadius: '1000px !important'}}
+                  >
+                    <span className="text-[#FBAF45]">Log In</span>
+                  </Button>
+                  <Button
+                    onClick={() => register?.()}
+                    sx={{fontWeight: '600 !important', background: '#FBAF45 !important', color: '#00142B', borderRadius: '1000px !important'}}
+                    variant="primary"
+                  >
+                    Sign Up
+                  </Button>
+                </div>
               </div>
             </div>
           </div>

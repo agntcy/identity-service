@@ -9,8 +9,11 @@ import * as CookieConsentVanilla from 'vanilla-cookieconsent';
 import {config} from './cookie-consent/config';
 import {useEffect} from 'react';
 import '@/styles/cookie.css';
+import {useWindowSize} from '@/hooks';
 
 export const Footer = () => {
+  const {width} = useWindowSize();
+
   useEffect(() => {
     if (window) {
       void CookieConsentVanilla.run(config);
@@ -24,28 +27,38 @@ export const Footer = () => {
       <SparkFooter
         productName="Cisco Systems, Inc."
         productLink="https://www.cisco.com/"
-        links={[
-          {
-            children: 'support@agntcy.com',
-            href: 'mailto:support@agntcy.com',
-            openInNewTab: true
-          },
-          {
-            children: 'Terms & Conditions',
-            href: 'https://www.cisco.com/c/en/us/about/legal/terms-conditions.html',
-            openInNewTab: true
-          },
-          {
-            children: 'Privacy Policy',
-            href: 'https://www.cisco.com/c/en/us/about/legal/privacy-full.html',
-            openInNewTab: true
-          },
-          {
-            children: 'Cookies',
-            href: '#',
-            onClick: () => CookieConsentVanilla.showPreferences()
-          }
-        ]}
+        links={
+          width >= 768
+            ? [
+                {
+                  children: 'support@agntcy.com',
+                  href: 'mailto:support@agntcy.com',
+                  openInNewTab: true
+                },
+                {
+                  children: 'Terms & Conditions',
+                  href: 'https://www.cisco.com/c/en/us/about/legal/terms-conditions.html',
+                  openInNewTab: true
+                },
+                {
+                  children: 'Privacy Policy',
+                  href: 'https://www.cisco.com/c/en/us/about/legal/privacy-full.html',
+                  openInNewTab: true
+                },
+                {
+                  children: 'Cookies',
+                  href: '#',
+                  onClick: () => CookieConsentVanilla.showPreferences()
+                }
+              ]
+            : [
+                {
+                  children: 'Cookies',
+                  href: '#',
+                  onClick: () => CookieConsentVanilla.showPreferences()
+                }
+              ]
+        }
       />
     </>
   );

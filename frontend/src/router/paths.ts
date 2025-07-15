@@ -6,6 +6,7 @@
 export const PATHS = {
   basePath: '/',
   welcome: '/welcome',
+  onboardDevice: '/onboard-device/:id',
   verifyIdentity: '/verify-identity',
   callBackLoading: '/login/callback',
   dashboard: '/dashboard',
@@ -28,6 +29,10 @@ export const PATHS = {
     identityProvider: {
       base: '/settings/identity-provider',
       connection: '/settings/identity-provider/connection'
+    },
+    devices: {
+      base: '/settings/devices',
+      add: '/settings/devices/add'
     },
     apiKey: '/settings/api-key',
     organizationsAndUsers: {

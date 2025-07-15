@@ -16,6 +16,7 @@ const Layout = () => {
   const defaultCollapsedLayout = [3.5, 96.5];
   const [layout, setLayout] = useState<number[]>(window.innerWidth < 768 ? defaultCollapsedLayout : defaultLayout);
   const [isCollapsed, setIsCollapsed] = useState(window.innerWidth < 768 ? true : false);
+  const isMobile = window.innerWidth < 768;
 
   const handleResize = () => {
     if (window.innerWidth < 768) {
@@ -56,6 +57,7 @@ const Layout = () => {
       <Header />
       <ResizablePanelGroup direction="horizontal" onLayout={onLayout}>
         <ResizablePanel
+          hidden={isMobile}
           defaultSize={layout[0]}
           collapsedSize={defaultCollapsedLayout[0]}
           minSize={10}

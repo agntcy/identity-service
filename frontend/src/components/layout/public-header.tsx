@@ -6,32 +6,50 @@
 import {Button, Header, Typography} from '@outshift/spark-design';
 import {Link} from 'react-router-dom';
 import Logo from '@/assets/logo-app-bar.svg';
-import {useAuth} from '@/hooks';
+import LogoIcon from '@/assets/icon-agntcy.svg';
+import {useAuth, useWindowSize} from '@/hooks';
+import {ReactNode} from 'react';
 
-export const PublicHeader = () => {
+export const PublicHeader = ({userSection}: {userSection?: ReactNode}) => {
   const {login, register} = useAuth();
+  const {width} = useWindowSize();
+  const isMobile = width < 768;
+
   return (
     <Header
       title={
-        <Typography variant="h1" fontWeight={700} fontSize="18px" lineHeight="18px" sx={(theme) => ({color: theme.palette.vars.brandTextSecondary})}>
-          Agent Identity
-        </Typography>
+        <div className="mt-1 md:mt-0">
+          <Typography
+            variant="h1"
+            fontWeight={700}
+            fontSize={isMobile ? '16px' : '18px'}
+            lineHeight="18px"
+            sx={(theme) => ({color: theme.palette.vars.brandTextSecondary})}
+          >
+            Agent Identity
+          </Typography>
+        </div>
       }
       logo={
         <Link to="https://agntcy.org/" target="_blank" rel="noopener noreferrer">
-          <img src={Logo} alt="Identity" />
+          <img src={Logo} alt="Identity" className="hidden md:block" />
+          <img src={LogoIcon} alt="Identity" className="w-8 h-8 md:hidden" />
         </Link>
       }
       position="fixed"
       userSection={
-        <div className="flex items-center gap-4">
-          <Button variant="secondary" onClick={() => login?.()} sx={{fontWeight: '600 !important'}}>
-            Log In
-          </Button>
-          <Button onClick={() => register?.()} sx={{fontWeight: '600 !important'}}>
-            Sign Up
-          </Button>
-        </div>
+        !userSection ? (
+          <div className="flex items-center gap-4">
+            <Button variant="secondary" onClick={() => login?.()} sx={{fontWeight: '600 !important'}}>
+              Log In
+            </Button>
+            <Button onClick={() => register?.()} sx={{fontWeight: '600 !important'}}>
+              Sign Up
+            </Button>
+          </div>
+        ) : (
+          userSection
+        )
       }
       useDivider={false}
     />

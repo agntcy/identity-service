@@ -127,7 +127,7 @@ export const TaskForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
                     sx={{
                       height: '36px',
                       marginTop: 0,
-                      '&.MuiInputBase-root': {backgroundColor: '#FBFCFE', marginTop: 0, border: '2px solid #D5DFF7', height: '32px'},
+                      '&.MuiInputBase-root': {backgroundColor: '#FBFCFE', marginTop: 0, border: '2px solid #D5DFF7', height: '36px'},
                       '& .MuiSelect-select': {backgroundColor: '#fbfcfe', color: '#777D85'},
                       '& .MuiSelect-icon': {
                         color: 'currentColor'
@@ -193,7 +193,7 @@ export const TaskForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
                   sx={{
                     height: '36px',
                     marginTop: 0,
-                    '&.MuiInputBase-root': {backgroundColor: '#FBFCFE', marginTop: 0, border: '2px solid #D5DFF7', height: '32px'},
+                    '&.MuiInputBase-root': {backgroundColor: '#FBFCFE', marginTop: 0, border: '2px solid #D5DFF7', height: '36px'},
                     '& .MuiSelect-select': {backgroundColor: '#fbfcfe', color: '#777D85'},
                     '& .MuiSelect-icon': {
                       color: 'currentColor'

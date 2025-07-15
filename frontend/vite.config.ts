@@ -8,6 +8,7 @@ import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import {defineConfig, loadEnv} from 'vite';
 import svgr from 'vite-plugin-svgr';
+import {VitePWA} from 'vite-plugin-pwa';
 
 /** @type {import('vite').UserConfig} */
 export default defineConfig(({mode}) => {
@@ -29,8 +30,69 @@ export default defineConfig(({mode}) => {
       }
     },
     build: {
-      chunkSizeWarningLimit: 1600
+      chunkSizeWarningLimit: 3200
     },
-    plugins: [react(), tailwindcss(), svgr()]
+    plugins: [
+      react(),
+      tailwindcss(),
+      svgr(),
+      VitePWA({
+        mode: mode === 'development' ? 'development' : 'production',
+        registerType: 'autoUpdate',
+        includeAssets: ['favicon.ico', 'apple-touch-icon-180x180.png', 'maskable-icon-512x512.png'],
+        strategies: 'injectManifest',
+        srcDir: 'src/lib',
+        filename: 'sw.ts',
+        injectRegister: 'inline',
+        injectManifest: {
+          maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
+          minify: false,
+          enableWorkboxModulesLogs: true,
+          globPatterns: ['**/*.{js,css,html,svg,png,svg,ico}']
+        },
+        base: '/',
+        manifest: {
+          name: 'Agent Identity | AGNTCY',
+          short_name: 'Agent Identity',
+          description: 'AGNTCY Identity management system with push notifications and offline capabilities',
+          theme_color: '#eff3fc',
+          background_color: '#eff3fc',
+          icons: [
+            {
+              src: 'pwa-64x64.png',
+              sizes: '64x64',
+              type: 'image/png'
+            },
+            {
+              src: 'pwa-192x192.png',
+              sizes: '192x192',
+              type: 'image/png'
+            },
+            {
+              src: 'pwa-512x512.png',
+              sizes: '512x512',
+              type: 'image/png',
+              purpose: 'any'
+            },
+            {
+              src: 'maskable-icon-512x512.png',
+              sizes: '512x512',
+              type: 'image/png',
+              purpose: 'maskable'
+            }
+          ]
+        },
+        workbox: {
+          globPatterns: ['**/*.{js,css,html,svg,png,svg,ico}'],
+          cleanupOutdatedCaches: true,
+          clientsClaim: true
+        },
+        devOptions: {
+          enabled: mode === 'development',
+          type: 'module',
+          navigateFallback: 'index.html'
+        }
+      })
+    ]
   };
 });

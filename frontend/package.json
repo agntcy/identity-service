@@ -11,7 +11,8 @@
     "lint:check": "eslint . && prettier \"**/*.+(ts*|js*)\" --check",
     "lint": "eslint . --fix && prettier \"**/*.+(ts*|js*)\" --write",
     "format": "prettier \"**/*.+(ts*|js*)\" --write",
-    "generate-bff": "yarn workspace utils generate-bff"
+    "generate-bff": "yarn workspace utils generate-bff",
+    "generate-pwa-assets": "pwa-assets-generator --preset minimal public/logo.svg"
   },
   "dependencies": {
     "@hello-pangea/dnd": "^18.0.1",
@@ -30,6 +31,7 @@
     "@radix-ui/react-slot": "^1.1.2",
     "@radix-ui/react-tabs": "^1.1.3",
     "@radix-ui/react-tooltip": "^1.1.8",
+    "@rollup/plugin-replace": "^6.0.2",
     "@segment/analytics-next": "^1.81.0",
     "@tailwindcss/vite": "^4.0.14",
     "@tanstack/react-query": "^5.81.2",
@@ -43,6 +45,7 @@
     "qs": "^6.14.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-qr-code": "^2.0.18",
     "react-resizable-panels": "^2.1.7",
     "sonner": "^2.0.1",
     "tailwind-merge": "^3.3.1",
@@ -50,6 +53,7 @@
     "tailwindcss-animate": "^1.0.7",
     "use-debounce": "^10.0.5",
     "vanilla-cookieconsent": "3.1.0",
+    "vite-plugin-pwa": "^1.0.1",
     "zustand": "^5.0.5"
   },
   "devDependencies": {
@@ -72,6 +76,7 @@
     "@types/react": "^18.2.56",
     "@types/react-dom": "^18.2.19",
     "@types/react-router-dom": "^5.3.3",
+    "@vite-pwa/assets-generator": "^1.0.0",
     "@vitejs/plugin-react": "^4.3.4",
     "copy-to-clipboard": "^3.3.3",
     "date-fns": "^4.1.0",
@@ -98,6 +103,10 @@
     "typescript-eslint": "^8.24.1",
     "vite": "^6.2.0",
     "vite-plugin-svgr": "^4.3.0",
+    "workbox-core": "^7.3.0",
+    "workbox-precaching": "^7.3.0",
+    "workbox-routing": "^7.3.0",
+    "workbox-window": "^7.3.0",
     "zod": "^3.24.2"
   },
   "engines": {

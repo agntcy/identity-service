@@ -27,8 +27,6 @@
   font-family: Sharp Sans;
   font-weight: 400;
   font-style: Book;
-  font-size: 60px;
-  line-height: 64px;
   letter-spacing: 0px;
   text-align: right;
   vertical-align: middle;
@@ -39,7 +37,6 @@
   font-family: Sharp Sans;
   font-weight: 700;
   font-style: Bold;
-  font-size: 46.19px;
   line-height: 56.97px;
   letter-spacing: 0px;
   color: #FBFCFE;
@@ -56,5 +53,4 @@
   /* padding-left: 90px; */
   gap: 24px;
   border-radius: 16px;
-
 }

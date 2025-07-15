@@ -3,61 +3,92 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, {useMemo, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
-import {ChevronDownIcon, ChevronUpIcon, LogOutIcon} from 'lucide-react';
+import {BellIcon, ChevronDownIcon, ChevronUpIcon, LogOutIcon} from 'lucide-react';
 import {Avatar, Button, Divider, Header as SparkHeader, Menu, MenuItem, Typography} from '@outshift/spark-design';
 import Logo from '@/assets/logo-app-bar.svg';
 import BookLogo from '@/assets/union.svg?react';
 import GitLogo from '@/assets/git.svg?react';
 import UserIcon from '@/assets/user.svg';
 import {Link} from 'react-router-dom';
-import {useAuth} from '@/hooks';
+import {useAuth, useWindowSize} from '@/hooks';
 import {docs} from '@/utils/docs';
 import {useSettingsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
+import LogoIcon from '@/assets/icon-agntcy.svg';
+import {NotificationSettings} from '../shared/notifications/notification-settings';
 
 export const Header = () => {
+  const {width} = useWindowSize();
+  const isMobile = width < 768;
+
+  const [openNotificationSettings, setOpenNotificationSettings] = useState(false);
+
+  const handleNotificationsChange = useCallback((value: boolean) => {
+    setOpenNotificationSettings(value);
+  }, []);
+
   return (
-    <SparkHeader
-      title={
-        <Typography variant="h1" fontWeight={700} fontSize="18px" lineHeight="18px" sx={(theme) => ({color: theme.palette.vars.brandTextSecondary})}>
-          Agent Identity
-        </Typography>
-      }
-      logo={
-        <Link to={PATHS.dashboard}>
-          <img src={Logo} alt="Identity" />
-        </Link>
-      }
-      position="fixed"
-      actions={[
-        {
-          id: 'docs',
-          icon: <BookLogo />,
-          tooltip: 'View Documentation',
-          href: docs(),
-          'aria-label': 'documentation',
-          target: '_blank'
-        },
-        {
-          id: 'github',
-          icon: <GitLogo />,
-          tooltip: 'View GitHub',
-          href: 'https://github.com/agntcy/identity',
-          'aria-label': 'github',
-          target: '_blank'
+    <>
+      <SparkHeader
+        title={
+          <Link to={PATHS.dashboard} className="flex items-center gap-2">
+            <Typography
+              variant="h1"
+              fontWeight={700}
+              fontSize={isMobile ? '16px' : '18px'}
+              lineHeight="18px"
+              sx={(theme) => ({color: theme.palette.vars.brandTextSecondary})}
+            >
+              Agent Identity
+            </Typography>
+          </Link>
         }
-      ]}
-      userSection={<UserSection />}
-    />
+        logo={
+          <Link to={PATHS.dashboard}>
+            <img src={Logo} alt="Identity" className="hidden md:block" />
+            <img src={LogoIcon} alt="Identity" className="w-8 h-8 md:hidden" />
+          </Link>
+        }
+        position="fixed"
+        actions={
+          width >= 768
+            ? [
+                {
+                  id: 'docs',
+                  icon: <BookLogo />,
+                  tooltip: 'View Documentation',
+                  href: docs(),
+                  'aria-label': 'documentation',
+                  target: '_blank'
+                },
+                {
+                  id: 'github',
+                  icon: <GitLogo />,
+                  tooltip: 'View GitHub',
+                  href: 'https://github.com/agntcy/identity',
+                  'aria-label': 'github',
+                  target: '_blank'
+                }
+              ]
+            : undefined
+        }
+        useDivider={!isMobile}
+        userSection={<UserSection handleNotificationsChange={handleNotificationsChange} />}
+      />
+      <NotificationSettings open={openNotificationSettings} onClose={() => handleNotificationsChange(false)} />
+    </>
   );
 };
 
-const UserSection = () => {
+const UserSection = ({handleNotificationsChange}: {handleNotificationsChange: (value: boolean) => void}) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+
+  const {width} = useWindowSize();
+  const isMobile = width < 768;
 
   const navigate = useNavigate();
   const {authInfo, logout} = useAuth();
@@ -103,16 +134,23 @@ const UserSection = () => {
               border: 'none !important'
             },
             '& .MuiButton-endIcon': {
-              marginBottom: '20px'
-            }
+              marginBottom: '14px'
+            },
+            ...(isMobile && {
+              minWidth: 'unset',
+              padding: 0,
+              '& .MuiButton-startIcon': {
+                margin: 0
+              }
+            })
           }
         }}
-        endIcon={open ? <ChevronUpIcon width={16} height={16} /> : <ChevronDownIcon width={16} height={16} />}
+        endIcon={isMobile ? null : open ? <ChevronUpIcon width={16} height={16} /> : <ChevronDownIcon width={16} height={16} />}
         disableRipple
         disableFocusRipple
         focusRipple={false}
       >
-        <div className="text-left">
+        <div className="text-left hidden md:block">
           <Typography variant="subtitle2" sx={(theme) => ({color: theme.palette.vars.baseTextStrong})}>
             <span className="capitalize">{authInfo?.user?.name || 'User'}</span>
           </Typography>
@@ -140,6 +178,18 @@ const UserSection = () => {
           </div>
         </div>
         <Divider />
+        <MenuItem
+          disableRipple
+          onClick={() => {
+            handleNotificationsChange(true);
+            handleClose();
+          }}
+        >
+          <div className="flex items-center justify-between w-full">
+            <Typography variant="body2Semibold">Notifications</Typography>
+            <BellIcon className="w-4 h-4" />
+          </div>
+        </MenuItem>
         <MenuItem disableRipple onClick={handleLogout}>
           <div className="flex items-center justify-between w-full">
             <Typography variant="body2Semibold">Logout</Typography>
