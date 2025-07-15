@@ -11,7 +11,7 @@ Agent Identity offers a [Python SDK](https://github.com/cisco-eti/identity-platf
 The SDK allows developers to use it as a:
 
 - A CLI to interact with local Agentic Services (issue a badge).
-- A SDK to integrate TBAC for Agentic Services in your Python applications.
+- A SDK to integrate `TBAC` for Agentic Services in your Python applications.
 
 :::tip[Endpoints]
 

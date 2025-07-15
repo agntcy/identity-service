@@ -50,7 +50,7 @@ This functionality empowers developers to establish new identities for their AI 
   - **OASF**
 - **Management**: Beyond creation, this section enables you to:
   - **Manage identities**: Update, modify, or revoke existing identities.
-  - **Define TBAC Rules and Policies**: Implement Task-Based Access Control rules to govern how your Agentic Services interact and access resources, ensuring secure and compliant operations.
+  - **Define `TBAC` Rules and Policies**: Implement Task-Based Access Control rules to govern how your Agentic Services interact and access resources, ensuring secure and compliant operations.
 - **Action**: To create new identities or manage existing ones, you will typically need to "**Log In**" to your Agent Identity account. If you are a new user, you can "**Sign Up**" to create an account and begin leveraging these features.
 
 ### Accessing Agent Identity
