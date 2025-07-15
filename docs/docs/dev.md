@@ -326,7 +326,7 @@ The REST API provides endpoints to integrate `TBAC` in your application. You can
 
 Below are the different endpoints you can use to authorize an Agentic Service:
 
-- **Perform an authoriation request**
+- **Perform an authorization request**
 
 ```curl
 curl https://{REST_API_ENDPOINT}/auth/authorize \
