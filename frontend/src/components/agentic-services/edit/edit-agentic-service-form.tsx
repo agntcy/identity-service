@@ -20,7 +20,7 @@ import {generatePath, Link, useNavigate} from 'react-router-dom';
 import z from 'zod';
 import OasfLogo from '@/assets/oasf.svg?react';
 import McpLogo from '@/assets/mcp.svg?react';
-import A2ALogo from '@/assets/a2a.png';
+import A2ALogo from '@/assets/a2a-logo.svg?react';
 
 export const EditAgenticServiceForm = ({app}: {app?: App}) => {
   const appTypes: SharedProviderProps<AppType>[] = [
@@ -41,7 +41,7 @@ export const EditAgenticServiceForm = ({app}: {app?: App}) => {
     {
       type: AppType.APP_TYPE_AGENT_A2A,
       title: 'A2A Agent',
-      imgURI: <img src={A2ALogo} className="w-7 h-7" />,
+      imgURI: <A2ALogo className="w-7 h-7" />,
       isDisabled: true,
       useTooltip: false
     }

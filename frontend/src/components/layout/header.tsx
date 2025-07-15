@@ -8,16 +8,16 @@ import {useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
 import {BellIcon, ChevronDownIcon, ChevronUpIcon, LogOutIcon} from 'lucide-react';
 import {Avatar, Button, Divider, Header as SparkHeader, Menu, MenuItem, Typography} from '@outshift/spark-design';
-import Logo from '@/assets/logo-app-bar.svg';
+import Logo from '@/assets/logo-app-bar.svg?react';
 import BookLogo from '@/assets/union.svg?react';
 import GitLogo from '@/assets/git.svg?react';
-import UserIcon from '@/assets/user.svg';
+import UserIcon from '@/assets/user.svg?react';
 import {Link} from 'react-router-dom';
 import {useAuth, useWindowSize} from '@/hooks';
 import {docs} from '@/utils/docs';
 import {useSettingsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
-import LogoIcon from '@/assets/icon-agntcy.svg';
+import LogoIcon from '@/assets/icon-agntcy.svg?react';
 import {NotificationSettings} from '../shared/notifications/notification-settings';
 
 export const Header = () => {
@@ -48,8 +48,8 @@ export const Header = () => {
         }
         logo={
           <Link to={PATHS.dashboard}>
-            <img src={Logo} alt="Identity" className="hidden md:block" />
-            <img src={LogoIcon} alt="Identity" className="w-8 h-8 md:hidden" />
+            <Logo className="hidden md:block" />
+            <LogoIcon className="w-8 h-8 md:hidden" />
           </Link>
         }
         position="fixed"
@@ -123,7 +123,11 @@ const UserSection = ({handleNotificationsChange}: {handleNotificationsChange: (v
     <>
       <Button
         onClick={handleClick}
-        startIcon={<Avatar sx={{width: '20px', height: '20px', '&:hover': {backgroundColor: 'inherit'}}} src={UserIcon} />}
+        startIcon={
+          <Avatar sx={{width: '20px', height: '20px', '&:hover': {backgroundColor: 'inherit'}}}>
+            <UserIcon className="w-5 h-5" />
+          </Avatar>
+        }
         variant="tertariary"
         sx={{
           paddingLeft: '4px',
@@ -164,7 +168,9 @@ const UserSection = ({handleNotificationsChange}: {handleNotificationsChange: (v
       <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
         <div className="min-w-[220px] my-2 space-y-2 mb-4">
           <div className="flex justify-center">
-            <Avatar sx={{width: '20px', height: '20px', '&:hover': {backgroundColor: 'inherit'}}} src={UserIcon} />
+            <Avatar sx={{width: '20px', height: '20px', '&:hover': {backgroundColor: 'inherit'}}}>
+              <UserIcon className="w-5 h-5" />
+            </Avatar>
           </div>
           <div className="text-center">
             <Typography variant="subtitle2" sx={(theme) => ({color: theme.palette.vars.baseTextStrong})}>

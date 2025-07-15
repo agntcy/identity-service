@@ -4,7 +4,7 @@
  */
 
 import {Button, Link, Typography} from '@outshift/spark-design';
-import EmptyState from '@/assets/empty-state.svg';
+import EmptyState from '@/assets/empty-state.svg?react';
 import {CheckIcon, PlusIcon} from 'lucide-react';
 import ScrollShadowWrapper from '@/components/ui/scroll-shadow-wrapper';
 import {PATHS} from '@/router/paths';
@@ -21,7 +21,7 @@ export const EmptyDashboard = () => {
           <div className="dashboard-card-content flex flex-col items-center justify-center h-full pt-4 gap-[12px]">
             <div className="px-4 md:px-0">
               <div className="flex justify-center items-center h-full">
-                <img src={EmptyState} alt="Empty State" className="w-[200px] h-[200px]" />
+                <EmptyState className="w-[200px] h-[200px]" />
               </div>
               <Typography variant="h6" textAlign="center">
                 Get started with AGNTCY&apos;s Agent Identity

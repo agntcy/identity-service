@@ -15,7 +15,7 @@ import {AgenticServiceFormValues} from '@/schemas/agentic-service-schema';
 import {AppType} from '@/types/api/app';
 import OasfLogo from '@/assets/oasf.svg?react';
 import McpLogo from '@/assets/mcp.svg?react';
-import A2ALogo from '@/assets/a2a.png';
+import A2ALogo from '@/assets/a2a-logo.svg?react';
 
 export const AgenticServicForm = ({isLoading = false}: {isLoading?: boolean}) => {
   const {control, reset} = useFormContext<AgenticServiceFormValues>();
@@ -39,7 +39,7 @@ export const AgenticServicForm = ({isLoading = false}: {isLoading?: boolean}) =>
     {
       type: AppType.APP_TYPE_AGENT_A2A,
       title: 'A2A Agent',
-      imgURI: <img src={A2ALogo} className="w-7 h-7" />,
+      imgURI: <A2ALogo className="w-7 h-7" />,
       isDisabled: isLoading
     }
   ];

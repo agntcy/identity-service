@@ -79,7 +79,6 @@ const getNotificationOptions = (data: any) => {
 };
 
 self.addEventListener('push', async (event) => {
-  console.log('Push event received:', event);
   try {
     if (event.data) {
       const notificationData = event.data.text();
