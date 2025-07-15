@@ -7601,6 +7601,8 @@ __metadata:
     vite-plugin-svgr: "npm:^4.3.0"
     workbox-core: "npm:^7.3.0"
     workbox-precaching: "npm:^7.3.0"
+    workbox-routing: "npm:^7.3.0"
+    workbox-window: "npm:^7.3.0"
     zod: "npm:^3.24.2"
     zustand: "npm:^5.0.5"
   languageName: unknown
@@ -12444,7 +12446,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"workbox-routing@npm:7.3.0":
+"workbox-routing@npm:7.3.0, workbox-routing@npm:^7.3.0":
   version: 7.3.0
   resolution: "workbox-routing@npm:7.3.0"
   dependencies:

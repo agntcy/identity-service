@@ -97,5 +97,12 @@ precacheAndRoute(self.__WB_MANIFEST);
 // clean old assets
 cleanupOutdatedCaches();
 
+/** @type {RegExp[] | undefined} */
+let allowlist;
+// in dev mode, we disable precaching to avoid caching issues
+if (import.meta.env.DEV) {
+  allowlist = [/^\/$/];
+}
+
 // to allow work offline
-registerRoute(new NavigationRoute(createHandlerBoundToURL('index.html')));
+registerRoute(new NavigationRoute(createHandlerBoundToURL('index.html'), {allowlist}));

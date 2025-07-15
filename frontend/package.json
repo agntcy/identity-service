@@ -105,6 +105,8 @@
     "vite-plugin-svgr": "^4.3.0",
     "workbox-core": "^7.3.0",
     "workbox-precaching": "^7.3.0",
+    "workbox-routing": "^7.3.0",
+    "workbox-window": "^7.3.0",
     "zod": "^3.24.2"
   },
   "engines": {

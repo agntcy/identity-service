@@ -47,7 +47,8 @@ export default defineConfig(({mode}) => {
         injectManifest: {
           maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
           minify: false,
-          enableWorkboxModulesLogs: true
+          enableWorkboxModulesLogs: true,
+          globPatterns: ['**/*.{js,css,html,svg,png,svg,ico}']
         },
         base: '/',
         manifest: {
@@ -82,12 +83,9 @@ export default defineConfig(({mode}) => {
           ]
         },
         workbox: {
-          globPatterns: ['**/*.{js,css,html,ico,png,svg,json,vue,txt,woff2}'],
-          navigateFallback: undefined,
+          globPatterns: ['**/*.{js,css,html,svg,png,svg,ico}'],
           cleanupOutdatedCaches: true,
-          skipWaiting: true,
-          clientsClaim: true,
-          maximumFileSizeToCacheInBytes: 4 * 1024 * 1024
+          clientsClaim: true
         },
         devOptions: {
           enabled: mode === 'development',

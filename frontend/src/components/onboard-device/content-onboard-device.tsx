@@ -8,11 +8,9 @@ import {Button, Typography} from '@mui/material';
 import {Card} from '../ui/card';
 import {BellIcon, BellOffIcon, RefreshCcwIcon} from 'lucide-react';
 import {GeneralSize, Tag, TagStatus} from '@outshift/spark-design';
-import {Notifications} from './notifications';
 
 export const ContentOnBoardDevice = ({id}: {id?: string}) => {
   const {enabled, supported, handleToggleNotifications, fixNotifications, loading} = useNotifications(id);
-
   return (
     <>
       <div className="px-8">
@@ -79,7 +77,6 @@ export const ContentOnBoardDevice = ({id}: {id?: string}) => {
           </div>
         </Card>
       </div>
-      <Notifications />
     </>
   );
 };
