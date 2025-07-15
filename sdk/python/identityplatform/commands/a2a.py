@@ -4,7 +4,6 @@
 
 import httpx
 
-
 A2A_WELL_KNOWN_URL = "/.well-known/agent.json"
 
 

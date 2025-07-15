@@ -3,6 +3,7 @@
 """Middleware for Starlette that authenticates the Identity Platform bearer token."""
 
 import json
+import logging
 
 from a2a.types import AgentCard, HTTPAuthSecurityScheme
 from identityplatform.sdk import IdentityPlatformSdk as Sdk
@@ -11,6 +12,8 @@ from starlette.applications import Starlette
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import JSONResponse, PlainTextResponse
+
+logger = logging.getLogger("identityplatform.auth.starlette")
 
 
 class IdentityPlatformMiddleware(BaseHTTPMiddleware):
@@ -33,6 +36,12 @@ class IdentityPlatformMiddleware(BaseHTTPMiddleware):
         # Allow public paths
         if path in self.public_paths:
             return await call_next(request)
+
+        logger.debug(
+            "Dispatching request to %s with method %s",
+            path,
+            request.method,
+        )
 
         # Get access token from the request
         try:
@@ -152,6 +161,11 @@ class IdentityPlatformMCPMiddleware(IdentityPlatformMiddleware):
             tool_name = jsonrpc_request["params"]["name"]
         except Exception as e:
             return self._forbidden(f"Authentication failed: {e}", request)
+
+        logger.debug(
+            "Dispatching MCP request with tool name %s",
+            tool_name,
+        )
 
         # Get access token from the request
         try:

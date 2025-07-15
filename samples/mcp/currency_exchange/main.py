@@ -3,6 +3,7 @@
 """MCP Server Example."""
 
 import logging
+import os
 
 import httpx
 import uvicorn
@@ -13,7 +14,7 @@ from mcp.server.fastmcp import FastMCP
 
 load_dotenv()
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=os.getenv("LOG_LEVEL", "DEBUG").upper())
 
 mcp = FastMCP("GitHub", stateless_http=True)
 
