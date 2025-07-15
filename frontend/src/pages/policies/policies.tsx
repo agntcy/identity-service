@@ -6,7 +6,7 @@
 import {BasePage} from '@/components/layout/base-page';
 import {ListPolicies} from '@/components/policies/list/list-policies';
 import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-renderer';
-import {useGetAgenticServices} from '@/queries';
+import {useGetAgenticServiceTotalCount} from '@/queries';
 import {PATHS} from '@/router/paths';
 import {useSettingsStore} from '@/store';
 import {Button} from '@mui/material';
@@ -21,7 +21,8 @@ const Policies: React.FC = () => {
     }))
   );
 
-  const {data, isLoading, error} = useGetAgenticServices();
+  const {data, isLoading, error} = useGetAgenticServiceTotalCount();
+  const hasAgenticServices = data && Number(data.total) > 0;
 
   const navigate = useNavigate();
 
@@ -30,7 +31,8 @@ const Policies: React.FC = () => {
       title="Policies"
       rightSideItems={
         !isEmptyIdp &&
-        !isLoading && (
+        !isLoading &&
+        hasAgenticServices && (
           <Link to={PATHS.policies.create}>
             <Button startIcon={<PlusIcon className="w-4 h-4" />} variant="primary" sx={{fontWeight: '600 !important'}}>
               Add Policy
@@ -57,7 +59,7 @@ const Policies: React.FC = () => {
       >
         <ConditionalQueryRenderer
           itemName="Policies"
-          data={data?.apps}
+          data={hasAgenticServices ? true : undefined}
           error={error}
           isLoading={isLoading}
           useRelativeLoader

@@ -6,7 +6,7 @@
 import {useCallback, useMemo, useState} from 'react';
 import {ConditionalQueryRenderer} from '../../ui/conditional-query-renderer';
 import {Box, EmptyState, Link, MenuItem, SelectNodeType, Table, toast, Typography} from '@outshift/spark-design';
-import {useGetAgenticServices} from '@/queries';
+import {useGetAgenticServices, useGetAgenticServiceTotalCount} from '@/queries';
 import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
 import {AgenticServiceColumns} from './agentic-services-columns';
 import {Card} from '@/components/ui/card';
@@ -49,6 +49,8 @@ export const ListAgenticServices = () => {
     query: query,
     types: appTypeFilters
   });
+
+  const {data: dataCount} = useGetAgenticServiceTotalCount();
 
   const {isTbacEnable} = useFeatureFlagsStore(
     useShallow((state) => ({
@@ -146,7 +148,7 @@ export const ListAgenticServices = () => {
             })}
             renderTopToolbar={() => (
               <FilterSections
-                title={`${data?.pagination?.total ?? 0} Agentic ${Number(data?.pagination?.total) > 1 ? 'Services' : 'Service'}`}
+                title={`${dataCount?.total ?? 0} Agentic ${Number(dataCount?.total) > 1 ? 'Services' : 'Service'}`}
                 searchFieldProps={{
                   placeholder: 'Search...',
                   value: query,

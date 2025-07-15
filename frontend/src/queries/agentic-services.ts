@@ -62,16 +62,6 @@ export const useGetAgenticServiceBadge = (id?: string) => {
   });
 };
 
-export const useGetAgenticServicesCount = () => {
-  return useQuery({
-    queryKey: ['get-agentic-service-count'],
-    queryFn: async () => {
-      const {data} = await AgenticServicesAPI.getAppsCount();
-      return data;
-    }
-  });
-};
-
 export const useGetGetTasksAgenticService = (query?: {excludeAppIds?: string[]}) => {
   return useQuery({
     queryKey: [
@@ -99,7 +89,7 @@ export const useGetGetTasksAgenticService = (query?: {excludeAppIds?: string[]})
 
 export const useGetAgenticServiceTotalCount = () => {
   return useQuery({
-    queryKey: ['get-agentic-service-total-count'],
+    queryKey: ['get-agentic-services-total-count'],
     queryFn: async () => {
       const {data} = await AgenticServicesAPI.getAppsCount();
       return data;

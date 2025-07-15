@@ -30,6 +30,7 @@ export const useCreateAgenticService = ({callbacks}: PropsSettingsAgenticService
         callbacks.onSuccess(resp);
       }
       await queryClient.invalidateQueries({queryKey: ['get-agentic-services']});
+      await queryClient.invalidateQueries({queryKey: ['get-agentic-services-total-count']});
     }
   });
 };
@@ -69,6 +70,7 @@ export const useDeleteAgenticService = ({callbacks = {}}: PropsSettingsAgenticSe
         callbacks.onSuccess(resp);
       }
       await queryClient.invalidateQueries({queryKey: ['get-agentic-services']});
+      await queryClient.invalidateQueries({queryKey: ['get-agentic-services-total-count']});
     }
   });
 };
