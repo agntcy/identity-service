@@ -12,7 +12,6 @@ from identityplatform.sdk import IdentityPlatformSdk as Sdk
 from rich import print
 from typing_extensions import Annotated
 
-
 app = typer.Typer()
 
 
@@ -21,15 +20,17 @@ def create(
     url: Annotated[
         str,
         typer.Argument(
-            help=
-            "The local accessible URL of the agentic service to issue a badge for"
-        ), ] = "",
-    key: Annotated[str,
-                   typer.Option(
-                       prompt="Agentic Service API Key",
-                       hide_input=True,
-                       help="The Agentic Service API Key",
-                   ), ] = "",
+            help="The local accessible URL of the agentic service to issue a badge for"
+        ),
+    ] = "",
+    key: Annotated[
+        str,
+        typer.Option(
+            prompt="Agentic Service API Key",
+            hide_input=True,
+            help="The Agentic Service API Key",
+        ),
+    ] = "",
 ):
     """Issue a badge for the agentic service."""
     if not url:
@@ -41,7 +42,8 @@ def create(
 
     # Fetch the agentic service
     app_info = identity_sdk._get_auth_service().AppInfo(
-        identity_sdk.empty_request())
+        identity_sdk.empty_request()
+    )
 
     # Get name and type
     service_name = app_info.app.name
@@ -86,7 +88,8 @@ def create(
 
     # Issue the badge
     identity_sdk._get_badge_service().IssueBadge(
-        request=Sdk.IssueBadgeRequest(app_id=service_id, **claims))
+        request=Sdk.IssueBadgeRequest(app_id=service_id, **claims)
+    )
 
     print(
         f"[bold green]Badge issued successfully for service [bold blue]{service_id}[/bold blue][/bold green]"

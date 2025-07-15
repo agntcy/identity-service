@@ -15,7 +15,7 @@ from agent_executor import AgentExecutor
 
 load_dotenv()
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=os.getenv("LOG_LEVEL", "DEBUG").upper())
 logger = logging.getLogger(__name__)
 
 

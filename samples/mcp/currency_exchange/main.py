@@ -3,13 +3,18 @@
 """MCP Server Example."""
 
 import logging
+import os
 
 import httpx
 import uvicorn
+from dotenv import load_dotenv
 from fastapi import FastAPI
+from identityplatform.auth.starlette import IdentityPlatformMCPMiddleware
 from mcp.server.fastmcp import FastMCP
 
-logging.basicConfig(level=logging.INFO)
+load_dotenv()
+
+logging.basicConfig(level=os.getenv("LOG_LEVEL", "DEBUG").upper())
 
 mcp = FastMCP("GitHub", stateless_http=True)
 
@@ -93,6 +98,12 @@ def get_currency_exchange_rate(
 
 
 app = FastAPI(lifespan=lambda _: mcp.session_manager.run())
+
+# Add IdentityPlatformMiddleware for authentication
+app.add_middleware(
+    IdentityPlatformMCPMiddleware,
+)
+
 app.mount("/", mcp.streamable_http_app())
 
 if __name__ == "__main__":

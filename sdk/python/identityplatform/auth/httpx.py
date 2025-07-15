@@ -8,7 +8,7 @@ from identityplatform.sdk import IdentityPlatformSdk as Sdk
 
 import httpx
 
-logger = logging.getLogger("httpx.auth")
+logger = logging.getLogger("identityplatform.auth.httpx")
 
 
 class IdentityPlatformAuth(httpx.Auth):
@@ -22,9 +22,7 @@ class IdentityPlatformAuth(httpx.Auth):
         """Add the Authorization header to the request."""
         access_token = self.sdk.access_token()
 
-        logger.debug(
-            "Issued new access token for Identity Platform SDK: %s",
-        )
+        logger.debug("Issued new access token for Identity Platform SDK")
 
         request.headers["Authorization"] = f"Bearer {access_token}"
         yield request

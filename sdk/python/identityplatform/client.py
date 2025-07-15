@@ -10,7 +10,7 @@ import grpc
 
 from identityplatform import constant
 
-logger = logging.getLogger("client")
+logger = logging.getLogger("identityplatform.client")
 
 
 class Client:  # pylint: disable=too-few-public-methods
@@ -55,7 +55,6 @@ class Client:  # pylint: disable=too-few-public-methods
 
         channel_credentials = grpc.local_channel_credentials()
         if use_ssl == 1:
-            logger.debug("Using SSL")
             if use_insecure == 1:
                 root_cert = base64.b64decode(
                     os.environ["IDENTITY_PLATFORM_INSECURE_ROOT_CA"]
