@@ -19,31 +19,33 @@ export const EmptyDashboard = () => {
         <WelcomeName />
         <div className="dashboard-card mx-6 mb-6">
           <div className="dashboard-card-content flex flex-col items-center justify-center h-full pt-4 gap-[12px]">
-            <div>
+            <div className="px-4 md:px-0">
               <div className="flex justify-center items-center h-full">
                 <img src={EmptyState} alt="Empty State" className="w-[200px] h-[200px]" />
               </div>
-              <Typography variant="h6">Get started with AGNTCY&apos;s Agent Identity</Typography>
-            </div>
-            <div className="text-center mx-auto">
-              <Typography textAlign="center" paddingLeft={4} paddingRight={4} variant="body1" maxWidth="70%" sx={{margin: '0 auto'}}>
-                Secure your AI agents and MCP servers with trusted identities. Create, verify, and manage agent identities for secure communication
-                and authentication.{' '}
-                <Link
-                  href={docs()}
-                  openInNewTab
-                  fontStyle={{
-                    fontWeight: 400,
-                    fontSize: '16px',
-                    lineHeight: '24px',
-                    letterSpacing: '0.01em'
-                  }}
-                >
-                  Learn more in our documentation.
-                </Link>
+              <Typography variant="h6" textAlign="center">
+                Get started with AGNTCY&apos;s Agent Identity
               </Typography>
             </div>
-            <div className="flex gap-4 w-full px-4 pb-4 mt-4">
+            <div className="text-center mx-auto pb-4 md:pb-0">
+              <Typography textAlign="center" variant="body1" maxWidth="70%" sx={{margin: '0 auto'}}>
+                Secure your AI agents and MCP servers with trusted identities. Create, verify, and manage agent identities for secure communication
+                and authentication.{' '}
+              </Typography>
+              <Link
+                href={docs()}
+                openInNewTab
+                fontStyle={{
+                  fontWeight: 400,
+                  fontSize: '16px',
+                  lineHeight: '24px',
+                  letterSpacing: '0.01em'
+                }}
+              >
+                Learn more in our documentation.
+              </Link>
+            </div>
+            <div className="gap-4 w-full px-4 pb-4 mt-4 hidden md:flex">
               <div className="bg-[#FBFCFE] rounded-[8px] flex-col flex justify-center items-center px-20 w-[50%] pt-[40px] pb-[24px]">
                 <div>
                   <Typography variant="h6" textAlign="center">

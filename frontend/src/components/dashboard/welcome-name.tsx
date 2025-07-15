@@ -11,9 +11,9 @@ export const WelcomeName = () => {
   const {width} = useWindowSize();
   const isMobile = width < 768;
   return (
-    <div className="bg-[#00142B]">
-      <div className="w-full h-[200px] md:h-[184px] flex flex-col justify-between sticky top-0 z-10 px-4">
-        <div className="flex justify-center items-center my-auto">
+    <div className="bg-[#00142B] h-full">
+      <div className="w-full h-[200px] md:h-[184px] flex flex-col justify-between sticky top-0 z-0">
+        <div className="flex justify-center items-center my-auto px-4 md:px-0">
           <div>
             <Typography variant={isMobile ? 'h5' : 'h3'} textAlign="center" sx={(theme) => ({color: theme.palette.vars.brandIconTertiaryDefault})}>
               Welcome to Agent Identity, <span className="capitalize">{authInfo?.user?.name || 'User'}!</span>
@@ -23,8 +23,8 @@ export const WelcomeName = () => {
             </Typography>
           </div>
         </div>
+        <div className="striped-bar" />
       </div>
-      <div className="striped-bar" />
     </div>
   );
 };
