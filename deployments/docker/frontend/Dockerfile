@@ -1,7 +1,7 @@
 # Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
 # SPDX-License-Identifier: Apache-2.0
 
-FROM node:20.18.2-alpine3.21 AS build
+FROM node:20-alpine3.21 AS build
 
 # set ARTIFACTORY_PASSWORD as an ENV var
 ARG ARTIFACTORY_PASSWORD
@@ -28,8 +28,7 @@ RUN touch .env && echo "ARTIFACTORY_PASSWORD=${ARTIFACTORY_PASSWORD}" >> .env
 RUN yarn install
 RUN yarn build
 
-
-FROM alpine:3.21.0
+FROM alpine:3.21
 
 # Install packages
 RUN apk add --update \
