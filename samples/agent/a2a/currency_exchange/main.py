@@ -21,7 +21,7 @@ from agent_executor import CurrencyAgentExecutor
 
 load_dotenv()
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 

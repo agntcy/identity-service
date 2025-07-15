@@ -13,7 +13,7 @@ from mcp.server.fastmcp import FastMCP
 
 load_dotenv()
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 
 mcp = FastMCP("GitHub", stateless_http=True)
 
