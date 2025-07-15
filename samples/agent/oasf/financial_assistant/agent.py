@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: Apache-2.0
 """Main entry point for the Financial Assistant Agent server."""
 
-from langchain_mcp_adapters.client import MultiServerMCPClient
 from langchain_ollama import ChatOllama
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.prebuilt import create_react_agent
@@ -57,17 +56,6 @@ class FinancialAssistantAgent:
         self.model = ChatOllama(
             base_url=self.ollama_base_url, model=self.ollama_model, temperature=0.2
         )
-
-        # Load tools from the MCP Server
-        client = MultiServerMCPClient(
-            {
-                "currency_exchange": {
-                    "url": self.currency_exchange_mcp_server_url,
-                    "transport": "streamable_http",
-                },
-            }
-        )
-        tools = await client.get_tools()
 
         # Create the currency exchange agent
         invoke_currency_exchange_agent = CurrencyExchangeAgent(
