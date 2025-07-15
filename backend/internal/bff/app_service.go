@@ -232,15 +232,15 @@ func (s *appService) ListApps(
 	appTypes = slices.DeleteFunc(appTypes, func(typ apptypes.AppType) bool {
 		return typ == apptypes.APP_TYPE_UNSPECIFIED
 	})
-	if len(appTypes) == 0 {
-		// Return empty results when no app type is specified
-		return &pagination.Pageable[apptypes.App]{
-			Items: []*apptypes.App{},
-			Total: 0,
-			Page:  0,
-			Size:  0,
-		}, nil
-	}
+	// if len(appTypes) == 0 {
+	// 	// Return empty results when no app type is specified
+	// 	return &pagination.Pageable[apptypes.App]{
+	// 		Items: []*apptypes.App{},
+	// 		Total: 0,
+	// 		Page:  0,
+	// 		Size:  0,
+	// 	}, nil
+	// }
 
 	page, err := s.appRepository.GetAllApps(ctx, paginationFilter, query, appTypes)
 	if err != nil {
