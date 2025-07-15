@@ -14,7 +14,6 @@ from langgraph.checkpoint.memory import MemorySaver
 from langgraph.prebuilt import create_react_agent
 from pydantic import BaseModel
 
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 memory = MemorySaver()

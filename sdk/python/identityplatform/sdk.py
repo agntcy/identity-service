@@ -53,8 +53,7 @@ class IdentityPlatformSdk:
             )
 
         logger.debug(
-            "Initializing Identity Platform SDK with API Key: %s, Async Mode: %s",
-            api_key,
+            "Initializing Identity Platform SDK with API Key, Async Mode: %s",
             async_mode,
         )
 
