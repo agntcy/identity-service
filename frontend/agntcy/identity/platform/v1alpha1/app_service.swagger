@@ -517,6 +517,11 @@
             "$ref": "#/definitions/v1alpha1AppTypeCountEntry"
           },
           "title": "The apps count per app type"
+        },
+        "total": {
+          "type": "string",
+          "format": "int64",
+          "title": "The total count"
         }
       }
     },

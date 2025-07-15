@@ -10,7 +10,7 @@ import {PATHS} from '@/router/paths';
 import {Link, Link as RouterLink} from 'react-router-dom';
 import {useFeatureFlagsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
-import {useGetAgenticServices, useGetPolicies, useGetSettings} from '@/queries';
+import {useGetAgenticServiceTotalCount, useGetPolicies, useGetSettings} from '@/queries';
 import StatsCard, {Stat} from '../ui/stats-card';
 import {ProviderType} from '../shared/provider-type';
 import {useMemo} from 'react';
@@ -24,7 +24,7 @@ export const StatsDashboard = () => {
     }))
   );
   const {data: dataSettings, isLoading: isLoadingSettings} = useGetSettings();
-  const {data: dataAgenticServices, isLoading: isLoadingAgenticServices} = useGetAgenticServices();
+  const {data: dataAgenticServices, isLoading: isLoadingAgenticServices} = useGetAgenticServiceTotalCount();
   const {data: dataPolicies, isLoading: isLoadingPolicies} = useGetPolicies({enable: isTbacEnable});
 
   const statsInfo: Stat[] = useMemo(() => {
@@ -39,7 +39,7 @@ export const StatsDashboard = () => {
         loading: isLoadingSettings
       },
       {
-        value: <Link to={PATHS.agenticServices.base}>{dataAgenticServices?.apps?.length || 0}</Link>,
+        value: <Link to={PATHS.agenticServices.base}>{dataAgenticServices?.total || 0}</Link>,
         title: 'Total Agentic Services',
         loading: isLoadingAgenticServices
       }
@@ -53,7 +53,7 @@ export const StatsDashboard = () => {
     }
     return temp;
   }, [
-    dataAgenticServices?.apps?.length,
+    dataAgenticServices?.total,
     dataPolicies?.policies?.length,
     dataSettings?.issuerSettings?.idpType,
     isLoadingAgenticServices,

@@ -292,6 +292,11 @@ export interface V1Alpha1CredentialStatus {
 export interface V1Alpha1GetAppsCountResponse {
   /** The apps count per app type */
   counts?: V1Alpha1AppTypeCountEntry[];
+  /**
+   * The total count
+   * @format int64
+   */
+  total?: string;
 }
 
 export interface V1Alpha1GetTasksResponse {

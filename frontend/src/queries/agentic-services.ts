@@ -96,3 +96,13 @@ export const useGetGetTasksAgenticService = (query?: {excludeAppIds?: string[]})
     enabled: !!query
   });
 };
+
+export const useGetAgenticServiceTotalCount = () => {
+  return useQuery({
+    queryKey: ['get-agentic-service-total-count'],
+    queryFn: async () => {
+      const {data} = await AgenticServicesAPI.getAppsCount();
+      return data;
+    }
+  });
+};
