@@ -10,7 +10,7 @@ import grpc
 
 from identityplatform import constant
 
-logger = logging.getLogger("client")
+logger = logging.getLogger("identityplatform.client")
 
 
 class Client:  # pylint: disable=too-few-public-methods

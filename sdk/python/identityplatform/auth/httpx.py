@@ -8,7 +8,7 @@ from identityplatform.sdk import IdentityPlatformSdk as Sdk
 
 import httpx
 
-logger = logging.getLogger("httpx.auth")
+logger = logging.getLogger("identityplatform.auth.httpx")
 
 
 class IdentityPlatformAuth(httpx.Auth):

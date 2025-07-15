@@ -11,12 +11,10 @@ from pkgutil import iter_modules
 import agntcy.identity.platform.v1alpha1
 from google.protobuf import empty_pb2
 
-from identityplatform import client, log
+from identityplatform import client
 
-logger = logging.getLogger("identity")
-
-if int(os.getenv("IDENTITY_PLATFORM_ENABLE_LOGS", "0")) == 1:
-    log.configure()
+logging.getLogger("identityplatform").addHandler(logging.NullHandler())
+logger = logging.getLogger("identityplatform.sdk")
 
 
 def _load_grpc_objects(module, path):
