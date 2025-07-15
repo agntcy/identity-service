@@ -53,7 +53,7 @@ export const FilterSections = <T,>({title, isLoading = true, searchFieldProps, d
       <Stack direction="row" gap={2} alignItems="center" justifyContent="end">
         {searchFieldProps && (
           <SearchField
-            sx={{'& .MuiInputBase-root': {marginTop: 0, width: '320px', height: '32px'}}}
+            sx={{'& .MuiInputBase-root': {marginTop: 0, width: '320px', height: '36px'}}}
             {...searchFieldProps}
             onChangeCallback={debounced}
           />

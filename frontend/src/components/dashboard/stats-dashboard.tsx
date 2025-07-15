@@ -7,7 +7,6 @@ import {Button, Typography} from '@outshift/spark-design';
 import {CheckIcon, PlusIcon} from 'lucide-react';
 import ScrollShadowWrapper from '@/components/ui/scroll-shadow-wrapper';
 import {PATHS} from '@/router/paths';
-import {useAuth} from '@/hooks';
 import {Link, Link as RouterLink} from 'react-router-dom';
 import {useFeatureFlagsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
@@ -16,10 +15,9 @@ import StatsCard, {Stat} from '../ui/stats-card';
 import {ProviderType} from '../shared/provider-type';
 import {useMemo} from 'react';
 import {cn} from '@/lib/utils';
+import {WelcomeName} from './welcome-name';
 
 export const StatsDashboard = () => {
-  const {authInfo} = useAuth();
-
   const {isTbacEnable} = useFeatureFlagsStore(
     useShallow((state) => ({
       isTbacEnable: state.featureFlags.isTbacEnable
@@ -67,19 +65,7 @@ export const StatsDashboard = () => {
   return (
     <ScrollShadowWrapper>
       <div className="flex flex-col h-full gap-[16px]">
-        <div className="w-full h-[184px] bg-[#00142B] flex flex-col justify-between sticky top-0 z-10">
-          <div className="flex justify-center items-center my-auto">
-            <div>
-              <Typography variant="h3" textAlign="center" sx={(theme) => ({color: theme.palette.vars.brandIconTertiaryDefault})}>
-                Welcome to Agent Identity, <span className="capitalize">{authInfo?.user?.name || 'User'}!</span>
-              </Typography>
-              <Typography variant="body1" textAlign="center" sx={(theme) => ({color: theme.palette.vars.baseTextInverse})}>
-                Create and manage identities for your MCP Servers, A2A Agents and OASF
-              </Typography>
-            </div>
-          </div>
-          <div className="striped-bar" />
-        </div>
+        <WelcomeName />
         <div className="px-[24px]">
           <StatsCard
             className={cn('grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 p-4', !isTbacEnable && 'md:grid-cols-2 lg:grid-cols-2')}
@@ -87,7 +73,7 @@ export const StatsDashboard = () => {
           />
         </div>
         <div className="card-group px-[24px]">
-          <div className="card-flex-group min-w-[384px] bg-[#FBFCFE] rounded-[8px] flex-col flex justify-start items-center px-20 py-12">
+          <div className="card-flex-group min-w-[384px] bg-[#FBFCFE] rounded-[8px] flex-col flex justify-start items-center px-20 py-12 hidden md:block">
             <div className="flex flex-col justify-between h-full gap-4">
               <div>
                 <Typography variant="h6" textAlign="center">
@@ -106,7 +92,7 @@ export const StatsDashboard = () => {
               </div>
             </div>
           </div>
-          <div className="card-flex-group min-w-[384px] bg-[#FBFCFE] rounded-[8px] flex-col flex justify-start items-center px-20 py-12">
+          <div className="card-flex-group min-w-[384px] bg-[#FBFCFE] rounded-[8px] flex-col flex justify-start items-center px-20 py-12 hidden md:block">
             <div className="flex flex-col justify-between h-full gap-4">
               <div>
                 <Typography variant="h6" textAlign="center">
@@ -126,7 +112,7 @@ export const StatsDashboard = () => {
             </div>
           </div>
           {isTbacEnable && (
-            <div className="card-flex-group min-w-[384px] bg-[#FBFCFE] rounded-[8px] flex-col flex justify-start items-center px-20 py-12">
+            <div className="card-flex-group min-w-[384px] bg-[#FBFCFE] rounded-[8px] flex-col flex justify-start items-center px-20 py-12 hidden md:block">
               <div className="flex flex-col justify-between h-full gap-4">
                 <div>
                   <Typography variant="h6" textAlign="center">

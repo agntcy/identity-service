@@ -15,6 +15,7 @@ import {QueryProvider} from './providers/query-provider/query-provider';
 import {FeatureFlagsProvider} from './providers/feature-flags-provider/feature-flags-provider';
 import {AnalyticsProvider} from './providers/analytics-provider/analytics-provider';
 import {PwaProvider} from './providers/pwa-provider/pwa-provider';
+import {NotificationsProvider} from './providers/notifications-provider/notifications-provider';
 
 const App = () => {
   return (
@@ -28,7 +29,9 @@ const App = () => {
                   <Toaster offset={{top: '64px', right: '16px'}} expand={false} duration={3500} />
                   <FeatureFlagsProvider>
                     <PwaProvider>
-                      <Router />
+                      <NotificationsProvider>
+                        <Router />
+                      </NotificationsProvider>
                     </PwaProvider>
                   </FeatureFlagsProvider>
                 </QueryProvider>

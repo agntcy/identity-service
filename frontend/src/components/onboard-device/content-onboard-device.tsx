@@ -10,10 +10,10 @@ import {BellIcon, BellOffIcon, RefreshCcwIcon} from 'lucide-react';
 import {GeneralSize, Tag, TagStatus} from '@outshift/spark-design';
 
 export const ContentOnBoardDevice = ({id}: {id?: string}) => {
-  const {enabled, supported, handleToggleNotifications, fixNotifications, loading} = useNotifications(id);
+  const {enabled, supported, handleToggleNotifications, fixNotifications, loading} = useNotifications();
   return (
     <>
-      <div className="px-8">
+      <div className="px-4">
         <Card variant="secondary" className="w-full max-w-md mx-auto space-y-6">
           <div className="flex gap-4 items-center">
             {enabled ? <BellIcon className="h-5 w-5 text-green-600" /> : <BellOffIcon className="h-5 w-5 text-gray-400" />}
@@ -33,7 +33,7 @@ export const ContentOnBoardDevice = ({id}: {id?: string}) => {
             <div className="pt-2">
               <Button
                 startIcon={enabled ? <BellOffIcon className="w-4 h-4" /> : <BellIcon className="w-4 h-4" />}
-                onClick={handleToggleNotifications}
+                onClick={() => handleToggleNotifications(id)}
                 fullWidth
                 variant={enabled ? 'outlined' : 'primary'}
                 sx={{fontWeight: 'bold !important'}}
@@ -58,7 +58,7 @@ export const ContentOnBoardDevice = ({id}: {id?: string}) => {
                 </Button>
               </div>
             )}
-            {supported && (
+            {supported && enabled && (
               <>
                 <div className="text-center">
                   <Typography variant="caption">

@@ -8,28 +8,15 @@ import EmptyState from '@/assets/empty-state.svg';
 import {CheckIcon, PlusIcon} from 'lucide-react';
 import ScrollShadowWrapper from '@/components/ui/scroll-shadow-wrapper';
 import {PATHS} from '@/router/paths';
-import {useAuth} from '@/hooks';
 import {Link as RouterLink} from 'react-router-dom';
 import {docs} from '@/utils/docs';
+import {WelcomeName} from './welcome-name';
 
 export const EmptyDashboard = () => {
-  const {authInfo} = useAuth();
   return (
     <ScrollShadowWrapper>
       <div className="flex flex-col h-full gap-[16px]">
-        <div className="w-full h-[184px] bg-[#00142B] flex flex-col justify-between sticky top-0 z-10">
-          <div className="flex justify-center items-center my-auto">
-            <div>
-              <Typography variant="h3" textAlign="center" sx={(theme) => ({color: theme.palette.vars.brandIconTertiaryDefault})}>
-                Welcome to Agent Identity, <span className="capitalize">{authInfo?.user?.name || 'User'}!</span>
-              </Typography>
-              <Typography variant="body1" textAlign="center" sx={(theme) => ({color: theme.palette.vars.baseTextInverse})}>
-                Create and manage identities for your MCP Servers, A2A Agents and OASF
-              </Typography>
-            </div>
-          </div>
-          <div className="striped-bar" />
-        </div>
+        <WelcomeName />
         <div className="dashboard-card mx-6 mb-6">
           <div className="dashboard-card-content flex flex-col items-center justify-center h-full pt-4 gap-[12px]">
             <div>

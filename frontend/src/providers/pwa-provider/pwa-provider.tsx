@@ -3,13 +3,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, {createContext, useCallback} from 'react';
+import React, {createContext, useCallback, useState} from 'react';
 import {useRegisterSW} from 'virtual:pwa-register/react';
-import { pwaInfo } from 'virtual:pwa-info';
 
 interface PwaContextProps {
   offlineReady: boolean;
   needRefresh: boolean;
+  swR: ServiceWorkerRegistration | undefined;
+  swUrl: string | undefined;
   closePwa: () => void;
   updateServiceWorker: (reload?: boolean) => Promise<void>;
 }
@@ -19,7 +20,12 @@ const PwaContext = createContext<PwaContextProps | undefined>(undefined);
 const PERIOD = 3600; // 1 hour in seconds
 
 export const PwaProvider: React.FC<React.PropsWithChildren> = ({children}) => {
+  const [swUrl, setSwUrl] = useState<string | undefined>(undefined);
+  const [swR, setSwR] = useState<ServiceWorkerRegistration | undefined>(undefined);
+
   const registerPeriodicSync = (period: number, swUrl: string, r: ServiceWorkerRegistration) => {
+    console.log(`🔄 Registering periodic sync every ${period} seconds...`);
+
     if (period <= 0) {
       return; // Skip periodic sync if period is not set
     }
@@ -50,6 +56,8 @@ export const PwaProvider: React.FC<React.PropsWithChildren> = ({children}) => {
   } = useRegisterSW({
     onRegisteredSW(swUrl, r) {
       console.log('✅ SW registered successfully.');
+      setSwUrl(swUrl);
+      setSwR(r);
       if (PERIOD <= 0) {
         return;
       }
@@ -74,11 +82,11 @@ export const PwaProvider: React.FC<React.PropsWithChildren> = ({children}) => {
     setNeedRefresh(false);
   }, [setOfflineReady, setNeedRefresh]);
 
-  console.log('PWA Info:', pwaInfo);
-
   const values = {
     offlineReady,
     needRefresh,
+    swR,
+    swUrl,
     closePwa,
     updateServiceWorker
   };

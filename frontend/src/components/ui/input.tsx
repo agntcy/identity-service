@@ -20,7 +20,7 @@ function Input({className, type, ...props}: React.ComponentProps<'input'>) {
         'aria-invalid:ring-destructive/20 aria-invalid:border-destructive',
         'bg-[#FBFCFE]',
         'border-[#D5DFF7] border-solid border-[2px]',
-        'h-[32px]',
+        'h-[36px]',
         className
       )}
       autoComplete="off"

@@ -52,7 +52,7 @@ export const AddDevice = () => {
     addDeviceMutation.mutate({});
   }, [addDeviceMutation]);
 
-  console.log('link:', link);
+  console.log('Device link:', link);
 
   return (
     <>
