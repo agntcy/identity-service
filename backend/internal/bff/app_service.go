@@ -7,6 +7,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"slices"
 	"time"
 
 	appcore "github.com/agntcy/identity-platform/internal/core/app"
@@ -36,6 +37,7 @@ type AppService interface {
 		query *string,
 		appTypes []apptypes.AppType,
 	) (*pagination.Pageable[apptypes.App], error)
+	CountAllApps(ctx context.Context) (int64, error)
 	DeleteApp(ctx context.Context, appID string) error
 	GetTasksPerAppType(
 		ctx context.Context,
@@ -227,6 +229,19 @@ func (s *appService) ListApps(
 	query *string,
 	appTypes []apptypes.AppType,
 ) (*pagination.Pageable[apptypes.App], error) {
+	appTypes = slices.DeleteFunc(appTypes, func(typ apptypes.AppType) bool {
+		return typ == apptypes.APP_TYPE_UNSPECIFIED
+	})
+	if len(appTypes) == 0 {
+		// Return empty results when no app type is specified
+		return &pagination.Pageable[apptypes.App]{
+			Items: []*apptypes.App{},
+			Total: 0,
+			Page:  0,
+			Size:  0,
+		}, nil
+	}
+
 	page, err := s.appRepository.GetAllApps(ctx, paginationFilter, query, appTypes)
 	if err != nil {
 		return nil, err
@@ -238,6 +253,10 @@ func (s *appService) ListApps(
 	}
 
 	return page, nil
+}
+
+func (s *appService) CountAllApps(ctx context.Context) (int64, error) {
+	return s.appRepository.CountAllApps(ctx)
 }
 
 func (s *appService) DeleteApp(ctx context.Context, appID string) error {

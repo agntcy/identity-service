@@ -1076,6 +1076,9 @@ components:
                     items:
                         $ref: '#/components/schemas/AppTypeCountEntry'
                     description: The apps count per app type
+                total:
+                    type: string
+                    description: The total count
         GetTasksResponse:
             type: object
             properties:

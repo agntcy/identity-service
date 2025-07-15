@@ -292,7 +292,9 @@ func (x *AppTypeCountEntry) GetValue() int64 {
 type GetAppsCountResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// The apps count per app type
-	Counts        []*AppTypeCountEntry `protobuf:"bytes,1,rep,name=counts,proto3" json:"counts,omitempty"`
+	Counts []*AppTypeCountEntry `protobuf:"bytes,1,rep,name=counts,proto3" json:"counts,omitempty"`
+	// The total count
+	Total         int64 `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -332,6 +334,13 @@ func (x *GetAppsCountResponse) GetCounts() []*AppTypeCountEntry {
 		return x.Counts
 	}
 	return nil
+}
+
+func (x *GetAppsCountResponse) GetTotal() int64 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
 }
 
 type GetAppRequest struct {
@@ -681,9 +690,10 @@ const file_agntcy_identity_platform_v1alpha1_app_service_proto_rawDesc = "" +
 	"\x13GetAppsCountRequest\"g\n" +
 	"\x11AppTypeCountEntry\x12<\n" +
 	"\x03key\x18\x01 \x01(\x0e2*.agntcy.identity.platform.v1alpha1.AppTypeR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\x03R\x05value\"d\n" +
+	"\x05value\x18\x02 \x01(\x03R\x05value\"z\n" +
 	"\x14GetAppsCountResponse\x12L\n" +
-	"\x06counts\x18\x01 \x03(\v24.agntcy.identity.platform.v1alpha1.AppTypeCountEntryR\x06counts\"&\n" +
+	"\x06counts\x18\x01 \x03(\v24.agntcy.identity.platform.v1alpha1.AppTypeCountEntryR\x06counts\x12\x14\n" +
+	"\x05total\x18\x02 \x01(\x03R\x05total\"&\n" +
 	"\rGetAppRequest\x12\x15\n" +
 	"\x06app_id\x18\x01 \x01(\tR\x05appId\"c\n" +
 	"\x10UpdateAppRequest\x12\x15\n" +

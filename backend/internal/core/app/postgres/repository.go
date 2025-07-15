@@ -8,7 +8,6 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"slices"
 
 	appcore "github.com/agntcy/identity-platform/internal/core/app"
 	"github.com/agntcy/identity-platform/internal/core/app/types"
@@ -126,9 +125,6 @@ func (r *repository) GetAllApps(
 		)
 	}
 
-	appTypes = slices.DeleteFunc(appTypes, func(typ types.AppType) bool {
-		return typ == types.APP_TYPE_UNSPECIFIED
-	})
 	if len(appTypes) > 0 {
 		dbQuery = dbQuery.Where("type IN ?", appTypes)
 	}
@@ -161,6 +157,24 @@ func (r *repository) GetAllApps(
 		Page:  paginationFilter.GetPage(),
 		Size:  int32(len(apps)),
 	}, nil
+}
+
+func (r *repository) CountAllApps(ctx context.Context) (int64, error) {
+	tenantID, ok := identitycontext.GetTenantID(ctx)
+	if !ok {
+		return 0, errutil.Err(
+			nil, "failed to get tenant ID from context",
+		)
+	}
+
+	var totalApps int64
+
+	err := r.dbContext.Client().Model(&App{}).Where("tenant_id = ?", tenantID).Count(&totalApps).Error
+	if err != nil {
+		return 0, errutil.Err(err, "there was an error counting the apps")
+	}
+
+	return totalApps, nil
 }
 
 func (r *repository) GetAppsByID(ctx context.Context, ids []string) ([]*types.App, error) {
