@@ -145,6 +145,9 @@ message AppTypeCountEntry {
 message GetAppsCountResponse {
   // The apps count per app type
   repeated AppTypeCountEntry counts = 1;
+
+  // The total count
+  int64 total = 2;
 }
 
 message GetAppRequest {

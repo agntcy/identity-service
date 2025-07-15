@@ -84,8 +84,14 @@ func (s *appService) GetAppsCount(
 	ctx context.Context,
 	req *identity_platform_sdk_go.GetAppsCountRequest,
 ) (*identity_platform_sdk_go.GetAppsCountResponse, error) {
-	// This method is not implemented yet.
-	return nil, grpcutil.BadRequestError(errors.New("GetAppsCount method is not implemented"))
+	totalCount, err := s.appSrv.CountAllApps(ctx)
+	if err != nil {
+		return nil, grpcutil.BadRequestError(err)
+	}
+
+	return &identity_platform_sdk_go.GetAppsCountResponse{
+		Total: totalCount,
+	}, nil
 }
 
 func (s *appService) GetApp(
