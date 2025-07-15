@@ -101,7 +101,7 @@ The tasks available for TBAC are automatically discovered from the Agentic Servi
 
 3. **Integrate TBAC in your application** following one of the methods below.
 
-### Using the Python SDK
+### A2A Integration using the Python SDK
 
 :::warning[IMPORTANT]
 When using the Python SDK for TBAC, you need to provide in your environment the following variables:
@@ -110,15 +110,12 @@ When using the Python SDK for TBAC, you need to provide in your environment the 
 
 :::
 
-#### **Using the easy plug-in A2A and MCP integrations**
-
-For easy plug-in integrations, you can use the following extensions and plugins:
-
-##### HTTPX Auth Class
+##### Invoke using HTTPX Auth Class
 
 For HTTPX-based applications, you can use the `IdentityPlatformAuth` class to integrate TBAC. This class provides an easy way to authorize Agentic Services and manage access tokens.
 
 ```python
+# Other imports
 from identityplatform.auth.httpx import IdentityPlatformAuth
 
 timeout = httpx.Timeout(connect=None, read=None, write=None, pool=None)
@@ -132,7 +129,7 @@ timeout=timeout, auth=auth
 
 You can see this class fully implemented in our [Financial Agentic Service](https://github.com/cisco-eti/identity-platform/blob/main/samples/agent/oasf/financial_assistant/currency_exchange_agent.py#L112).
 
-##### A2A Starlette auth middleware
+##### Authorize using the A2A Starlette/FastAPI auth middleware
 
 For A2A (Agent-to-Agent) based applications using Starlette, you can use the `IdentityPlatformA2AAuthMiddleware` to integrate TBAC. This middleware automatically handles authorization for incoming requests:
 
@@ -162,6 +159,7 @@ try:
 - **Add the middleware to your A2A Starlette application**
 
 ```python
+# Other imports
 from identityplatform.auth.starlette import IdentityPlatformA2AMiddleware
 
 # Start server
@@ -180,11 +178,101 @@ uvicorn.run(app, host=host, port=port)
 
 You can see this class fully implemented in our [Currency Exchange Agentic Service](https://github.com/cisco-eti/identity-platform/blob/main/samples/agent/a2a/currency_exchange/main.py#L91).
 
-##### Standard Starlette/FastAPI auth middleware
+### MCP Integration using the Python SDK
+
+:::warning[IMPORTANT]
+When using the Python SDK for TBAC, you need to provide in your environment the following variables:
+
+- `IDENTITY_PLATFORM_API_KEY`: Your Agentic Service API Key. You can obtain this key from the Agent Services details page.
+
+:::
+
+##### MCP ClientSession using HTTPX Auth Class
+
+For HTTPX-based applications, you can use the `IdentityPlatformAuth` class to integrate TBAC. This class provides an easy way to authorize Agentic Services and manage access tokens.
+Bellow you can find an example of how to use the `IdentityPlatformAuth` class with HTTPX and Langchain's `MultiServerMCPClient` MCP adapter:
+
+```python
+# Other imports
+from identityplatform.auth.httpx import IdentityPlatformAuth
+
+# Init auth
+auth = IdentityPlatformAuth()
+
+# Load tools from the MCP Server
+client = MultiServerMCPClient(
+    {
+        "some_mcp_server": {
+            "url": mcp_server_url,
+            "transport": "streamable_http",
+            "auth": auth, # Use the IdentityPlatformAuth for authorization
+        },
+    }
+)
+tools = await client.get_tools()
+
+self.graph = create_react_agent(
+    tools=tools,
+    # Other parameters
+)
+```
+
+You can see this class fully implemented in our [Currency Exchange Agentic Service](https://github.com/cisco-eti/identity-platform/blob/main/samples/agent/a2a/currency_exchange/agent.py#L80).
+
+Another example using the MCP `ClientSession:
+
+```python
+from mcp.client.streamable_http import streamablehttp_client
+from mcp import ClientSession
+
+from identityplatform.auth.httpx import IdentityPlatformAuth
+
+# Init auth
+auth = IdentityPlatformAuth()
+
+async def main():
+    # Connect to a streamable HTTP server using the IdentityPlatformAuth for authorization
+    async with streamablehttp_client("example/mcp", auth=auth) as (
+        read_stream,
+        write_stream,
+        _,
+    ):
+        # Create a session using the client streams
+        async with ClientSession(read_stream, write_stream) as session:
+            # Initialize the connection
+            await session.initialize()
+
+            # Call a tool
+```
+
+##### Authorize using the MCP Starlette/FastAPI auth middleware
+
+For MCP(Model Context Protocl) based applications using Starlette, you can use the `IdentityPlatformMCPAuthMiddleware` to integrate TBAC. This middleware automatically handles authorization for incoming requests:
+
+```python
+# Other imports
+from identityplatform.auth.starlette import IdentityPlatformMCPMiddleware
+
+# Start server
+app = server.build()
+
+# Add IdentityPlatformMiddleware for authentication
+app.add_middleware(
+    IdentityPlatformMCPMiddleware, # Define the middleware
+)
+
+# Run the application
+uvicorn.run(app, host=host, port=port)
+```
+
+You can see this class fully implemented in our [Currency Exchange MCP Server](https://github.com/cisco-eti/identity-platform/blob/main/samples/mcp/currency_exchange/main.py#L103).
+
+### Standard Starlette/FastAPI auth middleware
 
 We also support standard Starlette or FastAPI applications, you can use the `IdentityPlatformAuthMiddleware` to integrate TBAC. This middleware automatically handles authorization for incoming requests.
 
 ```python
+# Other imports
 from starlette.applications import Starlette
 from starlette.middleware import Middleware
 
@@ -199,7 +287,7 @@ middleware = [
 app = Starlette(routes=routes, middleware=middleware)
 ```
 
-#### Using a custom implementation
+### Using a custom implementation
 
 The Python SDK provides two functions to integrate TBAC in your application:
 
