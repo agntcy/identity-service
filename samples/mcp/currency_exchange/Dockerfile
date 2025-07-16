@@ -7,4 +7,7 @@ WORKDIR /code
 COPY ./* .
 RUN pip install --no-cache-dir .
 
+# Install identity platform dependency
+RUN pip install sdk/python
+
 CMD ["python", "main.py"]
