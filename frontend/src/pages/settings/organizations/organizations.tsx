@@ -6,6 +6,7 @@
 import {BasePage} from '@/components/layout/base-page';
 import {ListOrganizations} from '@/components/organizations/list/list-organizations';
 import {ConfirmModal} from '@/components/ui/confirm-modal';
+import {useAnalytics} from '@/hooks';
 import {useCreateTenant} from '@/mutations';
 import {PATHS} from '@/router/paths';
 import {Button, toast} from '@outshift/spark-design';
@@ -14,6 +15,8 @@ import {useCallback, useState} from 'react';
 
 const Organizations: React.FC = () => {
   const [openCreateModal, setOpenCreateModal] = useState(false);
+
+  const {analyticsTrack} = useAnalytics();
 
   const createOrganizationMutation = useCreateTenant({
     callbacks: {
@@ -35,9 +38,10 @@ const Organizations: React.FC = () => {
   });
 
   const handleCreateOrganization = useCallback(() => {
+    analyticsTrack('CLICK_CONFIRM_NEW_ORGANIZATION');
     setOpenCreateModal(false);
     createOrganizationMutation.mutate();
-  }, [createOrganizationMutation]);
+  }, [analyticsTrack, createOrganizationMutation]);
 
   return (
     <BasePage
@@ -74,6 +78,7 @@ const Organizations: React.FC = () => {
           loading={createOrganizationMutation.isPending}
           loadingPosition="start"
           onClick={() => {
+            analyticsTrack('CLICK_NEW_ORGANIZATION');
             setOpenCreateModal(true);
           }}
           variant="outlined"

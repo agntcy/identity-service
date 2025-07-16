@@ -18,6 +18,7 @@ import {VerifyIdentityForm} from './steps/verify-identity-form';
 import {VerifyIdentityFormValues, VerifyIdentitySchema} from '@/schemas/verify-identity-schema';
 import {useVerifyBadge} from '@/mutations/badge';
 import {VerificationResults} from './steps/verification-results';
+import {useAnalytics} from '@/hooks';
 
 export const VerifyIdentityStepper = () => {
   return (
@@ -36,6 +37,8 @@ const FormStepperComponent = () => {
     resolver: zodResolver(methods.current.schema),
     mode: 'all'
   });
+
+  const {analyticsTrack} = useAnalytics();
 
   const verifyIdentityMutation = useVerifyBadge({
     callbacks: {
@@ -92,10 +95,11 @@ const FormStepperComponent = () => {
       badge: values.badge,
       proofValue: values.proofValue
     });
+    analyticsTrack('CLICK_VERIFY_IDENTITY_VERIFY');
     verifyIdentityMutation.mutate({
       badge: values.proofValue
     });
-  }, [form, methods, verifyIdentityMutation]);
+  }, [analyticsTrack, form, methods, verifyIdentityMutation]);
 
   const onSubmit = useCallback(() => {
     if (methods.current.id === 'verifyIdentityForm') {
@@ -150,7 +154,10 @@ const FormStepperComponent = () => {
                         <StepperControls className="pt-4">
                           <Button
                             variant="tertariary"
-                            onClick={handleOnClear}
+                            onClick={() => {
+                              analyticsTrack('CLICK_VERIFY_IDENTITY_CANCEL');
+                              handleOnClear();
+                            }}
                             sx={{
                               fontWeight: '600 !important'
                             }}

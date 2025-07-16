@@ -21,6 +21,7 @@ import {BadgeModalForm} from '@/components/shared/badge-modal-form';
 import {cn} from '@/lib/utils';
 import {useFeatureFlagsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
+import {useAnalytics} from '@/hooks';
 
 export const ListAgenticServices = () => {
   const [pagination, setPagination] = useState<MRT_PaginationState>({
@@ -51,6 +52,8 @@ export const ListAgenticServices = () => {
   });
 
   const {data: dataCount} = useGetAgenticServiceTotalCount();
+
+  const {analyticsTrack} = useAnalytics();
 
   const {isTbacEnable} = useFeatureFlagsStore(
     useShallow((state) => ({
@@ -114,10 +117,13 @@ export const ListAgenticServices = () => {
   });
 
   const handleClickOnDelete = useCallback(() => {
+    analyticsTrack('CLICK_CONFIRM_DELETE_AGENTIC_SERVICE', {
+      type: tempApp?.type
+    });
     setShowActionsModal(false);
     setTempApp(undefined);
     deleteMutation.mutate(tempApp?.id || '');
-  }, [deleteMutation, tempApp]);
+  }, [analyticsTrack, deleteMutation, tempApp?.id, tempApp?.type]);
 
   return (
     <>
@@ -142,6 +148,9 @@ export const ListAgenticServices = () => {
             muiTableBodyRowProps={({row}) => ({
               sx: {cursor: 'pointer', '& .MuiIconButton-root': {color: (theme) => theme.palette.vars.interactiveSecondaryDefaultDefault}},
               onClick: () => {
+                analyticsTrack('CLICK_NAVIGATION_AGENTIC_SERVICE_INFO', {
+                  type: row.original.type
+                });
                 const path = generatePath(PATHS.agenticServices.info, {id: row.original?.id});
                 void navigate(path, {replace: true});
               }
@@ -186,6 +195,9 @@ export const ListAgenticServices = () => {
                 <MenuItem
                   key="re-issue-badge"
                   onClick={() => {
+                    analyticsTrack('CLICK_REISSUE_BADGE_AGENTIC_SERVICE', {
+                      type: row.original.type
+                    });
                     setTempApp(row.original);
                     setShowBadgeForm(true);
                   }}
@@ -199,6 +211,9 @@ export const ListAgenticServices = () => {
                 <MenuItem
                   key="edit-app"
                   onClick={() => {
+                    analyticsTrack('CLICK_EDIT_AGENTIC_SERVICE', {
+                      type: row.original.type
+                    });
                     const path = generatePath(PATHS.agenticServices.edit, {id: row.original.id});
                     void navigate(path, {replace: true});
                   }}
@@ -212,6 +227,9 @@ export const ListAgenticServices = () => {
                 <MenuItem
                   key="delete-app"
                   onClick={() => {
+                    analyticsTrack('CLICK_DELETE_AGENTIC_SERVICE', {
+                      type: row.original.type
+                    });
                     setTempApp(row.original);
                     setShowActionsModal(true);
                   }}
@@ -241,6 +259,7 @@ export const ListAgenticServices = () => {
                   containerProps={{paddingBottom: '40px'}}
                   actionTitle="Add Agentic Service"
                   actionCallback={() => {
+                    analyticsTrack('CLICK_NAVIGATION_ADD_AGENTIC_SERVICE');
                     void navigate(PATHS.agenticServices.add, {replace: true});
                   }}
                   actionButtonProps={{

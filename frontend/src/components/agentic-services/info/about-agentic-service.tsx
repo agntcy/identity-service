@@ -12,8 +12,11 @@ import {AgenticServiceType} from '@/components/shared/agentic-service-type';
 import {BadgeCard} from '@/components/shared/badge-card';
 import {StatusAgenticService} from '@/components/shared/status-agentic-service';
 import DateHover from '@/components/ui/date-hover';
+import {useAnalytics} from '@/hooks';
 
 export const AboutAgenticService = ({app, onChangeReissueBadge}: {app?: App; onChangeReissueBadge?: (value: boolean) => void}) => {
+  const {analyticsTrack} = useAnalytics();
+
   const keyValuePairs = useMemo(() => {
     const temp: KeyValuePair[] = [
       {
@@ -72,6 +75,7 @@ export const AboutAgenticService = ({app, onChangeReissueBadge}: {app?: App; onC
                     text={app?.apiKey || ''}
                     style={{border: 'none'}}
                     onCopy={() => {
+                      analyticsTrack('CLICK_COPY_API_KEY_AGENTIC_SERVICE');
                       toast({
                         title: 'API Key copied to clipboard',
                         description: 'You can now use this API Key in your applications.',

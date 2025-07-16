@@ -3,44 +3,68 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {createContext, useContext, useEffect, useMemo} from 'react';
+import {createContext, useContext, useEffect, useMemo, useState} from 'react';
 import {AnalyticsBrowser} from '@segment/analytics-next';
 import React from 'react';
 import config from '@/config';
 import {useAuth} from '@/hooks';
+import * as CookieConsentVanilla from 'vanilla-cookieconsent';
 
 type AnalyticsProviderState = {
   analytics?: AnalyticsBrowser;
+  isConsentGiven: boolean;
 };
 
 const AnalyticsProviderContext = createContext<AnalyticsProviderState | undefined>(undefined);
 
 export const AnalyticsProvider = ({children}: React.PropsWithChildren) => {
+  const [isConsentGiven, setIsConsentGiven] = useState(false);
+
   const segmentId = config.SEGMENT_ID as string | undefined;
 
   const {authInfo} = useAuth();
 
   const analytics = useMemo(() => {
-    if (segmentId) {
+    if (segmentId && isConsentGiven) {
       return AnalyticsBrowser.load({writeKey: segmentId});
     }
     return undefined;
-  }, [segmentId]);
+  }, [isConsentGiven, segmentId]);
 
   useEffect(() => {
-    if (authInfo?.isAuthenticated && analytics) {
-      void analytics?.identify('USER_LOGGED_IN', {
-        userId: authInfo.user?.username,
-        name: authInfo.user?.name,
-        email: authInfo.user?.username,
-        orgId: authInfo.user?.tenant?.id,
-        orgName: authInfo.user?.tenant?.name
-      });
+    if (analytics && isConsentGiven) {
+      if (authInfo?.isAuthenticated) {
+        void analytics.identify('USER_LOGGED_IN', {
+          userId: authInfo.user?.username,
+          name: authInfo.user?.name,
+          email: authInfo.user?.username,
+          orgId: authInfo.user?.tenant?.id,
+          orgName: authInfo.user?.tenant?.name
+        });
+      }
     }
-  }, [analytics, authInfo]);
+  }, [analytics, isConsentGiven, authInfo]);
+
+  useEffect(() => {
+    const listener = () => {
+      const preferences = CookieConsentVanilla.getUserPreferences();
+      const flag = preferences.acceptedCategories.includes('analytics');
+      setIsConsentGiven(flag);
+    };
+    window.addEventListener('cc:onChange', listener);
+    window.addEventListener('cc:onConsent', listener);
+    const preferences = CookieConsentVanilla.getUserPreferences();
+    const flag = preferences.acceptedCategories.includes('analytics');
+    setIsConsentGiven(flag);
+    return () => {
+      window.removeEventListener('cc:onChange', listener);
+      window.addEventListener('cc:onConsent', listener);
+    };
+  }, []);
 
   const value = {
-    analytics
+    analytics,
+    isConsentGiven
   };
 
   return <AnalyticsProviderContext.Provider value={value}>{children}</AnalyticsProviderContext.Provider>;

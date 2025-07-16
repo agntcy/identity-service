@@ -14,7 +14,7 @@ import {TenantReponse} from '@/types/api/iam';
 import {UsersColumns} from './users-columns';
 import {InviteUserModal} from '@/components/shared/invite-user-modal';
 import {Trash2Icon} from 'lucide-react';
-import {useAuth} from '@/hooks';
+import {useAnalytics, useAuth} from '@/hooks';
 import {useSettingsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
 import {ConfirmModal} from '@/components/ui/confirm-modal';
@@ -39,6 +39,8 @@ export const OrganizationInfo = ({
   const [errorGroups, setErrorGroups] = useState<Error | null>(null);
   const [openActionsModal, setOpenActionsModal] = useState<boolean>(false);
   const [userId, setUserId] = useState<string | undefined>(undefined);
+
+  const {analyticsTrack} = useAnalytics();
 
   const {data: dataUsers, isLoading: isLoadingUsers, error: errorUsers, refetch} = useGetUsersGroup(groupId || '');
 
@@ -71,13 +73,14 @@ export const OrganizationInfo = ({
   });
 
   const handleClickOnDelete = useCallback(() => {
+    analyticsTrack('CLICK_CONFIRM_DELETE_USER');
     deleteUserMutation.mutate({
       userId: userId || '',
       tenantId: tenant?.id || ''
     });
     setUserId(undefined);
     setOpenActionsModal(false);
-  }, [deleteUserMutation, tenant?.id, userId]);
+  }, [analyticsTrack, deleteUserMutation, tenant?.id, userId]);
 
   return (
     <>
@@ -129,6 +132,7 @@ export const OrganizationInfo = ({
                 <MenuItem
                   key="delete-user"
                   onClick={() => {
+                    analyticsTrack('CLICK_DELETE_USER');
                     setUserId(row.original.name);
                     setOpenActionsModal(true);
                   }}

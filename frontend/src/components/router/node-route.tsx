@@ -3,18 +3,31 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {Suspense} from 'react';
+import {Suspense, useEffect} from 'react';
 import {ErrorBoundary} from 'react-error-boundary';
 import {ErrorPage} from './error-page';
 import {Loading} from '@/components/ui/loading';
+import {useAnalytics} from '@/hooks';
 
 export interface NodeRouteProps {
   children: React.ReactNode;
   disableErrorBoundary?: boolean;
+  pageTitle?: string;
 }
 
-export const NodeRoute = ({children, disableErrorBoundary}: NodeRouteProps) => {
+export const NodeRoute = ({children, disableErrorBoundary, pageTitle}: NodeRouteProps) => {
   const getWrappedChildren = () => <Suspense fallback={<Loading />}>{children}</Suspense>;
+
+  const {analyticsPage} = useAnalytics();
+
+  useEffect(() => {
+    if (pageTitle) {
+      analyticsPage('VISIT_PAGE', {
+        pageTitle: pageTitle
+      });
+    }
+  }, [analyticsPage, pageTitle]);
+
   return disableErrorBoundary ? (
     getWrappedChildren()
   ) : (

@@ -11,11 +11,14 @@ import {RefreshCcwIcon} from 'lucide-react';
 import React, {useCallback} from 'react';
 import {ConfirmModal} from '../ui/confirm-modal';
 import {Card} from '../ui/card';
+import {useAnalytics} from '@/hooks';
 
 export const ContentApiKey: React.FC = () => {
   const [openActionsModal, setOpenActionsModal] = React.useState(false);
 
   const {data, error, isLoading, isFetching, refetch} = useGetSettings();
+
+  const {analyticsTrack} = useAnalytics();
 
   const setApiKeyMutation = useSetApiKey({
     callbacks: {
@@ -41,9 +44,10 @@ export const ContentApiKey: React.FC = () => {
   }, []);
 
   const handleConfirmAction = useCallback(() => {
+    analyticsTrack('CLICK_CONFIRM_REFRESH_API_KEY');
     setApiKeyMutation.mutate();
     handleChangeActionsModal(false);
-  }, [setApiKeyMutation, handleChangeActionsModal]);
+  }, [analyticsTrack, setApiKeyMutation, handleChangeActionsModal]);
 
   return (
     <ConditionalQueryRenderer
@@ -54,6 +58,7 @@ export const ContentApiKey: React.FC = () => {
       useRelativeLoader
       emptyListStateProps={{
         actionCallback: () => {
+          analyticsTrack('CLICK_CREATE_API_KEY');
           setApiKeyMutation.mutate();
         },
         actionTitle: 'Create API Key'
@@ -88,7 +93,14 @@ export const ContentApiKey: React.FC = () => {
         </CardContent>
       </Card>
       <div className="flex justify-end mt-4">
-        <Button onClick={() => handleChangeActionsModal(true)} startIcon={<RefreshCcwIcon className="w-4 h-4" />} sx={{fontWeight: '600 !important'}}>
+        <Button
+          onClick={() => {
+            analyticsTrack('CLICK_REFRESH_API_KEY');
+            handleChangeActionsModal(true);
+          }}
+          startIcon={<RefreshCcwIcon className="w-4 h-4" />}
+          sx={{fontWeight: '600 !important'}}
+        >
           Refresh
         </Button>
       </div>

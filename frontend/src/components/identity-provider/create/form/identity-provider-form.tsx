@@ -19,9 +19,12 @@ import OasfLogo from '@/assets/oasf.svg?react';
 import OryLogo from '@/assets/ory.svg?react';
 import {IdpType} from '@/types/api/settings';
 import {docs} from '@/utils/docs';
+import {useAnalytics} from '@/hooks';
 
 export const IdentityProviderForm = ({isLoading = false}: {isLoading?: boolean}) => {
   const {control, watch} = useFormContext<IdentityProvidersFormValues>();
+
+  const {analyticsTrack} = useAnalytics();
 
   const identityProviders: SharedProviderProps<IdpType>[] = [
     {
@@ -91,7 +94,15 @@ export const IdentityProviderForm = ({isLoading = false}: {isLoading?: boolean})
                 <FormControl>
                   <div className="card-group">
                     {identityProviders.map((provider, index) => (
-                      <SharedProvider key={index} {...provider} isSelected={field.value === provider.type} onSelect={field.onChange} />
+                      <SharedProvider
+                        key={index}
+                        {...provider}
+                        isSelected={field.value === provider.type}
+                        onSelect={(type) => {
+                          field.onChange(type);
+                          analyticsTrack('ADD_IDENTITY_PROVIDER_TYPE_SELECTED', {type});
+                        }}
+                      />
                     ))}
                   </div>
                 </FormControl>

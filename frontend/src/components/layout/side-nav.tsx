@@ -10,7 +10,7 @@ import {cn} from '@/lib/utils';
 import {PATHS} from '@/router/paths';
 import {ChevronLeftIcon, ChevronRightIcon, LayoutDashboardIcon} from 'lucide-react';
 import OrganizationLogo from '@/assets/organization.svg?react';
-import {useAuth} from '@/hooks';
+import {useAnalytics, useAuth} from '@/hooks';
 import {OrganizationsDrawer} from './organizations-drawer';
 import {OverflowTooltip, Tooltip, TooltipProps} from '@outshift/spark-design';
 import SettingsIcon from '@/assets/sidebar/settings.svg?react';
@@ -34,6 +34,7 @@ export const SideNav: React.FC<{isCollapsed?: boolean; onChangeCollapsed?: (valu
 
   const theme = useTheme();
   const {authInfo} = useAuth();
+  const {analyticsTrack} = useAnalytics();
 
   const {isTbacEnable} = useFeatureFlagsStore(
     useShallow((store) => ({
@@ -46,27 +47,41 @@ export const SideNav: React.FC<{isCollapsed?: boolean; onChangeCollapsed?: (valu
       {
         href: PATHS.dashboard,
         label: 'Dashboard',
-        icon: <LayoutDashboardIcon className="w-4 h-4" />
+        icon: <LayoutDashboardIcon className="w-4 h-4" />,
+        onClick: () => {
+          analyticsTrack('CLICK_NAVIGATION_DASHBOARD');
+        }
       },
       {
         href: PATHS.agenticServices.base,
         label: 'Agentic Services',
-        icon: <AgenticServicesLogo className="w-4 h-4" />
+        icon: <AgenticServicesLogo className="w-4 h-4" />,
+        onClick: () => {
+          analyticsTrack('CLICK_NAVIGATION_AGENTIC_SERVICES');
+        }
       },
       {
         href: PATHS.policies.base,
         label: 'Policies',
         icon: <PoliciesLogo className="w-4 h-4" />,
-        disabled: !isTbacEnable
+        disabled: !isTbacEnable,
+        onClick: () => {
+          if (isTbacEnable) {
+            analyticsTrack('CLICK_NAVIGATION_POLICIES');
+          }
+        }
       },
       {
         href: PATHS.settings.base,
         label: 'Settings',
-        icon: <SettingsIcon className="w-4 h-4" />
+        icon: <SettingsIcon className="w-4 h-4" />,
+        onClick: () => {
+          analyticsTrack('CLICK_NAVIGATION_SETTINGS');
+        }
       }
     ];
     return temp.filter((link) => !link.disabled);
-  }, [isTbacEnable]);
+  }, [analyticsTrack, isTbacEnable]);
 
   const location = useLocation();
   const currentPathName = location.pathname;

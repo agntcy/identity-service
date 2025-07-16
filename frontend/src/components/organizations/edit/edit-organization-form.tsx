@@ -6,6 +6,7 @@
 import {Card, CardContent} from '@/components/ui/card';
 import {Form, FormControl, FormField, FormItem, FormLabel} from '@/components/ui/form';
 import {Input} from '@/components/ui/input';
+import {useAnalytics} from '@/hooks';
 import {validateForm} from '@/lib/utils';
 import {useUpdateTenant} from '@/mutations';
 import {PATHS} from '@/router/paths';
@@ -26,6 +27,8 @@ export const EditOrganizationForm = ({tenant}: {tenant?: TenantReponse}) => {
       name: tenant?.name || ''
     }
   });
+
+  const {analyticsTrack} = useAnalytics();
 
   const navigate = useNavigate();
 
@@ -59,11 +62,12 @@ export const EditOrganizationForm = ({tenant}: {tenant?: TenantReponse}) => {
       });
       return;
     }
+    analyticsTrack('CLICK_SAVE_EDIT_ORGANIZATION');
     updateOrganizationMutation.mutate({
       id: tenant?.id || '',
       name: values.name
     });
-  }, [form, tenant?.id, updateOrganizationMutation]);
+  }, [analyticsTrack, form, tenant?.id, updateOrganizationMutation]);
 
   useEffect(() => {
     form.reset({

@@ -11,8 +11,10 @@ import {PATHS} from '@/router/paths';
 import {Link as RouterLink} from 'react-router-dom';
 import {docs} from '@/utils/docs';
 import {WelcomeName} from './welcome-name';
+import {useAnalytics} from '@/hooks';
 
 export const EmptyDashboard = () => {
+  const {analyticsTrack} = useAnalytics();
   return (
     <ScrollShadowWrapper>
       <div className="flex flex-col h-full gap-[16px]">
@@ -56,7 +58,7 @@ export const EmptyDashboard = () => {
                     supporting A2A-compatible protocols like Google A2A.
                   </Typography>
                   <div className="flex justify-center items-center mt-8">
-                    <RouterLink to={PATHS.agenticServices.verifyIdentity}>
+                    <RouterLink to={PATHS.agenticServices.verifyIdentity} onClick={() => analyticsTrack('CLICK_NAVIGATION_VERIFY_IDENTITY')}>
                       <Button variant="outlined" sx={{fontWeight: '600 !important'}} startIcon={<CheckIcon className="w-4 h-4" />}>
                         Verify Identity
                       </Button>
@@ -74,7 +76,10 @@ export const EmptyDashboard = () => {
                     A2A-compatible protocols like Google A2A, with support for policies and access controls.
                   </Typography>
                   <div className="flex justify-center items-center mt-8">
-                    <RouterLink to={PATHS.settings.identityProvider.connection}>
+                    <RouterLink
+                      to={PATHS.settings.identityProvider.connection}
+                      onClick={() => analyticsTrack('CLICK_NAVIGATION_CONNECT_IDENTITY_PROVIDER')}
+                    >
                       <Button variant="outlined" sx={{fontWeight: '600 !important'}} startIcon={<PlusIcon className="w-4 h-4" />}>
                         Connect Identity Provider
                       </Button>

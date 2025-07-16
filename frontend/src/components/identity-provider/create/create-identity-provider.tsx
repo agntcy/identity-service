@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {useCallback, useState} from 'react';
+import {useCallback} from 'react';
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {z} from 'zod';
@@ -16,16 +16,17 @@ import {Button, toast} from '@outshift/spark-design';
 import {IdentityProviderForm} from './form/identity-provider-form';
 import {useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
+import {useAnalytics} from '@/hooks';
 
 export const CreateIdentityProvider = () => {
-  const [navigateToAgenticServices, setNavigateToAgenticServices] = useState(false);
-
   const form = useForm<IdentityProvidersFormValues>({
     resolver: zodResolver(IdentityProvidersSchema),
     mode: 'all'
   });
 
   const navigate = useNavigate();
+
+  const {analyticsTrack} = useAnalytics();
 
   const mutationSetIdentityProvider = useSetIdentityProvider({
     callbacks: {
@@ -35,11 +36,7 @@ export const CreateIdentityProvider = () => {
           description: 'Identity provider connected successfully.',
           type: 'success'
         });
-        if (navigateToAgenticServices) {
-          void navigate(PATHS.agenticServices.add, {replace: true});
-        } else {
-          void navigate(PATHS.settings.base, {replace: true});
-        }
+        void navigate(PATHS.settings.base, {replace: true});
       },
       onError: () => {
         toast({
@@ -65,54 +62,49 @@ export const CreateIdentityProvider = () => {
     });
   }, [form]);
 
-  const handleSave = useCallback(
-    (navigateToCreate = false) => {
-      const values = form.getValues();
-      const validationResult = validateForm(IdentityProvidersSchema, values);
-      if (!validationResult.success) {
-        validationResult.errors?.forEach((error) => {
-          const fieldName = error.path[0] as keyof z.infer<typeof IdentityProvidersSchema>;
-          form.setError(fieldName, {type: 'manual', ...error});
-        });
-        return;
-      }
-      const data: IssuerSettings = {
-        idpType: values.provider
-      };
-      if (values.provider === IdpType.IDP_TYPE_DUO) {
-        data.duoIdpSettings = {
-          hostname: values.hostname,
-          integrationKey: values.integrationKey,
-          secretKey: values.secretKey
-        };
-      } else if (values.provider === IdpType.IDP_TYPE_OKTA) {
-        data.oktaIdpSettings = {
-          orgUrl: values.orgUrl?.replace(/\/$/, ''),
-          clientId: values.clientId,
-          privateKey: values.privateKey
-        };
-      } else if (values.provider === IdpType.IDP_TYPE_ORY) {
-        data.oryIdpSettings = {
-          apiKey: values.apiKey,
-          projectSlug: values.projectSlug
-        };
-      }
-      setNavigateToAgenticServices(navigateToCreate);
-      mutationSetIdentityProvider.mutate({
-        issuerSettings: {
-          ...data
-        }
+  const handleSave = useCallback(() => {
+    const values = form.getValues();
+    const validationResult = validateForm(IdentityProvidersSchema, values);
+    if (!validationResult.success) {
+      validationResult.errors?.forEach((error) => {
+        const fieldName = error.path[0] as keyof z.infer<typeof IdentityProvidersSchema>;
+        form.setError(fieldName, {type: 'manual', ...error});
       });
-    },
-    [form, mutationSetIdentityProvider]
-  );
+      return;
+    }
+    const data: IssuerSettings = {
+      idpType: values.provider
+    };
+    if (values.provider === IdpType.IDP_TYPE_DUO) {
+      data.duoIdpSettings = {
+        hostname: values.hostname,
+        integrationKey: values.integrationKey,
+        secretKey: values.secretKey
+      };
+    } else if (values.provider === IdpType.IDP_TYPE_OKTA) {
+      data.oktaIdpSettings = {
+        orgUrl: values.orgUrl?.replace(/\/$/, ''),
+        clientId: values.clientId,
+        privateKey: values.privateKey
+      };
+    } else if (values.provider === IdpType.IDP_TYPE_ORY) {
+      data.oryIdpSettings = {
+        apiKey: values.apiKey,
+        projectSlug: values.projectSlug
+      };
+    }
+    analyticsTrack('CLICK_SAVE_NEW_IDENTITY_PROVIDER', {
+      type: values.provider
+    });
+    mutationSetIdentityProvider.mutate({
+      issuerSettings: {
+        ...data
+      }
+    });
+  }, [analyticsTrack, form, mutationSetIdentityProvider]);
 
   const onSubmit = useCallback(() => {
-    handleSave(false);
-  }, [handleSave]);
-
-  const onSubmitAndNavigate = useCallback(() => {
-    handleSave(true);
+    handleSave();
   }, [handleSave]);
 
   return (
@@ -132,28 +124,15 @@ export const CreateIdentityProvider = () => {
           </Button>
           <Button
             type="submit"
-            loading={mutationSetIdentityProvider.isPending && !navigateToAgenticServices}
+            loading={mutationSetIdentityProvider.isPending}
             loadingPosition="start"
             disabled={mutationSetIdentityProvider.isPending || !form.formState.isValid}
             className="cursor-pointer"
             sx={{
               fontWeight: '600 !important'
             }}
-            variant="secondary"
           >
             Save
-          </Button>
-          <Button
-            loading={mutationSetIdentityProvider.isPending && navigateToAgenticServices}
-            loadingPosition="start"
-            disabled={mutationSetIdentityProvider.isPending || !form.formState.isValid}
-            className="cursor-pointer"
-            sx={{
-              fontWeight: '600 !important'
-            }}
-            onClick={onSubmitAndNavigate}
-          >
-            Save and Add Agentic Service
           </Button>
         </div>
       </form>

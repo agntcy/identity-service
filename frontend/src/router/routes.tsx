@@ -61,7 +61,7 @@ export const generateRoutes = (routes: Route[]): Route[] => {
     {
       path: PATHS.welcome,
       element: (
-        <NodeRoute>
+        <NodeRoute pageTitle="welcome">
           <Welcome />
         </NodeRoute>
       )
@@ -77,7 +77,7 @@ export const generateRoutes = (routes: Route[]): Route[] => {
     {
       path: PATHS.verifyIdentity,
       element: (
-        <NodeRoute>
+        <NodeRoute pageTitle="verify identity (public)">
           <VerifyIdentityPublic />
         </NodeRoute>
       ),
@@ -86,7 +86,7 @@ export const generateRoutes = (routes: Route[]): Route[] => {
     {
       path: PATHS.onboardDevice,
       element: (
-        <NodeRoute>
+        <NodeRoute pageTitle="onboard device">
           <OnBoardDevice />
         </NodeRoute>
       )
@@ -94,7 +94,7 @@ export const generateRoutes = (routes: Route[]): Route[] => {
     {
       path: PATHS.onboardDeviceId,
       element: (
-        <NodeRoute>
+        <NodeRoute pageTitle="onboard device">
           <OnBoardDevice />
         </NodeRoute>
       )
@@ -103,13 +103,11 @@ export const generateRoutes = (routes: Route[]): Route[] => {
       path: PATHS.basePath,
       element: (
         <SecureRoute redirectPath={PATHS.welcome}>
-          <NodeRoute>
-            <SettingsProvider>
-              <BannerProvider>
-                <Layout />
-              </BannerProvider>
-            </SettingsProvider>
-          </NodeRoute>
+          <SettingsProvider>
+            <BannerProvider>
+              <Layout />
+            </BannerProvider>
+          </SettingsProvider>
         </SecureRoute>
       ),
       children: [
@@ -148,7 +146,11 @@ export const useRoutes = () => {
         children: [
           {
             index: true,
-            element: <Dashboard />
+            element: (
+              <NodeRoute pageTitle="dashboard">
+                <Dashboard />
+              </NodeRoute>
+            )
           },
           {
             path: '*',
@@ -161,26 +163,46 @@ export const useRoutes = () => {
         children: [
           {
             index: true,
-            element: <AgenticServices />
+            element: (
+              <NodeRoute pageTitle="agentic services">
+                <AgenticServices />
+              </NodeRoute>
+            )
           },
           {
             path: PATHS.agenticServices.add,
-            element: <AddAgenticService />,
+            element: (
+              <NodeRoute pageTitle="add agentic service">
+                <AddAgenticService />
+              </NodeRoute>
+            ),
             disabled: isEmptyIdp
           },
           {
             path: PATHS.agenticServices.edit,
-            element: <EditAgenticService />,
+            element: (
+              <NodeRoute pageTitle="edit agentic service">
+                <EditAgenticService />
+              </NodeRoute>
+            ),
             disabled: isEmptyIdp
           },
           {
             path: PATHS.agenticServices.info,
-            element: <InfoAgenticService />,
+            element: (
+              <NodeRoute pageTitle="agentic service info">
+                <InfoAgenticService />
+              </NodeRoute>
+            ),
             disabled: isEmptyIdp
           },
           {
             path: PATHS.agenticServices.verifyIdentity,
-            element: <VerifyIdentityPrivate />
+            element: (
+              <NodeRoute pageTitle="verify identity (private)">
+                <VerifyIdentityPrivate />
+              </NodeRoute>
+            )
           },
           {
             path: '*',
@@ -194,19 +216,35 @@ export const useRoutes = () => {
         children: [
           {
             index: true,
-            element: <Policies />
+            element: (
+              <NodeRoute pageTitle="policies">
+                <Policies />
+              </NodeRoute>
+            )
           },
           {
             path: PATHS.policies.create,
-            element: <AddPolicy />
+            element: (
+              <NodeRoute pageTitle="add policy">
+                <AddPolicy />
+              </NodeRoute>
+            )
           },
           {
             path: PATHS.policies.info,
-            element: <InfoPolicy />
+            element: (
+              <NodeRoute pageTitle="policy info">
+                <InfoPolicy />
+              </NodeRoute>
+            )
           },
           {
             path: PATHS.policies.edit,
-            element: <EditPolicy />
+            element: (
+              <NodeRoute pageTitle="edit policy">
+                <EditPolicy />
+              </NodeRoute>
+            )
           },
           {
             path: '*',
@@ -226,11 +264,19 @@ export const useRoutes = () => {
             children: [
               {
                 index: true,
-                element: <IdentityProvider />
+                element: (
+                  <NodeRoute pageTitle="identity provider">
+                    <IdentityProvider />
+                  </NodeRoute>
+                )
               },
               {
                 path: PATHS.settings.identityProvider.connection,
-                element: <ConnectionIdentityProvider />,
+                element: (
+                  <NodeRoute pageTitle="connect identity provider">
+                    <ConnectionIdentityProvider />
+                  </NodeRoute>
+                ),
                 disabled: !isEmptyIdp
               },
               {
@@ -244,7 +290,11 @@ export const useRoutes = () => {
             children: [
               {
                 index: true,
-                element: <Devices />
+                element: (
+                  <NodeRoute pageTitle="devices">
+                    <Devices />
+                  </NodeRoute>
+                )
               },
               {
                 path: '*',
@@ -254,23 +304,39 @@ export const useRoutes = () => {
           },
           {
             path: PATHS.settings.apiKey,
-            element: <ApiKey />
+            element: (
+              <NodeRoute pageTitle="api key">
+                <ApiKey />
+              </NodeRoute>
+            )
           },
           {
             path: PATHS.settings.organizationsAndUsers.base,
             children: [
               {
                 index: true,
-                element: <Organizations />
+                element: (
+                  <NodeRoute pageTitle="organizations">
+                    <Organizations />
+                  </NodeRoute>
+                )
               },
               {
                 path: PATHS.settings.organizationsAndUsers.edit,
-                element: <EditOrganization />,
+                element: (
+                  <NodeRoute pageTitle="edit organization">
+                    <EditOrganization />
+                  </NodeRoute>
+                ),
                 disabled: !isAdmin
               },
               {
                 path: PATHS.settings.organizationsAndUsers.info,
-                element: <InfoOrganization />,
+                element: (
+                  <NodeRoute pageTitle="organization info">
+                    <InfoOrganization />
+                  </NodeRoute>
+                ),
                 disabled: !isAdmin
               },
               {

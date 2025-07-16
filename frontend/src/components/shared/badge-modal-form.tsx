@@ -21,6 +21,7 @@ import {Badge, IssueBadgeBody} from '@/types/api/badge';
 import {encodeBase64} from '@/utils/utils';
 import {generatePath, useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
+import {useAnalytics} from '@/hooks';
 
 interface BadgeModalFormProps extends ModalProps {
   title?: string;
@@ -54,6 +55,8 @@ export const BadgeModalForm = ({
   });
 
   const navigate = useNavigate();
+
+  const {analyticsTrack} = useAnalytics();
 
   const createBadge = useIssueBadge({
     callbacks: {
@@ -104,6 +107,9 @@ export const BadgeModalForm = ({
         wellKnownUrl: values.wellKnowServer || ''
       };
     }
+    analyticsTrack('CLICK_CREATE_BADGE_AGENTIC_SERVICE', {
+      type: app.type
+    });
     createBadge.mutate({
       id: app?.id || '',
       data: {...data}

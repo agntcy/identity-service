@@ -6,6 +6,7 @@
 import {ListAgenticServices} from '@/components/agentic-services/list/list-agentic-services';
 import {BasePage} from '@/components/layout/base-page';
 import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-renderer';
+import {useAnalytics} from '@/hooks';
 import {useGetSettings} from '@/queries';
 import {PATHS} from '@/router/paths';
 import {useSettingsStore} from '@/store';
@@ -25,18 +26,20 @@ const AgentServices: React.FC = () => {
 
   const navigate = useNavigate();
 
+  const {analyticsTrack} = useAnalytics();
+
   return (
     <BasePage
       title="Agentic Services"
       rightSideItems={
         <div className="flex gap-4 items-center">
-          <Link to={PATHS.agenticServices.verifyIdentity}>
+          <Link to={PATHS.agenticServices.verifyIdentity} onClick={() => analyticsTrack('CLICK_NAVIGATION_VERIFY_IDENTITY')}>
             <Button startIcon={<CheckIcon className="w-4 h-4" />} variant="secondary" sx={{fontWeight: '600 !important'}}>
               Verify Identity
             </Button>
           </Link>
           {!isEmptyIdp && (
-            <Link to={PATHS.agenticServices.add}>
+            <Link to={PATHS.agenticServices.add} onClick={() => analyticsTrack('CLICK_NAVIGATION_ADD_AGENTIC_SERVICE')}>
               <Button startIcon={<PlusIcon className="w-4 h-4" />} variant="primary" sx={{fontWeight: '600 !important'}}>
                 Add Agentic Service
               </Button>
@@ -62,6 +65,7 @@ const AgentServices: React.FC = () => {
             'Connect your identity provider to create and manage identities for your AI agents and MCP servers, including those supporting A2A-compatible protocols like Google A2A, with support for policies and access controls.',
           actionTitle: 'Connect Identity Provider',
           actionCallback: () => {
+            analyticsTrack('CLICK_NAVIGATION_CONNECT_IDENTITY_PROVIDER');
             void navigate(PATHS.settings.identityProvider.connection, {replace: true});
           }
         }}

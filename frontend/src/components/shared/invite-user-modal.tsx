@@ -15,6 +15,7 @@ import {InviteUserFormValues, InviteUserSchema} from '@/schemas/invite-user-sche
 import {validateForm} from '@/lib/utils';
 import z from 'zod';
 import {useGetGroupsTenant} from '@/queries';
+import {useAnalytics} from '@/hooks';
 
 interface InviteUserModalProps extends ModalProps {
   title?: string;
@@ -41,6 +42,8 @@ export const InviteUserModal = ({
     resolver: zodResolver(InviteUserSchema),
     mode: 'all'
   });
+
+  const {analyticsTrack} = useAnalytics();
 
   const inviteUser = useInviteUser({
     callbacks: {
@@ -72,13 +75,14 @@ export const InviteUserModal = ({
       });
       return;
     }
+    analyticsTrack('CLICK_INVITE_USER_CONFIRM');
     inviteUser.mutate({
       groupId: groupId,
       data: {
         username: values.email
       }
     });
-  }, [form, groupId, inviteUser]);
+  }, [analyticsTrack, form, groupId, inviteUser]);
 
   useEffect(() => {
     onGroupIdChange?.(groupId, isLoadingGroups, errorGroups);
