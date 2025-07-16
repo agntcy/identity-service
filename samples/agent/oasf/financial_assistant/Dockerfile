@@ -4,7 +4,8 @@
 FROM python:3.12-slim
 
 WORKDIR /code
-COPY ./* .
+COPY ./samples/agent/oasf/financial_assistant/* .
+COPY ./sdk/python/ ./sdk/python/
 RUN pip install --no-cache-dir .
 
 # Install identity platform dependency
