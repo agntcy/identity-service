@@ -33,8 +33,15 @@ serviceAccount:
   create: true
   name: ""
 
+externalSecrets:
+  secretStoreName: ""  
+  secretStoreKind: ClusterSecretStore
+  data:
+    - secretKey: IDENTITY_PLATFORM_API_KEY
+      remoteRef:
+        key: ""  
+        property: IDENTITY_PLATFORM_API_KEY
 
-IDENTITY_PLATFORM_API_KEY=
 
 configmap:
   CURRENCY_EXCHANGE_AGENT_URL: ""
