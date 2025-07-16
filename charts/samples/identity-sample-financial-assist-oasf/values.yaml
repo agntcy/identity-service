@@ -1,0 +1,44 @@
+# Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
+replicaCount: 1
+
+image:
+  repository: ""
+  pullPolicy: IfNotPresent
+  tag: ""
+
+service:
+  type: ClusterIP
+  http:
+    port: 9093
+    targetPort: 9093
+
+namespace: dev-samples
+imagePullSecrets:
+  - name: regcred
+
+ingress:
+  enabled: true
+  className: nginx-internal
+  annotations:
+    http:
+      kubernetes.io/ingress.class: nginx-internal
+      nginx.ingress.kubernetes.io/rewrite-target: /
+      cert-manager.io/cluster-issuer: letsencrypt
+  domainPrefixHttp: oasf-agent-financial-assist
+  apiDomainName: dev.example.com
+
+serviceAccount:
+  create: true
+  name: ""
+
+
+IDENTITY_PLATFORM_API_KEY=
+
+configmap:
+  CURRENCY_EXCHANGE_AGENT_URL: ""
+  CURRENCY_EXCHANGE_MCP_SERVER_URL: ""
+  OLLAMA_HOST: ""
+  OLLAMA_MODEL: ""
+  PORT: 9093
