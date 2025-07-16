@@ -37,3 +37,12 @@ configmap:
   OLLAMA_HOST: "http://ollama.example.com"
   OLLAMA_MODEL: "llama3.2"
   MCP_SERVER_URL: "https://mcp-server.example.com/mcp/"
+
+externalSecrets:
+  secretStoreName: ""  
+  secretStoreKind: ClusterSecretStore
+  data:
+    - secretKey: IDENTITY_PLATFORM_API_KEY
+      remoteRef:
+        key: ""  
+        property: IDENTITY_PLATFORM_API_KEY

@@ -170,7 +170,7 @@ jobs:
       runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
       ### REQUIRED
       ### Docker image name
-      image-name: "${{ github.event.repository.name }}-a2a-agent-currency-exchange"
+      image-name: "${{ github.event.repository.name }}-oasf-agent-financial-assistant"
 
       ### path to where docker should copy files into image
       ### defaults to root of repository (.)
