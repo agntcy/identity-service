@@ -153,8 +153,8 @@ jobs:
       ghcr-enabled: true
       ghcr-org-registry: ${{ vars.GHCR_REGISTRY }}
 
-  call-docker-build-push-oasf-agent-financial-assist:
-    name: Call Docker Build oasf agent financial assist
+  call-docker-build-push-oasf-agent-financial-assistant:
+    name: Call Docker Build oasf agent financial assistant
     needs: [checkout-unit-tests]
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/build-push-docker.yaml@production
 
