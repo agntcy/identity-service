@@ -5,7 +5,7 @@ apiVersion: v2
 name: pyramid-backend
 description: A Helm chart for pyramid backend
 type: application
-version: 0.1.5
+version: 0.1.6
 appVersion: "0.0.1"
 
 maintainers:

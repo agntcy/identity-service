@@ -34,10 +34,10 @@ serviceAccount:
   name: ""
 
 externalSecrets:
-  secretStoreName: ""  
+  secretStoreName: ""
   secretStoreKind: ClusterSecretStore
   data:
     - secretKey: IDENTITY_PLATFORM_API_KEY
       remoteRef:
-        key: ""  
+        key: ""
         property: IDENTITY_PLATFORM_API_KEY
