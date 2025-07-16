@@ -6,6 +6,7 @@
 import {InformationProvider} from '@/components/identity-provider/information/information-provider';
 import {BasePage} from '@/components/layout/base-page';
 import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-renderer';
+import {useAnalytics} from '@/hooks';
 import {useGetSettings} from '@/queries';
 import {PATHS} from '@/router/paths';
 import {useSettingsStore} from '@/store';
@@ -22,6 +23,8 @@ const IdentityProvider: React.FC = () => {
       isEmptyIdp: state.isEmptyIdp
     }))
   );
+
+  const {analyticsTrack} = useAnalytics();
 
   return (
     <BasePage
@@ -71,6 +74,7 @@ const IdentityProvider: React.FC = () => {
             'Connect your identity provider to create and manage identities for your AI agents and MCP servers, including those supporting A2A-compatible protocols like Google A2A, with support for policies and access controls.',
           actionTitle: 'Connect Identity Provider',
           actionCallback: () => {
+            analyticsTrack('CLICK_NAVIGATION_CONNECT_IDENTITY_PROVIDER');
             void navigate(PATHS.settings.identityProvider.connection, {replace: true});
           }
         }}

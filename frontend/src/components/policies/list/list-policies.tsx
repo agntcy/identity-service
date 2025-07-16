@@ -19,6 +19,7 @@ import {ConfirmModal} from '@/components/ui/confirm-modal';
 import {Policy} from '@/types/api/policy';
 import {useDeletePolicy} from '@/mutations';
 import {ListRules} from '@/components/shared/list-rules/list-rules';
+import {useAnalytics} from '@/hooks';
 
 export const ListPolicies = () => {
   const [pagination, setPagination] = useState<MRT_PaginationState>({
@@ -42,6 +43,8 @@ export const ListPolicies = () => {
       query: query
     }
   });
+
+  const {analyticsTrack} = useAnalytics();
 
   const dataPolicies = useMemo(() => {
     return (
@@ -82,10 +85,11 @@ export const ListPolicies = () => {
   });
 
   const handleClickOnDelete = useCallback(() => {
+    analyticsTrack('CLICK_CONFIRM_DELETE_POLICY');
     setShowActionsModal(false);
     setTempPolicy(undefined);
     deleteMutation.mutate(tempPolicy?.id || '');
-  }, [deleteMutation, tempPolicy]);
+  }, [analyticsTrack, deleteMutation, tempPolicy?.id]);
 
   return (
     <>
@@ -113,6 +117,7 @@ export const ListPolicies = () => {
                 if (isDetailPanel) {
                   return;
                 }
+                analyticsTrack('CLICK_NAVIGATION_POLICY_INFO');
                 const path = generatePath(PATHS.policies.info, {id: row.original?.id});
                 void navigate(path, {replace: true});
               }
@@ -152,6 +157,7 @@ export const ListPolicies = () => {
                   key="edit-policy"
                   sx={{display: 'flex', alignItems: 'center', gap: '8px'}}
                   onClick={() => {
+                    analyticsTrack('CLICK_NAVIGATION_EDIT_POLICY');
                     const path = generatePath(PATHS.policies.edit, {id: row.original?.id});
                     void navigate(path, {replace: true});
                   }}
@@ -164,6 +170,7 @@ export const ListPolicies = () => {
                 <MenuItem
                   key="delete-policy"
                   onClick={() => {
+                    analyticsTrack('CLICK_DELETE_POLICY');
                     setTempPolicy(row.original);
                     setShowActionsModal(true);
                   }}
@@ -193,6 +200,7 @@ export const ListPolicies = () => {
                   containerProps={{paddingBottom: '40px'}}
                   actionTitle="Add Policy"
                   actionCallback={() => {
+                    analyticsTrack('CLICK_NAVIGATION_ADD_POLICY');
                     void navigate(PATHS.policies.create, {replace: true});
                   }}
                   actionButtonProps={{

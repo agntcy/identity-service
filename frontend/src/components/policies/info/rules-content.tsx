@@ -17,6 +17,7 @@ import {TasksColumns} from './tasks-columns';
 import {OpsRule} from '@/components/shared/ops-rules/ops-rule';
 import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-renderer';
 import {useGetPolicyRules} from '@/queries';
+import {useAnalytics} from '@/hooks';
 
 const PAGE_SIZE = 5;
 
@@ -33,6 +34,8 @@ export const RulesContent = ({policy}: {policy?: Policy}) => {
   const [isAdd, setIsAdd] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+
+  const {analyticsTrack} = useAnalytics();
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -70,6 +73,7 @@ export const RulesContent = ({policy}: {policy?: Policy}) => {
           }}
           emptyListStateProps={{
             actionCallback: () => {
+              analyticsTrack('CLICK_ADD_RULE_POLICY');
               setIsAdd(true);
             },
             actionTitle: 'Add Rule',
@@ -85,6 +89,7 @@ export const RulesContent = ({policy}: {policy?: Policy}) => {
                 </Typography>
                 <Button
                   onClick={() => {
+                    analyticsTrack('CLICK_ADD_RULE_POLICY');
                     setTempRule(undefined);
                     setIsAdd(true);
                   }}
@@ -189,6 +194,7 @@ export const RulesContent = ({policy}: {policy?: Policy}) => {
                             key="edit-rule"
                             sx={{display: 'flex', alignItems: 'center', gap: '8px'}}
                             onClick={() => {
+                              analyticsTrack('CLICK_EDIT_RULE_POLICY');
                               setTempRule(rule);
                               setIsEdit(true);
                             }}
@@ -201,6 +207,7 @@ export const RulesContent = ({policy}: {policy?: Policy}) => {
                           <MenuItem
                             key="delete-rule"
                             onClick={() => {
+                              analyticsTrack('CLICK_DELETE_RULE_POLICY');
                               setTempRule(rule);
                               setIsDelete(true);
                             }}

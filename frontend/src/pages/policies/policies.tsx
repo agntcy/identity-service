@@ -6,6 +6,7 @@
 import {BasePage} from '@/components/layout/base-page';
 import {ListPolicies} from '@/components/policies/list/list-policies';
 import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-renderer';
+import {useAnalytics} from '@/hooks';
 import {useGetAgenticServiceTotalCount} from '@/queries';
 import {PATHS} from '@/router/paths';
 import {useSettingsStore} from '@/store';
@@ -22,9 +23,11 @@ const Policies: React.FC = () => {
   );
 
   const {data, isLoading, error} = useGetAgenticServiceTotalCount();
-  const hasAgenticServices = data && Number(data.total) > 0;
+  const hasAgenticServices = data && Number(data?.total) > 0;
 
   const navigate = useNavigate();
+
+  const {analyticsTrack} = useAnalytics();
 
   return (
     <BasePage
@@ -33,7 +36,7 @@ const Policies: React.FC = () => {
         !isEmptyIdp &&
         !isLoading &&
         hasAgenticServices && (
-          <Link to={PATHS.policies.create}>
+          <Link to={PATHS.policies.create} onClick={() => analyticsTrack('CLICK_NAVIGATION_ADD_POLICY')}>
             <Button startIcon={<PlusIcon className="w-4 h-4" />} variant="primary" sx={{fontWeight: '600 !important'}}>
               Add Policy
             </Button>
@@ -53,6 +56,7 @@ const Policies: React.FC = () => {
             'Connect your identity provider to create and manage identities for your AI agents and MCP servers, including those supporting A2A-compatible protocols like Google A2A, with support for policies and access controls.',
           actionTitle: 'Connect Identity Provider',
           actionCallback: () => {
+            analyticsTrack('CLICK_NAVIGATION_CONNECT_IDENTITY_PROVIDER');
             void navigate(PATHS.settings.identityProvider.connection, {replace: true});
           }
         }}
@@ -68,6 +72,7 @@ const Policies: React.FC = () => {
             description: 'Add an Agentic Service to manage identities and apply TBAC based access control.',
             actionTitle: 'Add Agentic Service',
             actionCallback: () => {
+              analyticsTrack('CLICK_NAVIGATION_ADD_AGENTIC_SERVICE');
               void navigate(PATHS.agenticServices.add);
             }
           }}

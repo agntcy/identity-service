@@ -15,13 +15,19 @@ import {PencilIcon, PlusIcon, Trash2Icon} from 'lucide-react';
 import {RulesColumns} from './rules-columns';
 import {OpsRule} from '../ops-rules/ops-rule';
 import {Policy, Rule} from '@/types/api/policy';
+import {useAnalytics} from '@/hooks';
 
 export const ListRules = ({policy, showRulesOps = false}: {policy?: Policy; showRulesOps?: boolean}) => {
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: 0,
     pageSize: 15
   });
-  const [sorting, setSorting] = useState<MRT_SortingState>([]);
+  const [sorting, setSorting] = useState<MRT_SortingState>([
+    {
+      id: 'createdAt',
+      desc: true
+    }
+  ]);
   const [query, setQuery] = useState<string | undefined>(undefined);
   const [tempRule, setTempRule] = useState<Rule | undefined>(undefined);
   const [isDelete, setIsDelete] = useState<boolean>(false);
@@ -44,6 +50,8 @@ export const ListRules = ({policy, showRulesOps = false}: {policy?: Policy; show
     },
     [setQuery, setPagination]
   );
+
+  const {analyticsTrack} = useAnalytics();
 
   return (
     <>
@@ -110,6 +118,7 @@ export const ListRules = ({policy, showRulesOps = false}: {policy?: Policy; show
                   key="edit-rule"
                   sx={{display: 'flex', alignItems: 'center', gap: '8px'}}
                   onClick={() => {
+                    analyticsTrack('CLICK_EDIT_RULE_POLICY');
                     setTempRule(row.original);
                     setIsEdit(true);
                   }}
@@ -122,6 +131,7 @@ export const ListRules = ({policy, showRulesOps = false}: {policy?: Policy; show
                 <MenuItem
                   key="delete-rule"
                   onClick={() => {
+                    analyticsTrack('CLICK_DELETE_RULE_POLICY');
                     setTempRule(row.original);
                     setIsDelete(true);
                   }}
@@ -147,6 +157,7 @@ export const ListRules = ({policy, showRulesOps = false}: {policy?: Policy; show
                     containerProps={{paddingBottom: '40px'}}
                     actionTitle="Add Rule"
                     actionCallback={() => {
+                      analyticsTrack('CLICK_ADD_RULE_POLICY');
                       setTempRule(undefined);
                       setIsAdd(true);
                     }}
