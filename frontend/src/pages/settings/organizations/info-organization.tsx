@@ -6,6 +6,7 @@
 import {BasePage} from '@/components/layout/base-page';
 import {OrganizationInfo} from '@/components/organizations/info/organization-info';
 import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-renderer';
+import {useAnalytics} from '@/hooks';
 import {useGetTenant} from '@/queries';
 import {PATHS} from '@/router/paths';
 import {Button} from '@outshift/spark-design';
@@ -18,6 +19,8 @@ const InfoOrganization: React.FC = () => {
   const [showInviteUserModal, setShowInviteUserModal] = useState<boolean>(false);
 
   const {data, isLoading, error, isError, refetch} = useGetTenant(id!);
+
+  const {analyticsTrack} = useAnalytics();
 
   return (
     <BasePage
@@ -40,6 +43,7 @@ const InfoOrganization: React.FC = () => {
           <Button
             variant="outlined"
             onClick={() => {
+              analyticsTrack('CLICK_INVITE_USER');
               setShowInviteUserModal(true);
             }}
             sx={{fontWeight: '600 !important'}}

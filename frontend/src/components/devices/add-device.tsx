@@ -11,10 +11,13 @@ import {useAddDevice} from '@/mutations';
 import {Device} from '@/types/api/device';
 import QRCode from 'react-qr-code';
 import {PATHS} from '@/router/paths';
+import {useAnalytics} from '@/hooks';
 
 export const AddDevice = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [device, setDevice] = useState<Device | undefined>();
+
+  const {analyticsTrack} = useAnalytics();
 
   const handleChange = useCallback((value: boolean) => {
     setOpen(value);
@@ -50,10 +53,9 @@ export const AddDevice = () => {
   }, [device]);
 
   const handleOnAddDevice = useCallback(() => {
+    analyticsTrack('CLICK_ADD_DEVICE');
     addDeviceMutation.mutate({});
-  }, [addDeviceMutation]);
-
-  console.log('Device link:', link);
+  }, [addDeviceMutation, analyticsTrack]);
 
   return (
     <>

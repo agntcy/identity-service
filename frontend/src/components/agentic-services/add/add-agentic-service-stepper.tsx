@@ -18,6 +18,7 @@ import {validateForm} from '@/lib/utils';
 import {useCreateAgenticService} from '@/mutations';
 import {generatePath, useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
+import {useAnalytics} from '@/hooks';
 
 export const AddAgenticServiceStepper = () => {
   return (
@@ -31,6 +32,8 @@ const FormStepperComponent = () => {
   const methods = useStepper();
 
   const navigate = useNavigate();
+
+  const {analyticsTrack} = useAnalytics();
 
   const form = useForm<z.infer<typeof methods.current.schema>>({
     resolver: zodResolver(methods.current.schema),
@@ -96,12 +99,15 @@ const FormStepperComponent = () => {
 
   const handleSave = useCallback(() => {
     const values = form.getValues() as AgenticServiceFormValues;
+    analyticsTrack('CLICK_SAVE_NEW_AGENTIC_SERVICE', {
+      type: values.type
+    });
     mutationCreate.mutate({
       type: values.type,
       name: values.name,
       description: values.description
     });
-  }, [form, mutationCreate]);
+  }, [analyticsTrack, form, mutationCreate]);
 
   const onSubmit = useCallback(() => {
     if (methods.current.id === 'agenticServiceForm') {

@@ -11,6 +11,7 @@ import {ListPoliciesAgenticService} from './list-policies-agentic-service';
 import {useSearchParams} from 'react-router-dom';
 import {useFeatureFlagsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
+import {useAnalytics} from '@/hooks';
 
 export const InfoAgenticService = ({app, onChangeReissueBadge}: {app?: App; onChangeReissueBadge?: (value: boolean) => void}) => {
   const [searchParams] = useSearchParams();
@@ -32,6 +33,8 @@ export const InfoAgenticService = ({app, onChangeReissueBadge}: {app?: App; onCh
     }
   ];
 
+  const {analyticsTrack} = useAnalytics();
+
   const {isTbacEnable} = useFeatureFlagsStore(
     useShallow((state) => ({
       isTbacEnable: state.featureFlags.isTbacEnable
@@ -49,6 +52,13 @@ export const InfoAgenticService = ({app, onChangeReissueBadge}: {app?: App; onCh
           options={options}
           value={view}
           onChange={(newView) => {
+            if (newView === 'policies-assigned') {
+              analyticsTrack('CLICK_VIEW_POLICIES_ASSIGNED_AGENTIC_SERVICE');
+            } else if (newView === 'policies-used-by') {
+              analyticsTrack('CLICK_VIEW_POLICIES_USED_BY_AGENTIC_SERVICE');
+            } else if (newView === 'about') {
+              analyticsTrack('CLICK_VIEW_ABOUT_AGENTIC_SERVICE');
+            }
             setView(newView);
           }}
           size="sm"

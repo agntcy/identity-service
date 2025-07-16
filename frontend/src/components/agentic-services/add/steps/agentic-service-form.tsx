@@ -16,10 +16,13 @@ import {AppType} from '@/types/api/app';
 import OasfLogo from '@/assets/oasf.svg?react';
 import McpLogo from '@/assets/mcp.svg?react';
 import A2ALogo from '@/assets/a2a-logo.svg?react';
+import {useAnalytics} from '@/hooks';
 
 export const AgenticServicForm = ({isLoading = false}: {isLoading?: boolean}) => {
   const {control, reset} = useFormContext<AgenticServiceFormValues>();
   const methods = useStepper();
+
+  const {analyticsTrack} = useAnalytics();
 
   const metaData = methods.getMetadata('agenticServiceForm') as AgenticServiceFormValues | undefined;
 
@@ -72,7 +75,15 @@ export const AgenticServicForm = ({isLoading = false}: {isLoading?: boolean}) =>
                 <FormControl>
                   <div className="card-group">
                     {appTypes.map((appType, index) => (
-                      <SharedProvider key={index} {...appType} isSelected={field.value === appType.type} onSelect={field.onChange} />
+                      <SharedProvider
+                        key={index}
+                        {...appType}
+                        isSelected={field.value === appType.type}
+                        onSelect={(type) => {
+                          field.onChange(type);
+                          analyticsTrack('ADD_AGENTIC_SERVICE_TYPE_SELECTED', {type});
+                        }}
+                      />
                     ))}
                   </div>
                 </FormControl>

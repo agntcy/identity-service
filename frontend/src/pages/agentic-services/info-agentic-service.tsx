@@ -8,6 +8,7 @@ import {BasePage} from '@/components/layout/base-page';
 import {BadgeModalForm} from '@/components/shared/badge-modal-form';
 import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-renderer';
 import {ConfirmModal} from '@/components/ui/confirm-modal';
+import {useAnalytics} from '@/hooks';
 import {useDeleteAgenticService} from '@/mutations';
 import {useGetAgenticService} from '@/queries';
 import {PATHS} from '@/router/paths';
@@ -28,6 +29,8 @@ const AgenticServiceInfo: React.FC = () => {
   const {data, isLoading, error, isError, refetch} = useGetAgenticService(id);
 
   const navigate = useNavigate();
+
+  const {analyticsTrack} = useAnalytics();
 
   const {isTbacEnable} = useFeatureFlagsStore(
     useShallow((state) => ({
@@ -56,9 +59,12 @@ const AgenticServiceInfo: React.FC = () => {
   });
 
   const handleClickOnDelete = useCallback(() => {
+    analyticsTrack('CLICK_CONFIRM_DELETE_AGENTIC_SERVICE', {
+      type: data?.type
+    });
     setShowConfirmDelete(false);
     deleteMutation.mutate(id || '');
-  }, [deleteMutation, id]);
+  }, [analyticsTrack, data?.type, deleteMutation, id]);
 
   return (
     <BasePage
@@ -81,6 +87,9 @@ const AgenticServiceInfo: React.FC = () => {
               variant="outlined"
               color="negative"
               onClick={() => {
+                analyticsTrack('CLICK_DELETE_AGENTIC_SERVICE', {
+                  type: data?.type
+                });
                 setShowConfirmDelete(true);
               }}
               sx={{fontWeight: '600 !important'}}
@@ -94,6 +103,9 @@ const AgenticServiceInfo: React.FC = () => {
               variant="secondary"
               sx={{fontWeight: '600 !important'}}
               onClick={() => {
+                analyticsTrack('CLICK_EDIT_AGENTIC_SERVICE', {
+                  type: data?.type
+                });
                 const path = generatePath(PATHS.agenticServices.edit, {id: id || ''});
                 void navigate(path, {replace: true});
               }}
@@ -103,6 +115,9 @@ const AgenticServiceInfo: React.FC = () => {
             {showReissueBadge && (
               <Button
                 onClick={() => {
+                  analyticsTrack('CLICK_REISSUE_BADGE_AGENTIC_SERVICE', {
+                    type: data?.type
+                  });
                   setShowBadgeForm(true);
                 }}
                 startIcon={<IdCardIcon className="w-4 h-4" />}

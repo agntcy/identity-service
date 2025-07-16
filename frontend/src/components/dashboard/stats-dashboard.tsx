@@ -16,6 +16,7 @@ import {ProviderType} from '../shared/provider-type';
 import {useMemo} from 'react';
 import {cn} from '@/lib/utils';
 import {WelcomeName} from './welcome-name';
+import {useAnalytics} from '@/hooks';
 
 export const StatsDashboard = () => {
   const {isTbacEnable} = useFeatureFlagsStore(
@@ -23,6 +24,9 @@ export const StatsDashboard = () => {
       isTbacEnable: state.featureFlags.isTbacEnable
     }))
   );
+
+  const {analyticsTrack} = useAnalytics();
+
   const {data: dataSettings, isLoading: isLoadingSettings} = useGetSettings();
   const {data: dataAgenticServices, isLoading: isLoadingAgenticServices} = useGetAgenticServiceTotalCount();
   const {data: dataPolicies, isLoading: isLoadingPolicies} = useGetPolicies({enable: isTbacEnable});
@@ -84,7 +88,7 @@ export const StatsDashboard = () => {
                 </Typography>
               </div>
               <div className="flex justify-center items-center">
-                <RouterLink to={PATHS.agenticServices.verifyIdentity}>
+                <RouterLink to={PATHS.agenticServices.verifyIdentity} onClick={() => analyticsTrack('CLICK_NAVIGATION_VERIFY_IDENTITY')}>
                   <Button variant="outlined" sx={{fontWeight: '600 !important'}} startIcon={<CheckIcon className="w-4 h-4" />}>
                     Verify Identity
                   </Button>
@@ -103,7 +107,7 @@ export const StatsDashboard = () => {
                 </Typography>
               </div>
               <div className="flex justify-center items-center">
-                <RouterLink to={PATHS.agenticServices.add}>
+                <RouterLink to={PATHS.agenticServices.add} onClick={() => analyticsTrack('CLICK_NAVIGATION_ADD_AGENTIC_SERVICE')}>
                   <Button variant="outlined" sx={{fontWeight: '600 !important'}} startIcon={<PlusIcon className="w-4 h-4" />}>
                     Add Agentic Service
                   </Button>
@@ -123,7 +127,7 @@ export const StatsDashboard = () => {
                   </Typography>
                 </div>
                 <div className="flex justify-center items-center mt-8">
-                  <RouterLink to={PATHS.policies.create}>
+                  <RouterLink to={PATHS.policies.create} onClick={() => analyticsTrack('CLICK_NAVIGATION_ADD_POLICY')}>
                     <Button variant="outlined" sx={{fontWeight: '600 !important'}} startIcon={<PlusIcon className="w-4 h-4" />}>
                       Add Policy
                     </Button>

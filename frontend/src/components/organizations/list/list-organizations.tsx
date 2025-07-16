@@ -13,7 +13,7 @@ import {Card} from '@/components/ui/card';
 import {Typography} from '@mui/material';
 import {PencilIcon, Trash2Icon, UserRoundPlusIcon} from 'lucide-react';
 import {cn} from '@/lib/utils';
-import {useAuth} from '@/hooks';
+import {useAnalytics, useAuth} from '@/hooks';
 import {generatePath, useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
 import {useDeleteTenant} from '@/mutations';
@@ -41,6 +41,8 @@ export const ListOrganizations = () => {
       isAdmin: state.isAdmin
     }))
   );
+
+  const {analyticsTrack} = useAnalytics();
 
   const navigate = useNavigate();
 
@@ -70,10 +72,11 @@ export const ListOrganizations = () => {
   });
 
   const handleClickOnDelete = useCallback(() => {
+    analyticsTrack('CLICK_CONFIRM_DELETE_ORGANIZATION');
     deleteTenantMutation.mutate(tenantId! || '');
     setTenantId(undefined);
     setOpenActionsModal(false);
-  }, [deleteTenantMutation, tenantId]);
+  }, [analyticsTrack, deleteTenantMutation, tenantId]);
 
   return (
     <>
@@ -104,6 +107,7 @@ export const ListOrganizations = () => {
                     type: 'warning'
                   });
                 } else {
+                  analyticsTrack('CLICK_ORGANIZATION_ROW');
                   const path = generatePath(PATHS.settings.organizationsAndUsers.info, {id: row.original?.id});
                   void navigate(path, {replace: true});
                 }
@@ -135,6 +139,7 @@ export const ListOrganizations = () => {
                 <MenuItem
                   key="add-user"
                   onClick={() => {
+                    analyticsTrack('CLICK_INVITE_USER');
                     setTenantId(row.original.id);
                     setShowInviteUserModal(true);
                   }}
@@ -148,6 +153,7 @@ export const ListOrganizations = () => {
                 <MenuItem
                   key="edit-org"
                   onClick={() => {
+                    analyticsTrack('CLICK_EDIT_ORGANIZATION');
                     const path = generatePath(PATHS.settings.organizationsAndUsers.edit, {id: row.original.id});
                     void navigate(path, {replace: true});
                   }}
@@ -161,6 +167,7 @@ export const ListOrganizations = () => {
                 <MenuItem
                   key="delete-org"
                   onClick={() => {
+                    analyticsTrack('CLICK_DELETE_ORGANIZATION');
                     setTenantId(row.original.id);
                     setOpenActionsModal(true);
                   }}

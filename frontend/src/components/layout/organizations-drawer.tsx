@@ -9,7 +9,7 @@ import {cn} from '@/lib/utils';
 import {useGetTenants} from '@/queries';
 import {LoaderRelative} from '../ui/loading';
 import {useCallback, useEffect, useMemo, useState} from 'react';
-import {useAuth} from '@/hooks';
+import {useAnalytics, useAuth} from '@/hooks';
 import {ConfirmModal} from '../ui/confirm-modal';
 import {PlusIcon} from 'lucide-react';
 import {useCreateTenant} from '@/mutations';
@@ -22,6 +22,8 @@ export const OrganizationsDrawer: React.FC<{
   const [tenant, setTenant] = useState<undefined | {id: string; name: string}>();
   const openConfirmation = Boolean(tenant?.id);
   const [openCreateModal, setOpenCreateModal] = useState(false);
+
+  const {analyticsTrack} = useAnalytics();
 
   const {authInfo, switchTenant} = useAuth();
 
@@ -47,10 +49,11 @@ export const OrganizationsDrawer: React.FC<{
   });
 
   const handleCreateOrganization = useCallback(() => {
+    analyticsTrack('CLICK_CONFIRM_NEW_ORGANIZATION');
     setOpenCreateModal(false);
     onChange(true);
     createOrganizationMutation.mutate();
-  }, [createOrganizationMutation, onChange]);
+  }, [analyticsTrack, createOrganizationMutation, onChange]);
 
   const handleConfirmationChange = useCallback(
     (value?: {id: string; name: string}) => {
@@ -120,6 +123,7 @@ export const OrganizationsDrawer: React.FC<{
                 }
               }}
               onClick={() => {
+                analyticsTrack('CLICK_NEW_ORGANIZATION');
                 setOpenCreateModal(true);
                 onChange(false);
               }}
@@ -143,6 +147,7 @@ export const OrganizationsDrawer: React.FC<{
                       tenant.id === authInfo?.user?.tenant?.id ? 'bg-[#9BCAFF]' : 'bg-transparent'
                     )}
                     onClick={() => {
+                      analyticsTrack('CLICK_SWITCH_ORGANIZATION_CONFIRMATION');
                       handleConfirmationChange(tenant);
                     }}
                   >
@@ -171,6 +176,7 @@ export const OrganizationsDrawer: React.FC<{
         }}
         onConfirm={() => {
           if (tenant?.id) {
+            analyticsTrack('CLICK_CONFIRM_SWITCH_ORGANIZATION');
             handleSwitchTenant(tenant.id);
           }
         }}

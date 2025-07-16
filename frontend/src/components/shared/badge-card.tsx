@@ -13,6 +13,7 @@ import {DownloadIcon, ExpandIcon} from 'lucide-react';
 import {BadgeModalForm} from './badge-modal-form';
 import {Badge} from '@/types/api/badge';
 import ScrollShadowWrapper from '../ui/scroll-shadow-wrapper';
+import {useAnalytics} from '@/hooks';
 
 interface BadgeCardProps {
   app?: App;
@@ -42,6 +43,8 @@ export const BadgeCard = ({app, navigateTo = true, confirmButtonText, showError 
   ];
 
   const {data, isLoading, isError} = useGetAgenticServiceBadge(app?.id);
+
+  const {analyticsTrack} = useAnalytics();
 
   const contentToShow = useMemo(() => {
     if (view === 'credential') {
@@ -77,12 +80,15 @@ export const BadgeCard = ({app, navigateTo = true, confirmButtonText, showError 
     link.download = `badge-${data?.verifiableCredential.id || 'unknown'}.json`;
     link.click();
     URL.revokeObjectURL(url);
+    analyticsTrack('CLICK_DOWNLOAD_BADGE_AGENTIC_SERVICE', {
+      type: app?.type
+    });
     toast({
       title: 'Download started',
       description: 'Your badge verifiable credential is being downloaded.',
       type: 'success'
     });
-  }, [data?.verifiableCredential]);
+  }, [analyticsTrack, app?.type, data?.verifiableCredential]);
 
   useEffect(() => {
     onBadgeChanged?.(data);
@@ -111,6 +117,7 @@ export const BadgeCard = ({app, navigateTo = true, confirmButtonText, showError 
           description: 'Create a badge for your agentic service to enable verifiable credentials.',
           actionTitle: 'Create Badge',
           actionCallback: () => {
+            analyticsTrack('CLICK_NAVIGATION_CREATE_BADGE_AGENTIC_SERVICE');
             setShowBadgeForm(true);
           }
         }}
@@ -133,7 +140,10 @@ export const BadgeCard = ({app, navigateTo = true, confirmButtonText, showError 
                 variant="tertariary"
                 endIcon={<ExpandIcon className="w-4 h-4" />}
                 sx={{padding: 0, fontWeight: '600 !important'}}
-                onClick={() => setShowBadge(true)}
+                onClick={() => {
+                  analyticsTrack('CLICK_VIEW_BADGE_AGENTIC_SERVICE');
+                  setShowBadge(true);
+                }}
               >
                 Show
               </Button>
@@ -145,6 +155,13 @@ export const BadgeCard = ({app, navigateTo = true, confirmButtonText, showError 
                 options={options}
                 value={view}
                 onChange={(newView) => {
+                  if (newView === 'credential') {
+                    analyticsTrack('CLICK_VIEW_CREDENTIAL_BADGE_AGENTIC_SERVICE');
+                  } else if (newView === 'claims') {
+                    analyticsTrack('CLICK_VIEW_CLAIMS_BADGE_AGENTIC_SERVICE');
+                  } else if (newView === 'jose') {
+                    analyticsTrack('CLICK_VIEW_JOSE_BADGE_AGENTIC_SERVICE');
+                  }
                   setView(newView);
                 }}
                 size="sm"

@@ -28,11 +28,14 @@ import DateHover from '@/components/ui/date-hover';
 import {cn} from '@/lib/utils';
 import ScrollShadowWrapper from '@/components/ui/scroll-shadow-wrapper';
 import {Separator} from '@/components/ui/separator';
+import {useAnalytics} from '@/hooks';
 
 export const VerificationResults = () => {
   const methods = useStepper();
   const metaData = methods.getMetadata('verficationResults');
   const results = metaData?.results as VerificationResult | undefined;
+
+  const {analyticsTrack} = useAnalytics();
 
   const keyValuePairs = useMemo(() => {
     const temp: KeyValuePair[] = [
@@ -79,12 +82,13 @@ export const VerificationResults = () => {
     link.download = `results-${results?.controlledIdentifierDocument || 'unknown'}.json`;
     link.click();
     URL.revokeObjectURL(url);
+    analyticsTrack('CLICK_DOWNLOAD_VERIFICATION_RESULTS');
     toast({
       title: 'Download started',
       description: 'Your verification results are being downloaded.',
       type: 'success'
     });
-  }, [results]);
+  }, [analyticsTrack, results]);
 
   return (
     <div className="flex gap-4">

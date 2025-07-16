@@ -13,7 +13,7 @@ import BookLogo from '@/assets/union.svg?react';
 import GitLogo from '@/assets/git.svg?react';
 import UserIcon from '@/assets/user.svg?react';
 import {Link} from 'react-router-dom';
-import {useAuth, useWindowSize} from '@/hooks';
+import {useAnalytics, useAuth, useWindowSize} from '@/hooks';
 import {docs} from '@/utils/docs';
 import {useSettingsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
@@ -25,6 +25,8 @@ export const Header = () => {
   const isMobile = width < 768;
 
   const [openNotificationSettings, setOpenNotificationSettings] = useState(false);
+
+  const {analyticsTrack} = useAnalytics();
 
   const handleNotificationsChange = useCallback((value: boolean) => {
     setOpenNotificationSettings(value);
@@ -62,7 +64,8 @@ export const Header = () => {
                   tooltip: 'View Documentation',
                   href: docs(),
                   'aria-label': 'documentation',
-                  target: '_blank'
+                  target: '_blank',
+                  onClick: () => analyticsTrack('CLICK_DOCS')
                 },
                 {
                   id: 'github',
@@ -70,7 +73,8 @@ export const Header = () => {
                   tooltip: 'View GitHub',
                   href: 'https://github.com/agntcy/identity',
                   'aria-label': 'github',
-                  target: '_blank'
+                  target: '_blank',
+                  onClick: () => analyticsTrack('CLICK_GITHUB')
                 }
               ]
             : undefined
