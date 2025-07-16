@@ -3,12 +3,33 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import {NotificationContent} from '@/components/notifications/notification-content';
+import {useWindowSize} from '@/hooks';
 import {apiRequest} from '@/lib/utils';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
-import {PropsWithChildren, useEffect} from 'react';
+import {PropsWithChildren, useCallback, useEffect, useState} from 'react';
 
 export const NotificationsProvider: React.FC<PropsWithChildren> = ({children}) => {
+  const [open, setOpen] = useState(false);
+
+  const {width} = useWindowSize();
   const queryClient = useQueryClient();
+
+  const isMobile = width < 768;
+
+  const handleOpenNotification = useCallback((value: boolean) => {
+    setOpen(value);
+  }, []);
+
+  const handleReceiveNotification = useCallback(
+    (notification: any) => {
+      if (isMobile) {
+        handleOpenNotification(true);
+        console.log(notification);
+      }
+    },
+    [handleOpenNotification, isMobile]
+  );
 
   const responseMutation = useMutation({
     mutationFn: (data: {action: string; notificationId: string; title?: string; message?: string}) => {
@@ -29,11 +50,16 @@ export const NotificationsProvider: React.FC<PropsWithChildren> = ({children}) =
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.addEventListener('message', (event) => {
         if (event.data && event.data.type === 'PUSH_NOTIFICATION') {
-          console.log('Received notification from service worker:', event.data);
+          handleReceiveNotification(event.data.payload);
         }
       });
     }
-  }, []);
+  }, [handleReceiveNotification]);
 
-  return <>{children}</>;
+  return (
+    <>
+      <NotificationContent open={open} onOpenChange={handleOpenNotification} />
+      {children}
+    </>
+  );
 };

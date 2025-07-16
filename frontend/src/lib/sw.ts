@@ -90,13 +90,14 @@ self.addEventListener('push', async (event) => {
         console.error('Failed to parse JSON from push event data:', jsonError);
       }
       if (parsedData) {
-        await sendNotification(parsedData);
-        const options = getNotificationOptions(parsedData);
-        if (!options) {
-          console.error('Invalid notification options, cannot display notification');
-          return;
-        }
-        await self.registration.showNotification((parsedData?.title as string) || 'Agent Identity | AGNTCY', options);
+        // const options = getNotificationOptions(parsedData);
+        // if (!options) {
+        //   console.error('Invalid notification options, cannot display notification');
+        //   return;
+        // }
+        // console.log(options)
+        // await sendNotification(options);
+        // await self.registration.showNotification((parsedData?.title as string) || 'Agent Identity | AGNTCY', options);
       }
     }
   } catch (error) {

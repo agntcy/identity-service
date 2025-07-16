@@ -53,6 +53,7 @@
     "tailwindcss-animate": "^1.0.7",
     "use-debounce": "^10.0.5",
     "vanilla-cookieconsent": "3.1.0",
+    "vaul": "^1.1.2",
     "vite-plugin-pwa": "^1.0.1",
     "zustand": "^5.0.5"
   },
@@ -107,6 +108,7 @@
     "workbox-precaching": "^7.3.0",
     "workbox-routing": "^7.3.0",
     "workbox-window": "^7.3.0",
+    "worker-timers": "^8.0.23",
     "zod": "^3.24.2"
   },
   "engines": {
