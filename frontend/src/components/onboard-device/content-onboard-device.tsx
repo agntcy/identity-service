@@ -8,9 +8,26 @@ import {Button, Typography} from '@mui/material';
 import {Card} from '../ui/card';
 import {BellIcon, BellOffIcon, RefreshCcwIcon} from 'lucide-react';
 import {GeneralSize, Tag, TagStatus} from '@outshift/spark-design';
+import {useLocalStore} from '@/store';
+import {useShallow} from 'zustand/react/shallow';
+import {useEffect} from 'react';
 
 export const ContentOnBoardDevice = ({id}: {id?: string}) => {
   const {enabled, supported, handleToggleNotifications, fixNotifications, loading} = useNotifications();
+
+  const {setIdDevice, idDevice} = useLocalStore(
+    useShallow((state) => ({
+      idDevice: state.idDevice,
+      setIdDevice: state.setIdDevice
+    }))
+  );
+
+  useEffect(() => {
+    if (id) {
+      setIdDevice(id);
+    }
+  }, [id, setIdDevice]);
+
   return (
     <>
       <div className="px-4">
@@ -33,7 +50,7 @@ export const ContentOnBoardDevice = ({id}: {id?: string}) => {
             <div className="pt-2">
               <Button
                 startIcon={enabled ? <BellOffIcon className="w-4 h-4" /> : <BellIcon className="w-4 h-4" />}
-                onClick={() => handleToggleNotifications(id)}
+                onClick={() => handleToggleNotifications(idDevice)}
                 fullWidth
                 variant={enabled ? 'outlined' : 'primary'}
                 sx={{fontWeight: 'bold !important'}}

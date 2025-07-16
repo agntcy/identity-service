@@ -56,6 +56,8 @@ export default defineConfig(({mode}) => {
           short_name: 'Agent Identity',
           description: 'AGNTCY Identity management system with push notifications and offline capabilities',
           theme_color: '#eff3fc',
+          scope: '/',
+          start_url: '/onboard-device',
           background_color: '#eff3fc',
           icons: [
             {

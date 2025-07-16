@@ -10,6 +10,7 @@ import {useCallback, useMemo, useState} from 'react';
 import {useAddDevice} from '@/mutations';
 import {Device} from '@/types/api/device';
 import QRCode from 'react-qr-code';
+import {PATHS} from '@/router/paths';
 
 export const AddDevice = () => {
   const [open, setOpen] = useState<boolean>(false);
@@ -26,7 +27,7 @@ export const AddDevice = () => {
         toast({
           title: 'Device added successfully',
           description: 'The device has been added to your account.',
-          type: 'success'
+          type: 'info'
         });
         handleChange(true);
       },
@@ -43,7 +44,7 @@ export const AddDevice = () => {
 
   const link = useMemo(() => {
     if (device) {
-      return `${window.location.origin}/onboard-device/${device.id}`;
+      return `${window.location.origin}${PATHS.onboardDevice}/${device.id}`;
     }
     return '';
   }, [device]);
@@ -51,6 +52,8 @@ export const AddDevice = () => {
   const handleOnAddDevice = useCallback(() => {
     addDeviceMutation.mutate({});
   }, [addDeviceMutation]);
+
+  console.log('Device link:', link);
 
   return (
     <>

@@ -92,6 +92,14 @@ export const generateRoutes = (routes: Route[]): Route[] => {
       )
     },
     {
+      path: PATHS.onboardDeviceId,
+      element: (
+        <NodeRoute>
+          <OnBoardDevice />
+        </NodeRoute>
+      )
+    },
+    {
       path: PATHS.basePath,
       element: (
         <SecureRoute redirectPath={PATHS.welcome}>

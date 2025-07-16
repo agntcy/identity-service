@@ -9,22 +9,11 @@ import {ExternalLinkIcon} from 'lucide-react';
 import {docs} from '@/utils/docs';
 import {Link} from '@outshift/spark-design';
 import {Footer as SparkFooter} from '@outshift/spark-design';
-import {useEffect} from 'react';
 import * as CookieConsentVanilla from 'vanilla-cookieconsent';
-import {config} from '@/components/layout/cookie-consent/config';
 import {ContentOnBoardDevice} from '@/components/onboard-device/content-onboard-device';
 
 const OnBoardDevice = () => {
   const {id} = useParams<{id: string}>();
-
-  useEffect(() => {
-    if (window) {
-      void CookieConsentVanilla.run(config);
-    } else {
-      console.warn('CookieConsent is not available in this environment.');
-    }
-  }, []);
-
   return (
     <div className="h-screen w-screen fixed top-0 left-0 z-50 no-doc-scroll relative overflow-hidden h-dvh">
       <div className="flex flex-col justify-between h-full">

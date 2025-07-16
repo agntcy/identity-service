@@ -7,6 +7,7 @@ import {Button, Divider, Link, Typography} from '@outshift/spark-design';
 import {useAuth} from '@/hooks';
 import {docs} from '@/utils/docs';
 import AgntcyLogo from '@/assets/agntcy-logo.svg?react';
+import * as CookieConsentVanilla from 'vanilla-cookieconsent';
 import '@/styles/welcome.css';
 
 const Welcome = () => {
@@ -70,6 +71,49 @@ const Welcome = () => {
                   >
                     Sign Up
                   </Button>
+                </div>
+                <div className="flex justify-center gap-4 mx-auto">
+                  <Link
+                    href="https://www.cisco.com/c/en/us/about/legal/terms-conditions.html"
+                    openInNewTab
+                    fontStyle={{
+                      fontWeight: 400,
+                      fontSize: '12px',
+                      lineHeight: '24px',
+                      letterSpacing: '0.01em',
+                      color: '#FBAF45'
+                    }}
+                    style={{color: '#FBAF45'}}
+                  >
+                    Terms & Conditions
+                  </Link>
+                  <Link
+                    href="https://www.cisco.com/c/en/us/about/legal/privacy-full.html"
+                    openInNewTab
+                    fontStyle={{
+                      fontWeight: 400,
+                      fontSize: '12px',
+                      lineHeight: '24px',
+                      letterSpacing: '0.01em',
+                      color: '#FBAF45'
+                    }}
+                    style={{color: '#FBAF45'}}
+                  >
+                    Privacy Policy
+                  </Link>
+                  <Link
+                    fontStyle={{
+                      fontWeight: 400,
+                      fontSize: '12px',
+                      lineHeight: '24px',
+                      letterSpacing: '0.01em',
+                      color: '#FBAF45'
+                    }}
+                    onClick={() => CookieConsentVanilla.showPreferences()}
+                    style={{color: '#FBAF45'}}
+                  >
+                    Cookies
+                  </Link>
                 </div>
               </div>
             </div>
