@@ -7,6 +7,7 @@ import {BasePage} from '@/components/layout/base-page';
 import {PolicyContent} from '@/components/policies/info/policy-content';
 import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-renderer';
 import {ConfirmModal} from '@/components/ui/confirm-modal';
+import {useAnalytics} from '@/hooks';
 import {useDeletePolicy} from '@/mutations';
 import {useGetPolicy} from '@/queries';
 import {PATHS} from '@/router/paths';
@@ -23,6 +24,8 @@ const InfoPolicy: React.FC = () => {
   const {data, isLoading, error, isError, refetch} = useGetPolicy(id);
 
   const navigate = useNavigate();
+
+  const {analyticsTrack} = useAnalytics();
 
   const deleteMutation = useDeletePolicy({
     callbacks: {
@@ -45,9 +48,10 @@ const InfoPolicy: React.FC = () => {
   });
 
   const handleClickOnDelete = useCallback(() => {
+    analyticsTrack('CLICK_CONFIRM_DELETE_POLICY');
     setShowConfirmDelete(false);
     deleteMutation.mutate(id || '');
-  }, [deleteMutation, id]);
+  }, [analyticsTrack, deleteMutation, id]);
 
   return (
     <BasePage
@@ -70,6 +74,7 @@ const InfoPolicy: React.FC = () => {
               variant="outlined"
               color="negative"
               onClick={() => {
+                analyticsTrack('CLICK_DELETE_POLICY');
                 setShowConfirmDelete(true);
               }}
               sx={{fontWeight: '600 !important'}}
@@ -83,6 +88,7 @@ const InfoPolicy: React.FC = () => {
               variant="secondary"
               sx={{fontWeight: '600 !important'}}
               onClick={() => {
+                analyticsTrack('CLICK_NAVIGATION_EDIT_POLICY');
                 const path = generatePath(PATHS.policies.edit, {id: id || ''});
                 void navigate(path, {replace: true});
               }}

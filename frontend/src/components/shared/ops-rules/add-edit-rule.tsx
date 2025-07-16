@@ -14,6 +14,7 @@ import {RuleForm} from './forms/rule-form';
 import {useCreateRule, useUpdateRule} from '@/mutations';
 import {validateForm} from '@/lib/utils';
 import z from 'zod';
+import {useAnalytics} from '@/hooks';
 
 interface AddEditRuleProps {
   open: boolean;
@@ -34,6 +35,8 @@ export const AddEditRule = ({policy, open, rule, mode = 'add', onClose}: AddEdit
       tasks: []
     }
   });
+
+  const {analyticsTrack} = useAnalytics();
 
   const createRule = useCreateRule({
     callbacks: {
@@ -88,6 +91,7 @@ export const AddEditRule = ({policy, open, rule, mode = 'add', onClose}: AddEdit
       return;
     }
     if (mode === 'add') {
+      analyticsTrack('CLICK_ADD_RULE_POLICY');
       createRule.mutate({
         id: policy?.id ?? '',
         data: {
@@ -99,6 +103,7 @@ export const AddEditRule = ({policy, open, rule, mode = 'add', onClose}: AddEdit
         }
       });
     } else if (mode === 'edit' && rule?.id && policy?.id) {
+      analyticsTrack('CLICK_EDIT_RULE_POLICY');
       updateRule.mutate({
         policyId: policy?.id ?? '',
         ruleId: rule.id,
@@ -111,7 +116,7 @@ export const AddEditRule = ({policy, open, rule, mode = 'add', onClose}: AddEdit
         }
       });
     }
-  }, [createRule, form, mode, policy?.id, rule?.id, updateRule]);
+  }, [analyticsTrack, createRule, form, mode, policy?.id, rule?.id, updateRule]);
 
   useEffect(() => {
     if (rule?.id && mode === 'edit') {

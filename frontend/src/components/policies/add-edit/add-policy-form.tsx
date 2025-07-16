@@ -18,18 +18,20 @@ import {Policy, RuleAction} from '@/types/api/policy';
 import {PolicyLogic} from './steps/policy-logic';
 import {useCreatePolicy, useCreateRule} from '@/mutations';
 import {PolicyLogicyFormValues, PolicyLogicySchema} from '@/schemas/policy-logic-schema';
-import {useNavigate} from 'react-router-dom';
+import {generatePath, useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
 import {PolicyReview} from './steps/policy-review';
+import {useAnalytics} from '@/hooks';
 
 export const AddPolicyForm = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [flagCreatePolicy, setFlagCreatePolicy] = useState(true);
-  const [flagCreateRules, setFlagCreateRules] = useState(true);
+  const [tempPolicy, setTempPolicy] = useState<Policy | undefined>(undefined);
 
   const methods = useStepper();
 
   const navigate = useNavigate();
+
+  const {analyticsTrack} = useAnalytics();
 
   const form = useForm<z.infer<typeof methods.current.schema>>({
     resolver: zodResolver(methods.current.schema),
@@ -61,21 +63,23 @@ export const AddPolicyForm = () => {
 
   const mutationCreatePolicy = useCreatePolicy({
     callbacks: {
-      onSuccess: (resp) => {
-        if (flagCreateRules) {
-          setFlagCreatePolicy(true);
-          void handleCreateRules(resp.data);
-        } else {
+      onSuccess: async (resp) => {
+        setTempPolicy(resp.data);
+        if (resp.data) {
+          await handleCreateRules(resp.data);
           toast({
             title: 'Success',
-            description: `Policy "${resp.data.name}" added successfully.`,
+            description: 'Policy created successfully.',
             type: 'success'
           });
-          void navigate(PATHS.policies.base, {replace: true});
+          const path = generatePath(PATHS.policies.info, {
+            id: resp.data.id
+          });
+          void navigate(path, {replace: true});
         }
       },
       onError: () => {
-        setFlagCreatePolicy(false);
+        setTempPolicy(undefined);
         setIsLoading(false);
         toast({
           title: 'Error',
@@ -108,12 +112,6 @@ export const AddPolicyForm = () => {
               return Promise.resolve();
             })
           );
-          toast({
-            title: 'Success',
-            description: `All rules for policy "${policy.name}" added successfully.`,
-            type: 'success'
-          });
-          void navigate(PATHS.policies.base, {replace: true});
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
           toast({
@@ -126,13 +124,12 @@ export const AddPolicyForm = () => {
         }
       }
     },
-    [policyLogicForm, mutationCreateRule, navigate]
+    [policyLogicForm, mutationCreateRule]
   );
 
   const handleOnClear = useCallback(() => {
     setIsLoading(false);
-    setFlagCreatePolicy(true);
-    setFlagCreateRules(true);
+    setTempPolicy(undefined);
     form.reset({
       name: '',
       description: '',
@@ -191,18 +188,29 @@ export const AddPolicyForm = () => {
     methods.next();
   }, [methods, policyLogicForm]);
 
-  const handleSave = useCallback(() => {
+  const handleSave = useCallback(async () => {
     const valuesPolicy = form.getValues() as PolicyFormValues;
-    setFlagCreateRules(true);
     setIsLoading(true);
-    if (flagCreatePolicy) {
+    analyticsTrack('CLICK_SAVE_NEW_POLICY');
+    if (!tempPolicy) {
       mutationCreatePolicy.mutate({
         assignedTo: valuesPolicy.assignedTo,
         description: valuesPolicy.description,
         name: valuesPolicy.name
       });
+    } else {
+      await handleCreateRules(tempPolicy);
+      toast({
+        title: 'Success',
+        description: 'Policy created successfully.',
+        type: 'success'
+      });
+      const path = generatePath(PATHS.policies.info, {
+        id: tempPolicy.id
+      });
+      void navigate(path, {replace: true});
     }
-  }, [flagCreatePolicy, form, mutationCreatePolicy]);
+  }, [form, analyticsTrack, tempPolicy, mutationCreatePolicy, handleCreateRules, navigate]);
 
   const onSubmit = useCallback(() => {
     if (methods.current.id === 'policyForm') {
@@ -250,7 +258,10 @@ export const AddPolicyForm = () => {
                           <div>
                             <Button
                               variant="tertariary"
-                              onClick={handleOnClear}
+                              onClick={() => {
+                                analyticsTrack('CLICK_CANCEL_ADD_POLICY');
+                                handleOnClear();
+                              }}
                               disabled={isLoading}
                               sx={{
                                 fontWeight: '600 !important'
@@ -273,7 +284,7 @@ export const AddPolicyForm = () => {
                               </Button>
                             )}
                             <Button
-                              loading={isLoading && flagCreateRules}
+                              loading={isLoading}
                               loadingPosition="start"
                               type="submit"
                               disabled={

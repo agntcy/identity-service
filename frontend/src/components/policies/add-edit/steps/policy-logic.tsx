@@ -16,6 +16,7 @@ import {RuleForm} from './rule-form';
 import {labels} from '@/constants/labels';
 import {Separator} from '@/components/ui/separator';
 import {TagActionTask} from '@/components/shared/tag-action-task';
+import {useAnalytics} from '@/hooks';
 
 export const PolicyLogic = ({isLoading = false, policyLogicForm}: {policyLogicForm: UseFormReturn<PolicyLogicyFormValues>; isLoading?: boolean}) => {
   const {
@@ -27,6 +28,8 @@ export const PolicyLogic = ({isLoading = false, policyLogicForm}: {policyLogicFo
     name: 'rules'
   });
 
+  const {analyticsTrack} = useAnalytics();
+
   const handleRemove = useCallback(
     (fieldIndex: number) => {
       removeRule(fieldIndex);
@@ -35,6 +38,7 @@ export const PolicyLogic = ({isLoading = false, policyLogicForm}: {policyLogicFo
   );
 
   const handleAddRule = useCallback(() => {
+    analyticsTrack('CLICK_ADD_POLICY_RULE');
     appendRule({
       name: '',
       description: '',
@@ -42,7 +46,7 @@ export const PolicyLogic = ({isLoading = false, policyLogicForm}: {policyLogicFo
       action: RuleAction.RULE_ACTION_UNSPECIFIED,
       tasks: []
     });
-  }, [appendRule]);
+  }, [analyticsTrack, appendRule]);
 
   const Title = ({index}: {index: number}) => {
     const name = useWatch({

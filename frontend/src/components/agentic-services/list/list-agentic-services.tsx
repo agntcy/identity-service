@@ -211,7 +211,7 @@ export const ListAgenticServices = () => {
                 <MenuItem
                   key="edit-app"
                   onClick={() => {
-                    analyticsTrack('CLICK_EDIT_AGENTIC_SERVICE', {
+                    analyticsTrack('CLICK_NAVIGATION_EDIT_AGENTIC_SERVICE', {
                       type: row.original.type
                     });
                     const path = generatePath(PATHS.agenticServices.edit, {id: row.original.id});

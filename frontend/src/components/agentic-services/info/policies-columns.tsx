@@ -65,6 +65,13 @@ export const PoliciesColumns = (): MRT_ColumnDef<Policy, any>[] => {
         Cell: CellAgenticService
       },
       {
+        accessorKey: 'updatedAt',
+        header: 'Updated At',
+        Cell: ({row}) => {
+          return <DateHover date={row.original.updatedAt || 'Not provided'} />;
+        }
+      },
+      {
         accessorKey: 'createdAt',
         header: 'Created At',
         Cell: ({row}) => {
