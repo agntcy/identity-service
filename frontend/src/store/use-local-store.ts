@@ -7,7 +7,9 @@ import {create, StateCreator} from 'zustand';
 import {createJSONStorage, persist, PersistOptions} from 'zustand/middleware';
 
 type LocalStore = {
+  idDevice?: string;
   onBoarded: boolean;
+  setIdDevice: (idDevice: string) => void;
   setOnBoarded: (onBoarded: boolean) => void;
   cleanThemeStore: () => void;
 };
@@ -17,9 +19,11 @@ type PersistStore = (config: StateCreator<LocalStore>, options: PersistOptions<L
 export const useLocalStore = create<LocalStore>(
   (persist as PersistStore)(
     (set): LocalStore => ({
+      idDevice: undefined,
       onBoarded: false,
+      setIdDevice: (idDevice: string) => set(() => ({idDevice})),
       setOnBoarded: (onBoarded: boolean) => set(() => ({onBoarded})),
-      cleanThemeStore: () => set(() => ({onBoarded: false}))
+      cleanThemeStore: () => set(() => ({onBoarded: false, idDevice: undefined}))
     }),
     {
       name: 'identity-local-storage',

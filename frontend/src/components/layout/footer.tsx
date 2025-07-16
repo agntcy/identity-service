@@ -6,21 +6,10 @@
 import {Footer as SparkFooter} from '@outshift/spark-design';
 import 'vanilla-cookieconsent/dist/cookieconsent.css';
 import * as CookieConsentVanilla from 'vanilla-cookieconsent';
-import {config} from './cookie-consent/config';
-import {useEffect} from 'react';
-import '@/styles/cookie.css';
 import {useWindowSize} from '@/hooks';
 
 export const Footer = () => {
   const {width} = useWindowSize();
-
-  useEffect(() => {
-    if (window) {
-      void CookieConsentVanilla.run(config);
-    } else {
-      console.warn('CookieConsent is not available in this environment.');
-    }
-  }, []);
 
   return (
     <>

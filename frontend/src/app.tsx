@@ -16,8 +16,19 @@ import {FeatureFlagsProvider} from './providers/feature-flags-provider/feature-f
 import {AnalyticsProvider} from './providers/analytics-provider/analytics-provider';
 import {PwaProvider} from './providers/pwa-provider/pwa-provider';
 import {NotificationsProvider} from './providers/notifications-provider/notifications-provider';
+import {useEffect} from 'react';
+import * as CookieConsentVanilla from 'vanilla-cookieconsent';
+import {config} from './cookies/config';
 
 const App = () => {
+  useEffect(() => {
+    if (window) {
+      void CookieConsentVanilla.run(config);
+    } else {
+      console.warn('CookieConsent is not available in this environment.');
+    }
+  }, []);
+
   return (
     <ThemeProvider>
       <ErrorBoundary fallbackRender={(props) => <ErrorPage {...props} />}>

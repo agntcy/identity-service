@@ -9,6 +9,7 @@ import Logo from '@/assets/logo-app-bar.svg?react';
 import LogoIcon from '@/assets/icon-agntcy.svg?react';
 import {useAuth, useWindowSize} from '@/hooks';
 import {ReactNode} from 'react';
+import {PATHS} from '@/router/paths';
 
 export const PublicHeader = ({userSection}: {userSection?: ReactNode}) => {
   const {login, register} = useAuth();
@@ -18,17 +19,19 @@ export const PublicHeader = ({userSection}: {userSection?: ReactNode}) => {
   return (
     <Header
       title={
-        <div className="mt-1 md:mt-0">
-          <Typography
-            variant="h1"
-            fontWeight={700}
-            fontSize={isMobile ? '16px' : '18px'}
-            lineHeight="18px"
-            sx={(theme) => ({color: theme.palette.vars.brandTextSecondary})}
-          >
-            Agent Identity
-          </Typography>
-        </div>
+        <Link to={PATHS.basePath}>
+          <div className="mt-1 md:mt-0">
+            <Typography
+              variant="h1"
+              fontWeight={700}
+              fontSize={isMobile ? '16px' : '18px'}
+              lineHeight="18px"
+              sx={(theme) => ({color: theme.palette.vars.brandTextSecondary})}
+            >
+              Agent Identity
+            </Typography>
+          </div>
+        </Link>
       }
       logo={
         <Link to="https://agntcy.org/" target="_blank" rel="noopener noreferrer">
