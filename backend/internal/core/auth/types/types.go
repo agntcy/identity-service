@@ -74,12 +74,12 @@ func (o *SessionDeviceOTP) HasExpired() bool {
 	now := time.Now().Unix()
 	expiresAt := time.Unix(o.ExpiresAt, 0).Add(sessionDeviceOTPDelayWindow).Unix()
 
-	return expiresAt > now
+	return expiresAt <= now
 }
 
 const (
 	sessionDeviceOTPLength      = 128
-	sessionDeviceOTPDuration    = 60 * time.Second
+	SessionDeviceOTPDuration    = 60 * time.Second
 	sessionDeviceOTPDelayWindow = 1 * time.Second
 )
 
@@ -90,7 +90,7 @@ func NewSessionDeviceOTP(sessionID, deviceID string) *SessionDeviceOTP {
 		SessionID: sessionID,
 		DeviceID:  deviceID,
 		CreatedAt: time.Now().Unix(),
-		ExpiresAt: time.Now().Add(sessionDeviceOTPDuration).Unix(),
+		ExpiresAt: time.Now().Add(SessionDeviceOTPDuration).Unix(),
 		Approved:  nil,
 	}
 }

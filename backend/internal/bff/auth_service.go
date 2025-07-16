@@ -36,6 +36,13 @@ type AuthService interface {
 		accessToken string,
 		toolName string,
 	) error
+	ApproveToken(
+		ctx context.Context,
+		deviceID string,
+		sessionID string,
+		otpValue string,
+		approve bool,
+	) error
 }
 
 type authService struct {
@@ -302,6 +309,41 @@ func (s *authService) ExtAuthZ(
 	return err
 }
 
+func (s *authService) ApproveToken(
+	ctx context.Context,
+	deviceID string,
+	sessionID string,
+	otpValue string,
+	approve bool,
+) error {
+	otp, err := s.authRepository.GetDeviceOTPByValue(ctx, deviceID, sessionID, otpValue)
+	if err != nil {
+		return err
+	}
+
+	if otp == nil {
+		return errors.New("cannot find OTP")
+	}
+
+	if otp.HasExpired() {
+		return errors.New("the OTP is already expired")
+	}
+
+	if otp.Used || otp.Approved != nil {
+		return errors.New("the OTP is already used")
+	}
+
+	otp.Approved = &approve
+	otp.UpdatedAt = ptrutil.Ptr(time.Now().Unix())
+
+	err = s.authRepository.UpdateDeviceOTP(ctx, otp)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (s *authService) sendDeviceOTP(
 	ctx context.Context,
 	session *authtypes.Session,
@@ -374,7 +416,7 @@ func (s *authService) waitForDeviceApproval(ctx context.Context, otpID string) e
 		return nil
 	}
 
-	log.Warn(err)
+	log.Warn(loopErr)
 
 	return errors.New("the user did not approve the invocation")
 }

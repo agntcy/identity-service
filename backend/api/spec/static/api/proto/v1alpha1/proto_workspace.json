@@ -1877,6 +1877,126 @@
               "defaultValue": ""
             }
           ]
+        },
+        {
+          "name": "SessionDeviceOTP",
+          "longName": "SessionDeviceOTP",
+          "fullName": "agntcy.identity.platform.v1alpha1.SessionDeviceOTP",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "id",
+              "description": "A unique identifier for the OTP.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_id",
+              "defaultValue": ""
+            },
+            {
+              "name": "value",
+              "description": "The value of the OTP.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_value",
+              "defaultValue": ""
+            },
+            {
+              "name": "session_id",
+              "description": "The Session that the OTP is generated for.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_session_id",
+              "defaultValue": ""
+            },
+            {
+              "name": "device_id",
+              "description": "The Device that the OTP is generated for.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_device_id",
+              "defaultValue": ""
+            },
+            {
+              "name": "created_at",
+              "description": "The creation time of the OTP.",
+              "label": "optional",
+              "type": "int64",
+              "longType": "int64",
+              "fullType": "int64",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_created_at",
+              "defaultValue": ""
+            },
+            {
+              "name": "updated_at",
+              "description": "The update time of the OTP.",
+              "label": "optional",
+              "type": "int64",
+              "longType": "int64",
+              "fullType": "int64",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_updated_at",
+              "defaultValue": ""
+            },
+            {
+              "name": "expires_at",
+              "description": "The expiration time of the OTP.",
+              "label": "optional",
+              "type": "int64",
+              "longType": "int64",
+              "fullType": "int64",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_expires_at",
+              "defaultValue": ""
+            },
+            {
+              "name": "approved",
+              "description": "A field that tells whether the OTP is approved or denied.",
+              "label": "optional",
+              "type": "bool",
+              "longType": "bool",
+              "fullType": "bool",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_approved",
+              "defaultValue": ""
+            },
+            {
+              "name": "used",
+              "description": "A field that tells whether the TOP is used or not.",
+              "label": "optional",
+              "type": "bool",
+              "longType": "bool",
+              "fullType": "bool",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_used",
+              "defaultValue": ""
+            }
+          ]
         }
       ],
       "services": []
@@ -1909,6 +2029,66 @@
               "type": "App",
               "longType": "App",
               "fullType": "agntcy.identity.platform.v1alpha1.App",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "ApproveTokenRequest",
+          "longName": "ApproveTokenRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.ApproveTokenRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "device_id",
+              "description": "The device id used to handle the approval requestion",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            },
+            {
+              "name": "session_id",
+              "description": "The session id related to the token that needs to be approved",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            },
+            {
+              "name": "otp",
+              "description": "The OTP sent to the device related to the request",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            },
+            {
+              "name": "approve",
+              "description": "The action made by the user (true: allow the token, false: deny the token)",
+              "label": "",
+              "type": "bool",
+              "longType": "bool",
+              "fullType": "bool",
               "ismap": false,
               "isoneof": false,
               "oneofdecl": "",
@@ -2165,6 +2345,29 @@
                     {
                       "method": "POST",
                       "pattern": "/v1alpha1/auth/ext_authz",
+                      "body": "*"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "ApproveToken",
+              "description": "Handle manual approval of external authorization requets",
+              "requestType": "ApproveTokenRequest",
+              "requestLongType": "ApproveTokenRequest",
+              "requestFullType": "agntcy.identity.platform.v1alpha1.ApproveTokenRequest",
+              "requestStreaming": false,
+              "responseType": "Empty",
+              "responseLongType": ".google.protobuf.Empty",
+              "responseFullType": "google.protobuf.Empty",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "POST",
+                      "pattern": "/v1alpha1/auth/approve_token",
                       "body": "*"
                     }
                   ]
@@ -2440,13 +2643,133 @@
       "name": "agntcy/identity/platform/v1alpha1/device.proto",
       "description": "",
       "package": "agntcy.identity.platform.v1alpha1",
-      "hasEnums": false,
+      "hasEnums": true,
       "hasExtensions": false,
       "hasMessages": true,
       "hasServices": false,
-      "enums": [],
+      "enums": [
+        {
+          "name": "NotificationType",
+          "longName": "NotificationType",
+          "fullName": "agntcy.identity.platform.v1alpha1.NotificationType",
+          "description": "",
+          "values": [
+            {
+              "name": "NOTIFICATION_TYPE_UNSPECIFIED",
+              "number": "0",
+              "description": ""
+            },
+            {
+              "name": "NOTIFICATION_TYPE_INFO",
+              "number": "1",
+              "description": ""
+            },
+            {
+              "name": "NOTIFICATION_TYPE_APPROVAL_REQUEST",
+              "number": "2",
+              "description": ""
+            }
+          ]
+        }
+      ],
       "extensions": [],
       "messages": [
+        {
+          "name": "ApprovalRequestInfo",
+          "longName": "ApprovalRequestInfo",
+          "fullName": "agntcy.identity.platform.v1alpha1.ApprovalRequestInfo",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "caller_app",
+              "description": "",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_caller_app",
+              "defaultValue": ""
+            },
+            {
+              "name": "callee_app",
+              "description": "",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_callee_app",
+              "defaultValue": ""
+            },
+            {
+              "name": "tool_name",
+              "description": "",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_tool_name",
+              "defaultValue": ""
+            },
+            {
+              "name": "otp",
+              "description": "",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_otp",
+              "defaultValue": ""
+            },
+            {
+              "name": "device_id",
+              "description": "",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_device_id",
+              "defaultValue": ""
+            },
+            {
+              "name": "session_id",
+              "description": "",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_session_id",
+              "defaultValue": ""
+            },
+            {
+              "name": "timeout_in_seconds",
+              "description": "",
+              "label": "optional",
+              "type": "int64",
+              "longType": "int64",
+              "fullType": "int64",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_timeout_in_seconds",
+              "defaultValue": ""
+            }
+          ]
+        },
         {
           "name": "Device",
           "longName": "Device",
@@ -2491,6 +2814,54 @@
               "ismap": false,
               "isoneof": true,
               "oneofdecl": "_subscription_token",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "Notification",
+          "longName": "Notification",
+          "fullName": "agntcy.identity.platform.v1alpha1.Notification",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "body",
+              "description": "",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_body",
+              "defaultValue": ""
+            },
+            {
+              "name": "type",
+              "description": "",
+              "label": "optional",
+              "type": "NotificationType",
+              "longType": "NotificationType",
+              "fullType": "agntcy.identity.platform.v1alpha1.NotificationType",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_type",
+              "defaultValue": ""
+            },
+            {
+              "name": "approval_request_info",
+              "description": "",
+              "label": "optional",
+              "type": "ApprovalRequestInfo",
+              "longType": "ApprovalRequestInfo",
+              "fullType": "agntcy.identity.platform.v1alpha1.ApprovalRequestInfo",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_approval_request_info",
               "defaultValue": ""
             }
           ]

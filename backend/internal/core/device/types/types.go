@@ -1,6 +1,8 @@
 // Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
 // SPDX-License-Identifier: Apache-2.0
 
+//go:generate stringer -type=NotificationType
+
 package types
 
 // Devices used for user approval
@@ -23,16 +25,35 @@ const (
 	NOTIFICATION_TYPE_APPROVAL_REQUEST
 )
 
+func (t *NotificationType) UnmarshalText(text []byte) error {
+	switch string(text) {
+	case NOTIFICATION_TYPE_INFO.String():
+		*t = NOTIFICATION_TYPE_INFO
+	case NOTIFICATION_TYPE_APPROVAL_REQUEST.String():
+		*t = NOTIFICATION_TYPE_APPROVAL_REQUEST
+	default:
+		*t = NOTIFICATION_TYPE_UNSPECIFIED
+	}
+
+	return nil
+}
+
+func (t NotificationType) MarshalText() ([]byte, error) {
+	return []byte(t.String()), nil
+}
+
 type ApprovalRequestInfo struct {
-	CallerApp string
-	CalleeApp *string
-	ToolName  *string
-	OTP       string
-	DeviceID  string
+	CallerApp        string  `json:"caller_app,omitempty" protobuf:"bytes,1,opt,name=caller_app"`
+	CalleeApp        *string `json:"callee_app,omitempty" protobuf:"bytes,2,opt,name=callee_app"`
+	ToolName         *string `json:"tool_name,omitempty" protobuf:"bytes,3,opt,name=tool_name"`
+	OTP              string  `json:"otp,omitempty" protobuf:"bytes,4,opt,name=otp"`
+	DeviceID         string  `json:"device_id,omitempty" protobuf:"bytes,5,opt,name=device_id"`
+	SessionID        string  `json:"session_id,omitempty" protobuf:"bytes,6,opt,name=session_id"`
+	TimeoutInSeconds int     `json:"timeout_in_seconds,omitempty" protobuf:"bytes,7,opt,name=timeout_in_seconds"`
 }
 
 type Notification struct {
-	Body                string
-	Type                NotificationType
-	ApprovalRequestInfo *ApprovalRequestInfo
+	Body                string               `json:"body,omitempty" protobuf:"bytes,1,opt,name=body"`
+	Type                NotificationType     `json:"type,omitempty" protobuf:"bytes,2,opt,name=type"`
+	ApprovalRequestInfo *ApprovalRequestInfo `json:"approval_request_info,omitempty" protobuf:"bytes,3,opt,name=approval_request_info"`
 }

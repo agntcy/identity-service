@@ -16,5 +16,6 @@ type Repository interface {
 	Update(ctx context.Context, session *types.Session) error
 	CreateDeviceOTP(ctx context.Context, otp *types.SessionDeviceOTP) error
 	GetDeviceOTP(ctx context.Context, id string) (*types.SessionDeviceOTP, error)
-	UpdateDeviceOTP(ctxt context.Context, otp *types.SessionDeviceOTP) error
+	UpdateDeviceOTP(ctx context.Context, otp *types.SessionDeviceOTP) error
+	GetDeviceOTPByValue(ctx context.Context, deviceID, sessionID, value string) (*types.SessionDeviceOTP, error)
 }

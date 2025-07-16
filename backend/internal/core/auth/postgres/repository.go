@@ -164,7 +164,7 @@ func (r *postgresRepository) GetDeviceOTP(
 }
 
 func (r *postgresRepository) UpdateDeviceOTP(
-	ctxt context.Context,
+	ctx context.Context,
 	otp *types.SessionDeviceOTP,
 ) error {
 	model := newSessionDeviceOTPModel(otp)
@@ -175,4 +175,31 @@ func (r *postgresRepository) UpdateDeviceOTP(
 	}
 
 	return nil
+}
+
+func (r *postgresRepository) GetDeviceOTPByValue(
+	ctx context.Context,
+	deviceID string,
+	sessionID string,
+	value string,
+) (*types.SessionDeviceOTP, error) {
+	var otp SessionDeviceOTP
+
+	result := r.dbContext.Client().
+		Where(
+			"value = ? AND device_id = ? AND session_id = ?",
+			value,
+			deviceID,
+			sessionID,
+		).
+		First(&otp)
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return nil, errutil.Err(result.Error, "OTP not found")
+		}
+
+		return nil, errutil.Err(result.Error, "there was an error fetching the OTP")
+	}
+
+	return otp.ToCoreType(), nil
 }

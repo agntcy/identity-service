@@ -83,6 +83,9 @@ if [ -n "${packages_comma_separated}" ]; then
   # can reference them by name and not by the underlying type (ex: int)
   go-enum-patch --patch="${Identity_ROOT}/local/enums.json" --type=go
 
+  # FIX: quick fix for proto file /usr/local/go/src/time/generated.proto does not exist
+  touch /usr/local/go/src/time/generated.proto
+
   go-to-protobuf \
     --apimachinery-packages="" \
     --proto-import="${Identity_ROOT}/third_party/protos" \

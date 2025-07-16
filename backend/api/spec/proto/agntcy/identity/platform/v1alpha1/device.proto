@@ -10,6 +10,22 @@ package agntcy.identity.platform.v1alpha1;
 // Package-wide variables from generator "generated".
 option go_package = "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_go";
 
+message ApprovalRequestInfo {
+  optional string caller_app = 1;
+
+  optional string callee_app = 2;
+
+  optional string tool_name = 3;
+
+  optional string otp = 4;
+
+  optional string device_id = 5;
+
+  optional string session_id = 6;
+
+  optional int64 timeout_in_seconds = 7;
+}
+
 // Devices used for user approval
 message Device {
   // A unique identifier for the Device.
@@ -20,4 +36,18 @@ message Device {
 
   // Subscription Token for the Device.
   optional string subscription_token = 3;
+}
+
+message Notification {
+  optional string body = 1;
+
+  optional NotificationType type = 2;
+
+  optional ApprovalRequestInfo approval_request_info = 3;
+}
+
+enum NotificationType {
+  NOTIFICATION_TYPE_UNSPECIFIED = 0;
+  NOTIFICATION_TYPE_INFO = 1;
+  NOTIFICATION_TYPE_APPROVAL_REQUEST = 2;
 }

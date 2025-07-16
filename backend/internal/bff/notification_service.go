@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"time"
 
 	webpush "github.com/SherClockHolmes/webpush-go"
 	authtypes "github.com/agntcy/identity-platform/internal/core/auth/types"
@@ -81,11 +82,13 @@ func (s *notificationService) SendOTPNotification(
 			Body: fmt.Sprintf("%s is trying to access %s", session.OwnerAppID, ptrutil.DerefStr(session.AppID)),
 			Type: devicetypes.NOTIFICATION_TYPE_APPROVAL_REQUEST,
 			ApprovalRequestInfo: &devicetypes.ApprovalRequestInfo{
-				CallerApp: session.OwnerAppID,
-				CalleeApp: session.AppID,
-				ToolName:  session.ToolName,
-				OTP:       otp.Value,
-				DeviceID:  otp.DeviceID,
+				CallerApp:        session.OwnerAppID,
+				CalleeApp:        session.AppID,
+				ToolName:         session.ToolName,
+				OTP:              otp.Value,
+				DeviceID:         otp.DeviceID,
+				SessionID:        session.ID,
+				TimeoutInSeconds: int(authtypes.SessionDeviceOTPDuration / time.Second),
 			},
 		},
 	)
