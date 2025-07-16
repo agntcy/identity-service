@@ -50,7 +50,7 @@ spec:
           - configMapRef:
               name: {{ .Release.Name }}-configmap-backend
           - secretRef:
-              name: {{ .Release.Name }}-{{ .Chart.Name }}-secret
+              name: {{ include "pyramid-backend.fullname" . }}-secret
           {{- with .Values.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}

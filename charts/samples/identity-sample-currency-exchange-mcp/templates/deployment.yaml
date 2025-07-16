@@ -45,6 +45,9 @@ spec:
             - name: http
               containerPort: {{ .Values.service.http.port }}
               protocol: TCP
+          envFrom:
+          - secretRef:
+              name: {{ include "identity-sample-currency-exchange-mcp.fullname" . }}-secret
           {{- with .Values.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}
