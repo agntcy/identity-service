@@ -190,7 +190,7 @@ jobs:
 
   call-helm-publish-identity-sample-financial-assist-oasf:
     name: Helm publish identity-sample-financial-assist-oasf
-    needs: [checkout-unit-tests]
+    needs: [checkout]
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@a663a51a68f4158da24f29d7859dabb891586d5c #main
     with:
       runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
