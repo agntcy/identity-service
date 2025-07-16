@@ -34,7 +34,7 @@ logger = logging.getLogger(__name__)
 @click.option("--ollama-model", default=os.getenv("OLLAMA_MODEL", "llama3.2"))
 @click.option(
     "--currency_exchange_mcp_server_url",
-    default=os.getenv("MCP_SERVER_URL", "http://localhost:9090/mcp"),
+    default=os.getenv("CURRENCY_EXCHANGE_MCP_SERVER_URL", "http://localhost:9090/mcp"),
 )
 def main(host, port, ollama_host, ollama_model, currency_exchange_mcp_server_url):
     """Starts the Currency Agent server."""
