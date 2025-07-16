@@ -103,7 +103,7 @@ const AgenticServiceInfo: React.FC = () => {
               variant="secondary"
               sx={{fontWeight: '600 !important'}}
               onClick={() => {
-                analyticsTrack('CLICK_EDIT_AGENTIC_SERVICE', {
+                analyticsTrack('CLICK_NAVIGATION_EDIT_AGENTIC_SERVICE', {
                   type: data?.type
                 });
                 const path = generatePath(PATHS.agenticServices.edit, {id: id || ''});

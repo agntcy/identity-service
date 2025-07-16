@@ -37,7 +37,7 @@ const App = () => {
             <AnalyticsProvider>
               <ApiProvider>
                 <QueryProvider>
-                  <Toaster offset={{top: '64px', right: '16px'}} expand={false} duration={3500} />
+                  <Toaster offset={{bottom: '64px', right: '16px'}} expand={false} duration={3500} position="bottom-right" />
                   <FeatureFlagsProvider>
                     <PwaProvider>
                       <NotificationsProvider>

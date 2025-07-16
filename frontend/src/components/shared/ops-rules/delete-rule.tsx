@@ -4,6 +4,7 @@
  */
 
 import {ConfirmModal} from '@/components/ui/confirm-modal';
+import {useAnalytics} from '@/hooks';
 import {useDeleteRule} from '@/mutations';
 import {Policy, Rule} from '@/types/api/policy';
 import {toast} from '@outshift/spark-design';
@@ -38,14 +39,17 @@ export const DeleteRule = ({policy, rule, open, onClose}: DeleteRuleProps) => {
     }
   });
 
+  const {analyticsTrack} = useAnalytics();
+
   const handleConfirm = useCallback(() => {
     if (rule?.id && policy?.id) {
+      analyticsTrack('CLICK_CONFIRM_DELETE_RULE_POLICY');
       mutationDeleteRule.mutate({
         policyId: policy.id,
         ruleId: rule.id
       });
     }
-  }, [rule?.id, policy?.id, mutationDeleteRule]);
+  }, [rule?.id, policy?.id, analyticsTrack, mutationDeleteRule]);
 
   return (
     <ConfirmModal

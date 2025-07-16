@@ -107,7 +107,7 @@ export const ListOrganizations = () => {
                     type: 'warning'
                   });
                 } else {
-                  analyticsTrack('CLICK_ORGANIZATION_ROW');
+                  analyticsTrack('CLICK_ORGANIZATION_INFO');
                   const path = generatePath(PATHS.settings.organizationsAndUsers.info, {id: row.original?.id});
                   void navigate(path, {replace: true});
                 }
@@ -153,7 +153,7 @@ export const ListOrganizations = () => {
                 <MenuItem
                   key="edit-org"
                   onClick={() => {
-                    analyticsTrack('CLICK_EDIT_ORGANIZATION');
+                    analyticsTrack('CLICK_NAVIGATION_EDIT_ORGANIZATION');
                     const path = generatePath(PATHS.settings.organizationsAndUsers.edit, {id: row.original.id});
                     void navigate(path, {replace: true});
                   }}

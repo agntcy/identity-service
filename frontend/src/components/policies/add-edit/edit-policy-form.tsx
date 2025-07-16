@@ -18,17 +18,19 @@ import {PolicyFormValues, PolicySchema} from '@/schemas/policy-schema';
 import {Policy, RuleAction} from '@/types/api/policy';
 import {useCreateRule, useDeleteRule, useUpdatePolicy, useUpdateRule} from '@/mutations';
 import {PolicyLogicyFormValues, PolicyLogicySchema} from '@/schemas/policy-logic-schema';
-import {useNavigate} from 'react-router-dom';
+import {generatePath, useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
 import {PolicyLogic} from './steps/policy-logic';
+import {useAnalytics} from '@/hooks';
 
 export const EditPolicyForm = ({policy}: {policy?: Policy}) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [flagCreateRules, setFlagCreateRules] = useState(true);
 
   const methods = useStepper();
 
   const navigate = useNavigate();
+
+  const {analyticsTrack} = useAnalytics();
 
   const form = useForm<z.infer<typeof methods.current.schema>>({
     resolver: zodResolver(methods.current.schema),
@@ -61,8 +63,8 @@ export const EditPolicyForm = ({policy}: {policy?: Policy}) => {
 
   const mutationUpdatePolicy = useUpdatePolicy({
     callbacks: {
-      onSuccess: (resp) => {
-        void handleUpdateRules(resp.data);
+      onSuccess: async (resp) => {
+        await handleUpdateRules(resp.data);
       },
       onError: () => {
         setIsLoading(false);
@@ -122,10 +124,11 @@ export const EditPolicyForm = ({policy}: {policy?: Policy}) => {
           );
           toast({
             title: 'Success',
-            description: `Policy "${policy.name}" and its rules updated successfully.`,
+            description: 'Policy updated successfully.',
             type: 'success'
           });
-          void navigate(PATHS.policies.base, {replace: true});
+          const path = generatePath(PATHS.policies.info, {id: policy?.id ?? ''});
+          void navigate(path, {replace: true});
         } catch (error) {
           toast({
             title: 'Error',
@@ -166,6 +169,7 @@ export const EditPolicyForm = ({policy}: {policy?: Policy}) => {
   const handleUpdate = useCallback(() => {
     const valuesPolicy = form.getValues() as PolicyFormValues;
     setIsLoading(true);
+    analyticsTrack('CLICK_SAVE_EDIT_POLICY');
     mutationUpdatePolicy.mutate({
       id: policy?.id || '',
       data: {
@@ -174,7 +178,7 @@ export const EditPolicyForm = ({policy}: {policy?: Policy}) => {
         assignedTo: valuesPolicy.assignedTo
       }
     });
-  }, [form, mutationUpdatePolicy, policy?.id]);
+  }, [analyticsTrack, form, mutationUpdatePolicy, policy?.id]);
 
   const onSubmit = useCallback(() => {
     if (methods.current.id === 'policyForm') {
@@ -260,7 +264,7 @@ export const EditPolicyForm = ({policy}: {policy?: Policy}) => {
                               </Button>
                             )}
                             <Button
-                              loading={isLoading && flagCreateRules}
+                              loading={isLoading}
                               loadingPosition="start"
                               type="submit"
                               disabled={

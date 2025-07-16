@@ -21,6 +21,7 @@ import z from 'zod';
 import OasfLogo from '@/assets/oasf.svg?react';
 import McpLogo from '@/assets/mcp.svg?react';
 import A2ALogo from '@/assets/a2a-logo.svg?react';
+import {useAnalytics} from '@/hooks';
 
 export const EditAgenticServiceForm = ({app}: {app?: App}) => {
   const appTypes: SharedProviderProps<AppType>[] = [
@@ -46,6 +47,8 @@ export const EditAgenticServiceForm = ({app}: {app?: App}) => {
       useTooltip: false
     }
   ];
+
+  const {analyticsTrack} = useAnalytics();
 
   const form = useForm<AgenticServiceFormValues>({
     resolver: zodResolver(AgenticServiceSchema),
@@ -90,6 +93,7 @@ export const EditAgenticServiceForm = ({app}: {app?: App}) => {
       });
       return;
     }
+    analyticsTrack('CLICK_SAVE_EDIT_AGENTIC_SERVICE');
     updateMutation.mutate({
       id: app?.id ?? '',
       data: {
@@ -97,7 +101,7 @@ export const EditAgenticServiceForm = ({app}: {app?: App}) => {
         description: values.description
       }
     });
-  }, [app?.id, form, updateMutation]);
+  }, [analyticsTrack, app?.id, form, updateMutation]);
 
   useEffect(() => {
     form.reset({
