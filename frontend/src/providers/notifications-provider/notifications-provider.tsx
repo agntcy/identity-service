@@ -11,10 +11,25 @@ import {PropsWithChildren, useCallback, useEffect, useState} from 'react';
 
 export const NotificationsProvider: React.FC<PropsWithChildren> = ({children}) => {
   const [open, setOpen] = useState(false);
+  const [notifications, setNotifications] = useState<any[]>([
+    {
+      id: '',
+      title: '',
+      message: '',
+      timestamp: '',
+      defaultOpen: true
+    },
+    {
+      id: '',
+      title: '',
+      message: '',
+      timestamp: '',
+      defaultOpen: true
+    }
+  ]);
 
   const {width} = useWindowSize();
   const queryClient = useQueryClient();
-
   const isMobile = width < 768;
 
   const handleOpenNotification = useCallback((value: boolean) => {
@@ -58,7 +73,10 @@ export const NotificationsProvider: React.FC<PropsWithChildren> = ({children}) =
 
   return (
     <>
-      <NotificationContent open={open} onOpenChange={handleOpenNotification} />
+      {isMobile &&
+        notifications.map((notification, index) => (
+          <NotificationContent key={notification.id || index} defaultOpen={notification.defaultOpen} />
+        ))}
       {children}
     </>
   );

@@ -5,7 +5,6 @@
 
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
   DrawerDescription,
   DrawerFooter,
@@ -13,19 +12,27 @@ import {
   DrawerProps,
   DrawerTitle
 } from '@/components/ui/drawer';
-import {Button} from '@outshift/spark-design';
+import {Button, Typography} from '@outshift/spark-design';
 import {BanIcon, CheckIcon} from 'lucide-react';
 import {CountDownTimer} from '../ui/count-down-timer';
 import {useCallback, useState} from 'react';
 
-interface NotificationContentProps extends Omit<DrawerProps, 'ref' | 'fadeFromIndex'> {
+interface NotificationContentProps extends Omit<DrawerProps, 'ref' | 'fadeFromIndex' | 'open' | 'onOpenChange'> {
   notification?: any;
   isLoading?: boolean;
   onAllow?: () => void;
   onDeny?: () => void;
 }
 
-export const NotificationContent = ({notification, onAllow, onDeny, isLoading, ...props}: NotificationContentProps) => {
+export const NotificationContent = ({
+  notification,
+  defaultOpen,
+  onAllow,
+  onDeny,
+  isLoading,
+  ...props
+}: NotificationContentProps) => {
+  const [open, setOpen] = useState(defaultOpen);
   const [timerEnded, setTimerEnded] = useState(false);
 
   const handleOnComplete = useCallback(() => {
@@ -33,12 +40,24 @@ export const NotificationContent = ({notification, onAllow, onDeny, isLoading, .
     setTimerEnded(true);
   }, []);
 
+  const handleAllow = useCallback(() => {
+    setOpen(false);
+    onAllow?.();
+  }, [onAllow]);
+
+  const handleDeny = useCallback(() => {
+    setOpen(false);
+    onDeny?.();
+  }, [onDeny]);
+
   return (
-    <Drawer {...props}>
-      <DrawerContent className="h-screen max-h-screen">
+    <Drawer open={open} onOpenChange={setOpen} dismissible={false} {...props}>
+      <DrawerContent className="max-h-screen" style={{height: 'calc(100vh - 56px)'}}>
         <DrawerHeader>
-          <DrawerTitle>Are you absolutely sure?</DrawerTitle>
-          <DrawerDescription>This action cannot be undone.</DrawerDescription>
+          <Typography variant="h6">{notification?.title || 'Notification'}</Typography>
+          <Typography variant="body2" className="text-muted-foreground">
+            {notification?.message || 'You have a new notification.'}
+          </Typography>
         </DrawerHeader>
         <div className="flex flex-col items-center justify-center h-full">
           <CountDownTimer duration={30} onComplete={handleOnComplete} />
@@ -54,7 +73,7 @@ export const NotificationContent = ({notification, onAllow, onDeny, isLoading, .
               fullWidth
               startIcon={<BanIcon className="w-4 h-4" />}
               disabled={timerEnded || isLoading}
-              onClick={onDeny}
+              onClick={handleDeny}
             >
               Deny
             </Button>
@@ -65,7 +84,7 @@ export const NotificationContent = ({notification, onAllow, onDeny, isLoading, .
               fullWidth
               startIcon={<CheckIcon className="w-4 h-4" />}
               disabled={timerEnded || isLoading}
-              onClick={onAllow}
+              onClick={handleAllow}
             >
               Allow
             </Button>

@@ -61,7 +61,7 @@ export const InstallButtonPwa = (props: FabProps) => {
     <div className="absolute bottom-16 right-6">
       <Tooltip title="Install Agent Identity" placement="left">
         <Fab
-          color='primary'
+          color="primary"
           variant="circular"
           sx={{backgroundColor: '#187adc'}}
           size="medium"

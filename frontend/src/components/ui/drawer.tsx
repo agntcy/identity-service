@@ -14,6 +14,10 @@ function Drawer({...props}: DrawerProps) {
   return <DrawerPrimitive.Root data-slot="drawer" {...props} />;
 }
 
+function DrawerNested({...props}: React.ComponentProps<typeof DrawerPrimitive.NestedRoot>) {
+  return <DrawerPrimitive.NestedRoot data-slot="drawer-nested" {...props} />;
+}
+
 function DrawerTrigger({...props}: React.ComponentProps<typeof DrawerPrimitive.Trigger>) {
   return <DrawerPrimitive.Trigger data-slot="drawer-trigger" {...props} />;
 }
@@ -55,7 +59,7 @@ function DrawerContent({className, children, ...props}: React.ComponentProps<typ
         )}
         {...props}
       >
-        <div className="bg-[#187adc] mx-auto mt-4 hidden h-2 w-[100px] shrink-0 rounded-full group-data-[vaul-drawer-direction=bottom]/drawer-content:block" />
+        <div className="bg-gray-200 mx-auto mt-4 hidden h-2 w-[100px] shrink-0 rounded-full group-data-[vaul-drawer-direction=bottom]/drawer-content:block" />
         {children}
       </DrawerPrimitive.Content>
     </DrawerPortal>
@@ -80,19 +84,11 @@ function DrawerFooter({className, ...props}: React.ComponentProps<'div'>) {
 }
 
 function DrawerTitle({className, ...props}: React.ComponentProps<typeof DrawerPrimitive.Title>) {
-  return (
-    <DrawerPrimitive.Title data-slot="drawer-title" className={cn('text-foreground font-semibold', className)} {...props} />
-  );
+  return <DrawerPrimitive.Title data-slot="drawer-title" className={cn(className)} {...props} />;
 }
 
 function DrawerDescription({className, ...props}: React.ComponentProps<typeof DrawerPrimitive.Description>) {
-  return (
-    <DrawerPrimitive.Description
-      data-slot="drawer-description"
-      className={cn('text-muted-foreground text-sm', className)}
-      {...props}
-    />
-  );
+  return <DrawerPrimitive.Description data-slot="drawer-description" className={cn(className)} {...props} />;
 }
 
 export {
@@ -105,7 +101,8 @@ export {
   DrawerHeader,
   DrawerFooter,
   DrawerTitle,
-  DrawerDescription
+  DrawerDescription,
+  DrawerNested
 };
 
 export type {DrawerProps};
