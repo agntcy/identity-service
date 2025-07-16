@@ -1,7 +1,7 @@
 # Security Policies and Procedures
 
 This document outlines security procedures and general policies for the
-`Identity SaaS` project.
+`Identity Platform` project.
 
 - [Security Policies and Procedures](#security-policies-and-procedures)
   - [Disclosing a security issue](#disclosing-a-security-issue)
@@ -10,12 +10,12 @@ This document outlines security procedures and general policies for the
 
 ## Disclosing a security issue
 
-The `Identity SaaS` maintainers take all security issues in the project
-seriously. Thank you for improving the security of `Identity SaaS`. We
+The `Identity Platform` maintainers take all security issues in the project
+seriously. Thank you for improving the security of `Identity Platform`. We
 appreciate your dedication to responsible disclosure and will make every effort
 to acknowledge your contributions.
 
-`Identity SaaS` leverages GitHub's private vulnerability reporting.
+`Identity Platform` leverages GitHub's private vulnerability reporting.
 
 To learn more about this feature and how to submit a vulnerability report,
 review [GitHub's documentation on private reporting](https://docs.github.com/code-security/security-advisories/guidance-on-reporting-and-writing-information-about-vulnerabilities/privately-reporting-a-security-vulnerability).
