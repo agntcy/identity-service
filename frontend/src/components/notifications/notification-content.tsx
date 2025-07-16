@@ -3,7 +3,16 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerProps, DrawerTitle} from '@/components/ui/drawer';
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerProps,
+  DrawerTitle
+} from '@/components/ui/drawer';
 import {Button} from '@outshift/spark-design';
 import {BanIcon, CheckIcon} from 'lucide-react';
 import {CountDownTimer} from '../ui/count-down-timer';

@@ -153,7 +153,9 @@ const UserSection = ({handleNotificationsChange}: {handleNotificationsChange: (v
             })
           }
         }}
-        endIcon={isMobile ? null : open ? <ChevronUpIcon width={16} height={16} /> : <ChevronDownIcon width={16} height={16} />}
+        endIcon={
+          isMobile ? null : open ? <ChevronUpIcon width={16} height={16} /> : <ChevronDownIcon width={16} height={16} />
+        }
         disableRipple
         disableFocusRipple
         focusRipple={false}
@@ -163,7 +165,14 @@ const UserSection = ({handleNotificationsChange}: {handleNotificationsChange: (v
             <span className="capitalize">{authInfo?.user?.name || 'User'}</span>
           </Typography>
           <div className="-mt-[3px]">
-            <Typography textAlign="left" variant="caption" sx={(theme) => ({color: theme.palette.vars.baseTextStrong, textTransform: 'capitalize'})}>
+            <Typography
+              textAlign="left"
+              variant="caption"
+              sx={(theme) => ({
+                color: theme.palette.vars.baseTextStrong,
+                textTransform: 'capitalize'
+              })}
+            >
               {role}
             </Typography>
           </div>
@@ -181,7 +190,13 @@ const UserSection = ({handleNotificationsChange}: {handleNotificationsChange: (v
               <span className="capitalize">{authInfo?.user?.name || 'User'}</span>
             </Typography>
             <div className="-mt-[4px]">
-              <Typography variant="caption" sx={(theme) => ({color: theme.palette.vars.baseTextStrong, textTransform: 'capitalize'})}>
+              <Typography
+                variant="caption"
+                sx={(theme) => ({
+                  color: theme.palette.vars.baseTextStrong,
+                  textTransform: 'capitalize'
+                })}
+              >
                 {role}
               </Typography>
             </div>

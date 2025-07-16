@@ -28,7 +28,16 @@ const statsCardStyles = cva('gap-4 w-full min-h-20 px-0 pb-0', {
   }
 });
 
-const StatsCard: React.FC<StatsCardProps> = ({stats, vertical, isGrid, loading, className, callToAction, title, useCard = true}) => {
+const StatsCard: React.FC<StatsCardProps> = ({
+  stats,
+  vertical,
+  isGrid,
+  loading,
+  className,
+  callToAction,
+  title,
+  useCard = true
+}) => {
   if (stats.length === 0) {
     return null;
   }

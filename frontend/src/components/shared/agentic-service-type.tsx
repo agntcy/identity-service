@@ -11,7 +11,15 @@ import A2AIcon from '@/assets/a2a-logo.svg?react';
 import {Typography} from '@mui/material';
 import {labels} from '@/constants/labels';
 
-export const AgenticServiceType = ({type, className, showLabel = true}: {type?: AppType; className?: string; showLabel?: boolean}) => {
+export const AgenticServiceType = ({
+  type,
+  className,
+  showLabel = true
+}: {
+  type?: AppType;
+  className?: string;
+  showLabel?: boolean;
+}) => {
   return (
     <div className={cn('flex items-center gap-2', className)}>
       {type === AppType.APP_TYPE_MCP_SERVER && <MCPIcon className="h-[20px] w-[20px]" />}

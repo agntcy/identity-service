@@ -123,18 +123,32 @@ const FormStepperComponent = () => {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <StepperPanel className="w-full">
-            <Accordion type="single" collapsible className="w-full" defaultValue={methods.get('agenticServiceForm').id} value={methods.current.id}>
+            <Accordion
+              type="single"
+              collapsible
+              className="w-full"
+              defaultValue={methods.get('agenticServiceForm').id}
+              value={methods.current.id}
+            >
               {methods.all.map((step) => {
                 return (
                   <div className="flex gap-2 items-top -ml-1" key={step.id}>
                     <StepperNavigation>
-                      <StepperStep of={step.id} onlyIcon isLoading={methods.current.id === step.id && mutationCreate.isPending} />
+                      <StepperStep
+                        of={step.id}
+                        onlyIcon
+                        isLoading={methods.current.id === step.id && mutationCreate.isPending}
+                      />
                     </StepperNavigation>
                     <AccordionItem value={step.id} className="border-b-0 w-full">
                       <AccordionTrigger className="pt-0 w-full cursor-default" useArrow={false}>
                         <div className="w-full -mt-[3px]">
                           <div className="flex items-center gap-2">
-                            <Typography variant="h6" fontSize={18} sx={(theme) => ({color: theme.palette.vars.baseTextStrong})}>
+                            <Typography
+                              variant="h6"
+                              fontSize={18}
+                              sx={(theme) => ({color: theme.palette.vars.baseTextStrong})}
+                            >
                               {step.title}
                             </Typography>
                           </div>

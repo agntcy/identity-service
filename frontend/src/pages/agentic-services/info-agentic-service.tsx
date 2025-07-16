@@ -172,7 +172,8 @@ const AgenticServiceInfo: React.FC = () => {
                 <>
                   <br />
                   <br />
-                  <strong>Note:</strong> If this agentic service is a TBAC service, it will also remove the associated TBAC policies.
+                  <strong>Note:</strong> If this agentic service is a TBAC service, it will also remove the associated TBAC
+                  policies.
                 </>
               )}
             </>

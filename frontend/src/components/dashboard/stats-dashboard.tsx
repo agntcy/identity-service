@@ -72,7 +72,10 @@ export const StatsDashboard = () => {
         <WelcomeName />
         <div className="px-[24px]">
           <StatsCard
-            className={cn('grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 p-4', !isTbacEnable && 'md:grid-cols-2 lg:grid-cols-2')}
+            className={cn(
+              'grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 p-4',
+              !isTbacEnable && 'md:grid-cols-2 lg:grid-cols-2'
+            )}
             stats={statsInfo}
           />
         </div>
@@ -88,8 +91,15 @@ export const StatsDashboard = () => {
                 </Typography>
               </div>
               <div className="flex justify-center items-center">
-                <RouterLink to={PATHS.agenticServices.verifyIdentity} onClick={() => analyticsTrack('CLICK_NAVIGATION_VERIFY_IDENTITY')}>
-                  <Button variant="outlined" sx={{fontWeight: '600 !important'}} startIcon={<CheckIcon className="w-4 h-4" />}>
+                <RouterLink
+                  to={PATHS.agenticServices.verifyIdentity}
+                  onClick={() => analyticsTrack('CLICK_NAVIGATION_VERIFY_IDENTITY')}
+                >
+                  <Button
+                    variant="outlined"
+                    sx={{fontWeight: '600 !important'}}
+                    startIcon={<CheckIcon className="w-4 h-4" />}
+                  >
                     Verify Identity
                   </Button>
                 </RouterLink>
@@ -107,8 +117,15 @@ export const StatsDashboard = () => {
                 </Typography>
               </div>
               <div className="flex justify-center items-center">
-                <RouterLink to={PATHS.agenticServices.add} onClick={() => analyticsTrack('CLICK_NAVIGATION_ADD_AGENTIC_SERVICE')}>
-                  <Button variant="outlined" sx={{fontWeight: '600 !important'}} startIcon={<PlusIcon className="w-4 h-4" />}>
+                <RouterLink
+                  to={PATHS.agenticServices.add}
+                  onClick={() => analyticsTrack('CLICK_NAVIGATION_ADD_AGENTIC_SERVICE')}
+                >
+                  <Button
+                    variant="outlined"
+                    sx={{fontWeight: '600 !important'}}
+                    startIcon={<PlusIcon className="w-4 h-4" />}
+                  >
                     Add Agentic Service
                   </Button>
                 </RouterLink>
@@ -128,7 +145,11 @@ export const StatsDashboard = () => {
                 </div>
                 <div className="flex justify-center items-center mt-8">
                   <RouterLink to={PATHS.policies.create} onClick={() => analyticsTrack('CLICK_NAVIGATION_ADD_POLICY')}>
-                    <Button variant="outlined" sx={{fontWeight: '600 !important'}} startIcon={<PlusIcon className="w-4 h-4" />}>
+                    <Button
+                      variant="outlined"
+                      sx={{fontWeight: '600 !important'}}
+                      startIcon={<PlusIcon className="w-4 h-4" />}
+                    >
                       Add Policy
                     </Button>
                   </RouterLink>

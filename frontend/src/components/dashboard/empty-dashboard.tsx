@@ -31,8 +31,8 @@ export const EmptyDashboard = () => {
             </div>
             <div className="text-center mx-auto pb-4 md:pb-0">
               <Typography textAlign="center" variant="body1" maxWidth="70%" sx={{margin: '0 auto'}}>
-                Secure your AI agents and MCP servers with trusted identities. Create, verify, and manage agent identities for secure communication
-                and authentication.{' '}
+                Secure your AI agents and MCP servers with trusted identities. Create, verify, and manage agent identities
+                for secure communication and authentication.{' '}
               </Typography>
               <Link
                 href={docs()}
@@ -54,12 +54,19 @@ export const EmptyDashboard = () => {
                     Verify Identity Badges
                   </Typography>
                   <Typography variant="body1" marginTop={2} textAlign="center">
-                    Ensure secure communication and authentication by verifying identities for your MCP servers and AI agents, including those
-                    supporting A2A-compatible protocols like Google A2A.
+                    Ensure secure communication and authentication by verifying identities for your MCP servers and AI
+                    agents, including those supporting A2A-compatible protocols like Google A2A.
                   </Typography>
                   <div className="flex justify-center items-center mt-8">
-                    <RouterLink to={PATHS.agenticServices.verifyIdentity} onClick={() => analyticsTrack('CLICK_NAVIGATION_VERIFY_IDENTITY')}>
-                      <Button variant="outlined" sx={{fontWeight: '600 !important'}} startIcon={<CheckIcon className="w-4 h-4" />}>
+                    <RouterLink
+                      to={PATHS.agenticServices.verifyIdentity}
+                      onClick={() => analyticsTrack('CLICK_NAVIGATION_VERIFY_IDENTITY')}
+                    >
+                      <Button
+                        variant="outlined"
+                        sx={{fontWeight: '600 !important'}}
+                        startIcon={<CheckIcon className="w-4 h-4" />}
+                      >
                         Verify Identity
                       </Button>
                     </RouterLink>
@@ -72,15 +79,20 @@ export const EmptyDashboard = () => {
                     Create Badges & Policies
                   </Typography>
                   <Typography variant="body1" marginTop={2} textAlign="center">
-                    Connect your identity provider to create and manage identities for your AI agents and MCP servers, including those supporting
-                    A2A-compatible protocols like Google A2A, with support for policies and access controls.
+                    Connect your identity provider to create and manage identities for your AI agents and MCP servers,
+                    including those supporting A2A-compatible protocols like Google A2A, with support for policies and access
+                    controls.
                   </Typography>
                   <div className="flex justify-center items-center mt-8">
                     <RouterLink
                       to={PATHS.settings.identityProvider.connection}
                       onClick={() => analyticsTrack('CLICK_NAVIGATION_CONNECT_IDENTITY_PROVIDER')}
                     >
-                      <Button variant="outlined" sx={{fontWeight: '600 !important'}} startIcon={<PlusIcon className="w-4 h-4" />}>
+                      <Button
+                        variant="outlined"
+                        sx={{fontWeight: '600 !important'}}
+                        startIcon={<PlusIcon className="w-4 h-4" />}
+                      >
                         Connect Identity Provider
                       </Button>
                     </RouterLink>

@@ -190,7 +190,11 @@ export const BadgeModalForm = ({
                   <FormItem>
                     <FormLabel className="form-label">Well Know Server</FormLabel>
                     <FormControl>
-                      <Input placeholder="Type the URL of the well know server..." {...field} disabled={createBadge.isPending} />
+                      <Input
+                        placeholder="Type the URL of the well know server..."
+                        {...field}
+                        disabled={createBadge.isPending}
+                      />
                     </FormControl>
                   </FormItem>
                 )}
@@ -198,7 +202,12 @@ export const BadgeModalForm = ({
             )}
           </ModalContent>
           <ModalActions>
-            <Button onClick={onCancel} variant="tertariary" disabled={createBadge.isPending} sx={{fontWeight: '600 !important'}}>
+            <Button
+              onClick={onCancel}
+              variant="tertariary"
+              disabled={createBadge.isPending}
+              sx={{fontWeight: '600 !important'}}
+            >
               Cancel
             </Button>
             <Button

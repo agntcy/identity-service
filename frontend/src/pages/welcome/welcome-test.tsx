@@ -31,7 +31,8 @@ const WelcomeTest = () => {
           <div className="welcome-main-card mx-auto max-w-[1000px] px-[80px]">
             <div className="text-center mx-auto">
               <Typography textAlign="center" variant="body1" paddingTop={2} color="#FBFCFE">
-                Secure your AI agents and MCP servers with trusted identities. Create, verify, and manage agent identities for secure communication
+                Secure your AI agents and MCP servers with trusted identities. Create, verify, and manage agent identities
+                for secure communication
               </Typography>
               <Link
                 href={docs()}
@@ -55,8 +56,8 @@ const WelcomeTest = () => {
                     Verify Identity Badges
                   </Typography>
                   <Typography variant="body1" marginTop={2} marginBottom={2} color="#FBFCFE">
-                    Ensure secure communication and authentication by verifying identities for your MCP servers and AI agents, including those
-                    supporting A2A-compatible protocols like Google A2A.
+                    Ensure secure communication and authentication by verifying identities for your MCP servers and AI
+                    agents, including those supporting A2A-compatible protocols like Google A2A.
                   </Typography>
                   <div className="absolute bottom-10 transform translate-y-1/2 left-1/2 -translate-x-1/2 w-full">
                     <RouterLink to={PATHS.verifyIdentity}>
@@ -83,17 +84,25 @@ const WelcomeTest = () => {
                     Register Agents
                   </Typography>
                   <Typography variant="body1" marginTop={2} marginBottom={2} color="#FBFCFE">
-                    Register your AI agents and MCP servers, including those supporting A2A-compatible protocols like Google A2A, to create and manage
-                    identities with support for policies and access controls.
+                    Register your AI agents and MCP servers, including those supporting A2A-compatible protocols like Google
+                    A2A, to create and manage identities with support for policies and access controls.
                   </Typography>
                   <div className="absolute bottom-10 transform translate-y-1/2 left-1/2 -translate-x-1/2 w-full">
                     <div className="flex justify-center items-center gap-4">
-                      <Button variant="outlined" onClick={() => login?.()} sx={{fontWeight: '600 !important', color: '#FBFCFE !important'}}>
+                      <Button
+                        variant="outlined"
+                        onClick={() => login?.()}
+                        sx={{fontWeight: '600 !important', color: '#FBFCFE !important'}}
+                      >
                         Log In
                       </Button>
                       <Button
                         onClick={() => register?.()}
-                        sx={{fontWeight: '600 !important', background: '#FBAF45 !important', color: '#00142B'}}
+                        sx={{
+                          fontWeight: '600 !important',
+                          background: '#FBAF45 !important',
+                          color: '#00142B'
+                        }}
                         variant="primary"
                       >
                         Sign Up

@@ -14,7 +14,11 @@ class SettingsAPIClass extends SettingsApi.Api<Settings> {
   protected authInfo: AuthInfo | null | undefined;
   protected retry = false;
   protected tokenExpiredHttpHandler?: () => Promise<AuthInfo | undefined>;
-  protected logout?: (params: {revokeAccessToken?: boolean; revokeRefreshToken?: boolean; clearTokensBeforeRedirect?: boolean}) => void;
+  protected logout?: (params: {
+    revokeAccessToken?: boolean;
+    revokeRefreshToken?: boolean;
+    clearTokensBeforeRedirect?: boolean;
+  }) => void;
 
   public getSettings = this.v1Alpha1.getSettings;
   public setUpIssuer = this.v1Alpha1.setUpIssuer;
@@ -41,7 +45,13 @@ class SettingsAPIClass extends SettingsApi.Api<Settings> {
 
   protected resErrInterceptor = async (error: AxiosError) => {
     const originalConfig = error.config;
-    if (this.authInfo && !this.retry && originalConfig && error.response && httpErrorsAuth.includes(error.response?.status)) {
+    if (
+      this.authInfo &&
+      !this.retry &&
+      originalConfig &&
+      error.response &&
+      httpErrorsAuth.includes(error.response?.status)
+    ) {
       this.retry = true;
       const message = (error.response.data as {message?: string}).message;
       if (this.tokenExpiredHttpHandler && !message?.includes(USER_NOT_AUTH)) {
@@ -74,7 +84,11 @@ class SettingsAPIClass extends SettingsApi.Api<Settings> {
 
   public setTokenExpiredHandlers(handlers: {
     tokenExpiredHttpHandler?: () => Promise<AuthInfo | undefined>;
-    logout?: (params: {revokeAccessToken?: boolean; revokeRefreshToken?: boolean; clearTokensBeforeRedirect?: boolean}) => void;
+    logout?: (params: {
+      revokeAccessToken?: boolean;
+      revokeRefreshToken?: boolean;
+      clearTokensBeforeRedirect?: boolean;
+    }) => void;
   }) {
     this.tokenExpiredHttpHandler = handlers.tokenExpiredHttpHandler;
     this.logout = handlers.logout;

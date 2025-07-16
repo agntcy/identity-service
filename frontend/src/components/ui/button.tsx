@@ -17,7 +17,8 @@ const buttonVariants = cva(
       variant: {
         primary:
           'button-text text-[16px] bg-[#187ADC] text-[#E8E9EA] shadow-xs text-[#E8E9EA] hover:bg-[#79B9FF] disabled:bg-[#0051AF66] disabled:text-[#E8F1FF]',
-        secondary: 'button-text text-[16px] bg-[#062242] text-[#E8E9EA] shadow-xs hover:bg-[#263B62] disabled:bg-[#00142B66] disabled:text-[#FBFCFE]',
+        secondary:
+          'button-text text-[16px] bg-[#062242] text-[#E8E9EA] shadow-xs hover:bg-[#263B62] disabled:bg-[#00142B66] disabled:text-[#FBFCFE]',
         outline:
           'button-text text-[16px] border-2 border-[#FBAB2C] text-[#00142B] bg-transparent hover:border-[#FFD7A2] hover:text-[#0D274D] disabled:border-[#FBAF4566] disabled:text-[#777D85]',
         tertariary: 'button-text text-[16px] bg-transparent text-[#187ADC] hover:text-[#79B9FF] disabled:text-[#0051AF66]',

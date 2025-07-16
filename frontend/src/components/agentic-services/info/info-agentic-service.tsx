@@ -13,7 +13,13 @@ import {useFeatureFlagsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
 import {useAnalytics} from '@/hooks';
 
-export const InfoAgenticService = ({app, onChangeReissueBadge}: {app?: App; onChangeReissueBadge?: (value: boolean) => void}) => {
+export const InfoAgenticService = ({
+  app,
+  onChangeReissueBadge
+}: {
+  app?: App;
+  onChangeReissueBadge?: (value: boolean) => void;
+}) => {
   const [searchParams] = useSearchParams();
   const viewHelper = searchParams.get('view');
 

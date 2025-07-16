@@ -77,7 +77,13 @@ export const PolicyForm = ({isLoading = false}: {isLoading?: boolean}) => {
                   <FormItem>
                     <FormLabel className="form-label">Description</FormLabel>
                     <FormControl>
-                      <Textarea className="resize-none" rows={4} placeholder="Type the description..." {...field} disabled={isLoading} />
+                      <Textarea
+                        className="resize-none"
+                        rows={4}
+                        placeholder="Type the description..."
+                        {...field}
+                        disabled={isLoading}
+                      />
                     </FormControl>
                   </FormItem>
                 )}
@@ -103,7 +109,12 @@ export const PolicyForm = ({isLoading = false}: {isLoading?: boolean}) => {
                           sx={{
                             height: '36px',
                             marginTop: 0,
-                            '&.MuiInputBase-root': {backgroundColor: '#FBFCFE', marginTop: 0, border: '2px solid #D5DFF7', height: '36px'},
+                            '&.MuiInputBase-root': {
+                              backgroundColor: '#FBFCFE',
+                              marginTop: 0,
+                              border: '2px solid #D5DFF7',
+                              height: '36px'
+                            },
                             '& .MuiSelect-select': {backgroundColor: '#fbfcfe', color: '#777D85'},
                             '& .MuiSelect-icon': {
                               color: 'currentColor'
@@ -112,14 +123,21 @@ export const PolicyForm = ({isLoading = false}: {isLoading?: boolean}) => {
                           renderValue={(select: any) => {
                             if (!select) {
                               return (
-                                <Typography variant="body2" fontSize={14} sx={(theme) => ({color: theme.palette.vars.baseTextWeak})}>
+                                <Typography
+                                  variant="body2"
+                                  fontSize={14}
+                                  sx={(theme) => ({color: theme.palette.vars.baseTextWeak})}
+                                >
                                   Select agentic service...
                                 </Typography>
                               );
                             }
                             return (
                               <div className="mb-[2px]">
-                                <Tag size={GeneralSize.Small} icon={optionAgenticServices.find((option) => option.value === select)?.icon}>
+                                <Tag
+                                  size={GeneralSize.Small}
+                                  icon={optionAgenticServices.find((option) => option.value === select)?.icon}
+                                >
                                   {optionAgenticServices.find((option) => option.value === select)?.label}
                                 </Tag>
                               </div>
@@ -132,7 +150,11 @@ export const PolicyForm = ({isLoading = false}: {isLoading?: boolean}) => {
                             <MenuItem value="" disabled>
                               <div className="flex items-center gap-2">
                                 <Skeleton variant="circular" width={20} height={20} />
-                                <Typography variant="body2" fontSize={14} sx={(theme) => ({color: theme.palette.vars.baseTextWeak})}>
+                                <Typography
+                                  variant="body2"
+                                  fontSize={14}
+                                  sx={(theme) => ({color: theme.palette.vars.baseTextWeak})}
+                                >
                                   No agentic services available
                                 </Typography>
                               </div>

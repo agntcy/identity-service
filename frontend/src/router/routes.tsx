@@ -23,7 +23,9 @@ const Welcome = React.lazy(() => import('@/pages/welcome/welcome'));
 
 // Settings Identity Provider
 const IdentityProvider = React.lazy(() => import('@/pages/settings/identity-provider/identity-provider'));
-const ConnectionIdentityProvider = React.lazy(() => import('@/pages/settings/identity-provider/connection-identity-provider'));
+const ConnectionIdentityProvider = React.lazy(
+  () => import('@/pages/settings/identity-provider/connection-identity-provider')
+);
 
 // Dashboard
 const Dashboard = React.lazy(() => import('@/pages/dashboard/dashboard'));

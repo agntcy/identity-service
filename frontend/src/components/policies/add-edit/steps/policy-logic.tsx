@@ -18,7 +18,13 @@ import {Separator} from '@/components/ui/separator';
 import {TagActionTask} from '@/components/shared/tag-action-task';
 import {useAnalytics} from '@/hooks';
 
-export const PolicyLogic = ({isLoading = false, policyLogicForm}: {policyLogicForm: UseFormReturn<PolicyLogicyFormValues>; isLoading?: boolean}) => {
+export const PolicyLogic = ({
+  isLoading = false,
+  policyLogicForm
+}: {
+  policyLogicForm: UseFormReturn<PolicyLogicyFormValues>;
+  isLoading?: boolean;
+}) => {
   const {
     fields,
     append: appendRule,
@@ -64,7 +70,10 @@ export const PolicyLogic = ({isLoading = false, policyLogicForm}: {policyLogicFo
     return (
       <div className="flex gap-4 items-center h-[24px]">
         <Separator orientation="vertical" />
-        <TagActionTask action={rule?.action} text={labels.rulesActions[rule?.action ?? RuleAction.RULE_ACTION_UNSPECIFIED]} />
+        <TagActionTask
+          action={rule?.action}
+          text={labels.rulesActions[rule?.action ?? RuleAction.RULE_ACTION_UNSPECIFIED]}
+        />
         <Tag size={GeneralSize.Medium}>
           {rule?.tasks?.length || 0} {rule?.tasks?.length && rule?.tasks?.length > 1 ? 'Tasks' : 'Task'}
         </Tag>

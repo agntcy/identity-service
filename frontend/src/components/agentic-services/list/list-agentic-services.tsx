@@ -146,7 +146,12 @@ export const ListAgenticServices = () => {
             data={data?.apps || []}
             isLoading={isLoading || deleteMutation.isPending}
             muiTableBodyRowProps={({row}) => ({
-              sx: {cursor: 'pointer', '& .MuiIconButton-root': {color: (theme) => theme.palette.vars.interactiveSecondaryDefaultDefault}},
+              sx: {
+                cursor: 'pointer',
+                '& .MuiIconButton-root': {
+                  color: (theme) => theme.palette.vars.interactiveSecondaryDefaultDefault
+                }
+              },
               onClick: () => {
                 analyticsTrack('CLICK_NAVIGATION_AGENTIC_SERVICE_INFO', {
                   type: row.original.type
@@ -283,13 +288,16 @@ export const ListAgenticServices = () => {
               <>
                 <br />
                 <br />
-                <strong>Note:</strong> If this agentic service is a TBAC service, it will also remove the associated TBAC policies.
+                <strong>Note:</strong> If this agentic service is a TBAC service, it will also remove the associated TBAC
+                policies.
                 <br />
                 <br />
                 Confirm policies{' '}
                 <Link
                   href={(() => {
-                    const basePath = generatePath(PATHS.agenticServices.info, {id: tempApp?.id || ''});
+                    const basePath = generatePath(PATHS.agenticServices.info, {
+                      id: tempApp?.id || ''
+                    });
                     const searchParams = new URLSearchParams();
                     searchParams.set('view', 'policies-assigned');
                     return `${basePath}?${searchParams.toString()}`;

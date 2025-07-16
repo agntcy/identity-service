@@ -98,7 +98,12 @@ export const ListOrganizations = () => {
             data={data?.tenants || []}
             isLoading={isLoading || isFetching}
             muiTableBodyRowProps={({row}) => ({
-              sx: {cursor: 'pointer', '& .MuiIconButton-root': {color: (theme) => theme.palette.vars.interactiveSecondaryDefaultDefault}},
+              sx: {
+                cursor: 'pointer',
+                '& .MuiIconButton-root': {
+                  color: (theme) => theme.palette.vars.interactiveSecondaryDefaultDefault
+                }
+              },
               onClick: () => {
                 if (currentTenantId !== row.original.id) {
                   toast({
@@ -108,7 +113,9 @@ export const ListOrganizations = () => {
                   });
                 } else {
                   analyticsTrack('CLICK_ORGANIZATION_INFO');
-                  const path = generatePath(PATHS.settings.organizationsAndUsers.info, {id: row.original?.id});
+                  const path = generatePath(PATHS.settings.organizationsAndUsers.info, {
+                    id: row.original?.id
+                  });
                   void navigate(path, {replace: true});
                 }
               }
@@ -154,7 +161,9 @@ export const ListOrganizations = () => {
                   key="edit-org"
                   onClick={() => {
                     analyticsTrack('CLICK_NAVIGATION_EDIT_ORGANIZATION');
-                    const path = generatePath(PATHS.settings.organizationsAndUsers.edit, {id: row.original.id});
+                    const path = generatePath(PATHS.settings.organizationsAndUsers.edit, {
+                      id: row.original.id
+                    });
                     void navigate(path, {replace: true});
                   }}
                   sx={{display: 'flex', alignItems: 'center', gap: '8px'}}

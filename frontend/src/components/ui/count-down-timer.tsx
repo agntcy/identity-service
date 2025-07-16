@@ -3,7 +3,15 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {Box, BoxProps, CircularProgress, circularProgressClasses, CircularProgressProps, Typography, TypographyProps} from '@mui/material';
+import {
+  Box,
+  BoxProps,
+  CircularProgress,
+  circularProgressClasses,
+  CircularProgressProps,
+  Typography,
+  TypographyProps
+} from '@mui/material';
 import {useEffect, useState, useMemo} from 'react';
 
 const TIMER = 1000; // 1 second
@@ -16,7 +24,14 @@ interface CountDownTimerProps extends CircularProgressProps {
   onComplete?: () => void;
 }
 
-export const CountDownTimer = ({duration, showText = true, onComplete, boxProps, textProps, ...props}: CountDownTimerProps) => {
+export const CountDownTimer = ({
+  duration,
+  showText = true,
+  onComplete,
+  boxProps,
+  textProps,
+  ...props
+}: CountDownTimerProps) => {
   const [timeDuration, setTimeDuration] = useState(duration);
   const [countdownPercentage, setCountdownPercentage] = useState(100);
 

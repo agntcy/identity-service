@@ -14,7 +14,11 @@ class AgenticServicesAPIClass extends AgenticServiceApi.Api<App> {
   protected authInfo: AuthInfo | null | undefined;
   protected retry = false;
   protected tokenExpiredHttpHandler?: () => Promise<AuthInfo | undefined>;
-  protected logout?: (params: {revokeAccessToken?: boolean; revokeRefreshToken?: boolean; clearTokensBeforeRedirect?: boolean}) => void;
+  protected logout?: (params: {
+    revokeAccessToken?: boolean;
+    revokeRefreshToken?: boolean;
+    clearTokensBeforeRedirect?: boolean;
+  }) => void;
 
   public getApp = this.v1Alpha1.getApp;
   public createApp = this.v1Alpha1.createApp;
@@ -46,7 +50,13 @@ class AgenticServicesAPIClass extends AgenticServiceApi.Api<App> {
 
   protected resErrInterceptor = async (error: AxiosError) => {
     const originalConfig = error.config;
-    if (this.authInfo && !this.retry && originalConfig && error.response && httpErrorsAuth.includes(error.response?.status)) {
+    if (
+      this.authInfo &&
+      !this.retry &&
+      originalConfig &&
+      error.response &&
+      httpErrorsAuth.includes(error.response?.status)
+    ) {
       this.retry = true;
       const message = (error.response.data as {message?: string}).message;
       if (this.tokenExpiredHttpHandler && !message?.includes(USER_NOT_AUTH)) {
@@ -79,7 +89,11 @@ class AgenticServicesAPIClass extends AgenticServiceApi.Api<App> {
 
   public setTokenExpiredHandlers(handlers: {
     tokenExpiredHttpHandler?: () => Promise<AuthInfo | undefined>;
-    logout?: (params: {revokeAccessToken?: boolean; revokeRefreshToken?: boolean; clearTokensBeforeRedirect?: boolean}) => void;
+    logout?: (params: {
+      revokeAccessToken?: boolean;
+      revokeRefreshToken?: boolean;
+      clearTokensBeforeRedirect?: boolean;
+    }) => void;
   }) {
     this.tokenExpiredHttpHandler = handlers.tokenExpiredHttpHandler;
     this.logout = handlers.logout;

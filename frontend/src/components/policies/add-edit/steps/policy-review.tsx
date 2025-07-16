@@ -5,7 +5,17 @@
  */
 
 import {Card, CardContent} from '@/components/ui/card';
-import {Accordion, Divider, EmptyState, GeneralSize, Pagination, Table, Tag, TagStatus, Typography} from '@outshift/spark-design';
+import {
+  Accordion,
+  Divider,
+  EmptyState,
+  GeneralSize,
+  Pagination,
+  Table,
+  Tag,
+  TagStatus,
+  Typography
+} from '@outshift/spark-design';
 import {useCallback, useMemo, useState} from 'react';
 import KeyValue, {KeyValuePair} from '@/components/ui/key-value';
 import {AgenticServiceType} from '@/components/shared/agentic-service-type';
@@ -172,7 +182,9 @@ export const PolicyReview = () => {
             boxShadow: 'none'
           }
         }}
-        renderEmptyRowsFallback={() => <EmptyState title="No tasks found" containerProps={{paddingBottom: '40px'}} actionTitle="Add Policy" />}
+        renderEmptyRowsFallback={() => (
+          <EmptyState title="No tasks found" containerProps={{paddingBottom: '40px'}} actionTitle="Add Policy" />
+        )}
       />
     );
   };
@@ -213,7 +225,10 @@ export const PolicyReview = () => {
                         (
                           <div className="flex gap-4 items-center h-[24px]">
                             <Separator orientation="vertical" />
-                            <TagActionTask action={rule.action} text={labels.rulesActions[rule.action ?? RuleAction.RULE_ACTION_UNSPECIFIED]} />
+                            <TagActionTask
+                              action={rule.action}
+                              text={labels.rulesActions[rule.action ?? RuleAction.RULE_ACTION_UNSPECIFIED]}
+                            />
                             <Tag size={GeneralSize.Medium}>
                               {rule.tasks?.length || 0} {rule?.tasks?.length && rule?.tasks?.length > 1 ? 'Tasks' : 'Task'}
                             </Tag>

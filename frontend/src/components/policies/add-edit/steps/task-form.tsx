@@ -100,7 +100,9 @@ export const TaskForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
         <Typography variant="captionSemibold">{group.label}</Typography>
       </ListSubheader>,
       items,
-      items.length > 0 && items.length < group.values.length ? <Divider key={`${group.groupBy}-divider`} sx={{margin: '4px 0'}} /> : null
+      items.length > 0 && items.length < group.values.length ? (
+        <Divider key={`${group.groupBy}-divider`} sx={{margin: '4px 0'}} />
+      ) : null
     ];
   };
 
@@ -127,7 +129,12 @@ export const TaskForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
                     sx={{
                       height: '36px',
                       marginTop: 0,
-                      '&.MuiInputBase-root': {backgroundColor: '#FBFCFE', marginTop: 0, border: '2px solid #D5DFF7', height: '36px'},
+                      '&.MuiInputBase-root': {
+                        backgroundColor: '#FBFCFE',
+                        marginTop: 0,
+                        border: '2px solid #D5DFF7',
+                        height: '36px'
+                      },
                       '& .MuiSelect-select': {backgroundColor: '#fbfcfe', color: '#777D85'},
                       '& .MuiSelect-icon': {
                         color: 'currentColor'
@@ -136,7 +143,11 @@ export const TaskForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
                     renderValue={(selected: string[]) => {
                       if (!selected || selected.length === 0) {
                         return (
-                          <Typography variant="body2" fontSize={14} sx={(theme) => ({color: theme.palette.vars.baseTextWeak})}>
+                          <Typography
+                            variant="body2"
+                            fontSize={14}
+                            sx={(theme) => ({color: theme.palette.vars.baseTextWeak})}
+                          >
                             Select tasks...
                           </Typography>
                         );
@@ -145,7 +156,8 @@ export const TaskForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
                         <div className="mt-[1px]">
                           <Tags
                             items={selected.map((value) => ({
-                              valueFormatter: () => optionsTasksValues.find((option) => option.value === value)?.label || 'Unknown Task',
+                              valueFormatter: () =>
+                                optionsTasksValues.find((option) => option.value === value)?.label || 'Unknown Task',
                               value
                             }))}
                             showOnlyFirst={false}
@@ -163,7 +175,11 @@ export const TaskForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
                       <MenuItem value="" disabled>
                         <div className="flex items-center gap-2">
                           <Skeleton variant="circular" width={20} height={20} />
-                          <Typography variant="body2" fontSize={14} sx={(theme) => ({color: theme.palette.vars.baseTextWeak})}>
+                          <Typography
+                            variant="body2"
+                            fontSize={14}
+                            sx={(theme) => ({color: theme.palette.vars.baseTextWeak})}
+                          >
                             No tasks available
                           </Typography>
                         </div>
@@ -193,7 +209,12 @@ export const TaskForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
                   sx={{
                     height: '36px',
                     marginTop: 0,
-                    '&.MuiInputBase-root': {backgroundColor: '#FBFCFE', marginTop: 0, border: '2px solid #D5DFF7', height: '36px'},
+                    '&.MuiInputBase-root': {
+                      backgroundColor: '#FBFCFE',
+                      marginTop: 0,
+                      border: '2px solid #D5DFF7',
+                      height: '36px'
+                    },
                     '& .MuiSelect-select': {backgroundColor: '#fbfcfe', color: '#777D85'},
                     '& .MuiSelect-icon': {
                       color: 'currentColor'

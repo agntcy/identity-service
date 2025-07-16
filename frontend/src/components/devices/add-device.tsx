@@ -3,7 +3,16 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {Button, EmptyState, Modal, ModalActions, ModalContent, ModalSubtitle, ModalTitle, toast} from '@outshift/spark-design';
+import {
+  Button,
+  EmptyState,
+  Modal,
+  ModalActions,
+  ModalContent,
+  ModalSubtitle,
+  ModalTitle,
+  toast
+} from '@outshift/spark-design';
 import {Card} from '../ui/card';
 import {PlusIcon} from 'lucide-react';
 import {useCallback, useMemo, useState} from 'react';
@@ -84,7 +93,13 @@ export const AddDevice = () => {
         </ModalSubtitle>
         <ModalContent>
           <div style={{height: 'auto', margin: '0 auto', maxWidth: '200px', width: '100%'}} className="pt-4">
-            <QRCode size={256} style={{height: 'auto', maxWidth: '100%', width: '100%'}} viewBox={`0 0 256 256`} bgColor="#fbfcfe" value={link} />
+            <QRCode
+              size={256}
+              style={{height: 'auto', maxWidth: '100%', width: '100%'}}
+              viewBox={`0 0 256 256`}
+              bgColor="#fbfcfe"
+              value={link}
+            />
           </div>
         </ModalContent>
         <ModalActions>

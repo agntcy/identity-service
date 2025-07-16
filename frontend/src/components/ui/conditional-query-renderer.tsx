@@ -121,8 +121,16 @@ export const ConditionalQueryRenderer: React.FC<React.PropsWithChildren<Conditio
 
   if (useContainer && unreadyResult) {
     return (
-      <Card className={cn('flex flex-col gap-2 items-center p-[24px] bg-[#F5F8FD] w-full h-full', classNameContainer, useSkeleton)}>
-        <div className="bg-[#F5F8FD] p-[24px] rounded-[8px] w-full h-full justify-center flex flex-col items-center">{unreadyResult}</div>
+      <Card
+        className={cn(
+          'flex flex-col gap-2 items-center p-[24px] bg-[#F5F8FD] w-full h-full',
+          classNameContainer,
+          useSkeleton
+        )}
+      >
+        <div className="bg-[#F5F8FD] p-[24px] rounded-[8px] w-full h-full justify-center flex flex-col items-center">
+          {unreadyResult}
+        </div>
       </Card>
     );
   }
@@ -130,7 +138,10 @@ export const ConditionalQueryRenderer: React.FC<React.PropsWithChildren<Conditio
   if (unreadyResult) {
     return (
       <div className={cn('flex flex-col gap-2 items-center w-full h-full', classNameContainer, useSkeleton)}>
-        <div className="bg-[#F5F8FD] p-[24px] rounded-[8px] w-full h-full justify-center flex flex-col items-center"> {unreadyResult}</div>
+        <div className="bg-[#F5F8FD] p-[24px] rounded-[8px] w-full h-full justify-center flex flex-col items-center">
+          {' '}
+          {unreadyResult}
+        </div>
       </div>
     );
   }

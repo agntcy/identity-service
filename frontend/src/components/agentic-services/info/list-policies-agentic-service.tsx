@@ -80,7 +80,12 @@ export const ListPoliciesAgenticService = ({appId, mode = 'assinged'}: {appId?: 
             data={dataPolicies}
             isLoading={isLoading}
             muiTableBodyRowProps={({row, isDetailPanel}) => ({
-              sx: {cursor: 'pointer', '& .MuiIconButton-root': {color: (theme) => theme.palette.vars.interactiveSecondaryDefaultDefault}},
+              sx: {
+                cursor: 'pointer',
+                '& .MuiIconButton-root': {
+                  color: (theme) => theme.palette.vars.interactiveSecondaryDefaultDefault
+                }
+              },
               onClick: () => {
                 if (isDetailPanel) {
                   return;
