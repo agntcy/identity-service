@@ -83,7 +83,7 @@ type Rule struct {
 }
 
 // This function checks whether a Rule is allowing appID to be called.
-// If the app is an MCP server than a check agains a specific toolName
+// If the app is an MCP server than a check against a specific toolName
 // is made.
 func (r *Rule) CanInvoke(appID, toolName string) bool {
 	for _, task := range r.Tasks {
@@ -126,12 +126,12 @@ type Policy struct {
 	UpdatedAt *time.Time `json:"updated_at,omitempty" protobuf:"google.protobuf.Timestamp,7,opt,name=updated_at"`
 }
 
-func (p *Policy) CanInvoke(appID, toolName string) bool {
+func (p *Policy) CanInvoke(appID, toolName string) *Rule {
 	for _, rule := range p.Rules {
 		if rule.CanInvoke(appID, toolName) {
-			return true
+			return rule
 		}
 	}
 
-	return false
+	return nil
 }

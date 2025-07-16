@@ -495,6 +495,7 @@ func (r *repository) GetAllPolicies(
 	}
 
 	policies := make([]*types.Policy, 0)
+
 	for _, row := range rows {
 		var policy *types.Policy
 

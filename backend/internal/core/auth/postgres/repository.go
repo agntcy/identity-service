@@ -5,6 +5,7 @@ package postgres
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	sessioncore "github.com/agntcy/identity-platform/internal/core/auth"
@@ -16,6 +17,7 @@ import (
 	"github.com/agntcy/identity-platform/internal/pkg/strutil"
 	"github.com/agntcy/identity-platform/pkg/db"
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 const (
@@ -125,6 +127,51 @@ func (r *postgresRepository) Update(ctx context.Context, session *types.Session)
 		return errutil.Err(
 			result.Error, "there was an error updating the session",
 		)
+	}
+
+	return nil
+}
+
+func (r *postgresRepository) CreateDeviceOTP(ctx context.Context, otp *types.SessionDeviceOTP) error {
+	model := newSessionDeviceOTPModel(otp)
+
+	result := r.dbContext.Client().Create(model)
+	if result.Error != nil {
+		return errutil.Err(
+			result.Error, "there was an error creating the device OTP",
+		)
+	}
+
+	return nil
+}
+
+func (r *postgresRepository) GetDeviceOTP(
+	ctx context.Context,
+	id string,
+) (*types.SessionDeviceOTP, error) {
+	var otp SessionDeviceOTP
+
+	result := r.dbContext.Client().First(&otp, uuid.MustParse(id))
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return nil, errutil.Err(result.Error, "OTP not found")
+		}
+
+		return nil, errutil.Err(result.Error, "there was an error fetching the OTP")
+	}
+
+	return otp.ToCoreType(), nil
+}
+
+func (r *postgresRepository) UpdateDeviceOTP(
+	ctxt context.Context,
+	otp *types.SessionDeviceOTP,
+) error {
+	model := newSessionDeviceOTPModel(otp)
+
+	err := r.dbContext.Client().Save(model).Error
+	if err != nil {
+		return errutil.Err(err, "there was an error updating the device OTP")
 	}
 
 	return nil

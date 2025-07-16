@@ -6,11 +6,13 @@ package bff
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 
 	webpush "github.com/SherClockHolmes/webpush-go"
 	authtypes "github.com/agntcy/identity-platform/internal/core/auth/types"
 	devicetypes "github.com/agntcy/identity-platform/internal/core/device/types"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
+	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
 )
 
 const (
@@ -24,9 +26,11 @@ type NotificationService interface {
 		ctx context.Context,
 		device *devicetypes.Device,
 	) error
-	SendNotification(
+	SendOTPNotification(
 		ctx context.Context,
+		device *devicetypes.Device,
 		session *authtypes.Session,
+		otp *authtypes.SessionDeviceOTP,
 	) error
 }
 
@@ -53,27 +57,44 @@ func (s *notificationService) TestNotification(
 	return s.sendWebPushNotification(
 		ctx,
 		&device.SubscriptionToken,
-		testMessage,
+		&devicetypes.Notification{
+			Body: testMessage,
+			Type: devicetypes.NOTIFICATION_TYPE_INFO,
+		},
 	)
 }
 
-func (s *notificationService) SendNotification(
+func (s *notificationService) SendOTPNotification(
 	ctx context.Context,
+	device *devicetypes.Device,
 	session *authtypes.Session,
+	otp *authtypes.SessionDeviceOTP,
 ) error {
 	if session == nil {
 		return nil // No session to notify
 	}
 
-	// TODO: Add notification logic and wait here
-
-	return nil
+	return s.sendWebPushNotification(
+		ctx,
+		&device.SubscriptionToken,
+		&devicetypes.Notification{
+			Body: fmt.Sprintf("%s is trying to access %s", session.OwnerAppID, ptrutil.DerefStr(session.AppID)),
+			Type: devicetypes.NOTIFICATION_TYPE_APPROVAL_REQUEST,
+			ApprovalRequestInfo: &devicetypes.ApprovalRequestInfo{
+				CallerApp: session.OwnerAppID,
+				CalleeApp: session.AppID,
+				ToolName:  session.ToolName,
+				OTP:       otp.Value,
+				DeviceID:  otp.DeviceID,
+			},
+		},
+	)
 }
 
 func (s *notificationService) sendWebPushNotification(
 	_ context.Context,
 	subscriptionToken *string,
-	message string,
+	notification *devicetypes.Notification,
 ) error {
 	if subscriptionToken == nil {
 		return errutil.Err(
@@ -93,19 +114,28 @@ func (s *notificationService) sendWebPushNotification(
 		)
 	}
 
+	payload, err := json.Marshal(notification)
+	if err != nil {
+		return errutil.Err(err, "failed to marshal notification payload")
+	}
+
 	// Send Notification
-	resp, err := webpush.SendNotification([]byte(message), &webpush.Subscription{
-		Endpoint: subscription["endpoint"].(string),
-		Keys: webpush.Keys{
-			P256dh: subscription["p256dh"].(string),
-			Auth:   subscription["auth"].(string),
+	resp, err := webpush.SendNotification(
+		payload,
+		&webpush.Subscription{
+			Endpoint: subscription["endpoint"].(string),
+			Keys: webpush.Keys{
+				P256dh: subscription["p256dh"].(string),
+				Auth:   subscription["auth"].(string),
+			},
 		},
-	}, &webpush.Options{
-		Subscriber:      s.subscriber,
-		VAPIDPublicKey:  s.vapidPublicKey,
-		VAPIDPrivateKey: s.vapidPrivateKey,
-		TTL:             ttl,
-	})
+		&webpush.Options{
+			Subscriber:      s.subscriber,
+			VAPIDPublicKey:  s.vapidPublicKey,
+			VAPIDPrivateKey: s.vapidPrivateKey,
+			TTL:             ttl,
+		},
+	)
 	if err != nil {
 		return err
 	}

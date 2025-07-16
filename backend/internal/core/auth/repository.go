@@ -14,4 +14,7 @@ type Repository interface {
 	GetByAuthorizationCode(ctx context.Context, code string) (*types.Session, error)
 	GetByAccessToken(ctx context.Context, accessToken string) (*types.Session, error)
 	Update(ctx context.Context, session *types.Session) error
+	CreateDeviceOTP(ctx context.Context, otp *types.SessionDeviceOTP) error
+	GetDeviceOTP(ctx context.Context, id string) (*types.SessionDeviceOTP, error)
+	UpdateDeviceOTP(ctxt context.Context, otp *types.SessionDeviceOTP) error
 }
