@@ -7,6 +7,7 @@ import logging
 import os
 
 import grpc
+from dotenv import load_dotenv
 
 from identityplatform import constant
 
@@ -18,6 +19,8 @@ class Client:  # pylint: disable=too-few-public-methods
 
     def __init__(self, api_key, async_mode=False):
         """Initialize the client."""
+        load_dotenv()
+
         # Get credentials
         grpc_server_url = os.environ.get(
             "IDENTITY_PLATFORM_GRPC_SERVER_URL", constant.DEFAULT_GRPC_URL

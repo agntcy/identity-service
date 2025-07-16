@@ -9,6 +9,7 @@ from importlib import import_module
 from pkgutil import iter_modules
 
 import agntcy.identity.platform.v1alpha1
+from dotenv import load_dotenv
 from google.protobuf import empty_pb2
 
 from identityplatform import client
@@ -44,6 +45,7 @@ class IdentityPlatformSdk:
         """
         # Try to get the API Key from the environment variable
         if api_key is None:
+            load_dotenv()
             api_key = os.environ.get("IDENTITY_PLATFORM_API_KEY")
 
         # Validate API Key
