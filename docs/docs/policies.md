@@ -5,7 +5,7 @@ title: Creating Policies for Agentic Services (Preview)
 
 # Creating Policies for Agentic Services
 
-The Policies section in the AGNTCY Agent Identity SaaS allows administrators to define rules and permissions for Agentic Services.
+The Policies section in the AGNTCY Agent Identity Platform allows administrators to define rules and permissions for Agentic Services.
 This guide will walk you through the process of creating, editing, and managing policies,
 ensuring your Agentic Services operate within the desired constraints and capabilities.
 
