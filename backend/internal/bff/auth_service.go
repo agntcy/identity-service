@@ -5,11 +5,13 @@ package bff
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	appcore "github.com/agntcy/identity-platform/internal/core/app"
 	authcore "github.com/agntcy/identity-platform/internal/core/auth"
 	authtypes "github.com/agntcy/identity-platform/internal/core/auth/types"
+	devicecore "github.com/agntcy/identity-platform/internal/core/device"
 	idpcore "github.com/agntcy/identity-platform/internal/core/idp"
 	policycore "github.com/agntcy/identity-platform/internal/core/policy"
 	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
@@ -34,6 +36,13 @@ type AuthService interface {
 		accessToken string,
 		toolName string,
 	) error
+	ApproveToken(
+		ctx context.Context,
+		deviceID string,
+		sessionID string,
+		otpValue string,
+		approve bool,
+	) error
 }
 
 type authService struct {
@@ -42,6 +51,8 @@ type authService struct {
 	oidcAuthenticator oidc.Authenticator
 	appRepository     appcore.Repository
 	policyEvaluator   policycore.Evaluator
+	deviceRepository  devicecore.Repository
+	notifService      NotificationService
 }
 
 func NewAuthService(
@@ -50,6 +61,8 @@ func NewAuthService(
 	oidcAuthenticator oidc.Authenticator,
 	appRepository appcore.Repository,
 	policyEvaluator policycore.Evaluator,
+	deviceRepository devicecore.Repository,
+	notifService NotificationService,
 ) AuthService {
 	return &authService{
 		authRepository:    authRepository,
@@ -57,6 +70,8 @@ func NewAuthService(
 		oidcAuthenticator: oidcAuthenticator,
 		appRepository:     appRepository,
 		policyEvaluator:   policyEvaluator,
+		deviceRepository:  deviceRepository,
+		notifService:      notifService,
 	}
 }
 
@@ -94,7 +109,7 @@ func (s *authService) Authorize(
 		}
 
 		// Evaluate the session based on existing policies
-		err = s.policyEvaluator.Evaluate(ctx, app, ownerAppID, ptrutil.DerefStr(toolName))
+		_, err = s.policyEvaluator.Evaluate(ctx, app, ownerAppID, ptrutil.DerefStr(toolName))
 		if err != nil {
 			return nil, err
 		}
@@ -269,15 +284,176 @@ func (s *authService) ExtAuthZ(
 
 	// Evaluate the session based on existing policies
 	// Evaluate based on provided appID and toolName and the session appID, toolName
-	err = s.policyEvaluator.Evaluate(ctx, app, session.OwnerAppID, toolName)
+	rule, err := s.policyEvaluator.Evaluate(ctx, app, session.OwnerAppID, toolName)
 	if err != nil {
 		log.Error("Policy evaluation failed: ", err)
 
 		return err
 	}
 
+	if rule.NeedsApproval {
+		otp, err := s.sendDeviceOTP(ctx, session)
+		if err != nil {
+			return err
+		}
+
+		err = s.waitForDeviceApproval(ctx, otp.ID)
+		if err != nil {
+			return err
+		}
+	}
+
 	// Expire the session
 	session.ExpiresAt = ptrutil.Ptr(time.Now().Add(-time.Hour).Unix())
 
 	return err
+}
+
+func (s *authService) ApproveToken(
+	ctx context.Context,
+	deviceID string,
+	sessionID string,
+	otpValue string,
+	approve bool,
+) error {
+	otp, err := s.authRepository.GetDeviceOTPByValue(ctx, deviceID, sessionID, otpValue)
+	if err != nil {
+		return err
+	}
+
+	if otp == nil {
+		return errors.New("cannot find OTP")
+	}
+
+	if otp.HasExpired() {
+		return errors.New("the OTP is already expired")
+	}
+
+	if otp.Used || otp.Approved != nil {
+		return errors.New("the OTP is already used")
+	}
+
+	otp.Approved = &approve
+	otp.UpdatedAt = ptrutil.Ptr(time.Now().Unix())
+
+	err = s.authRepository.UpdateDeviceOTP(ctx, otp)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *authService) sendDeviceOTP(
+	ctx context.Context,
+	session *authtypes.Session,
+) (*authtypes.SessionDeviceOTP, error) {
+	devices, err := s.deviceRepository.GetDevices(ctx, session.UserID)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(devices) == 0 {
+		return nil, errors.New("no devices registered")
+	}
+
+	device := devices[len(devices)-1]
+
+	otp := authtypes.NewSessionDeviceOTP(session.ID, device.ID)
+
+	err = s.authRepository.CreateDeviceOTP(ctx, otp)
+	if err != nil {
+		return nil, err
+	}
+
+	err = s.notifService.SendOTPNotification(ctx, device, session, otp)
+	if err != nil {
+		return nil, errutil.Err(err, "unable to send notification")
+	}
+
+	return otp, nil
+}
+
+func (s *authService) waitForDeviceApproval(ctx context.Context, otpID string) error {
+	timeout := 60 * time.Second
+	tick := 500 * time.Millisecond
+
+	loopErr := s.activeWaitLoop(
+		timeout,
+		tick,
+		func() (bool, error) {
+			otp, err := s.authRepository.GetDeviceOTP(ctx, otpID)
+			if err != nil {
+				return true, err
+			}
+
+			if otp.Used {
+				return true, errors.New("the OTP is already used")
+			}
+
+			if otp.HasExpired() {
+				return true, errors.New("the OTP is expired")
+			}
+
+			if otp.Approved != nil && !*otp.Approved {
+				return true, errors.New("the OTP has been denied by the user")
+			}
+
+			if otp.Approved != nil && *otp.Approved {
+				return true, nil
+			}
+
+			return false, nil
+		},
+	)
+
+	err := s.flagDeviceOTPAsUsed(ctx, otpID)
+	if err != nil {
+		return err
+	}
+
+	if loopErr == nil {
+		return nil
+	}
+
+	log.Warn(loopErr)
+
+	return errors.New("the user did not approve the invocation")
+}
+
+func (s *authService) flagDeviceOTPAsUsed(ctx context.Context, otpID string) error {
+	otp, err := s.authRepository.GetDeviceOTP(ctx, otpID)
+	if err != nil {
+		return err
+	}
+
+	otp.Used = true
+	otp.UpdatedAt = ptrutil.Ptr(time.Now().Unix())
+
+	return s.authRepository.UpdateDeviceOTP(ctx, otp)
+}
+
+func (s *authService) activeWaitLoop(
+	timeoutDuration time.Duration,
+	tickDuration time.Duration,
+	onTick func() (stop bool, err error),
+) error {
+	timeout := time.After(timeoutDuration)
+	tick := time.Tick(tickDuration)
+
+	for {
+		select {
+		case <-timeout:
+			return errors.New("timeout")
+		case <-tick:
+			stop, err := onTick()
+			if err != nil {
+				return err
+			}
+
+			if stop {
+				return nil
+			}
+		}
+	}
 }

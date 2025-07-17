@@ -4,18 +4,15 @@
 package strutil
 
 import (
+	"crypto/rand" // math/rand is not considered cryptographically secure
 	"fmt"
-	"math/rand"
-	"time"
 )
 
 const extraLength = 2 // for hex encoding
 
 func Random(length int) string {
-	source := rand.NewSource(time.Now().UnixNano())
-	rng := rand.New(source)
 	b := make([]byte, length+extraLength)
-	rng.Read(b)
+	_, _ = rand.Read(b) // Default reader uses OS APIs that never return an error
 
 	return fmt.Sprintf("%x", b)[2 : length+extraLength]
 }

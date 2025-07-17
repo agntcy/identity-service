@@ -137,3 +137,21 @@ func (s *authService) ExtAuthz(
 
 	return &emptypb.Empty{}, nil
 }
+
+func (s *authService) ApproveToken(
+	ctx context.Context,
+	req *identity_platform_sdk_go.ApproveTokenRequest,
+) (*emptypb.Empty, error) {
+	err := s.authSrv.ApproveToken(
+		ctx,
+		req.GetDeviceId(),
+		req.GetSessionId(),
+		req.GetOtp(),
+		req.GetApprove(),
+	)
+	if err != nil {
+		return nil, grpcutil.InternalError(errutil.Err(nil, "failed to approve token"))
+	}
+
+	return &emptypb.Empty{}, nil
+}

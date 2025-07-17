@@ -63,6 +63,19 @@ service AuthService {
       summary: "Handle external authorization requests";
     };
   }
+
+  // Handle manual approval of external authorization requets
+  rpc ApproveToken(ApproveTokenRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v1alpha1/auth/approve_token"
+      body: "*"
+    };
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "ApproveToken";
+      summary: "Handle manual approval of external authorization requets";
+    };
+  }
 }
 
 message AppInfoResponse {
@@ -104,4 +117,18 @@ message ExtAuthzRequest {
 
   // The tool name that will be invoked
   optional string tool_name = 2;
+}
+
+message ApproveTokenRequest {
+  // The device id used to handle the approval requestion
+  string device_id = 1;
+
+  // The session id related to the token that needs to be approved
+  string session_id = 2;
+
+  // The OTP sent to the device related to the request
+  string otp = 3;
+
+  // The action made by the user (true: allow the token, false: deny the token)
+  bool approve = 4;
 }

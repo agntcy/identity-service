@@ -326,6 +326,78 @@ func (x *ExtAuthzRequest) GetToolName() string {
 	return ""
 }
 
+type ApproveTokenRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The device id used to handle the approval requestion
+	DeviceId string `protobuf:"bytes,1,opt,name=device_id,json=deviceId,proto3" json:"device_id,omitempty"`
+	// The session id related to the token that needs to be approved
+	SessionId string `protobuf:"bytes,2,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
+	// The OTP sent to the device related to the request
+	Otp string `protobuf:"bytes,3,opt,name=otp,proto3" json:"otp,omitempty"`
+	// The action made by the user (true: allow the token, false: deny the token)
+	Approve       bool `protobuf:"varint,4,opt,name=approve,proto3" json:"approve,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ApproveTokenRequest) Reset() {
+	*x = ApproveTokenRequest{}
+	mi := &file_agntcy_identity_platform_v1alpha1_auth_service_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ApproveTokenRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ApproveTokenRequest) ProtoMessage() {}
+
+func (x *ApproveTokenRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_agntcy_identity_platform_v1alpha1_auth_service_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ApproveTokenRequest.ProtoReflect.Descriptor instead.
+func (*ApproveTokenRequest) Descriptor() ([]byte, []int) {
+	return file_agntcy_identity_platform_v1alpha1_auth_service_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *ApproveTokenRequest) GetDeviceId() string {
+	if x != nil {
+		return x.DeviceId
+	}
+	return ""
+}
+
+func (x *ApproveTokenRequest) GetSessionId() string {
+	if x != nil {
+		return x.SessionId
+	}
+	return ""
+}
+
+func (x *ApproveTokenRequest) GetOtp() string {
+	if x != nil {
+		return x.Otp
+	}
+	return ""
+}
+
+func (x *ApproveTokenRequest) GetApprove() bool {
+	if x != nil {
+		return x.Approve
+	}
+	return false
+}
+
 var File_agntcy_identity_platform_v1alpha1_auth_service_proto protoreflect.FileDescriptor
 
 const file_agntcy_identity_platform_v1alpha1_auth_service_proto_rawDesc = "" +
@@ -352,12 +424,19 @@ const file_agntcy_identity_platform_v1alpha1_auth_service_proto_rawDesc = "" +
 	"\faccess_token\x18\x01 \x01(\tR\vaccessToken\x12 \n" +
 	"\ttool_name\x18\x02 \x01(\tH\x00R\btoolName\x88\x01\x01B\f\n" +
 	"\n" +
-	"_tool_name2\x84\x06\n" +
+	"_tool_name\"}\n" +
+	"\x13ApproveTokenRequest\x12\x1b\n" +
+	"\tdevice_id\x18\x01 \x01(\tR\bdeviceId\x12\x1d\n" +
+	"\n" +
+	"session_id\x18\x02 \x01(\tR\tsessionId\x12\x10\n" +
+	"\x03otp\x18\x03 \x01(\tR\x03otp\x12\x18\n" +
+	"\aapprove\x18\x04 \x01(\bR\aapprove2\xd9\a\n" +
 	"\vAuthService\x12\x90\x01\n" +
 	"\aAppInfo\x12\x16.google.protobuf.Empty\x1a2.agntcy.identity.platform.v1alpha1.AppInfoResponse\"9\x92A\x17\x12\fGet App Info*\aAppInfo\x82\xd3\xe4\x93\x02\x19\x12\x17/v1alpha1/auth/app_info\x12\xda\x01\n" +
 	"\tAuthorize\x123.agntcy.identity.platform.v1alpha1.AuthorizeRequest\x1a4.agntcy.identity.platform.v1alpha1.AuthorizeResponse\"b\x92A<\x12/Authorize a request from an Agent or MCP Server*\tAuthorize\x82\xd3\xe4\x93\x02\x1d:\x01*\"\x18/v1alpha1/auth/authorize\x12\xc6\x01\n" +
 	"\x05Token\x12/.agntcy.identity.platform.v1alpha1.TokenRequest\x1a0.agntcy.identity.platform.v1alpha1.TokenResponse\"Z\x92A8\x12(Request token for an Agent or MCP Server*\fRequestToken\x82\xd3\xe4\x93\x02\x19:\x01*\"\x14/v1alpha1/auth/token\x12\xb0\x01\n" +
-	"\bExtAuthz\x122.agntcy.identity.platform.v1alpha1.ExtAuthzRequest\x1a\x16.google.protobuf.Empty\"X\x92A2\x12&Handle external authorization requests*\bExtAuthz\x82\xd3\xe4\x93\x02\x1d:\x01*\"\x18/v1alpha1/auth/ext_authz\x1a\t\x92A\x06\n" +
+	"\bExtAuthz\x122.agntcy.identity.platform.v1alpha1.ExtAuthzRequest\x1a\x16.google.protobuf.Empty\"X\x92A2\x12&Handle external authorization requests*\bExtAuthz\x82\xd3\xe4\x93\x02\x1d:\x01*\"\x18/v1alpha1/auth/ext_authz\x12\xd2\x01\n" +
+	"\fApproveToken\x126.agntcy.identity.platform.v1alpha1.ApproveTokenRequest\x1a\x16.google.protobuf.Empty\"r\x92AH\x128Handle manual approval of external authorization requets*\fApproveToken\x82\xd3\xe4\x93\x02!:\x01*\"\x1c/v1alpha1/auth/approve_token\x1a\t\x92A\x06\n" +
 	"\x04AuthBkZigithub.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_gob\x06proto3"
 
 var (
@@ -372,29 +451,32 @@ func file_agntcy_identity_platform_v1alpha1_auth_service_proto_rawDescGZIP() []b
 	return file_agntcy_identity_platform_v1alpha1_auth_service_proto_rawDescData
 }
 
-var file_agntcy_identity_platform_v1alpha1_auth_service_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_agntcy_identity_platform_v1alpha1_auth_service_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_agntcy_identity_platform_v1alpha1_auth_service_proto_goTypes = []any{
-	(*AppInfoResponse)(nil),   // 0: agntcy.identity.platform.v1alpha1.AppInfoResponse
-	(*AuthorizeRequest)(nil),  // 1: agntcy.identity.platform.v1alpha1.AuthorizeRequest
-	(*AuthorizeResponse)(nil), // 2: agntcy.identity.platform.v1alpha1.AuthorizeResponse
-	(*TokenRequest)(nil),      // 3: agntcy.identity.platform.v1alpha1.TokenRequest
-	(*TokenResponse)(nil),     // 4: agntcy.identity.platform.v1alpha1.TokenResponse
-	(*ExtAuthzRequest)(nil),   // 5: agntcy.identity.platform.v1alpha1.ExtAuthzRequest
-	(*App)(nil),               // 6: agntcy.identity.platform.v1alpha1.App
-	(*emptypb.Empty)(nil),     // 7: google.protobuf.Empty
+	(*AppInfoResponse)(nil),     // 0: agntcy.identity.platform.v1alpha1.AppInfoResponse
+	(*AuthorizeRequest)(nil),    // 1: agntcy.identity.platform.v1alpha1.AuthorizeRequest
+	(*AuthorizeResponse)(nil),   // 2: agntcy.identity.platform.v1alpha1.AuthorizeResponse
+	(*TokenRequest)(nil),        // 3: agntcy.identity.platform.v1alpha1.TokenRequest
+	(*TokenResponse)(nil),       // 4: agntcy.identity.platform.v1alpha1.TokenResponse
+	(*ExtAuthzRequest)(nil),     // 5: agntcy.identity.platform.v1alpha1.ExtAuthzRequest
+	(*ApproveTokenRequest)(nil), // 6: agntcy.identity.platform.v1alpha1.ApproveTokenRequest
+	(*App)(nil),                 // 7: agntcy.identity.platform.v1alpha1.App
+	(*emptypb.Empty)(nil),       // 8: google.protobuf.Empty
 }
 var file_agntcy_identity_platform_v1alpha1_auth_service_proto_depIdxs = []int32{
-	6, // 0: agntcy.identity.platform.v1alpha1.AppInfoResponse.app:type_name -> agntcy.identity.platform.v1alpha1.App
-	7, // 1: agntcy.identity.platform.v1alpha1.AuthService.AppInfo:input_type -> google.protobuf.Empty
+	7, // 0: agntcy.identity.platform.v1alpha1.AppInfoResponse.app:type_name -> agntcy.identity.platform.v1alpha1.App
+	8, // 1: agntcy.identity.platform.v1alpha1.AuthService.AppInfo:input_type -> google.protobuf.Empty
 	1, // 2: agntcy.identity.platform.v1alpha1.AuthService.Authorize:input_type -> agntcy.identity.platform.v1alpha1.AuthorizeRequest
 	3, // 3: agntcy.identity.platform.v1alpha1.AuthService.Token:input_type -> agntcy.identity.platform.v1alpha1.TokenRequest
 	5, // 4: agntcy.identity.platform.v1alpha1.AuthService.ExtAuthz:input_type -> agntcy.identity.platform.v1alpha1.ExtAuthzRequest
-	0, // 5: agntcy.identity.platform.v1alpha1.AuthService.AppInfo:output_type -> agntcy.identity.platform.v1alpha1.AppInfoResponse
-	2, // 6: agntcy.identity.platform.v1alpha1.AuthService.Authorize:output_type -> agntcy.identity.platform.v1alpha1.AuthorizeResponse
-	4, // 7: agntcy.identity.platform.v1alpha1.AuthService.Token:output_type -> agntcy.identity.platform.v1alpha1.TokenResponse
-	7, // 8: agntcy.identity.platform.v1alpha1.AuthService.ExtAuthz:output_type -> google.protobuf.Empty
-	5, // [5:9] is the sub-list for method output_type
-	1, // [1:5] is the sub-list for method input_type
+	6, // 5: agntcy.identity.platform.v1alpha1.AuthService.ApproveToken:input_type -> agntcy.identity.platform.v1alpha1.ApproveTokenRequest
+	0, // 6: agntcy.identity.platform.v1alpha1.AuthService.AppInfo:output_type -> agntcy.identity.platform.v1alpha1.AppInfoResponse
+	2, // 7: agntcy.identity.platform.v1alpha1.AuthService.Authorize:output_type -> agntcy.identity.platform.v1alpha1.AuthorizeResponse
+	4, // 8: agntcy.identity.platform.v1alpha1.AuthService.Token:output_type -> agntcy.identity.platform.v1alpha1.TokenResponse
+	8, // 9: agntcy.identity.platform.v1alpha1.AuthService.ExtAuthz:output_type -> google.protobuf.Empty
+	8, // 10: agntcy.identity.platform.v1alpha1.AuthService.ApproveToken:output_type -> google.protobuf.Empty
+	6, // [6:11] is the sub-list for method output_type
+	1, // [1:6] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
 	1, // [1:1] is the sub-list for extension extendee
 	0, // [0:1] is the sub-list for field type_name
@@ -414,7 +496,7 @@ func file_agntcy_identity_platform_v1alpha1_auth_service_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_agntcy_identity_platform_v1alpha1_auth_service_proto_rawDesc), len(file_agntcy_identity_platform_v1alpha1_auth_service_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   6,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

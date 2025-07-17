@@ -8,6 +8,7 @@ import (
 	"errors"
 
 	apptypes "github.com/agntcy/identity-platform/internal/core/app/types"
+	"github.com/agntcy/identity-platform/internal/core/policy/types"
 	"github.com/agntcy/identity/pkg/log"
 )
 
@@ -17,7 +18,7 @@ type Evaluator interface {
 		calledApp *apptypes.App,
 		callingAppID string,
 		toolName string,
-	) error
+	) (*types.Rule, error)
 }
 
 type evaluator struct {
@@ -35,9 +36,9 @@ func (e *evaluator) Evaluate(
 	calledApp *apptypes.App,
 	callingAppID string,
 	toolName string,
-) error {
+) (*types.Rule, error) {
 	if calledApp.Type == apptypes.APP_TYPE_MCP_SERVER && toolName == "" {
-		return errors.New("please provide a tool name")
+		return nil, errors.New("please provide a tool name")
 	}
 
 	log.Debug("Evaluating policies for app: ", calledApp.ID,
@@ -45,14 +46,15 @@ func (e *evaluator) Evaluate(
 
 	policies, err := e.policyRepository.GetPoliciesByAppID(ctx, callingAppID)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	for _, policy := range policies {
-		if policy.CanInvoke(calledApp.ID, toolName) {
-			return nil
+		rule := policy.CanInvoke(calledApp.ID, toolName)
+		if rule != nil {
+			return rule, nil
 		}
 	}
 
-	return errors.New("not allowed")
+	return nil, errors.New("not allowed")
 }

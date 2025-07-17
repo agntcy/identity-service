@@ -39,6 +39,11 @@ class AuthServiceStub(object):
                 request_serializer=agntcy_dot_identity_dot_platform_dot_v1alpha1_dot_auth__service__pb2.ExtAuthzRequest.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 _registered_method=True)
+        self.ApproveToken = channel.unary_unary(
+                '/agntcy.identity.platform.v1alpha1.AuthService/ApproveToken',
+                request_serializer=agntcy_dot_identity_dot_platform_dot_v1alpha1_dot_auth__service__pb2.ApproveTokenRequest.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                _registered_method=True)
 
 
 class AuthServiceServicer(object):
@@ -73,6 +78,13 @@ class AuthServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def ApproveToken(self, request, context):
+        """Handle manual approval of external authorization requets
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_AuthServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -94,6 +106,11 @@ def add_AuthServiceServicer_to_server(servicer, server):
             'ExtAuthz': grpc.unary_unary_rpc_method_handler(
                     servicer.ExtAuthz,
                     request_deserializer=agntcy_dot_identity_dot_platform_dot_v1alpha1_dot_auth__service__pb2.ExtAuthzRequest.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
+            'ApproveToken': grpc.unary_unary_rpc_method_handler(
+                    servicer.ApproveToken,
+                    request_deserializer=agntcy_dot_identity_dot_platform_dot_v1alpha1_dot_auth__service__pb2.ApproveTokenRequest.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
     }
@@ -205,6 +222,33 @@ class AuthService(object):
             target,
             '/agntcy.identity.platform.v1alpha1.AuthService/ExtAuthz',
             agntcy_dot_identity_dot_platform_dot_v1alpha1_dot_auth__service__pb2.ExtAuthzRequest.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ApproveToken(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/agntcy.identity.platform.v1alpha1.AuthService/ApproveToken',
+            agntcy_dot_identity_dot_platform_dot_v1alpha1_dot_auth__service__pb2.ApproveTokenRequest.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options,
             channel_credentials,
