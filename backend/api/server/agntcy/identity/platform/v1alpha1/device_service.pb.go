@@ -10,6 +10,7 @@
 package identity_platform_sdk_go
 
 import (
+	v1alpha1 "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/shared/v1alpha1"
 	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2/options"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -126,19 +127,198 @@ func (x *RegisterDeviceRequest) GetDevice() *Device {
 	return nil
 }
 
+type ListDevicesRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The current page of the pagination
+	Page *int32 `protobuf:"varint,1,opt,name=page,proto3,oneof" json:"page,omitempty"`
+	// The page size of the pagination
+	Size *int32 `protobuf:"varint,2,opt,name=size,proto3,oneof" json:"size,omitempty"`
+	// The search query
+	Query         *string `protobuf:"bytes,3,opt,name=query,proto3,oneof" json:"query,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListDevicesRequest) Reset() {
+	*x = ListDevicesRequest{}
+	mi := &file_agntcy_identity_platform_v1alpha1_device_service_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListDevicesRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListDevicesRequest) ProtoMessage() {}
+
+func (x *ListDevicesRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_agntcy_identity_platform_v1alpha1_device_service_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListDevicesRequest.ProtoReflect.Descriptor instead.
+func (*ListDevicesRequest) Descriptor() ([]byte, []int) {
+	return file_agntcy_identity_platform_v1alpha1_device_service_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *ListDevicesRequest) GetPage() int32 {
+	if x != nil && x.Page != nil {
+		return *x.Page
+	}
+	return 0
+}
+
+func (x *ListDevicesRequest) GetSize() int32 {
+	if x != nil && x.Size != nil {
+		return *x.Size
+	}
+	return 0
+}
+
+func (x *ListDevicesRequest) GetQuery() string {
+	if x != nil && x.Query != nil {
+		return *x.Query
+	}
+	return ""
+}
+
+type ListDevicesResponse struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// A list of Apps.
+	Devices []*Device `protobuf:"bytes,1,rep,name=devices,proto3" json:"devices,omitempty"`
+	// Pagination response.
+	Pagination    *v1alpha1.PagedResponse `protobuf:"bytes,2,opt,name=pagination,proto3,oneof" json:"pagination,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListDevicesResponse) Reset() {
+	*x = ListDevicesResponse{}
+	mi := &file_agntcy_identity_platform_v1alpha1_device_service_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListDevicesResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListDevicesResponse) ProtoMessage() {}
+
+func (x *ListDevicesResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_agntcy_identity_platform_v1alpha1_device_service_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListDevicesResponse.ProtoReflect.Descriptor instead.
+func (*ListDevicesResponse) Descriptor() ([]byte, []int) {
+	return file_agntcy_identity_platform_v1alpha1_device_service_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *ListDevicesResponse) GetDevices() []*Device {
+	if x != nil {
+		return x.Devices
+	}
+	return nil
+}
+
+func (x *ListDevicesResponse) GetPagination() *v1alpha1.PagedResponse {
+	if x != nil {
+		return x.Pagination
+	}
+	return nil
+}
+
+type DeleteDeviceRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The device id.
+	DeviceId      string `protobuf:"bytes,1,opt,name=device_id,json=deviceId,proto3" json:"device_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteDeviceRequest) Reset() {
+	*x = DeleteDeviceRequest{}
+	mi := &file_agntcy_identity_platform_v1alpha1_device_service_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteDeviceRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteDeviceRequest) ProtoMessage() {}
+
+func (x *DeleteDeviceRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_agntcy_identity_platform_v1alpha1_device_service_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteDeviceRequest.ProtoReflect.Descriptor instead.
+func (*DeleteDeviceRequest) Descriptor() ([]byte, []int) {
+	return file_agntcy_identity_platform_v1alpha1_device_service_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *DeleteDeviceRequest) GetDeviceId() string {
+	if x != nil {
+		return x.DeviceId
+	}
+	return ""
+}
+
 var File_agntcy_identity_platform_v1alpha1_device_service_proto protoreflect.FileDescriptor
 
 const file_agntcy_identity_platform_v1alpha1_device_service_proto_rawDesc = "" +
 	"\n" +
-	"6agntcy/identity/platform/v1alpha1/device_service.proto\x12!agntcy.identity.platform.v1alpha1\x1a.agntcy/identity/platform/v1alpha1/device.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\"U\n" +
+	"6agntcy/identity/platform/v1alpha1/device_service.proto\x12!agntcy.identity.platform.v1alpha1\x1a9agntcy/identity/platform/shared/v1alpha1/pagination.proto\x1a.agntcy/identity/platform/v1alpha1/device.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\"U\n" +
 	"\x10AddDeviceRequest\x12A\n" +
 	"\x06device\x18\x01 \x01(\v2).agntcy.identity.platform.v1alpha1.DeviceR\x06device\"w\n" +
 	"\x15RegisterDeviceRequest\x12\x1b\n" +
 	"\tdevice_id\x18\x01 \x01(\tR\bdeviceId\x12A\n" +
-	"\x06device\x18\x02 \x01(\v2).agntcy.identity.platform.v1alpha1.DeviceR\x06device2\xa5\x03\n" +
+	"\x06device\x18\x02 \x01(\v2).agntcy.identity.platform.v1alpha1.DeviceR\x06device\"}\n" +
+	"\x12ListDevicesRequest\x12\x17\n" +
+	"\x04page\x18\x01 \x01(\x05H\x00R\x04page\x88\x01\x01\x12\x17\n" +
+	"\x04size\x18\x02 \x01(\x05H\x01R\x04size\x88\x01\x01\x12\x19\n" +
+	"\x05query\x18\x03 \x01(\tH\x02R\x05query\x88\x01\x01B\a\n" +
+	"\x05_pageB\a\n" +
+	"\x05_sizeB\b\n" +
+	"\x06_query\"\xc7\x01\n" +
+	"\x13ListDevicesResponse\x12C\n" +
+	"\adevices\x18\x01 \x03(\v2).agntcy.identity.platform.v1alpha1.DeviceR\adevices\x12\\\n" +
+	"\n" +
+	"pagination\x18\x02 \x01(\v27.agntcy.identity.platform.shared.v1alpha1.PagedResponseH\x00R\n" +
+	"pagination\x88\x01\x01B\r\n" +
+	"\v_pagination\"2\n" +
+	"\x13DeleteDeviceRequest\x12\x1b\n" +
+	"\tdevice_id\x18\x01 \x01(\tR\bdeviceId2\x9f\x06\n" +
 	"\rDeviceService\x12\xbd\x01\n" +
 	"\tAddDevice\x123.agntcy.identity.platform.v1alpha1.AddDeviceRequest\x1a).agntcy.identity.platform.v1alpha1.Device\"P\x92A-\x12 Add new device for approval flow*\tAddDevice\x82\xd3\xe4\x93\x02\x1a:\x06device\"\x10/v1alpha1/device\x12\xc6\x01\n" +
-	"\x0eRegisterDevice\x128.agntcy.identity.platform.v1alpha1.RegisterDeviceRequest\x1a\x16.google.protobuf.Empty\"b\x92A3\x12!Register device for approval flow*\x0eRegisterDevice\x82\xd3\xe4\x93\x02&:\x06device\"\x1c/v1alpha1/device/{device_id}\x1a\v\x92A\b\n" +
+	"\x0eRegisterDevice\x128.agntcy.identity.platform.v1alpha1.RegisterDeviceRequest\x1a\x16.google.protobuf.Empty\"b\x92A3\x12!Register device for approval flow*\x0eRegisterDevice\x82\xd3\xe4\x93\x02&:\x06device\"\x1c/v1alpha1/device/{device_id}\x12\xc3\x01\n" +
+	"\vListDevices\x125.agntcy.identity.platform.v1alpha1.ListDevicesRequest\x1a6.agntcy.identity.platform.v1alpha1.ListDevicesResponse\"E\x92A*\x12\x1bList all registered devices*\vListDevices\x82\xd3\xe4\x93\x02\x12\x12\x10/v1alpha1/device\x12\xb1\x01\n" +
+	"\fDeleteDevice\x126.agntcy.identity.platform.v1alpha1.DeleteDeviceRequest\x1a\x16.google.protobuf.Empty\"Q\x92A*\x12\x1aDelete a registered Device*\fDeleteDevice\x82\xd3\xe4\x93\x02\x1e*\x1c/v1alpha1/device/{device_id}\x1a\v\x92A\b\n" +
 	"\x06DeviceBkZigithub.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_gob\x06proto3"
 
 var (
@@ -153,25 +333,35 @@ func file_agntcy_identity_platform_v1alpha1_device_service_proto_rawDescGZIP() [
 	return file_agntcy_identity_platform_v1alpha1_device_service_proto_rawDescData
 }
 
-var file_agntcy_identity_platform_v1alpha1_device_service_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_agntcy_identity_platform_v1alpha1_device_service_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_agntcy_identity_platform_v1alpha1_device_service_proto_goTypes = []any{
-	(*AddDeviceRequest)(nil),      // 0: agntcy.identity.platform.v1alpha1.AddDeviceRequest
-	(*RegisterDeviceRequest)(nil), // 1: agntcy.identity.platform.v1alpha1.RegisterDeviceRequest
-	(*Device)(nil),                // 2: agntcy.identity.platform.v1alpha1.Device
-	(*emptypb.Empty)(nil),         // 3: google.protobuf.Empty
+	(*AddDeviceRequest)(nil),       // 0: agntcy.identity.platform.v1alpha1.AddDeviceRequest
+	(*RegisterDeviceRequest)(nil),  // 1: agntcy.identity.platform.v1alpha1.RegisterDeviceRequest
+	(*ListDevicesRequest)(nil),     // 2: agntcy.identity.platform.v1alpha1.ListDevicesRequest
+	(*ListDevicesResponse)(nil),    // 3: agntcy.identity.platform.v1alpha1.ListDevicesResponse
+	(*DeleteDeviceRequest)(nil),    // 4: agntcy.identity.platform.v1alpha1.DeleteDeviceRequest
+	(*Device)(nil),                 // 5: agntcy.identity.platform.v1alpha1.Device
+	(*v1alpha1.PagedResponse)(nil), // 6: agntcy.identity.platform.shared.v1alpha1.PagedResponse
+	(*emptypb.Empty)(nil),          // 7: google.protobuf.Empty
 }
 var file_agntcy_identity_platform_v1alpha1_device_service_proto_depIdxs = []int32{
-	2, // 0: agntcy.identity.platform.v1alpha1.AddDeviceRequest.device:type_name -> agntcy.identity.platform.v1alpha1.Device
-	2, // 1: agntcy.identity.platform.v1alpha1.RegisterDeviceRequest.device:type_name -> agntcy.identity.platform.v1alpha1.Device
-	0, // 2: agntcy.identity.platform.v1alpha1.DeviceService.AddDevice:input_type -> agntcy.identity.platform.v1alpha1.AddDeviceRequest
-	1, // 3: agntcy.identity.platform.v1alpha1.DeviceService.RegisterDevice:input_type -> agntcy.identity.platform.v1alpha1.RegisterDeviceRequest
-	2, // 4: agntcy.identity.platform.v1alpha1.DeviceService.AddDevice:output_type -> agntcy.identity.platform.v1alpha1.Device
-	3, // 5: agntcy.identity.platform.v1alpha1.DeviceService.RegisterDevice:output_type -> google.protobuf.Empty
-	4, // [4:6] is the sub-list for method output_type
-	2, // [2:4] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	5, // 0: agntcy.identity.platform.v1alpha1.AddDeviceRequest.device:type_name -> agntcy.identity.platform.v1alpha1.Device
+	5, // 1: agntcy.identity.platform.v1alpha1.RegisterDeviceRequest.device:type_name -> agntcy.identity.platform.v1alpha1.Device
+	5, // 2: agntcy.identity.platform.v1alpha1.ListDevicesResponse.devices:type_name -> agntcy.identity.platform.v1alpha1.Device
+	6, // 3: agntcy.identity.platform.v1alpha1.ListDevicesResponse.pagination:type_name -> agntcy.identity.platform.shared.v1alpha1.PagedResponse
+	0, // 4: agntcy.identity.platform.v1alpha1.DeviceService.AddDevice:input_type -> agntcy.identity.platform.v1alpha1.AddDeviceRequest
+	1, // 5: agntcy.identity.platform.v1alpha1.DeviceService.RegisterDevice:input_type -> agntcy.identity.platform.v1alpha1.RegisterDeviceRequest
+	2, // 6: agntcy.identity.platform.v1alpha1.DeviceService.ListDevices:input_type -> agntcy.identity.platform.v1alpha1.ListDevicesRequest
+	4, // 7: agntcy.identity.platform.v1alpha1.DeviceService.DeleteDevice:input_type -> agntcy.identity.platform.v1alpha1.DeleteDeviceRequest
+	5, // 8: agntcy.identity.platform.v1alpha1.DeviceService.AddDevice:output_type -> agntcy.identity.platform.v1alpha1.Device
+	7, // 9: agntcy.identity.platform.v1alpha1.DeviceService.RegisterDevice:output_type -> google.protobuf.Empty
+	3, // 10: agntcy.identity.platform.v1alpha1.DeviceService.ListDevices:output_type -> agntcy.identity.platform.v1alpha1.ListDevicesResponse
+	7, // 11: agntcy.identity.platform.v1alpha1.DeviceService.DeleteDevice:output_type -> google.protobuf.Empty
+	8, // [8:12] is the sub-list for method output_type
+	4, // [4:8] is the sub-list for method input_type
+	4, // [4:4] is the sub-list for extension type_name
+	4, // [4:4] is the sub-list for extension extendee
+	0, // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_agntcy_identity_platform_v1alpha1_device_service_proto_init() }
@@ -180,13 +370,15 @@ func file_agntcy_identity_platform_v1alpha1_device_service_proto_init() {
 		return
 	}
 	file_agntcy_identity_platform_v1alpha1_device_proto_init()
+	file_agntcy_identity_platform_v1alpha1_device_service_proto_msgTypes[2].OneofWrappers = []any{}
+	file_agntcy_identity_platform_v1alpha1_device_service_proto_msgTypes[3].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_agntcy_identity_platform_v1alpha1_device_service_proto_rawDesc), len(file_agntcy_identity_platform_v1alpha1_device_service_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

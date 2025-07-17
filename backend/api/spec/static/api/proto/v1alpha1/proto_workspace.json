@@ -2815,6 +2815,30 @@
               "isoneof": true,
               "oneofdecl": "_subscription_token",
               "defaultValue": ""
+            },
+            {
+              "name": "name",
+              "description": "The device human-readable name.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_name",
+              "defaultValue": ""
+            },
+            {
+              "name": "created_at",
+              "description": "The creation time of the Device.",
+              "label": "optional",
+              "type": "Timestamp",
+              "longType": "google.protobuf.Timestamp",
+              "fullType": "google.protobuf.Timestamp",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_created_at",
+              "defaultValue": ""
             }
           ]
         },
@@ -2905,6 +2929,114 @@
           ]
         },
         {
+          "name": "DeleteDeviceRequest",
+          "longName": "DeleteDeviceRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.DeleteDeviceRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "device_id",
+              "description": "The device id.",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "ListDevicesRequest",
+          "longName": "ListDevicesRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.ListDevicesRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "page",
+              "description": "The current page of the pagination",
+              "label": "optional",
+              "type": "int32",
+              "longType": "int32",
+              "fullType": "int32",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_page",
+              "defaultValue": ""
+            },
+            {
+              "name": "size",
+              "description": "The page size of the pagination",
+              "label": "optional",
+              "type": "int32",
+              "longType": "int32",
+              "fullType": "int32",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_size",
+              "defaultValue": ""
+            },
+            {
+              "name": "query",
+              "description": "The search query",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_query",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "ListDevicesResponse",
+          "longName": "ListDevicesResponse",
+          "fullName": "agntcy.identity.platform.v1alpha1.ListDevicesResponse",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "devices",
+              "description": "A list of Apps.",
+              "label": "repeated",
+              "type": "Device",
+              "longType": "Device",
+              "fullType": "agntcy.identity.platform.v1alpha1.Device",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            },
+            {
+              "name": "pagination",
+              "description": "Pagination response.",
+              "label": "optional",
+              "type": "PagedResponse",
+              "longType": "agntcy.identity.platform.shared.v1alpha1.PagedResponse",
+              "fullType": "agntcy.identity.platform.shared.v1alpha1.PagedResponse",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_pagination",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
           "name": "RegisterDeviceRequest",
           "longName": "RegisterDeviceRequest",
           "fullName": "agntcy.identity.platform.v1alpha1.RegisterDeviceRequest",
@@ -2989,6 +3121,50 @@
                       "method": "POST",
                       "pattern": "/v1alpha1/device/{device_id}",
                       "body": "device"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "ListDevices",
+              "description": "List all registered devices",
+              "requestType": "ListDevicesRequest",
+              "requestLongType": "ListDevicesRequest",
+              "requestFullType": "agntcy.identity.platform.v1alpha1.ListDevicesRequest",
+              "requestStreaming": false,
+              "responseType": "ListDevicesResponse",
+              "responseLongType": "ListDevicesResponse",
+              "responseFullType": "agntcy.identity.platform.v1alpha1.ListDevicesResponse",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "GET",
+                      "pattern": "/v1alpha1/device"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "DeleteDevice",
+              "description": "Delete a registered Device.",
+              "requestType": "DeleteDeviceRequest",
+              "requestLongType": "DeleteDeviceRequest",
+              "requestFullType": "agntcy.identity.platform.v1alpha1.DeleteDeviceRequest",
+              "requestStreaming": false,
+              "responseType": "Empty",
+              "responseLongType": ".google.protobuf.Empty",
+              "responseFullType": "google.protobuf.Empty",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "DELETE",
+                      "pattern": "/v1alpha1/device/{device_id}"
                     }
                   ]
                 }
