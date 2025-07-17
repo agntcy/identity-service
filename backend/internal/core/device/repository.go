@@ -32,4 +32,5 @@ type Repository interface {
 		paginationFilter pagination.PaginationFilter,
 		query *string,
 	) (*pagination.Pageable[types.Device], error)
+	DeleteDevice(ctx context.Context, device *types.Device) error
 }

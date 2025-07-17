@@ -8,6 +8,7 @@ import (
 	"database/sql"
 	"errors"
 
+	authpg "github.com/agntcy/identity-platform/internal/core/auth/postgres"
 	devicecore "github.com/agntcy/identity-platform/internal/core/device"
 	"github.com/agntcy/identity-platform/internal/core/device/types"
 	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
@@ -47,6 +48,7 @@ func (r *repository) AddDevice(
 	if !ok {
 		return nil, identitycontext.ErrTenantNotFound
 	}
+
 	model.TenantID = tenantID
 
 	inserted := r.dbContext.Client().Create(model)
@@ -222,4 +224,36 @@ func (r *repository) ListRegisteredDevices(
 		Page:  paginationFilter.GetPage(),
 		Size:  int32(len(devices)),
 	}, nil
+}
+
+func (r *repository) DeleteDevice(ctx context.Context, device *types.Device) error {
+	tenantID, ok := identitycontext.GetTenantID(ctx)
+	if !ok {
+		return identitycontext.ErrTenantNotFound
+	}
+
+	model := newDeviceModel(device)
+
+	err := r.dbContext.Client().Transaction(func(tx *gorm.DB) error {
+		err := r.dbContext.Client().
+			Where("device_id = ?", device.ID).
+			Delete(&authpg.SessionDeviceOTP{}).Error
+		if err != nil {
+			return nil
+		}
+
+		err = r.dbContext.Client().
+			Where("tenant_id = ?", tenantID).
+			Delete(model).Error
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+	if err != nil {
+		return errutil.Err(err, "failed to delete device")
+	}
+
+	return nil
 }

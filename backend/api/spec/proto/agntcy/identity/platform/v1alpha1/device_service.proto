@@ -52,6 +52,16 @@ service DeviceService {
       summary: "List all registered devices";
     };
   }
+
+  // Delete a registered Device.
+  rpc DeleteDevice(DeleteDeviceRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/v1alpha1/device/{device_id}"};
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "DeleteDevice";
+      summary: "Delete a registered Device";
+    };
+  }
 }
 
 message AddDeviceRequest {
@@ -84,4 +94,9 @@ message ListDevicesResponse {
 
   // Pagination response.
   optional agntcy.identity.platform.shared.v1alpha1.PagedResponse pagination = 2;
+}
+
+message DeleteDeviceRequest {
+  // The device id.
+  string device_id = 1;
 }

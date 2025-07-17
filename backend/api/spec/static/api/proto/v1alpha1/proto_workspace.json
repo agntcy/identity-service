@@ -2929,6 +2929,30 @@
           ]
         },
         {
+          "name": "DeleteDeviceRequest",
+          "longName": "DeleteDeviceRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.DeleteDeviceRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "device_id",
+              "description": "The device id.",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
           "name": "ListDevicesRequest",
           "longName": "ListDevicesRequest",
           "fullName": "agntcy.identity.platform.v1alpha1.ListDevicesRequest",
@@ -3119,6 +3143,28 @@
                     {
                       "method": "GET",
                       "pattern": "/v1alpha1/device"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "DeleteDevice",
+              "description": "Delete a registered Device.",
+              "requestType": "DeleteDeviceRequest",
+              "requestLongType": "DeleteDeviceRequest",
+              "requestFullType": "agntcy.identity.platform.v1alpha1.DeleteDeviceRequest",
+              "requestStreaming": false,
+              "responseType": "Empty",
+              "responseLongType": ".google.protobuf.Empty",
+              "responseFullType": "google.protobuf.Empty",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "DELETE",
+                      "pattern": "/v1alpha1/device/{device_id}"
                     }
                   ]
                 }

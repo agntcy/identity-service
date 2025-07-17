@@ -33,6 +33,3 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _globals['_APP']._serialized_start=116
   _globals['_APP']._serialized_end=682
 # @@protoc_insertion_point(module_scope)
-als['_APP']._serialized_start=116
-  _globals['_APP']._serialized_end=682
-# @@protoc_insertion_point(module_scope)

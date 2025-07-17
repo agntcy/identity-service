@@ -244,6 +244,51 @@ func (x *ListDevicesResponse) GetPagination() *v1alpha1.PagedResponse {
 	return nil
 }
 
+type DeleteDeviceRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The device id.
+	DeviceId      string `protobuf:"bytes,1,opt,name=device_id,json=deviceId,proto3" json:"device_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteDeviceRequest) Reset() {
+	*x = DeleteDeviceRequest{}
+	mi := &file_agntcy_identity_platform_v1alpha1_device_service_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteDeviceRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteDeviceRequest) ProtoMessage() {}
+
+func (x *DeleteDeviceRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_agntcy_identity_platform_v1alpha1_device_service_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteDeviceRequest.ProtoReflect.Descriptor instead.
+func (*DeleteDeviceRequest) Descriptor() ([]byte, []int) {
+	return file_agntcy_identity_platform_v1alpha1_device_service_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *DeleteDeviceRequest) GetDeviceId() string {
+	if x != nil {
+		return x.DeviceId
+	}
+	return ""
+}
+
 var File_agntcy_identity_platform_v1alpha1_device_service_proto protoreflect.FileDescriptor
 
 const file_agntcy_identity_platform_v1alpha1_device_service_proto_rawDesc = "" +
@@ -266,11 +311,14 @@ const file_agntcy_identity_platform_v1alpha1_device_service_proto_rawDesc = "" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v27.agntcy.identity.platform.shared.v1alpha1.PagedResponseH\x00R\n" +
 	"pagination\x88\x01\x01B\r\n" +
-	"\v_pagination2\xeb\x04\n" +
+	"\v_pagination\"2\n" +
+	"\x13DeleteDeviceRequest\x12\x1b\n" +
+	"\tdevice_id\x18\x01 \x01(\tR\bdeviceId2\x9f\x06\n" +
 	"\rDeviceService\x12\xbd\x01\n" +
 	"\tAddDevice\x123.agntcy.identity.platform.v1alpha1.AddDeviceRequest\x1a).agntcy.identity.platform.v1alpha1.Device\"P\x92A-\x12 Add new device for approval flow*\tAddDevice\x82\xd3\xe4\x93\x02\x1a:\x06device\"\x10/v1alpha1/device\x12\xc6\x01\n" +
 	"\x0eRegisterDevice\x128.agntcy.identity.platform.v1alpha1.RegisterDeviceRequest\x1a\x16.google.protobuf.Empty\"b\x92A3\x12!Register device for approval flow*\x0eRegisterDevice\x82\xd3\xe4\x93\x02&:\x06device\"\x1c/v1alpha1/device/{device_id}\x12\xc3\x01\n" +
-	"\vListDevices\x125.agntcy.identity.platform.v1alpha1.ListDevicesRequest\x1a6.agntcy.identity.platform.v1alpha1.ListDevicesResponse\"E\x92A*\x12\x1bList all registered devices*\vListDevices\x82\xd3\xe4\x93\x02\x12\x12\x10/v1alpha1/device\x1a\v\x92A\b\n" +
+	"\vListDevices\x125.agntcy.identity.platform.v1alpha1.ListDevicesRequest\x1a6.agntcy.identity.platform.v1alpha1.ListDevicesResponse\"E\x92A*\x12\x1bList all registered devices*\vListDevices\x82\xd3\xe4\x93\x02\x12\x12\x10/v1alpha1/device\x12\xb1\x01\n" +
+	"\fDeleteDevice\x126.agntcy.identity.platform.v1alpha1.DeleteDeviceRequest\x1a\x16.google.protobuf.Empty\"Q\x92A*\x12\x1aDelete a registered Device*\fDeleteDevice\x82\xd3\xe4\x93\x02\x1e*\x1c/v1alpha1/device/{device_id}\x1a\v\x92A\b\n" +
 	"\x06DeviceBkZigithub.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_gob\x06proto3"
 
 var (
@@ -285,29 +333,32 @@ func file_agntcy_identity_platform_v1alpha1_device_service_proto_rawDescGZIP() [
 	return file_agntcy_identity_platform_v1alpha1_device_service_proto_rawDescData
 }
 
-var file_agntcy_identity_platform_v1alpha1_device_service_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_agntcy_identity_platform_v1alpha1_device_service_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_agntcy_identity_platform_v1alpha1_device_service_proto_goTypes = []any{
 	(*AddDeviceRequest)(nil),       // 0: agntcy.identity.platform.v1alpha1.AddDeviceRequest
 	(*RegisterDeviceRequest)(nil),  // 1: agntcy.identity.platform.v1alpha1.RegisterDeviceRequest
 	(*ListDevicesRequest)(nil),     // 2: agntcy.identity.platform.v1alpha1.ListDevicesRequest
 	(*ListDevicesResponse)(nil),    // 3: agntcy.identity.platform.v1alpha1.ListDevicesResponse
-	(*Device)(nil),                 // 4: agntcy.identity.platform.v1alpha1.Device
-	(*v1alpha1.PagedResponse)(nil), // 5: agntcy.identity.platform.shared.v1alpha1.PagedResponse
-	(*emptypb.Empty)(nil),          // 6: google.protobuf.Empty
+	(*DeleteDeviceRequest)(nil),    // 4: agntcy.identity.platform.v1alpha1.DeleteDeviceRequest
+	(*Device)(nil),                 // 5: agntcy.identity.platform.v1alpha1.Device
+	(*v1alpha1.PagedResponse)(nil), // 6: agntcy.identity.platform.shared.v1alpha1.PagedResponse
+	(*emptypb.Empty)(nil),          // 7: google.protobuf.Empty
 }
 var file_agntcy_identity_platform_v1alpha1_device_service_proto_depIdxs = []int32{
-	4, // 0: agntcy.identity.platform.v1alpha1.AddDeviceRequest.device:type_name -> agntcy.identity.platform.v1alpha1.Device
-	4, // 1: agntcy.identity.platform.v1alpha1.RegisterDeviceRequest.device:type_name -> agntcy.identity.platform.v1alpha1.Device
-	4, // 2: agntcy.identity.platform.v1alpha1.ListDevicesResponse.devices:type_name -> agntcy.identity.platform.v1alpha1.Device
-	5, // 3: agntcy.identity.platform.v1alpha1.ListDevicesResponse.pagination:type_name -> agntcy.identity.platform.shared.v1alpha1.PagedResponse
+	5, // 0: agntcy.identity.platform.v1alpha1.AddDeviceRequest.device:type_name -> agntcy.identity.platform.v1alpha1.Device
+	5, // 1: agntcy.identity.platform.v1alpha1.RegisterDeviceRequest.device:type_name -> agntcy.identity.platform.v1alpha1.Device
+	5, // 2: agntcy.identity.platform.v1alpha1.ListDevicesResponse.devices:type_name -> agntcy.identity.platform.v1alpha1.Device
+	6, // 3: agntcy.identity.platform.v1alpha1.ListDevicesResponse.pagination:type_name -> agntcy.identity.platform.shared.v1alpha1.PagedResponse
 	0, // 4: agntcy.identity.platform.v1alpha1.DeviceService.AddDevice:input_type -> agntcy.identity.platform.v1alpha1.AddDeviceRequest
 	1, // 5: agntcy.identity.platform.v1alpha1.DeviceService.RegisterDevice:input_type -> agntcy.identity.platform.v1alpha1.RegisterDeviceRequest
 	2, // 6: agntcy.identity.platform.v1alpha1.DeviceService.ListDevices:input_type -> agntcy.identity.platform.v1alpha1.ListDevicesRequest
-	4, // 7: agntcy.identity.platform.v1alpha1.DeviceService.AddDevice:output_type -> agntcy.identity.platform.v1alpha1.Device
-	6, // 8: agntcy.identity.platform.v1alpha1.DeviceService.RegisterDevice:output_type -> google.protobuf.Empty
-	3, // 9: agntcy.identity.platform.v1alpha1.DeviceService.ListDevices:output_type -> agntcy.identity.platform.v1alpha1.ListDevicesResponse
-	7, // [7:10] is the sub-list for method output_type
-	4, // [4:7] is the sub-list for method input_type
+	4, // 7: agntcy.identity.platform.v1alpha1.DeviceService.DeleteDevice:input_type -> agntcy.identity.platform.v1alpha1.DeleteDeviceRequest
+	5, // 8: agntcy.identity.platform.v1alpha1.DeviceService.AddDevice:output_type -> agntcy.identity.platform.v1alpha1.Device
+	7, // 9: agntcy.identity.platform.v1alpha1.DeviceService.RegisterDevice:output_type -> google.protobuf.Empty
+	3, // 10: agntcy.identity.platform.v1alpha1.DeviceService.ListDevices:output_type -> agntcy.identity.platform.v1alpha1.ListDevicesResponse
+	7, // 11: agntcy.identity.platform.v1alpha1.DeviceService.DeleteDevice:output_type -> google.protobuf.Empty
+	8, // [8:12] is the sub-list for method output_type
+	4, // [4:8] is the sub-list for method input_type
 	4, // [4:4] is the sub-list for extension type_name
 	4, // [4:4] is the sub-list for extension extendee
 	0, // [0:4] is the sub-list for field type_name
@@ -327,7 +378,7 @@ func file_agntcy_identity_platform_v1alpha1_device_service_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_agntcy_identity_platform_v1alpha1_device_service_proto_rawDesc), len(file_agntcy_identity_platform_v1alpha1_device_service_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

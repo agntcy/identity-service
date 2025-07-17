@@ -80,3 +80,15 @@ func (s *deviceService) ListDevices(
 		Pagination: pagination.ConvertToPagedResponse(paginationFilter, apps),
 	}, nil
 }
+
+func (s *deviceService) DeleteDevice(
+	ctx context.Context,
+	req *identity_platform_sdk_go.DeleteDeviceRequest,
+) (*emptypb.Empty, error) {
+	err := s.deviceSrv.DeleteDevice(ctx, req.GetDeviceId())
+	if err != nil {
+		return nil, grpcutil.BadRequestError(err)
+	}
+
+	return &emptypb.Empty{}, nil
+}

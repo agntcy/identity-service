@@ -40,6 +40,7 @@ func newDeviceModel(src *types.Device) *Device {
 	}
 
 	return &Device{
+		ID:                uuid.MustParse(src.ID),
 		UserID:            ptrutil.Ptr(src.UserID),
 		SubscriptionToken: src.SubscriptionToken,
 		Name:              src.Name,

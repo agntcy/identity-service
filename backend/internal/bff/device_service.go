@@ -21,6 +21,7 @@ type DeviceService interface {
 		paginationFilter pagination.PaginationFilter,
 		query *string,
 	) (*pagination.Pageable[devicetypes.Device], error)
+	DeleteDevice(ctx context.Context, deviceID string) error
 }
 
 type deviceService struct {
@@ -111,4 +112,18 @@ func (s *deviceService) ListRegisteredDevices(
 	}
 
 	return page, nil
+}
+
+func (s *deviceService) DeleteDevice(ctx context.Context, deviceID string) error {
+	device, err := s.deviceRepository.GetDevice(ctx, deviceID)
+	if err != nil {
+		return err
+	}
+
+	err = s.deviceRepository.DeleteDevice(ctx, device)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

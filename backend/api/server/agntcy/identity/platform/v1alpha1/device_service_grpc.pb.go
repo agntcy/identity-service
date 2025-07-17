@@ -26,6 +26,7 @@ const (
 	DeviceService_AddDevice_FullMethodName      = "/agntcy.identity.platform.v1alpha1.DeviceService/AddDevice"
 	DeviceService_RegisterDevice_FullMethodName = "/agntcy.identity.platform.v1alpha1.DeviceService/RegisterDevice"
 	DeviceService_ListDevices_FullMethodName    = "/agntcy.identity.platform.v1alpha1.DeviceService/ListDevices"
+	DeviceService_DeleteDevice_FullMethodName   = "/agntcy.identity.platform.v1alpha1.DeviceService/DeleteDevice"
 )
 
 // DeviceServiceClient is the client API for DeviceService service.
@@ -40,6 +41,8 @@ type DeviceServiceClient interface {
 	RegisterDevice(ctx context.Context, in *RegisterDeviceRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// List all registered devices
 	ListDevices(ctx context.Context, in *ListDevicesRequest, opts ...grpc.CallOption) (*ListDevicesResponse, error)
+	// Delete a registered Device.
+	DeleteDevice(ctx context.Context, in *DeleteDeviceRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type deviceServiceClient struct {
@@ -80,6 +83,16 @@ func (c *deviceServiceClient) ListDevices(ctx context.Context, in *ListDevicesRe
 	return out, nil
 }
 
+func (c *deviceServiceClient) DeleteDevice(ctx context.Context, in *DeleteDeviceRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, DeviceService_DeleteDevice_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // DeviceServiceServer is the server API for DeviceService service.
 // All implementations should embed UnimplementedDeviceServiceServer
 // for forward compatibility.
@@ -92,6 +105,8 @@ type DeviceServiceServer interface {
 	RegisterDevice(context.Context, *RegisterDeviceRequest) (*emptypb.Empty, error)
 	// List all registered devices
 	ListDevices(context.Context, *ListDevicesRequest) (*ListDevicesResponse, error)
+	// Delete a registered Device.
+	DeleteDevice(context.Context, *DeleteDeviceRequest) (*emptypb.Empty, error)
 }
 
 // UnimplementedDeviceServiceServer should be embedded to have
@@ -109,6 +124,9 @@ func (UnimplementedDeviceServiceServer) RegisterDevice(context.Context, *Registe
 }
 func (UnimplementedDeviceServiceServer) ListDevices(context.Context, *ListDevicesRequest) (*ListDevicesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListDevices not implemented")
+}
+func (UnimplementedDeviceServiceServer) DeleteDevice(context.Context, *DeleteDeviceRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteDevice not implemented")
 }
 func (UnimplementedDeviceServiceServer) testEmbeddedByValue() {}
 
@@ -184,6 +202,24 @@ func _DeviceService_ListDevices_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _DeviceService_DeleteDevice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteDeviceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DeviceServiceServer).DeleteDevice(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: DeviceService_DeleteDevice_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DeviceServiceServer).DeleteDevice(ctx, req.(*DeleteDeviceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // DeviceService_ServiceDesc is the grpc.ServiceDesc for DeviceService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -202,6 +238,10 @@ var DeviceService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListDevices",
 			Handler:    _DeviceService_ListDevices_Handler,
+		},
+		{
+			MethodName: "DeleteDevice",
+			Handler:    _DeviceService_DeleteDevice_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
