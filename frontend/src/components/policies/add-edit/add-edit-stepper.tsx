@@ -9,5 +9,9 @@ import {AddPolicyForm} from './add-policy-form';
 import {EditPolicyForm} from './edit-policy-form';
 
 export const AddEditPolicyStepper = ({mode = 'add', policy}: {mode: 'add' | 'edit'; policy?: Policy}) => {
-  return <StepperProvider variant="vertical">{mode === 'add' ? <AddPolicyForm /> : <EditPolicyForm policy={policy} />}</StepperProvider>;
+  return (
+    <StepperProvider variant="vertical">
+      {mode === 'add' ? <AddPolicyForm /> : <EditPolicyForm policy={policy} />}
+    </StepperProvider>
+  );
 };

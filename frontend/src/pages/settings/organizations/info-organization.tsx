@@ -66,7 +66,11 @@ const InfoOrganization: React.FC = () => {
           }
         }}
       >
-        <OrganizationInfo tenant={data} showInviteUserModal={showInviteUserModal} onChangeInviteUser={(value) => setShowInviteUserModal(value)} />
+        <OrganizationInfo
+          tenant={data}
+          showInviteUserModal={showInviteUserModal}
+          onChangeInviteUser={(value) => setShowInviteUserModal(value)}
+        />
       </ConditionalQueryRenderer>
     </BasePage>
   );

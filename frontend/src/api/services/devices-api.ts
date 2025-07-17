@@ -14,10 +14,16 @@ class DevicesAPIClass extends DevicesApi.Api<Device> {
   protected authInfo: AuthInfo | null | undefined;
   protected retry = false;
   protected tokenExpiredHttpHandler?: () => Promise<AuthInfo | undefined>;
-  protected logout?: (params: {revokeAccessToken?: boolean; revokeRefreshToken?: boolean; clearTokensBeforeRedirect?: boolean}) => void;
+  protected logout?: (params: {
+    revokeAccessToken?: boolean;
+    revokeRefreshToken?: boolean;
+    clearTokensBeforeRedirect?: boolean;
+  }) => void;
 
   public addDevice = this.v1Alpha1.addDevice;
   public registerDevice = this.v1Alpha1.registerDevice;
+  public listDevices = this.v1Alpha1.listDevices;
+  public deleteDevice = this.v1Alpha1.deleteDevice;
 
   protected handleLogout = () => {
     this.logout?.({
@@ -40,7 +46,13 @@ class DevicesAPIClass extends DevicesApi.Api<Device> {
 
   protected resErrInterceptor = async (error: AxiosError) => {
     const originalConfig = error.config;
-    if (this.authInfo && !this.retry && originalConfig && error.response && httpErrorsAuth.includes(error.response?.status)) {
+    if (
+      this.authInfo &&
+      !this.retry &&
+      originalConfig &&
+      error.response &&
+      httpErrorsAuth.includes(error.response?.status)
+    ) {
       this.retry = true;
       const message = (error.response.data as {message?: string}).message;
       if (this.tokenExpiredHttpHandler && !message?.includes(USER_NOT_AUTH)) {
@@ -73,7 +85,11 @@ class DevicesAPIClass extends DevicesApi.Api<Device> {
 
   public setTokenExpiredHandlers(handlers: {
     tokenExpiredHttpHandler?: () => Promise<AuthInfo | undefined>;
-    logout?: (params: {revokeAccessToken?: boolean; revokeRefreshToken?: boolean; clearTokensBeforeRedirect?: boolean}) => void;
+    logout?: (params: {
+      revokeAccessToken?: boolean;
+      revokeRefreshToken?: boolean;
+      clearTokensBeforeRedirect?: boolean;
+    }) => void;
   }) {
     this.tokenExpiredHttpHandler = handlers.tokenExpiredHttpHandler;
     this.logout = handlers.logout;

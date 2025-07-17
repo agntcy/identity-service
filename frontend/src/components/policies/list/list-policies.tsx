@@ -112,7 +112,12 @@ export const ListPolicies = () => {
             data={dataPolicies}
             isLoading={isLoading || deleteMutation.isPending}
             muiTableBodyRowProps={({row, isDetailPanel}) => ({
-              sx: {cursor: 'pointer', '& .MuiIconButton-root': {color: (theme) => theme.palette.vars.interactiveSecondaryDefaultDefault}},
+              sx: {
+                cursor: 'pointer',
+                '& .MuiIconButton-root': {
+                  color: (theme) => theme.palette.vars.interactiveSecondaryDefaultDefault
+                }
+              },
               onClick: () => {
                 if (isDetailPanel) {
                   return;

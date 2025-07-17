@@ -65,11 +65,11 @@ const getNotificationOptions = (data: any) => {
       vibrate: [200, 100, 200],
       requireInteraction: data.requireInteraction ?? true,
       silent: data.silent ?? false,
-      timestamp: Date.now(),
-      data: {
-        id: data.id || Date.now().toString(),
-        ...data.data
-      }
+      timestamp: Date.now()
+      // data: {
+      //   id: data.id || Date.now().toString(),
+      //   ...data.data
+      // }
     };
     return options;
   } catch (error) {
@@ -78,26 +78,27 @@ const getNotificationOptions = (data: any) => {
   }
 };
 
-self.addEventListener('push', async (event) => {
+self.addEventListener('push', (event) => {
   try {
     if (event.data) {
-      const notificationData = event.data.text();
-      let parsedData;
-      try {
-        parsedData = JSON.parse(notificationData);
-      } catch (jsonError) {
-        parsedData = notificationData; // Fallback to raw text if JSON parsing fails
-        console.error('Failed to parse JSON from push event data:', jsonError);
-      }
-      if (parsedData) {
-        await sendNotification(parsedData);
-        const options = getNotificationOptions(parsedData);
-        if (!options) {
-          console.error('Invalid notification options, cannot display notification');
-          return;
-        }
-        await self.registration.showNotification((parsedData?.title as string) || 'Agent Identity | AGNTCY', options);
-      }
+      const notificationData = event.data.json();
+      console.log('Push event data:', notificationData);
+      // let parsedData;
+      // try {
+      //   parsedData = JSON.parse(notificationData);
+      // } catch (jsonError) {
+      //   parsedData = notificationData; // Fallback to raw text if JSON parsing fails
+      //   console.error('Failed to parse JSON from push event data:', jsonError);
+      // }
+      // if (parsedData) {
+      //   const options = getNotificationOptions(parsedData);
+      //   if (!options) {
+      //     console.error('Invalid notification options, cannot display notification');
+      //     return;
+      //   }
+      //   // await sendNotification(options);
+      //   await self.registration.showNotification((parsedData?.title as string) || 'Agent Identity | AGNTCY', options);
+      // }
     }
   } catch (error) {
     console.error('Error handling push event:', error);

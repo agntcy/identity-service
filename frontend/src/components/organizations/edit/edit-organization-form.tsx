@@ -95,7 +95,11 @@ export const EditOrganizationForm = ({tenant}: {tenant?: TenantReponse}) => {
                     <FormItem className="w-[50%]">
                       <FormLabel className="form-label">Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="Type the name of your organization..." {...field} disabled={updateOrganizationMutation.isPending} />
+                        <Input
+                          placeholder="Type the name of your organization..."
+                          {...field}
+                          disabled={updateOrganizationMutation.isPending}
+                        />
                       </FormControl>
                     </FormItem>
                   )}

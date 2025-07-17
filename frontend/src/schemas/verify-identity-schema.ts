@@ -10,9 +10,9 @@ export const VerifyIdentitySchema = z.object({
   proofValue: z.string().optional(),
   badgeFile: z
     .union([
-      z
-        .instanceof(File, {message: 'File is required'})
-        .refine((file) => !file || file.size !== 0 || file.size <= 3000000, {message: 'Max size exceeded'}),
+      z.instanceof(File, {message: 'File is required'}).refine((file) => !file || file.size !== 0 || file.size <= 3000000, {
+        message: 'Max size exceeded'
+      }),
       z.string().optional()
     ])
     .refine((value) => value instanceof File || typeof value === 'string', {

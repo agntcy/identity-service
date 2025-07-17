@@ -16,7 +16,9 @@ if ('useNavigate' in ReactRouterDom) {
 } else {
   // throw when useNavigate is triggered
   useRouteNavigate = () => {
-    throw new Error('Unsupported: SecureRoute only works with react-router-dom v6 or any router library with compatible APIs.');
+    throw new Error(
+      'Unsupported: SecureRoute only works with react-router-dom v6 or any router library with compatible APIs.'
+    );
   };
 }
 

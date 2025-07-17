@@ -46,7 +46,9 @@ const DateHover: React.FC<DateHoverProps> = ({className, date, ...props}) => {
   );
 };
 
-interface DateHoverProps extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>, VariantProps<typeof dateHoverStyles> {
+interface DateHoverProps
+  extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>,
+    VariantProps<typeof dateHoverStyles> {
   date?: string | number | Date;
 }
 

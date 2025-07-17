@@ -17,7 +17,15 @@ interface ConfirmModalProps {
   onConfirm: () => void;
 }
 
-export const ConfirmModal: React.FC<ConfirmModalProps> = ({open, title, description, buttonConfirmProps, confirmButtonText, onCancel, onConfirm}) => {
+export const ConfirmModal: React.FC<ConfirmModalProps> = ({
+  open,
+  title,
+  description,
+  buttonConfirmProps,
+  confirmButtonText,
+  onCancel,
+  onConfirm
+}) => {
   return (
     <Modal open={open} onClose={onCancel} aria-labelledby="dialog-title" aria-describedby="dialog-description" maxWidth="md">
       <ModalTitle>{title}</ModalTitle>

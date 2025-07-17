@@ -93,7 +93,12 @@ export const BasePage = ({
             >
               <Box display="flex" justifyContent="space-between" flexWrap="wrap" alignItems="start">
                 <Box display="flex" flexDirection="column" gap="8px" flexGrow={1}>
-                  <Typography variant="h5" component="h1" fontWeight="bold" sx={(theme) => ({color: theme.palette.vars.baseTextStrong})}>
+                  <Typography
+                    variant="h5"
+                    component="h1"
+                    fontWeight="bold"
+                    sx={(theme) => ({color: theme.palette.vars.baseTextStrong})}
+                  >
                     {title}
                   </Typography>
                   {description && <Typography variant="body2">{description}</Typography>}
@@ -108,10 +113,26 @@ export const BasePage = ({
           )}
         </Box>
         {subNav && tab !== undefined && (
-          <Box display="flex" justifyContent="space-between" flexDirection="column" flexWrap="wrap" maxWidth="100%" flexGrow={1} height="auto">
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            flexDirection="column"
+            flexWrap="wrap"
+            maxWidth="100%"
+            flexGrow={1}
+            height="auto"
+          >
             <Tabs value={tab} onChange={handleChange} role="navigation" {...tabsProps}>
               {subNav.map((item, idx) => {
-                return <Tab key={`item-tab-${idx}`} component={Link} aria-current={item.selected && 'page'} {...item} to={item.href || '#'} />;
+                return (
+                  <Tab
+                    key={`item-tab-${idx}`}
+                    component={Link}
+                    aria-current={item.selected && 'page'}
+                    {...item}
+                    to={item.href || '#'}
+                  />
+                );
               })}
             </Tabs>
           </Box>

@@ -21,8 +21,7 @@ import LogoIcon from '@/assets/icon-agntcy.svg?react';
 import {NotificationSettings} from '../shared/notifications/notification-settings';
 
 export const Header = () => {
-  const {width} = useWindowSize();
-  const isMobile = width < 768;
+  const {isMobile} = useWindowSize();
 
   const [openNotificationSettings, setOpenNotificationSettings] = useState(false);
 
@@ -56,7 +55,7 @@ export const Header = () => {
         }
         position="fixed"
         actions={
-          width >= 768
+          !isMobile
             ? [
                 {
                   id: 'docs',
@@ -91,8 +90,7 @@ const UserSection = ({handleNotificationsChange}: {handleNotificationsChange: (v
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
-  const {width} = useWindowSize();
-  const isMobile = width < 768;
+  const {isMobile} = useWindowSize();
 
   const navigate = useNavigate();
   const {authInfo, logout} = useAuth();
@@ -153,7 +151,9 @@ const UserSection = ({handleNotificationsChange}: {handleNotificationsChange: (v
             })
           }
         }}
-        endIcon={isMobile ? null : open ? <ChevronUpIcon width={16} height={16} /> : <ChevronDownIcon width={16} height={16} />}
+        endIcon={
+          isMobile ? null : open ? <ChevronUpIcon width={16} height={16} /> : <ChevronDownIcon width={16} height={16} />
+        }
         disableRipple
         disableFocusRipple
         focusRipple={false}
@@ -163,7 +163,14 @@ const UserSection = ({handleNotificationsChange}: {handleNotificationsChange: (v
             <span className="capitalize">{authInfo?.user?.name || 'User'}</span>
           </Typography>
           <div className="-mt-[3px]">
-            <Typography textAlign="left" variant="caption" sx={(theme) => ({color: theme.palette.vars.baseTextStrong, textTransform: 'capitalize'})}>
+            <Typography
+              textAlign="left"
+              variant="caption"
+              sx={(theme) => ({
+                color: theme.palette.vars.baseTextStrong,
+                textTransform: 'capitalize'
+              })}
+            >
               {role}
             </Typography>
           </div>
@@ -181,25 +188,33 @@ const UserSection = ({handleNotificationsChange}: {handleNotificationsChange: (v
               <span className="capitalize">{authInfo?.user?.name || 'User'}</span>
             </Typography>
             <div className="-mt-[4px]">
-              <Typography variant="caption" sx={(theme) => ({color: theme.palette.vars.baseTextStrong, textTransform: 'capitalize'})}>
+              <Typography
+                variant="caption"
+                sx={(theme) => ({
+                  color: theme.palette.vars.baseTextStrong,
+                  textTransform: 'capitalize'
+                })}
+              >
                 {role}
               </Typography>
             </div>
           </div>
         </div>
         <Divider />
-        <MenuItem
-          disableRipple
-          onClick={() => {
-            handleNotificationsChange(true);
-            handleClose();
-          }}
-        >
-          <div className="flex items-center justify-between w-full">
-            <Typography variant="body2Semibold">Notifications</Typography>
-            <BellIcon className="w-4 h-4" />
-          </div>
-        </MenuItem>
+        {isMobile && (
+          <MenuItem
+            disableRipple
+            onClick={() => {
+              handleNotificationsChange(true);
+              handleClose();
+            }}
+          >
+            <div className="flex items-center justify-between w-full">
+              <Typography variant="body2Semibold">Notifications</Typography>
+              <BellIcon className="w-4 h-4" />
+            </div>
+          </MenuItem>
+        )}
         <MenuItem disableRipple onClick={handleLogout}>
           <div className="flex items-center justify-between w-full">
             <Typography variant="body2Semibold">Logout</Typography>

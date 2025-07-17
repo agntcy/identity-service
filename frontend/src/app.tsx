@@ -19,6 +19,7 @@ import {NotificationsProvider} from './providers/notifications-provider/notifica
 import {useEffect} from 'react';
 import * as CookieConsentVanilla from 'vanilla-cookieconsent';
 import {config} from './cookies/config';
+import {InstallButtonPwa} from './components/shared/pwa/install-button-pwa';
 
 const App = () => {
   useEffect(() => {
@@ -49,6 +50,7 @@ const App = () => {
               </ApiProvider>
             </AnalyticsProvider>
           </AuthProvider>
+          <InstallButtonPwa />
         </HelmetProvider>
       </ErrorBoundary>
     </ThemeProvider>

@@ -3,10 +3,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {useLayoutEffect, useState} from 'react';
+import {useLayoutEffect, useMemo, useState} from 'react';
 
 export const useWindowSize = () => {
   const [windowSize, setWindowSize] = useState({width: 0, height: 0});
+  const isMobile = useMemo(() => windowSize.width < 768, [windowSize.width]);
 
   const handleSize = () => {
     setWindowSize({
@@ -21,5 +22,5 @@ export const useWindowSize = () => {
     return () => window.removeEventListener('resize', handleSize);
   }, []);
 
-  return windowSize;
+  return {windowSize, isMobile};
 };

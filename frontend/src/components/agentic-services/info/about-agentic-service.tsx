@@ -14,7 +14,13 @@ import {StatusAgenticService} from '@/components/shared/status-agentic-service';
 import DateHover from '@/components/ui/date-hover';
 import {useAnalytics} from '@/hooks';
 
-export const AboutAgenticService = ({app, onChangeReissueBadge}: {app?: App; onChangeReissueBadge?: (value: boolean) => void}) => {
+export const AboutAgenticService = ({
+  app,
+  onChangeReissueBadge
+}: {
+  app?: App;
+  onChangeReissueBadge?: (value: boolean) => void;
+}) => {
   const {analyticsTrack} = useAnalytics();
 
   const keyValuePairs = useMemo(() => {
@@ -70,7 +76,9 @@ export const AboutAgenticService = ({app, onChangeReissueBadge}: {app?: App; onC
               </div>
               <CardContent className="p-0 space-y-4">
                 <div className="bg-[#FBFCFE] border border-[#D5DFF7] rounded-[6px] w-fit py-2 px-4 flex justify-between items-center gap-8 w-full">
-                  <Typography variant="body2">{app?.apiKey ? `${'*'.repeat(20)}${app.apiKey.slice(-5)}` : 'No API Key available'}</Typography>
+                  <Typography variant="body2">
+                    {app?.apiKey ? `${'*'.repeat(20)}${app.apiKey.slice(-5)}` : 'No API Key available'}
+                  </Typography>
                   <CopyButton
                     text={app?.apiKey || ''}
                     style={{border: 'none'}}

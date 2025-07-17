@@ -104,7 +104,8 @@ export const useUpdateRule = ({callbacks}: PropsSettingsRules = {}) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ['update-rule'],
-    mutationFn: ({policyId, ruleId, data}: {policyId: string; ruleId: string; data: CreateRuleBody}) => PolicyAPI.updateRule(policyId, ruleId, data),
+    mutationFn: ({policyId, ruleId, data}: {policyId: string; ruleId: string; data: CreateRuleBody}) =>
+      PolicyAPI.updateRule(policyId, ruleId, data),
     onError: () => {
       if (callbacks?.onError) {
         callbacks.onError();

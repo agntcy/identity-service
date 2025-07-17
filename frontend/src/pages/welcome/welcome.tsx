@@ -36,9 +36,16 @@ const Welcome = () => {
                     Create Badges & Policies
                   </Typography>
                   <div className="hidden md:block">
-                    <Typography textAlign="center" variant="body1" paddingTop={2} color="#FBFCFE" maxWidth={'80%'} sx={{margin: '0 auto'}}>
-                      Register your AI agents and MCP servers, including those supporting A2A-compatible protocols like Google A2A, to create and
-                      manage identities with support for policies and access controls.
+                    <Typography
+                      textAlign="center"
+                      variant="body1"
+                      paddingTop={2}
+                      color="#FBFCFE"
+                      maxWidth={'80%'}
+                      sx={{margin: '0 auto'}}
+                    >
+                      Register your AI agents and MCP servers, including those supporting A2A-compatible protocols like
+                      Google A2A, to create and manage identities with support for policies and access controls.
                     </Typography>
                   </div>
                   <Link
@@ -60,13 +67,22 @@ const Welcome = () => {
                   <Button
                     variant="outlined"
                     onClick={() => login?.()}
-                    sx={{fontWeight: '600 !important', color: '#FBFCFE !important', borderRadius: '1000px !important'}}
+                    sx={{
+                      fontWeight: '600 !important',
+                      color: '#FBFCFE !important',
+                      borderRadius: '1000px !important'
+                    }}
                   >
                     <span className="text-[#FBAF45]">Log In</span>
                   </Button>
                   <Button
                     onClick={() => register?.()}
-                    sx={{fontWeight: '600 !important', background: '#FBAF45 !important', color: '#00142B', borderRadius: '1000px !important'}}
+                    sx={{
+                      fontWeight: '600 !important',
+                      background: '#FBAF45 !important',
+                      color: '#00142B',
+                      borderRadius: '1000px !important'
+                    }}
                     variant="primary"
                   >
                     Sign Up

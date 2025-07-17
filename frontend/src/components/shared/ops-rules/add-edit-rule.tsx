@@ -139,7 +139,12 @@ export const AddEditRule = ({policy, open, rule, mode = 'add', onClose}: AddEdit
             <RuleForm policy={policy} />
           </ModalContent>
           <ModalActions>
-            <Button onClick={onClose} variant="tertariary" disabled={createRule.isPending} sx={{fontWeight: '600 !important'}}>
+            <Button
+              onClick={onClose}
+              variant="tertariary"
+              disabled={createRule.isPending}
+              sx={{fontWeight: '600 !important'}}
+            >
               Cancel
             </Button>
             <Button

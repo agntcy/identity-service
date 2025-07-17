@@ -21,7 +21,11 @@ class IamAPIClass {
   public instance: AxiosInstance;
   protected retry = false;
   protected tokenExpiredHttpHandler?: () => Promise<AuthInfo | undefined>;
-  protected logout?: (params: {revokeAccessToken?: boolean; revokeRefreshToken?: boolean; clearTokensBeforeRedirect?: boolean}) => void;
+  protected logout?: (params: {
+    revokeAccessToken?: boolean;
+    revokeRefreshToken?: boolean;
+    clearTokensBeforeRedirect?: boolean;
+  }) => void;
 
   constructor() {
     this.instance = axios.create({
@@ -112,7 +116,13 @@ class IamAPIClass {
 
   protected resErrInterceptor = async (error: AxiosError) => {
     const originalConfig = error.config;
-    if (this.authInfo && !this.retry && originalConfig && error.response && httpErrorsAuth.includes(error.response?.status)) {
+    if (
+      this.authInfo &&
+      !this.retry &&
+      originalConfig &&
+      error.response &&
+      httpErrorsAuth.includes(error.response?.status)
+    ) {
       this.retry = true;
       if (this.tokenExpiredHttpHandler) {
         try {
@@ -143,7 +153,11 @@ class IamAPIClass {
 
   public setTokenExpiredHandlers(handlers: {
     tokenExpiredHttpHandler?: () => Promise<AuthInfo | undefined>;
-    logout?: (params: {revokeAccessToken?: boolean; revokeRefreshToken?: boolean; clearTokensBeforeRedirect?: boolean}) => void;
+    logout?: (params: {
+      revokeAccessToken?: boolean;
+      revokeRefreshToken?: boolean;
+      clearTokensBeforeRedirect?: boolean;
+    }) => void;
   }) {
     this.tokenExpiredHttpHandler = handlers.tokenExpiredHttpHandler;
     this.logout = handlers.logout;

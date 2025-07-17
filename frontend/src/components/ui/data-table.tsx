@@ -119,8 +119,14 @@ export const DataTable = forwardRef<DataTableRef, DataTableProps<any, any>>(
                     <TableRow key={headerGroup.id}>
                       {headerGroup.headers.map((header) => {
                         return (
-                          <TableHead key={header.id} colSpan={header.colSpan} className={cn('whitespace-nowrap', classNameTableColumn)}>
-                            {header.isPlaceholder ? null : flexRender(<DataTableColumnHeader column={header.column} />, header.getContext())}
+                          <TableHead
+                            key={header.id}
+                            colSpan={header.colSpan}
+                            className={cn('whitespace-nowrap', classNameTableColumn)}
+                          >
+                            {header.isPlaceholder
+                              ? null
+                              : flexRender(<DataTableColumnHeader column={header.column} />, header.getContext())}
                           </TableHead>
                         );
                       })}
@@ -133,7 +139,13 @@ export const DataTable = forwardRef<DataTableRef, DataTableProps<any, any>>(
                   table
                     .getRowModel()
                     .rows.map((row) => (
-                      <TableRowWrapper table={table} key={row.id} row={row} onRowClick={onRowClick} className={classNameTableColumn} />
+                      <TableRowWrapper
+                        table={table}
+                        key={row.id}
+                        row={row}
+                        onRowClick={onRowClick}
+                        className={classNameTableColumn}
+                      />
                     ))
                 ) : (
                   <TableRow>
@@ -174,7 +186,12 @@ const TableRowWrapper = <TData extends Row<TData>>({
 
   return (
     <>
-      <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'} className="group" onClick={() => onRowClick?.(row.original)}>
+      <TableRow
+        key={row.id}
+        data-state={row.getIsSelected() && 'selected'}
+        className="group"
+        onClick={() => onRowClick?.(row.original)}
+      >
         {row.getVisibleCells().map((cell) => (
           <TableCellWrapper cell={cell} className={className} key={cell.column.id} />
         ))}
