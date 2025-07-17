@@ -37,7 +37,8 @@ export const ConditionalQueryRenderer: React.FC<React.PropsWithChildren<Conditio
   useSkeleton = false,
   useContainer = false,
   enable = true,
-  useLoading = true
+  useLoading = true,
+  bypass = false
 }) => {
   if (!enable) {
     return <>{children}</>;
@@ -117,6 +118,10 @@ export const ConditionalQueryRenderer: React.FC<React.PropsWithChildren<Conditio
     return null;
   };
 
+  if (bypass) {
+    return <>{children}</>;
+  }
+
   const unreadyResult = getUnreadyStateUI();
 
   if (useContainer && unreadyResult) {
@@ -167,4 +172,5 @@ interface ConditionalQueryRendererProps {
   useContainer?: boolean;
   enable?: boolean;
   useLoading?: boolean;
+  bypass?: boolean;
 }

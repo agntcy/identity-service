@@ -14,7 +14,7 @@ import {generatePath, useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
 import {FilterSections} from '@/components/shared/filters-sections';
 import {App, AppType} from '@/types/api/app';
-import {IdCardIcon, PencilIcon, PlusIcon, Trash2Icon} from 'lucide-react';
+import {CheckIcon, IdCardIcon, PencilIcon, PlusIcon, Trash2Icon} from 'lucide-react';
 import {ConfirmModal} from '@/components/ui/confirm-modal';
 import {useDeleteAgenticService} from '@/mutations';
 import {BadgeModalForm} from '@/components/shared/badge-modal-form';
@@ -197,6 +197,22 @@ export const ListAgenticServices = () => {
             onSortingChange={setSorting}
             renderRowActionMenuItems={({row}) => {
               return [
+                <MenuItem
+                  key="verify-identity"
+                  onClick={() => {
+                    analyticsTrack('CLICK_NAVIGATION_VERIFY_IDENTITY_AGENTIC_SERVICE', {
+                      type: row.original.type
+                    });
+                    const path = generatePath(PATHS.agenticServices.verifyIdentity.info, {id: row.original.id});
+                    void navigate(path, {replace: true});
+                  }}
+                  sx={{display: 'flex', alignItems: 'center', gap: '8px'}}
+                >
+                  <CheckIcon className="w-4 h-4" color="#062242" />
+                  <Typography variant="body2" color="#1A1F27">
+                    Verifiy Identity
+                  </Typography>
+                </MenuItem>,
                 <MenuItem
                   key="re-issue-badge"
                   onClick={() => {

@@ -118,6 +118,7 @@ func main() {
 		&badgepg.CredentialSchema{},
 		&badgepg.CredentialStatus{},
 		&authpg.Session{},
+		&authpg.SessionDeviceOTP{},
 		&policypg.Policy{},
 		&policypg.Task{},
 		&policypg.Rule{},
@@ -263,19 +264,21 @@ func main() {
 		taskService,
 		badgeRevoker,
 	)
+	notificationSrv := bff.NewNotificationService(
+		config.WebApprovalEmail,
+		config.WebApprovalPubKey,
+		config.WebApprovalPrivKey,
+	)
 	authSrv := bff.NewAuthService(
 		authRepository,
 		credentialStore,
 		oidcAuthenticator,
 		appRepository,
 		policyEvaluator,
+		deviceRepository,
+		notificationSrv,
 	)
 	policySrv := bff.NewPolicyService(appRepository, policyRepository)
-	notificationSrv := bff.NewNotificationService(
-		config.WebApprovalEmail,
-		config.WebApprovalPubKey,
-		config.WebApprovalPrivKey,
-	)
 	deviceSrv := bff.NewDeviceService(
 		deviceRepository,
 		notificationSrv,

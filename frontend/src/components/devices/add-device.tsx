@@ -21,6 +21,7 @@ import {Device} from '@/types/api/device';
 import QRCode from 'react-qr-code';
 import {PATHS} from '@/router/paths';
 import {useAnalytics} from '@/hooks';
+import {generatePath} from 'react-router-dom';
 
 export const AddDevice = () => {
   const [open, setOpen] = useState<boolean>(false);
@@ -56,7 +57,8 @@ export const AddDevice = () => {
 
   const link = useMemo(() => {
     if (device) {
-      return `${window.location.origin}${PATHS.onboardDevice}/${device.id}`;
+      const path = generatePath(PATHS.onboardDevice.info, {id: device.id});
+      return `${window.location.origin}${path}`;
     }
     return '';
   }, [device]);

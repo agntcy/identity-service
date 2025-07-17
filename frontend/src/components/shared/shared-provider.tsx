@@ -6,7 +6,8 @@
 import {ReactNode} from 'react';
 import {Card} from '../ui/card';
 import {cn} from '@/lib/utils';
-import {Tooltip, Typography} from '@outshift/spark-design';
+import {Typography} from '@outshift/spark-design';
+import {Tooltip} from '@mui/material';
 
 export const SharedProvider = <T,>({
   imgURI,
@@ -22,7 +23,7 @@ export const SharedProvider = <T,>({
 }: SharedProviderProps<T>) => {
   if (useTooltip && isDisabled) {
     return (
-      <Tooltip title="This option is not available" placement="top">
+      <Tooltip title="This option is not available" arrow>
         <span>
           <Card
             onClick={() => undefined}

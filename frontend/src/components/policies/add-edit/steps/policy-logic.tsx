@@ -8,9 +8,9 @@ import {Form} from '@/components/ui/form';
 import {PlusIcon, XIcon} from 'lucide-react';
 import {useCallback} from 'react';
 import {useFieldArray, UseFormReturn, useWatch} from 'react-hook-form';
-import {Button, Divider, IconButton, Typography} from '@mui/material';
+import {Button, Divider, IconButton, Tooltip, Typography} from '@mui/material';
 import {PolicyLogicyFormValues} from '@/schemas/policy-logic-schema';
-import {Accordion, GeneralSize, Tag, TagStatus, Tooltip} from '@outshift/spark-design';
+import {Accordion, GeneralSize, Tag, TagStatus} from '@outshift/spark-design';
 import {RuleAction} from '@/types/api/policy';
 import {RuleForm} from './rule-form';
 import {labels} from '@/constants/labels';
@@ -109,7 +109,7 @@ export const PolicyLogic = ({
                             </div>
                           </Accordion>
                         </div>
-                        <Tooltip title="Remove this rule">
+                        <Tooltip title="Remove this rule" arrow>
                           <IconButton
                             sx={(theme) => ({
                               color: theme.palette.vars.baseTextDefault,
@@ -126,7 +126,7 @@ export const PolicyLogic = ({
                       <div className="w-full">
                         {index > 0 && fields.length > 0 && (
                           <div className="flex justify-end">
-                            <Tooltip title="Remove this rule">
+                            <Tooltip title="Remove this rule" arrow>
                               <IconButton
                                 sx={(theme) => ({
                                   color: theme.palette.vars.baseTextDefault,

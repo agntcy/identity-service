@@ -49,7 +49,7 @@ export const BadgeModalForm = ({
       type: app.type,
       oasfSpecs: undefined,
       mcpServer: undefined,
-      wellKnowServer: undefined,
+      wellKnownServer: undefined,
       oasfSpecsContent: undefined
     }
   });
@@ -104,7 +104,7 @@ export const BadgeModalForm = ({
       };
     } else if (app?.type === AppType.APP_TYPE_AGENT_A2A) {
       data.a2a = {
-        wellKnownUrl: values.wellKnowServer || ''
+        wellKnownUrl: values.wellKnownServer || ''
       };
     }
     analyticsTrack('CLICK_CREATE_BADGE_AGENTIC_SERVICE', {
@@ -122,7 +122,7 @@ export const BadgeModalForm = ({
       type: app.type,
       oasfSpecs: undefined,
       mcpServer: undefined,
-      wellKnowServer: undefined,
+      wellKnownServer: undefined,
       oasfSpecsContent: undefined
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -185,16 +185,12 @@ export const BadgeModalForm = ({
             {app.type === AppType.APP_TYPE_AGENT_A2A && (
               <FormField
                 control={form.control}
-                name="wellKnowServer"
+                name="wellKnownServer"
                 render={({field}) => (
                   <FormItem>
-                    <FormLabel className="form-label">Well Know Server</FormLabel>
+                    <FormLabel className="form-label">Well Known Server</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="Type the URL of the well know server..."
-                        {...field}
-                        disabled={createBadge.isPending}
-                      />
+                      <Input placeholder="Type the URL of the well known server..." {...field} disabled={createBadge.isPending} />
                     </FormControl>
                   </FormItem>
                 )}

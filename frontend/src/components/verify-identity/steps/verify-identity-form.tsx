@@ -5,7 +5,6 @@
  */
 
 import {Card, CardContent} from '@/components/ui/card';
-import {useStepper} from '../stepper';
 import {useFormContext} from 'react-hook-form';
 import {FormControl, FormField, FormItem, FormLabel} from '@/components/ui/form';
 import {useCallback, useEffect} from 'react';
@@ -17,9 +16,6 @@ import {parseJwt} from '@/utils/utils';
 
 export const VerifyIdentityForm = ({isLoading = false}: {isLoading?: boolean}) => {
   const {control, watch, reset, setValue, setError} = useFormContext<VerifyIdentityFormValues>();
-  const methods = useStepper();
-
-  const metaData = methods.getMetadata('verifyIdentityForm') as VerifyIdentityFormValues | undefined;
 
   const badge = watch('badge');
   const badgeContent = watch('badgeContent');
@@ -63,6 +59,7 @@ export const VerifyIdentityForm = ({isLoading = false}: {isLoading?: boolean}) =
   );
 
   useEffect(() => {
+    console.log(badge);
     if (badge) {
       try {
         const VC = JSON.parse(badge);
@@ -87,18 +84,6 @@ export const VerifyIdentityForm = ({isLoading = false}: {isLoading?: boolean}) =
       }
     }
   }, [badge, setError, setValue]);
-
-  useEffect(() => {
-    if (metaData) {
-      reset({
-        badge: metaData.badge || '',
-        badgeFile: metaData.badgeFile || undefined,
-        badgeContent: metaData.badgeContent || '',
-        proofValue: metaData.proofValue || ''
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [metaData]);
 
   return (
     <Card className="text-start py-4 rounded-[8px] p-[24px]" variant="secondary">

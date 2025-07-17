@@ -4,25 +4,13 @@
  */
 
 import {Card, CardContent} from '@/components/ui/card';
-import {
-  Accordion,
-  Divider,
-  EmptyState,
-  GeneralSize,
-  MenuItem,
-  Pagination,
-  Table,
-  Tag,
-  TagStatus,
-  Tooltip,
-  Typography
-} from '@outshift/spark-design';
+import {Accordion, Divider, EmptyState, GeneralSize, MenuItem, Pagination, Table, Tag, TagStatus, Typography} from '@outshift/spark-design';
 import {useCallback, useState} from 'react';
 import {Policy, Rule, RuleAction} from '@/types/api/policy';
 import {Separator} from '@/components/ui/separator';
 import {labels} from '@/constants/labels';
 import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
-import {Box, Button, IconButton, Menu} from '@mui/material';
+import {Box, Button, IconButton, Menu, Tooltip} from '@mui/material';
 import {EllipsisVerticalIcon, PencilIcon, PlusIcon, Trash2Icon} from 'lucide-react';
 import {TagActionTask} from '@/components/shared/tag-action-task';
 import {TasksColumns} from './tasks-columns';
@@ -193,7 +181,7 @@ export const RulesContent = ({policy}: {policy?: Policy}) => {
                             </div>
                           </Accordion>
                         </div>
-                        <Tooltip title="Actions">
+                        <Tooltip title="Actions" arrow>
                           <IconButton
                             sx={(theme) => ({
                               color: theme.palette.vars.baseTextDefault,

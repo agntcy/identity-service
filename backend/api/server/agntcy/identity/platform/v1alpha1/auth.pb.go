@@ -141,6 +141,123 @@ func (x *Session) GetExpiresAt() int64 {
 	return 0
 }
 
+type SessionDeviceOTP struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// A unique identifier for the OTP.
+	Id *string `protobuf:"bytes,1,opt,name=id,proto3,oneof" json:"id,omitempty"`
+	// The value of the OTP.
+	Value *string `protobuf:"bytes,2,opt,name=value,proto3,oneof" json:"value,omitempty"`
+	// The Session that the OTP is generated for.
+	SessionId *string `protobuf:"bytes,3,opt,name=session_id,json=sessionId,proto3,oneof" json:"session_id,omitempty"`
+	// The Device that the OTP is generated for.
+	DeviceId *string `protobuf:"bytes,4,opt,name=device_id,json=deviceId,proto3,oneof" json:"device_id,omitempty"`
+	// The creation time of the OTP.
+	CreatedAt *int64 `protobuf:"varint,5,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
+	// The update time of the OTP.
+	UpdatedAt *int64 `protobuf:"varint,6,opt,name=updated_at,json=updatedAt,proto3,oneof" json:"updated_at,omitempty"`
+	// The expiration time of the OTP.
+	ExpiresAt *int64 `protobuf:"varint,7,opt,name=expires_at,json=expiresAt,proto3,oneof" json:"expires_at,omitempty"`
+	// A field that tells whether the OTP is approved or denied.
+	Approved *bool `protobuf:"varint,8,opt,name=approved,proto3,oneof" json:"approved,omitempty"`
+	// A field that tells whether the TOP is used or not.
+	Used          *bool `protobuf:"varint,9,opt,name=used,proto3,oneof" json:"used,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SessionDeviceOTP) Reset() {
+	*x = SessionDeviceOTP{}
+	mi := &file_agntcy_identity_platform_v1alpha1_auth_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SessionDeviceOTP) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SessionDeviceOTP) ProtoMessage() {}
+
+func (x *SessionDeviceOTP) ProtoReflect() protoreflect.Message {
+	mi := &file_agntcy_identity_platform_v1alpha1_auth_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SessionDeviceOTP.ProtoReflect.Descriptor instead.
+func (*SessionDeviceOTP) Descriptor() ([]byte, []int) {
+	return file_agntcy_identity_platform_v1alpha1_auth_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *SessionDeviceOTP) GetId() string {
+	if x != nil && x.Id != nil {
+		return *x.Id
+	}
+	return ""
+}
+
+func (x *SessionDeviceOTP) GetValue() string {
+	if x != nil && x.Value != nil {
+		return *x.Value
+	}
+	return ""
+}
+
+func (x *SessionDeviceOTP) GetSessionId() string {
+	if x != nil && x.SessionId != nil {
+		return *x.SessionId
+	}
+	return ""
+}
+
+func (x *SessionDeviceOTP) GetDeviceId() string {
+	if x != nil && x.DeviceId != nil {
+		return *x.DeviceId
+	}
+	return ""
+}
+
+func (x *SessionDeviceOTP) GetCreatedAt() int64 {
+	if x != nil && x.CreatedAt != nil {
+		return *x.CreatedAt
+	}
+	return 0
+}
+
+func (x *SessionDeviceOTP) GetUpdatedAt() int64 {
+	if x != nil && x.UpdatedAt != nil {
+		return *x.UpdatedAt
+	}
+	return 0
+}
+
+func (x *SessionDeviceOTP) GetExpiresAt() int64 {
+	if x != nil && x.ExpiresAt != nil {
+		return *x.ExpiresAt
+	}
+	return 0
+}
+
+func (x *SessionDeviceOTP) GetApproved() bool {
+	if x != nil && x.Approved != nil {
+		return *x.Approved
+	}
+	return false
+}
+
+func (x *SessionDeviceOTP) GetUsed() bool {
+	if x != nil && x.Used != nil {
+		return *x.Used
+	}
+	return false
+}
+
 var File_agntcy_identity_platform_v1alpha1_auth_proto protoreflect.FileDescriptor
 
 const file_agntcy_identity_platform_v1alpha1_auth_proto_rawDesc = "" +
@@ -169,7 +286,31 @@ const file_agntcy_identity_platform_v1alpha1_auth_proto_rawDesc = "" +
 	"\r_access_tokenB\a\n" +
 	"\x05_codeB\r\n" +
 	"\v_created_atB\r\n" +
-	"\v_expires_atBkZigithub.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_gob\x06proto3"
+	"\v_expires_at\"\x9f\x03\n" +
+	"\x10SessionDeviceOTP\x12\x13\n" +
+	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x19\n" +
+	"\x05value\x18\x02 \x01(\tH\x01R\x05value\x88\x01\x01\x12\"\n" +
+	"\n" +
+	"session_id\x18\x03 \x01(\tH\x02R\tsessionId\x88\x01\x01\x12 \n" +
+	"\tdevice_id\x18\x04 \x01(\tH\x03R\bdeviceId\x88\x01\x01\x12\"\n" +
+	"\n" +
+	"created_at\x18\x05 \x01(\x03H\x04R\tcreatedAt\x88\x01\x01\x12\"\n" +
+	"\n" +
+	"updated_at\x18\x06 \x01(\x03H\x05R\tupdatedAt\x88\x01\x01\x12\"\n" +
+	"\n" +
+	"expires_at\x18\a \x01(\x03H\x06R\texpiresAt\x88\x01\x01\x12\x1f\n" +
+	"\bapproved\x18\b \x01(\bH\aR\bapproved\x88\x01\x01\x12\x17\n" +
+	"\x04used\x18\t \x01(\bH\bR\x04used\x88\x01\x01B\x05\n" +
+	"\x03_idB\b\n" +
+	"\x06_valueB\r\n" +
+	"\v_session_idB\f\n" +
+	"\n" +
+	"_device_idB\r\n" +
+	"\v_created_atB\r\n" +
+	"\v_updated_atB\r\n" +
+	"\v_expires_atB\v\n" +
+	"\t_approvedB\a\n" +
+	"\x05_usedBkZigithub.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_gob\x06proto3"
 
 var (
 	file_agntcy_identity_platform_v1alpha1_auth_proto_rawDescOnce sync.Once
@@ -183,9 +324,10 @@ func file_agntcy_identity_platform_v1alpha1_auth_proto_rawDescGZIP() []byte {
 	return file_agntcy_identity_platform_v1alpha1_auth_proto_rawDescData
 }
 
-var file_agntcy_identity_platform_v1alpha1_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_agntcy_identity_platform_v1alpha1_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_agntcy_identity_platform_v1alpha1_auth_proto_goTypes = []any{
-	(*Session)(nil), // 0: agntcy.identity.platform.v1alpha1.Session
+	(*Session)(nil),          // 0: agntcy.identity.platform.v1alpha1.Session
+	(*SessionDeviceOTP)(nil), // 1: agntcy.identity.platform.v1alpha1.SessionDeviceOTP
 }
 var file_agntcy_identity_platform_v1alpha1_auth_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -201,13 +343,14 @@ func file_agntcy_identity_platform_v1alpha1_auth_proto_init() {
 		return
 	}
 	file_agntcy_identity_platform_v1alpha1_auth_proto_msgTypes[0].OneofWrappers = []any{}
+	file_agntcy_identity_platform_v1alpha1_auth_proto_msgTypes[1].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_agntcy_identity_platform_v1alpha1_auth_proto_rawDesc), len(file_agntcy_identity_platform_v1alpha1_auth_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   1,
+			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

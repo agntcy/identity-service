@@ -19,27 +19,24 @@ import {
   ViewSwitcher
 } from '@outshift/spark-design';
 import {ConditionalQueryRenderer} from '../ui/conditional-query-renderer';
-import {DownloadIcon, ExpandIcon} from 'lucide-react';
+import {CheckIcon, DownloadIcon, ExpandIcon} from 'lucide-react';
 import {BadgeModalForm} from './badge-modal-form';
 import {Badge} from '@/types/api/badge';
 import ScrollShadowWrapper from '../ui/scroll-shadow-wrapper';
 import {useAnalytics} from '@/hooks';
+import {generatePath, useNavigate} from 'react-router-dom';
+import {PATHS} from '@/router/paths';
 
 interface BadgeCardProps {
   app?: App;
+  verifyIdentity?: boolean;
   navigateTo?: boolean;
   showError?: boolean;
   confirmButtonText?: string;
   onBadgeChanged?: (badge?: Badge) => void;
 }
 
-export const BadgeCard = ({
-  app,
-  navigateTo = true,
-  confirmButtonText,
-  showError = false,
-  onBadgeChanged
-}: BadgeCardProps) => {
+export const BadgeCard = ({app, navigateTo = true, verifyIdentity = false, confirmButtonText, showError = false, onBadgeChanged}: BadgeCardProps) => {
   const [showBadgeForm, setShowBadgeForm] = useState<boolean>(false);
   const [showBadge, setShowBadge] = useState<boolean>(false);
   const [view, setView] = useState('credential');
@@ -61,6 +58,8 @@ export const BadgeCard = ({
   const {data, isLoading, isError} = useGetAgenticServiceBadge(app?.id);
 
   const {analyticsTrack} = useAnalytics();
+
+  const navigate = useNavigate();
 
   const contentToShow = useMemo(() => {
     if (view === 'credential') {
@@ -146,6 +145,19 @@ export const BadgeCard = ({
               Badge
             </Typography>
             <div className="flex gap-4">
+              {verifyIdentity && (
+                <Button
+                  variant="tertariary"
+                  endIcon={<CheckIcon className="w-4 h-4" />}
+                  sx={{padding: 0, fontWeight: '600 !important'}}
+                  onClick={() => {
+                    const path = generatePath(PATHS.agenticServices.verifyIdentity.info, {id: app?.id || ''});
+                    void navigate(path, {replace: true});
+                  }}
+                >
+                  Verify Identity
+                </Button>
+              )}
               <Button
                 variant="tertariary"
                 endIcon={<DownloadIcon className="w-4 h-4" />}

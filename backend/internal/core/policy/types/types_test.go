@@ -48,7 +48,9 @@ func TestPolicyCanInvoke_Should_Pass(t *testing.T) {
 
 	for _, app := range apps {
 		t.Run(fmt.Sprintf("test policy against app %s", app), func(t *testing.T) {
-			assert.True(t, policy.CanInvoke(app, ""))
+			t.Parallel()
+
+			assert.NotNil(t, policy.CanInvoke(app, ""))
 		})
 	}
 }
@@ -94,7 +96,9 @@ func TestPolicyCanInvoke_Should_Pass_With_ToolName(t *testing.T) {
 
 	for idx := range apps {
 		t.Run(fmt.Sprintf("test policy against app %s", apps[idx]), func(t *testing.T) {
-			assert.True(t, policy.CanInvoke(apps[idx], tools[idx]))
+			t.Parallel()
+
+			assert.NotNil(t, policy.CanInvoke(apps[idx], tools[idx]))
 		})
 	}
 }
@@ -117,7 +121,7 @@ func TestPolicyCanInvoke_Should_Fail_For_Invalid_App(t *testing.T) {
 	}
 	invalidAppID := "invalid_app"
 
-	assert.False(t, policy.CanInvoke(invalidAppID, ""))
+	assert.Nil(t, policy.CanInvoke(invalidAppID, ""))
 }
 
 func TestPolicyCanInvoke_Should_Fail_For_Invalid_Tool(t *testing.T) {
@@ -141,5 +145,5 @@ func TestPolicyCanInvoke_Should_Fail_For_Invalid_Tool(t *testing.T) {
 	}
 	invalidToolName := "invalid_tool"
 
-	assert.False(t, policy.CanInvoke(app, invalidToolName))
+	assert.Nil(t, policy.CanInvoke(app, invalidToolName))
 }

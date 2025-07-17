@@ -8,6 +8,7 @@ import (
 	"errors"
 	"strings"
 
+	identity_platform_sdk_go "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1"
 	"github.com/agntcy/identity-platform/internal/pkg/grpcutil"
 	outshiftiam "github.com/agntcy/identity-platform/internal/pkg/iam"
 	"github.com/agntcy/identity-platform/pkg/log"
@@ -25,6 +26,7 @@ const (
 var allowedServicesWithoutAuth = []string{
 	"/agntcy.identity.platform.v1alpha1.DeviceService/RegisterDevice",
 	"/agntcy.identity.platform.v1alpha1.BadgeService/VerifyBadge",
+	identity_platform_sdk_go.AuthService_ApproveToken_FullMethodName,
 	"/grpc.health.v1.Health/Check",
 }
 

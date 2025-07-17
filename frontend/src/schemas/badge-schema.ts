@@ -24,7 +24,7 @@ export const BadgeSchema = z
       .optional(),
     mcpServer: z.string().optional(),
     oasfSpecsContent: z.string().optional(),
-    wellKnowServer: z.string().optional()
+    wellKnownServer: z.string().optional()
   })
   .superRefine((data, ctx) => {
     if (data.type === AppType.APP_TYPE_AGENT_OASF) {
@@ -42,7 +42,7 @@ export const BadgeSchema = z
         });
       }
     } else if (data.type === AppType.APP_TYPE_AGENT_A2A) {
-      if (!data.wellKnowServer) {
+      if (!data.wellKnownServer) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: 'Well-Known Server is required for A2A Agentic Service'

@@ -60,7 +60,6 @@ configmap:
   DB_HOST: "pyramid-platform-postgresql"
   DB_PORT: "5432"
   DB_USERNAME: "pyramid"
-  DB_PASSWORD: "pyramid"
   DB_NAME: "identity-platform"
 
   VAULT_HOST: "0.0.0.0"
@@ -85,9 +84,7 @@ postgresql:
   enabled: true
   auth:
     enablePostgresUser: true
-    postgresPassword: pyramid
     username: pyramid
-    password: pyramid
     database: identity-platform
   persistence:
     enabled: true

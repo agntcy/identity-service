@@ -8,7 +8,7 @@ import {cva} from 'class-variance-authority';
 import React, {useMemo} from 'react';
 import {format, formatDistanceToNow} from 'date-fns';
 import {safeGetDate} from '@/utils/date';
-import {Tooltip} from '@outshift/spark-design';
+import {Tooltip} from '@mui/material';
 
 const dateHoverStyles = cva(['_date-hover inline cursor-default']);
 
@@ -38,7 +38,7 @@ const DateHover: React.FC<DateHoverProps> = ({className, date, ...props}) => {
   }
 
   return (
-    <Tooltip title={<div>{format(dateObj, 'PPPPpppp')}</div>} placement="top">
+    <Tooltip arrow title={<div>{format(dateObj, 'PPPPpppp')}</div>}>
       <div className={dateHoverStyles({class: className})} {...props}>
         {props.children || `${formatDistanceToNow(dateObj, {addSuffix: true})}`}
       </div>

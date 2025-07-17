@@ -6,6 +6,7 @@ package postgres
 import (
 	apptypes "github.com/agntcy/identity-platform/internal/core/app/types"
 	types "github.com/agntcy/identity-platform/internal/core/auth/types"
+	devicetypes "github.com/agntcy/identity-platform/internal/core/device/types"
 	"github.com/agntcy/identity-platform/internal/pkg/secrets"
 	"github.com/agntcy/identity-platform/internal/pkg/strutil"
 	"github.com/google/uuid"
@@ -49,5 +50,46 @@ func newSessionModel(src *types.Session) *Session {
 		AuthorizationCode: src.AuthorizationCode,
 		ExpiresAt:         src.ExpiresAt,
 		CreatedAt:         src.CreatedAt,
+	}
+}
+
+type SessionDeviceOTP struct {
+	ID        uuid.UUID `gorm:"primaryKey;default:gen_random_uuid()"`
+	Value     string    `gorm:"uniqueIndex"`
+	SessionID string    `gorm:"foreignKey:ID"`
+	Session   *Session
+	DeviceID  string `gorm:"foreignKey:ID"`
+	Device    *devicetypes.Device
+	CreatedAt int64 `gorm:"autoCreateTime"`
+	ExpiresAt int64
+	Approved  *bool
+	Used      bool
+}
+
+func (e *SessionDeviceOTP) ToCoreType() *types.SessionDeviceOTP {
+	return &types.SessionDeviceOTP{
+		ID:        e.ID.String(),
+		Value:     e.Value,
+		SessionID: e.SessionID,
+		DeviceID:  e.DeviceID,
+		CreatedAt: e.CreatedAt,
+		ExpiresAt: e.ExpiresAt,
+		Approved:  e.Approved,
+		Used:      e.Used,
+	}
+}
+
+func newSessionDeviceOTPModel(src *types.SessionDeviceOTP) *SessionDeviceOTP {
+	id, _ := uuid.Parse(src.ID)
+
+	return &SessionDeviceOTP{
+		ID:        id,
+		Value:     src.Value,
+		SessionID: src.SessionID,
+		DeviceID:  src.DeviceID,
+		CreatedAt: src.CreatedAt,
+		ExpiresAt: src.ExpiresAt,
+		Approved:  src.Approved,
+		Used:      src.Used,
 	}
 }
