@@ -10,7 +10,7 @@ import {Policy, RuleAction} from '@/types/api/policy';
 import {labels} from '@/constants/labels';
 import {useGetGetTasksAgenticService} from '@/queries';
 import {useMemo} from 'react';
-import {Divider, ListSubheader} from '@mui/material';
+import {Checkbox, Divider, ListSubheader} from '@mui/material';
 import {RuleFormValues} from '@/schemas/rule-schema';
 
 export const TaskForm = ({isLoading = false, policy}: {isLoading?: boolean; policy?: Policy}) => {
@@ -79,6 +79,7 @@ export const TaskForm = ({isLoading = false, policy}: {isLoading?: boolean; poli
     const items = group.values.map((t) => {
       return (
         <MenuItem key={t.value} value={t.value} sx={{paddingLeft: '24px'}}>
+          <Checkbox checked={policyForm.watch('tasks').includes(t.value)} size="small" />
           <Typography variant="body2">{t.label}</Typography>
         </MenuItem>
       );
@@ -130,7 +131,12 @@ export const TaskForm = ({isLoading = false, policy}: {isLoading?: boolean; poli
                         );
                       }
                       return (
-                        <div className="mt-[1px]">
+                        <div
+                          className="mt-[1px] w-fit"
+                          onMouseDown={(event) => {
+                            event.stopPropagation();
+                          }}
+                        >
                           <Tags
                             items={selected.map((value) => ({
                               valueFormatter: () => optionsTasksValues.find((option) => option.value === value)?.label || 'Unknown Task',
@@ -139,6 +145,9 @@ export const TaskForm = ({isLoading = false, policy}: {isLoading?: boolean; poli
                             showOnlyFirst={false}
                             shouldTruncate
                             maxTooltipTags={2}
+                            handleDelete={(event, node) => {
+                              field.onChange(selected.filter((task) => task !== node.value));
+                            }}
                           />
                         </div>
                       );
