@@ -23,9 +23,9 @@ logger = logging.getLogger(__name__)
 @click.option("--host", "host", default="0.0.0.0")
 @click.option("--port", "port", default=os.getenv("PORT", 9093), type=int)
 @click.option(
-    "--ollama-host", default=os.getenv("OLLAMA_HOST", "http://localhost:11434")
+    "--azure-openai-endpoint", default=os.getenv("AZURE_OPENAI_ENDPOINT", "")
 )
-@click.option("--ollama-model", default=os.getenv("OLLAMA_MODEL", "llama3.2"))
+@click.option("--azure-openai-api-key", default=os.getenv("AZURE_OPENAI_API_KEY", ""))
 @click.option(
     "--currency-exchange-mcp-server-url",
     default=os.getenv("CURRENCY_EXCHANGE_MCP_SERVER_URL", "http://localhost:9090/mcp"),
@@ -37,8 +37,8 @@ logger = logging.getLogger(__name__)
 def main(
     host,
     port,
-    ollama_host,
-    ollama_model,
+    azure_openai_endpoint,
+    azure_openai_api_key,
     currency_exchange_mcp_server_url,
     currency_exchange_agent_url,
 ):
@@ -48,8 +48,8 @@ def main(
     try:
         # Initialize the agent with capabilities and skills
         agent = FinancialAssistantAgent(
-            ollama_base_url=ollama_host,
-            ollama_model=ollama_model,
+            azure_openai_endpoint=azure_openai_endpoint,
+            azure_openai_api_key=azure_openai_api_key,
             currency_exchange_mcp_server_url=currency_exchange_mcp_server_url,
             currency_exchange_agent_url=currency_exchange_agent_url,
         )

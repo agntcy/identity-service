@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 """Main entry point for the Financial Assistant Agent server."""
 
-from langchain_ollama import ChatOllama
+from langchain_openai import ChatOpenAI
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.prebuilt import create_react_agent
 
@@ -24,14 +24,14 @@ class FinancialAssistantAgent:
 
     def __init__(
         self,
-        ollama_base_url,
-        ollama_model,
+        azure_openai_endpoint,
+        azure_openai_api_key,
         currency_exchange_mcp_server_url,
         currency_exchange_agent_url,
     ) -> None:
-        """Initialize the agent with the Ollama model and tools."""
-        self.ollama_base_url = ollama_base_url
-        self.ollama_model = ollama_model
+        """Initialize the agent with the Azure OpenAI model and tools."""
+        self.azure_openai_endpoint = azure_openai_endpoint
+        self.azure_openai_api_key = azure_openai_api_key
         self.currency_exchange_mcp_server_url = currency_exchange_mcp_server_url
         self.currency_exchange_agent_url = currency_exchange_agent_url
 
@@ -52,9 +52,17 @@ class FinancialAssistantAgent:
 
     async def init_graph(self):
         """Initialize the model and tools for the agent."""
-        # Set up the Ollama model
-        self.model = ChatOllama(
-            base_url=self.ollama_base_url, model=self.ollama_model, temperature=0.2
+        # Set up the Azure OpenAI model via AI Gateway
+        self.model = ChatOpenAI(
+            api_key=self.azure_openai_api_key,
+            base_url=self.azure_openai_endpoint,
+            model="gpt-3.5-turbo",  # Specify the model explicitly
+            temperature=0.2,
+            max_completion_tokens=1000,
+            top_p=0.5,
+            default_headers={
+                "Authorization": f"Bearer {self.azure_openai_api_key}"
+            }
         )
 
         # Create the currency exchange agent

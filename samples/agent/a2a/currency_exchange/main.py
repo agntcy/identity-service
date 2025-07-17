@@ -29,14 +29,14 @@ logger = logging.getLogger(__name__)
 @click.option("--host", "host", default="0.0.0.0")
 @click.option("--port", "port", default=9091)
 @click.option(
-    "--ollama-host", default=os.getenv("OLLAMA_HOST", "http://localhost:11434")
+    "--azure-openai-endpoint", default=os.getenv("AZURE_OPENAI_ENDPOINT", "")
 )
-@click.option("--ollama-model", default=os.getenv("OLLAMA_MODEL", "llama3.2"))
+@click.option("--azure-openai-api-key", default=os.getenv("AZURE_OPENAI_API_KEY", ""))
 @click.option(
     "--currency_exchange_mcp_server_url",
     default=os.getenv("CURRENCY_EXCHANGE_MCP_SERVER_URL", "http://localhost:9090/mcp"),
 )
-def main(host, port, ollama_host, ollama_model, currency_exchange_mcp_server_url):
+def main(host, port, azure_openai_endpoint, azure_openai_api_key, currency_exchange_mcp_server_url):
     """Starts the Currency Agent server."""
 
     # Define auth scheme
@@ -76,7 +76,7 @@ def main(host, port, ollama_host, ollama_model, currency_exchange_mcp_server_url
         # Initialize the HTTP client and request handler
         request_handler = DefaultRequestHandler(
             agent_executor=CurrencyAgentExecutor(
-                ollama_host, ollama_model, currency_exchange_mcp_server_url
+                azure_openai_endpoint, azure_openai_api_key, currency_exchange_mcp_server_url
             ),
             task_store=InMemoryTaskStore(),
         )
