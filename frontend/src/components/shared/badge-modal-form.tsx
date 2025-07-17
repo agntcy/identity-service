@@ -190,7 +190,11 @@ export const BadgeModalForm = ({
                   <FormItem>
                     <FormLabel className="form-label">Well Known Server</FormLabel>
                     <FormControl>
-                      <Input placeholder="Type the URL of the well known server..." {...field} disabled={createBadge.isPending} />
+                      <Input
+                        placeholder="Type the URL of the well known server..."
+                        {...field}
+                        disabled={createBadge.isPending}
+                      />
                     </FormControl>
                   </FormItem>
                 )}

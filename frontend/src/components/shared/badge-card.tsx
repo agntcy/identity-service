@@ -36,7 +36,14 @@ interface BadgeCardProps {
   onBadgeChanged?: (badge?: Badge) => void;
 }
 
-export const BadgeCard = ({app, navigateTo = true, verifyIdentity = false, confirmButtonText, showError = false, onBadgeChanged}: BadgeCardProps) => {
+export const BadgeCard = ({
+  app,
+  navigateTo = true,
+  verifyIdentity = false,
+  confirmButtonText,
+  showError = false,
+  onBadgeChanged
+}: BadgeCardProps) => {
   const [showBadgeForm, setShowBadgeForm] = useState<boolean>(false);
   const [showBadge, setShowBadge] = useState<boolean>(false);
   const [view, setView] = useState('credential');

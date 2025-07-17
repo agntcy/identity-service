@@ -4,7 +4,18 @@
  */
 
 import {Card, CardContent} from '@/components/ui/card';
-import {Accordion, Divider, EmptyState, GeneralSize, MenuItem, Pagination, Table, Tag, TagStatus, Typography} from '@outshift/spark-design';
+import {
+  Accordion,
+  Divider,
+  EmptyState,
+  GeneralSize,
+  MenuItem,
+  Pagination,
+  Table,
+  Tag,
+  TagStatus,
+  Typography
+} from '@outshift/spark-design';
 import {useCallback, useState} from 'react';
 import {Policy, Rule, RuleAction} from '@/types/api/policy';
 import {Separator} from '@/components/ui/separator';

@@ -139,7 +139,11 @@ const FormStepperComponent = ({badge}: {badge?: Badge}) => {
                 return (
                   <div className="flex gap-2 items-top -ml-1" key={step.id}>
                     <StepperNavigation>
-                      <StepperStep of={step.id} onlyIcon isLoading={methods.current.id === step.id && verifyIdentityMutation.isPending} />
+                      <StepperStep
+                        of={step.id}
+                        onlyIcon
+                        isLoading={methods.current.id === step.id && verifyIdentityMutation.isPending}
+                      />
                     </StepperNavigation>
                     <AccordionItem value={step.id} className="border-b-0 w-full">
                       <AccordionTrigger className="pt-0 w-full cursor-default" useArrow={false}>

@@ -91,8 +91,15 @@ export const StatsDashboard = () => {
                 </Typography>
               </div>
               <div className="flex justify-center items-center">
-                <RouterLink to={PATHS.agenticServices.verifyIdentity.base} onClick={() => analyticsTrack('CLICK_NAVIGATION_VERIFY_IDENTITY')}>
-                  <Button variant="outlined" sx={{fontWeight: '600 !important'}} startIcon={<CheckIcon className="w-4 h-4" />}>
+                <RouterLink
+                  to={PATHS.agenticServices.verifyIdentity.base}
+                  onClick={() => analyticsTrack('CLICK_NAVIGATION_VERIFY_IDENTITY')}
+                >
+                  <Button
+                    variant="outlined"
+                    sx={{fontWeight: '600 !important'}}
+                    startIcon={<CheckIcon className="w-4 h-4" />}
+                  >
                     Verify Identity
                   </Button>
                 </RouterLink>

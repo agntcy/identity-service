@@ -33,7 +33,10 @@ const AgentServices: React.FC = () => {
       title="Agentic Services"
       rightSideItems={
         <div className="flex gap-4 items-center">
-          <Link to={PATHS.agenticServices.verifyIdentity.base} onClick={() => analyticsTrack('CLICK_NAVIGATION_VERIFY_IDENTITY')}>
+          <Link
+            to={PATHS.agenticServices.verifyIdentity.base}
+            onClick={() => analyticsTrack('CLICK_NAVIGATION_VERIFY_IDENTITY')}
+          >
             <Button startIcon={<CheckIcon className="w-4 h-4" />} variant="secondary" sx={{fontWeight: '600 !important'}}>
               Verify Identity
             </Button>
