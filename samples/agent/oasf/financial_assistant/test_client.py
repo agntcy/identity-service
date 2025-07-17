@@ -17,7 +17,7 @@ load_dotenv()
 async def main() -> None:
     """Main function to run the tests."""
 
-    AGENT_URL = os.getenv("AGENT_URL", "http://0.0.0:9092/invoke")
+    AGENT_URL = os.getenv("AGENT_URL", "http://0.0.0:9093/invoke")
 
     # Connect to the agent
     print(f"Connecting to agent at {AGENT_URL}...")

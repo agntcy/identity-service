@@ -105,13 +105,13 @@ export const ListOrganizations = () => {
                 }
               },
               onClick: () => {
-                if (currentTenantId !== row.original.id) {
+                if (currentTenantId !== row.original.id || !isAdmin) {
                   toast({
                     title: 'Access Denied',
                     description: 'You cannot view or edit this organization as it is not your current organization.',
                     type: 'warning'
                   });
-                } else {
+                } else if (isAdmin) {
                   analyticsTrack('CLICK_ORGANIZATION_INFO');
                   const path = generatePath(PATHS.settings.organizationsAndUsers.info, {
                     id: row.original?.id
