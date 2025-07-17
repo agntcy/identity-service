@@ -17,6 +17,52 @@
   ],
   "paths": {
     "/v1alpha1/device": {
+      "get": {
+        "summary": "List all registered devices",
+        "operationId": "ListDevices",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1alpha1ListDevicesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "description": "The current page of the pagination",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "size",
+            "description": "The page size of the pagination",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "query",
+            "description": "The search query",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Device"
+        ]
+      },
       "post": {
         "summary": "Add new device for approval flow",
         "operationId": "AddDevice",
@@ -51,6 +97,37 @@
       }
     },
     "/v1alpha1/device/{deviceId}": {
+      "delete": {
+        "summary": "Delete a registered Device",
+        "operationId": "DeleteDevice",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "deviceId",
+            "description": "The device id.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Device"
+        ]
+      },
       "post": {
         "summary": "Register device for approval flow",
         "operationId": "RegisterDevice",
@@ -138,9 +215,60 @@
         "subscriptionToken": {
           "type": "string",
           "description": "Subscription Token for the Device."
+        },
+        "name": {
+          "type": "string",
+          "description": "The device human-readable name."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The creation time of the Device."
         }
       },
       "title": "Devices used for user approval"
+    },
+    "v1alpha1ListDevicesResponse": {
+      "type": "object",
+      "properties": {
+        "devices": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1alpha1Device"
+          },
+          "description": "A list of Apps."
+        },
+        "pagination": {
+          "$ref": "#/definitions/v1alpha1PagedResponse",
+          "description": "Pagination response."
+        }
+      }
+    },
+    "v1alpha1PagedResponse": {
+      "type": "object",
+      "properties": {
+        "nextPage": {
+          "type": "integer",
+          "format": "int32",
+          "title": "Next page"
+        },
+        "hasNextPage": {
+          "type": "boolean",
+          "title": "Has next page"
+        },
+        "total": {
+          "type": "string",
+          "format": "int64",
+          "title": "The total size of items"
+        },
+        "size": {
+          "type": "integer",
+          "format": "int32",
+          "title": "The size of the current page"
+        }
+      },
+      "title": "Pagination response"
     }
   }
 }

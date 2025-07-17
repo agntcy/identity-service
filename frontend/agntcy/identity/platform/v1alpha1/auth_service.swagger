@@ -39,6 +39,40 @@
         ]
       }
     },
+    "/v1alpha1/auth/approve_token": {
+      "post": {
+        "summary": "Handle manual approval of external authorization requets",
+        "operationId": "ApproveToken",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1alpha1ApproveTokenRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
     "/v1alpha1/auth/authorize": {
       "post": {
         "summary": "Authorize a request from an Agent or MCP Server",
@@ -246,6 +280,27 @@
       "default": "APP_TYPE_UNSPECIFIED",
       "description": "- APP_TYPE_UNSPECIFIED: Unspecified Envelope Type.\n - APP_TYPE_AGENT_A2A: Agent A2A App Type.\n - APP_TYPE_AGENT_OASF: Agent OASF App Type.\n - APP_TYPE_MCP_SERVER: Agent MCP Server App Type.",
       "title": "App Type"
+    },
+    "v1alpha1ApproveTokenRequest": {
+      "type": "object",
+      "properties": {
+        "deviceId": {
+          "type": "string",
+          "title": "The device id used to handle the approval requestion"
+        },
+        "sessionId": {
+          "type": "string",
+          "title": "The session id related to the token that needs to be approved"
+        },
+        "otp": {
+          "type": "string",
+          "title": "The OTP sent to the device related to the request"
+        },
+        "approve": {
+          "type": "boolean",
+          "title": "The action made by the user (true: allow the token, false: deny the token)"
+        }
+      }
     },
     "v1alpha1AuthorizeRequest": {
       "type": "object",

@@ -27,8 +27,6 @@ export const useNotifications = () => {
   const {updateServiceWorker} = usePwa();
   const device = getDeviceInfo();
 
-  console.log('Device detected:', device);
-
   const subscribeDevice = useCallback(
     (sub: PushSubscription, id?: string) => {
       const subscriptionData = {

@@ -206,6 +206,17 @@ export interface V1Alpha1AppInfoResponse {
   app?: V1Alpha1App;
 }
 
+export interface V1Alpha1ApproveTokenRequest {
+  /** The device id used to handle the approval requestion */
+  deviceId?: string;
+  /** The session id related to the token that needs to be approved */
+  sessionId?: string;
+  /** The OTP sent to the device related to the request */
+  otp?: string;
+  /** The action made by the user (true: allow the token, false: deny the token) */
+  approve?: boolean;
+}
+
 export interface V1Alpha1AuthorizeRequest {
   /** The app id for which authorization is requested. */
   appId?: string;
@@ -397,6 +408,24 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<V1Alpha1AppInfoResponse, RpcStatus>({
         path: `/v1alpha1/auth/app_info`,
         method: 'GET',
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Auth
+     * @name ApproveToken
+     * @summary Handle manual approval of external authorization requets
+     * @request POST:/v1alpha1/auth/approve_token
+     */
+    approveToken: (body: V1Alpha1ApproveTokenRequest, params: RequestParams = {}) =>
+      this.request<object, RpcStatus>({
+        path: `/v1alpha1/auth/approve_token`,
+        method: 'POST',
+        body: body,
+        type: ContentType.Json,
         format: 'json',
         ...params
       }),

@@ -152,6 +152,41 @@ export interface V1Alpha1Device {
   userId?: string;
   /** Subscription Token for the Device. */
   subscriptionToken?: string;
+  /** The device human-readable name. */
+  name?: string;
+  /**
+   * The creation time of the Device.
+   * @format date-time
+   */
+  createdAt?: string;
+}
+
+export interface V1Alpha1ListDevicesResponse {
+  /** A list of Apps. */
+  devices?: V1Alpha1Device[];
+  /** Pagination response. */
+  pagination?: V1Alpha1PagedResponse;
+}
+
+/** Pagination response */
+export interface V1Alpha1PagedResponse {
+  /**
+   * Next page
+   * @format int32
+   */
+  nextPage?: number;
+  /** Has next page */
+  hasNextPage?: boolean;
+  /**
+   * The total size of items
+   * @format int64
+   */
+  total?: string;
+  /**
+   * The size of the current page
+   * @format int32
+   */
+  size?: number;
 }
 
 import type {AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType} from 'axios';
@@ -300,6 +335,39 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Device
+     * @name ListDevices
+     * @summary List all registered devices
+     * @request GET:/v1alpha1/device
+     */
+    listDevices: (
+      query?: {
+        /**
+         * The current page of the pagination
+         * @format int32
+         */
+        page?: number;
+        /**
+         * The page size of the pagination
+         * @format int32
+         */
+        size?: number;
+        /** The search query */
+        query?: string;
+      },
+      params: RequestParams = {}
+    ) =>
+      this.request<V1Alpha1ListDevicesResponse, RpcStatus>({
+        path: `/v1alpha1/device`,
+        method: 'GET',
+        query: query,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Device
      * @name AddDevice
      * @summary Add new device for approval flow
      * @request POST:/v1alpha1/device
@@ -310,6 +378,22 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         method: 'POST',
         body: device,
         type: ContentType.Json,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Device
+     * @name DeleteDevice
+     * @summary Delete a registered Device
+     * @request DELETE:/v1alpha1/device/{deviceId}
+     */
+    deleteDevice: (deviceId: string, params: RequestParams = {}) =>
+      this.request<object, RpcStatus>({
+        path: `/v1alpha1/device/${deviceId}`,
+        method: 'DELETE',
         format: 'json',
         ...params
       }),
