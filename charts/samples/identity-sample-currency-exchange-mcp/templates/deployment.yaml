@@ -46,6 +46,8 @@ spec:
               containerPort: {{ .Values.service.http.port }}
               protocol: TCP
           envFrom:
+          - configMapRef:
+              name: {{ $.Release.Name }}-configmap-currency-exchange-mcp
           - secretRef:
               name: {{ include "identity-sample-currency-exchange-mcp.fullname" . }}-secret
           {{- with .Values.livenessProbe }}
