@@ -49,8 +49,7 @@ const InfoPolicy = React.lazy(() => import('@/pages/policies/info-policy'));
 const EditPolicy = React.lazy(() => import('@/pages/policies/edit-policy'));
 
 // Verify Identity
-const VerifyIdentityPrivate = React.lazy(() => import('@/pages/agentic-services/verify-identity-private'));
-const VerifyIdentityPublic = React.lazy(() => import('@/pages/verify-identity/verify-identity-public'));
+const VerifyIdentity = React.lazy(() => import('@/pages/verify-identity/verify-identity'));
 
 // Devices
 const Devices = React.lazy(() => import('@/pages/settings/devices/devices'));
@@ -73,15 +72,6 @@ export const generateRoutes = (routes: Route[]): Route[] => {
           <Loading />
         </NodeRoute>
       )
-    },
-    {
-      path: PATHS.verifyIdentity,
-      element: (
-        <NodeRoute pageTitle="verify identity (public)">
-          <VerifyIdentityPublic />
-        </NodeRoute>
-      ),
-      disabled: true // This route is disabled by default, can be enabled later
     },
     {
       path: PATHS.onboardDevice.base,
@@ -206,29 +196,29 @@ export const useRoutes = () => {
             disabled: isEmptyIdp
           },
           {
-            path: PATHS.agenticServices.verifyIdentity.base,
-            children: [
-              {
-                index: true,
-                element: (
-                  <NodeRoute pageTitle="verify identity agentic service">
-                    <VerifyIdentityPrivate />
-                  </NodeRoute>
-                )
-              },
-              {
-                path: PATHS.agenticServices.verifyIdentity.info,
-                element: (
-                  <NodeRoute pageTitle="verify identity agentic service info">
-                    <VerifyIdentityPrivate />
-                  </NodeRoute>
-                )
-              },
-              {
-                path: '*',
-                element: <NotFound />
-              }
-            ]
+            path: '*',
+            element: <NotFound />
+          }
+        ]
+      },
+      {
+        path: PATHS.verifyIdentity.base,
+        children: [
+          {
+            index: true,
+            element: (
+              <NodeRoute pageTitle="verify identity">
+                <VerifyIdentity />
+              </NodeRoute>
+            )
+          },
+          {
+            path: PATHS.verifyIdentity.info,
+            element: (
+              <NodeRoute pageTitle="verify identity info">
+                <VerifyIdentity />
+              </NodeRoute>
+            )
           },
           {
             path: '*',

@@ -139,7 +139,7 @@ export const BadgeCard = ({app, navigateTo = true, verifyIdentity = false, confi
                   endIcon={<CheckIcon className="w-4 h-4" />}
                   sx={{padding: 0, fontWeight: '600 !important'}}
                   onClick={() => {
-                    const path = generatePath(PATHS.agenticServices.verifyIdentity.info, {id: app?.id || ''});
+                    const path = generatePath(PATHS.verifyIdentity.info, {id: app?.id || ''});
                     void navigate(path, {replace: true});
                   }}
                 >
