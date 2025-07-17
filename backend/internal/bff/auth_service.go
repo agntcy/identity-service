@@ -9,6 +9,7 @@ import (
 	"time"
 
 	appcore "github.com/agntcy/identity-platform/internal/core/app"
+	apptypes "github.com/agntcy/identity-platform/internal/core/app/types"
 	authcore "github.com/agntcy/identity-platform/internal/core/auth"
 	authtypes "github.com/agntcy/identity-platform/internal/core/auth/types"
 	devicecore "github.com/agntcy/identity-platform/internal/core/device"
@@ -270,6 +271,12 @@ func (s *authService) ExtAuthZ(
 		)
 	}
 
+	// validate the caller app
+	callerApp, err := s.appRepository.GetApp(ctx, session.OwnerAppID)
+	if err != nil {
+		return errutil.Err(err, "the caller app not found")
+	}
+
 	log.Debug("Verifying access token: ", accessToken)
 
 	// Validate expiration of the access token
@@ -292,7 +299,7 @@ func (s *authService) ExtAuthZ(
 	}
 
 	if rule.NeedsApproval {
-		otp, err := s.sendDeviceOTP(ctx, session)
+		otp, err := s.sendDeviceOTP(ctx, session, callerApp, app)
 		if err != nil {
 			return err
 		}
@@ -347,6 +354,8 @@ func (s *authService) ApproveToken(
 func (s *authService) sendDeviceOTP(
 	ctx context.Context,
 	session *authtypes.Session,
+	callerApp *apptypes.App,
+	calleeApp *apptypes.App,
 ) (*authtypes.SessionDeviceOTP, error) {
 	devices, err := s.deviceRepository.GetDevices(ctx, session.UserID)
 	if err != nil {
@@ -366,7 +375,7 @@ func (s *authService) sendDeviceOTP(
 		return nil, err
 	}
 
-	err = s.notifService.SendOTPNotification(ctx, device, session, otp)
+	err = s.notifService.SendOTPNotification(ctx, device, session, otp, callerApp, calleeApp)
 	if err != nil {
 		return nil, errutil.Err(err, "unable to send notification")
 	}
@@ -375,11 +384,10 @@ func (s *authService) sendDeviceOTP(
 }
 
 func (s *authService) waitForDeviceApproval(ctx context.Context, otpID string) error {
-	timeout := 60 * time.Second
 	tick := 500 * time.Millisecond
 
 	loopErr := s.activeWaitLoop(
-		timeout,
+		authtypes.SessionDeviceOTPDuration,
 		tick,
 		func() (bool, error) {
 			otp, err := s.authRepository.GetDeviceOTP(ctx, otpID)

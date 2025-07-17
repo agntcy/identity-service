@@ -11,6 +11,7 @@ import (
 	devicetypes "github.com/agntcy/identity-platform/internal/core/device/types"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 	"github.com/agntcy/identity-platform/internal/pkg/pagination"
+	"github.com/google/uuid"
 )
 
 type DeviceService interface {
@@ -50,6 +51,7 @@ func (s *deviceService) AddDevice(
 		)
 	}
 
+	device.ID = uuid.NewString()
 	device.CreatedAt = time.Now().UTC()
 
 	// Add the device to the repository.
@@ -89,7 +91,7 @@ func (s *deviceService) RegisterDevice(
 	existingDevice.UserID = device.UserID
 
 	// Try to send a notification about the device registration.
-	if err := s.notificationService.TestNotification(ctx, existingDevice); err != nil {
+	if err := s.notificationService.SendDeviceRegisteredNotification(ctx, existingDevice); err != nil {
 		return errutil.Err(
 			err,
 			"failed to send notification for device registration",
