@@ -12,9 +12,9 @@ import {RuleAction} from '@/types/api/policy';
 import {labels} from '@/constants/labels';
 import {PolicyFormValues} from '@/schemas/policy-schema';
 import {useGetGetTasksAgenticService} from '@/queries';
-import {useMemo} from 'react';
+import {useCallback, useMemo} from 'react';
 import {useStepper} from '../stepper';
-import {Divider, ListSubheader} from '@mui/material';
+import {Checkbox, Divider, ListSubheader} from '@mui/material';
 
 export const TaskForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; fieldIndex: number}) => {
   const policyForm = useFormContext<PolicyLogicyFormValues>();
@@ -91,6 +91,7 @@ export const TaskForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
     const items = group.values.map((t) => {
       return (
         <MenuItem key={t.value} value={t.value} sx={{paddingLeft: '24px'}}>
+          <Checkbox checked={policyForm.watch(`rules.${fieldIndex}.tasks`).includes(t.value)} size="small" />
           <Typography variant="body2">{t.label}</Typography>
         </MenuItem>
       );
@@ -153,7 +154,12 @@ export const TaskForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
                         );
                       }
                       return (
-                        <div className="mt-[1px]">
+                        <div
+                          className="mt-[1px] w-fit"
+                          onMouseDown={(event) => {
+                            event.stopPropagation();
+                          }}
+                        >
                           <Tags
                             items={selected.map((value) => ({
                               valueFormatter: () =>
@@ -163,6 +169,9 @@ export const TaskForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
                             showOnlyFirst={false}
                             shouldTruncate
                             maxTooltipTags={2}
+                            handleDelete={(event, node) => {
+                              field.onChange(selected.filter((task) => task !== node.value));
+                            }}
                           />
                         </div>
                       );
