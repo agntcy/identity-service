@@ -6,6 +6,7 @@
 import {NotificationContent} from '@/components/notifications/notification-content';
 import {useWindowSize} from '@/hooks';
 import {apiRequest} from '@/lib/utils';
+import {INotification} from '@/types/sw/notification';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {PropsWithChildren, useCallback, useEffect, useState} from 'react';
 
@@ -31,7 +32,7 @@ export const NotificationsProvider: React.FC<PropsWithChildren> = ({children}) =
   const queryClient = useQueryClient();
 
   const handleReceiveNotification = useCallback(
-    (notification: any) => {
+    (notification: INotification) => {
       if (isMobile) {
         console.log(notification);
       }
@@ -61,7 +62,7 @@ export const NotificationsProvider: React.FC<PropsWithChildren> = ({children}) =
   useEffect(() => {
     const listenerPushNotification = (event: MessageEvent) => {
       if (event.data && event.data.type === 'PUSH_NOTIFICATION') {
-        handleReceiveNotification(event.data.payload);
+        handleReceiveNotification(event.data.payload as INotification);
       }
     };
     if ('serviceWorker' in navigator && isMobile) {

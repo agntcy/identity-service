@@ -13,22 +13,15 @@ export interface ApprovalRequestInfo {
   timeoutInSeconds?: number;
 }
 
-export interface Device {
-  id?: string;
-  userId?: string;
-  subscriptionToken?: string;
-  name?: string;
-  createdAt?: Date;
-}
-
 export enum NotificationType {
   UNSPECIFIED = 'NOTIFICATION_TYPE_UNSPECIFIED',
   INFO = 'NOTIFICATION_TYPE_INFO',
   APPROVAL_REQUEST = 'NOTIFICATION_TYPE_APPROVAL_REQUEST'
 }
 
-export interface Notification {
+export interface INotification {
   body?: string;
   type?: NotificationType;
+  id?: string;
   approvalRequestInfo?: ApprovalRequestInfo;
 }
