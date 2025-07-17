@@ -71,7 +71,7 @@ const FormStepperComponent = () => {
       oasfSpecs: undefined,
       mcpServer: undefined,
       oasfSpecsContent: undefined,
-      wellKnowServer: undefined
+      wellKnownServer: undefined
     });
     methods.reset();
     methods.resetMetadata();

@@ -16,7 +16,7 @@ export const labels = {
   providerTypes: {
     [IdpType.IDP_TYPE_OKTA]: 'Okta',
     [IdpType.IDP_TYPE_DUO]: 'Duo',
-    [IdpType.IDP_TYPE_SELF]: 'OASF (Agntcy)',
+    [IdpType.IDP_TYPE_SELF]: 'OASF (AGNTCY)',
     [IdpType.IDP_TYPE_ORY]: 'Ory'
   },
   rulesActions: {

@@ -6,8 +6,10 @@
 export const PATHS = {
   basePath: '/',
   welcome: '/welcome',
-  onboardDevice: '/onboard-device',
-  onboardDeviceId: '/onboard-device/:id',
+  onboardDevice: {
+    base: '/onboard-device',
+    info: '/onboard-device/:id?'
+  },
   verifyIdentity: '/verify-identity',
   callBackLoading: '/login/callback',
   dashboard: '/dashboard',
@@ -16,8 +18,10 @@ export const PATHS = {
     add: '/agentic-services/add',
     info: '/agentic-services/:id',
     edit: '/agentic-services/:id/edit',
-    verifyIdentity: '/agentic-services/verify-identity',
-    reIssueBadge: '/agentic-services/:id/re-issue-badge'
+    verifyIdentity: {
+      base: '/agentic-services/verify-identity',
+      info: '/agentic-services/verify-identity/:id'
+    }
   },
   policies: {
     base: '/policies',

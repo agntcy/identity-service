@@ -89,6 +89,7 @@ export const AboutAgenticService = ({app, onChangeReissueBadge}: {app?: App; onC
           </div>
           <div className="w-full">
             <BadgeCard
+              verifyIdentity={true}
               app={app}
               navigateTo={false}
               onBadgeChanged={(badge) => {

@@ -10,8 +10,7 @@ import {IdentityProvidersFormValues} from '@/schemas/identity-provider-schema';
 import {SharedProvider, SharedProviderProps} from '@/components/shared/shared-provider';
 import {Input} from '@/components/ui/input';
 import {PasswordInput} from '@/components/ui/password-input';
-import {IconButton} from '@mui/material';
-import {Link, Tooltip, Typography} from '@outshift/spark-design';
+import {Link, Typography} from '@outshift/spark-design';
 import {ExternalLinkIcon, InfoIcon} from 'lucide-react';
 import DuoLogo from '@/assets/duo.svg?react';
 import OktaLogo from '@/assets/okta.svg?react';
@@ -20,6 +19,7 @@ import OryLogo from '@/assets/ory.svg?react';
 import {IdpType} from '@/types/api/settings';
 import {docs} from '@/utils/docs';
 import {useAnalytics} from '@/hooks';
+import {IconButton, Tooltip} from '@mui/material';
 
 export const IdentityProviderForm = ({isLoading = false}: {isLoading?: boolean}) => {
   const {control, watch} = useFormContext<IdentityProvidersFormValues>();
@@ -47,13 +47,14 @@ export const IdentityProviderForm = ({isLoading = false}: {isLoading?: boolean})
     },
     {
       type: IdpType.IDP_TYPE_SELF,
-      title: 'Agntcy',
+      title: 'AGNTCY',
       imgURI: <OasfLogo />,
       isDisabled: isLoading,
       infoAction: (
         <Tooltip
-          title="Agntcy is an open-source identity provider that allows you to manage your own identity and access management system."
-          placement="top"
+          title="AGNTCY is an open-source identity provider that allows you to manage your own identity and access management system."
+          arrow
+          placement="right"
         >
           <IconButton
             sx={(theme) => ({

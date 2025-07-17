@@ -6,8 +6,7 @@
 import {CreateIdentityProvider} from '@/components/identity-provider/create/create-identity-provider';
 import {BasePage} from '@/components/layout/base-page';
 import {PATHS} from '@/router/paths';
-import {IconButton} from '@mui/material';
-import {Tooltip} from '@outshift/spark-design';
+import {IconButton, Tooltip} from '@mui/material';
 import {InfoIcon} from 'lucide-react';
 
 const ConnectionIdentityProvider: React.FC = () => {
@@ -22,7 +21,8 @@ const ConnectionIdentityProvider: React.FC = () => {
                 In the first release, you can link a single identity provider as an issuer, but it won&apos;t be possible to edit or remove it.
               </div>
             }
-            placement="top"
+            arrow
+            placement="right"
           >
             <IconButton
               sx={(theme) => ({

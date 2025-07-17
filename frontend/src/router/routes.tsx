@@ -84,20 +84,29 @@ export const generateRoutes = (routes: Route[]): Route[] => {
       disabled: true // This route is disabled by default, can be enabled later
     },
     {
-      path: PATHS.onboardDevice,
-      element: (
-        <NodeRoute pageTitle="onboard device">
-          <OnBoardDevice />
-        </NodeRoute>
-      )
-    },
-    {
-      path: PATHS.onboardDeviceId,
-      element: (
-        <NodeRoute pageTitle="onboard device">
-          <OnBoardDevice />
-        </NodeRoute>
-      )
+      path: PATHS.onboardDevice.base,
+      children: [
+        {
+          index: true,
+          element: (
+            <NodeRoute pageTitle="onboard device">
+              <OnBoardDevice />
+            </NodeRoute>
+          )
+        },
+        {
+          path: PATHS.onboardDevice.info,
+          element: (
+            <NodeRoute pageTitle="onboard device info">
+              <OnBoardDevice />
+            </NodeRoute>
+          )
+        },
+        {
+          path: '*',
+          element: <NotFound />
+        }
+      ]
     },
     {
       path: PATHS.basePath,
@@ -197,12 +206,29 @@ export const useRoutes = () => {
             disabled: isEmptyIdp
           },
           {
-            path: PATHS.agenticServices.verifyIdentity,
-            element: (
-              <NodeRoute pageTitle="verify identity (private)">
-                <VerifyIdentityPrivate />
-              </NodeRoute>
-            )
+            path: PATHS.agenticServices.verifyIdentity.base,
+            children: [
+              {
+                index: true,
+                element: (
+                  <NodeRoute pageTitle="verify identity agentic service">
+                    <VerifyIdentityPrivate />
+                  </NodeRoute>
+                )
+              },
+              {
+                path: PATHS.agenticServices.verifyIdentity.info,
+                element: (
+                  <NodeRoute pageTitle="verify identity agentic service info">
+                    <VerifyIdentityPrivate />
+                  </NodeRoute>
+                )
+              },
+              {
+                path: '*',
+                element: <NotFound />
+              }
+            ]
           },
           {
             path: '*',

@@ -4,7 +4,7 @@
  */
 
 import {ReactNode, useMemo, useState} from 'react';
-import {IconButton, Typography, useTheme} from '@mui/material';
+import {IconButton, Tooltip, Typography, useTheme} from '@mui/material';
 import {Link, useLocation} from 'react-router-dom';
 import {cn} from '@/lib/utils';
 import {PATHS} from '@/router/paths';
@@ -12,7 +12,7 @@ import {ChevronLeftIcon, ChevronRightIcon, LayoutDashboardIcon} from 'lucide-rea
 import OrganizationLogo from '@/assets/organization.svg?react';
 import {useAnalytics, useAuth} from '@/hooks';
 import {OrganizationsDrawer} from './organizations-drawer';
-import {OverflowTooltip, Tooltip, TooltipProps} from '@outshift/spark-design';
+import {OverflowTooltip, TooltipProps} from '@outshift/spark-design';
 import SettingsIcon from '@/assets/sidebar/settings.svg?react';
 import AgenticServicesLogo from '@/assets/sidebar/agentic-services.svg?react';
 import PoliciesLogo from '@/assets/sidebar/access-policies.svg?react';
@@ -226,11 +226,12 @@ const SideNavTooltip: React.FC<
     <Tooltip
       title={
         <div className="flex flex-col gap-1 p-1">
-          <Typography variant="body1">{title}</Typography>
+          <Typography variant="captionMedium">{title}</Typography>
           {description && <Typography variant="body2">{description}</Typography>}
         </div>
       }
       placement="right"
+      arrow
     >
       {children}
     </Tooltip>

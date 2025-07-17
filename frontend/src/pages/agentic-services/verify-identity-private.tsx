@@ -9,8 +9,15 @@ import {PATHS} from '@/router/paths';
 import {ExternalLinkIcon} from 'lucide-react';
 import {docs} from '@/utils/docs';
 import {Link} from '@outshift/spark-design';
+import {useParams} from 'react-router-dom';
+import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-renderer';
+import {useGetAgenticServiceBadge} from '@/queries';
 
 const VerifyIdentityPrivate: React.FC = () => {
+  const {id} = useParams<{id: string}>();
+
+  const {data, isLoading, error, refetch} = useGetAgenticServiceBadge(id);
+
   return (
     <BasePage
       title="Verify Identity"
@@ -33,7 +40,21 @@ const VerifyIdentityPrivate: React.FC = () => {
         </Link>
       }
     >
-      <VerifyIdentityStepper />
+      <ConditionalQueryRenderer
+        itemName="Agentic Service Badge"
+        data={data}
+        error={error}
+        isLoading={isLoading}
+        useRelativeLoader
+        errorListStateProps={{
+          actionCallback: () => {
+            void refetch();
+          }
+        }}
+        bypass={!id}
+      >
+        <VerifyIdentityStepper badge={data} />
+      </ConditionalQueryRenderer>
     </BasePage>
   );
 };
