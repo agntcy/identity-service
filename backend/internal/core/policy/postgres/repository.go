@@ -115,9 +115,16 @@ func (r *repository) UpdateRule(ctx context.Context, rule *types.Rule) error {
 		return identitycontext.ErrTenantNotFound
 	}
 
-	model := NewRuleModel(rule, tenantID)
+	return r.dbContext.Client().Transaction(func(tx *gorm.DB) error {
+		// We need to pass a new instance of the model for each call
+		// since .Model() modifies the passed model and removes all the tasks.
+		err := tx.Model(NewRuleModel(rule, tenantID)).Association("Tasks").Clear()
+		if err != nil {
+			return err
+		}
 
-	return r.dbContext.Client().Save(model).Error
+		return tx.Save(NewRuleModel(rule, tenantID)).Error
+	})
 }
 
 func (r *repository) UpdateTasks(ctx context.Context, tasks ...*types.Task) error {
@@ -427,8 +434,6 @@ func (r *repository) GetAllPolicies(
 
 	dbQuery := r.dbContext.Client().
 		Joins("LEFT JOIN rules ON rules.policy_id = policies.id").
-		Joins("LEFT JOIN rule_tasks ON rule_tasks.rule_id = rules.id").
-		Joins("LEFT JOIN tasks ON tasks.id = rule_tasks.task_id").
 		Where("policies.tenant_id = ?", tenantID)
 
 	if query != nil && *query != "" {

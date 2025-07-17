@@ -235,15 +235,13 @@ func (r *repository) DeleteDevice(ctx context.Context, device *types.Device) err
 	model := newDeviceModel(device)
 
 	err := r.dbContext.Client().Transaction(func(tx *gorm.DB) error {
-		err := r.dbContext.Client().
-			Where("device_id = ?", device.ID).
+		err := tx.Where("device_id = ?", device.ID).
 			Delete(&authpg.SessionDeviceOTP{}).Error
 		if err != nil {
 			return nil
 		}
 
-		err = r.dbContext.Client().
-			Where("tenant_id = ?", tenantID).
+		err = tx.Where("tenant_id = ?", tenantID).
 			Delete(model).Error
 		if err != nil {
 			return err
