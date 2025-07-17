@@ -27,9 +27,8 @@ export const NotificationsProvider: React.FC<PropsWithChildren> = ({children}) =
     }
   ]);
 
-  const {width} = useWindowSize();
+  const {isMobile} = useWindowSize();
   const queryClient = useQueryClient();
-  const isMobile = width < 768;
 
   const handleReceiveNotification = useCallback(
     (notification: any) => {
@@ -60,14 +59,14 @@ export const NotificationsProvider: React.FC<PropsWithChildren> = ({children}) =
   });
 
   useEffect(() => {
-    if ('serviceWorker' in navigator) {
+    if ('serviceWorker' in navigator && isMobile) {
       navigator.serviceWorker.addEventListener('message', (event) => {
         if (event.data && event.data.type === 'PUSH_NOTIFICATION') {
           handleReceiveNotification(event.data.payload);
         }
       });
     }
-  }, [handleReceiveNotification]);
+  }, [handleReceiveNotification, isMobile]);
 
   return (
     <>

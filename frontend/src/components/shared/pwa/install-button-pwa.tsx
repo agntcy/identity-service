@@ -20,8 +20,7 @@ interface BeforeInstallPromptEvent extends Event {
 
 export const InstallButtonPwa = (props: FabProps) => {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
-  const {width} = useWindowSize();
-  const isMobile = width < 768;
+  const {isMobile} = useWindowSize();
 
   const handleInstall = useCallback(async () => {
     if (deferredPrompt) {

@@ -9,7 +9,7 @@ import * as CookieConsentVanilla from 'vanilla-cookieconsent';
 import {useWindowSize} from '@/hooks';
 
 export const Footer = () => {
-  const {width} = useWindowSize();
+  const {isMobile} = useWindowSize();
 
   return (
     <>
@@ -17,7 +17,7 @@ export const Footer = () => {
         productName="Cisco Systems, Inc."
         productLink="https://www.cisco.com/"
         links={
-          width >= 768
+          !isMobile
             ? [
                 {
                   children: 'support@agntcy.com',

@@ -8,8 +8,7 @@ import {Typography} from '@outshift/spark-design';
 
 export const WelcomeName = () => {
   const {authInfo} = useAuth();
-  const {width} = useWindowSize();
-  const isMobile = width < 768;
+  const {isMobile} = useWindowSize();
   return (
     <div className="bg-[#00142B] h-full">
       <div className="w-full h-[200px] md:h-[184px] flex flex-col justify-between sticky top-0 z-0">
