@@ -58,8 +58,15 @@ export const EmptyDashboard = () => {
                     agents, including those supporting A2A-compatible protocols like Google A2A.
                   </Typography>
                   <div className="flex justify-center items-center mt-8">
-                    <RouterLink to={PATHS.verifyIdentity.base} onClick={() => analyticsTrack('CLICK_NAVIGATION_VERIFY_IDENTITY')}>
-                      <Button variant="outlined" sx={{fontWeight: '600 !important'}} startIcon={<CheckIcon className="w-4 h-4" />}>
+                    <RouterLink
+                      to={PATHS.verifyIdentity.base}
+                      onClick={() => analyticsTrack('CLICK_NAVIGATION_VERIFY_IDENTITY')}
+                    >
+                      <Button
+                        variant="outlined"
+                        sx={{fontWeight: '600 !important'}}
+                        startIcon={<CheckIcon className="w-4 h-4" />}
+                      >
                         Verify Identity
                       </Button>
                     </RouterLink>
