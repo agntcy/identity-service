@@ -386,6 +386,42 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/Status'
     /v1alpha1/device:
+        get:
+            tags:
+                - DeviceService
+            description: List all registered devices
+            operationId: DeviceService_ListDevices
+            parameters:
+                - name: page
+                  in: query
+                  description: The current page of the pagination
+                  schema:
+                    type: integer
+                    format: int32
+                - name: size
+                  in: query
+                  description: The page size of the pagination
+                  schema:
+                    type: integer
+                    format: int32
+                - name: query
+                  in: query
+                  description: The search query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListDevicesResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
         post:
             tags:
                 - DeviceService
@@ -429,6 +465,28 @@ paths:
                         schema:
                             $ref: '#/components/schemas/Device'
                 required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - DeviceService
+            description: Delete a registered Device.
+            operationId: DeviceService_DeleteDevice
+            parameters:
+                - name: deviceId
+                  in: path
+                  description: The device id.
+                  required: true
+                  schema:
+                    type: string
             responses:
                 "200":
                     description: OK
@@ -1080,6 +1138,13 @@ components:
                 subscriptionToken:
                     type: string
                     description: Subscription Token for the Device.
+                name:
+                    type: string
+                    description: The device human-readable name.
+                createdAt:
+                    type: string
+                    description: The creation time of the Device.
+                    format: date-time
             description: Devices used for user approval
         DuoIdpSettings:
             type: object
@@ -1229,6 +1294,18 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/App'
+                    description: A list of Apps.
+                pagination:
+                    allOf:
+                        - $ref: '#/components/schemas/PagedResponse'
+                    description: Pagination response.
+        ListDevicesResponse:
+            type: object
+            properties:
+                devices:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Device'
                     description: A list of Apps.
                 pagination:
                     allOf:
