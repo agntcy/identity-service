@@ -83,7 +83,7 @@ export const CountDownTimer = ({
             ...props.sx,
             opacity: 0.2
           }}
-          size={80}
+          size={120}
           {...props}
           value={100}
           variant="determinate"
@@ -100,7 +100,7 @@ export const CountDownTimer = ({
               strokeDasharray: '31.4, 94.2'
             }
           }}
-          size={80}
+          size={120}
           {...props}
           style={{
             transform: 'scaleX(-1) rotate(-90deg)'

@@ -3,15 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerProps,
-  DrawerTitle
-} from '@/components/ui/drawer';
+import {Drawer, DrawerContent, DrawerFooter, DrawerHeader, DrawerProps} from '@/components/ui/drawer';
 import {Button, Typography} from '@outshift/spark-design';
 import {BanIcon, CheckIcon} from 'lucide-react';
 import {CountDownTimer} from '../ui/count-down-timer';
@@ -36,9 +28,10 @@ export const NotificationContent = ({
   const [timerEnded, setTimerEnded] = useState(false);
 
   const handleOnComplete = useCallback(() => {
-    console.log('Timer completed');
+    setOpen(false);
     setTimerEnded(true);
-  }, []);
+    onDeny?.();
+  }, [onDeny]);
 
   const handleAllow = useCallback(() => {
     setOpen(false);

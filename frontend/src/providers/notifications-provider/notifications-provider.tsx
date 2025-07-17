@@ -10,7 +10,6 @@ import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {PropsWithChildren, useCallback, useEffect, useState} from 'react';
 
 export const NotificationsProvider: React.FC<PropsWithChildren> = ({children}) => {
-  const [open, setOpen] = useState(false);
   const [notifications, setNotifications] = useState<any[]>([
     {
       id: '',
@@ -32,19 +31,18 @@ export const NotificationsProvider: React.FC<PropsWithChildren> = ({children}) =
   const queryClient = useQueryClient();
   const isMobile = width < 768;
 
-  const handleOpenNotification = useCallback((value: boolean) => {
-    setOpen(value);
-  }, []);
-
   const handleReceiveNotification = useCallback(
     (notification: any) => {
       if (isMobile) {
-        handleOpenNotification(true);
         console.log(notification);
       }
     },
-    [handleOpenNotification, isMobile]
+    [isMobile]
   );
+
+  const handleOnAllow = useCallback((notificationId: any) => {}, []);
+
+  const handleOnDeny = useCallback((notificationId: any) => {}, []);
 
   const responseMutation = useMutation({
     mutationFn: (data: {action: string; notificationId: string; title?: string; message?: string}) => {
@@ -75,7 +73,13 @@ export const NotificationsProvider: React.FC<PropsWithChildren> = ({children}) =
     <>
       {isMobile &&
         notifications.map((notification, index) => (
-          <NotificationContent key={notification.id || index} defaultOpen={notification.defaultOpen} />
+          <NotificationContent
+            key={notification.id || index}
+            defaultOpen={notification.defaultOpen}
+            notification={notification}
+            onAllow={() => handleOnAllow(notification.id)}
+            onDeny={() => handleOnDeny(notification.id)}
+          />
         ))}
       {children}
     </>
