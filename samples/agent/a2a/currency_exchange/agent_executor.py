@@ -20,10 +20,10 @@ logger = logging.getLogger(__name__)
 class CurrencyAgentExecutor(AgentExecutor):
     """Currency Conversion AgentExecutor Example."""
 
-    def __init__(self, ollama_host, ollama_model, currency_exchange_mcp_server_url):
+    def __init__(self, azure_openai_endpoint, azure_openai_api_key, currency_exchange_mcp_server_url):
         self.agent = CurrencyAgent(
-            ollama_base_url=ollama_host,
-            ollama_model=ollama_model,
+            azure_openai_endpoint=azure_openai_endpoint,
+            azure_openai_api_key=azure_openai_api_key,
             currency_exchange_mcp_server_url=currency_exchange_mcp_server_url,
         )
 
