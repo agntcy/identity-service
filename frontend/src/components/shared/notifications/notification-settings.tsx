@@ -34,12 +34,12 @@ export const NotificationSettings = (props: NotificationSettingsProps) => {
   });
 
   const handler = useCallback(() => {
-    if (enabled) {
-      handleToggleNotifications();
-      return;
-    } else if (supported) {
-      addDeviceMutation.mutate({});
-    }
+    // if (enabled) {
+    //   handleToggleNotifications();
+    //   return;
+    // } else if (supported) {
+    //   addDeviceMutation.mutate({});
+    // }
   }, [addDeviceMutation, enabled, handleToggleNotifications, supported]);
 
   return (

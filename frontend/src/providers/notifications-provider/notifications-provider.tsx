@@ -11,20 +11,20 @@ import {PropsWithChildren, useCallback, useEffect, useState} from 'react';
 
 export const NotificationsProvider: React.FC<PropsWithChildren> = ({children}) => {
   const [notifications, setNotifications] = useState<any[]>([
-    {
-      id: '',
-      title: '',
-      message: '',
-      timestamp: '',
-      defaultOpen: true
-    },
-    {
-      id: '',
-      title: '',
-      message: '',
-      timestamp: '',
-      defaultOpen: true
-    }
+    // {
+    //   id: '',
+    //   title: '',
+    //   message: '',
+    //   timestamp: '',
+    //   defaultOpen: true
+    // },
+    // {
+    //   id: '',
+    //   title: '',
+    //   message: '',
+    //   timestamp: '',
+    //   defaultOpen: true
+    // }
   ]);
 
   const {isMobile} = useWindowSize();
@@ -59,18 +59,22 @@ export const NotificationsProvider: React.FC<PropsWithChildren> = ({children}) =
   });
 
   useEffect(() => {
+    const listenerPushNotification = (event: MessageEvent) => {
+      if (event.data && event.data.type === 'PUSH_NOTIFICATION') {
+        handleReceiveNotification(event.data.payload);
+      }
+    };
     if ('serviceWorker' in navigator && isMobile) {
-      navigator.serviceWorker.addEventListener('message', (event) => {
-        if (event.data && event.data.type === 'PUSH_NOTIFICATION') {
-          handleReceiveNotification(event.data.payload);
-        }
-      });
+      navigator.serviceWorker.addEventListener('message', listenerPushNotification);
     }
+    return () => {
+      navigator.serviceWorker.removeEventListener('message', listenerPushNotification);
+    };
   }, [handleReceiveNotification, isMobile]);
 
   return (
     <>
-      {isMobile &&
+      {/* {isMobile &&
         notifications.map((notification, index) => (
           <NotificationContent
             key={notification.id || index}
@@ -79,7 +83,7 @@ export const NotificationsProvider: React.FC<PropsWithChildren> = ({children}) =
             onAllow={() => handleOnAllow(notification.id)}
             onDeny={() => handleOnDeny(notification.id)}
           />
-        ))}
+        ))} */}
       {children}
     </>
   );

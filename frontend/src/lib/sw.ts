@@ -65,11 +65,11 @@ const getNotificationOptions = (data: any) => {
       vibrate: [200, 100, 200],
       requireInteraction: data.requireInteraction ?? true,
       silent: data.silent ?? false,
-      timestamp: Date.now(),
-      data: {
-        id: data.id || Date.now().toString(),
-        ...data.data
-      }
+      timestamp: Date.now()
+      // data: {
+      //   id: data.id || Date.now().toString(),
+      //   ...data.data
+      // }
     };
     return options;
   } catch (error) {
@@ -95,7 +95,7 @@ self.addEventListener('push', async (event) => {
           console.error('Invalid notification options, cannot display notification');
           return;
         }
-        await sendNotification(options);
+        // await sendNotification(options);
         await self.registration.showNotification((parsedData?.title as string) || 'Agent Identity | AGNTCY', options);
       }
     }
