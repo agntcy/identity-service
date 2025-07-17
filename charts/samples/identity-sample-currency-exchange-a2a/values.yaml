@@ -39,10 +39,10 @@ configmap:
   MCP_SERVER_URL: "https://mcp-server.example.com/mcp/"
 
 externalSecrets:
-  secretStoreName: ""  
+  secretStoreName: ""
   secretStoreKind: ClusterSecretStore
   data:
     - secretKey: IDENTITY_PLATFORM_API_KEY
       remoteRef:
-        key: ""  
+        key: ""
         property: IDENTITY_PLATFORM_API_KEY
