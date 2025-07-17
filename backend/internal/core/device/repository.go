@@ -7,6 +7,7 @@ import (
 	"context"
 
 	"github.com/agntcy/identity-platform/internal/core/device/types"
+	"github.com/agntcy/identity-platform/internal/pkg/pagination"
 )
 
 type Repository interface {
@@ -26,4 +27,9 @@ type Repository interface {
 		ctx context.Context,
 		device *types.Device,
 	) (*types.Device, error)
+	ListRegisteredDevices(
+		ctx context.Context,
+		paginationFilter pagination.PaginationFilter,
+		query *string,
+	) (*pagination.Pageable[types.Device], error)
 }

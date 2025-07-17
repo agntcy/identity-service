@@ -20,6 +20,8 @@ func ToDevice(
 		ID:                src.GetId(),
 		UserID:            src.GetUserId(),
 		SubscriptionToken: src.GetSubscriptionToken(),
+		Name:              src.GetName(),
+		CreatedAt:         src.GetCreatedAt().AsTime(),
 	}
 }
 
@@ -31,6 +33,10 @@ func FromDevice(
 	}
 
 	return &identity_platform_sdk_go.Device{
-		Id: ptrutil.Ptr(src.ID),
+		Id:                ptrutil.Ptr(src.ID),
+		UserId:            ptrutil.Ptr(src.UserID),
+		SubscriptionToken: ptrutil.Ptr(src.SubscriptionToken),
+		Name:              ptrutil.Ptr(src.Name),
+		CreatedAt:         newTimestamp(&src.CreatedAt),
 	}
 }

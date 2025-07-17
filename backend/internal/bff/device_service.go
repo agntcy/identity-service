@@ -5,15 +5,22 @@ package bff
 
 import (
 	"context"
+	"time"
 
 	devicecore "github.com/agntcy/identity-platform/internal/core/device"
 	devicetypes "github.com/agntcy/identity-platform/internal/core/device/types"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
+	"github.com/agntcy/identity-platform/internal/pkg/pagination"
 )
 
 type DeviceService interface {
 	AddDevice(ctx context.Context, device *devicetypes.Device) (*devicetypes.Device, error)
 	RegisterDevice(ctx context.Context, deviceId string, device *devicetypes.Device) error
+	ListRegisteredDevices(
+		ctx context.Context,
+		paginationFilter pagination.PaginationFilter,
+		query *string,
+	) (*pagination.Pageable[devicetypes.Device], error)
 }
 
 type deviceService struct {
@@ -41,6 +48,8 @@ func (s *deviceService) AddDevice(
 			"device cannot be nil",
 		)
 	}
+
+	device.CreatedAt = time.Now().UTC()
 
 	// Add the device to the repository.
 	return s.deviceRepository.AddDevice(ctx, device)
@@ -89,4 +98,17 @@ func (s *deviceService) RegisterDevice(
 	_, err = s.deviceRepository.UpdateDevice(ctx, existingDevice)
 
 	return err
+}
+
+func (s *deviceService) ListRegisteredDevices(
+	ctx context.Context,
+	paginationFilter pagination.PaginationFilter,
+	query *string,
+) (*pagination.Pageable[devicetypes.Device], error) {
+	page, err := s.deviceRepository.ListRegisteredDevices(ctx, paginationFilter, query)
+	if err != nil {
+		return nil, errutil.Err(err, "failed to fetch registered devices")
+	}
+
+	return page, nil
 }

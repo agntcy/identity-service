@@ -7,6 +7,8 @@ syntax = "proto3";
 
 package agntcy.identity.platform.v1alpha1;
 
+import "google/protobuf/timestamp.proto";
+
 // Package-wide variables from generator "generated".
 option go_package = "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_go";
 
@@ -36,6 +38,12 @@ message Device {
 
   // Subscription Token for the Device.
   optional string subscription_token = 3;
+
+  // The device human-readable name.
+  optional string name = 4;
+
+  // The creation time of the Device.
+  optional .google.protobuf.Timestamp created_at = 5;
 }
 
 message Notification {
