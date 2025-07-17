@@ -5,7 +5,6 @@
 
 import {BasePage} from '@/components/layout/base-page';
 import {VerifyIdentityStepper} from '@/components/verify-identity/verify-identity-stepper';
-import {PATHS} from '@/router/paths';
 import {ExternalLinkIcon} from 'lucide-react';
 import {docs} from '@/utils/docs';
 import {Link} from '@outshift/spark-design';
@@ -13,7 +12,7 @@ import {useParams} from 'react-router-dom';
 import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-renderer';
 import {useGetAgenticServiceBadge} from '@/queries';
 
-const VerifyIdentityPrivate: React.FC = () => {
+const VerifyIdentity: React.FC = () => {
   const {id} = useParams<{id: string}>();
 
   const {data, isLoading, error, refetch} = useGetAgenticServiceBadge(id);
@@ -22,15 +21,6 @@ const VerifyIdentityPrivate: React.FC = () => {
     <BasePage
       title="Verify Identity"
       useBorder
-      breadcrumbs={[
-        {
-          link: PATHS.agenticServices.base,
-          text: 'Agentic Services'
-        },
-        {
-          text: 'Verify Identity'
-        }
-      ]}
       rightSideItems={
         <Link href={docs('verify')} openInNewTab>
           <div className="flex items-center gap-1">
@@ -41,7 +31,7 @@ const VerifyIdentityPrivate: React.FC = () => {
       }
     >
       <ConditionalQueryRenderer
-        itemName="Agentic Service Badge"
+        itemName="Verify Identity Badge"
         data={data}
         error={error}
         isLoading={isLoading}
@@ -59,4 +49,4 @@ const VerifyIdentityPrivate: React.FC = () => {
   );
 };
 
-export default VerifyIdentityPrivate;
+export default VerifyIdentity;

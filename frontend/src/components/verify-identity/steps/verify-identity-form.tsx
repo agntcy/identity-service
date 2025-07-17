@@ -59,7 +59,6 @@ export const VerifyIdentityForm = ({isLoading = false}: {isLoading?: boolean}) =
   );
 
   useEffect(() => {
-    console.log(badge);
     if (badge) {
       try {
         const VC = JSON.parse(badge);

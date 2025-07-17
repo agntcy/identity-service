@@ -118,7 +118,7 @@ export const PolicyForm = ({isLoading = false}: {isLoading?: boolean}) => {
                               );
                             }
                             return (
-                              <div className="mb-[2px]">
+                              <div className="mt-[1px]">
                                 <Tag size={GeneralSize.Small} icon={optionAgenticServices.find((option) => option.value === select)?.icon}>
                                   {optionAgenticServices.find((option) => option.value === select)?.label}
                                 </Tag>

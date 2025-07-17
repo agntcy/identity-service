@@ -10,18 +10,17 @@ export const PATHS = {
     base: '/onboard-device',
     info: '/onboard-device/:id?'
   },
-  verifyIdentity: '/verify-identity',
   callBackLoading: '/login/callback',
   dashboard: '/dashboard',
+  verifyIdentity: {
+    base: '/verify-identity',
+    info: '/verify-identity/:id'
+  },
   agenticServices: {
     base: '/agentic-services',
     add: '/agentic-services/add',
     info: '/agentic-services/:id',
-    edit: '/agentic-services/:id/edit',
-    verifyIdentity: {
-      base: '/agentic-services/verify-identity',
-      info: '/agentic-services/verify-identity/:id'
-    }
+    edit: '/agentic-services/:id/edit'
   },
   policies: {
     base: '/policies',
