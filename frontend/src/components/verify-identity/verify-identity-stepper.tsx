@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect} from 'react';
 import {StepperControls, StepperNavigation, StepperPanel, StepperProvider, StepperStep, useStepper} from './stepper';
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
@@ -23,6 +23,8 @@ import {Badge} from '@/types/api/badge';
 import {parseJwt} from '@/utils/utils';
 import {Card} from '../ui/card';
 import {LoaderRelative} from '../ui/loading';
+import {useNavigate} from 'react-router-dom';
+import {PATHS} from '@/router/paths';
 
 export const VerifyIdentityStepper = ({badge}: {badge?: Badge}) => {
   return (
@@ -33,6 +35,7 @@ export const VerifyIdentityStepper = ({badge}: {badge?: Badge}) => {
 };
 const FormStepperComponent = ({badge}: {badge?: Badge}) => {
   const methods = useStepper();
+  const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof methods.current.schema>>({
     resolver: zodResolver(methods.current.schema),
@@ -74,7 +77,8 @@ const FormStepperComponent = ({badge}: {badge?: Badge}) => {
     methods.reset();
     methods.resetMetadata();
     methods.goTo('verifyIdentityForm');
-  }, [form, methods]);
+    void navigate(PATHS.verifyIdentity.base, {replace: true});
+  }, [form, methods, navigate]);
 
   const handleVerifyBadge = useCallback(() => {
     const values = form.getValues() as VerifyIdentityFormValues;

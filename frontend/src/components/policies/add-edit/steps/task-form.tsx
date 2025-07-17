@@ -12,7 +12,7 @@ import {RuleAction} from '@/types/api/policy';
 import {labels} from '@/constants/labels';
 import {PolicyFormValues} from '@/schemas/policy-schema';
 import {useGetGetTasksAgenticService} from '@/queries';
-import {useCallback, useMemo} from 'react';
+import {useMemo} from 'react';
 import {useStepper} from '../stepper';
 import {Checkbox, Divider, ListSubheader} from '@mui/material';
 

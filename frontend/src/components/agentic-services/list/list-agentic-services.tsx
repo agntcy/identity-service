@@ -203,7 +203,7 @@ export const ListAgenticServices = () => {
                     analyticsTrack('CLICK_NAVIGATION_VERIFY_IDENTITY_AGENTIC_SERVICE', {
                       type: row.original.type
                     });
-                    const path = generatePath(PATHS.agenticServices.verifyIdentity.info, {id: row.original.id});
+                    const path = generatePath(PATHS.verifyIdentity.info, {id: row.original.id});
                     void navigate(path, {replace: true});
                   }}
                   sx={{display: 'flex', alignItems: 'center', gap: '8px'}}

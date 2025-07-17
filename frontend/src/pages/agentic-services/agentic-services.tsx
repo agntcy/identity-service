@@ -11,7 +11,7 @@ import {useGetSettings} from '@/queries';
 import {PATHS} from '@/router/paths';
 import {useSettingsStore} from '@/store';
 import {Button} from '@outshift/spark-design';
-import {CheckIcon, PlusIcon} from 'lucide-react';
+import {PlusIcon} from 'lucide-react';
 import {Link, useNavigate} from 'react-router-dom';
 import {useShallow} from 'zustand/react/shallow';
 
@@ -32,23 +32,13 @@ const AgentServices: React.FC = () => {
     <BasePage
       title="Agentic Services"
       rightSideItems={
-        <div className="flex gap-4 items-center">
-          <Link
-            to={PATHS.agenticServices.verifyIdentity.base}
-            onClick={() => analyticsTrack('CLICK_NAVIGATION_VERIFY_IDENTITY')}
-          >
-            <Button startIcon={<CheckIcon className="w-4 h-4" />} variant="secondary" sx={{fontWeight: '600 !important'}}>
-              Verify Identity
+        !isEmptyIdp && (
+          <Link to={PATHS.agenticServices.add} onClick={() => analyticsTrack('CLICK_NAVIGATION_ADD_AGENTIC_SERVICE')}>
+            <Button startIcon={<PlusIcon className="w-4 h-4" />} variant="primary" sx={{fontWeight: '600 !important'}}>
+              Add Agentic Service
             </Button>
           </Link>
-          {!isEmptyIdp && (
-            <Link to={PATHS.agenticServices.add} onClick={() => analyticsTrack('CLICK_NAVIGATION_ADD_AGENTIC_SERVICE')}>
-              <Button startIcon={<PlusIcon className="w-4 h-4" />} variant="primary" sx={{fontWeight: '600 !important'}}>
-                Add Agentic Service
-              </Button>
-            </Link>
-          )}
-        </div>
+        )
       }
     >
       <ConditionalQueryRenderer
