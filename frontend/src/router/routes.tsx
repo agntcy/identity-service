@@ -305,6 +305,7 @@ export const useRoutes = () => {
           },
           {
             path: PATHS.settings.devices.base,
+            disabled: !isTbacEnable,
             children: [
               {
                 index: true,

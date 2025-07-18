@@ -15,7 +15,7 @@ import UserIcon from '@/assets/user.svg?react';
 import {Link} from 'react-router-dom';
 import {useAnalytics, useAuth, useWindowSize} from '@/hooks';
 import {docs} from '@/utils/docs';
-import {useSettingsStore} from '@/store';
+import {useFeatureFlagsStore, useSettingsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
 import LogoIcon from '@/assets/icon-agntcy.svg?react';
 import {NotificationSettings} from '../shared/notifications/notification-settings';
@@ -98,6 +98,12 @@ const UserSection = ({handleNotificationsChange}: {handleNotificationsChange: (v
   const {session} = useSettingsStore(
     useShallow((state) => ({
       session: state.session
+    }))
+  );
+
+  const {isTbacEnable} = useFeatureFlagsStore(
+    useShallow((store) => ({
+      isTbacEnable: store.featureFlags.isTbacEnable
     }))
   );
 
@@ -201,7 +207,7 @@ const UserSection = ({handleNotificationsChange}: {handleNotificationsChange: (v
           </div>
         </div>
         <Divider />
-        {isMobile && (
+        {isMobile && isTbacEnable && (
           <MenuItem
             disableRipple
             onClick={() => {
