@@ -19,6 +19,7 @@ import {useFeatureFlagsStore, useSettingsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
 import LogoIcon from '@/assets/icon-agntcy.svg?react';
 import {NotificationSettings} from '../shared/notifications/notification-settings';
+import {useGetDevices} from '@/queries';
 
 export const Header = () => {
   const {isMobile} = useWindowSize();
@@ -30,6 +31,12 @@ export const Header = () => {
   const handleNotificationsChange = useCallback((value: boolean) => {
     setOpenNotificationSettings(value);
   }, []);
+
+  const {data: dataDevices} = useGetDevices(undefined, isMobile);
+
+  const hasDevices = useMemo(() => {
+    return (dataDevices?.devices ?? []).length > 0;
+  }, [dataDevices?.devices]);
 
   return (
     <>
@@ -79,14 +86,20 @@ export const Header = () => {
             : undefined
         }
         useDivider={!isMobile}
-        userSection={<UserSection handleNotificationsChange={handleNotificationsChange} />}
+        userSection={<UserSection hasDevices={hasDevices} handleNotificationsChange={handleNotificationsChange} />}
       />
       <NotificationSettings open={openNotificationSettings} onClose={() => handleNotificationsChange(false)} />
     </>
   );
 };
 
-const UserSection = ({handleNotificationsChange}: {handleNotificationsChange: (value: boolean) => void}) => {
+const UserSection = ({
+  handleNotificationsChange,
+  hasDevices = false
+}: {
+  handleNotificationsChange: (value: boolean) => void;
+  hasDevices?: boolean;
+}) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -207,7 +220,7 @@ const UserSection = ({handleNotificationsChange}: {handleNotificationsChange: (v
           </div>
         </div>
         <Divider />
-        {isMobile && isTbacEnable && (
+        {isMobile && isTbacEnable && hasDevices && (
           <MenuItem
             disableRipple
             onClick={() => {

@@ -20,8 +20,11 @@ import {useEffect} from 'react';
 import * as CookieConsentVanilla from 'vanilla-cookieconsent';
 import {config} from './cookies/config';
 import {InstallButtonPwa} from './components/shared/pwa/install-button-pwa';
+import {useWindowSize} from './hooks';
 
 const App = () => {
+  const {isMobile} = useWindowSize();
+
   useEffect(() => {
     if (window) {
       void CookieConsentVanilla.run(config);
@@ -38,7 +41,12 @@ const App = () => {
             <AnalyticsProvider>
               <ApiProvider>
                 <QueryProvider>
-                  <Toaster offset={{bottom: '64px', right: '16px'}} expand={false} duration={3500} position="bottom-right" />
+                  <Toaster
+                    offset={{bottom: '64px', right: '16px'}}
+                    expand={false}
+                    duration={3500}
+                    position={isMobile ? 'top-center' : 'bottom-right'}
+                  />
                   <FeatureFlagsProvider>
                     <PwaProvider>
                       <NotificationsProvider>

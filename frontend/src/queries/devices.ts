@@ -7,7 +7,7 @@ import {DevicesAPI} from '@/api/services';
 import {useQuery} from '@tanstack/react-query';
 import qs from 'qs';
 
-export const useGetDevices = (query?: {page?: number; size?: number; query?: string}) => {
+export const useGetDevices = (query?: {page?: number; size?: number; query?: string}, enable = true) => {
   return useQuery({
     queryKey: [
       'get-devices',
@@ -31,6 +31,7 @@ export const useGetDevices = (query?: {page?: number; size?: number; query?: str
         }
       );
       return data;
-    }
+    },
+    enabled: enable
   });
 };

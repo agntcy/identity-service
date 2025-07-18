@@ -3,7 +3,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import getDeviceInfo from '@/lib/device';
 import {
   askPermissionNotifications,
   checkNotifications,
@@ -25,7 +24,6 @@ export const useNotifications = () => {
 
   const registerDeviceMutation = useRegisterDevice({});
   const {updateServiceWorker} = usePwa();
-  const device = getDeviceInfo();
 
   const subscribeDevice = useCallback(
     (sub: PushSubscription, id?: string) => {
