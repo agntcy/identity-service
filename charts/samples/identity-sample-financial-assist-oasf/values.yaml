@@ -13,9 +13,6 @@ service:
   http:
     port: 9093
     targetPort: 9093
-  ui:
-    port: 80
-    targetPort: 80
 
 namespace: dev-samples
 imagePullSecrets:
@@ -29,12 +26,7 @@ ingress:
       kubernetes.io/ingress.class: nginx-internal
       nginx.ingress.kubernetes.io/rewrite-target: /
       cert-manager.io/cluster-issuer: letsencrypt
-    ui:
-      kubernetes.io/ingress.class: nginx-internal
-      nginx.ingress.kubernetes.io/rewrite-target: /
-      cert-manager.io/cluster-issuer: letsencrypt
   domainPrefixHttp: oasf-agent-financial-assist
-  domainPrefixUi: oasf-ui-financial-assist
   apiDomainName: dev.example.com
 
 serviceAccount:
