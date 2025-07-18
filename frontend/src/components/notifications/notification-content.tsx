@@ -46,8 +46,11 @@ export const NotificationContent = ({
         });
       },
       onError: () => {
+        onHandleRequest?.(notification);
+        setOpen(false);
         setIsLoadingApprove(false);
         setIsLoadingDeny(false);
+        setTimerEnded(true);
         toast({
           title: 'Error',
           description: 'An error occurred while processing your request.',
