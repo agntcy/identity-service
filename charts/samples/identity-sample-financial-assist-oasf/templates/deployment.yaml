@@ -45,6 +45,9 @@ spec:
             - name: http
               containerPort: {{ .Values.service.http.port }}
               protocol: TCP
+            - name: ui
+              containerPort: {{ .Values.service.ui.port }}
+              protocol: TCP
           envFrom:
           - configMapRef:
               name: {{ $.Release.Name }}-configmap-financial-assistant-oasf

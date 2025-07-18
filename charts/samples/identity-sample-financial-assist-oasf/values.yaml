@@ -13,6 +13,9 @@ service:
   http:
     port: 9093
     targetPort: 9093
+  ui:
+    port: 80
+    targetPort: 80
 
 namespace: dev-samples
 imagePullSecrets:
@@ -26,7 +29,12 @@ ingress:
       kubernetes.io/ingress.class: nginx-internal
       nginx.ingress.kubernetes.io/rewrite-target: /
       cert-manager.io/cluster-issuer: letsencrypt
+    ui:
+      kubernetes.io/ingress.class: nginx-internal
+      nginx.ingress.kubernetes.io/rewrite-target: /
+      cert-manager.io/cluster-issuer: letsencrypt
   domainPrefixHttp: oasf-agent-financial-assist
+  domainPrefixUi: oasf-ui-financial-assist
   apiDomainName: dev.example.com
 
 serviceAccount:
@@ -41,11 +49,19 @@ externalSecrets:
       remoteRef:
         key: ""
         property: IDENTITY_PLATFORM_API_KEY
+    - secretKey: AZURE_OPENAI_API_KEY
+      remoteRef:
+        key: ""
+        property: AZURE_OPENAI_API_KEY
+    - secretKey: AZURE_OPENAI_ENDPOINT
+      remoteRef:
+        key: ""
+        property: AZURE_OPENAI_ENDPOINT
 
 
 configmap:
   CURRENCY_EXCHANGE_AGENT_URL: ""
   CURRENCY_EXCHANGE_MCP_SERVER_URL: ""
-  OLLAMA_HOST: ""
-  OLLAMA_MODEL: ""
-  PORT: 9093
+  IDENTITY_PLATFORM_GRPC_SERVER_URL: "api.grpc.identity-platform.staging.outshift.ai"
+  PORT: "9093"
+  LOG_LEVEL: "INFO"

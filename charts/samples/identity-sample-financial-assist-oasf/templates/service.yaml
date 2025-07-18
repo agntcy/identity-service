@@ -13,6 +13,9 @@ spec:
     - name: http
       port: {{ .Values.service.http.port }}
       targetPort: {{ .Values.service.http.targetPort }}
+    - name: ui
+      port: {{ .Values.service.ui.port }}
+      targetPort: {{ .Values.service.ui.targetPort }}
   selector:
     app.kubernetes.io/name: {{ .Chart.Name }}
     app.kubernetes.io/instance: {{ .Release.Name }}
