@@ -52,11 +52,10 @@ def trade_currency_exchange(
 
         converted_amount = amount * rate
         return {
-            "amount": amount,
+            "converted_amount": converted_amount,
             "from_currency": currency_from,
             "to_currency": currency_to,
             "rate": rate,
-            "converted_amount": converted_amount,
         }
     except httpx.HTTPError as e:
         return {"error": f"API request failed: {e}"}
