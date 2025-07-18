@@ -9,3 +9,4 @@ export * from './iam';
 export * from './badge';
 export * from './policies';
 export * from './devices';
+export * from './auth';

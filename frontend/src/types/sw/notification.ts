@@ -4,13 +4,13 @@
  */
 
 export interface ApprovalRequestInfo {
-  callerApp?: string;
-  calleeApp?: string;
-  toolName?: string;
+  callee_app?: string;
+  caller_app?: string;
+  tool_name?: string;
   otp?: string;
-  deviceId?: string;
-  sessionId?: string;
-  timeoutInSeconds?: number;
+  device_id?: string;
+  session_id?: string;
+  timeout_in_seconds?: number;
 }
 
 export enum NotificationType {
@@ -23,5 +23,6 @@ export interface INotification {
   body?: string;
   type?: NotificationType;
   id?: string;
-  approvalRequestInfo?: ApprovalRequestInfo;
+  timestamp?: number;
+  approval_request_info?: ApprovalRequestInfo;
 }

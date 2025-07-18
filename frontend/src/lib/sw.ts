@@ -13,42 +13,13 @@ const BADGE_PATH = '/pwa-64x64.png';
 
 declare let self: ServiceWorkerGlobalScope;
 
-self.addEventListener('message', async (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
-    try {
-      await self.skipWaiting();
-    } catch (error) {
-      console.error('Error during service worker skipWaiting:', error);
-    }
-  }
-});
-
-// self.__WB_MANIFEST is default injection point
-precacheAndRoute(self.__WB_MANIFEST);
-
-// clean old assets
-cleanupOutdatedCaches();
-
-/** @type {RegExp[] | undefined} */
-let allowlist;
-// in dev mode, we disable precaching to avoid caching issues
-if (import.meta.env.DEV) {
-  allowlist = [/^\/$/];
-}
-
-// to allow work offline
-registerRoute(new NavigationRoute(createHandlerBoundToURL('index.html'), {allowlist}));
-
-// SW logic for push notifications //
-
 const sendNotification = async (payload: any) => {
   try {
-    await self.clients.matchAll({type: 'window', includeUncontrolled: true}).then((clients) => {
-      clients.forEach((client) => {
-        client.postMessage({
-          type: 'PUSH_NOTIFICATION',
-          payload: payload
-        });
+    const clients = await self.clients.matchAll({type: 'window', includeUncontrolled: true});
+    clients.forEach((client) => {
+      client.postMessage({
+        type: 'PUSH_NOTIFICATION',
+        payload: payload
       });
     });
   } catch (error) {
@@ -80,27 +51,52 @@ const getNotificationOptions = (data: any) => {
   }
 };
 
+self.addEventListener('message', async (event) => {
+  if (event.data.type === 'SKIP_WAITING') {
+    try {
+      await self.skipWaiting();
+    } catch (error) {
+      console.error('Error during service worker skipWaiting:', error);
+    }
+  } else if (event.data.type === 'CLOSE_NOTIFICATION') {
+    try {
+      const notifications = await self.registration.getNotifications();
+      const notification = notifications.find((n) => n.data?.id === event.data.notificationId);
+      if (notification) {
+        notification.close();
+      }
+    } catch (error) {
+      console.error('Error closing notification:', error);
+    }
+  }
+});
+
 self.addEventListener('push', async (event) => {
   try {
     if (event.data) {
       const notificationData: INotification | undefined = event.data.json();
       if (notificationData) {
         const id = generateRandomId();
-
-        // TODO: build actions based on notification type
         const options = getNotificationOptions({
           body: notificationData.body,
           requireInteraction: notificationData.type === NotificationType.APPROVAL_REQUEST ? true : false,
+          ...(notificationData.type === NotificationType.APPROVAL_REQUEST && {
+            actions: [
+              {action: 'allow', title: 'Allow'},
+              {action: 'deny', title: 'Deny'}
+            ]
+          }),
           data: {
             id: id,
-            approvalRequestInfo: notificationData.approvalRequestInfo
+            approvalRequestInfo: notificationData.approval_request_info
           }
         });
         if (!options) {
           console.error('Invalid notification options, cannot display notification');
           return;
         }
-        await sendNotification({...notificationData, id});
+        console.log(options);
+        await sendNotification({...notificationData, id, timestamp: Date.now()});
         await self.registration.showNotification('Agent Identity | AGNTCY', options);
       }
     }
@@ -113,3 +109,19 @@ self.addEventListener('notificationclick', (event) => {
   const {action, notification} = event;
   console.log('Notification click event:', event);
 });
+
+// self.__WB_MANIFEST is default injection point
+precacheAndRoute(self.__WB_MANIFEST);
+
+// clean old assets
+cleanupOutdatedCaches();
+
+/** @type {RegExp[] | undefined} */
+let allowlist;
+// in dev mode, we disable precaching to avoid caching issues
+if (import.meta.env.DEV) {
+  allowlist = [/^\/$/];
+}
+
+// to allow work offline
+registerRoute(new NavigationRoute(createHandlerBoundToURL('index.html'), {allowlist}));
