@@ -7,11 +7,32 @@ import {INotification, NotificationType} from '@/types/sw/notification';
 import {generateRandomId} from '@/utils/utils';
 import {cleanupOutdatedCaches, createHandlerBoundToURL, precacheAndRoute} from 'workbox-precaching';
 import {NavigationRoute, registerRoute} from 'workbox-routing';
+import config from '@/config';
+import {ApproveTokenRequest} from '@/types/api/auth';
 
 const ICON_PATH = '/pwa-192x192.png';
 const BADGE_PATH = '/pwa-64x64.png';
 
+// NOTE: pay attention to the API endpoint
+const API_ENDPOINT = `${config.API_HOST}/v1alpha1/auth/approve_token`;
+
 declare let self: ServiceWorkerGlobalScope;
+
+const aproveToken = (data: ApproveTokenRequest) => {
+  console.log('Approving token with data:', data);
+  return fetch(API_ENDPOINT, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      deviceId: data.deviceId,
+      sessionId: data.sessionId,
+      otp: data.otp,
+      approve: data.approve
+    })
+  });
+};
 
 const sendNotification = async (payload: any) => {
   try {
@@ -24,6 +45,20 @@ const sendNotification = async (payload: any) => {
     });
   } catch (error) {
     console.error('Error sending notification:', error);
+  }
+};
+
+const removeNotification = async (payload: any) => {
+  try {
+    const clients = await self.clients.matchAll({type: 'window', includeUncontrolled: true});
+    clients.forEach((client) => {
+      client.postMessage({
+        type: 'REMOVE_NOTIFICATION',
+        payload: payload
+      });
+    });
+  } catch (error) {
+    console.error('Error removing notification:', error);
   }
 };
 
@@ -88,6 +123,8 @@ self.addEventListener('push', async (event) => {
           }),
           data: {
             id: id,
+            timestamp: Date.now(),
+            type: notificationData.type,
             approvalRequestInfo: notificationData.approval_request_info
           }
         });
@@ -95,7 +132,6 @@ self.addEventListener('push', async (event) => {
           console.error('Invalid notification options, cannot display notification');
           return;
         }
-        console.log(options);
         await sendNotification({...notificationData, id, timestamp: Date.now()});
         await self.registration.showNotification('Agent Identity | AGNTCY', options);
       }
@@ -106,8 +142,47 @@ self.addEventListener('push', async (event) => {
 });
 
 self.addEventListener('notificationclick', (event) => {
-  const {action, notification} = event;
-  console.log('Notification click event:', event);
+  try {
+    const {action, notification} = event;
+    const data = notification.data as INotification | undefined;
+    if ((action === 'allow' || action === 'deny') && data?.type === NotificationType.APPROVAL_REQUEST) {
+      const now = Date.now();
+      if (data && data.timestamp && now < data.timestamp + (data.approval_request_info?.timeout_in_seconds || 60) * 1000) {
+        console.log(`Notification action: ${action}`, data);
+        event.waitUntil(
+          aproveToken({
+            // deviceId: data.approval_request_info?.device_id,
+            // sessionId: data.approval_request_info?.session_id,
+            // otp: data.approval_request_info?.otp,
+            approve: action === 'allow'
+          })
+            .then(async (response) => {
+              if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+              }
+              console.log('Notification action processed.');
+              await self.registration.showNotification('Agent Identity | AGNTCY', {
+                body: `Your request has been ${action === 'allow' ? 'approved' : 'denied'}.`
+              });
+            })
+            .catch((error) => {
+              console.error('Error approving notification:', error);
+            })
+          // .finally(() => {
+          //   void removeNotification(data);
+          //   notification.close();
+          // })
+        );
+        console.log('Notification action handled successfully');
+      } else {
+        console.warn('Notification is expired or invalid, ignoring action');
+        void removeNotification(data);
+        notification.close();
+      }
+    }
+  } catch (error) {
+    console.error('Error handling notification click:', error);
+  }
 });
 
 // self.__WB_MANIFEST is default injection point

@@ -32,6 +32,12 @@ export const NotificationsProvider: React.FC<PropsWithChildren> = ({children}) =
     }
   }, []);
 
+  const handleRemoveNotification = useCallback((notification: INotification) => {
+    if (notification.id) {
+      setNotifications((prev) => prev.filter((n) => n.id !== notification.id));
+    }
+  }, []);
+
   const handleReceiveNotification = useCallback(
     (notification: INotification) => {
       if (isMobile && notification.type === NotificationType.APPROVAL_REQUEST && enabled) {
@@ -110,6 +116,21 @@ export const NotificationsProvider: React.FC<PropsWithChildren> = ({children}) =
       navigator.serviceWorker.removeEventListener('message', listenerPushNotification);
     };
   }, [enabled, handleReceiveNotification, isMobile]);
+
+  useEffect(() => {
+    const listenerRemoveNotification = (event: MessageEvent) => {
+      if (event.data && event.data.type === 'REMOVE_NOTIFICATION') {
+        console.log('Received remove notification event:', event.data.payload);
+        handleRemoveNotification(event.data.payload as INotification);
+      }
+    };
+    if ('serviceWorker' in navigator && isMobile && enabled) {
+      navigator.serviceWorker.addEventListener('message', listenerRemoveNotification);
+    }
+    return () => {
+      navigator.serviceWorker.removeEventListener('message', listenerRemoveNotification);
+    };
+  }, [enabled, handleRemoveNotification, isMobile]);
 
   console.log(notifications);
 

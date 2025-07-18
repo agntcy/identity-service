@@ -11,6 +11,7 @@ export interface ApprovalRequestInfo {
   device_id?: string;
   session_id?: string;
   timeout_in_seconds?: number;
+  timstamp?: number;
 }
 
 export enum NotificationType {
