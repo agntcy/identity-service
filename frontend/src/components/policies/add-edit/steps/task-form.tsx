@@ -11,7 +11,7 @@ import {PolicyLogicyFormValues} from '@/schemas/policy-logic-schema';
 import {RuleAction} from '@/types/api/policy';
 import {labels} from '@/constants/labels';
 import {PolicyFormValues} from '@/schemas/policy-schema';
-import {useGetGetTasksAgenticService} from '@/queries';
+import {useGetDevices, useGetGetTasksAgenticService} from '@/queries';
 import {useMemo} from 'react';
 import {useStepper} from '../stepper';
 import {Checkbox, Divider, ListSubheader} from '@mui/material';
@@ -109,7 +109,7 @@ export const TaskForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
 
   return (
     <div className="w-full flex gap-8">
-      <div className="w-[50%]">
+      <div className="w-full">
         {isLoadingTasks || isErrorTasks ? (
           <Skeleton sx={{marginTop: '14px', height: '60px'}} />
         ) : (
@@ -201,7 +201,7 @@ export const TaskForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
           />
         )}
       </div>
-      <div className="w-[50%]">
+      <div className="w-full">
         <FormField
           control={policyForm.control}
           name={`rules.${fieldIndex}.action`}
@@ -238,7 +238,7 @@ export const TaskForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
                       );
                     }
                     return (
-                      <div className="mb-[4px]">
+                      <div className="mt-[1px]">
                         <Tag size={GeneralSize.Small}>{labels.rulesActions[select]}</Tag>
                       </div>
                     );

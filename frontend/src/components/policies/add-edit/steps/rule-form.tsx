@@ -8,10 +8,21 @@ import {FormControl, FormField, FormItem, FormLabel} from '@/components/ui/form'
 import {Input} from '@/components/ui/input';
 import {PolicyLogicyFormValues} from '@/schemas/policy-logic-schema';
 import {TaskForm} from './task-form';
-import {Checkbox} from '@outshift/spark-design';
+import {Checkbox, Skeleton} from '@outshift/spark-design';
+import {useGetDevices} from '@/queries';
+import {useMemo} from 'react';
+import {IconButton, Tooltip} from '@mui/material';
+import {InfoIcon} from 'lucide-react';
 
 export const RuleForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; fieldIndex: number}) => {
   const policyForm = useFormContext<PolicyLogicyFormValues>();
+
+  const {data: dataDevices, isLoading: isLoadingDevices, isError: isErrorDevices} = useGetDevices();
+
+  const hasDevices = useMemo(() => {
+    return (dataDevices?.devices?.length ?? 0) > 0;
+  }, [dataDevices]);
+
   return (
     <div className="space-y-6 w-full">
       <div className="w-full flex gap-8">
@@ -41,24 +52,45 @@ export const RuleForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
         />
       </div>
       <TaskForm isLoading={isLoading} fieldIndex={fieldIndex} />
-      <FormField
-        control={policyForm.control}
-        name={`rules.${fieldIndex}.needsApproval`}
-        render={({field}) => (
-          <FormItem className="w-full">
-            <FormControl>
-              <div className="flex items-center">
-                <Checkbox
-                  id="needs-approval-checkbox"
-                  checked={field.value}
-                  onChange={(checked) => field.onChange(checked)}
-                />
-                <FormLabel className="form-label">Needs Approval?</FormLabel>
-              </div>
-            </FormControl>
-          </FormItem>
-        )}
-      />
+      {isLoadingDevices || isErrorDevices ? (
+        <Skeleton sx={{marginTop: '14px', height: '50px', width: '50px'}} />
+      ) : (
+        <FormField
+          control={policyForm.control}
+          name={`rules.${fieldIndex}.needsApproval`}
+          render={({field}) => (
+            <FormItem className="w-full">
+              <FormControl>
+                <div className="flex items-center">
+                  <Checkbox
+                    disabled={!hasDevices}
+                    id="needs-approval-checkbox"
+                    checked={field.value}
+                    onChange={(checked) => field.onChange(checked)}
+                  />
+                  <FormLabel className="form-label">Needs Approval?</FormLabel>
+                  <Tooltip
+                    title="Enable this if the rule requires approval before execution, you need to have devices set"
+                    arrow
+                    placement="right"
+                  >
+                    <IconButton
+                      sx={(theme) => ({
+                        color: theme.palette.vars.baseTextDefault,
+                        width: '24px',
+                        height: '24px',
+                        marginLeft: '8px'
+                      })}
+                    >
+                      <InfoIcon className="w-4 h-4" />
+                    </IconButton>
+                  </Tooltip>
+                </div>
+              </FormControl>
+            </FormItem>
+          )}
+        />
+      )}
     </div>
   );
 };

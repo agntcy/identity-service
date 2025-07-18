@@ -20,7 +20,7 @@ require (
 require (
 	github.com/SherClockHolmes/webpush-go v1.4.0
 	github.com/agntcy/identity v0.0.11
-	github.com/agntcy/identity/api/client v0.0.0-20250710140849-5c703eea2fbc
+	github.com/agntcy/identity/api/client v0.0.0-20250718125643-92ca1e020cbf
 	github.com/coocood/freecache v1.2.4
 	github.com/duosecurity/duo_api_golang v0.0.0-20250430191550-ac36954387e7
 	github.com/eko/gocache/store/freecache/v4 v4.2.2

@@ -226,7 +226,7 @@ export const TaskForm = ({isLoading = false, policy}: {isLoading?: boolean; poli
                       );
                     }
                     return (
-                      <div className="mb-[4px]">
+                      <div className="mt-[1px]">
                         <Tag size={GeneralSize.Small}>{labels.rulesActions[select]}</Tag>
                       </div>
                     );
