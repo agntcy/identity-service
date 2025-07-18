@@ -11,7 +11,7 @@ The samples are composed of a `Currency Exchange A2A Agent` leveraging a `Curren
 
 The two agents and the MCP server are connected as shown in the diagram below:
 
-![Connectivity Diagram](https://raw.githubusercontent.com/cisco-eti/identity-platform/main/samples/img/samples.svg)]
+![Connectivity Diagram](https://raw.githubusercontent.com/cisco-eti/identity-platform/main/samples/img/samples.svg)
 
 ## Prerequisites
 
