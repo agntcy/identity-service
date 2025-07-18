@@ -19,10 +19,10 @@ const API_ENDPOINT = `${config.API_HOST}/v1alpha1/auth/approve_token`;
 declare let self: ServiceWorkerGlobalScope;
 
 const aproveToken = (data: ApproveTokenRequest) => {
-  console.log('Approving token with data:', data);
   return fetch(API_ENDPOINT, {
     method: 'POST',
     headers: {
+      Accept: 'application/json',
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
@@ -125,7 +125,7 @@ self.addEventListener('push', async (event) => {
             id: id,
             timestamp: Date.now(),
             type: notificationData.type,
-            approvalRequestInfo: notificationData.approval_request_info
+            approval_request_info: notificationData.approval_request_info
           }
         });
         if (!options) {
@@ -147,20 +147,20 @@ self.addEventListener('notificationclick', (event) => {
     const data = notification.data as INotification | undefined;
     if ((action === 'allow' || action === 'deny') && data?.type === NotificationType.APPROVAL_REQUEST) {
       const now = Date.now();
-      if (data && data.timestamp && now < data.timestamp + (data.approval_request_info?.timeout_in_seconds || 60) * 1000) {
-        console.log(`Notification action: ${action}`, data);
+      if (
+        data &&
+        data.timestamp &&
+        data.approval_request_info?.timeout_in_seconds &&
+        now < data.timestamp + (data.approval_request_info?.timeout_in_seconds || 60) * 1000
+      ) {
         event.waitUntil(
           aproveToken({
-            // deviceId: data.approval_request_info?.device_id,
-            // sessionId: data.approval_request_info?.session_id,
-            // otp: data.approval_request_info?.otp,
+            deviceId: data.approval_request_info?.device_id,
+            sessionId: data.approval_request_info?.session_id,
+            otp: data.approval_request_info?.otp,
             approve: action === 'allow'
           })
-            .then(async (response) => {
-              if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-              }
-              console.log('Notification action processed.');
+            .then(async () => {
               await self.registration.showNotification('Agent Identity | AGNTCY', {
                 body: `Your request has been ${action === 'allow' ? 'approved' : 'denied'}.`
               });
@@ -168,10 +168,10 @@ self.addEventListener('notificationclick', (event) => {
             .catch((error) => {
               console.error('Error approving notification:', error);
             })
-          // .finally(() => {
-          //   void removeNotification(data);
-          //   notification.close();
-          // })
+            .finally(() => {
+              void removeNotification(data);
+              notification.close();
+            })
         );
         console.log('Notification action handled successfully');
       } else {

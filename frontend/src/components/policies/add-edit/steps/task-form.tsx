@@ -11,7 +11,7 @@ import {PolicyLogicyFormValues} from '@/schemas/policy-logic-schema';
 import {RuleAction} from '@/types/api/policy';
 import {labels} from '@/constants/labels';
 import {PolicyFormValues} from '@/schemas/policy-schema';
-import {useGetDevices, useGetGetTasksAgenticService} from '@/queries';
+import {useGetGetTasksAgenticService} from '@/queries';
 import {useMemo} from 'react';
 import {useStepper} from '../stepper';
 import {Checkbox, Divider, ListSubheader} from '@mui/material';

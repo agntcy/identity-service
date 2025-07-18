@@ -120,7 +120,6 @@ export const NotificationsProvider: React.FC<PropsWithChildren> = ({children}) =
   useEffect(() => {
     const listenerRemoveNotification = (event: MessageEvent) => {
       if (event.data && event.data.type === 'REMOVE_NOTIFICATION') {
-        console.log('Received remove notification event:', event.data.payload);
         handleRemoveNotification(event.data.payload as INotification);
       }
     };
@@ -131,8 +130,6 @@ export const NotificationsProvider: React.FC<PropsWithChildren> = ({children}) =
       navigator.serviceWorker.removeEventListener('message', listenerRemoveNotification);
     };
   }, [enabled, handleRemoveNotification, isMobile]);
-
-  console.log(notifications);
 
   return (
     <>

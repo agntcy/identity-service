@@ -10,7 +10,8 @@ import {BellIcon, BellOffIcon, RefreshCcwIcon} from 'lucide-react';
 import {GeneralSize, Tag, TagStatus} from '@outshift/spark-design';
 import {Card} from '@/components/ui/card';
 import {useCallback} from 'react';
-import {useAddDevice} from '@/mutations';
+import {useLocalStore} from '@/store';
+import {useShallow} from 'zustand/react/shallow';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface NotificationSettingsProps extends ModalProps {}
@@ -18,29 +19,25 @@ interface NotificationSettingsProps extends ModalProps {}
 export const NotificationSettings = (props: NotificationSettingsProps) => {
   const {enabled, supported, handleToggleNotifications, fixNotifications, loading} = useNotifications();
 
-  const addDeviceMutation = useAddDevice({
-    callbacks: {
-      onSuccess: (resp) => {
-        handleToggleNotifications(resp.data.id);
-      },
-      onError: () => {
-        toast({
-          title: 'Error adding device',
-          description: 'An error occurred while adding the device. Please try again.',
-          type: 'error'
-        });
-      }
-    }
-  });
+  const {idDevice} = useLocalStore(
+    useShallow((state) => ({
+      idDevice: state.idDevice,
+      setIdDevice: state.setIdDevice
+    }))
+  );
 
   const handler = useCallback(() => {
-    // if (enabled) {
-    //   handleToggleNotifications();
-    //   return;
-    // } else if (supported) {
-    //   addDeviceMutation.mutate({});
-    // }
-  }, [addDeviceMutation, enabled, handleToggleNotifications, supported]);
+    if (idDevice) {
+      handleToggleNotifications();
+      return;
+    } else {
+      toast({
+        title: 'Device ID not found',
+        description: 'Please onboard a device first to enable notifications.',
+        type: 'error'
+      });
+    }
+  }, [handleToggleNotifications, idDevice]);
 
   return (
     <Modal {...props} maxWidth="md" fullWidth>
@@ -70,7 +67,7 @@ export const NotificationSettings = (props: NotificationSettingsProps) => {
                   fullWidth
                   variant={enabled ? 'outlined' : 'primary'}
                   sx={{fontWeight: 'bold !important'}}
-                  loading={loading || addDeviceMutation.isPending}
+                  loading={loading}
                   loadingPosition="start"
                   disabled={!supported}
                 >
