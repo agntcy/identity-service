@@ -160,3 +160,4 @@ test_example*.py
 test_example.py
 test_example2.py
 .vscode
+*.bkp
