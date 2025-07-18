@@ -26,3 +26,15 @@ services:
       - "9093:9091"
     extra_hosts:
       - "host.docker.internal:host-gateway"
+  identity-platform-samples-financial-assistant-oasf-agent:
+    container_name: identity-platform-samples-financial-assistant-oasf-agent
+    build:
+      context: ./agent/oasf/financial_assistant
+      dockerfile: Dockerfile
+    restart: always
+    depends_on:
+      - identity-platform-samples-currency-exchange-a2a-agent
+    ports:
+      - "9094:9092"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
