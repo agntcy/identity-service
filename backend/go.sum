@@ -4,6 +4,8 @@ github.com/agntcy/identity v0.0.11 h1:NJH4LfDna9fdz361ENXevn0OvRWw11auRyR3jjvwe6
 github.com/agntcy/identity v0.0.11/go.mod h1:/4m4pa2WhJ4dQVAK2UvjyelLW3acnTtaXSUIf3uRK1Q=
 github.com/agntcy/identity/api/client v0.0.0-20250710140849-5c703eea2fbc h1:fFNLyBtOTBAkW8BmMUIf9HGpOlrTyyotmv7edt3TWPw=
 github.com/agntcy/identity/api/client v0.0.0-20250710140849-5c703eea2fbc/go.mod h1:hpLI3UidcyPaOee9xtj7h4bsxUY7eEaX9E/DLLJKvGo=
+github.com/agntcy/identity/api/client v0.0.0-20250718125643-92ca1e020cbf h1:g836sJbNauc7ymDO8/YsnqcmxvAwH8kUGV9l6kYAzGg=
+github.com/agntcy/identity/api/client v0.0.0-20250718125643-92ca1e020cbf/go.mod h1:hpLI3UidcyPaOee9xtj7h4bsxUY7eEaX9E/DLLJKvGo=
 github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 h1:DklsrG3dyBCFEj5IhUbnKptjxatkF07cF2ak3yi77so=
 github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2/go.mod h1:WaHUgvxTVq04UNunO+XhnAqY/wQc+bxr74GqbsZ/Jqw=
 github.com/beorn7/perks v1.0.1 h1:VlbKKnNfV8bJzeqoa4cOKqO6bYr3WgKZxO8Z16+hsOM=
