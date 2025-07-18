@@ -6,7 +6,13 @@
 import {ArrowDownIcon, ArrowUpIcon, CaretSortIcon, EyeNoneIcon} from '@radix-ui/react-icons';
 import {Column} from '@tanstack/react-table';
 import {cn} from '@/lib/utils';
-import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger} from './dropdown-menu';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from './dropdown-menu';
 import {Button} from './button';
 
 interface DataTableColumnHeaderProps<TData, TValue> extends React.HTMLAttributes<HTMLDivElement> {
@@ -14,7 +20,11 @@ interface DataTableColumnHeaderProps<TData, TValue> extends React.HTMLAttributes
   classNameTitle?: string;
 }
 
-function DataTableColumnHeader<TData, TValue>({column, className, classNameTitle}: DataTableColumnHeaderProps<TData, TValue>) {
+function DataTableColumnHeader<TData, TValue>({
+  column,
+  className,
+  classNameTitle
+}: DataTableColumnHeaderProps<TData, TValue>) {
   if (!column.getCanSort()) {
     return <p className={cn('text-sm normal-case', classNameTitle)}>{column.columnDef.header as string}</p>;
   }

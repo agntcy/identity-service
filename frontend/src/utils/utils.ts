@@ -15,3 +15,5 @@ export const parseJwt = (token: string) => {
     return undefined;
   }
 };
+
+export const generateRandomId = () => Math.random().toString(36).slice(2);

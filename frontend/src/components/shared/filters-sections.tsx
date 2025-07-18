@@ -65,12 +65,20 @@ export const FilterSections = <T,>({title, isLoading = true, searchFieldProps, d
 };
 
 const CustomDropdown = <T,>({treeData, onSelectValues, isSearchFieldEnabled, ...props}: CustomDropdownProps<T>) => {
-  const {flattenedTreeOptions, onSelectAllChange, selectAllNode, selectedValues, setSearchText, toggleExpand, updateCheckbox, searchTextDebounced} =
-    useDropdownAutocompleteTree({
-      treeData: treeData,
-      parentSelectOnly: true,
-      selectAllIcon: null
-    });
+  const {
+    flattenedTreeOptions,
+    onSelectAllChange,
+    selectAllNode,
+    selectedValues,
+    setSearchText,
+    toggleExpand,
+    updateCheckbox,
+    searchTextDebounced
+  } = useDropdownAutocompleteTree({
+    treeData: treeData,
+    parentSelectOnly: true,
+    selectAllIcon: null
+  });
 
   useEffect(() => {
     onSelectValues?.(selectedValues);
@@ -79,7 +87,9 @@ const CustomDropdown = <T,>({treeData, onSelectValues, isSearchFieldEnabled, ...
   return (
     <DropdownAutocompleteTree
       flattenedTreeOptions={
-        isSearchFieldEnabled ? flattenedTreeOptions.flattenedSelectTreeWithSearch : flattenedTreeOptions.flattenedSelectTreeWithoutSearch
+        isSearchFieldEnabled
+          ? flattenedTreeOptions.flattenedSelectTreeWithSearch
+          : flattenedTreeOptions.flattenedSelectTreeWithoutSearch
       }
       onSelectAllChange={onSelectAllChange}
       searchText={searchTextDebounced}

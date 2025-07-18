@@ -115,7 +115,12 @@ export const InviteUserModal = ({
             />
           </ModalContent>
           <ModalActions>
-            <Button onClick={onCancel} variant="tertariary" disabled={inviteUser.isPending} sx={{fontWeight: '600 !important'}}>
+            <Button
+              onClick={onCancel}
+              variant="tertariary"
+              disabled={inviteUser.isPending}
+              sx={{fontWeight: '600 !important'}}
+            >
               Cancel
             </Button>
             <Button

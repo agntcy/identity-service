@@ -4,7 +4,18 @@
  */
 
 import {Card, CardContent} from '@/components/ui/card';
-import {Accordion, Divider, EmptyState, GeneralSize, MenuItem, Pagination, Table, Tag, TagStatus, Typography} from '@outshift/spark-design';
+import {
+  Accordion,
+  Divider,
+  EmptyState,
+  GeneralSize,
+  MenuItem,
+  Pagination,
+  Table,
+  Tag,
+  TagStatus,
+  Typography
+} from '@outshift/spark-design';
 import {useCallback, useState} from 'react';
 import {Policy, Rule, RuleAction} from '@/types/api/policy';
 import {Separator} from '@/components/ui/separator';
@@ -113,11 +124,18 @@ export const RulesContent = ({policy}: {policy?: Policy}) => {
                               (
                                 <div className="flex gap-4 items-center h-[24px]">
                                   <Separator orientation="vertical" />
-                                  <TagActionTask action={rule.action} text={labels.rulesActions[rule.action ?? RuleAction.RULE_ACTION_UNSPECIFIED]} />
+                                  <TagActionTask
+                                    action={rule.action}
+                                    text={labels.rulesActions[rule.action ?? RuleAction.RULE_ACTION_UNSPECIFIED]}
+                                  />
                                   <Tag size={GeneralSize.Medium}>
-                                    {rule.tasks?.length || 0} {rule.tasks?.length && rule.tasks?.length > 1 ? 'Tasks' : 'Task'}
+                                    {rule.tasks?.length || 0}{' '}
+                                    {rule.tasks?.length && rule.tasks?.length > 1 ? 'Tasks' : 'Task'}
                                   </Tag>
-                                  <Tag status={rule.needsApproval ? TagStatus.Positive : TagStatus.Negative} size={GeneralSize.Small}>
+                                  <Tag
+                                    status={rule.needsApproval ? TagStatus.Positive : TagStatus.Negative}
+                                    size={GeneralSize.Small}
+                                  >
                                     <Typography variant="captionSemibold">
                                       Approval: <b>{rule.needsApproval ? 'Yes' : 'No'}</b>
                                     </Typography>
@@ -158,7 +176,11 @@ export const RulesContent = ({policy}: {policy?: Policy}) => {
                                       backgroundColor: theme.palette.vars.controlBackgroundDefault
                                     })}
                                   >
-                                    <EmptyState title="No tasks found" containerProps={{paddingBottom: '40px'}} actionTitle="Add Policy" />
+                                    <EmptyState
+                                      title="No tasks found"
+                                      containerProps={{paddingBottom: '40px'}}
+                                      actionTitle="Add Policy"
+                                    />
                                   </Box>
                                 )}
                               />
@@ -226,7 +248,11 @@ export const RulesContent = ({policy}: {policy?: Policy}) => {
                     </div>
                   ))}
                   <div className="flex justify-end">
-                    <Pagination count={Number(data?.pagination?.total) || 0} page={pageRules} onChange={handlePaginationRulesChange} />
+                    <Pagination
+                      count={Number(data?.pagination?.total) || 0}
+                      page={pageRules}
+                      onChange={handlePaginationRulesChange}
+                    />
                   </div>
                 </div>
               </CardContent>

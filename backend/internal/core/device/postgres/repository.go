@@ -5,13 +5,17 @@ package postgres
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 
+	authpg "github.com/agntcy/identity-platform/internal/core/auth/postgres"
 	devicecore "github.com/agntcy/identity-platform/internal/core/device"
 	"github.com/agntcy/identity-platform/internal/core/device/types"
 	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
 	"github.com/agntcy/identity-platform/internal/pkg/convertutil"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
+	"github.com/agntcy/identity-platform/internal/pkg/gormutil"
+	"github.com/agntcy/identity-platform/internal/pkg/pagination"
 	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
 	"github.com/agntcy/identity-platform/pkg/db"
 	"gorm.io/gorm"
@@ -44,6 +48,7 @@ func (r *repository) AddDevice(
 	if !ok {
 		return nil, identitycontext.ErrTenantNotFound
 	}
+
 	model.TenantID = tenantID
 
 	inserted := r.dbContext.Client().Create(model)
@@ -104,11 +109,20 @@ func (r *repository) GetDevices(
 	// If userID is nil, we fetch all devices for the tenant
 	if userID == nil {
 		result = r.dbContext.Client().
-			Where("tenant_id = ?", tenantID).
+			Where(
+				"tenant_id = ? AND subscription_token IS NOT NULL AND subscription_token <> ''",
+				tenantID,
+			).
+			Order("created_at ASC").
 			Find(&devices)
 	} else {
 		result = r.dbContext.Client().
-			Where("tenant_id = ? AND user_id = ?", tenantID, userID).
+			Where(
+				"tenant_id = ? AND user_id = ? AND subscription_token IS NOT NULL AND subscription_token <> ''",
+				tenantID,
+				userID,
+			).
+			Order("created_at ASC").
 			Find(&devices)
 	}
 
@@ -156,4 +170,88 @@ func (r *repository) UpdateDevice(
 	}
 
 	return existingDevice.ToCoreType(), nil
+}
+
+func (r *repository) ListRegisteredDevices(
+	ctx context.Context,
+	paginationFilter pagination.PaginationFilter,
+	query *string,
+) (*pagination.Pageable[types.Device], error) {
+	tenantID, ok := identitycontext.GetTenantID(ctx)
+	if !ok {
+		return nil, errutil.Err(
+			nil, "failed to get tenant ID from context",
+		)
+	}
+
+	dbQuery := r.dbContext.Client().Where(
+		"tenant_id = ? AND subscription_token IS NOT NULL AND subscription_token <> ''",
+		tenantID,
+	)
+
+	if query != nil && *query != "" {
+		dbQuery = dbQuery.Where(
+			"id ILIKE @query OR name ILIKE @query",
+			sql.Named("query", "%"+*query+"%"),
+		)
+	}
+
+	dbQuery = dbQuery.Session(&gorm.Session{}) // https://gorm.io/docs/method_chaining.html#Reusability-and-Safety
+
+	var devices []*Device
+
+	err := dbQuery.Scopes(gormutil.Paginate(paginationFilter)).Order("created_at DESC").Find(&devices).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errutil.Err(err, "no devices found")
+		}
+
+		return nil, errutil.Err(err, "there was an error fetching the devices")
+	}
+
+	var totalDevices int64
+
+	err = dbQuery.Model(&Device{}).Count(&totalDevices).Error
+	if err != nil {
+		return nil, errutil.Err(err, "there was an error fetching the devices")
+	}
+
+	return &pagination.Pageable[types.Device]{
+		Items: convertutil.ConvertSlice(devices, func(device *Device) *types.Device {
+			return device.ToCoreType()
+		}),
+		Total: totalDevices,
+		Page:  paginationFilter.GetPage(),
+		Size:  int32(len(devices)),
+	}, nil
+}
+
+func (r *repository) DeleteDevice(ctx context.Context, device *types.Device) error {
+	tenantID, ok := identitycontext.GetTenantID(ctx)
+	if !ok {
+		return identitycontext.ErrTenantNotFound
+	}
+
+	model := newDeviceModel(device)
+
+	err := r.dbContext.Client().Transaction(func(tx *gorm.DB) error {
+		err := tx.Where("device_id = ?", device.ID).
+			Delete(&authpg.SessionDeviceOTP{}).Error
+		if err != nil {
+			return nil
+		}
+
+		err = tx.Where("tenant_id = ?", tenantID).
+			Delete(model).Error
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+	if err != nil {
+		return errutil.Err(err, "failed to delete device")
+	}
+
+	return nil
 }

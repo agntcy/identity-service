@@ -5,6 +5,8 @@
 
 package types
 
+import "time"
+
 // Devices used for user approval
 type Device struct {
 	// A unique identifier for the Device.
@@ -15,6 +17,12 @@ type Device struct {
 
 	// Subscription Token for the Device.
 	SubscriptionToken string `json:"subscription_token,omitempty" protobuf:"bytes,3,opt,name=subscription_token"`
+
+	// The device human-readable name.
+	Name string `json:"name,omitempty" protobuf:"bytes,4,opt,name=name"`
+
+	// The creation time of the Device.
+	CreatedAt time.Time `json:"created_at" protobuf:"google.protobuf.Timestamp,5,opt,name=created_at"`
 }
 
 type NotificationType int

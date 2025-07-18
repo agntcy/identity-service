@@ -55,7 +55,11 @@ export const VerificationResults = () => {
         keyProp: 'Badge Status',
         value: (
           <div className="flex items-center gap-2">
-            <Badge content={null} type={results?.status ? 'success' : 'error'} styleBadge={{width: '6px', height: '6px', padding: '0'}} />
+            <Badge
+              content={null}
+              type={results?.status ? 'success' : 'error'}
+              styleBadge={{width: '6px', height: '6px', padding: '0'}}
+            />
             <Typography color="#272E37" fontSize={14}>
               {results?.status ? 'Active' : 'Revoked'}
             </Typography>

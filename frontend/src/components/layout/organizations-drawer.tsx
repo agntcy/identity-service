@@ -151,7 +151,10 @@ export const OrganizationsDrawer: React.FC<{
                       handleConfirmationChange(tenant);
                     }}
                   >
-                    <Typography variant="captionMedium" sx={{color: tenant.id === authInfo?.user?.tenant?.id ? '#0051AF' : '#00142B'}}>
+                    <Typography
+                      variant="captionMedium"
+                      sx={{color: tenant.id === authInfo?.user?.tenant?.id ? '#0051AF' : '#00142B'}}
+                    >
                       <OverflowTooltip value={tenant.name} someLongText={tenant.name} placement="right" />
                     </Typography>
                   </div>
@@ -166,7 +169,8 @@ export const OrganizationsDrawer: React.FC<{
         title="Change Organization"
         description={
           <>
-            This will log you out of your current organization so that you can log into <b>{tenant?.name}</b>. Do you still want to continue?
+            This will log you out of your current organization so that you can log into <b>{tenant?.name}</b>. Do you still
+            want to continue?
           </>
         }
         confirmButtonText="Continue"

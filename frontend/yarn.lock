@@ -2964,7 +2964,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@radix-ui/react-dialog@npm:^1.1.14, @radix-ui/react-dialog@npm:^1.1.6":
+"@radix-ui/react-dialog@npm:^1.1.1, @radix-ui/react-dialog@npm:^1.1.14, @radix-ui/react-dialog@npm:^1.1.6":
   version: 1.1.14
   resolution: "@radix-ui/react-dialog@npm:1.1.14"
   dependencies:
@@ -7595,7 +7595,9 @@ __metadata:
     typescript: "npm:~5.7.2"
     typescript-eslint: "npm:^8.24.1"
     use-debounce: "npm:^10.0.5"
+    user-agent-data-types: "npm:^0.4.2"
     vanilla-cookieconsent: "npm:3.1.0"
+    vaul: "npm:^1.1.2"
     vite: "npm:^6.2.0"
     vite-plugin-pwa: "npm:^1.0.1"
     vite-plugin-svgr: "npm:^4.3.0"
@@ -11991,6 +11993,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"user-agent-data-types@npm:^0.4.2":
+  version: 0.4.2
+  resolution: "user-agent-data-types@npm:0.4.2"
+  checksum: 10/0c448b820b70eb99f64ce611ddda70ff3a5af4bfe0b02e4fcae72bb8377710593358657413399daf583622c63a50e024b11d8947d1136ddeca01d6b066f963ad
+  languageName: node
+  linkType: hard
+
 "utils@workspace:utils":
   version: 0.0.0-use.local
   resolution: "utils@workspace:utils"
@@ -12005,6 +12014,18 @@ __metadata:
   version: 3.1.0
   resolution: "vanilla-cookieconsent@npm:3.1.0"
   checksum: 10/053e887cde87cb1e583288d2c3d8b56acf9c97293e5c9ff5c35d0f43b68c8e20441a321469126e92ac78fbb8410fe245cd2f879d4c376b7b2a66ffca00dee41c
+  languageName: node
+  linkType: hard
+
+"vaul@npm:^1.1.2":
+  version: 1.1.2
+  resolution: "vaul@npm:1.1.2"
+  dependencies:
+    "@radix-ui/react-dialog": "npm:^1.1.1"
+  peerDependencies:
+    react: ^16.8 || ^17.0 || ^18.0 || ^19.0.0 || ^19.0.0-rc
+    react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0.0 || ^19.0.0-rc
+  checksum: 10/9d34f7f9aae1994450233f7803fcd47dca7680bc621ee24717b8e78b72fda9c5156e1ff2c8af6c2705993224fd8d3725ed89d84ba5bd1d411124dd91cde2b2e5
   languageName: node
   linkType: hard
 

@@ -13,8 +13,7 @@ import {PATHS} from '@/router/paths';
 
 export const PublicHeader = ({userSection}: {userSection?: ReactNode}) => {
   const {login, register} = useAuth();
-  const {width} = useWindowSize();
-  const isMobile = width < 768;
+  const {isMobile} = useWindowSize();
 
   return (
     <Header

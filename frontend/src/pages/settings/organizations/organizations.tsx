@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 /**
  * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
  * SPDX-License-Identifier: Apache-2.0
@@ -9,14 +10,47 @@ import {ConfirmModal} from '@/components/ui/confirm-modal';
 import {useAnalytics} from '@/hooks';
 import {useCreateTenant} from '@/mutations';
 import {PATHS} from '@/router/paths';
+import {useFeatureFlagsStore} from '@/store';
 import {Button, toast} from '@outshift/spark-design';
 import {PlusIcon} from 'lucide-react';
-import {useCallback, useState} from 'react';
+import {useCallback, useMemo, useState} from 'react';
+import {useShallow} from 'zustand/react/shallow';
 
 const Organizations: React.FC = () => {
   const [openCreateModal, setOpenCreateModal] = useState(false);
 
   const {analyticsTrack} = useAnalytics();
+
+  const {isTbacEnable} = useFeatureFlagsStore(
+    useShallow((state) => ({
+      isTbacEnable: state.featureFlags.isTbacEnable
+    }))
+  );
+
+  const subNav = useMemo(() => {
+    return [
+      {
+        label: 'Identity Provider',
+        href: PATHS.settings.identityProvider.base
+      },
+      {
+        label: 'API Key',
+        href: PATHS.settings.apiKey
+      },
+      ...(isTbacEnable
+        ? [
+            {
+              label: 'Devices',
+              href: PATHS.settings.devices.base
+            }
+          ]
+        : []),
+      {
+        label: 'Organizations & Users',
+        href: PATHS.settings.organizationsAndUsers.base
+      }
+    ];
+  }, [isTbacEnable]);
 
   const createOrganizationMutation = useCreateTenant({
     callbacks: {
@@ -46,24 +80,7 @@ const Organizations: React.FC = () => {
   return (
     <BasePage
       title="Organizations & Users"
-      subNav={[
-        {
-          label: 'Identity Provider',
-          href: PATHS.settings.identityProvider.base
-        },
-        {
-          label: 'Devices',
-          href: PATHS.settings.devices.base
-        },
-        {
-          label: 'API Key',
-          href: PATHS.settings.apiKey
-        },
-        {
-          label: 'Organizations & Users',
-          href: PATHS.settings.organizationsAndUsers.base
-        }
-      ]}
+      subNav={subNav}
       breadcrumbs={[
         {
           text: 'Settings',

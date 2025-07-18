@@ -30,7 +30,10 @@ interface SideNavLinkItem {
   onClick?: () => void;
 }
 
-export const SideNav: React.FC<{isCollapsed?: boolean; onChangeCollapsed?: (value?: boolean) => void}> = ({isCollapsed, onChangeCollapsed}) => {
+export const SideNav: React.FC<{
+  isCollapsed?: boolean;
+  onChangeCollapsed?: (value?: boolean) => void;
+}> = ({isCollapsed, onChangeCollapsed}) => {
   const [isOrgOpen, setIsOrgOpen] = useState(false);
 
   const theme = useTheme();
@@ -112,7 +115,11 @@ export const SideNav: React.FC<{isCollapsed?: boolean; onChangeCollapsed?: (valu
                 <OverflowTooltip
                   value={authInfo?.user?.tenant?.name}
                   someLongText={authInfo?.user?.tenant?.name}
-                  styleText={{color: theme.palette.vars.brandTextSecondary, fontSize: '14px', fontWeight: '500'}}
+                  styleText={{
+                    color: theme.palette.vars.brandTextSecondary,
+                    fontSize: '14px',
+                    fontWeight: '500'
+                  }}
                 />
               }
               isLink={false}
@@ -121,7 +128,10 @@ export const SideNav: React.FC<{isCollapsed?: boolean; onChangeCollapsed?: (valu
                 'border-1 border-[#D5DFF7] border-solid h-[56px] rounded-[8px] flex items-center gap-4 mt-8',
                 isOrgOpen && 'bg-[#E8F1FF] custom-border-org'
               )}
-              classNameIcon={cn('[&>svg]:min-w-7 [&>svg]:min-h-7 [&>svg]:max-w-7 [&>svg]:max-h-7', isOrgOpen && isCollapsed && 'pr-4')}
+              classNameIcon={cn(
+                '[&>svg]:min-w-7 [&>svg]:min-h-7 [&>svg]:max-w-7 [&>svg]:max-h-7',
+                isOrgOpen && isCollapsed && 'pr-4'
+              )}
               isCollapsed={isCollapsed}
               actionIcon={isOrgOpen || isCollapsed ? null : <ChevronRightIcon className="ml-auto w-4 h-4" />}
               onClick={() => {
@@ -131,7 +141,14 @@ export const SideNav: React.FC<{isCollapsed?: boolean; onChangeCollapsed?: (valu
           </div>
           <div className={cn('flex flex-col gap-1 mt-8 pr-4', isCollapsed && 'pr-4')}>
             {sideNavLinks.map((link) => {
-              return <SideNavLink {...link} isCollapsed={isCollapsed} key={`side-nav-link-${link.href}`} isActive={active?.href === link.href} />;
+              return (
+                <SideNavLink
+                  {...link}
+                  isCollapsed={isCollapsed}
+                  key={`side-nav-link-${link.href}`}
+                  isActive={active?.href === link.href}
+                />
+              );
             })}
           </div>
         </div>
@@ -167,7 +184,20 @@ const SideNavLink: React.FC<{
   classNameIcon?: string;
   actionIcon?: ReactNode;
   onClick?: () => void;
-}> = ({label, href, icon, isActive, isCollapsed, isLink = true, description, className, actionIcon, classNameIcon, isExternal, onClick}) => {
+}> = ({
+  label,
+  href,
+  icon,
+  isActive,
+  isCollapsed,
+  isLink = true,
+  description,
+  className,
+  actionIcon,
+  classNameIcon,
+  isExternal,
+  onClick
+}) => {
   const ThisLink = (
     <div
       className={cn(
@@ -197,7 +227,9 @@ const SideNavLink: React.FC<{
           noWrap
           textAlign="left"
           variant="captionMedium"
-          sx={(theme) => ({color: isActive ? theme.palette.vars.brandTextPrimary : theme.palette.vars.brandTextSecondary})}
+          sx={(theme) => ({
+            color: isActive ? theme.palette.vars.brandTextPrimary : theme.palette.vars.brandTextSecondary
+          })}
         >
           {label}
         </Typography>
@@ -207,7 +239,11 @@ const SideNavLink: React.FC<{
   );
 
   const Wrapper = isLink ? (
-    <Link to={href ? href : '#'} target={isExternal ? '_blank' : undefined} rel={isExternal ? 'noopener noreferrer' : undefined}>
+    <Link
+      to={href ? href : '#'}
+      target={isExternal ? '_blank' : undefined}
+      rel={isExternal ? 'noopener noreferrer' : undefined}
+    >
       {ThisLink}
     </Link>
   ) : (

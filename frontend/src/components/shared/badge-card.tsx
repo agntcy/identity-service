@@ -7,7 +7,17 @@ import {useGetAgenticServiceBadge} from '@/queries';
 import {Card} from '../ui/card';
 import {App} from '@/types/api/app';
 import {useCallback, useEffect, useMemo, useState} from 'react';
-import {Button, CodeBlock, CopyButton, Modal, ModalContent, ModalTitle, toast, Typography, ViewSwitcher} from '@outshift/spark-design';
+import {
+  Button,
+  CodeBlock,
+  CopyButton,
+  Modal,
+  ModalContent,
+  ModalTitle,
+  toast,
+  Typography,
+  ViewSwitcher
+} from '@outshift/spark-design';
 import {ConditionalQueryRenderer} from '../ui/conditional-query-renderer';
 import {CheckIcon, DownloadIcon, ExpandIcon} from 'lucide-react';
 import {BadgeModalForm} from './badge-modal-form';
@@ -26,7 +36,14 @@ interface BadgeCardProps {
   onBadgeChanged?: (badge?: Badge) => void;
 }
 
-export const BadgeCard = ({app, navigateTo = true, verifyIdentity = false, confirmButtonText, showError = false, onBadgeChanged}: BadgeCardProps) => {
+export const BadgeCard = ({
+  app,
+  navigateTo = true,
+  verifyIdentity = false,
+  confirmButtonText,
+  showError = false,
+  onBadgeChanged
+}: BadgeCardProps) => {
   const [showBadgeForm, setShowBadgeForm] = useState<boolean>(false);
   const [showBadge, setShowBadge] = useState<boolean>(false);
   const [view, setView] = useState('credential');
@@ -78,7 +95,9 @@ export const BadgeCard = ({app, navigateTo = true, verifyIdentity = false, confi
       });
       return;
     }
-    const blob = new Blob([JSON.stringify(data.verifiableCredential, null, 2)], {type: 'application/json'});
+    const blob = new Blob([JSON.stringify(data.verifiableCredential, null, 2)], {
+      type: 'application/json'
+    });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
@@ -187,10 +206,20 @@ export const BadgeCard = ({app, navigateTo = true, verifyIdentity = false, confi
             </div>
             <ScrollShadowWrapper className="max-h-[50vh] overflow-auto">
               {view === 'credential' && (
-                <CodeBlock containerProps={{maxWidth: '40vw'}} showLineNumbers wrapLongLines text={JSON.stringify(contentToShow, null, 2)} />
+                <CodeBlock
+                  containerProps={{maxWidth: '40vw'}}
+                  showLineNumbers
+                  wrapLongLines
+                  text={JSON.stringify(contentToShow, null, 2)}
+                />
               )}
               {view === 'claims' && (
-                <CodeBlock containerProps={{maxWidth: '40vw'}} showLineNumbers wrapLongLines text={JSON.stringify(contentToShow, null, 2)} />
+                <CodeBlock
+                  containerProps={{maxWidth: '40vw'}}
+                  showLineNumbers
+                  wrapLongLines
+                  text={JSON.stringify(contentToShow, null, 2)}
+                />
               )}
               {view === 'jose' && (
                 <div className="border border-solid border-[#d5dff7] p-4 w-full rounded-[6px] bg-[#fbfcfe] relative">

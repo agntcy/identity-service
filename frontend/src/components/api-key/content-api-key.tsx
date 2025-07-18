@@ -6,19 +6,30 @@
 import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-renderer';
 import {useSetApiKey} from '@/mutations';
 import {useGetSettings} from '@/queries';
-import {Button, CardContent, CopyButton, toast, Typography} from '@outshift/spark-design';
-import {RefreshCcwIcon} from 'lucide-react';
-import React, {useCallback} from 'react';
+import {CardContent, CopyButton, toast, Typography} from '@outshift/spark-design';
+import {EllipsisVerticalIcon, RefreshCcwIcon} from 'lucide-react';
+import React, {useCallback, useState} from 'react';
 import {ConfirmModal} from '../ui/confirm-modal';
 import {Card} from '../ui/card';
 import {useAnalytics} from '@/hooks';
+import {IconButton, Menu, MenuItem, Tooltip} from '@mui/material';
 
 export const ContentApiKey: React.FC = () => {
-  const [openActionsModal, setOpenActionsModal] = React.useState(false);
+  const [openActionsModal, setOpenActionsModal] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
 
   const {data, error, isLoading, isFetching, refetch} = useGetSettings();
 
   const {analyticsTrack} = useAnalytics();
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const setApiKeyMutation = useSetApiKey({
     callbacks: {
@@ -69,41 +80,67 @@ export const ContentApiKey: React.FC = () => {
         }
       }}
     >
-      <Card variant="secondary">
-        <CardContent>
-          <div className="flex flex-col gap-6">
-            <Typography variant="body1Semibold">API Key</Typography>
-            <div className="bg-[#FBFCFE] border-[2px] border-[#D5DFF7] rounded-[4px] w-fit py-2 px-4 flex justify-between items-center gap-4">
-              <Typography variant="body2">
-                {data?.apiKey?.apiKey ? `${'*'.repeat(55)}${data.apiKey.apiKey.slice(-5)}` : 'No API Key available'}
-              </Typography>
-              <CopyButton
-                text={data?.apiKey?.apiKey || ''}
-                style={{border: 'none'}}
-                onCopy={() => {
-                  toast({
-                    title: 'API Key copied to clipboard',
-                    description: 'You can now use this API Key in your applications.',
-                    type: 'success'
-                  });
+      <Card className="text-start space-y-6" variant="secondary">
+        <div className="flex justify-between items-start">
+          <Typography variant="subtitle1" fontWeight={600}>
+            API Key
+          </Typography>
+          <div>
+            <Tooltip title="Actions" arrow>
+              <IconButton
+                sx={(theme) => ({
+                  color: theme.palette.vars.baseTextDefault,
+                  width: '24px',
+                  height: '24px'
+                })}
+                onClick={handleClick}
+              >
+                <EllipsisVerticalIcon className="h-4 w-4" />
+              </IconButton>
+            </Tooltip>
+            <Menu
+              transformOrigin={{horizontal: 'right', vertical: 'top'}}
+              anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              onClick={handleClose}
+            >
+              <MenuItem
+                key="refresh-api-key"
+                onClick={() => {
+                  analyticsTrack('CLICK_REFRESH_API_KEY');
+                  handleChangeActionsModal(true);
                 }}
-              />
-            </div>
+                sx={{display: 'flex', alignItems: 'center', gap: '8px'}}
+              >
+                <RefreshCcwIcon className="w-4 h-4" color="#062242" />
+                <Typography variant="body2" color="#062242">
+                  Refresh
+                </Typography>
+              </MenuItem>
+            </Menu>
+          </div>
+        </div>
+        <CardContent>
+          <div className="bg-[#FBFCFE] border-[2px] border-[#D5DFF7] rounded-[4px] w-fit py-2 px-4 flex justify-between items-center gap-4">
+            <Typography variant="body2">
+              {data?.apiKey?.apiKey ? `${'*'.repeat(55)}${data.apiKey.apiKey.slice(-5)}` : 'No API Key available'}
+            </Typography>
+            <CopyButton
+              text={data?.apiKey?.apiKey || ''}
+              style={{border: 'none'}}
+              onCopy={() => {
+                toast({
+                  title: 'API Key copied to clipboard',
+                  description: 'You can now use this API Key in your applications.',
+                  type: 'success'
+                });
+              }}
+            />
           </div>
         </CardContent>
       </Card>
-      <div className="flex justify-end mt-4">
-        <Button
-          onClick={() => {
-            analyticsTrack('CLICK_REFRESH_API_KEY');
-            handleChangeActionsModal(true);
-          }}
-          startIcon={<RefreshCcwIcon className="w-4 h-4" />}
-          sx={{fontWeight: '600 !important'}}
-        >
-          Refresh
-        </Button>
-      </div>
       <ConfirmModal
         open={openActionsModal}
         title="Confirm Action"

@@ -8,7 +8,10 @@ import {Card} from './card';
 
 const PlaceholderPageContent: React.FC<{type?: 'placeholder' | 'mock'}> = ({type = 'placeholder'}) => {
   const title = type === 'placeholder' ? 'This page is a placeholder' : 'This page contains mock data';
-  const description = type === 'placeholder' ? 'This page has not been implemented yet.' : 'This page contains mock data for development purposes.';
+  const description =
+    type === 'placeholder'
+      ? 'This page has not been implemented yet.'
+      : 'This page contains mock data for development purposes.';
 
   return (
     <Card variant="secondary">

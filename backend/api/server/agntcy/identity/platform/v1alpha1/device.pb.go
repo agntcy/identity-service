@@ -11,6 +11,7 @@ package identity_platform_sdk_go
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -173,8 +174,12 @@ type Device struct {
 	UserId *string `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3,oneof" json:"user_id,omitempty"`
 	// Subscription Token for the Device.
 	SubscriptionToken *string `protobuf:"bytes,3,opt,name=subscription_token,json=subscriptionToken,proto3,oneof" json:"subscription_token,omitempty"`
-	unknownFields     protoimpl.UnknownFields
-	sizeCache         protoimpl.SizeCache
+	// The device human-readable name.
+	Name *string `protobuf:"bytes,4,opt,name=name,proto3,oneof" json:"name,omitempty"`
+	// The creation time of the Device.
+	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *Device) Reset() {
@@ -226,6 +231,20 @@ func (x *Device) GetSubscriptionToken() string {
 		return *x.SubscriptionToken
 	}
 	return ""
+}
+
+func (x *Device) GetName() string {
+	if x != nil && x.Name != nil {
+		return *x.Name
+	}
+	return ""
+}
+
+func (x *Device) GetCreatedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.CreatedAt
+	}
+	return nil
 }
 
 type Notification struct {
@@ -292,7 +311,7 @@ var File_agntcy_identity_platform_v1alpha1_device_proto protoreflect.FileDescrip
 
 const file_agntcy_identity_platform_v1alpha1_device_proto_rawDesc = "" +
 	"\n" +
-	".agntcy/identity/platform/v1alpha1/device.proto\x12!agntcy.identity.platform.v1alpha1\"\xf7\x02\n" +
+	".agntcy/identity/platform/v1alpha1/device.proto\x12!agntcy.identity.platform.v1alpha1\x1a\x1fgoogle/protobuf/timestamp.proto\"\xf7\x02\n" +
 	"\x13ApprovalRequestInfo\x12\"\n" +
 	"\n" +
 	"caller_app\x18\x01 \x01(\tH\x00R\tcallerApp\x88\x01\x01\x12\"\n" +
@@ -312,15 +331,20 @@ const file_agntcy_identity_platform_v1alpha1_device_proto_rawDesc = "" +
 	"\n" +
 	"_device_idB\r\n" +
 	"\v_session_idB\x15\n" +
-	"\x13_timeout_in_seconds\"\x99\x01\n" +
+	"\x13_timeout_in_seconds\"\x8a\x02\n" +
 	"\x06Device\x12\x13\n" +
 	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x1c\n" +
 	"\auser_id\x18\x02 \x01(\tH\x01R\x06userId\x88\x01\x01\x122\n" +
-	"\x12subscription_token\x18\x03 \x01(\tH\x02R\x11subscriptionToken\x88\x01\x01B\x05\n" +
+	"\x12subscription_token\x18\x03 \x01(\tH\x02R\x11subscriptionToken\x88\x01\x01\x12\x17\n" +
+	"\x04name\x18\x04 \x01(\tH\x03R\x04name\x88\x01\x01\x12>\n" +
+	"\n" +
+	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampH\x04R\tcreatedAt\x88\x01\x01B\x05\n" +
 	"\x03_idB\n" +
 	"\n" +
 	"\b_user_idB\x15\n" +
-	"\x13_subscription_token\"\x92\x02\n" +
+	"\x13_subscription_tokenB\a\n" +
+	"\x05_nameB\r\n" +
+	"\v_created_at\"\x92\x02\n" +
 	"\fNotification\x12\x17\n" +
 	"\x04body\x18\x01 \x01(\tH\x00R\x04body\x88\x01\x01\x12L\n" +
 	"\x04type\x18\x02 \x01(\x0e23.agntcy.identity.platform.v1alpha1.NotificationTypeH\x01R\x04type\x88\x01\x01\x12o\n" +
@@ -348,19 +372,21 @@ func file_agntcy_identity_platform_v1alpha1_device_proto_rawDescGZIP() []byte {
 var file_agntcy_identity_platform_v1alpha1_device_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_agntcy_identity_platform_v1alpha1_device_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_agntcy_identity_platform_v1alpha1_device_proto_goTypes = []any{
-	(NotificationType)(0),       // 0: agntcy.identity.platform.v1alpha1.NotificationType
-	(*ApprovalRequestInfo)(nil), // 1: agntcy.identity.platform.v1alpha1.ApprovalRequestInfo
-	(*Device)(nil),              // 2: agntcy.identity.platform.v1alpha1.Device
-	(*Notification)(nil),        // 3: agntcy.identity.platform.v1alpha1.Notification
+	(NotificationType)(0),         // 0: agntcy.identity.platform.v1alpha1.NotificationType
+	(*ApprovalRequestInfo)(nil),   // 1: agntcy.identity.platform.v1alpha1.ApprovalRequestInfo
+	(*Device)(nil),                // 2: agntcy.identity.platform.v1alpha1.Device
+	(*Notification)(nil),          // 3: agntcy.identity.platform.v1alpha1.Notification
+	(*timestamppb.Timestamp)(nil), // 4: google.protobuf.Timestamp
 }
 var file_agntcy_identity_platform_v1alpha1_device_proto_depIdxs = []int32{
-	0, // 0: agntcy.identity.platform.v1alpha1.Notification.type:type_name -> agntcy.identity.platform.v1alpha1.NotificationType
-	1, // 1: agntcy.identity.platform.v1alpha1.Notification.approval_request_info:type_name -> agntcy.identity.platform.v1alpha1.ApprovalRequestInfo
-	2, // [2:2] is the sub-list for method output_type
-	2, // [2:2] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	4, // 0: agntcy.identity.platform.v1alpha1.Device.created_at:type_name -> google.protobuf.Timestamp
+	0, // 1: agntcy.identity.platform.v1alpha1.Notification.type:type_name -> agntcy.identity.platform.v1alpha1.NotificationType
+	1, // 2: agntcy.identity.platform.v1alpha1.Notification.approval_request_info:type_name -> agntcy.identity.platform.v1alpha1.ApprovalRequestInfo
+	3, // [3:3] is the sub-list for method output_type
+	3, // [3:3] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_agntcy_identity_platform_v1alpha1_device_proto_init() }

@@ -15,7 +15,7 @@ export const Loading = ({classNameContainer, spinnerProps}: LoadingProps) => {
   return (
     <div
       className={cn(
-        'flex flex-col justify-center items-center h-full w-full fixed top-[50%] left-[50%] z-[1000] -translate-x-[50%] -translate-y-[50%]',
+        'bg-[#fbfcfe] flex flex-col justify-center items-center h-full w-full fixed top-[50%] left-[50%] z-[5000] -translate-x-[50%] -translate-y-[50%]',
         classNameContainer
       )}
     >

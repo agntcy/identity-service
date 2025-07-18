@@ -18,7 +18,8 @@ const ConnectionIdentityProvider: React.FC = () => {
           <Tooltip
             title={
               <div className="text-center">
-                In the first release, you can link a single identity provider as an issuer, but it won&apos;t be possible to edit or remove it.
+                In the first release, you can link a single identity provider as an issuer, but it won&apos;t be possible to
+                edit or remove it.
               </div>
             }
             arrow

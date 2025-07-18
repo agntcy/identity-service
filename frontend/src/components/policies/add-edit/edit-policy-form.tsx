@@ -214,7 +214,13 @@ export const EditPolicyForm = ({policy}: {policy?: Policy}) => {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <StepperPanel className="w-full">
-            <Accordion type="single" collapsible className="w-full" defaultValue={methods.get('policyForm').id} value={methods.current.id}>
+            <Accordion
+              type="single"
+              collapsible
+              className="w-full"
+              defaultValue={methods.get('policyForm').id}
+              value={methods.current.id}
+            >
               {methods.all.map((step) => {
                 return (
                   <div className="flex gap-2 items-top -ml-1" key={step.id}>
@@ -225,7 +231,11 @@ export const EditPolicyForm = ({policy}: {policy?: Policy}) => {
                       <AccordionTrigger className="pt-0 w-full cursor-default" useArrow={false}>
                         <div className="w-full -mt-[3px]">
                           <div className="flex items-center gap-2">
-                            <Typography variant="h6" fontSize={18} sx={(theme) => ({color: theme.palette.vars.baseTextStrong})}>
+                            <Typography
+                              variant="h6"
+                              fontSize={18}
+                              sx={(theme) => ({color: theme.palette.vars.baseTextStrong})}
+                            >
                               {step.title}
                             </Typography>
                           </div>
@@ -268,7 +278,9 @@ export const EditPolicyForm = ({policy}: {policy?: Policy}) => {
                               loadingPosition="start"
                               type="submit"
                               disabled={
-                                isLoading || !form.formState.isValid || (methods.current.id === 'policyLogic' && !policyLogicForm.formState.isValid)
+                                isLoading ||
+                                !form.formState.isValid ||
+                                (methods.current.id === 'policyLogic' && !policyLogicForm.formState.isValid)
                               }
                               className="cursor-pointer"
                               sx={{

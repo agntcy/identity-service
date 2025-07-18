@@ -4,6 +4,8 @@
 package postgres
 
 import (
+	"time"
+
 	"github.com/agntcy/identity-platform/internal/core/device/types"
 	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
 	"github.com/google/uuid"
@@ -14,6 +16,8 @@ type Device struct {
 	TenantID          string    `gorm:"not null;type:varchar(256);"`
 	UserID            *string   `gorm:"not null;type:varchar(256);"`
 	SubscriptionToken string    `gorm:"not null;type:varchar(4096);"`
+	Name              string
+	CreatedAt         time.Time
 }
 
 func (d *Device) ToCoreType() *types.Device {
@@ -25,6 +29,8 @@ func (d *Device) ToCoreType() *types.Device {
 		ID:                d.ID.String(),
 		UserID:            ptrutil.DerefStr(d.UserID),
 		SubscriptionToken: d.SubscriptionToken,
+		Name:              d.Name,
+		CreatedAt:         d.CreatedAt,
 	}
 }
 
@@ -34,7 +40,10 @@ func newDeviceModel(src *types.Device) *Device {
 	}
 
 	return &Device{
+		ID:                uuid.MustParse(src.ID),
 		UserID:            ptrutil.Ptr(src.UserID),
 		SubscriptionToken: src.SubscriptionToken,
+		Name:              src.Name,
+		CreatedAt:         src.CreatedAt,
 	}
 }

@@ -92,7 +92,14 @@ const defineStepper = <const Steps extends Stepperize.Step[]>(...steps: Steps): 
   return {
     ...rest,
     useStepper,
-    StepperProvider: ({variant = 'horizontal', labelOrientation = 'horizontal', tracking = false, children, className, ...props}) => {
+    StepperProvider: ({
+      variant = 'horizontal',
+      labelOrientation = 'horizontal',
+      tracking = false,
+      children,
+      className,
+      ...props
+    }) => {
       return (
         <StepperContext.Provider value={{variant, labelOrientation, tracking}}>
           <Scoped initialStep={props.initialStep} initialMetadata={props.initialMetadata}>
@@ -228,7 +235,11 @@ const defineStepper = <const Steps extends Stepperize.Step[]>(...steps: Steps): 
       const {tracking} = useStepperProvider();
 
       return (
-        <Comp className={cn('stepper-step-panel', className)} ref={(node) => scrollIntoStepperPanel(node, tracking)} {...props}>
+        <Comp
+          className={cn('stepper-step-panel', className)}
+          ref={(node) => scrollIntoStepperPanel(node, tracking)}
+          {...props}
+        >
           {children}
         </Comp>
       );
@@ -368,7 +379,11 @@ const listVariants = cva('stepper-navigation-list flex gap-1 w-[38px]', {
 });
 
 const classForSeparator = cva(
-  ['bg-[#FBAB2C]', 'data-[state=completed]:bg-[#187ADC] data-[disabled]:opacity-50', 'transition-all duration-300 ease-in-out'],
+  [
+    'bg-[#FBAB2C]',
+    'data-[state=completed]:bg-[#187ADC] data-[disabled]:opacity-50',
+    'transition-all duration-300 ease-in-out'
+  ],
   {
     variants: {
       orientation: {

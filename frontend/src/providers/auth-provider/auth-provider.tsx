@@ -40,7 +40,12 @@ const AuthProvider: React.FC<React.PropsWithChildren> = ({children}) => {
   }, [authConfig]);
 
   const isValidOktaConfig: boolean = React.useMemo(() => {
-    if (!newAuthConfig?.oktaIssuer || newAuthConfig?.oktaIssuer === '' || !newAuthConfig?.oktaClient || newAuthConfig?.oktaClient === '') {
+    if (
+      !newAuthConfig?.oktaIssuer ||
+      newAuthConfig?.oktaIssuer === '' ||
+      !newAuthConfig?.oktaClient ||
+      newAuthConfig?.oktaClient === ''
+    ) {
       return false;
     }
     return true;
@@ -110,7 +115,8 @@ const AuthProvider: React.FC<React.PropsWithChildren> = ({children}) => {
             }
           }
           const isCustomerSupport =
-            (accessToken?.claims?.customer_support as boolean | undefined) || (idToken?.claims?.customer_support as boolean | undefined);
+            (accessToken?.claims?.customer_support as boolean | undefined) ||
+            (idToken?.claims?.customer_support as boolean | undefined);
           if (isCustomerSupport) {
             oktaInstance?.tokenManager.removeRefreshToken();
           }
@@ -158,7 +164,9 @@ const AuthProvider: React.FC<React.PropsWithChildren> = ({children}) => {
   const login = () => {
     try {
       const queryParams = new URLSearchParams({
-        ...(newAuthConfig?.configOptions?.redirectUri ? {redirectUri: newAuthConfig?.configOptions?.redirectUri?.trim()} : {})
+        ...(newAuthConfig?.configOptions?.redirectUri
+          ? {redirectUri: newAuthConfig?.configOptions?.redirectUri?.trim()}
+          : {})
       });
       window.location.href = `${newAuthConfig?.iamUI}/${newAuthConfig?.productId}/login?${queryParams.toString()}`;
     } catch (error) {
@@ -170,7 +178,9 @@ const AuthProvider: React.FC<React.PropsWithChildren> = ({children}) => {
   const register = () => {
     try {
       const queryParams = new URLSearchParams({
-        ...(newAuthConfig?.configOptions?.redirectUri ? {redirectUri: newAuthConfig?.configOptions?.redirectUri?.trim()} : {})
+        ...(newAuthConfig?.configOptions?.redirectUri
+          ? {redirectUri: newAuthConfig?.configOptions?.redirectUri?.trim()}
+          : {})
       });
       window.location.href = `${newAuthConfig?.iamUI}/${newAuthConfig?.productId}/register?${queryParams.toString()}`;
     } catch (error) {
@@ -243,7 +253,9 @@ const AuthProvider: React.FC<React.PropsWithChildren> = ({children}) => {
     try {
       const queryParams = new URLSearchParams({
         ...(tenant ? {tenant} : {}),
-        ...(newAuthConfig?.configOptions?.redirectUri ? {redirectUri: newAuthConfig?.configOptions?.redirectUri?.trim()} : {})
+        ...(newAuthConfig?.configOptions?.redirectUri
+          ? {redirectUri: newAuthConfig?.configOptions?.redirectUri?.trim()}
+          : {})
       });
       if (tenant) {
         window.location.href = `${newAuthConfig?.iamUI}/${newAuthConfig?.productId}/tenants?${queryParams.toString()}`;
@@ -362,7 +374,13 @@ const AuthProvider: React.FC<React.PropsWithChildren> = ({children}) => {
   }
 
   if (!isValidConfig || !isValidOktaConfig) {
-    return <AuthError error={new Error('No authConfig passed to <AuthProvider> component or invalid config passed to <AuthProvider> component.')} />;
+    return (
+      <AuthError
+        error={
+          new Error('No authConfig passed to <AuthProvider> component or invalid config passed to <AuthProvider> component.')
+        }
+      />
+    );
   }
 
   if (isAutoRenew && !newAuthConfig?.configOptions?.scopes?.includes('offline_access')) {
@@ -386,7 +404,9 @@ const AuthProvider: React.FC<React.PropsWithChildren> = ({children}) => {
   }
 
   if (newAuthConfig?.configOptions?.expireEarlySeconds) {
-    console.warn("expireEarlySeconds option it's only to be used in local development, in production it's disabled by default.");
+    console.warn(
+      "expireEarlySeconds option it's only to be used in local development, in production it's disabled by default."
+    );
   }
 
   const values = {

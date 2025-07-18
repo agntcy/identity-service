@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import {INotification, NotificationType} from '@/types/sw/notification';
+import {generateRandomId} from '@/utils/utils';
 import {cleanupOutdatedCaches, createHandlerBoundToURL, precacheAndRoute} from 'workbox-precaching';
 import {NavigationRoute, registerRoute} from 'workbox-routing';
 
@@ -81,22 +83,25 @@ const getNotificationOptions = (data: any) => {
 self.addEventListener('push', async (event) => {
   try {
     if (event.data) {
-      const notificationData = event.data.text();
-      let parsedData;
-      try {
-        parsedData = JSON.parse(notificationData);
-      } catch (jsonError) {
-        parsedData = notificationData; // Fallback to raw text if JSON parsing fails
-        console.error('Failed to parse JSON from push event data:', jsonError);
-      }
-      if (parsedData) {
-        await sendNotification(parsedData);
-        const options = getNotificationOptions(parsedData);
+      const notificationData: INotification | undefined = event.data.json();
+      if (notificationData) {
+        const id = generateRandomId();
+
+        // TODO: build actions based on notification type
+        const options = getNotificationOptions({
+          body: notificationData.body,
+          requireInteraction: notificationData.type === NotificationType.APPROVAL_REQUEST ? true : false,
+          data: {
+            id: id,
+            approvalRequestInfo: notificationData.approvalRequestInfo
+          }
+        });
         if (!options) {
           console.error('Invalid notification options, cannot display notification');
           return;
         }
-        await self.registration.showNotification((parsedData?.title as string) || 'Agent Identity | AGNTCY', options);
+        await sendNotification({...notificationData, id});
+        await self.registration.showNotification('Agent Identity | AGNTCY', options);
       }
     }
   } catch (error) {

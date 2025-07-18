@@ -10,6 +10,7 @@ import (
 	"time"
 
 	webpush "github.com/SherClockHolmes/webpush-go"
+	apptypes "github.com/agntcy/identity-platform/internal/core/app/types"
 	authtypes "github.com/agntcy/identity-platform/internal/core/auth/types"
 	devicetypes "github.com/agntcy/identity-platform/internal/core/device/types"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
@@ -18,12 +19,13 @@ import (
 
 const (
 	// TTL is the time-to-live for the web push notification.
-	ttl         = 60
-	testMessage = "All is set for Identity Approvals."
+	ttl = 60
+
+	deviceRegisteredMessage = "All is set for Identity Approvals."
 )
 
 type NotificationService interface {
-	TestNotification(
+	SendDeviceRegisteredNotification(
 		ctx context.Context,
 		device *devicetypes.Device,
 	) error
@@ -32,6 +34,8 @@ type NotificationService interface {
 		device *devicetypes.Device,
 		session *authtypes.Session,
 		otp *authtypes.SessionDeviceOTP,
+		callerApp *apptypes.App,
+		calleeApp *apptypes.App,
 	) error
 }
 
@@ -51,7 +55,7 @@ func NewNotificationService(
 	}
 }
 
-func (s *notificationService) TestNotification(
+func (s *notificationService) SendDeviceRegisteredNotification(
 	ctx context.Context,
 	device *devicetypes.Device,
 ) error {
@@ -59,7 +63,7 @@ func (s *notificationService) TestNotification(
 		ctx,
 		&device.SubscriptionToken,
 		&devicetypes.Notification{
-			Body: testMessage,
+			Body: deviceRegisteredMessage,
 			Type: devicetypes.NOTIFICATION_TYPE_INFO,
 		},
 	)
@@ -70,20 +74,37 @@ func (s *notificationService) SendOTPNotification(
 	device *devicetypes.Device,
 	session *authtypes.Session,
 	otp *authtypes.SessionDeviceOTP,
+	callerApp *apptypes.App,
+	calleeApp *apptypes.App,
 ) error {
 	if session == nil {
 		return nil // No session to notify
+	}
+
+	body := fmt.Sprintf(
+		"The agent '%s' is trying to call the agent '%s'",
+		ptrutil.DerefStr(callerApp.Name),
+		ptrutil.DerefStr(calleeApp.Name),
+	)
+
+	if session.ToolName != nil && *session.ToolName != "" {
+		body = fmt.Sprintf(
+			"The agent '%s' is trying to invoke the tool '%s' of the MCP server '%s'",
+			ptrutil.DerefStr(callerApp.Name),
+			ptrutil.DerefStr(session.ToolName),
+			ptrutil.DerefStr(calleeApp.Name),
+		)
 	}
 
 	return s.sendWebPushNotification(
 		ctx,
 		&device.SubscriptionToken,
 		&devicetypes.Notification{
-			Body: fmt.Sprintf("%s is trying to access %s", session.OwnerAppID, ptrutil.DerefStr(session.AppID)),
+			Body: body,
 			Type: devicetypes.NOTIFICATION_TYPE_APPROVAL_REQUEST,
 			ApprovalRequestInfo: &devicetypes.ApprovalRequestInfo{
-				CallerApp:        session.OwnerAppID,
-				CalleeApp:        session.AppID,
+				CallerApp:        ptrutil.DerefStr(callerApp.Name),
+				CalleeApp:        calleeApp.Name,
 				ToolName:         session.ToolName,
 				OTP:              otp.Value,
 				DeviceID:         otp.DeviceID,

@@ -132,7 +132,12 @@ export const EditAgenticServiceForm = ({app}: {app?: App}) => {
                       <FormControl>
                         <div className="card-group">
                           {appTypes.map((appType, index) => (
-                            <SharedProvider key={index} {...appType} isSelected={field.value === appType.type} onSelect={field.onChange} />
+                            <SharedProvider
+                              key={index}
+                              {...appType}
+                              isSelected={field.value === appType.type}
+                              onSelect={field.onChange}
+                            />
                           ))}
                         </div>
                       </FormControl>

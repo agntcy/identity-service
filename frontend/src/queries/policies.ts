@@ -11,7 +11,13 @@ export const useGetPolicies = ({
   query,
   enable = true
 }: {
-  query?: {page?: number; size?: number; query?: string; appIds?: string[]; rulesForAppIds?: string[]};
+  query?: {
+    page?: number;
+    size?: number;
+    query?: string;
+    appIds?: string[];
+    rulesForAppIds?: string[];
+  };
   enable?: boolean;
 }) => {
   return useQuery({

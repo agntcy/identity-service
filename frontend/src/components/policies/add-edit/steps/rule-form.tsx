@@ -48,7 +48,11 @@ export const RuleForm = ({isLoading = false, fieldIndex}: {isLoading?: boolean; 
           <FormItem className="w-full">
             <FormControl>
               <div className="flex items-center">
-                <Checkbox id="needs-approval-checkbox" checked={field.value} onChange={(checked) => field.onChange(checked)} />
+                <Checkbox
+                  id="needs-approval-checkbox"
+                  checked={field.value}
+                  onChange={(checked) => field.onChange(checked)}
+                />
                 <FormLabel className="form-label">Needs Approval?</FormLabel>
               </div>
             </FormControl>
