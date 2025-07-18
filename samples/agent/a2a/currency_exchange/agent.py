@@ -70,9 +70,7 @@ class CurrencyAgent:
             temperature=0.2,
             max_completion_tokens=1000,
             top_p=0.5,
-            default_headers={
-                "Authorization": f"Bearer {self.azure_openai_api_key}"
-            }
+            default_headers={"Authorization": f"Bearer {self.azure_openai_api_key}"},
         )
 
         # Init auth
@@ -131,7 +129,7 @@ class CurrencyAgent:
                 yield {
                     "is_task_complete": False,
                     "require_user_input": False,
-                    "content": f"Currency trade executed successfully. Conversion details: {message.content}",
+                    "content": f"Success. Details: {message.content}",
                 }
 
         yield self.get_agent_response(config)
