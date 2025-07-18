@@ -222,7 +222,6 @@ func (s *authService) ExtAuthZ(
 	toolName string,
 ) error {
 	// TODO:
-	// - verify correctly the JWT (expiration date)
 	// - check the self issued one with the generated keys
 
 	if accessToken == "" {
@@ -238,6 +237,10 @@ func (s *authService) ExtAuthZ(
 			err,
 			"invalid session",
 		)
+	}
+
+	if session.HasExpired() {
+		return errutil.Err(nil, "the session has expired")
 	}
 
 	log.Debug("Got session by access token: ", session.ID)
@@ -310,8 +313,13 @@ func (s *authService) ExtAuthZ(
 		}
 	}
 
-	// Expire the session
-	session.ExpiresAt = ptrutil.Ptr(time.Now().Add(-time.Hour).Unix())
+	// Expire the session (should we move this code at the beginning of the method?)
+	session.Expire()
+
+	err = s.authRepository.Update(ctx, session)
+	if err != nil {
+		return err
+	}
 
 	return err
 }

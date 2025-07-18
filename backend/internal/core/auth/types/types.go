@@ -6,6 +6,7 @@ package types
 import (
 	"time"
 
+	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
 	"github.com/agntcy/identity-platform/internal/pkg/strutil"
 	"github.com/google/uuid"
 )
@@ -38,6 +39,14 @@ type Session struct {
 
 	// The expiration time of the Session.
 	ExpiresAt *int64 `json:"expires_at,omitempty" protobuf:"bytes,9,opt,name=expires_at"`
+}
+
+func (s *Session) HasExpired() bool {
+	return s.ExpiresAt != nil && *s.ExpiresAt <= time.Now().Unix()
+}
+
+func (s *Session) Expire() {
+	s.ExpiresAt = ptrutil.Ptr(time.Now().Add(-time.Second).Unix())
 }
 
 type SessionDeviceOTP struct {
