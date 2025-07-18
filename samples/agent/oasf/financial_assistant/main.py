@@ -22,9 +22,7 @@ logger = logging.getLogger(__name__)
 @click.command()
 @click.option("--host", "host", default="0.0.0.0")
 @click.option("--port", "port", default=os.getenv("PORT", 9093), type=int)
-@click.option(
-    "--azure-openai-endpoint", default=os.getenv("AZURE_OPENAI_ENDPOINT", "")
-)
+@click.option("--azure-openai-endpoint", default=os.getenv("AZURE_OPENAI_ENDPOINT", ""))
 @click.option("--azure-openai-api-key", default=os.getenv("AZURE_OPENAI_API_KEY", ""))
 @click.option(
     "--currency-exchange-mcp-server-url",

@@ -2,6 +2,8 @@
 # SPDX-License-Identifier: Apache-2.0
 """Main entry point for the Financial Assistant Agent server."""
 
+from identityplatform.auth.httpx import IdentityPlatformAuth
+from langchain_mcp_adapters.client import MultiServerMCPClient
 from langchain_openai import ChatOpenAI
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.prebuilt import create_react_agent
@@ -17,8 +19,10 @@ class FinancialAssistantAgent:
     # pylint: disable=line-too-long
     SYSTEM_INSTRUCTION = (
         "You are a supervisor financial assistant.\n"
-        "You should invoke the get_exchange_rate for any currency rate information.\n"
-        "Use the invoke_currency_exchange_agent tool to perform currency conversions.\n"
+        "Use the get_currency_exchange_rate tool to get currency exchange rate information.\n"
+        "Use the invoke_currency_exchange_agent tool to perform currency conversions and trades.\n"
+        "Do not do currency conversion or trade directly.\n"
+        "If you get '403 Forbidden' error, it means you are not allowed to call the agent or the tool directly.\n"
         "DO NOT call the trade_currency_exchange tool directly.\n"
     )
 
@@ -60,9 +64,7 @@ class FinancialAssistantAgent:
             temperature=0.2,
             max_completion_tokens=1000,
             top_p=0.5,
-            default_headers={
-                "Authorization": f"Bearer {self.azure_openai_api_key}"
-            }
+            default_headers={"Authorization": f"Bearer {self.azure_openai_api_key}"},
         )
 
         # Create the currency exchange agent
@@ -70,9 +72,24 @@ class FinancialAssistantAgent:
             self.currency_exchange_agent_url
         ).get_invoke_tool()
 
+        # Init auth
+        auth = IdentityPlatformAuth()
+
+        # Load tools from the MCP Server
+        client = MultiServerMCPClient(
+            {
+                "currency_exchange": {
+                    "url": self.currency_exchange_mcp_server_url,
+                    "transport": "streamable_http",
+                    "auth": auth,
+                },
+            }
+        )
+        tools = await client.get_tools()
+
         # Create the agent with the tools
         self.graph = create_react_agent(
             model=self.model,
-            tools=[invoke_currency_exchange_agent],
+            tools=[invoke_currency_exchange_agent, *tools],
             prompt=self.SYSTEM_INSTRUCTION,
         )
