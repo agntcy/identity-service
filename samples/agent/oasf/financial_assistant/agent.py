@@ -74,5 +74,5 @@ class FinancialAssistantAgent:
         self.graph = create_react_agent(
             model=self.model,
             tools=[invoke_currency_exchange_agent],
-            state_modifier=self.SYSTEM_INSTRUCTION,
+            prompt=self.SYSTEM_INSTRUCTION,
         )
