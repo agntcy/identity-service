@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<!--
+ Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+ SPDX-License-Identifier: Apache-2.0
+-->
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Assistant</title>
+    <script src="https://unpkg.com/axios@latest/dist/axios.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .chat-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            min-height: 600px;
+        }
+
+        .status-bar {
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+
+        .status-dot.connected { background: #28a745; }
+        .status-dot.disconnected { background: #dc3545; }
+        .status-dot.loading { background: #007bff; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #fafafa;
+        }
+
+        .message {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin: 0 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .message-avatar.user { background: #667eea; }
+        .message-avatar.assistant { background: #28a745; }
+
+        .message-content {
+            max-width: 70%;
+            background: white;
+            padding: 15px 20px;
+            border-radius: 18px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .message.user .message-content {
+            background: #667eea;
+            color: white;
+        }
+
+        .message-time {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .message.user .message-time {
+            color: rgba(255,255,255,0.8);
+        }
+
+        .tools-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .tools-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .tools-icon {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+            background: #007bff;
+            border-radius: 3px;
+            display: inline-block;
+        }
+
+        .tool-call {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .tool-call:last-child {
+            margin-bottom: 0;
+        }
+
+        .tool-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .tool-name {
+            font-weight: 600;
+            color: #007bff;
+        }
+
+        .tool-status {
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .tool-status.success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .tool-status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .tool-details {
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.8rem;
+            background: white;
+            padding: 8px;
+            border-radius: 6px;
+            margin-top: 8px;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .input-container {
+            padding: 20px;
+            border-top: 1px solid #e9ecef;
+            background: white;
+        }
+
+        .input-form {
+            display: flex;
+            align-items: flex-end;
+            gap: 12px;
+        }
+
+        .input-wrapper {
+            flex: 1;
+            position: relative;
+        }
+
+        .message-input {
+            width: 100%;
+            min-height: 44px;
+            max-height: 120px;
+            padding: 12px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 22px;
+            font-size: 16px;
+            font-family: inherit;
+            resize: none;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .message-input:focus {
+            border-color: #667eea;
+        }
+
+        .send-button {
+            width: 44px;
+            height: 44px;
+            border: none;
+            border-radius: 50%;
+            background: #667eea;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .send-button:hover:not(:disabled) {
+            background: #5a67d8;
+            transform: scale(1.05);
+        }
+
+        .send-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            background: white;
+            border-radius: 18px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ccc;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            border: 1px solid #f5c6cb;
+        }
+
+        .config-section {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .config-section code {
+            background: rgba(255,255,255,0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Financial Assistant</h1>
+            <p>AI-Powered Financial Assistant</p>
+        </div>
+
+        <div class="config-section">
+            <strong>🔗 Server Configuration:</strong>
+            <br>Agent URL: <code id="agentUrl">/invoke</code>
+            <br>Protocol: <code>Simple HTTP POST</code>
+        </div>
+
+        <div class="chat-container">
+            <div class="status-bar">
+                <div class="status-indicator">
+                    <span class="status-dot disconnected" id="statusDot"></span>
+                    <span id="statusText">Connecting...</span>
+                </div>
+                <div>
+                    <span id="messageCount">0 messages</span> • 
+                    <span id="toolCount">0 tools used</span>
+                </div>
+            </div>
+
+            <div class="messages-container" id="messagesContainer">
+                <div class="message assistant">
+                    <div class="message-avatar assistant">🤖</div>
+                    <div class="message-content">
+                        <div>Welcome! I'm your AI Financial Assistant. I can help you with currency exchanges, financial calculations, and more.</div>
+                        <div class="message-time">Ready to chat</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-container">
+                <form class="input-form" id="messageForm">
+                    <div class="input-wrapper">
+                        <textarea 
+                            class="message-input" 
+                            id="messageInput" 
+                            placeholder="Ask me about finances, currency exchange..."
+                            rows="1"
+                        ></textarea>
+                    </div>
+                    <button type="submit" class="send-button" id="sendButton">
+                        ➤
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class FinancialAssistantChat {
+            constructor() {
+                this.agentUrl = '/invoke'; // Relative URL - backend is in same container
+                this.messages = [];
+                this.isTyping = false;
+                this.messageCount = 0;
+                this.toolCount = 0;
+                
+                this.initializeElements();
+                this.setupEventListeners();
+                this.checkConnection();
+            }
+
+            initializeElements() {
+                this.messagesContainer = document.getElementById('messagesContainer');
+                this.messageForm = document.getElementById('messageForm');
+                this.messageInput = document.getElementById('messageInput');
+                this.sendButton = document.getElementById('sendButton');
+                this.statusDot = document.getElementById('statusDot');
+                this.statusText = document.getElementById('statusText');
+                this.messageCountEl = document.getElementById('messageCount');
+                this.toolCountEl = document.getElementById('toolCount');
+                this.agentUrlEl = document.getElementById('agentUrl');
+                
+                this.agentUrlEl.textContent = this.agentUrl;
+            }
+
+            setupEventListeners() {
+                this.messageForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.sendMessage();
+                });
+
+                this.messageInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        this.sendMessage();
+                    }
+                });
+
+                this.messageInput.addEventListener('input', () => {
+                    this.autoResize();
+                });
+            }
+
+            autoResize() {
+                this.messageInput.style.height = 'auto';
+                this.messageInput.style.height = this.messageInput.scrollHeight + 'px';
+            }
+
+            async checkConnection() {
+                try {
+                    // Test the invoke endpoint with a simple request
+                    const response = await fetch(this.agentUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ prompt: 'test connection' })
+                    });
+                    
+                    if (response.ok) {
+                        this.updateStatus('connected', 'Connected to Financial Assistant');
+                        console.log('Connection test successful');
+                    } else {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+                } catch (error) {
+                    console.error('Connection check failed:', error);
+                    this.updateStatus('disconnected', 'Connection failed - check if agent is running');
+                }
+            }
+
+            updateStatus(status, text) {
+                this.statusDot.className = `status-dot ${status}`;
+                this.statusText.textContent = text;
+            }
+
+            updateCounts() {
+                this.messageCountEl.textContent = `${this.messageCount} messages`;
+                this.toolCountEl.textContent = `${this.toolCount} tools used`;
+            }
+
+            generateMessageId() {
+                return Array.from(crypto.getRandomValues(new Uint8Array(16)), b => b.toString(16).padStart(2, '0')).join('');
+            }
+
+            addMessage(content, isUser = false, tools = []) {
+                const message = {
+                    id: this.generateMessageId(),
+                    content,
+                    isUser,
+                    tools,
+                    timestamp: new Date()
+                };
+
+                this.messages.push(message);
+                this.renderMessage(message);
+                this.messageCount++;
+                this.toolCount += tools.length;
+                this.updateCounts();
+                this.scrollToBottom();
+            }
+
+            renderMessage(message) {
+                const messageEl = document.createElement('div');
+                messageEl.className = `message ${message.isUser ? 'user' : 'assistant'}`;
+                
+                const avatar = message.isUser ? '👤' : '🤖';
+                const avatarClass = message.isUser ? 'user' : 'assistant';
+                
+                let toolsHtml = '';
+                if (message.tools && message.tools.length > 0) {
+                    toolsHtml = `
+                        <div class="tools-section">
+                            <div class="tools-header">
+                                <span class="tools-icon"></span>
+                                <strong>${message.tools.length} tool call${message.tools.length !== 1 ? 's' : ''}</strong>
+                            </div>
+                            ${message.tools.map(tool => `
+                                <div class="tool-call">
+                                    <div class="tool-header">
+                                        <span class="tool-name">${tool.name || 'Unknown Tool'}</span>
+                                        <span class="tool-status ${tool.success ? 'success' : 'error'}">
+                                            ${tool.success ? 'Success' : 'Error'}
+                                        </span>
+                                    </div>
+                                    ${tool.input ? `
+                                        <div><strong>Input:</strong></div>
+                                        <div class="tool-details">${JSON.stringify(tool.input, null, 2)}</div>
+                                    ` : ''}
+                                    ${tool.output ? `
+                                        <div><strong>Output:</strong></div>
+                                        <div class="tool-details">${JSON.stringify(tool.output, null, 2)}</div>
+                                    ` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+
+                messageEl.innerHTML = `
+                    <div class="message-avatar ${avatarClass}">${avatar}</div>
+                    <div class="message-content">
+                        <div>${message.content}</div>
+                        <div class="message-time">${message.timestamp.toLocaleTimeString()}</div>
+                        ${toolsHtml}
+                    </div>
+                `;
+
+                this.messagesContainer.appendChild(messageEl);
+            }
+
+            showTypingIndicator() {
+                if (this.isTyping) return;
+                
+                this.isTyping = true;
+                const typingEl = document.createElement('div');
+                typingEl.className = 'message assistant';
+                typingEl.id = 'typing-indicator';
+                typingEl.innerHTML = `
+                    <div class="message-avatar assistant">🤖</div>
+                    <div class="typing-indicator">
+                        <div class="typing-dots">
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                        </div>
+                    </div>
+                `;
+                
+                this.messagesContainer.appendChild(typingEl);
+                this.scrollToBottom();
+            }
+
+            hideTypingIndicator() {
+                const typingEl = document.getElementById('typing-indicator');
+                if (typingEl) {
+                    typingEl.remove();
+                }
+                this.isTyping = false;
+            }
+
+            scrollToBottom() {
+                this.messagesContainer.scrollTop = this.messagesContainer.scrollHeight;
+            }
+
+            async sendMessage() {
+                const text = this.messageInput.value.trim();
+                if (!text || this.isTyping) return;
+
+                // Add user message
+                this.addMessage(text, true);
+                
+                // Clear input
+                this.messageInput.value = '';
+                this.autoResize();
+                
+                // Show typing indicator
+                this.showTypingIndicator();
+                this.updateStatus('loading', 'Processing...');
+
+                try {
+                    // Send to agent using simple prompt protocol
+                    const response = await fetch(this.agentUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({ prompt: text })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+
+                    const data = await response.json();
+                    console.log('Agent Response:', data);
+
+                    // Hide typing indicator
+                    this.hideTypingIndicator();
+
+                    // Process response - the response should contain a messages array
+                    let assistantMessage = 'No response received';
+                    let tools = [];
+
+                    if (data.messages && Array.isArray(data.messages)) {
+                        // Extract all content from the messages
+                        const allContent = [];
+                        
+                        data.messages.forEach(msg => {
+                            if (msg.type === 'ai' && msg.content) {
+                                allContent.push(msg.content);
+                            }
+                            
+                            // Extract tool calls
+                            if (msg.tool_calls && Array.isArray(msg.tool_calls)) {
+                                msg.tool_calls.forEach(toolCall => {
+                                    tools.push({
+                                        name: toolCall.name || 'Unknown Tool',
+                                        input: toolCall.args || toolCall.arguments,
+                                        output: null, // Will be filled from tool results
+                                        success: false, // Default to false, will be updated based on output
+                                        id: toolCall.id
+                                    });
+                                });
+                            }
+                            
+                            // Extract tool results
+                            if (msg.type === 'tool') {
+                                // Find the corresponding tool call and add the result
+                                const tool = tools.find(t => t.id === msg.tool_call_id);
+                                if (tool) {
+                                    tool.output = msg.content;
+                                    // Determine success based on output content
+                                    tool.success = msg.content !== null && 
+                                                  msg.content !== 'null' && 
+                                                  msg.content !== '' && 
+                                                  msg.content !== undefined &&
+                                                  !String(msg.content).startsWith('Error:');
+                                }
+                            }
+                        });
+                        
+                        assistantMessage = allContent.join('\n\n') || 'No response content';
+                    } else if (data.content) {
+                        assistantMessage = data.content;
+                    } else if (typeof data === 'string') {
+                        assistantMessage = data;
+                    }
+
+                    // Add assistant message with tools
+                    this.addMessage(assistantMessage, false, tools);
+                    this.updateStatus('connected', 'Ready');
+
+                } catch (error) {
+                    console.error('Error sending message:', error);
+                    this.hideTypingIndicator();
+                    this.addMessage(`Error: ${error.message}`, false);
+                    this.updateStatus('disconnected', 'Error - check connection');
+                }
+            }
+        }
+
+        // Initialize the chat when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new FinancialAssistantChat();
+        });
+    </script>
+</body>
+</html>
