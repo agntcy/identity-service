@@ -360,7 +360,7 @@
 
         <div class="config-section">
             <strong>🔗 Server Configuration:</strong>
-            <br>Agent URL: <code id="agentUrl">AGENT_URL_DISPLAY_PLACEHOLDER</code>
+            <br>Agent URL: <code id="agentUrl">/invoke</code>
             <br>Protocol: <code>Simple HTTP POST</code>
         </div>
 
@@ -407,7 +407,7 @@
     <script>
         class FinancialAssistantChat {
             constructor() {
-                this.agentUrl = 'AGENT_URL_PLACEHOLDER'; // Configured via environment variable
+                this.agentUrl = '/invoke'; // Relative URL - backend is in same container
                 this.messages = [];
                 this.isTyping = false;
                 this.messageCount = 0;
