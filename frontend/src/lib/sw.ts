@@ -147,8 +147,8 @@ self.addEventListener('push', async (event) => {
           requireInteraction: notificationData.type === NotificationType.APPROVAL_REQUEST ? true : false,
           ...(notificationData.type === NotificationType.APPROVAL_REQUEST && {
             actions: [
+              {action: 'deny', title: 'Deny'},
               {action: 'allow', title: 'Allow'},
-              {action: 'deny', title: 'Deny'}
             ]
           }),
           data: {
@@ -223,6 +223,8 @@ self.addEventListener('notificationclick', (event) => {
         void removeNotification(data);
         notification.close();
       }
+    } else {
+      console.log('Notification clicked without action or not an approval request');
     }
   } catch (error) {
     console.error('Error handling notification click:', error);
