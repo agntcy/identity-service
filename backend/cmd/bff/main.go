@@ -277,6 +277,8 @@ func main() {
 		policyEvaluator,
 		deviceRepository,
 		notificationSrv,
+		settingsRepository,
+		keyStore,
 	)
 	policySrv := bff.NewPolicyService(appRepository, policyRepository)
 	deviceSrv := bff.NewDeviceService(
