@@ -23,15 +23,15 @@ export const InfoAgenticService = ({
   const [searchParams] = useSearchParams();
   const viewHelper = searchParams.get('view');
 
-  const [view, setView] = useState(viewHelper === 'policies-assigned' ? 'policies-assigned' : 'about');
+  const [view, setView] = useState(viewHelper === 'policies-assigned-to' ? 'policies-assigned-to' : 'about');
   const options = [
     {
       value: 'about',
       label: 'About'
     },
     {
-      value: 'policies-assigned',
-      label: 'Policies Assigned'
+      value: 'policies-assigned-to',
+      label: 'Policies Assigned To'
     },
     {
       value: 'policies-used-by',
@@ -58,8 +58,8 @@ export const InfoAgenticService = ({
           options={options}
           value={view}
           onChange={(newView) => {
-            if (newView === 'policies-assigned') {
-              analyticsTrack('CLICK_VIEW_POLICIES_ASSIGNED_AGENTIC_SERVICE');
+            if (newView === 'policies-assigned-to') {
+              analyticsTrack('CLICK_VIEW_POLICIES_ASSIGNED_TO_AGENTIC_SERVICE');
             } else if (newView === 'policies-used-by') {
               analyticsTrack('CLICK_VIEW_POLICIES_USED_BY_AGENTIC_SERVICE');
             } else if (newView === 'about') {
@@ -71,7 +71,7 @@ export const InfoAgenticService = ({
         />
       </div>
       {view === 'about' && <AboutAgenticService app={app} onChangeReissueBadge={onChangeReissueBadge} />}
-      {view === 'policies-assigned' && <ListPoliciesAgenticService appId={app?.id} mode="assinged" />}
+      {view === 'policies-assigned-to' && <ListPoliciesAgenticService appId={app?.id} mode="assinged" />}
       {view === 'policies-used-by' && <ListPoliciesAgenticService appId={app?.id} mode="used-by" />}
     </div>
   );
