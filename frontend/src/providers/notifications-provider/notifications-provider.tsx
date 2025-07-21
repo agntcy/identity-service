@@ -4,17 +4,18 @@
  */
 
 import {NotificationContent} from '@/components/notifications/notification-content';
-import {useNotifications, useWindowSize} from '@/hooks';
+import {useWindowSize} from '@/hooks';
 import {INotification, NotificationType} from '@/types/sw/notification';
 import {PropsWithChildren, useCallback, useEffect, useState} from 'react';
+import {useNotificationUtils} from '../notification-utils-provider/notification-utils-provider';
 
-const TIMER = 1000; // 1,5 seconds
+const TIMER = 1000; // 1 seconds
 
 export const NotificationsProvider: React.FC<PropsWithChildren> = ({children}) => {
   const [notifications, setNotifications] = useState<INotification[]>([]);
 
   const {isMobile} = useWindowSize();
-  const {enabled} = useNotifications();
+  const {enabled} = useNotificationUtils();
 
   const removeNotification = useCallback(async (notification: INotification) => {
     try {
@@ -40,7 +41,7 @@ export const NotificationsProvider: React.FC<PropsWithChildren> = ({children}) =
 
   const handleReceiveNotification = useCallback(
     (notification: INotification) => {
-      if (isMobile && notification.type === NotificationType.APPROVAL_REQUEST && enabled) {
+      if (isMobile && notification.type === NotificationType.APPROVAL_REQUEST) {
         setNotifications((prev) => {
           const existingNotification = prev.find((n) => n.id === notification.id);
           if (existingNotification) {
@@ -50,7 +51,7 @@ export const NotificationsProvider: React.FC<PropsWithChildren> = ({children}) =
         });
       }
     },
-    [enabled, isMobile]
+    [isMobile]
   );
 
   const checkIsExpired = useCallback((notification: INotification) => {
@@ -113,9 +114,11 @@ export const NotificationsProvider: React.FC<PropsWithChildren> = ({children}) =
       navigator.serviceWorker.addEventListener('message', listenerPushNotification);
     }
     return () => {
-      navigator.serviceWorker.removeEventListener('message', listenerPushNotification);
+      if ('serviceWorker' in navigator && isMobile && enabled) {
+        navigator.serviceWorker.removeEventListener('message', listenerPushNotification);
+      }
     };
-  }, [enabled, handleReceiveNotification, isMobile]);
+  }, [handleReceiveNotification, isMobile, enabled]);
 
   useEffect(() => {
     const listenerRemoveNotification = (event: MessageEvent) => {
@@ -127,14 +130,15 @@ export const NotificationsProvider: React.FC<PropsWithChildren> = ({children}) =
       navigator.serviceWorker.addEventListener('message', listenerRemoveNotification);
     }
     return () => {
-      navigator.serviceWorker.removeEventListener('message', listenerRemoveNotification);
+      if ('serviceWorker' in navigator && isMobile && enabled) {
+        navigator.serviceWorker.removeEventListener('message', listenerRemoveNotification);
+      }
     };
-  }, [enabled, handleRemoveNotification, isMobile]);
+  }, [handleRemoveNotification, isMobile, enabled]);
 
   return (
     <>
       {isMobile &&
-        enabled &&
         notifications
           .sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0))
           .map((notification, index) => (

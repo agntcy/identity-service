@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import {toast} from '@outshift/spark-design';
 import React, {createContext, useCallback, useState} from 'react';
 import {useRegisterSW} from 'virtual:pwa-register/react';
 
@@ -61,12 +62,18 @@ export const PwaProvider: React.FC<React.PropsWithChildren> = ({children}) => {
       if (PERIOD <= 0) {
         return;
       }
-      if (r?.active?.state === 'activated') {
+      if (r) {
         registerPeriodicSync(PERIOD, swUrl, r);
       }
     },
     onRegisterError(error) {
       console.log('❌ SW registration error:', error);
+      toast({
+        title: 'SW Registration Error',
+        description: 'There was an error registering the service worker. Please try again later.',
+        type: 'error',
+        showCloseButton: false
+      });
     },
     onOfflineReady() {
       console.log('✅ SW is ready to work offline.');

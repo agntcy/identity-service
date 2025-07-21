@@ -22,6 +22,7 @@ import {config} from './cookies/config';
 import {InstallButtonPwa} from './components/shared/pwa/install-button-pwa';
 import {useWindowSize} from './hooks';
 import {Manifest} from './components/shared/manifest';
+import {NotificationUtilsProvider} from './providers/notification-utils-provider/notification-utils-provider';
 
 const App = () => {
   const {isMobile} = useWindowSize();
@@ -51,9 +52,11 @@ const App = () => {
                   />
                   <FeatureFlagsProvider>
                     <PwaProvider>
-                      <NotificationsProvider>
-                        <Router />
-                      </NotificationsProvider>
+                      <NotificationUtilsProvider>
+                        <NotificationsProvider>
+                          <Router />
+                        </NotificationsProvider>
+                      </NotificationUtilsProvider>
                     </PwaProvider>
                   </FeatureFlagsProvider>
                 </QueryProvider>

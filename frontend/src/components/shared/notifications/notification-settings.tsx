@@ -4,13 +4,13 @@
  */
 
 import {Modal, ModalActions, ModalContent, ModalProps, ModalTitle, toast} from '@outshift/spark-design';
-import {useNotifications} from '@/hooks';
 import {Button, Typography} from '@mui/material';
 import {BellIcon, BellOffIcon, RefreshCcwIcon} from 'lucide-react';
 import {GeneralSize, Tag, TagStatus} from '@outshift/spark-design';
 import {Card} from '@/components/ui/card';
 import {useCallback} from 'react';
 import {useSearchParams} from 'react-router-dom';
+import {useNotificationUtils} from '@/providers/notification-utils-provider/notification-utils-provider';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface NotificationSettingsProps extends ModalProps {}
@@ -19,7 +19,7 @@ export const NotificationSettings = (props: NotificationSettingsProps) => {
   const [searchParams] = useSearchParams();
   const id = searchParams.get('id') || undefined;
 
-  const {enabled, supported, handleToggleNotifications, fixNotifications, loading} = useNotifications();
+  const {enabled, supported, handleToggleNotifications, fixNotifications, loading} = useNotificationUtils();
 
   const handler = useCallback(() => {
     if (id) {

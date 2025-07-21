@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import React, {createContext, useContext, useState, useCallback, useEffect, ReactNode} from 'react';
 import {
   askPermissionNotifications,
   checkNotifications,
@@ -15,9 +16,25 @@ import {arrayBufferToBase64} from '@/lib/utils';
 import {useRegisterDevice} from '@/mutations';
 import {usePwa} from '@/providers/pwa-provider/pwa-provider';
 import {toast} from '@outshift/spark-design';
-import {useState, useCallback, useEffect} from 'react';
 
-export const useNotifications = () => {
+interface NotificationUtilsContextType {
+  loading: boolean;
+  enabled: boolean;
+  supported: boolean;
+  enableNotifications: (id?: string) => Promise<void>;
+  disableNotifications: () => Promise<void>;
+  handleToggleNotifications: (id?: string) => void;
+  fixNotifications: () => Promise<void>;
+  init: () => Promise<void>;
+}
+
+const NotificationUtilsContext = createContext<NotificationUtilsContextType | undefined>(undefined);
+
+interface NotificationUtilsProviderProps {
+  children: ReactNode;
+}
+
+export const NotificationUtilsProvider: React.FC<NotificationUtilsProviderProps> = ({children}) => {
   const [loading, setLoading] = useState(false);
   const [enabled, setEnabled] = useState(false);
   const [supported, setSupported] = useState(false);
@@ -202,13 +219,24 @@ export const useNotifications = () => {
     void init();
   }, []);
 
-  return {
+  const value: NotificationUtilsContextType = {
     loading,
     enabled,
     supported,
-    fixNotifications,
-    init,
+    enableNotifications,
     disableNotifications,
-    handleToggleNotifications
+    handleToggleNotifications,
+    fixNotifications,
+    init
   };
+
+  return <NotificationUtilsContext.Provider value={value}>{children}</NotificationUtilsContext.Provider>;
+};
+
+export const useNotificationUtils = (): NotificationUtilsContextType => {
+  const context = useContext(NotificationUtilsContext);
+  if (context === undefined) {
+    throw new Error('useNotificationUtils must be used within a NotificationUtilsProvider');
+  }
+  return context;
 };

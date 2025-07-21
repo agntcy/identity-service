@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import {clientsClaim} from 'workbox-core';
 import {INotification, NotificationType} from '@/types/sw/notification';
 import {generateRandomId} from '@/utils/utils';
 import {cleanupOutdatedCaches, createHandlerBoundToURL, precacheAndRoute} from 'workbox-precaching';
@@ -192,11 +193,13 @@ precacheAndRoute(self.__WB_MANIFEST);
 cleanupOutdatedCaches();
 
 /** @type {RegExp[] | undefined} */
-let allowlist;
-// in dev mode, we disable precaching to avoid caching issues
+let allowlist: undefined | RegExp[];
 if (import.meta.env.DEV) {
   allowlist = [/^\/$/];
 }
 
 // to allow work offline
 registerRoute(new NavigationRoute(createHandlerBoundToURL('index.html'), {allowlist}));
+
+void self.skipWaiting();
+clientsClaim();

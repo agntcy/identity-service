@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
  * SPDX-License-Identifier: Apache-2.0
@@ -28,19 +29,16 @@ export const checkNotifications = () => {
   }
 };
 
-export const askPermissionNotifications = () => {
-  return new Promise(function (resolve, reject) {
-    const permissionResult = Notification.requestPermission(function (result) {
-      resolve(result);
-    });
-    if (permissionResult) {
-      permissionResult.then(resolve, reject);
-    }
-  }).then(function (permissionResult) {
-    if (permissionResult !== 'granted') {
+export const askPermissionNotifications = async () => {
+  try {
+    const permission = await Notification.requestPermission();
+    if (permission !== 'granted') {
       throw new Error("❌ We weren't granted permission.");
     }
-  });
+    return permission;
+  } catch (error) {
+    throw new Error("❌ We weren't granted permission.");
+  }
 };
 
 export const getNotificationPermissionState = async () => {

@@ -3,18 +3,18 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {useNotifications} from '@/hooks';
 import {Button, Typography} from '@mui/material';
 import {Card} from '../ui/card';
 import {BellIcon, BellOffIcon, RefreshCcwIcon} from 'lucide-react';
 import {GeneralSize, Tag, TagStatus} from '@outshift/spark-design';
 import {useSearchParams} from 'react-router-dom';
+import {useNotificationUtils} from '@/providers/notification-utils-provider/notification-utils-provider';
 
 export const ContentOnBoardDevice = () => {
   const [searchParams] = useSearchParams();
   const id = searchParams.get('id') || undefined;
 
-  const {enabled, supported, handleToggleNotifications, fixNotifications, loading} = useNotifications();
+  const {enabled, supported, handleToggleNotifications, fixNotifications, loading} = useNotificationUtils();
 
   return (
     <>

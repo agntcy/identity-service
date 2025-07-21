@@ -16,6 +16,8 @@ export const Manifest = () => {
       description: 'AGNTCY Identity management system with push notifications and offline capabilities',
       theme_color: '#eff3fc',
       display: 'standalone',
+      display_override: ['tabbed'],
+      orientation: 'portrait',
       scope: window.location.origin,
       start_url: `${window.location.origin}/onboard-device?id=${id}`,
       background_color: '#eff3fc',
