@@ -13,8 +13,11 @@ import (
 	authcore "github.com/agntcy/identity-platform/internal/core/auth"
 	authtypes "github.com/agntcy/identity-platform/internal/core/auth/types"
 	devicecore "github.com/agntcy/identity-platform/internal/core/device"
+	"github.com/agntcy/identity-platform/internal/core/identity"
 	idpcore "github.com/agntcy/identity-platform/internal/core/idp"
 	policycore "github.com/agntcy/identity-platform/internal/core/policy"
+	settingscore "github.com/agntcy/identity-platform/internal/core/settings"
+	settingstypes "github.com/agntcy/identity-platform/internal/core/settings/types"
 	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 	"github.com/agntcy/identity-platform/internal/pkg/jwtutil"
@@ -47,13 +50,15 @@ type AuthService interface {
 }
 
 type authService struct {
-	authRepository    authcore.Repository
-	credentialStore   idpcore.CredentialStore
-	oidcAuthenticator oidc.Authenticator
-	appRepository     appcore.Repository
-	policyEvaluator   policycore.Evaluator
-	deviceRepository  devicecore.Repository
-	notifService      NotificationService
+	authRepository     authcore.Repository
+	credentialStore    idpcore.CredentialStore
+	oidcAuthenticator  oidc.Authenticator
+	appRepository      appcore.Repository
+	policyEvaluator    policycore.Evaluator
+	deviceRepository   devicecore.Repository
+	notifService       NotificationService
+	settingsRepository settingscore.Repository
+	keyStore           identity.KeyStore
 }
 
 func NewAuthService(
@@ -64,15 +69,19 @@ func NewAuthService(
 	policyEvaluator policycore.Evaluator,
 	deviceRepository devicecore.Repository,
 	notifService NotificationService,
+	settingsRepository settingscore.Repository,
+	keyStore identity.KeyStore,
 ) AuthService {
 	return &authService{
-		authRepository:    authRepository,
-		credentialStore:   credentialStore,
-		oidcAuthenticator: oidcAuthenticator,
-		appRepository:     appRepository,
-		policyEvaluator:   policyEvaluator,
-		deviceRepository:  deviceRepository,
-		notifService:      notifService,
+		authRepository:     authRepository,
+		credentialStore:    credentialStore,
+		oidcAuthenticator:  oidcAuthenticator,
+		appRepository:      appRepository,
+		policyEvaluator:    policyEvaluator,
+		deviceRepository:   deviceRepository,
+		notifService:       notifService,
+		settingsRepository: settingsRepository,
+		keyStore:           keyStore,
 	}
 }
 
@@ -174,13 +183,40 @@ func (s *authService) Token(
 		)
 	}
 
-	// Issue a token
-	accessToken, err := s.oidcAuthenticator.Token(
-		ctx,
-		clientCredentials.Issuer,
-		clientCredentials.ClientID,
-		clientCredentials.ClientSecret,
-	)
+	issuer, issErr := s.settingsRepository.GetIssuerSettings(ctx)
+	if issErr != nil {
+		return nil, errutil.Err(err, "failed to fetch issuer settings")
+	}
+
+	var accessToken string
+
+	if issuer.IdpType != settingstypes.IDP_TYPE_SELF && clientCredentials.ClientSecret != "" {
+		// Issue a token from an IdP
+		accessToken, err = s.oidcAuthenticator.Token(
+			ctx,
+			clientCredentials.Issuer,
+			clientCredentials.ClientID,
+			clientCredentials.ClientSecret,
+		)
+	} else if issuer.IdpType == settingstypes.IDP_TYPE_SELF {
+		privKey, keyErr := s.keyStore.RetrievePrivKey(ctx, issuer.KeyID)
+		if keyErr != nil {
+			return nil, errutil.Err(
+				keyErr,
+				"error retrieving private key from vault for proof generation",
+			)
+		}
+
+		// Issue a self-signed JWT proof
+		accessToken, err = oidc.SelfIssueJWT(
+			clientCredentials.Issuer,
+			clientCredentials.ClientID,
+			privKey,
+		)
+	} else {
+		err = errors.New("issuer is not self-issued and the client secret is not set")
+	}
+
 	if err != nil {
 		return nil, errutil.Err(
 			err,
@@ -221,9 +257,6 @@ func (s *authService) ExtAuthZ(
 	accessToken string,
 	toolName string,
 ) error {
-	// TODO:
-	// - check the self issued one with the generated keys
-
 	if accessToken == "" {
 		return errutil.Err(
 			nil,
