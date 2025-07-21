@@ -33,9 +33,26 @@ export const FileUpload = ({onConvert, handleChange, defaultFile, disabled, ...p
     event.preventDefault();
     setIsDragging(false);
     if (event.dataTransfer.files && event.dataTransfer.files.length > 0) {
-      setFile(event.dataTransfer.files[0]);
-      handleChange?.(event.dataTransfer.files[0]);
-      props.onChange?.(event as unknown as React.ChangeEvent<HTMLInputElement>);
+      const droppedFile = event.dataTransfer.files[0];
+      setFile(droppedFile);
+      handleChange?.(droppedFile);
+
+      // Create a synthetic change event for props.onChange
+      const input = document.getElementById('file') as HTMLInputElement;
+      if (input && props.onChange) {
+        // Create a new FileList with the dropped file
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(droppedFile);
+        input.files = dataTransfer.files;
+
+        // Create synthetic event
+        const syntheticEvent = {
+          target: input,
+          currentTarget: input
+        } as React.ChangeEvent<HTMLInputElement>;
+
+        props.onChange(syntheticEvent);
+      }
     }
   };
 

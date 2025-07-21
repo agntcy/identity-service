@@ -28,7 +28,7 @@ export const BadgeSchema = z
   })
   .superRefine((data, ctx) => {
     if (data.type === AppType.APP_TYPE_AGENT_OASF) {
-      if (data.oasfSpecs === null || !data.oasfSpecs) {
+      if (data.oasfSpecs === null || !data.oasfSpecs || !data.oasfSpecsContent) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: 'OASF Specs are required for OASF Agentic Service'
