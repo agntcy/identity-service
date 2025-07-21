@@ -448,7 +448,13 @@ func (r *repository) GetAllPolicies(
 	}
 
 	if len(rulesForAppIDs) > 0 {
-		dbQuery = dbQuery.Where("tasks.app_id IN (?)", rulesForAppIDs)
+		dbQuery = dbQuery.Where(
+			"0 < (?)",
+			r.dbContext.Client().Table("tasks").
+				Select("COUNT(tasks.id)").
+				Joins("LEFT JOIN rule_tasks ON rule_tasks.task_id = tasks.id").
+				Where("rule_tasks.rule_id = rules.id AND tasks.app_id IN (?)", rulesForAppIDs),
+		)
 	}
 
 	dbQuery = dbQuery.Session(&gorm.Session{})
