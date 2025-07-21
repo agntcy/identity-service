@@ -148,7 +148,7 @@ self.addEventListener('push', async (event) => {
           ...(notificationData.type === NotificationType.APPROVAL_REQUEST && {
             actions: [
               {action: 'deny', title: 'Deny'},
-              {action: 'allow', title: 'Allow'},
+              {action: 'allow', title: 'Allow'}
             ]
           }),
           data: {

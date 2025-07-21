@@ -12,7 +12,6 @@ import {ConfirmModal} from '../ui/confirm-modal';
 import {useAnalytics} from '@/hooks';
 import {Device} from '@/types/api/device';
 import {PATHS} from '@/router/paths';
-import getDeviceInfo from '@/lib/device';
 import {QRCodeModal} from '../shared/qr-code-modal';
 import {Card} from '../ui/card';
 import KeyValue from '../ui/key-value';
@@ -122,10 +121,7 @@ export const ListDevices: React.FC = () => {
   const handleOnAddDevice = useCallback(() => {
     if ((data?.devices?.length ?? 0) < 1) {
       analyticsTrack('CLICK_ADD_DEVICE');
-      const {name} = getDeviceInfo();
-      addDeviceMutation.mutate({
-        name: name || 'Unknown Device'
-      });
+      addDeviceMutation.mutate({});
     } else {
       toast({
         title: 'Device Limit Reached',

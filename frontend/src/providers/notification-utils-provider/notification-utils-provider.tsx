@@ -16,6 +16,7 @@ import {arrayBufferToBase64} from '@/lib/utils';
 import {useRegisterDevice} from '@/mutations';
 import {usePwa} from '@/providers/pwa-provider/pwa-provider';
 import {toast} from '@outshift/spark-design';
+import getDeviceInfo from '@/lib/device';
 
 interface NotificationUtilsContextType {
   loading: boolean;
@@ -49,10 +50,12 @@ export const NotificationUtilsProvider: React.FC<NotificationUtilsProviderProps>
         p256dh: arrayBufferToBase64(sub.getKey('p256dh')!),
         auth: arrayBufferToBase64(sub.getKey('auth')!)
       };
+      const {name} = getDeviceInfo();
       return registerDeviceMutation.mutateAsync({
         id: id || '',
         data: {
-          subscriptionToken: JSON.stringify(subscriptionData)
+          subscriptionToken: JSON.stringify(subscriptionData),
+          name: name || 'Unknown Device'
         }
       });
     },
