@@ -25,6 +25,9 @@ The first step involves defining your Agentic Service, which automatically creat
 4.  **Details:**
     - **Name:** Enter a descriptive name for your Agentic Service (e.g., "Currency Exchange MCP Server"). This name will help you identify the service within the platform.
     - **Description:** Provide a brief explanation of your service's purpose (e.g., "A Currency Exchange MCP Server").
+
+![Create Agentic Service MCP Server](/img/agentic-service-mcp-2.png)
+
 5.  Click **Next** to proceed. Upon creation, an API Key will be generated for your Agentic Service. Ensure you securely store this API Key, as it will be required for issuing the badge.
 
 ![Create Agentic Service MCP Server](/img/agentic-service-mcp-no-badge.png)
@@ -74,3 +77,25 @@ You can view the details of your newly created Agentic Service, including its AP
 And the details of the Agentic Service you just created:
 
 ![Create Agentic Service MCP Server](/img/agentic-service-mcp-badge.png)
+
+## 3. Policies Associated to An Agentic Service
+
+Located at the top right corner of the details screen of an Agentic Service, two tabs called "Policies Assigned" and "Policies Used By" allow you to see which Policies are currently assigned to the Agentic Service and which policies from this Agentic Service may be used by other Agentic Services respectively.
+
+### Policies Assigned
+
+The Policies Assigned tab provides an overview of the policies that are currently assigned to a specific agent service, such as the emailMCPServer. This section displays essential information including:
+ 
+- **Policy Name:** The name of the policy, such as "Invoke Policy".
+- **Rules:** The specific rule(s) associated with each policy.
+- **Assigned To:** Indicates the agent or service to which the policy is assigned, such as emailMCPServer.
+- **Updated At & Created At:** Timestamp details indicating when the policy was last updated or created.
+- **Action & Needs Approval:** Shows the allowed actions and whether approval is required or not.
+
+![Policies Assigned to Agentic Service](/img/agentic-service-mcp-badge-policies-assigned.png)
+
+### Policies Used By
+
+TBD
+
+![Policies Used By Agentic Service](/img/agentic-service-mcp-badge-policies-usedby.png)
