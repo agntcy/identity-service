@@ -93,9 +93,3 @@ The Policies Assigned tab provides an overview of the policies that are currentl
 - **Action & Needs Approval:** Shows the allowed actions and whether approval is required or not.
 
 ![Policies Assigned to Agentic Service](/img/agentic-service-mcp-badge-policies-assigned.png)
-
-### Policies Used By
-
-TBD
-
-![Policies Used By Agentic Service](/img/agentic-service-mcp-badge-policies-usedby.png)
