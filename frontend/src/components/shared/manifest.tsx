@@ -2,13 +2,12 @@
  * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
  * SPDX-License-Identifier: Apache-2.0
  */
-import { useMemo } from "react"
-import { Helmet } from "react-helmet-async"
+import {useMemo} from 'react';
+import {Helmet} from 'react-helmet-async';
 
 export const Manifest = () => {
-  // Native way to get query params
-  const searchParams = new URLSearchParams(window.location.search)
-  const id = searchParams.get('id')
+  const searchParams = new URLSearchParams(window.location.search);
+  const id = searchParams.get('id');
 
   const manifestHref = useMemo(() => {
     const manifest = {
@@ -44,7 +43,7 @@ export const Manifest = () => {
           purpose: 'maskable'
         }
       ]
-    }
+    };
     const dataUri = `data:application/json;base64,${btoa(JSON.stringify(manifest))}`;
     return dataUri;
   }, [id]);
@@ -53,5 +52,5 @@ export const Manifest = () => {
     <Helmet>
       <link rel="manifest" href={manifestHref} />
     </Helmet>
-  )
-}
+  );
+};
