@@ -7,7 +7,7 @@ import {Drawer, DrawerContent, DrawerFooter, DrawerHeader, DrawerProps} from '@/
 import {Button, GeneralSize, Tag, TagStatus, toast, Typography} from '@outshift/spark-design';
 import {BanIcon, CheckIcon} from 'lucide-react';
 import {CountDownTimer} from '../ui/count-down-timer';
-import {useCallback, useState} from 'react';
+import {useCallback, useMemo, useState} from 'react';
 import {INotification, NotificationType} from '@/types/sw/notification';
 import {useAproveToken} from '@/mutations';
 
@@ -30,6 +30,18 @@ export const NotificationContent = ({
   const [timerEnded, setTimerEnded] = useState(false);
 
   const zIndex = notification?.timestamp ? Math.floor((Date.now() - notification.timestamp) / 1000) : 0;
+
+  const remainingDuration = useMemo(() => {
+    if (!notification?.timestamp || !notification?.approval_request_info?.timeout_in_seconds) {
+      return 0;
+    }
+    const now = Date.now();
+    const notificationTime = notification.timestamp;
+    const timeoutMs = notification.approval_request_info.timeout_in_seconds * 1000;
+    const expiryTime = notificationTime + timeoutMs;
+    const remainingMs = expiryTime - now;
+    return Math.max(0, Math.floor(remainingMs / 1000));
+  }, [notification?.timestamp, notification?.approval_request_info?.timeout_in_seconds]);
 
   const aproveTokenMutation = useAproveToken({
     callbacks: {
@@ -120,10 +132,7 @@ export const NotificationContent = ({
         <div className="flex flex-col items-center justify-center h-full">
           {notification?.type === NotificationType.APPROVAL_REQUEST &&
             notification.approval_request_info?.timeout_in_seconds && (
-              <CountDownTimer
-                duration={notification.approval_request_info?.timeout_in_seconds}
-                onComplete={handleOnComplete}
-              />
+              <CountDownTimer duration={remainingDuration} onComplete={handleOnComplete} />
             )}
         </div>
         {notification?.type === NotificationType.APPROVAL_REQUEST && (

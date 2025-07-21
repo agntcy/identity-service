@@ -10,6 +10,7 @@ import {cleanupOutdatedCaches, createHandlerBoundToURL, precacheAndRoute} from '
 import {NavigationRoute, registerRoute} from 'workbox-routing';
 import config from '@/config';
 import {ApproveTokenRequest} from '@/types/api/auth';
+import {notificationUtils} from '@/utils/index-db-store';
 
 const ICON_PATH = '/pwa-192x192.png';
 const BADGE_PATH = '/pwa-64x64.png';
@@ -18,6 +19,27 @@ const BADGE_PATH = '/pwa-64x64.png';
 const API_ENDPOINT = `${config.API_HOST}/v1alpha1/auth/approve_token`;
 
 declare let self: ServiceWorkerGlobalScope;
+
+const cleanupExpiredNotifications = async () => {
+  try {
+    const notifications = await notificationUtils.getNotifications();
+    const now = Date.now();
+    for (const notification of notifications) {
+      if (
+        notification.type === NotificationType.APPROVAL_REQUEST &&
+        notification.timestamp &&
+        notification.approval_request_info?.timeout_in_seconds
+      ) {
+        const expiryTime = notification.timestamp + notification.approval_request_info.timeout_in_seconds * 1000;
+        if (now > expiryTime && notification.id) {
+          await notificationUtils.removeNotification(notification.id);
+        }
+      }
+    }
+  } catch (error) {
+    console.error('Error cleaning up expired notifications:', error);
+  }
+};
 
 const aproveToken = (data: ApproveTokenRequest) => {
   return fetch(API_ENDPOINT, {
@@ -51,6 +73,9 @@ const sendNotification = async (payload: any) => {
 
 const removeNotification = async (payload: any) => {
   try {
+    if (payload.id) {
+      await notificationUtils.removeNotification(payload.id as string);
+    }
     const clients = await self.clients.matchAll({type: 'window', includeUncontrolled: true});
     clients.forEach((client) => {
       client.postMessage({
@@ -86,6 +111,10 @@ const getNotificationOptions = (data: any) => {
     return null;
   }
 };
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(cleanupExpiredNotifications());
+});
 
 self.addEventListener('message', async (event) => {
   if (event.data.type === 'SKIP_WAITING') {
@@ -129,10 +158,24 @@ self.addEventListener('push', async (event) => {
             approval_request_info: notificationData.approval_request_info
           }
         });
+
         if (!options) {
           console.error('Invalid notification options, cannot display notification');
           return;
         }
+
+        // Add error handling for IndexedDB operations
+        try {
+          await notificationUtils.addNotification({
+            ...notificationData,
+            id: id,
+            timestamp: Date.now()
+          });
+        } catch (dbError) {
+          console.error('Error saving notification to IndexedDB:', dbError);
+          // Continue with showing notification even if DB save fails
+        }
+
         await sendNotification({...notificationData, id, timestamp: Date.now()});
         await self.registration.showNotification('Agent Identity | AGNTCY', options);
       }
