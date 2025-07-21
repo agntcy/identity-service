@@ -42,7 +42,8 @@ export const NotificationContent = ({
         toast({
           title: 'Success',
           description: 'Your request has been processed successfully.',
-          type: 'success'
+          type: 'success',
+          showCloseButton: false
         });
       },
       onError: () => {
@@ -54,7 +55,8 @@ export const NotificationContent = ({
         toast({
           title: 'Error',
           description: 'An error occurred while processing your request.',
-          type: 'error'
+          type: 'error',
+          showCloseButton: false
         });
       }
     }

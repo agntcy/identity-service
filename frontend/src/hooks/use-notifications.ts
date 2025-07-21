@@ -53,7 +53,8 @@ export const useNotifications = () => {
             toast({
               title: 'Notifications Enabled',
               description: 'You will now receive push notifications.',
-              type: 'success'
+              type: 'success',
+              showCloseButton: false
             });
             setEnabled(true);
           } else {
@@ -64,7 +65,8 @@ export const useNotifications = () => {
               toast({
                 title: 'Notifications Enabled',
                 description: 'You will now receive push notifications.',
-                type: 'success'
+                type: 'success',
+                showCloseButton: false
               });
               setEnabled(true);
             } catch (error) {
@@ -72,7 +74,8 @@ export const useNotifications = () => {
               toast({
                 title: 'Subscription Failed',
                 description: 'Please try again later.',
-                type: 'error'
+                type: 'error',
+                showCloseButton: false
               });
               setEnabled(false);
             } finally {
@@ -84,7 +87,8 @@ export const useNotifications = () => {
           toast({
             title: 'Subscription Failed',
             description: 'Please try again later.',
-            type: 'error'
+            type: 'error',
+            showCloseButton: false
           });
           setEnabled(false);
         } finally {
@@ -95,7 +99,8 @@ export const useNotifications = () => {
         toast({
           title: 'Permission Denied',
           description: 'Please enable notifications in your browser settings',
-          type: 'error'
+          type: 'error',
+          showCloseButton: false
         });
         setEnabled(false);
       } finally {
@@ -113,14 +118,16 @@ export const useNotifications = () => {
       toast({
         title: 'Notifications Disabled',
         description: 'You will no longer receive push notifications.',
-        type: 'success'
+        type: 'success',
+        showCloseButton: false
       });
     } catch (error) {
       console.error('Failed to disable notifications:', error);
       toast({
         title: 'Unsubscribe Failed',
         description: 'Please try again later.',
-        type: 'error'
+        type: 'error',
+        showCloseButton: false
       });
     } finally {
       setLoading(false);
@@ -147,14 +154,16 @@ export const useNotifications = () => {
       toast({
         title: 'Notifications Fixed',
         description: 'Your notification issues have been resolved.',
-        type: 'success'
+        type: 'success',
+        showCloseButton: false
       });
     } catch (error) {
       console.error('Failed to fix notifications:', error);
       toast({
         title: 'Fix Failed',
         description: 'Please try again later.',
-        type: 'error'
+        type: 'error',
+        showCloseButton: false
       });
     } finally {
       setLoading(false);
@@ -168,7 +177,8 @@ export const useNotifications = () => {
         toast({
           title: 'Notifications Not Supported',
           description: 'Your browser does not support push notifications.',
-          type: 'error'
+          type: 'error',
+          showCloseButton: false
         });
       }
       setSupported(supported);

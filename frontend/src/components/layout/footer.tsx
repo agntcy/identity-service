@@ -4,13 +4,11 @@
  */
 
 import {Footer as SparkFooter} from '@outshift/spark-design';
-import 'vanilla-cookieconsent/dist/cookieconsent.css';
 import * as CookieConsentVanilla from 'vanilla-cookieconsent';
 import {useWindowSize} from '@/hooks';
 
 export const Footer = () => {
   const {isMobile} = useWindowSize();
-
   return (
     <>
       <SparkFooter

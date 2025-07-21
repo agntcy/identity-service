@@ -55,7 +55,7 @@ export const PwaProvider: React.FC<React.PropsWithChildren> = ({children}) => {
     updateServiceWorker
   } = useRegisterSW({
     onRegisteredSW(swUrl, r) {
-      console.log('✅ SW registered successfully.');
+      console.log('✅ SW registered successfully:', swUrl);
       setSwUrl(swUrl);
       setSwR(r);
       if (PERIOD <= 0) {

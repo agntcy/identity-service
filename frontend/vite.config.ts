@@ -44,6 +44,13 @@ export default defineConfig(({mode}) => {
         filename: 'sw.ts',
         injectRegister: 'inline',
         base: '/',
+        strategies: 'injectManifest',
+        injectManifest: {
+          maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
+          minify: false,
+          enableWorkboxModulesLogs: true,
+          globPatterns: ['**/*.{js,css,html,svg,png,svg,ico}']
+        },
         manifest: false,
         workbox: {
           globPatterns: ['**/*.{js,css,html,svg,png,svg,ico}'],

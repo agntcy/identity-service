@@ -10,25 +10,20 @@ import {BellIcon, BellOffIcon, RefreshCcwIcon} from 'lucide-react';
 import {GeneralSize, Tag, TagStatus} from '@outshift/spark-design';
 import {Card} from '@/components/ui/card';
 import {useCallback} from 'react';
-import {useLocalStore} from '@/store';
-import {useShallow} from 'zustand/react/shallow';
+import {useSearchParams} from 'react-router-dom';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface NotificationSettingsProps extends ModalProps {}
 
 export const NotificationSettings = (props: NotificationSettingsProps) => {
+  const [searchParams] = useSearchParams();
+  const id = searchParams.get('id') || undefined;
+
   const {enabled, supported, handleToggleNotifications, fixNotifications, loading} = useNotifications();
 
-  const {idDevice} = useLocalStore(
-    useShallow((state) => ({
-      idDevice: state.idDevice,
-      setIdDevice: state.setIdDevice
-    }))
-  );
-
   const handler = useCallback(() => {
-    if (idDevice) {
-      handleToggleNotifications();
+    if (id) {
+      handleToggleNotifications(id);
       return;
     } else {
       toast({
@@ -37,7 +32,7 @@ export const NotificationSettings = (props: NotificationSettingsProps) => {
         type: 'error'
       });
     }
-  }, [handleToggleNotifications, idDevice]);
+  }, [handleToggleNotifications, id]);
 
   return (
     <Modal {...props} maxWidth="md" fullWidth>
