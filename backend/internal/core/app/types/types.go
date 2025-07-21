@@ -79,7 +79,7 @@ func (s AppStatus) MarshalText() ([]byte, error) {
 	return []byte(s.String()), nil
 }
 
-// Identity Platform App.
+// Identity Service App.
 type App struct {
 	// A unique identifier for the App.
 	ID string `json:"id,omitempty" protobuf:"bytes,1,opt,name=id"`

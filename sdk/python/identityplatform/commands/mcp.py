@@ -1,6 +1,6 @@
 # Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
 # SPDX-License-Identifier: Apache-2.0
-"""MCP Discover for the Identity Platform Python SDK."""
+"""MCP Discover for the Identity Service Python SDK."""
 
 import json
 from typing import List
@@ -49,9 +49,10 @@ class McpServer:
 
     def toJSON(self):
         """Convert the McpServer instance to a JSON string."""
-        return json.dumps(
-            self, default=lambda o: o.__dict__, sort_keys=True, indent=4
-        )
+        return json.dumps(self,
+                          default=lambda o: o.__dict__,
+                          sort_keys=True,
+                          indent=4)
 
 
 async def discover(name: str, url: str) -> str:
@@ -63,9 +64,9 @@ async def discover(name: str, url: str) -> str:
 
         # Connect to a streamable HTTP server
         async with streamablehttp_client(f"{url}") as (
-            read_stream,
-            write_stream,
-            _,
+                read_stream,
+                write_stream,
+                _,
         ):
             # Create a session using the client streams
             async with ClientSession(read_stream, write_stream) as session:
@@ -86,8 +87,7 @@ async def discover(name: str, url: str) -> str:
                             name=tool.name,
                             description=tool.description,
                             parameters=parameters,
-                        )
-                    )
+                        ))
 
                 # Discover MCP server - List resources
                 resources_response = await session.list_resources()
@@ -99,8 +99,7 @@ async def discover(name: str, url: str) -> str:
                             name=resource.name,
                             description=resource.description,
                             uri=resource.uri,
-                        )
-                    )
+                        ))
 
                 # Return the discovered MCP server
                 return McpServer(

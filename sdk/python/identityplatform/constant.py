@@ -1,6 +1,6 @@
 # Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
 # SPDX-License-Identifier: Apache-2.0
-"""Constants for the Identity Platform Python SDK."""
+"""Constants for the Identity Service Python SDK."""
 
 
 DEFAULT_GRPC_URL = "api.grpc.identity-platform.staging.outshift.ai"

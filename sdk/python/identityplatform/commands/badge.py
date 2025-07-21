@@ -1,6 +1,6 @@
 # Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
 # SPDX-License-Identifier: Apache-2.0
-"""Badge services for the Identity Platform Python SDK."""
+"""Badge services for the Identity Service Python SDK."""
 
 import asyncio
 import base64
@@ -20,17 +20,15 @@ def create(
     url: Annotated[
         str,
         typer.Argument(
-            help="The local accessible URL of the agentic service to issue a badge for"
-        ),
-    ] = "",
-    key: Annotated[
-        str,
-        typer.Option(
-            prompt="Agentic Service API Key",
-            hide_input=True,
-            help="The Agentic Service API Key",
-        ),
-    ] = "",
+            help=
+            "The local accessible URL of the agentic service to issue a badge for"
+        ), ] = "",
+    key: Annotated[str,
+                   typer.Option(
+                       prompt="Agentic Service API Key",
+                       hide_input=True,
+                       help="The Agentic Service API Key",
+                   ), ] = "",
 ):
     """Issue a badge for the agentic service."""
     if not url:
@@ -42,8 +40,7 @@ def create(
 
     # Fetch the agentic service
     app_info = identity_sdk._get_auth_service().AppInfo(
-        identity_sdk.empty_request()
-    )
+        identity_sdk.empty_request())
 
     # Get name and type
     service_name = app_info.app.name
@@ -88,8 +85,7 @@ def create(
 
     # Issue the badge
     identity_sdk._get_badge_service().IssueBadge(
-        request=Sdk.IssueBadgeRequest(app_id=service_id, **claims)
-    )
+        request=Sdk.IssueBadgeRequest(app_id=service_id, **claims))
 
     print(
         f"[bold green]Badge issued successfully for service [bold blue]{service_id}[/bold blue][/bold green]"

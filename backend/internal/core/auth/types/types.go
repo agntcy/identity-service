@@ -11,7 +11,7 @@ import (
 	"github.com/google/uuid"
 )
 
-// Identity Platform Session
+// Identity Service Session
 type Session struct {
 	// A unique identifier for the Session.
 	ID string `json:"id,omitempty" protobuf:"bytes,1,opt,name=id"`

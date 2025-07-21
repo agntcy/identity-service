@@ -4,7 +4,7 @@ sidebar_position: 3
 
 # Creating Agentic Service Identities
 
-This guide outlines the process of creating and registering Agentic Services within the AGNTCY platform, which involves establishing a unique identity for your service and subsequently issuing a badge for its discovery.
+This guide outlines the process of creating and registering Agentic Services within the AGNTCY **Agent Identity Service**, which involves establishing a unique identity for your service and subsequently issuing a badge for its discovery.
 
 ## 1. Create Agentic Service (Identity Creation)
 
@@ -85,7 +85,7 @@ Located at the top right corner of the details screen of an Agentic Service, two
 ### Policies Assigned
 
 The Policies Assigned tab provides an overview of the policies that are currently assigned to a specific agent service, such as the emailMCPServer. This section displays essential information including:
- 
+
 - **Policy Name:** The name of the policy, such as "Invoke Policy".
 - **Rules:** The specific rule(s) associated with each policy.
 - **Assigned To:** Indicates the agent or service to which the policy is assigned, such as emailMCPServer.

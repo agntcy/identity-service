@@ -92,7 +92,7 @@ type IssuerSettings struct {
 
 // Identity Settings
 type Settings struct {
-	// An API Key for the Identity Platform.
+	// An API Key for the Identity Service.
 	ApiKey *ApiKey `json:"api_key,omitempty" protobuf:"bytes,1,opt,name=api_key"`
 
 	// Settings for the Issuer.

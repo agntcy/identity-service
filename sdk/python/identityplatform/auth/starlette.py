@@ -1,6 +1,6 @@
 # Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
 # SPDX-License-Identifier: Apache-2.0
-"""Middleware for Starlette that authenticates the Identity Platform bearer token."""
+"""Middleware for Starlette that authenticates the Identity Service bearer token."""
 
 import json
 import logging
@@ -48,8 +48,7 @@ class IdentityPlatformMiddleware(BaseHTTPMiddleware):
             access_token = self._parse_access_token(request)
         except Exception as e:
             return self._unauthorized(
-                "Missing or malformed Authorization header.", request
-            )
+                "Missing or malformed Authorization header.", request)
 
         try:
             # Authorize the access token
@@ -78,9 +77,11 @@ class IdentityPlatformMiddleware(BaseHTTPMiddleware):
                 status_code=403,
                 media_type="text/event-stream",
             )
-        return JSONResponse(
-            {"error": "forbidden", "reason": reason}, status_code=403
-        )
+        return JSONResponse({
+            "error": "forbidden",
+            "reason": reason
+        },
+                            status_code=403)
 
     def _unauthorized(self, reason: str, request: Request):
         """Return a 401 Unauthorized response."""
@@ -91,9 +92,11 @@ class IdentityPlatformMiddleware(BaseHTTPMiddleware):
                 status_code=401,
                 media_type="text/event-stream",
             )
-        return JSONResponse(
-            {"error": "unauthorized", "reason": reason}, status_code=401
-        )
+        return JSONResponse({
+            "error": "unauthorized",
+            "reason": reason
+        },
+                            status_code=401)
 
 
 class IdentityPlatformA2AMiddleware(IdentityPlatformMiddleware):
@@ -111,8 +114,7 @@ class IdentityPlatformA2AMiddleware(IdentityPlatformMiddleware):
 
         if self.agent_card is None:
             raise ValueError(
-                "AgentCard must be provided to IdentityPlatformMiddleware."
-            )
+                "AgentCard must be provided to IdentityPlatformMiddleware.")
 
         if self.agent_card.securitySchemes is None:
             raise ValueError(
@@ -172,8 +174,7 @@ class IdentityPlatformMCPMiddleware(IdentityPlatformMiddleware):
             access_token = self._parse_access_token(request)
         except Exception as e:
             return self._unauthorized(
-                "Missing or malformed Authorization header.", request
-            )
+                "Missing or malformed Authorization header.", request)
 
         try:
             # Authorize the access token for the specific tool
