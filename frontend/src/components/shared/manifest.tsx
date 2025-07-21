@@ -52,7 +52,7 @@ export const Manifest = () => {
 
   return (
     <Helmet>
-      <link rel="manifest" href={manifestHref} />
+      <link rel="manifest" href={manifestHref} nonce='a762833a-23e0-400b-b00a-9350d6f7bc69' />
     </Helmet>
   );
 };
