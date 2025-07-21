@@ -8,7 +8,7 @@ import {useWindowSize} from '@/hooks';
 import {INotification, NotificationType} from '@/types/sw/notification';
 import {PropsWithChildren, useCallback, useEffect, useState} from 'react';
 import {useNotificationUtils} from '../notification-utils-provider/notification-utils-provider';
-import {notificationUtils} from '@/utils/index-db-store';
+import {notificationUtils} from '@/utils/notification-store';
 
 const TIMER = 1000; // 1 seconds
 
@@ -166,8 +166,6 @@ export const NotificationsProvider: React.FC<PropsWithChildren> = ({children}) =
       }
     };
   }, [handleRemoveNotification, isMobile, enabled]);
-
-  console.log('NotificationsProvider initialized with notifications:', notifications);
 
   return (
     <>

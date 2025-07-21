@@ -10,7 +10,7 @@ import {cleanupOutdatedCaches, createHandlerBoundToURL, precacheAndRoute} from '
 import {NavigationRoute, registerRoute} from 'workbox-routing';
 import config from '@/config';
 import {ApproveTokenRequest} from '@/types/api/auth';
-import {notificationUtils} from '@/utils/index-db-store';
+import {notificationUtils} from '@/utils/notification-store';
 
 const ICON_PATH = '/pwa-192x192.png';
 const BADGE_PATH = '/pwa-64x64.png';
