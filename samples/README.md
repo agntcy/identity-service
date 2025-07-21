@@ -1,6 +1,6 @@
-# Identity platform Samples
+# Agent Identity Service Samples
 
-These samples are designed to help you understand how to use the Identity Platform effectively.
+These samples are designed to help you understand how to use the **Agent Identity Service** effectively.
 The samples are composed of a `Currency Exchange A2A Agent` leveraging a `Currency Exchange MCP Server` and an `Financial Assistant OASF Agent Definition`.
 
 > [!NOTE]

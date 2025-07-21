@@ -73,7 +73,7 @@ func (RuleAction) EnumDescriptor() ([]byte, []int) {
 	return file_agntcy_identity_platform_v1alpha1_policy_proto_rawDescGZIP(), []int{0}
 }
 
-// Identity Platform Policy.
+// Identity Service Policy.
 type Policy struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// A unique identifier for the Policy.
@@ -173,7 +173,7 @@ func (x *Policy) GetUpdatedAt() *timestamppb.Timestamp {
 	return nil
 }
 
-// Identity Platform Policy Rule
+// Identity Service Policy Rule
 type Rule struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// A unique identifier for the Rule.
@@ -290,7 +290,7 @@ func (x *Rule) GetUpdatedAt() *timestamppb.Timestamp {
 	return nil
 }
 
-// Identity Platform Policy Task
+// Identity Service Policy Task
 type Task struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// A unique identifier for the Task.

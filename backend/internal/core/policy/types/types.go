@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-// Identity Platform Policy Task
+// Identity Service Policy Task
 type Task struct {
 	// A unique identifier for the Task.
 	ID string `json:"id,omitempty"`
@@ -53,7 +53,7 @@ func (a RuleAction) MarshalText() ([]byte, error) {
 	return []byte(a.String()), nil
 }
 
-// Identity Platform Policy Rule
+// Identity Service Policy Rule
 type Rule struct {
 	// A unique identifier for the Rule.
 	ID string `json:"id,omitempty" protobuf:"bytes,1,opt,name=id"`
@@ -102,7 +102,7 @@ func (r *Rule) CanInvoke(appID, toolName string) bool {
 	return false
 }
 
-// Identity Platform Policy.
+// Identity Service Policy.
 type Policy struct {
 	// A unique identifier for the Policy.
 	ID string `json:"id,omitempty" protobuf:"bytes,1,opt,name=id"`

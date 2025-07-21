@@ -5,13 +5,13 @@ title: Creating Policies for Agentic Services (Preview)
 
 # Creating Policies for Agentic Services
 
-The Policies section in the AGNTCY Agent Identity Platform allows administrators to define rules and permissions for Agentic Services.
+The Policies section in the AGNTCY **Agent Identity Service** allows administrators to define rules and permissions for Agentic Services.
 This guide will walk you through the process of creating, editing, and managing policies,
 ensuring your Agentic Services operate within the desired constraints and capabilities.
 
 ## Introducing Task-Based Access Control (`TBAC`)
 
-The AGNTCY Agent Identity platform leverages Task-Based Access Control (`TBAC`) to enhance the management and security of Agentic Services. `TBAC` allows administrators to define specific tasks that can be performed by each service and the permissions required to execute these tasks. By integrating `TBAC` into your policies, you can ensure that each Agentic Service adheres to organizational security standards and operational requirements.
+The AGNTCY **Agent Identity Service** leverages Task-Based Access Control (`TBAC`) to enhance the management and security of Agentic Services. `TBAC` allows administrators to define specific tasks that can be performed by each service and the permissions required to execute these tasks. By integrating `TBAC` into your policies, you can ensure that each Agentic Service adheres to organizational security standards and operational requirements.
 
 ### Benefits of `TBAC`
 

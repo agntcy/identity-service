@@ -12,7 +12,7 @@ import "google/protobuf/timestamp.proto";
 // Package-wide variables from generator "generated".
 option go_package = "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_go";
 
-// Identity Platform App.
+// Identity Service App.
 message App {
   // A unique identifier for the App.
   optional string id = 1;

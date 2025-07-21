@@ -137,7 +137,7 @@ func (AppType) EnumDescriptor() ([]byte, []int) {
 	return file_agntcy_identity_platform_v1alpha1_app_proto_rawDescGZIP(), []int{1}
 }
 
-// Identity Platform App.
+// Identity Service App.
 type App struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// A unique identifier for the App.

@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # Overview
 
-Welcome to the comprehensive documentation for **Agent Identity** platform, a foundational service within the AGNTCY ecosystem designed for robust digital identity management. This section provides a high-level overview of Agent Identity's purpose, key functionalities, and how you can begin leveraging its capabilities.
+Welcome to the comprehensive documentation for **Agent Identity Service**, a foundational service within the AGNTCY ecosystem designed for robust digital identity management. This section provides a high-level overview of Agent Identity's purpose, key functionalities, and how you can begin leveraging its capabilities.
 
 ![Welcome](/img/overview.png)
 

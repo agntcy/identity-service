@@ -23,7 +23,7 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// Identity Platform Session
+// Identity Service Session
 type Session struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// A unique identifier for the Session.

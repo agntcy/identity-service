@@ -8,7 +8,7 @@ COPY ./samples/mcp/currency_exchange/* .
 COPY ./sdk/python/ ./sdk/python/
 RUN pip install --no-cache-dir .
 
-# Install identity platform dependency
+# Install identity service dependency
 RUN pip install sdk/python
 
 CMD ["python", "main.py"]
