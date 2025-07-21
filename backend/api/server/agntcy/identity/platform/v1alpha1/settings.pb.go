@@ -400,7 +400,7 @@ func (x *OryIdpSettings) GetApiKey() string {
 // Identity Settings
 type Settings struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// An API Key for the Identity Platform.
+	// An API Key for the Identity Service.
 	ApiKey *ApiKey `protobuf:"bytes,1,opt,name=api_key,json=apiKey,proto3,oneof" json:"api_key,omitempty"`
 	// Settings for the Issuer.
 	IssuerSettings *IssuerSettings `protobuf:"bytes,2,opt,name=issuer_settings,json=issuerSettings,proto3,oneof" json:"issuer_settings,omitempty"`

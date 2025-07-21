@@ -964,7 +964,7 @@ components:
                     type: string
                     description: UpdatedAt records the timestamp of the last update to the App
                     format: date-time
-            description: Identity Platform App.
+            description: Identity Service App.
         AppInfoResponse:
             type: object
             properties:
@@ -1399,7 +1399,7 @@ components:
                     type: string
                     description: UpdatedAt records the timestamp of the last update to the Policy
                     format: date-time
-            description: Identity Platform Policy.
+            description: Identity Service Policy.
         Proof:
             type: object
             properties:
@@ -1453,7 +1453,7 @@ components:
                     type: string
                     description: UpdatedAt records the timestamp of the last update to the Rule
                     format: date-time
-            description: Identity Platform Policy Rule
+            description: Identity Service Policy Rule
         SetIssuerRequest:
             required:
                 - issuerSettings
@@ -1469,7 +1469,7 @@ components:
                 apiKey:
                     allOf:
                         - $ref: '#/components/schemas/ApiKey'
-                    description: An API Key for the Identity Platform.
+                    description: An API Key for the Identity Service.
                 issuerSettings:
                     allOf:
                         - $ref: '#/components/schemas/IssuerSettings'
@@ -1509,7 +1509,7 @@ components:
                 toolName:
                     type: string
                     description: A tool name for the Task.
-            description: Identity Platform Policy Task
+            description: Identity Service Policy Task
         TokenRequest:
             type: object
             properties:

@@ -65,7 +65,7 @@ message OryIdpSettings {
 
 // Identity Settings
 message Settings {
-  // An API Key for the Identity Platform.
+  // An API Key for the Identity Service.
   optional ApiKey api_key = 1;
 
   // Settings for the Issuer.

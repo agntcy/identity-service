@@ -12,7 +12,7 @@ import "google/protobuf/timestamp.proto";
 // Package-wide variables from generator "generated".
 option go_package = "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_go";
 
-// Identity Platform Policy.
+// Identity Service Policy.
 message Policy {
   // A unique identifier for the Policy.
   optional string id = 1;
@@ -36,7 +36,7 @@ message Policy {
   optional .google.protobuf.Timestamp updated_at = 7;
 }
 
-// Identity Platform Policy Rule
+// Identity Service Policy Rule
 message Rule {
   // A unique identifier for the Rule.
   optional string id = 1;
@@ -65,7 +65,7 @@ message Rule {
   optional .google.protobuf.Timestamp updated_at = 9;
 }
 
-// Identity Platform Policy Task
+// Identity Service Policy Task
 message Task {
   // A unique identifier for the Task.
   optional string id = 1;
