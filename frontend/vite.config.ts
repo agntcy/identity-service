@@ -40,54 +40,16 @@ export default defineConfig(({mode}) => {
         mode: mode === 'development' ? 'development' : 'production',
         registerType: 'autoUpdate',
         includeAssets: ['favicon.ico', 'apple-touch-icon-180x180.png', 'maskable-icon-512x512.png'],
-        strategies: 'injectManifest',
         srcDir: 'src/lib',
         filename: 'sw.ts',
         injectRegister: 'inline',
         base: '/',
-        injectManifest: {
-          maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
-          minify: false,
-          enableWorkboxModulesLogs: true,
-          globPatterns: ['**/*.{js,css,html,svg,png,svg,ico}']
-        },
-        manifest: {
-          name: 'Agent Identity | AGNTCY',
-          short_name: 'Agent Identity',
-          description: 'AGNTCY Identity management system with push notifications and offline capabilities',
-          theme_color: '#eff3fc',
-          scope: '/',
-          start_url: '/onboard-device',
-          background_color: '#eff3fc',
-          icons: [
-            {
-              src: 'pwa-64x64.png',
-              sizes: '64x64',
-              type: 'image/png'
-            },
-            {
-              src: 'pwa-192x192.png',
-              sizes: '192x192',
-              type: 'image/png'
-            },
-            {
-              src: 'pwa-512x512.png',
-              sizes: '512x512',
-              type: 'image/png',
-              purpose: 'any'
-            },
-            {
-              src: 'maskable-icon-512x512.png',
-              sizes: '512x512',
-              type: 'image/png',
-              purpose: 'maskable'
-            }
-          ]
-        },
+        manifest: false,
         workbox: {
           globPatterns: ['**/*.{js,css,html,svg,png,svg,ico}'],
           cleanupOutdatedCaches: true,
-          clientsClaim: true
+          clientsClaim: true,
+          maximumFileSizeToCacheInBytes: 4 * 1024 * 1024 // 4MB
         },
         devOptions: {
           enabled: mode === 'development',

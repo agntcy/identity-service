@@ -87,14 +87,6 @@ export const generateRoutes = (routes: Route[]): Route[] => {
           )
         },
         {
-          path: PATHS.onboardDevice.info,
-          element: (
-            <NodeRoute pageTitle="onboard device info">
-              <OnBoardDevice />
-            </NodeRoute>
-          )
-        },
-        {
           path: '*',
           element: <NotFound />
         }

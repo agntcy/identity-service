@@ -11,7 +11,6 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {ConfirmModal} from '../ui/confirm-modal';
 import {useAnalytics} from '@/hooks';
 import {Device} from '@/types/api/device';
-import {generatePath} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
 import getDeviceInfo from '@/lib/device';
 import {QRCodeModal} from '../shared/qr-code-modal';
@@ -100,7 +99,7 @@ export const ListDevices: React.FC = () => {
 
   const link = useMemo(() => {
     if (device) {
-      const path = generatePath(PATHS.onboardDevice.info, {id: device.id});
+      const path = `${PATHS.onboardDevice.base}?id=${device.id}`;
       return `${window.location.origin}${path}`;
     }
     return undefined;

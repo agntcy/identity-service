@@ -4,7 +4,17 @@
  */
 
 import React from 'react';
-import {Button, Modal, ModalActions, ModalContent, ModalProps, ModalSubtitle, ModalTitle} from '@outshift/spark-design';
+import {
+  Button,
+  Link,
+  Modal,
+  ModalActions,
+  ModalContent,
+  ModalProps,
+  ModalSubtitle,
+  ModalTitle,
+  Typography
+} from '@outshift/spark-design';
 import QRCode from 'react-qr-code';
 
 interface QRCodeModalProps extends Omit<ModalProps, 'title' | 'subtitle'> {
@@ -39,6 +49,12 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({title, subtitle, link, 
             bgColor="#fbfcfe"
             value={link || '#'}
           />
+        </div>
+        <div className="mt-4 flex justify-center gap-1">
+          <Typography variant="body2Semibold">or</Typography>
+          <Link href={link} openInNewTab sx={{ml: 1}}>
+            click here
+          </Link>
         </div>
       </ModalContent>
       <ModalActions>

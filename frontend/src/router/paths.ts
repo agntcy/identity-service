@@ -7,8 +7,7 @@ export const PATHS = {
   basePath: '/',
   welcome: '/welcome',
   onboardDevice: {
-    base: '/onboard-device',
-    info: '/onboard-device/:id?'
+    base: '/onboard-device'
   },
   callBackLoading: '/login/callback',
   dashboard: '/dashboard',

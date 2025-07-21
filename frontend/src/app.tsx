@@ -21,6 +21,7 @@ import * as CookieConsentVanilla from 'vanilla-cookieconsent';
 import {config} from './cookies/config';
 import {InstallButtonPwa} from './components/shared/pwa/install-button-pwa';
 import {useWindowSize} from './hooks';
+import {Manifest} from './components/shared/manifest';
 
 const App = () => {
   const {isMobile} = useWindowSize();
@@ -37,6 +38,7 @@ const App = () => {
     <ThemeProvider>
       <ErrorBoundary fallbackRender={(props) => <ErrorPage {...props} />}>
         <HelmetProvider>
+          <Manifest />
           <AuthProvider>
             <AnalyticsProvider>
               <ApiProvider>

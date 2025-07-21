@@ -10,23 +10,16 @@ import {BellIcon, BellOffIcon, RefreshCcwIcon} from 'lucide-react';
 import {GeneralSize, Tag, TagStatus} from '@outshift/spark-design';
 import {useLocalStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
-import {useEffect} from 'react';
 
-export const ContentOnBoardDevice = ({id}: {id?: string}) => {
+export const ContentOnBoardDevice = () => {
   const {enabled, supported, handleToggleNotifications, fixNotifications, loading} = useNotifications();
 
-  const {setIdDevice, idDevice} = useLocalStore(
+  const {idDevice} = useLocalStore(
     useShallow((state) => ({
       idDevice: state.idDevice,
       setIdDevice: state.setIdDevice
     }))
   );
-
-  useEffect(() => {
-    if (id) {
-      setIdDevice(id);
-    }
-  }, [id, setIdDevice]);
 
   return (
     <>
