@@ -167,8 +167,8 @@ export const NotificationsProvider: React.FC<PropsWithChildren> = ({children}) =
         role="presentation"
         aria-hidden="true"
         className={cn(
-          'fixed inset-0 z-[100] bg-black/50 transition-opacity duration-300',
-          hasNotificationsRequest ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+          'fixed z-[100] bg-black/50 transition-opacity ease-in-out duration-300 pointer-events-auto',
+          hasNotificationsRequest ? 'opacity-100 inset-0 pointer-events-none' : 'opacity-0'
         )}
       />
       {isMobile && hasNotificationsRequest && enabled && (

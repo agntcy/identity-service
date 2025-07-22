@@ -142,6 +142,7 @@ self.addEventListener('push', async (event) => {
       const notificationData: INotification | undefined = event.data.json();
       if (notificationData) {
         const id = generateRandomId();
+        const idDevice = notificationData.approval_request_info?.device_id;
         const options = getNotificationOptions({
           body: notificationData.body,
           requireInteraction: notificationData.type === NotificationType.APPROVAL_REQUEST ? true : false,
@@ -155,7 +156,8 @@ self.addEventListener('push', async (event) => {
             id: id,
             timestamp: Date.now(),
             type: notificationData.type,
-            approval_request_info: notificationData.approval_request_info
+            approval_request_info: notificationData.approval_request_info,
+            url: idDevice ? `/onboard-device?id=${idDevice}` : `/onboard-device`
           }
         });
 
@@ -223,7 +225,29 @@ self.addEventListener('notificationclick', (event) => {
         notification.close();
       }
     } else {
-      console.log('Notification clicked without action or not an approval request');
+      event.waitUntil(
+        self.clients
+          .matchAll({
+            type: 'window',
+            includeUncontrolled: true
+          })
+          .then(function (clientList) {
+            for (const client of clientList) {
+              if ('focus' in client) {
+                event.notification.close();
+                return client.focus();
+              }
+            }
+            if (self.clients.openWindow) {
+              event.notification.close();
+              let url = `${self.location.origin}/onboard-device`;
+              if (notification?.data?.url) {
+                url = `${self.location.origin}${notification.data.url}`;
+              }
+              return self.clients.openWindow(url);
+            }
+          })
+      );
     }
   } catch (error) {
     console.error('Error handling notification click:', error);
