@@ -4,22 +4,18 @@
  */
 
 import {FallbackProps} from 'react-error-boundary';
-import {isRouteErrorResponse, useRouteError} from 'react-router-dom';
 import {EmptyState} from '@outshift/spark-design';
 import {Card} from '../ui/card';
 
-interface ErrorPageProps extends Omit<FallbackProps, 'resetErrorBoundary'> {
+interface ErrorPageBoundaryProps extends Omit<FallbackProps, 'resetErrorBoundary'> {
   className?: string;
   resetErrorBoundary?: (...args: any[]) => void;
 }
 
-export const ErrorPage = ({error, resetErrorBoundary}: ErrorPageProps) => {
-  const errorRouter = useRouteError();
+export const ErrorPageBoundary = ({error, resetErrorBoundary}: ErrorPageBoundaryProps) => {
   let errorMessage: string;
 
-  if (isRouteErrorResponse(errorRouter)) {
-    errorMessage = error.error?.message || error.statusText;
-  } else if (error instanceof Error) {
+  if (error instanceof Error) {
     errorMessage = error.message;
   } else if (typeof error === 'string') {
     errorMessage = error;

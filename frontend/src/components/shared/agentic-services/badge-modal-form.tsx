@@ -11,10 +11,7 @@ import {Modal, ModalActions, ModalContent, ModalProps, ModalTitle, toast} from '
 import {BadgeFormValues, BadgeSchema} from '@/schemas/badge-schema';
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
-import {Form, FormControl, FormField, FormItem, FormLabel} from '../ui/form';
-import {useCallback, useEffect, useState} from 'react';
-import {FileUpload} from '../ui/file-upload';
-import {Input} from '../ui/input';
+import {useCallback, useEffect} from 'react';
 import {useIssueBadge} from '@/mutations';
 import z from 'zod';
 import {Badge, IssueBadgeBody} from '@/types/api/badge';
@@ -22,6 +19,9 @@ import {encodeBase64} from '@/utils/utils';
 import {generatePath, useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
 import {useAnalytics} from '@/hooks';
+import {Form, FormControl, FormField, FormItem, FormLabel} from '@/components/ui/form';
+import {FileUpload} from '@/components/ui/file-upload';
+import {Input} from '@/components/ui/input';
 
 interface BadgeModalFormProps extends ModalProps {
   title?: string;

@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {AgenticServiceType} from '@/components/shared/agentic-service-type';
-import {StatusAgenticService} from '@/components/shared/status-agentic-service';
+import {AgenticServiceType} from '@/components/shared/agentic-services/agentic-service-type';
+import {StatusAgenticService} from '@/components/shared/agentic-services/status-agentic-service';
 import DateHover from '@/components/ui/date-hover';
 import {App} from '@/types/api/app';
 import {MRT_ColumnDef} from 'material-react-table';

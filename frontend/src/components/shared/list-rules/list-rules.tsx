@@ -10,7 +10,7 @@ import {useGetPolicyRules} from '@/queries';
 import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
 import {Card} from '@/components/ui/card';
 import {cn} from '@/lib/utils';
-import {FilterSections} from '@/components/shared/filters-sections';
+import {FilterSections} from '@/components/shared/helpers/filters-sections';
 import {PencilIcon, PlusIcon, Trash2Icon} from 'lucide-react';
 import {RulesColumns} from './rules-columns';
 import {OpsRule} from '../ops-rules/ops-rule';

@@ -13,7 +13,7 @@ import {Card} from '@/components/ui/card';
 import {cn} from '@/lib/utils';
 import {generatePath, useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
-import {FilterSections} from '@/components/shared/filters-sections';
+import {FilterSections} from '@/components/shared/helpers/filters-sections';
 import {PencilIcon, PlusIcon, Trash2Icon} from 'lucide-react';
 import {ConfirmModal} from '@/components/ui/confirm-modal';
 import {Policy} from '@/types/api/policy';

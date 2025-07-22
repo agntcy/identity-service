@@ -14,7 +14,7 @@ import {PolicyFormValues} from '@/schemas/policy-schema';
 import {Textarea} from '@/components/ui/textarea';
 import {useGetAgenticServices} from '@/queries';
 import {Skeleton} from '@mui/material';
-import {AgenticServiceType} from '@/components/shared/agentic-service-type';
+import {AgenticServiceType} from '@/components/shared/agentic-services/agentic-service-type';
 
 export const PolicyForm = ({isLoading = false}: {isLoading?: boolean}) => {
   const {control, reset, formState} = useFormContext<PolicyFormValues>();

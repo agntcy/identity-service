@@ -7,7 +7,7 @@ import {Card, CardContent} from '@/components/ui/card';
 import {Link, Typography} from '@outshift/spark-design';
 import {useMemo} from 'react';
 import KeyValue, {KeyValuePair} from '@/components/ui/key-value';
-import {AgenticServiceType} from '@/components/shared/agentic-service-type';
+import {AgenticServiceType} from '@/components/shared/agentic-services/agentic-service-type';
 import {Policy} from '@/types/api/policy';
 import {useGetAgenticService} from '@/queries';
 import {generatePath} from 'react-router-dom';

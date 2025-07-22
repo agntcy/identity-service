@@ -12,7 +12,7 @@ import {ConfirmModal} from '../ui/confirm-modal';
 import {useAnalytics} from '@/hooks';
 import {Device} from '@/types/api/device';
 import {PATHS} from '@/router/paths';
-import {QRCodeModal} from '../shared/qr-code-modal';
+import {QRCodeModal} from '../shared/helpers/qr-code-modal';
 import {Card} from '../ui/card';
 import KeyValue from '../ui/key-value';
 import DateHover from '../ui/date-hover';

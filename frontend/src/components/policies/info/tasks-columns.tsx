@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {AgenticServiceType} from '@/components/shared/agentic-service-type';
+import {AgenticServiceType} from '@/components/shared/agentic-services/agentic-service-type';
 import {useGetAgenticService} from '@/queries';
 import {PATHS} from '@/router/paths';
 import {Task} from '@/types/api/policy';

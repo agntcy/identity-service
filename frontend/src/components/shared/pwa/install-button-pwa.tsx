@@ -63,7 +63,7 @@ export const InstallButtonPwa = (props: FabProps) => {
           color="primary"
           variant="circular"
           sx={{backgroundColor: '#187adc'}}
-          size="medium"
+          size="large"
           {...props}
           onClick={handleInstall}
         >
