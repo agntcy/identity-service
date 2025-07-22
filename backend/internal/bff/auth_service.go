@@ -335,7 +335,7 @@ func (s *authService) ExtAuthZ(
 	}
 
 	if rule.NeedsApproval {
-		otp, err := s.sendDeviceOTP(ctx, session, callerApp, app)
+		otp, err := s.sendDeviceOTP(ctx, session, callerApp, app, &toolName)
 		if err != nil {
 			return err
 		}
@@ -397,6 +397,7 @@ func (s *authService) sendDeviceOTP(
 	session *authtypes.Session,
 	callerApp *apptypes.App,
 	calleeApp *apptypes.App,
+	toolName *string,
 ) (*authtypes.SessionDeviceOTP, error) {
 	devices, err := s.deviceRepository.GetDevices(ctx, session.UserID)
 	if err != nil {
@@ -416,7 +417,7 @@ func (s *authService) sendDeviceOTP(
 		return nil, err
 	}
 
-	err = s.notifService.SendOTPNotification(ctx, device, session, otp, callerApp, calleeApp)
+	err = s.notifService.SendOTPNotification(ctx, device, session, otp, callerApp, calleeApp, toolName)
 	if err != nil {
 		return nil, errutil.Err(err, "unable to send notification")
 	}

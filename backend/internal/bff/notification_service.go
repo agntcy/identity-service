@@ -36,6 +36,7 @@ type NotificationService interface {
 		otp *authtypes.SessionDeviceOTP,
 		callerApp *apptypes.App,
 		calleeApp *apptypes.App,
+		toolName *string,
 	) error
 }
 
@@ -76,6 +77,7 @@ func (s *notificationService) SendOTPNotification(
 	otp *authtypes.SessionDeviceOTP,
 	callerApp *apptypes.App,
 	calleeApp *apptypes.App,
+	toolName *string,
 ) error {
 	if session == nil {
 		return nil // No session to notify
@@ -87,11 +89,11 @@ func (s *notificationService) SendOTPNotification(
 		ptrutil.DerefStr(calleeApp.Name),
 	)
 
-	if session.ToolName != nil && *session.ToolName != "" {
+	if toolName != nil && *toolName != "" {
 		body = fmt.Sprintf(
 			"The agent '%s' is trying to invoke the tool '%s' of the MCP server '%s'",
 			ptrutil.DerefStr(callerApp.Name),
-			ptrutil.DerefStr(session.ToolName),
+			ptrutil.DerefStr(toolName),
 			ptrutil.DerefStr(calleeApp.Name),
 		)
 	}
@@ -105,7 +107,7 @@ func (s *notificationService) SendOTPNotification(
 			ApprovalRequestInfo: &devicetypes.ApprovalRequestInfo{
 				CallerApp:        ptrutil.DerefStr(callerApp.Name),
 				CalleeApp:        calleeApp.Name,
-				ToolName:         session.ToolName,
+				ToolName:         toolName,
 				OTP:              otp.Value,
 				DeviceID:         otp.DeviceID,
 				SessionID:        session.ID,
