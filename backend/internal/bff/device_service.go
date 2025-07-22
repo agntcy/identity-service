@@ -89,6 +89,7 @@ func (s *deviceService) RegisterDevice(
 	// Update
 	existingDevice.SubscriptionToken = device.SubscriptionToken
 	existingDevice.UserID = device.UserID
+	existingDevice.Name = device.Name
 
 	// Try to send a notification about the device registration.
 	if err := s.notificationService.SendDeviceRegisteredNotification(ctx, existingDevice); err != nil {
