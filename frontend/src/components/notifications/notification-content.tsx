@@ -45,14 +45,18 @@ export const NotificationContent = ({
     return Math.max(0, Math.floor(remainingMs / 1000));
   }, [notification?.timestamp, notification?.approval_request_info?.timeout_in_seconds]);
 
+  const handleOnComplete = useCallback(() => {
+    setOpen(false);
+    setIsLoadingApprove(false);
+    setIsLoadingDeny(false);
+    setTimerEnded(true);
+  }, []);
+
   const aproveTokenMutation = useAproveToken({
     callbacks: {
       onSuccess: () => {
         onHandleRequest?.(notification);
-        setOpen(false);
-        setIsLoadingApprove(false);
-        setIsLoadingDeny(false);
-        setTimerEnded(true);
+        handleOnComplete();
         toast({
           title: 'Success',
           description: 'Your request has been processed successfully.',
@@ -62,10 +66,7 @@ export const NotificationContent = ({
       },
       onError: () => {
         onHandleRequest?.(notification);
-        setOpen(false);
-        setIsLoadingApprove(false);
-        setIsLoadingDeny(false);
-        setTimerEnded(true);
+        handleOnComplete();
         toast({
           title: 'Error',
           description: 'An error occurred while processing your request.',
@@ -75,13 +76,6 @@ export const NotificationContent = ({
       }
     }
   });
-
-  const handleOnComplete = useCallback(() => {
-    setOpen(false);
-    setIsLoadingApprove(false);
-    setIsLoadingDeny(false);
-    setTimerEnded(true);
-  }, []);
 
   const handleAllow = useCallback(() => {
     setIsLoadingApprove(true);
@@ -163,7 +157,7 @@ export const NotificationContent = ({
                 color="negative"
                 fullWidth
                 startIcon={<BanIcon className="w-4 h-4" />}
-                disabled={timerEnded || aproveTokenMutation.isPending}
+                disabled={timerEnded || aproveTokenMutation.isPending || isLoadingApprove}
                 onClick={handleDeny}
                 loading={isLoadingDeny}
                 loadingPosition="start"
@@ -176,7 +170,7 @@ export const NotificationContent = ({
                 }}
                 fullWidth
                 startIcon={<CheckIcon className="w-4 h-4" />}
-                disabled={timerEnded || aproveTokenMutation.isPending}
+                disabled={timerEnded || aproveTokenMutation.isPending || isLoadingDeny}
                 onClick={handleAllow}
                 loading={isLoadingApprove}
                 loadingPosition="start"
