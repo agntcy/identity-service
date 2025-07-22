@@ -161,6 +161,7 @@ func (r *repository) UpdateDevice(
 	// Update the current device
 	existingDevice.SubscriptionToken = device.SubscriptionToken
 	existingDevice.UserID = ptrutil.Ptr(device.UserID)
+	existingDevice.Name = device.Name
 
 	result = r.dbContext.Client().Save(existingDevice)
 	if result.Error != nil {
@@ -196,11 +197,16 @@ func (r *repository) ListRegisteredDevices(
 		)
 	}
 
-	dbQuery = dbQuery.Session(&gorm.Session{}) // https://gorm.io/docs/method_chaining.html#Reusability-and-Safety
+	dbQuery = dbQuery.Session(
+		&gorm.Session{},
+	) // https://gorm.io/docs/method_chaining.html#Reusability-and-Safety
 
 	var devices []*Device
 
-	err := dbQuery.Scopes(gormutil.Paginate(paginationFilter)).Order("created_at DESC").Find(&devices).Error
+	err := dbQuery.Scopes(gormutil.Paginate(paginationFilter)).
+		Order("created_at DESC").
+		Find(&devices).
+		Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errutil.Err(err, "no devices found")
