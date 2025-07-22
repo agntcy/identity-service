@@ -19,6 +19,7 @@ const TIMER = 1000; // 1 second
 interface CountDownTimerProps extends CircularProgressProps {
   boxProps?: BoxProps;
   duration: number;
+  totalDuration?: number; // Add this new prop
   showText?: boolean;
   textProps?: TypographyProps;
   onComplete?: () => void;
@@ -26,14 +27,17 @@ interface CountDownTimerProps extends CircularProgressProps {
 
 export const CountDownTimer = ({
   duration,
+  totalDuration,
   showText = true,
   onComplete,
   boxProps,
   textProps,
   ...props
 }: CountDownTimerProps) => {
+  const calculationDuration = totalDuration || duration;
+
   const [timeDuration, setTimeDuration] = useState(duration);
-  const [countdownPercentage, setCountdownPercentage] = useState(100);
+  const [countdownPercentage, setCountdownPercentage] = useState(Math.ceil((duration / calculationDuration) * 100));
 
   const text = useMemo(() => {
     if (timeDuration <= 0) {
@@ -58,14 +62,14 @@ export const CountDownTimer = ({
           return 0;
         }
         const newTimeDuration = prev - 1;
-        const percentage = Math.ceil((newTimeDuration / duration) * 100);
+        const percentage = Math.ceil((newTimeDuration / calculationDuration) * 100);
         setCountdownPercentage(percentage);
         return newTimeDuration;
       });
     }, TIMER);
     return () => clearInterval(intervalId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [duration, onComplete]);
+  }, [duration, totalDuration, onComplete]);
 
   return (
     <>

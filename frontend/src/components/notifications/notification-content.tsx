@@ -13,15 +13,15 @@ import {useAproveToken} from '@/mutations';
 
 interface NotificationContentProps extends Omit<DrawerProps, 'ref' | 'fadeFromIndex' | 'open' | 'onOpenChange'> {
   notification?: INotification;
-  useOverlay?: boolean;
+  index: number;
   onHandleRequest?: (notification?: INotification) => void;
 }
 
 export const NotificationContent = ({
   notification,
+  index,
   defaultOpen,
   onHandleRequest,
-  useOverlay,
   ...props
 }: NotificationContentProps) => {
   const [isLoadingApprove, setIsLoadingApprove] = useState(false);
@@ -101,12 +101,22 @@ export const NotificationContent = ({
     });
   }, [aproveTokenMutation, notification]);
 
+  if (index > 2) {
+    return null;
+  }
+
   return (
     <Drawer open={open} onOpenChange={setOpen} dismissible={timerEnded} {...props}>
       <DrawerContent
-        useOverlay={useOverlay}
+        useOverlay={false}
         className="max-h-screen space-y-4"
-        style={{height: 'calc(65vh - 56px)', zIndex: 3000 + zIndex}}
+        style={{
+          height: `calc(${65 + index * 0.5}vh - 56px)`,
+          zIndex: 3000 + zIndex,
+          pointerEvents: index === 0 ? 'auto' : 'none',
+          transform: `scale(${1 - index * 0.035}) translate3d(0px, ${-16 * (index + 0.035)}px, 0px)`,
+          animationDuration: index === 0 ? '0.5s' : '0s'
+        }}
       >
         <DrawerHeader className="space-y-4">
           <div>
@@ -132,7 +142,11 @@ export const NotificationContent = ({
         <div className="flex flex-col items-center justify-center h-full">
           {notification?.type === NotificationType.APPROVAL_REQUEST &&
             notification.approval_request_info?.timeout_in_seconds && (
-              <CountDownTimer duration={remainingDuration} onComplete={handleOnComplete} />
+              <CountDownTimer
+                duration={remainingDuration}
+                totalDuration={notification.approval_request_info?.timeout_in_seconds}
+                onComplete={handleOnComplete}
+              />
             )}
         </div>
         {notification?.type === NotificationType.APPROVAL_REQUEST && (

@@ -47,7 +47,7 @@ const App = () => {
               <ApiProvider>
                 <QueryProvider>
                   <Toaster
-                    offset={{bottom: '64px', right: '16px'}}
+                    offset={isMobile ? undefined : {bottom: '64px', right: '16px'}}
                     expand={false}
                     duration={3500}
                     position={isMobile ? 'top-center' : 'bottom-right'}

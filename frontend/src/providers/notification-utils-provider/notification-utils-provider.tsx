@@ -17,6 +17,7 @@ import {useRegisterDevice} from '@/mutations';
 import {usePwa} from '@/providers/pwa-provider/pwa-provider';
 import {toast} from '@outshift/spark-design';
 import getDeviceInfo from '@/lib/device';
+import {notificationUtils} from '@/utils/notification-store';
 
 interface NotificationUtilsContextType {
   loading: boolean;
@@ -171,6 +172,7 @@ export const NotificationUtilsProvider: React.FC<NotificationUtilsProviderProps>
     try {
       setLoading(true);
       await updateServiceWorker();
+      await notificationUtils.clearAllNotifications();
       toast({
         title: 'Notifications Fixed',
         description: 'Your notification issues have been resolved.',

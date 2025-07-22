@@ -32,7 +32,7 @@ const indexDbStore = {
   },
 };
 
-const NOTIFICATIONS_KEY = 'app_notifications';
+const NOTIFICATIONS_KEY = 'agent_identity_notifications';
 
 const notificationUtils = {
   // Get all notifications

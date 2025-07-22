@@ -6,9 +6,10 @@
 import {NotificationContent} from '@/components/notifications/notification-content';
 import {useWindowSize} from '@/hooks';
 import {INotification, NotificationType} from '@/types/sw/notification';
-import {PropsWithChildren, useCallback, useEffect, useState} from 'react';
+import {PropsWithChildren, useCallback, useEffect, useMemo, useState} from 'react';
 import {useNotificationUtils} from '../notification-utils-provider/notification-utils-provider';
 import {notificationUtils} from '@/utils/notification-store';
+import {cn} from '@/lib/utils';
 
 const TIMER = 1000; // 1 seconds
 
@@ -17,6 +18,10 @@ export const NotificationsProvider: React.FC<PropsWithChildren> = ({children}) =
 
   const {isMobile} = useWindowSize();
   const {enabled} = useNotificationUtils();
+
+  const hasNotificationsRequest = useMemo(() => {
+    return notifications.filter((n) => n.type === NotificationType.APPROVAL_REQUEST).length > 0;
+  }, [notifications]);
 
   const loadNotifications = useCallback(async () => {
     try {
@@ -27,45 +32,36 @@ export const NotificationsProvider: React.FC<PropsWithChildren> = ({children}) =
     }
   }, []);
 
-  const removeNotification = useCallback(async (notification: INotification) => {
-    try {
-      // Remove from IndexedDB
-      if (notification.id) {
-        await notificationUtils.removeNotification(notification.id);
-      }
-      // Remove from state
-      setNotifications((prev) => prev.filter((n) => n.id !== notification.id));
-      // Also remove from service worker
-      if ('serviceWorker' in navigator) {
-        const registration = await navigator.serviceWorker.ready;
-        if (registration.active) {
-          registration.active.postMessage({
-            type: 'CLOSE_NOTIFICATION',
-            notificationId: notification.id
-          });
+  const removeNotification = useCallback(
+    async (notification: INotification) => {
+      try {
+        if (notification.id) {
+          await notificationUtils.removeNotification(notification.id);
         }
+        await loadNotifications();
+        if ('serviceWorker' in navigator) {
+          const registration = await navigator.serviceWorker.ready;
+          if (registration.active) {
+            registration.active.postMessage({
+              type: 'CLOSE_NOTIFICATION',
+              notificationId: notification.id
+            });
+          }
+        }
+      } catch (error) {
+        console.error('Error removing notification:', error);
       }
-    } catch (error) {
-      console.error('Error removing notification:', error);
-    }
-  }, []);
+    },
+    [loadNotifications]
+  );
 
-  const addNotification = useCallback(async (notification: INotification) => {
+  const addNotification = useCallback(async () => {
     try {
-      // Add to IndexedDB
-      await notificationUtils.addNotification(notification);
-      // Update state
-      setNotifications((prev) => {
-        const existingNotification = prev.find((n) => n.id === notification.id);
-        if (existingNotification) {
-          return prev.map((n) => (n.id === notification.id ? {...n, ...notification} : n));
-        }
-        return [notification, ...prev];
-      });
+      await loadNotifications();
     } catch (error) {
       console.error('Error adding notification:', error);
     }
-  }, []);
+  }, [loadNotifications]);
 
   const handleRemoveNotification = useCallback(
     async (notification: INotification) => {
@@ -77,7 +73,7 @@ export const NotificationsProvider: React.FC<PropsWithChildren> = ({children}) =
   const handleReceiveNotification = useCallback(
     async (notification: INotification) => {
       if (isMobile && notification.type === NotificationType.APPROVAL_REQUEST) {
-        await addNotification(notification);
+        await addNotification();
       }
     },
     [isMobile, addNotification]
@@ -97,10 +93,8 @@ export const NotificationsProvider: React.FC<PropsWithChildren> = ({children}) =
     if (expiredNotifications.length === 0) {
       return;
     }
-    // Remove expired notifications from IndexedDB
     for (const notification of expiredNotifications) {
       if (notification.id) {
-        await notificationUtils.removeNotification(notification.id);
         await removeNotification(notification);
       }
     }
@@ -167,20 +161,33 @@ export const NotificationsProvider: React.FC<PropsWithChildren> = ({children}) =
     };
   }, [handleRemoveNotification, isMobile, enabled]);
 
+  console.log(notifications);
+
   return (
     <>
-      {isMobile &&
-        notifications
-          .sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0))
-          .map((notification, index) => (
-            <NotificationContent
-              useOverlay={index === 0}
-              key={notification.id}
-              defaultOpen={checkIsExpired(notification)}
-              notification={notification}
-              onHandleRequest={onHandleRequest}
-            />
-          ))}
+      <div
+        role="presentation"
+        aria-hidden="true"
+        className={cn(
+          'fixed inset-0 z-[100] bg-black/50 transition-opacity duration-300',
+          hasNotificationsRequest ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        )}
+      />
+      {isMobile && hasNotificationsRequest && enabled && (
+        <>
+          {notifications
+            .sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0))
+            .map((notification, index) => (
+              <NotificationContent
+                key={notification.id}
+                index={index}
+                defaultOpen={checkIsExpired(notification)}
+                notification={notification}
+                onHandleRequest={onHandleRequest}
+              />
+            ))}
+        </>
+      )}
       {children}
     </>
   );

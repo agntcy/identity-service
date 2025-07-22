@@ -173,7 +173,6 @@ self.addEventListener('push', async (event) => {
           });
         } catch (dbError) {
           console.error('Error saving notification to IndexedDB:', dbError);
-          // Continue with showing notification even if DB save fails
         }
 
         await sendNotification({...notificationData, id, timestamp: Date.now()});
