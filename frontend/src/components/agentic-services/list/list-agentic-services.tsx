@@ -21,7 +21,7 @@ import {cn} from '@/lib/utils';
 import {useFeatureFlagsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
 import {useAnalytics} from '@/hooks';
-import { BadgeModalForm } from '@/components/shared/agentic-services/badge-modal-form';
+import {BadgeModalForm} from '@/components/shared/agentic-services/badge-modal-form';
 
 export const ListAgenticServices = () => {
   const [pagination, setPagination] = useState<MRT_PaginationState>({

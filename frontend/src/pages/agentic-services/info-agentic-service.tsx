@@ -5,7 +5,7 @@
 
 import {InfoAgenticService} from '@/components/agentic-services/info/info-agentic-service';
 import {BasePage} from '@/components/layout/base-page';
-import { BadgeModalForm } from '@/components/shared/agentic-services/badge-modal-form';
+import {BadgeModalForm} from '@/components/shared/agentic-services/badge-modal-form';
 import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-renderer';
 import {ConfirmModal} from '@/components/ui/confirm-modal';
 import {useAnalytics} from '@/hooks';

@@ -12,7 +12,7 @@ import {AgenticServiceType} from '@/components/shared/agentic-services/agentic-s
 import {StatusAgenticService} from '@/components/shared/agentic-services/status-agentic-service';
 import DateHover from '@/components/ui/date-hover';
 import {useAnalytics} from '@/hooks';
-import { BadgeCard } from '@/components/shared/agentic-services/badge-card';
+import {BadgeCard} from '@/components/shared/agentic-services/badge-card';
 
 export const AboutAgenticService = ({
   app,

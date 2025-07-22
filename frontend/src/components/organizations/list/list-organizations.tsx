@@ -20,7 +20,7 @@ import {useDeleteTenant} from '@/mutations';
 import {ConfirmModal} from '@/components/ui/confirm-modal';
 import {useSettingsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
-import { InviteUserModal } from '@/components/shared/organizations/invite-user-modal';
+import {InviteUserModal} from '@/components/shared/organizations/invite-user-modal';
 
 export const ListOrganizations = () => {
   const [pagination, setPagination] = useState<MRT_PaginationState>({
