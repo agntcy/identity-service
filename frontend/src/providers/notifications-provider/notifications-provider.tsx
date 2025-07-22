@@ -161,8 +161,6 @@ export const NotificationsProvider: React.FC<PropsWithChildren> = ({children}) =
     };
   }, [handleRemoveNotification, isMobile, enabled]);
 
-  console.log(notifications);
-
   return (
     <>
       <div
