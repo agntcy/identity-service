@@ -23,7 +23,7 @@ import {labels} from '@/constants/labels';
 import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
 import {Box, Button, IconButton, Menu, Tooltip} from '@mui/material';
 import {EllipsisVerticalIcon, PencilIcon, PlusIcon, Trash2Icon} from 'lucide-react';
-import {TagActionTask} from '@/components/shared/tag-action-task';
+import {TagActionTask} from '@/components/shared/policies/tag-action-task';
 import {TasksColumns} from './tasks-columns';
 import {OpsRule} from '@/components/shared/ops-rules/ops-rule';
 import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-renderer';

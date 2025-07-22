@@ -9,7 +9,7 @@ import {Rule} from '@/types/api/policy';
 import {GeneralSize, Tag, Tags, TagStatus} from '@outshift/spark-design';
 import {MRT_ColumnDef} from 'material-react-table';
 import {useMemo} from 'react';
-import {TagActionTask} from '../tag-action-task';
+import {TagActionTask} from '../policies/tag-action-task';
 
 export const RulesColumns = (): MRT_ColumnDef<Rule, any>[] => {
   const columns: MRT_ColumnDef<Rule, any>[] = useMemo(

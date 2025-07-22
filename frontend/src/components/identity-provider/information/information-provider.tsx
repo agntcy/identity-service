@@ -9,7 +9,7 @@ import {Link, Typography} from '@outshift/spark-design';
 import {useMemo} from 'react';
 import {IdpType, IssuerSettings} from '@/types/api/settings';
 import KeyValue, {KeyValuePair} from '@/components/ui/key-value';
-import {ProviderType} from '@/components/shared/provider-type';
+import {ProviderType} from '@/components/shared/identity-provider/provider-type';
 import {docs} from '@/utils/docs';
 
 export const InformationProvider = ({idpSettings}: {idpSettings?: IssuerSettings}) => {

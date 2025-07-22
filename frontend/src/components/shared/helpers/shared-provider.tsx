@@ -4,10 +4,10 @@
  */
 
 import {ReactNode} from 'react';
-import {Card} from '../ui/card';
 import {cn} from '@/lib/utils';
 import {Typography} from '@outshift/spark-design';
 import {Tooltip} from '@mui/material';
+import {Card} from '@/components/ui/card';
 
 export const SharedProvider = <T,>({
   imgURI,

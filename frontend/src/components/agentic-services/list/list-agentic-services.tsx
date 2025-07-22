@@ -12,16 +12,16 @@ import {AgenticServiceColumns} from './agentic-services-columns';
 import {Card} from '@/components/ui/card';
 import {generatePath, useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
-import {FilterSections} from '@/components/shared/filters-sections';
+import {FilterSections} from '@/components/shared/helpers/filters-sections';
 import {App, AppType} from '@/types/api/app';
 import {CheckIcon, IdCardIcon, PencilIcon, PlusIcon, Trash2Icon} from 'lucide-react';
 import {ConfirmModal} from '@/components/ui/confirm-modal';
 import {useDeleteAgenticService} from '@/mutations';
-import {BadgeModalForm} from '@/components/shared/badge-modal-form';
 import {cn} from '@/lib/utils';
 import {useFeatureFlagsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
 import {useAnalytics} from '@/hooks';
+import { BadgeModalForm } from '@/components/shared/agentic-services/badge-modal-form';
 
 export const ListAgenticServices = () => {
   const [pagination, setPagination] = useState<MRT_PaginationState>({

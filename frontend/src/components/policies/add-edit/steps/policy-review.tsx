@@ -18,7 +18,7 @@ import {
 } from '@outshift/spark-design';
 import {useCallback, useMemo, useState} from 'react';
 import KeyValue, {KeyValuePair} from '@/components/ui/key-value';
-import {AgenticServiceType} from '@/components/shared/agentic-service-type';
+import {AgenticServiceType} from '@/components/shared/agentic-services/agentic-service-type';
 import {useGetAgenticService, useGetGetTasksAgenticService} from '@/queries';
 import {Separator} from '@/components/ui/separator';
 import {labels} from '@/constants/labels';
@@ -29,7 +29,7 @@ import {PolicyFormValues} from '@/schemas/policy-schema';
 import {PolicyLogicyFormValues} from '@/schemas/policy-logic-schema';
 import {RuleAction} from '@/types/api/policy';
 import {RuleFormValues} from '@/schemas/rule-schema';
-import {TagActionTask} from '@/components/shared/tag-action-task';
+import {TagActionTask} from '@/components/shared/policies/tag-action-task';
 import {AppType} from '@/types/api/app';
 
 const PAGE_SIZE = 5;

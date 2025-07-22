@@ -7,7 +7,6 @@ import {ErrorBoundary} from 'react-error-boundary';
 import {HelmetProvider} from 'react-helmet-async';
 import {Router} from './router/router';
 import {Toaster} from '@outshift/spark-design';
-import {ErrorPage} from './components/router/error-page';
 import AuthProvider from './providers/auth-provider/auth-provider';
 import {ThemeProvider} from './providers/theme-provider/theme-provider';
 import {ApiProvider} from './providers/api-provider/api-provider';
@@ -21,8 +20,9 @@ import * as CookieConsentVanilla from 'vanilla-cookieconsent';
 import {config} from './cookies/config';
 import {InstallButtonPwa} from './components/shared/pwa/install-button-pwa';
 import {useWindowSize} from './hooks';
-import {Manifest} from './components/shared/manifest';
+import {Manifest} from './components/shared/manifest/manifest';
 import {NotificationUtilsProvider} from './providers/notification-utils-provider/notification-utils-provider';
+import {ErrorPageBoundary} from './components/router/error-page-boundary';
 
 const App = () => {
   const {isMobile} = useWindowSize();
@@ -37,7 +37,9 @@ const App = () => {
 
   return (
     <ThemeProvider>
-      <ErrorBoundary fallbackRender={(props) => <ErrorPage {...props} />}>
+      <ErrorBoundary
+        fallbackRender={(props) => <ErrorPageBoundary {...props} resetErrorBoundary={() => window.location.reload()} />}
+      >
         <HelmetProvider>
           <Manifest />
           <AuthProvider>

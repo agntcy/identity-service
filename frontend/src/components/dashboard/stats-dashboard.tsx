@@ -12,7 +12,7 @@ import {useFeatureFlagsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
 import {useGetAgenticServiceTotalCount, useGetPolicies, useGetSettings} from '@/queries';
 import StatsCard, {Stat} from '../ui/stats-card';
-import {ProviderType} from '../shared/provider-type';
+import {ProviderType} from '../shared/identity-provider/provider-type';
 import {useMemo} from 'react';
 import {cn} from '@/lib/utils';
 import {WelcomeName} from './welcome-name';

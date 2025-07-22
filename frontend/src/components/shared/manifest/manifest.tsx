@@ -19,7 +19,7 @@ export const Manifest = () => {
       display_override: ['tabbed'],
       orientation: 'portrait',
       scope: window.location.origin,
-      start_url: `${window.location.origin}/onboard-device?id=${id}`,
+      start_url: id ? `${window.location.origin}/onboard-device?id=${id}` : `${window.location.origin}/onboard-device`,
       background_color: '#eff3fc',
       icons: [
         {

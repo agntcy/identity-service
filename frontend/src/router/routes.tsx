@@ -17,6 +17,7 @@ import {BannerProvider} from '@/providers/banner-provider/banner-provider';
 import {SettingsProvider} from '@/providers/settings-provider/settings-provider';
 import {useFeatureFlagsStore, useSettingsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
+import {useWindowSize} from '@/hooks';
 
 // Welcome
 const Welcome = React.lazy(() => import('@/pages/welcome/welcome'));
@@ -132,6 +133,8 @@ export const useRoutes = () => {
     }))
   );
 
+  const {isMobile} = useWindowSize();
+
   const routes = useMemo<Route[]>(() => {
     return [
       {
@@ -153,6 +156,7 @@ export const useRoutes = () => {
       },
       {
         path: PATHS.agenticServices.base,
+        disabled: isMobile,
         children: [
           {
             index: true,
@@ -197,6 +201,7 @@ export const useRoutes = () => {
       },
       {
         path: PATHS.verifyIdentity.base,
+        disabled: isMobile,
         children: [
           {
             index: true,
@@ -222,7 +227,7 @@ export const useRoutes = () => {
       },
       {
         path: PATHS.policies.base,
-        disabled: !isTbacEnable,
+        disabled: !isTbacEnable || isMobile,
         children: [
           {
             index: true,
@@ -264,6 +269,7 @@ export const useRoutes = () => {
       },
       {
         path: PATHS.settings.base,
+        disabled: isMobile,
         children: [
           {
             index: true,
@@ -297,7 +303,7 @@ export const useRoutes = () => {
           },
           {
             path: PATHS.settings.devices.base,
-            disabled: !isTbacEnable,
+            disabled: !isTbacEnable || isMobile,
             children: [
               {
                 index: true,
@@ -315,6 +321,7 @@ export const useRoutes = () => {
           },
           {
             path: PATHS.settings.apiKey,
+            disabled: isMobile,
             element: (
               <NodeRoute pageTitle="api key">
                 <ApiKey />
@@ -363,7 +370,7 @@ export const useRoutes = () => {
         ]
       }
     ];
-  }, [isAdmin, isEmptyIdp, isTbacEnable]);
+  }, [isAdmin, isEmptyIdp, isMobile, isTbacEnable]);
 
   const removeDisabledRoutes = useCallback((routes: Route[]): Route[] => {
     return routes

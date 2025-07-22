@@ -12,13 +12,13 @@ import {Card} from '@/components/ui/card';
 import {cn} from '@/lib/utils';
 import {TenantReponse} from '@/types/api/iam';
 import {UsersColumns} from './users-columns';
-import {InviteUserModal} from '@/components/shared/invite-user-modal';
 import {Trash2Icon} from 'lucide-react';
 import {useAnalytics, useAuth} from '@/hooks';
 import {useSettingsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
 import {ConfirmModal} from '@/components/ui/confirm-modal';
 import {useDeleteUser} from '@/mutations';
+import {InviteUserModal} from '@/components/shared/organizations/invite-user-modal';
 
 export const OrganizationInfo = ({
   tenant,

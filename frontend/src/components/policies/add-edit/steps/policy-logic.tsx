@@ -15,7 +15,7 @@ import {RuleAction} from '@/types/api/policy';
 import {RuleForm} from './rule-form';
 import {labels} from '@/constants/labels';
 import {Separator} from '@/components/ui/separator';
-import {TagActionTask} from '@/components/shared/tag-action-task';
+import {TagActionTask} from '@/components/shared/policies/tag-action-task';
 import {useAnalytics} from '@/hooks';
 
 export const PolicyLogic = ({

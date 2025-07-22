@@ -4,7 +4,6 @@
  */
 
 import {useGetAgenticServiceBadge} from '@/queries';
-import {Card} from '../ui/card';
 import {App} from '@/types/api/app';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {
@@ -18,14 +17,15 @@ import {
   Typography,
   ViewSwitcher
 } from '@outshift/spark-design';
-import {ConditionalQueryRenderer} from '../ui/conditional-query-renderer';
 import {CheckIcon, DownloadIcon, ExpandIcon} from 'lucide-react';
-import {BadgeModalForm} from './badge-modal-form';
 import {Badge} from '@/types/api/badge';
-import ScrollShadowWrapper from '../ui/scroll-shadow-wrapper';
 import {useAnalytics} from '@/hooks';
 import {generatePath, useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
+import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-renderer';
+import ScrollShadowWrapper from '@/components/ui/scroll-shadow-wrapper';
+import {BadgeModalForm} from './badge-modal-form';
+import {Card} from '@/components/ui/card';
 
 interface BadgeCardProps {
   app?: App;
