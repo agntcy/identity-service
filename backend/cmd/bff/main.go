@@ -36,6 +36,7 @@ import (
 	"github.com/agntcy/identity-platform/pkg/grpcserver"
 	"github.com/agntcy/identity-platform/pkg/log"
 	"github.com/agntcy/identity/pkg/oidc"
+	awsconfig "github.com/aws/aws-sdk-go-v2/config"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/rs/cors"
 	"github.com/sirupsen/logrus"
@@ -187,18 +188,36 @@ func main() {
 		token = os.Getenv("VAULT_DEV_ROOT_TOKEN")
 	}
 
-	vaultClient, err := vault.NewHashicorpVaultService(
-		config.VaultHost,
-		config.VaultPort,
-		config.VaultUseSsl,
-		token, // This should be set in dev mode only
-	)
-	if err != nil {
-		log.Error("unable to create vault client ", err)
+	var credentialStore idpcore.CredentialStore
+
+	switch config.KeyStoreType {
+	case KeyStoreTypeVault:
+		vaultClient, err := vault.NewHashicorpVaultService(
+			config.VaultHost,
+			config.VaultPort,
+			config.VaultUseSsl,
+			token, // This should be set in dev mode only
+		)
+		if err != nil {
+			log.Error("unable to create vault client ", err)
+		}
+
+		credentialStore = idpcore.NewVaultCredentialStore(vaultClient)
+	case KeyStoreTypeAwsSm:
+		awscfg, err := awsconfig.LoadDefaultConfig(ctx, awsconfig.WithRegion(config.AwsRegion))
+		if err != nil {
+			log.Fatal("unable to load aws config ", err)
+		}
+
+		credentialStore, err = idpcore.NewAwsSmCredentialStore(&awscfg, nil)
+		if err != nil {
+			log.Fatal("unable to create AWS SM client ", err)
+		}
+	default:
+		log.Fatal("invalid KeyStoreType value ", config.KeyStoreType)
 	}
 
 	idpFactory := idpcore.NewFactory()
-	credentialStore := idpcore.NewCredentialStore(vaultClient)
 
 	keyStore, err := identitycore.NewVaultKeyStore(
 		config.VaultHost,

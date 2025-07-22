@@ -7,6 +7,13 @@ import (
 	"time"
 )
 
+type KeyStoreType string
+
+const (
+	KeyStoreTypeVault KeyStoreType = "vault"
+	KeyStoreTypeAwsSm KeyStoreType = "awssm"
+)
+
 //nolint:lll // Ignore linting for long lines
 type Configuration struct {
 	ServerHttpHost                                          string        `split_words:"true" default:":4000"`
@@ -21,9 +28,11 @@ type Configuration struct {
 	DbUsername                                              string        `split_words:"true"                                              required:"true"`
 	DbPassword                                              string        `split_words:"true"                                              required:"true"`
 	DbUseSsl                                                bool          `split_words:"true" default:"false"`
+	KeyStoreType                                            KeyStoreType  `split_words:"true" default:"vault"`
 	VaultHost                                               string        `split_words:"true" default:"0.0.0.0"`
 	VaultPort                                               string        `split_words:"true" default:"8200"`
 	VaultUseSsl                                             bool          `split_words:"true" default:"false"`
+	AwsRegion                                               string        `split_words:"true"`
 	IdentityHost                                            string        `split_words:"true" default:"0.0.0.0"`
 	IdentityPort                                            string        `split_words:"true" default:"4003"`
 	IamProductID                                            string        `split_words:"true"                                              required:"true"`
