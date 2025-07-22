@@ -14,6 +14,7 @@ import {useAproveToken} from '@/mutations';
 interface NotificationContentProps extends Omit<DrawerProps, 'ref' | 'fadeFromIndex' | 'open' | 'onOpenChange'> {
   notification?: INotification;
   index: number;
+  useOverlay: boolean;
   onHandleRequest?: (notification?: INotification) => void;
 }
 
@@ -21,6 +22,7 @@ export const NotificationContent = ({
   notification,
   index,
   defaultOpen,
+  useOverlay,
   onHandleRequest,
   ...props
 }: NotificationContentProps) => {
@@ -108,10 +110,11 @@ export const NotificationContent = ({
   return (
     <Drawer open={open} onOpenChange={setOpen} dismissible={timerEnded} {...props}>
       <DrawerContent
-        useOverlay={false}
+        useOverlay={useOverlay}
+        classNameOverlay={index > 0 ? 'inset-full' : ''}
         className="max-h-screen space-y-4"
         style={{
-          height: `calc(${65 + index * 0.5}vh - 56px)`,
+          height: `calc(${65 + index * 1}vh - 56px)`,
           zIndex: 3000 + zIndex,
           pointerEvents: index === 0 ? 'auto' : 'none',
           transform: `scale(${1 - index * 0.035}) translate3d(0px, ${-16 * (index + 0.035)}px, 0px)`,

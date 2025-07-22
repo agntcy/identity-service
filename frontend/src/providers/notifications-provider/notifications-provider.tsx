@@ -9,7 +9,6 @@ import {INotification, NotificationType} from '@/types/sw/notification';
 import {PropsWithChildren, useCallback, useEffect, useMemo, useState} from 'react';
 import {useNotificationUtils} from '../notification-utils-provider/notification-utils-provider';
 import {notificationUtils} from '@/utils/notification-store';
-import {cn} from '@/lib/utils';
 
 const TIMER = 1000; // 1 seconds
 
@@ -163,14 +162,6 @@ export const NotificationsProvider: React.FC<PropsWithChildren> = ({children}) =
 
   return (
     <>
-      <div
-        role="presentation"
-        aria-hidden="true"
-        className={cn(
-          'fixed z-[100] bg-black/50 transition-opacity ease-in-out duration-300 pointer-events-auto',
-          hasNotificationsRequest ? 'opacity-100 inset-0 pointer-events-none' : 'opacity-0'
-        )}
-      />
       {isMobile && hasNotificationsRequest && enabled && (
         <>
           {notifications
@@ -179,6 +170,7 @@ export const NotificationsProvider: React.FC<PropsWithChildren> = ({children}) =
               <NotificationContent
                 key={notification.id}
                 index={index}
+                useOverlay={hasNotificationsRequest}
                 defaultOpen={checkIsExpired(notification)}
                 notification={notification}
                 onHandleRequest={onHandleRequest}
