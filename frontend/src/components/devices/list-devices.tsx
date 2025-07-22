@@ -96,6 +96,11 @@ export const ListDevices: React.FC = () => {
     setQrCodeModal(value);
   }, []);
 
+  const handleClickDone = useCallback(() => {
+    handleChangeQrCodeModal(false);
+    void refetch();
+  }, [handleChangeQrCodeModal, refetch]);
+
   const link = useMemo(() => {
     if (device) {
       const path = `${PATHS.onboardDevice.base}?id=${device.id}`;
@@ -229,7 +234,7 @@ export const ListDevices: React.FC = () => {
         }
         link={link}
         onClose={() => {
-          handleChangeQrCodeModal(false);
+          handleClickDone();
         }}
       />
     </>
