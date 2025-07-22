@@ -55,8 +55,8 @@ export const ListDevices: React.FC = () => {
       onSuccess: (resp) => {
         setDevice(resp.data);
         toast({
-          title: 'Device added successfully',
-          description: 'The device has been added to your account.',
+          title: 'Onboarding Device',
+          description: "Don't forget to scan the QR code with your device.",
           type: 'info'
         });
         handleChangeQrCodeModal(true);
@@ -225,13 +225,7 @@ export const ListDevices: React.FC = () => {
       <QRCodeModal
         open={openQrCodeModal}
         title="Add Device"
-        subtitle={
-          <>
-            Scan the QR code below with your device to register it to your account.
-            <br />
-            Ensure that you have the necessary permissions to add a device.
-          </>
-        }
+        subtitle={<>Scan the QR code below with your device to register it to your account.</>}
         link={link}
         onClose={() => {
           handleClickDone();
