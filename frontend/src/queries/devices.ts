@@ -4,7 +4,7 @@
  */
 
 import {DevicesAPI} from '@/api/services';
-import {useQuery} from '@tanstack/react-query';
+import {keepPreviousData, useQuery} from '@tanstack/react-query';
 import qs from 'qs';
 
 export const useGetDevices = (query?: {page?: number; size?: number; query?: string}, enable = true) => {
@@ -32,6 +32,7 @@ export const useGetDevices = (query?: {page?: number; size?: number; query?: str
       );
       return data;
     },
-    enabled: enable
+    enabled: enable,
+    placeholderData: keepPreviousData
   });
 };
