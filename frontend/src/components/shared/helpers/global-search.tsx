@@ -167,6 +167,13 @@ export const GlobalSearch = () => {
         void navigate(path);
         break;
       }
+      case 'policies': {
+        const path = generatePath(PATHS.policies.info, {
+          id: typedOption.entity.id
+        });
+        void navigate(path);
+        break;
+      }
     }
   };
 
