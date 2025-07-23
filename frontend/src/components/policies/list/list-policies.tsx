@@ -138,6 +138,7 @@ export const ListPolicies = () => {
                 isLoading={isLoading}
               />
             )}
+            enableColumnResizing
             enableRowActions
             topToolbarProps={{
               enableActions: false

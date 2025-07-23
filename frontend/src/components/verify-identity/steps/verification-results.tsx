@@ -170,6 +170,7 @@ export const VerificationResults = () => {
                         header: 'Message'
                       }
                     ]}
+                    enableColumnResizing
                     data={results?.errors || []}
                     isLoading={false}
                     enableRowActions

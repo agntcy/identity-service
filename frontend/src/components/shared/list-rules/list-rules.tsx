@@ -70,6 +70,7 @@ export const ListRules = ({policy, showRulesOps = false}: {policy?: Policy; show
       >
         <Card className={cn(!isLoading && 'p-0')} variant="secondary">
           <Table
+            enableColumnResizing
             densityCompact
             columns={RulesColumns()}
             data={data?.rules || []}

@@ -137,6 +137,7 @@ export const OrganizationInfo = ({
                 isLoading={isLoadingUsers || isLoadingGroups}
               />
             )}
+            enableColumnResizing
             enableRowActions
             topToolbarProps={{
               enableActions: false

@@ -156,6 +156,7 @@ export const ListOrganizations = () => {
                 }
               }
             })}
+            enableColumnResizing
             enableRowActions
             topToolbarProps={{
               enableActions: false

@@ -146,6 +146,7 @@ export const RulesContent = ({policy}: {policy?: Policy}) => {
                           >
                             <div>
                               <Table
+                                enableColumnResizing
                                 columns={TasksColumns}
                                 densityCompact
                                 data={rule.tasks || []}

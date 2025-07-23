@@ -105,6 +105,7 @@ export const ListPoliciesAgenticService = ({appId, mode = 'assinged'}: {appId?: 
                 isLoading={isLoading}
               />
             )}
+            enableColumnResizing
             enableRowActions
             topToolbarProps={{
               enableActions: false

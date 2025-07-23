@@ -179,6 +179,7 @@ export const ListAgenticServices = () => {
                 isLoading={isLoading}
               />
             )}
+            enableColumnResizing
             enableRowActions
             topToolbarProps={{
               enableActions: false

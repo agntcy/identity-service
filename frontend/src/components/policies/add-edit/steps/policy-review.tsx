@@ -171,6 +171,7 @@ export const PolicyReview = () => {
             border: '1px solid #D5DFF7'
           }
         }}
+        enableColumnResizing
         onPaginationChange={setPagination}
         onSortingChange={setSorting}
         rowCount={dataTask.length}
