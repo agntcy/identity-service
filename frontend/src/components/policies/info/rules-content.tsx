@@ -16,7 +16,7 @@ import {
   TagStatus,
   Typography
 } from '@outshift/spark-design';
-import {useCallback, useState} from 'react';
+import {useCallback, useMemo, useState} from 'react';
 import {Policy, Rule, RuleAction} from '@/types/api/policy';
 import {Separator} from '@/components/ui/separator';
 import {labels} from '@/constants/labels';
@@ -68,6 +68,18 @@ export const RulesContent = ({policy}: {policy?: Policy}) => {
     }
   });
 
+  const dataCount = useMemo(() => {
+    return Number(data?.pagination?.total) || 0;
+  }, [data]);
+
+  const handleOnClose = useCallback(() => {
+    setPageRules(1);
+    setTempRule(undefined);
+    setIsDelete(false);
+    setIsEdit(false);
+    setIsAdd(false);
+  }, []);
+
   return (
     <>
       <div className="w-full">
@@ -96,7 +108,7 @@ export const RulesContent = ({policy}: {policy?: Policy}) => {
             <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <Typography variant="subtitle1" fontWeight={600}>
-                  {data?.rules?.length} Policy {data?.rules?.length && data?.rules?.length > 1 ? 'Rules' : 'Rule'}
+                  {dataCount} {dataCount && dataCount > 1 ? 'Rules' : 'Rule'}
                 </Typography>
                 <Button
                   onClick={() => {
@@ -248,31 +260,21 @@ export const RulesContent = ({policy}: {policy?: Policy}) => {
                       </div>
                     </div>
                   ))}
-                  <div className="flex justify-end">
-                    <Pagination
-                      count={Number(data?.pagination?.total) || 0}
-                      page={pageRules}
-                      onChange={handlePaginationRulesChange}
-                    />
-                  </div>
+                  {dataCount > 5 && (
+                    <div className="flex justify-end">
+                      <Pagination
+                        count={Math.ceil(dataCount / PAGE_SIZE)}
+                        page={pageRules}
+                        onChange={handlePaginationRulesChange}
+                      />
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </div>
           </Card>
         </ConditionalQueryRenderer>
-        <OpsRule
-          policy={policy}
-          rule={tempRule}
-          isDelete={isDelete}
-          isEdit={isEdit}
-          isAdd={isAdd}
-          onClose={() => {
-            setTempRule(undefined);
-            setIsDelete(false);
-            setIsEdit(false);
-            setIsAdd(false);
-          }}
-        />
+        <OpsRule policy={policy} rule={tempRule} isDelete={isDelete} isEdit={isEdit} isAdd={isAdd} onClose={handleOnClose} />
       </div>
     </>
   );

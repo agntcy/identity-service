@@ -194,6 +194,10 @@ export const PolicyReview = () => {
     setPageRules(value);
   }, []);
 
+  const dataCount = useMemo(() => {
+    return Number(rules?.length) || 0;
+  }, [rules]);
+
   return (
     <>
       <div className="flex gap-4">
@@ -213,7 +217,7 @@ export const PolicyReview = () => {
           <Card className="text-start space-y-4" variant="secondary">
             <div className="flex justify-between items-center">
               <Typography variant="subtitle1" fontWeight={600}>
-                {rules?.length} Policy {rules?.length && rules?.length > 1 ? 'Rules' : 'Rule'}
+                {dataCount} {dataCount && dataCount > 1 ? 'Rules' : 'Rule'}
               </Typography>
             </div>
             <CardContent className="p-0 space-y-4">
@@ -256,14 +260,15 @@ export const PolicyReview = () => {
                     </div>
                   </div>
                 ))}
-                <div className="flex justify-end">
-                  <Pagination
-                    size="small"
-                    count={Math.ceil((rules?.length || 0) / PAGE_SIZE)}
-                    page={pageRules}
-                    onChange={handlePaginationRulesChange}
-                  />
-                </div>
+                {dataCount > 5 && (
+                  <div className="flex justify-end">
+                    <Pagination
+                      count={Math.ceil(dataCount / PAGE_SIZE)}
+                      page={pageRules}
+                      onChange={handlePaginationRulesChange}
+                    />
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
