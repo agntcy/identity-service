@@ -17,7 +17,7 @@ export const EmptyDashboard = () => {
   const {analyticsTrack} = useAnalytics();
   return (
     <ScrollShadowWrapper>
-      <div className="flex flex-col h-full gap-[16px]">
+      <div className="flex flex-col h-full gap-[16px] mb-12">
         <WelcomeName />
         <div className="dashboard-card mx-6 mb-6">
           <div className="dashboard-card-content flex flex-col items-center justify-center h-full pt-4 gap-[12px]">

@@ -68,7 +68,7 @@ export const StatsDashboard = () => {
 
   return (
     <ScrollShadowWrapper>
-      <div className="flex flex-col h-full gap-[16px]">
+      <div className="flex flex-col h-full gap-[16px] mb-12">
         <WelcomeName />
         <div className="px-[24px]">
           <StatsCard

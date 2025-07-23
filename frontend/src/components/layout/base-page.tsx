@@ -137,7 +137,7 @@ export const BasePage = ({
             </Tabs>
           </Box>
         )}
-        <Box width="100%" height="100%" marginTop="8px">
+        <Box width="100%" height="100%" marginTop="8px" marginBottom="16px">
           {children}
         </Box>
       </Box>
