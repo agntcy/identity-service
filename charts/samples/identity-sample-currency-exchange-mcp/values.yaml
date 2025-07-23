@@ -32,7 +32,8 @@ ingress:
 serviceAccount:
   create: true
   name: ""
-
+configmap:
+  IDENTITY_PLATFORM_GRPC_SERVER_URL: ""
 externalSecrets:
   secretStoreName: ""
   secretStoreKind: ClusterSecretStore
