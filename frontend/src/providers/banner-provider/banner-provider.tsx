@@ -6,6 +6,7 @@
 import React, {createContext, useState, useContext, ReactNode, useCallback, useMemo} from 'react';
 import {Banner, BannerProps} from '@outshift/spark-design';
 import {useWindowSize} from '@/hooks';
+import {docs} from '@/utils/docs';
 
 interface BannerType extends BannerProps {
   id: string;
@@ -21,7 +22,23 @@ interface BannerContextProps {
 const BannerContext = createContext<BannerContextProps | undefined>(undefined);
 
 export const BannerProvider: React.FC<{children: ReactNode}> = ({children}) => {
-  const [banners, setBanners] = useState<BannerType[]>([]);
+  const [banners, setBanners] = useState<BannerType[]>([
+    {
+      id: 'docs-banner',
+      text: (
+        <>
+          <span>
+            This is a reference implementation of the AGNTCY Agent Identity intended for testing and demonstration purposes
+            only.
+          </span>{' '}
+          <a className="underline" href={docs()} target="_blank" rel="noopener noreferrer">
+            Learn more
+          </a>
+        </>
+      ),
+      showCloseButton: false
+    }
+  ]);
 
   const {isMobile} = useWindowSize();
 
