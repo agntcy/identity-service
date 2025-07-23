@@ -20,6 +20,7 @@ import {useShallow} from 'zustand/react/shallow';
 import LogoIcon from '@/assets/icon-agntcy.svg?react';
 import {NotificationSettings} from '../shared/notifications/notification-settings';
 import {useGetDevices} from '@/queries';
+import {GlobalSearch} from '../shared/helpers/global-search';
 
 export const Header = () => {
   const {isMobile} = useWindowSize();
@@ -60,6 +61,7 @@ export const Header = () => {
             <LogoIcon className="w-8 h-8 md:hidden" />
           </Link>
         }
+        customSearchNode={!isMobile && <GlobalSearch />}
         position="fixed"
         actions={
           !isMobile

@@ -8,7 +8,10 @@ import {AppType} from '@/types/api/app';
 import {keepPreviousData, useQuery} from '@tanstack/react-query';
 import qs from 'qs';
 
-export const useGetAgenticServices = (query?: {page?: number; size?: number; query?: string; types?: AppType[]}) => {
+export const useGetAgenticServices = (
+  query?: {page?: number; size?: number; query?: string; types?: AppType[]},
+  enabled = true
+) => {
   return useQuery({
     queryKey: [
       'get-agentic-services',
@@ -35,7 +38,8 @@ export const useGetAgenticServices = (query?: {page?: number; size?: number; que
       );
       return data;
     },
-    placeholderData: keepPreviousData
+    placeholderData: keepPreviousData,
+    enabled: enabled
   });
 };
 
