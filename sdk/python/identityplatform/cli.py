@@ -7,9 +7,9 @@ import typer
 from identityplatform.commands import badge
 
 app = typer.Typer()
-app.add_typer(badge.app,
-              name="badge",
-              help="Handle badges for Agentic Services")
+app.add_typer(
+    badge.app, name="badge", help="Handle badges for Agentic Services"
+)
 
 if __name__ == "__main__":
     app()
