@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {useCallback, useState} from 'react';
+import {useCallback, useMemo, useState} from 'react';
 import {ConditionalQueryRenderer} from '../../ui/conditional-query-renderer';
 import {MenuItem, Table, toast} from '@outshift/spark-design';
 import {useGetTenants} from '@/queries';
@@ -21,8 +21,10 @@ import {ConfirmModal} from '@/components/ui/confirm-modal';
 import {useSettingsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
 import {InviteUserModal} from '@/components/shared/organizations/invite-user-modal';
+import {FilterSections} from '@/components/shared/helpers/filters-sections';
 
 export const ListOrganizations = () => {
+  const [query, setQuery] = useState<string | undefined>(undefined);
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: 0,
     pageSize: 10
@@ -32,9 +34,25 @@ export const ListOrganizations = () => {
   const [openActionsModal, setOpenActionsModal] = useState<boolean>(false);
   const [showInviteUserModal, setShowInviteUserModal] = useState<boolean>(false);
 
-  const {data, isLoading, isFetching, refetch, error} = useGetTenants();
+  const {data, isLoading, refetch, error} = useGetTenants();
   const {authInfo, logout} = useAuth();
   const currentTenantId = authInfo?.user?.tenant?.id;
+
+  const dataCount = useMemo(() => {
+    return data?.tenants.length ?? 0;
+  }, [data?.tenants.length]);
+
+  const filterData = useMemo(() => {
+    if (!query) {
+      return data?.tenants || [];
+    }
+    return (
+      data?.tenants.filter(
+        (tenant) =>
+          tenant.name.toLowerCase().includes(query.toLowerCase()) || tenant.id.toLowerCase().includes(query.toLowerCase())
+      ) || []
+    );
+  }, [data?.tenants, query]);
 
   const {isAdmin} = useSettingsStore(
     useShallow((state) => ({
@@ -78,13 +96,20 @@ export const ListOrganizations = () => {
     setOpenActionsModal(false);
   }, [analyticsTrack, deleteTenantMutation, tenantId]);
 
+  const handleQueryChange = useCallback(
+    (value: string) => {
+      setQuery(value);
+    },
+    [setQuery]
+  );
+
   return (
     <>
       <ConditionalQueryRenderer
         itemName="Organizations"
         data={data?.tenants}
         error={error}
-        isLoading={isLoading || isFetching}
+        isLoading={isLoading}
         useRelativeLoader
         errorListStateProps={{
           actionCallback: () => {
@@ -92,11 +117,22 @@ export const ListOrganizations = () => {
           }
         }}
       >
-        <Card className={cn(!(isFetching || isLoading) && 'p-0')} variant="secondary">
+        <Card className={cn(!isLoading && 'p-0')} variant="secondary">
           <Table
             columns={OrganizationsColumns()}
-            data={data?.tenants || []}
-            isLoading={isLoading || isFetching}
+            data={filterData}
+            isLoading={isLoading}
+            renderTopToolbar={() => (
+              <FilterSections
+                title={`${dataCount} ${dataCount > 1 ? 'Organizations' : 'Organization'}`}
+                searchFieldProps={{
+                  placeholder: 'Search...',
+                  value: query,
+                  onChangeCallback: handleQueryChange
+                }}
+                isLoading={isLoading}
+              />
+            )}
             muiTableBodyRowProps={({row}) => ({
               sx: {
                 cursor: 'pointer',
@@ -130,12 +166,8 @@ export const ListOrganizations = () => {
               }
             }}
             onPaginationChange={setPagination}
-            rowCount={data?.tenants.length ?? 0}
+            rowCount={dataCount}
             rowsPerPageOptions={[1, 10, 25, 50, 100]}
-            title={{
-              label: (data?.tenants?.length ?? 0) > 1 ? 'Organizations' : 'Organization',
-              count: data?.tenants?.length ?? 0
-            }}
             state={{pagination, sorting}}
             onSortingChange={setSorting}
             renderRowActionMenuItems={({row}) => {

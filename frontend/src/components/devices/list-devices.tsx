@@ -167,7 +167,7 @@ export const ListDevices: React.FC = () => {
           }
         }}
       >
-        <Card className="text-start space-y-6" variant="secondary">
+        {/* <Card className="text-start space-y-6" variant="secondary">
           <div className="flex justify-between items-start">
             <Typography variant="subtitle1" fontWeight={600}>
               About
@@ -212,7 +212,7 @@ export const ListDevices: React.FC = () => {
           <CardContent className="p-0 space-y-4">
             <KeyValue pairs={keyValuePairs} useCard={false} />
           </CardContent>
-        </Card>
+        </Card> */}
         <ConfirmModal
           open={openActionsModal}
           title="Confirm Action"

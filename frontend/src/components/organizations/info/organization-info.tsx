@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {useCallback, useState} from 'react';
+import {useCallback, useMemo, useState} from 'react';
 import {ConditionalQueryRenderer} from '../../ui/conditional-query-renderer';
 import {MenuItem, Table, toast, Typography} from '@outshift/spark-design';
 import {useGetUsersGroup} from '@/queries';
@@ -19,6 +19,7 @@ import {useShallow} from 'zustand/react/shallow';
 import {ConfirmModal} from '@/components/ui/confirm-modal';
 import {useDeleteUser} from '@/mutations';
 import {InviteUserModal} from '@/components/shared/organizations/invite-user-modal';
+import {FilterSections} from '@/components/shared/helpers/filters-sections';
 
 export const OrganizationInfo = ({
   tenant,
@@ -29,6 +30,7 @@ export const OrganizationInfo = ({
   showInviteUserModal: boolean;
   onChangeInviteUser: (value: boolean) => void;
 }) => {
+  const [query, setQuery] = useState<string | undefined>(undefined);
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: 0,
     pageSize: 10
@@ -52,6 +54,22 @@ export const OrganizationInfo = ({
       isAdmin: state.isAdmin
     }))
   );
+
+  const dataCount = useMemo(() => {
+    return dataUsers?.users.length ?? 0;
+  }, [dataUsers?.users.length]);
+
+  const filterData = useMemo(() => {
+    if (!query) {
+      return dataUsers?.users || [];
+    }
+    return (
+      dataUsers?.users.filter(
+        (user) =>
+          user.name.toLowerCase().includes(query.toLowerCase()) || user.role.toLowerCase().includes(query.toLowerCase())
+      ) || []
+    );
+  }, [dataUsers?.users, query]);
 
   const deleteUserMutation = useDeleteUser({
     callbacks: {
@@ -82,6 +100,13 @@ export const OrganizationInfo = ({
     setOpenActionsModal(false);
   }, [analyticsTrack, deleteUserMutation, tenant?.id, userId]);
 
+  const handleQueryChange = useCallback(
+    (value: string) => {
+      setQuery(value);
+    },
+    [setQuery]
+  );
+
   return (
     <>
       <ConditionalQueryRenderer
@@ -99,8 +124,19 @@ export const OrganizationInfo = ({
         <Card className={cn(!(isLoadingGroups || isLoadingUsers) && 'p-0')} variant="secondary">
           <Table
             columns={UsersColumns()}
-            data={dataUsers?.users || []}
+            data={filterData}
             isLoading={isLoadingGroups || isLoadingUsers || deleteUserMutation.isPending}
+            renderTopToolbar={() => (
+              <FilterSections
+                title={`${dataCount} ${dataCount > 1 ? 'Users' : 'User'}`}
+                searchFieldProps={{
+                  placeholder: 'Search...',
+                  value: query,
+                  onChangeCallback: handleQueryChange
+                }}
+                isLoading={isLoadingUsers || isLoadingGroups}
+              />
+            )}
             enableRowActions
             topToolbarProps={{
               enableActions: false
@@ -111,12 +147,8 @@ export const OrganizationInfo = ({
               }
             }}
             onPaginationChange={setPagination}
-            rowCount={dataUsers?.users.length ?? 0}
+            rowCount={dataCount}
             rowsPerPageOptions={[1, 10, 25, 50, 100]}
-            title={{
-              label: (dataUsers?.users?.length ?? 0) > 1 ? 'Users' : 'User',
-              count: dataUsers?.users?.length ?? 0
-            }}
             state={{pagination, sorting}}
             onSortingChange={setSorting}
             muiBottomToolbarProps={{
