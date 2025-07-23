@@ -13,6 +13,7 @@ import {useAnalytics, useAuth} from '@/hooks';
 import {ConfirmModal} from '../ui/confirm-modal';
 import {PlusIcon} from 'lucide-react';
 import {useCreateTenant} from '@/mutations';
+import {useBanner} from '@/providers/banner-provider/banner-provider';
 
 export const OrganizationsDrawer: React.FC<{
   isOpen: boolean;
@@ -28,6 +29,8 @@ export const OrganizationsDrawer: React.FC<{
   const {authInfo, switchTenant} = useAuth();
 
   const {data, isLoading, isError} = useGetTenants();
+
+  const {hasBanners} = useBanner();
 
   const createOrganizationMutation = useCreateTenant({
     callbacks: {
@@ -101,7 +104,8 @@ export const OrganizationsDrawer: React.FC<{
           side="left"
           className={cn(
             'left-[264px] top-[56px] bg-[#E8F1FF] w-[224px] organization-drawer data-[state=closed]:slide-out-to-left-custom data-[state=open]:slide-in-from-left-custom',
-            isCollapsed && 'left-[88px]'
+            isCollapsed && 'left-[88px]',
+            hasBanners && 'top-[96px]'
           )}
           useOverlay={false}
         >

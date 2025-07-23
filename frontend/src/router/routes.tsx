@@ -13,7 +13,6 @@ import {Navigate} from 'react-router-dom';
 import React from 'react';
 import {SecureRoute} from '@/components/router/secure-route';
 import {Loading} from '@/components/ui/loading';
-import {BannerProvider} from '@/providers/banner-provider/banner-provider';
 import {SettingsProvider} from '@/providers/settings-provider/settings-provider';
 import {useFeatureFlagsStore, useSettingsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
@@ -98,9 +97,7 @@ export const generateRoutes = (routes: Route[]): Route[] => {
       element: (
         <SecureRoute redirectPath={PATHS.welcome}>
           <SettingsProvider>
-            <BannerProvider>
-              <Layout />
-            </BannerProvider>
+            <Layout />
           </SettingsProvider>
         </SecureRoute>
       ),

@@ -3,16 +3,17 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, {createContext, useState, useContext, ReactNode, useCallback} from 'react';
-import {Banner} from '@outshift/spark-design';
+import React, {createContext, useState, useContext, ReactNode, useCallback, useMemo} from 'react';
+import {Banner, BannerProps} from '@outshift/spark-design';
+import {useWindowSize} from '@/hooks';
 
-interface Banner {
+interface BannerType extends BannerProps {
   id: string;
-  text: string;
 }
 
 interface BannerContextProps {
-  banners: Banner[];
+  banners: BannerType[];
+  hasBanners: boolean;
   addBanner: (text: string) => void;
   removeBanner: (id: string) => void;
 }
@@ -20,7 +21,11 @@ interface BannerContextProps {
 const BannerContext = createContext<BannerContextProps | undefined>(undefined);
 
 export const BannerProvider: React.FC<{children: ReactNode}> = ({children}) => {
-  const [banners, setBanners] = useState<Banner[]>([]);
+  const [banners, setBanners] = useState<BannerType[]>([]);
+
+  const {isMobile} = useWindowSize();
+
+  const hasBanners = useMemo(() => banners.length > 0 && !isMobile, [banners.length, isMobile]);
 
   const addBanner = useCallback((text: string, id?: string) => {
     const customId = id || `banner-${Date.now()}`;
@@ -31,17 +36,33 @@ export const BannerProvider: React.FC<{children: ReactNode}> = ({children}) => {
     setBanners((prev) => prev.filter((banner) => banner.id !== id));
   }, []);
 
+  const values = {
+    banners,
+    hasBanners,
+    addBanner,
+    removeBanner
+  };
+
   return (
-    <BannerContext.Provider value={{banners, addBanner, removeBanner}}>
-      {/* Ensure the banners are displayed at the top of the page */}
-      <div className="fixed top-0 left-0 w-full z-50">
-        {banners.map((banner) => (
-          <div key={banner.id} className="mt-[56px]">
-            <Banner text={banner.text} onClose={() => removeBanner(banner.id)} />
+    <BannerContext.Provider value={values}>
+      <div className="pt-[56px]">
+        {hasBanners && (
+          <div className="grid grid-cols-1">
+            {banners.map((banner, index) => (
+              <div
+                key={banner.id}
+                className="col-start-1 row-start-1"
+                style={{
+                  zIndex: index + 1
+                }}
+              >
+                <Banner {...banner} onClose={() => removeBanner(banner.id)} />
+              </div>
+            ))}
           </div>
-        ))}
+        )}
+        {children}
       </div>
-      {children}
     </BannerContext.Provider>
   );
 };
