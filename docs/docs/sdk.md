@@ -29,6 +29,8 @@ pip install git+https://github.com/cisco-eti/identity-platform@main#subdirectory
 
 ### Example Usage
 
+#### Verifying a Badge
+
 Here is a basic example of how to use the Python SDK to verify a badge for an Agentic Service:
 
 ```python
@@ -51,4 +53,29 @@ try:
 except Exception as e:
     print("Error verifying badge: ", e)
 
+```
+
+#### Issuing a Badge
+
+Here is a basic example of how to use the Python SDK to issue a badge for an Agentic Service:
+
+```python
+# Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
+from dotenv import load_dotenv
+from identityplatform.sdk import IdentityPlatformSdk as Sdk
+
+load_dotenv()
+
+identity_sdk = Sdk(
+    api_key="{YOUR_AGENTIC_SERVICE_API_KEY}",
+)
+
+try:
+    identity_sdk.issue_badge("{AGENTIC_SERVICE_URL}")
+
+    print("Badge issued successfully!")
+except Exception as e:
+    print("Error issuing badge: ", e)
 ```
