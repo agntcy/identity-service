@@ -34,9 +34,9 @@ serviceAccount:
   name: ""
 
 configmap:
-  OLLAMA_HOST: "http://ollama.example.com"
-  OLLAMA_MODEL: "llama3.2"
-  MCP_SERVER_URL: "https://mcp-server.example.com/mcp/"
+  MCP_SERVER_URL: ""
+  AZURE_OPENAI_ENDPOINT: ""
+  IDENTITY_PLATFORM_GRPC_SERVER_URL: ""
 
 externalSecrets:
   secretStoreName: ""
@@ -46,3 +46,7 @@ externalSecrets:
       remoteRef:
         key: ""
         property: IDENTITY_PLATFORM_API_KEY
+    - secretKey: AZURE_OPENAI_API_KEY
+      remoteRef:
+        key: ""
+        property: AZURE_OPENAI_API_KEY
