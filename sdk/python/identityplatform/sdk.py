@@ -2,6 +2,8 @@
 # SPDX-License-Identifier: Apache-2.0
 """Identity Service SDK for Python."""
 
+import asyncio
+import base64
 import inspect
 import logging
 import os
@@ -9,10 +11,13 @@ from importlib import import_module
 from pkgutil import iter_modules
 
 import agntcy.identity.platform.v1alpha1
+from agntcy.identity.platform.v1alpha1.app_pb2 import AppType
 from dotenv import load_dotenv
 from google.protobuf import empty_pb2
 
 from identityplatform import client
+from identityplatform.badge.a2a import discover as discover_a2a
+from identityplatform.badge.mcp import discover as discover_mcp
 
 logging.getLogger("identityplatform").addHandler(logging.NullHandler())
 logger = logging.getLogger("identityplatform.sdk")
@@ -72,17 +77,20 @@ class IdentityPlatformSdk:
         return empty_pb2.Empty()
 
     def _get_app_service(
-        self, ) -> "agntcy.identity.platform.v1alpha1.AppsService":
+        self,
+    ) -> "agntcy.identity.platform.v1alpha1.AppsService":
         """Return the AppService stub."""
         return IdentityPlatformSdk.AppServiceStub(self.client.channel)
 
     def _get_badge_service(
-        self, ) -> "agntcy.identity.platform.v1alpha1.BadgeService":
+        self,
+    ) -> "agntcy.identity.platform.v1alpha1.BadgeService":
         """Return the BadgeService stub."""
         return IdentityPlatformSdk.BadgeServiceStub(self.client.channel)
 
     def _get_auth_service(
-        self, ) -> "agntcy.identity.platform.v1alpha1.AuthService":
+        self,
+    ) -> "agntcy.identity.platform.v1alpha1.AuthService":
         """Return the AuthService stub."""
         return IdentityPlatformSdk.AuthServiceStub(self.client.channel)
 
@@ -108,11 +116,14 @@ class IdentityPlatformSdk:
                     app_id=agentic_service_id,
                     tool_name=tool_name,
                     user_token=user_token,
-                ))
+                )
+            )
 
             token_response = self._get_auth_service().Token(
                 IdentityPlatformSdk.TokenRequest(
-                    authorization_code=auth_response.authorization_code, ))
+                    authorization_code=auth_response.authorization_code,
+                )
+            )
 
             return token_response.access_token
         except Exception as e:
@@ -131,10 +142,11 @@ class IdentityPlatformSdk:
             IdentityPlatformSdk.ExtAuthzRequest(
                 access_token=access_token,
                 tool_name=tool_name,
-            ))
+            )
+        )
 
     def verify_badge(
-            self, badge: str
+        self, badge: str
     ) -> "agntcy.identity.platform.v1alpha1.VerificationResult":
         """Verify a badge.
 
@@ -145,10 +157,11 @@ class IdentityPlatformSdk:
             VerificationResult: The result of the verification.
         """
         return self._get_badge_service().VerifyBadge(
-            request=IdentityPlatformSdk.VerifyBadgeRequest(badge=badge))
+            request=IdentityPlatformSdk.VerifyBadgeRequest(badge=badge)
+        )
 
     async def averify_badge(
-            self, badge: str
+        self, badge: str
     ) -> "agntcy.identity.platform.v1alpha1.VerificationResult":
         """Verify a badge using async method.
 
@@ -159,4 +172,67 @@ class IdentityPlatformSdk:
             VerificationResult: The result of the verification.
         """
         return await self._get_badge_service().VerifyBadge(
-            IdentityPlatformSdk.VerifyBadgeRequest(badge=badge))
+            IdentityPlatformSdk.VerifyBadgeRequest(badge=badge)
+        )
+
+    def issue_badge(
+        self,
+        url: str,
+    ):
+        """Issue a badge for an agentic service.
+
+        Parameters:
+            url (str): The URL of the agentic service to issue a badge for.
+        """
+        # Fetch the agentic service
+        app_info = self._get_auth_service().AppInfo(self.empty_request())
+
+        # Get name and type
+        service_name = app_info.app.name
+        service_type = app_info.app.type
+        service_id = app_info.app.id
+
+        logger.debug(f"Service Name: [bold blue]{service_name}[/bold blue]")
+        logger.debug(f"Service Type: [bold blue]{service_type}[/bold blue]")
+
+        # Get claims
+        claims = {}
+
+        if service_type == AppType.Value(
+            "APP_TYPE_MCP_SERVER"
+        ):  # APP_TYPE_MCP_SERVER
+            logger.debug(
+                f"[bold green]Discovering MCP server for {service_name} at {url}[/bold green]"
+            )
+
+            # Discover the MCP server
+            schema = asyncio.run(discover_mcp(service_name, url))
+
+            claims["mcp"] = {
+                "schema_base64": base64.b64encode(schema.encode("utf-8")),
+            }
+        elif service_type == AppType.Value(
+            "APP_TYPE_AGENT_A2A"
+        ):  # APP_TYPE_AGENT_A2A
+            logger.debug(
+                f"[bold green]Discovering A2A agent for {service_name} at [bold blue]{url}[/bold blue][/bold green]"
+            )
+
+            # Discover the A2A agent
+            schema = discover_a2a(url)
+
+            claims["a2a"] = {
+                "schema_base64": base64.b64encode(schema.encode("utf-8")),
+            }
+
+        if not claims:
+            raise ValueError(
+                f"Unsupported service type: {service_type} for service {service_name}"
+            )
+
+        # Issue the badge
+        self._get_badge_service().IssueBadge(
+            request=IdentityPlatformSdk.IssueBadgeRequest(
+                app_id=service_id, **claims
+            )
+        )
