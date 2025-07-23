@@ -49,6 +49,10 @@ func (s *Session) Expire() {
 	s.ExpiresAt = ptrutil.Ptr(time.Now().Add(-time.Second).Unix())
 }
 
+func (s *Session) ExpireAfter(duration time.Duration) {
+	s.ExpiresAt = ptrutil.Ptr(time.Now().Add(duration).Unix())
+}
+
 type SessionDeviceOTP struct {
 	// A unique identifier for the OTP.
 	ID string `json:"id,omitempty" protobuf:"bytes,1,opt,name=id"`
