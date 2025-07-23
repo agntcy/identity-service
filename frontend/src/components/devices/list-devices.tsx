@@ -6,34 +6,55 @@
 import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-renderer';
 import {useAddDevice, useDeleteDevice} from '@/mutations';
 import {useGetDevices} from '@/queries';
-import {CardContent, toast, Typography} from '@outshift/spark-design';
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import {EmptyState, Table, toast, Typography} from '@outshift/spark-design';
+import React, {useCallback, useMemo, useState} from 'react';
 import {ConfirmModal} from '../ui/confirm-modal';
-import {useAnalytics} from '@/hooks';
+import {useAnalytics, useAuth} from '@/hooks';
 import {Device} from '@/types/api/device';
 import {PATHS} from '@/router/paths';
 import {QRCodeModal} from '../shared/helpers/qr-code-modal';
 import {Card} from '../ui/card';
-import KeyValue from '../ui/key-value';
-import DateHover from '../ui/date-hover';
-import {IconButton, Menu, MenuItem, Tooltip} from '@mui/material';
-import {EllipsisVerticalIcon, Trash2Icon} from 'lucide-react';
+import {Box, MenuItem} from '@mui/material';
+import {BellIcon, PlusIcon, Trash2Icon} from 'lucide-react';
+import {cn} from '@/lib/utils';
+import {DevicesColumns} from './devices-columns';
+import {FilterSections} from '../shared/helpers/filters-sections';
+import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
 
 export const ListDevices: React.FC = () => {
+  const [pagination, setPagination] = useState<MRT_PaginationState>({
+    pageIndex: 0,
+    pageSize: 15
+  });
+  const [sorting, setSorting] = useState<MRT_SortingState>([
+    {
+      id: 'createdAt',
+      desc: true
+    }
+  ]);
+  const [query, setQuery] = useState<string | undefined>(undefined);
   const [openQrCodeModal, setQrCodeModal] = useState(false);
-  const [device, setDevice] = useState<Device | undefined>();
-  const [openActionsModal, setOpenActionsModal] = useState(false);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
+  const [tempDevice, setTempDevice] = useState<Device | undefined>();
+  const [showActionsModal, setShowActionsModal] = useState<boolean>(false);
 
-  const {data, error, isLoading, refetch} = useGetDevices();
+  const {data, error, isLoading, refetch} = useGetDevices({
+    page: pagination.pageIndex + 1,
+    size: pagination.pageSize,
+    query: query
+  });
+
+  const dataCount = useMemo(() => {
+    return Number(data?.pagination?.total);
+  }, [data?.pagination?.total]);
+
+  const {authInfo} = useAuth();
 
   const {analyticsTrack} = useAnalytics();
 
   const deleteMutation = useDeleteDevice({
     callbacks: {
       onSuccess: () => {
-        setDevice(undefined);
+        setTempDevice(undefined);
         toast({
           title: 'Success',
           description: 'Device deleted successfully.',
@@ -53,7 +74,7 @@ export const ListDevices: React.FC = () => {
   const addDeviceMutation = useAddDevice({
     callbacks: {
       onSuccess: (resp) => {
-        setDevice(resp.data);
+        setTempDevice(resp.data);
         toast({
           title: 'Onboarding Device',
           description: "Don't forget to scan the QR code with your device.",
@@ -62,7 +83,7 @@ export const ListDevices: React.FC = () => {
         handleChangeQrCodeModal(true);
       },
       onError: () => {
-        setDevice(undefined);
+        setTempDevice(undefined);
         toast({
           title: 'Error adding device',
           description: 'An error occurred while adding the device. Please try again.',
@@ -72,132 +93,113 @@ export const ListDevices: React.FC = () => {
     }
   });
 
-  const handleChangeActionsModal = useCallback((value: boolean) => {
-    setOpenActionsModal(value);
-  }, []);
+  const link = useMemo(() => {
+    if (tempDevice) {
+      const path = `${PATHS.onboardDevice.base}?id=${tempDevice.id}`;
+      return `${window.location.origin}${path}`;
+    }
+    return undefined;
+  }, [tempDevice]);
 
   const handleConfirmAction = useCallback(() => {
-    if (device?.id) {
+    if (tempDevice?.id) {
       analyticsTrack('CLICK_DELETE_DEVICE');
-      deleteMutation.mutate(device.id);
+      deleteMutation.mutate(tempDevice.id);
     }
-    setOpenActionsModal(false);
-  }, [analyticsTrack, deleteMutation, device]);
-
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+    setShowActionsModal(false);
+  }, [analyticsTrack, deleteMutation, tempDevice]);
 
   const handleChangeQrCodeModal = useCallback((value: boolean) => {
     setQrCodeModal(value);
   }, []);
 
   const handleClickDone = useCallback(() => {
+    setTempDevice(undefined);
     handleChangeQrCodeModal(false);
     void refetch();
   }, [handleChangeQrCodeModal, refetch]);
 
-  const link = useMemo(() => {
-    if (device) {
-      const path = `${PATHS.onboardDevice.base}?id=${device.id}`;
-      return `${window.location.origin}${path}`;
-    }
-    return undefined;
-  }, [device]);
-
-  const keyValuePairs = useMemo(() => {
-    const temp = [
-      {
-        keyProp: 'Name',
-        value: device?.name || 'Not provided'
-      },
-      {
-        keyProp: 'Created At',
-        value: <DateHover date={device?.createdAt} />
-      }
-    ];
-    return temp;
-  }, [device]);
+  const handleQueryChange = useCallback(
+    (value: string) => {
+      setQuery(value);
+    },
+    [setQuery]
+  );
 
   const handleOnAddDevice = useCallback(() => {
-    if ((data?.devices?.length ?? 0) < 1) {
-      analyticsTrack('CLICK_ADD_DEVICE');
-      addDeviceMutation.mutate({});
-    } else {
-      toast({
-        title: 'Device Limit Reached',
-        description:
-          'You can only have one device registered at a time. Please remove the existing device before adding a new one.',
-        type: 'error'
-      });
-      return;
-    }
-  }, [addDeviceMutation, analyticsTrack, data?.devices?.length]);
-
-  useEffect(() => {
-    if (data && data.devices && data.devices.length > 0) {
-      setDevice(data.devices[0]);
-    }
-  }, [data, data?.devices]);
+    analyticsTrack('CLICK_ADD_DEVICE');
+    addDeviceMutation.mutate({});
+  }, [addDeviceMutation, analyticsTrack]);
 
   return (
     <>
       <ConditionalQueryRenderer
         itemName="Devices"
-        data={data?.devices || device}
+        data={true}
         error={error}
-        isLoading={isLoading}
+        isLoading={false}
         useRelativeLoader
-        emptyListStateProps={{
-          title: 'Add Device',
-          description:
-            'Register a new device to your account. This will allow you to manage and authenticate your devices securely.',
-          actionTitle: 'Add Device',
-          actionCallback: () => {
-            handleOnAddDevice();
-          }
-        }}
         errorListStateProps={{
           actionCallback: () => {
             void refetch();
           }
         }}
+        useLoading={false}
       >
-        {/* <Card className="text-start space-y-6" variant="secondary">
-          <div className="flex justify-between items-start">
-            <Typography variant="subtitle1" fontWeight={600}>
-              About
-            </Typography>
-            <div>
-              <Tooltip title="Actions" arrow>
-                <IconButton
-                  sx={(theme) => ({
-                    color: theme.palette.vars.baseTextDefault,
-                    width: '24px',
-                    height: '24px'
-                  })}
-                  onClick={handleClick}
+        <Card className={cn(!isLoading && 'p-0')} variant="secondary">
+          <Table
+            columns={DevicesColumns()}
+            data={data?.devices || []}
+            isLoading={isLoading || deleteMutation.isPending}
+            renderTopToolbar={() => (
+              <FilterSections
+                title={`${dataCount ?? 0} ${dataCount > 1 ? 'Devices' : 'Device'}`}
+                searchFieldProps={{
+                  placeholder: 'Search...',
+                  value: query,
+                  onChangeCallback: handleQueryChange
+                }}
+                isLoading={isLoading}
+              />
+            )}
+            enableColumnResizing
+            enableRowActions
+            topToolbarProps={{
+              enableActions: false
+            }}
+            muiTableContainerProps={{
+              style: {
+                border: '1px solid #D5DFF7'
+              }
+            }}
+            manualPagination={true}
+            manualFiltering={true}
+            onPaginationChange={setPagination}
+            rowCount={Number(data?.pagination?.total) || 0}
+            rowsPerPageOptions={[1, 15, 25, 50, 100]}
+            state={{pagination, sorting}}
+            onSortingChange={setSorting}
+            renderRowActionMenuItems={({row}) => {
+              return [
+                <MenuItem
+                  disabled
+                  key="test-device"
+                  onClick={() => {
+                    analyticsTrack('CLICK_TEST_DEVICE');
+                  }}
+                  sx={{display: 'flex', alignItems: 'center', gap: '8px'}}
                 >
-                  <EllipsisVerticalIcon className="h-4 w-4" />
-                </IconButton>
-              </Tooltip>
-              <Menu
-                transformOrigin={{horizontal: 'right', vertical: 'top'}}
-                anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                onClick={handleClose}
-              >
+                  <BellIcon className="w-4 h-4" color="#062242" />
+                  <Typography variant="body2" color="#1A1F27">
+                    Test
+                  </Typography>
+                </MenuItem>,
                 <MenuItem
                   key="delete-device"
                   onClick={() => {
                     analyticsTrack('CLICK_DELETE_DEVICE');
-                    handleChangeActionsModal(true);
+                    setTempDevice(row.original);
+                    setShowActionsModal(true);
                   }}
                   sx={{display: 'flex', alignItems: 'center', gap: '8px'}}
                 >
@@ -206,25 +208,52 @@ export const ListDevices: React.FC = () => {
                     Delete
                   </Typography>
                 </MenuItem>
-              </Menu>
-            </div>
-          </div>
-          <CardContent className="p-0 space-y-4">
-            <KeyValue pairs={keyValuePairs} useCard={false} />
-          </CardContent>
-        </Card> */}
+              ];
+            }}
+            muiBottomToolbarProps={{
+              style: {
+                boxShadow: 'none'
+              }
+            }}
+            renderEmptyRowsFallback={() => (
+              <Box
+                sx={(theme) => ({
+                  backgroundColor: theme.palette.vars.controlBackgroundDefault
+                })}
+              >
+                <EmptyState
+                  title="Add Device"
+                  description="Register a new device to your account. This will allow you to manage and authenticate your devices securely."
+                  containerProps={{paddingBottom: '40px'}}
+                  actionTitle="Add Device"
+                  actionCallback={() => {
+                    handleOnAddDevice();
+                  }}
+                  actionButtonProps={{
+                    sx: {fontWeight: '600 !important'},
+                    startIcon: <PlusIcon className="w-4 h-4" />,
+                    variant: 'outlined'
+                  }}
+                />
+              </Box>
+            )}
+          />
+        </Card>
         <ConfirmModal
-          open={openActionsModal}
+          open={showActionsModal}
           title="Confirm Action"
           description="Are you sure you want to delete this device? This action cannot be undone."
           confirmButtonText="Delete Device"
-          onCancel={() => handleChangeActionsModal(false)}
+          onCancel={() => {
+            setShowActionsModal(false);
+            setTempDevice(undefined);
+          }}
           onConfirm={handleConfirmAction}
         />
       </ConditionalQueryRenderer>
       <QRCodeModal
         open={openQrCodeModal}
-        title="Add Device"
+        title="Onboard Device"
         subtitle={<>Scan the QR code below with your device to register it to your account.</>}
         link={link}
         onClose={() => {
