@@ -31,7 +31,11 @@ const FlooredCount = ({count, childrenCount}: {count: number; childrenCount: num
     return null;
   }
   const formattedCount = remainingCount < 10 ? remainingCount : `${Math.floor(remainingCount / 10) * 10}+`;
-  return <>{formattedCount} results not shown</>;
+  return (
+    <Typography sx={{float: 'left', margin: '10px'}} variant="body2">
+      {formattedCount} results not shown
+    </Typography>
+  );
 };
 
 export interface SearchFieldWithAutocompleteOption<T> {
@@ -165,12 +169,10 @@ export const SearchFieldWithAutocomplete = forwardRef(function SearchFieldWithAu
           <Typography variant="body2Semibold">{labels[params.group] || params.group}</Typography>
           <List sx={{paddingTop: '4px'}}>{params.children}</List>
           <div className="flex justify-between items-center">
-            <Typography sx={{float: 'left', margin: '10px'}} variant="body2">
-              <FlooredCount
-                count={filteredOptions[params.group].length}
-                childrenCount={React.Children.count(params.children)}
-              />
-            </Typography>
+            <FlooredCount
+              count={filteredOptions[params.group].length}
+              childrenCount={React.Children.count(params.children)}
+            />
             {filteredOptions[params.group].length > INITIAL_COUNT ? (
               filteredOptions[params.group].length - React.Children.count(params.children) > 0 ? (
                 <Button
@@ -188,7 +190,7 @@ export const SearchFieldWithAutocomplete = forwardRef(function SearchFieldWithAu
               )
             ) : null}
           </div>
-          <Divider sx={{marginTop: '42px'}} />
+          <Divider sx={{marginTop: '16px', marginBottom: '22px'}} />
         </Box>
       )}
       renderOption={(props, option) => (

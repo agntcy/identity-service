@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 /**
  * Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
  * SPDX-License-Identifier: Apache-2.0
@@ -12,9 +13,11 @@ import {ListItemIcon, ListItemText, Typography} from '@mui/material';
 import {App} from '@/types/api/app';
 import {Policy} from '@/types/api/policy';
 import {useCallback, useMemo, useState} from 'react';
-import {useGetAgenticServices} from '@/queries';
+import {useGetAgenticServices, useGetPolicies} from '@/queries';
 import {AgenticServiceType} from '../agentic-services/agentic-service-type';
 import {PATHS} from '@/router/paths';
+import {useFeatureFlagsStore} from '@/store';
+import {useShallow} from 'zustand/react/shallow';
 type GlobalSearchOptionType = App | Policy;
 
 const ApplicationListItem = ({app}: {app: App}) => (
@@ -31,6 +34,12 @@ export const GlobalSearch = () => {
 
   const navigate = useNavigate();
 
+  const {isTbacEnable} = useFeatureFlagsStore(
+    useShallow((state) => ({
+      isTbacEnable: state.featureFlags.isTbacEnable
+    }))
+  );
+
   const {data: dataAgenticServices, isLoading: loadingAgenticServices} = useGetAgenticServices(
     {
       query: query
@@ -38,21 +47,40 @@ export const GlobalSearch = () => {
     !!query
   );
 
+  const {data: dataPolicies, isLoading: loadingPolicies} = useGetPolicies({
+    query: {
+      query: query
+    },
+    enable: !!query && isTbacEnable
+  });
+
   const dataSources = useMemo(() => {
     return [
       {
         id: 'agentic-services',
         items: dataAgenticServices?.apps?.sort((a, b) => (a.name ?? '').localeCompare(b.name ?? '')) || [],
         renderer: (item: GlobalSearchOptionType) => <ApplicationListItem app={item} />
-      }
+      },
+      ...(isTbacEnable
+        ? [
+            {
+              id: 'policies',
+              items: dataPolicies?.policies?.sort((a, b) => (a.name ?? '').localeCompare(b.name ?? '')) || [],
+              renderer: (item: GlobalSearchOptionType) => (
+                <ListItemText primary={<Typography variant="body2">{item.name}</Typography>} />
+              )
+            }
+          ]
+        : [])
     ];
-  }, [dataAgenticServices]);
+  }, [dataAgenticServices?.apps, dataPolicies?.policies, isTbacEnable]);
 
   const dataLabels = useMemo(() => {
     return {
-      'agentic-services': 'Agentic Services'
+      'agentic-services': 'Agentic Services',
+      ...(isTbacEnable ? {policies: 'Policies'} : {})
     };
-  }, []);
+  }, [isTbacEnable]);
 
   const options = useMemo(() => {
     return dataSources.reduce((acc, ds) => {
@@ -92,7 +120,7 @@ export const GlobalSearch = () => {
       onChange={handleChange}
       onSearch={handleChangeQuery}
       serverFiltering={true}
-      loading={loadingAgenticServices}
+      loading={loadingAgenticServices || (isTbacEnable && loadingPolicies)}
       options={options as any}
       labels={dataLabels}
     />
