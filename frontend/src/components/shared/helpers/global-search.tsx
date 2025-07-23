@@ -13,21 +13,82 @@ import {ListItemIcon, ListItemText, Typography} from '@mui/material';
 import {App} from '@/types/api/app';
 import {Policy} from '@/types/api/policy';
 import {useCallback, useMemo, useState} from 'react';
-import {useGetAgenticServices, useGetPolicies} from '@/queries';
+import {useGetAgenticService, useGetAgenticServices, useGetPolicies} from '@/queries';
 import {AgenticServiceType} from '../agentic-services/agentic-service-type';
 import {PATHS} from '@/router/paths';
 import {useFeatureFlagsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
+import {GeneralSize, Tag, Tags, TagStatus} from '@outshift/spark-design';
 type GlobalSearchOptionType = App | Policy;
 
 const ApplicationListItem = ({app}: {app: App}) => (
-  <>
+  <div className="flex items-center">
     <ListItemIcon>
       <AgenticServiceType type={app.type} showLabel={false} />
     </ListItemIcon>
-    <ListItemText primary={<Typography variant="body2">{app.name}</Typography>} />
-  </>
+    <ListItemText
+      primary={
+        <Tags
+          size={GeneralSize.Small}
+          items={[
+            {
+              valueFormatter: () => app.name || 'Unknown Application'
+            },
+            ...(app.description
+              ? [
+                  {
+                    valueFormatter: () => app.description || undefined
+                  }
+                ]
+              : [])
+          ]}
+          showOnlyFirst={false}
+          shouldTruncate
+          maxTooltipTags={2}
+        />
+      }
+    />
+  </div>
 );
+
+const PolicyListItem = ({policy}: {policy: Policy}) => {
+  const {data} = useGetAgenticService(policy.assignedTo);
+  return (
+    <div className="flex items-center gap-2">
+      <ListItemText
+        primary={
+          <Tags
+            size={GeneralSize.Small}
+            items={[
+              {
+                valueFormatter: () => policy.name || 'Unknown Policy'
+              },
+              ...(policy.description
+                ? [
+                    {
+                      valueFormatter: () => policy.description || undefined
+                    }
+                  ]
+                : [])
+            ]}
+            showOnlyFirst={false}
+            shouldTruncate
+            maxTooltipTags={2}
+          />
+        }
+      />
+      <Tag status={TagStatus.Info} size={GeneralSize.Small}>
+        {policy.rules?.length ?? 0} Rule{(policy.rules?.length ?? 0) > 1 ? 's' : ''}
+      </Tag>
+      <Tag size={GeneralSize.Small}>
+        <div className="flex items-center gap-2">
+          <AgenticServiceType type={data?.type} showLabel={false} />
+          <Typography variant="body2">{data?.name ?? 'Not provided'}</Typography>
+        </div>
+      </Tag>
+    </div>
+  );
+};
 
 export const GlobalSearch = () => {
   const [query, setQuery] = useState('');
@@ -66,9 +127,7 @@ export const GlobalSearch = () => {
             {
               id: 'policies',
               items: dataPolicies?.policies?.sort((a, b) => (a.name ?? '').localeCompare(b.name ?? '')) || [],
-              renderer: (item: GlobalSearchOptionType) => (
-                <ListItemText primary={<Typography variant="body2">{item.name}</Typography>} />
-              )
+              renderer: (item: GlobalSearchOptionType) => <PolicyListItem policy={item} />
             }
           ]
         : [])

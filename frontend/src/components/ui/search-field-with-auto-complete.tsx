@@ -169,10 +169,12 @@ export const SearchFieldWithAutocomplete = forwardRef(function SearchFieldWithAu
           <Typography variant="body2Semibold">{labels[params.group] || params.group}</Typography>
           <List sx={{paddingTop: '4px'}}>{params.children}</List>
           <div className="flex justify-between items-center">
-            <FlooredCount
-              count={filteredOptions[params.group].length}
-              childrenCount={React.Children.count(params.children)}
-            />
+            <span>
+              <FlooredCount
+                count={filteredOptions[params.group].length}
+                childrenCount={React.Children.count(params.children)}
+              />
+            </span>
             {filteredOptions[params.group].length > INITIAL_COUNT ? (
               filteredOptions[params.group].length - React.Children.count(params.children) > 0 ? (
                 <Button
@@ -184,7 +186,12 @@ export const SearchFieldWithAutocomplete = forwardRef(function SearchFieldWithAu
                   Show more...
                 </Button>
               ) : (
-                <Button variant="tertariary" size="small" onClick={() => handleReset(params.group)} sx={{float: 'right'}}>
+                <Button
+                  variant="tertariary"
+                  size="small"
+                  onClick={() => handleReset(params.group)}
+                  sx={{float: 'right', marginTop: '8px'}}
+                >
                   Reset
                 </Button>
               )
