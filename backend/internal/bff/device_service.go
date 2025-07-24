@@ -9,6 +9,7 @@ import (
 
 	devicecore "github.com/agntcy/identity-platform/internal/core/device"
 	devicetypes "github.com/agntcy/identity-platform/internal/core/device/types"
+	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
 	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 	"github.com/agntcy/identity-platform/internal/pkg/pagination"
 	"github.com/google/uuid"
@@ -51,7 +52,10 @@ func (s *deviceService) AddDevice(
 		)
 	}
 
+	userID, _ := identitycontext.GetUserID(ctx)
+
 	device.ID = uuid.NewString()
+	device.UserID = userID
 	device.CreatedAt = time.Now().UTC()
 
 	// Add the device to the repository.
@@ -88,7 +92,6 @@ func (s *deviceService) RegisterDevice(
 
 	// Update
 	existingDevice.SubscriptionToken = device.SubscriptionToken
-	existingDevice.UserID = device.UserID
 	existingDevice.Name = device.Name
 
 	// Try to send a notification about the device registration.
