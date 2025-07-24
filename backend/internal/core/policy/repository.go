@@ -45,4 +45,5 @@ type Repository interface {
 		paginationFilter pagination.PaginationFilter,
 		query *string,
 	) (*pagination.Pageable[types.Rule], error)
+	CountAllPolicies(ctx context.Context) (int64, error)
 }

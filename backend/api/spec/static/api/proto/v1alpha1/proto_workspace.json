@@ -3424,6 +3424,41 @@
           ]
         },
         {
+          "name": "GetPoliciesCountRequest",
+          "longName": "GetPoliciesCountRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.GetPoliciesCountRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": false,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": []
+        },
+        {
+          "name": "GetPoliciesCountResponse",
+          "longName": "GetPoliciesCountResponse",
+          "fullName": "agntcy.identity.platform.v1alpha1.GetPoliciesCountResponse",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "total",
+              "description": "The total count",
+              "label": "",
+              "type": "int64",
+              "longType": "int64",
+              "fullType": "int64",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
           "name": "GetPolicyRequest",
           "longName": "GetPolicyRequest",
           "fullName": "agntcy.identity.platform.v1alpha1.GetPolicyRequest",
@@ -3868,6 +3903,28 @@
                     {
                       "method": "GET",
                       "pattern": "/v1alpha1/policies"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "GetPoliciesCount",
+              "description": "Get policies total count.",
+              "requestType": "GetPoliciesCountRequest",
+              "requestLongType": "GetPoliciesCountRequest",
+              "requestFullType": "agntcy.identity.platform.v1alpha1.GetPoliciesCountRequest",
+              "requestStreaming": false,
+              "responseType": "GetPoliciesCountResponse",
+              "responseLongType": "GetPoliciesCountResponse",
+              "responseFullType": "agntcy.identity.platform.v1alpha1.GetPoliciesCountResponse",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "GET",
+                      "pattern": "/v1alpha1/policies/all/count"
                     }
                   ]
                 }

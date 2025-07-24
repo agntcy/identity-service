@@ -600,3 +600,19 @@ func (r *repository) GetAllRules(
 		Size:  int32(len(rules)),
 	}, nil
 }
+
+func (r *repository) CountAllPolicies(ctx context.Context) (int64, error) {
+	tenantID, ok := identitycontext.GetTenantID(ctx)
+	if !ok {
+		return 0, identitycontext.ErrTenantNotFound
+	}
+
+	var totalPolicies int64
+
+	err := r.dbContext.Client().Model(&Policy{}).Where("tenant_id = ?", tenantID).Count(&totalPolicies).Error
+	if err != nil {
+		return 0, errutil.Err(err, "there was an error counting the policies")
+	}
+
+	return totalPolicies, nil
+}
