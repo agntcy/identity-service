@@ -1,0 +1,28 @@
+# Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
+name: sonarqube test
+on:
+  # We want pull requests so we can build (test) but not push to image registry
+  push:
+    branches:
+      - 'PYRA-361-add-sonarqube-scan'
+# Grant read access for GITHUB_TOKEN on all jobs
+permissions:
+  id-token: write # This is required for requesting the JWT
+  contents: read  # This is required for actions/checkout
+  packages: write # Needed to push docker image to GAR or ECR
+jobs:
+  ################################## SonarQube  Scan ##############################
+  #################################################################################
+  call-sonar-scan:
+    name: Call SonarQube scan
+    if: startsWith(github.ref, 'refs/tags/')
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/sonar-scan.yaml@production
+    with:
+      sonar-properties-file: "./.github/linters/sonar-project.properties"
+    secrets:
+      vault-approle-role-id: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
+      vault-approle-secret-id: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
+      ghcr-username: ${{ secrets.GHCR_USERNAME }}
+      ghcr-token: ${{ secrets.GHCR_TOKEN }}
