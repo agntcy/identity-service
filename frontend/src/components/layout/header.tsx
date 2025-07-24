@@ -8,7 +8,6 @@ import {useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
 import {BellIcon, ChevronDownIcon, ChevronUpIcon, LogOutIcon} from 'lucide-react';
 import {Avatar, Button, Divider, Header as SparkHeader, Menu, MenuItem, Typography} from '@outshift/spark-design';
-import Logo from '@/assets/logo-app-bar.svg?react';
 import BookLogo from '@/assets/union.svg?react';
 import GitLogo from '@/assets/git.svg?react';
 import UserIcon from '@/assets/user.svg?react';
@@ -17,10 +16,11 @@ import {useAnalytics, useAuth, useWindowSize} from '@/hooks';
 import {docs} from '@/utils/docs';
 import {useFeatureFlagsStore, useSettingsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
-import LogoIcon from '@/assets/icon-agntcy.svg?react';
 import {NotificationSettings} from '../shared/notifications/notification-settings';
 import {useGetDevices} from '@/queries';
 import {GlobalSearch} from '../shared/helpers/global-search';
+import OutshiftLogo from '@/assets/outshift-color.svg?react';
+import OutshiftIcon from '@/assets/outshift.svg?react';
 
 export const Header = () => {
   const {isMobile} = useWindowSize();
@@ -43,25 +43,31 @@ export const Header = () => {
     <>
       <SparkHeader
         title={
-          <Link to={PATHS.dashboard} className="flex items-center gap-2">
+          <Link to={PATHS.dashboard} className="mt-1 lg:ml-1">
             <Typography
               variant="h1"
               fontWeight={700}
               fontSize={isMobile ? '16px' : '18px'}
               lineHeight="18px"
-              sx={(theme) => ({color: theme.palette.vars.brandTextSecondary})}
+              sx={() => ({color: 'black'})}
             >
-              Agent Identity
+              Agent Identity Service
             </Typography>
           </Link>
         }
         logo={
           <Link to={PATHS.dashboard}>
-            <Logo className="hidden md:block" />
-            <LogoIcon className="w-8 h-8 md:hidden" />
+            <OutshiftLogo className="h-[44px] hidden lg:block" />
+            <OutshiftIcon className="h-[44px] w-[44px] lg:hidden" />
           </Link>
         }
-        customSearchNode={!isMobile && <GlobalSearch />}
+        customSearchNode={
+          !isMobile && (
+            <div className="hidden lg:block">
+              <GlobalSearch />
+            </div>
+          )
+        }
         position="fixed"
         actions={
           !isMobile

@@ -19,7 +19,7 @@ export const WelcomeName = () => {
               textAlign="center"
               sx={(theme) => ({color: theme.palette.vars.brandIconTertiaryDefault})}
             >
-              Welcome to Agent Identity, <span className="capitalize">{authInfo?.user?.name || 'User'}!</span>
+              Welcome to Agent Identity Service, <span className="capitalize">{authInfo?.user?.name || 'User'}!</span>
             </Typography>
             <Typography
               variant={isMobile ? 'body2' : 'body1'}
@@ -30,7 +30,6 @@ export const WelcomeName = () => {
             </Typography>
           </div>
         </div>
-        <div className="striped-bar" />
       </div>
     </div>
   );

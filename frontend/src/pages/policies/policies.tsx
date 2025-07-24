@@ -51,7 +51,7 @@ const Policies: React.FC = () => {
         isLoading={false}
         useRelativeLoader
         emptyListStateProps={{
-          title: 'Get started with Agent Identity',
+          title: 'Get started with Agent Identity Service',
           description:
             'Connect your identity provider to create and manage identities for your AI agents and MCP servers, including those supporting A2A-compatible protocols like Google A2A, with support for policies and access controls.',
           actionTitle: 'Connect Identity Provider',
@@ -68,7 +68,7 @@ const Policies: React.FC = () => {
           isLoading={isLoading}
           useRelativeLoader
           emptyListStateProps={{
-            title: 'Get started with Agent Identity',
+            title: 'Get started with Agent Identity Service',
             description: 'Add an Agentic Service to manage identities and apply TBAC based access control.',
             actionTitle: 'Add Agentic Service',
             actionCallback: () => {

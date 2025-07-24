@@ -178,7 +178,7 @@ self.addEventListener('push', async (event) => {
         }
 
         await sendNotification({...notificationData, id, timestamp: Date.now()});
-        await self.registration.showNotification('Agent Identity | AGNTCY', options);
+        await self.registration.showNotification('Agent Identity Service | AGNTCY', options);
       }
     }
   } catch (error) {
@@ -206,7 +206,7 @@ self.addEventListener('notificationclick', (event) => {
             approve: action === 'allow'
           })
             .then(async () => {
-              await self.registration.showNotification('Agent Identity | AGNTCY', {
+              await self.registration.showNotification('Agent Identity Service | AGNTCY', {
                 body: `Your request has been ${action === 'allow' ? 'approved' : 'denied'}.`
               });
             })

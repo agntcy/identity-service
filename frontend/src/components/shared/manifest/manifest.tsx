@@ -11,8 +11,8 @@ export const Manifest = () => {
 
   const manifestHref = useMemo(() => {
     const manifest = {
-      name: 'Agent Identity | AGNTCY',
-      short_name: 'Agent Identity',
+      name: 'Agent Identity Service | AGNTCY',
+      short_name: 'Agent Identity Service',
       description: 'AGNTCY Identity management system with push notifications and offline capabilities',
       theme_color: '#eff3fc',
       display: 'standalone',

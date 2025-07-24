@@ -27,11 +27,11 @@ export const BannerProvider: React.FC<{children: ReactNode}> = ({children}) => {
       id: 'docs-banner',
       text: (
         <>
-          <span>
-            This is a reference implementation of the AGNTCY Agent Identity intended for testing and demonstration purposes
-            only.
+          <span className="text-[10px] lg:text-[16px]">
+            This is a reference implementation of the AGNTCY Agent Identity Service intended for testing and demonstration
+            purposes only.
           </span>{' '}
-          <a className="underline" href={docs()} target="_blank" rel="noopener noreferrer">
+          <a className="underline text-[10px] lg:text-[16px]" href={docs()} target="_blank" rel="noopener noreferrer">
             Learn more
           </a>
         </>
@@ -40,7 +40,7 @@ export const BannerProvider: React.FC<{children: ReactNode}> = ({children}) => {
     }
   ]);
 
-  const {isMobile} = useWindowSize();
+  const {isMobile, isTablet} = useWindowSize();
 
   const hasBanners = useMemo(() => banners.length > 0 && !isMobile, [banners.length, isMobile]);
 
@@ -73,7 +73,15 @@ export const BannerProvider: React.FC<{children: ReactNode}> = ({children}) => {
                   zIndex: index + 1
                 }}
               >
-                <Banner {...banner} onClose={() => removeBanner(banner.id)} />
+                <Banner
+                  {...banner}
+                  onClose={() => removeBanner(banner.id)}
+                  sx={{
+                    '& .MuiAlert-icon': {
+                      visibility: isMobile || isTablet ? 'hidden' : 'visible'
+                    }
+                  }}
+                />
               </div>
             ))}
           </div>

@@ -5,11 +5,11 @@
 
 import {Button, Header, Typography} from '@outshift/spark-design';
 import {Link} from 'react-router-dom';
-import Logo from '@/assets/logo-app-bar.svg?react';
-import LogoIcon from '@/assets/icon-agntcy.svg?react';
 import {useAuth, useWindowSize} from '@/hooks';
 import {ReactNode} from 'react';
 import {PATHS} from '@/router/paths';
+import OutshiftLogo from '@/assets/outshift-color.svg?react';
+import OutshiftIcon from '@/assets/outshift.svg?react';
 
 export const PublicHeader = ({userSection}: {userSection?: ReactNode}) => {
   const {login, register} = useAuth();
@@ -18,24 +18,22 @@ export const PublicHeader = ({userSection}: {userSection?: ReactNode}) => {
   return (
     <Header
       title={
-        <Link to={PATHS.basePath}>
-          <div className="mt-1 md:mt-0">
-            <Typography
-              variant="h1"
-              fontWeight={700}
-              fontSize={isMobile ? '16px' : '18px'}
-              lineHeight="18px"
-              sx={(theme) => ({color: theme.palette.vars.brandTextSecondary})}
-            >
-              Agent Identity
-            </Typography>
-          </div>
+        <Link to={PATHS.dashboard} className="mt-1 lg:ml-1">
+          <Typography
+            variant="h1"
+            fontWeight={700}
+            fontSize={isMobile ? '16px' : '18px'}
+            lineHeight="18px"
+            sx={() => ({color: 'black'})}
+          >
+            Agent Identity Service
+          </Typography>
         </Link>
       }
       logo={
         <Link to="https://agntcy.org/" target="_blank" rel="noopener noreferrer">
-          <Logo className="hidden md:block" />
-          <LogoIcon className="w-8 h-8 md:hidden" />
+          <OutshiftLogo className="h-[44px] hidden lg:block" />
+          <OutshiftIcon className="h-[44px] w-[44px] lg:hidden" />
         </Link>
       }
       position="fixed"
