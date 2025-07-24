@@ -21,6 +21,7 @@ jobs:
     with:
       sonar-properties-file: "./.github/linters/sonar-project.properties"
       sonar-java-version: "17"
+      sonar-java-distribution: "temurin"
     secrets:
       vault-approle-role-id: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
       vault-approle-secret-id: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
