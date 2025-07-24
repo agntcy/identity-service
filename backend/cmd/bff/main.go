@@ -189,6 +189,7 @@ func main() {
 	}
 
 	var credentialStore idpcore.CredentialStore
+	var keyStore identitycore.KeyStore
 
 	switch config.KeyStoreType {
 	case KeyStoreTypeVault:
@@ -203,6 +204,16 @@ func main() {
 		}
 
 		credentialStore = idpcore.NewVaultCredentialStore(vaultClient)
+
+		keyStore, err = identitycore.NewVaultKeyStore(
+			config.VaultHost,
+			config.VaultPort,
+			config.VaultUseSsl,
+			token, // This should be set in dev mode only
+		)
+		if err != nil {
+			log.Fatal("unable to create vault key store ", err)
+		}
 	case KeyStoreTypeAwsSm:
 		awscfg, err := awsconfig.LoadDefaultConfig(ctx, awsconfig.WithRegion(config.AwsRegion))
 		if err != nil {
@@ -213,21 +224,16 @@ func main() {
 		if err != nil {
 			log.Fatal("unable to create AWS SM client ", err)
 		}
+
+		keyStore, err = identitycore.NewAwsSmKeyStore(&awscfg, nil)
+		if err != nil {
+			log.Fatal("unable to create AWS SM key store ", err)
+		}
 	default:
 		log.Fatal("invalid KeyStoreType value ", config.KeyStoreType)
 	}
 
 	idpFactory := idpcore.NewFactory()
-
-	keyStore, err := identitycore.NewVaultKeyStore(
-		config.VaultHost,
-		config.VaultPort,
-		config.VaultUseSsl,
-		token, // This should be set in dev mode only
-	)
-	if err != nil {
-		log.Fatal("unable to create vault key store ", err)
-	}
 
 	// OIDC Authenticator
 	oidcAuthenticator := oidc.NewAuthenticator()
