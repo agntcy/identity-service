@@ -19,9 +19,10 @@ const OnBoardDevice = () => {
   const [searchParams] = useSearchParams();
   const id = searchParams.get('id') || undefined;
 
-  const {setIdDevice} = useLocalStore(
+  const {setIdDevice, idDevice} = useLocalStore(
     useShallow((state) => ({
-      setIdDevice: state.setIdDevice
+      setIdDevice: state.setIdDevice,
+      idDevice: state.idDevice
     }))
   );
 
@@ -46,7 +47,7 @@ const OnBoardDevice = () => {
             }
           />
           <div className="flex flex-col justify-center h-full">
-            <ContentOnBoardDevice id={id} />
+            <ContentOnBoardDevice id={idDevice} />
           </div>
           <SparkFooter
             productName="Cisco Systems, Inc."
