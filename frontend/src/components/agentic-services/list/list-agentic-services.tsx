@@ -156,7 +156,7 @@ export const ListAgenticServices = () => {
                 analyticsTrack('CLICK_NAVIGATION_AGENTIC_SERVICE_INFO', {
                   type: row.original.type
                 });
-                const path = generatePath(PATHS.agenticServices.info, {id: row.original?.id});
+                const path = generatePath(PATHS.agenticServices.info.base, {id: row.original?.id});
                 void navigate(path, {replace: true});
               }
             })}
@@ -312,12 +312,10 @@ export const ListAgenticServices = () => {
                 Confirm policies{' '}
                 <Link
                   href={(() => {
-                    const basePath = generatePath(PATHS.agenticServices.info, {
+                    const basePath = generatePath(PATHS.agenticServices.info.policiesAssignedTo, {
                       id: tempApp?.id || ''
                     });
-                    const searchParams = new URLSearchParams();
-                    searchParams.set('view', 'policies-assigned');
-                    return `${basePath}?${searchParams.toString()}`;
+                    return basePath;
                   })()}
                 >
                   here

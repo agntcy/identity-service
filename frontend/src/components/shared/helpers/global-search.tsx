@@ -135,7 +135,7 @@ export const GlobalSearch = () => {
     const typedOption = option as SearchFieldWithAutocompleteOption<GlobalSearchOptionType>;
     switch (typedOption.category) {
       case 'agentic-services': {
-        const path = generatePath(PATHS.agenticServices.info, {
+        const path = generatePath(PATHS.agenticServices.info.base, {
           id: typedOption.entity.id
         });
         void navigate(path);

@@ -30,8 +30,15 @@ const ConnectionIdentityProvider = React.lazy(
 // Dashboard
 const Dashboard = React.lazy(() => import('@/pages/dashboard/dashboard'));
 
+// Settings Base
+const SettingsBase = React.lazy(() => import('@/pages/settings/settings-base'));
+
 // Settings API Key
 const ApiKey = React.lazy(() => import('@/pages/settings/api-key/api-key'));
+
+// Settings Devices
+const Devices = React.lazy(() => import('@/pages/settings/devices/devices'));
+const OnBoardDevice = React.lazy(() => import('@/pages/onboard-device/onboard-device'));
 
 // Settings Organizations
 const Organizations = React.lazy(() => import('@/pages/settings/organizations/organizations'));
@@ -42,7 +49,14 @@ const InfoOrganization = React.lazy(() => import('@/pages/settings/organizations
 const AgenticServices = React.lazy(() => import('@/pages/agentic-services/agentic-services'));
 const AddAgenticService = React.lazy(() => import('@/pages/agentic-services/add-agentic-service'));
 const EditAgenticService = React.lazy(() => import('@/pages/agentic-services/edit-agentic-service'));
-const InfoAgenticService = React.lazy(() => import('@/pages/agentic-services/info-agentic-service'));
+const InfoAgenticService = React.lazy(() => import('@/pages/agentic-services/info/info-agentic-service'));
+const AboutAgenticService = React.lazy(() => import('@/pages/agentic-services/info/about-agentic-service'));
+const PoliciesAssignedToAgenticService = React.lazy(
+  () => import('@/pages/agentic-services/info/policies-assigned-to-agentic-service')
+);
+const PoliciesUsedByAgenticService = React.lazy(
+  () => import('@/pages/agentic-services/info/policies-used-by-agentic-service')
+);
 
 // Policies
 const Policies = React.lazy(() => import('@/pages/policies/policies'));
@@ -52,10 +66,6 @@ const EditPolicy = React.lazy(() => import('@/pages/policies/edit-policy'));
 
 // Verify Identity
 const VerifyIdentity = React.lazy(() => import('@/pages/verify-identity/verify-identity'));
-
-// Devices
-const Devices = React.lazy(() => import('@/pages/settings/devices/devices'));
-const OnBoardDevice = React.lazy(() => import('@/pages/onboard-device/onboard-device'));
 
 export const generateRoutes = (routes: Route[]): Route[] => {
   return [
@@ -182,13 +192,41 @@ export const useRoutes = () => {
             disabled: isEmptyIdp
           },
           {
-            path: PATHS.agenticServices.info,
+            path: PATHS.agenticServices.info.base,
             element: (
-              <NodeRoute pageTitle="agentic service info">
+              <NodeRoute>
                 <InfoAgenticService />
               </NodeRoute>
             ),
-            disabled: isEmptyIdp
+            disabled: isEmptyIdp,
+            children: [
+              {
+                index: true,
+                element: (
+                  <NodeRoute pageTitle="agentic service about">
+                    <AboutAgenticService />
+                  </NodeRoute>
+                )
+              },
+              {
+                path: PATHS.agenticServices.info.policiesAssignedTo,
+                element: (
+                  <NodeRoute pageTitle="agentic service policies assigned to">
+                    <PoliciesAssignedToAgenticService />
+                  </NodeRoute>
+                ),
+                disabled: !isTbacEnable
+              },
+              {
+                path: PATHS.agenticServices.info.policiesUsedBy,
+                element: (
+                  <NodeRoute pageTitle="agentic service policies used by">
+                    <PoliciesUsedByAgenticService />
+                  </NodeRoute>
+                ),
+                disabled: !isTbacEnable
+              }
+            ]
           },
           {
             path: '*',
@@ -267,6 +305,11 @@ export const useRoutes = () => {
       {
         path: PATHS.settings.base,
         disabled: isMobile,
+        element: (
+          <NodeRoute>
+            <SettingsBase />
+          </NodeRoute>
+        ),
         children: [
           {
             index: true,

@@ -86,6 +86,7 @@ export const ListRules = ({policy, showRulesOps = false}: {policy?: Policy; show
                   value: query,
                   onChangeCallback: handleQueryChange
                 }}
+                sameLine
                 isLoading={isLoading}
               />
             )}

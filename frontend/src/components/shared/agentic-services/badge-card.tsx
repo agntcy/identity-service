@@ -10,6 +10,7 @@ import {
   Button,
   CodeBlock,
   CopyButton,
+  Divider,
   Modal,
   ModalContent,
   ModalTitle,
@@ -26,10 +27,12 @@ import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-render
 import ScrollShadowWrapper from '@/components/ui/scroll-shadow-wrapper';
 import {BadgeModalForm} from './badge-modal-form';
 import {Card} from '@/components/ui/card';
+import {IdCardIcon} from 'lucide-react';
 
 interface BadgeCardProps {
   app?: App;
   verifyIdentity?: boolean;
+  reIssueBadge?: boolean;
   navigateTo?: boolean;
   showError?: boolean;
   confirmButtonText?: string;
@@ -40,6 +43,7 @@ export const BadgeCard = ({
   app,
   navigateTo = true,
   verifyIdentity = false,
+  reIssueBadge = false,
   confirmButtonText,
   showError = false,
   onBadgeChanged
@@ -151,31 +155,53 @@ export const BadgeCard = ({
             <Typography variant="subtitle1" fontWeight={600}>
               Badge
             </Typography>
-            <div className="flex gap-4">
+            <div className="flex gap-4 items-center">
               {verifyIdentity && (
-                <Button
-                  variant="tertariary"
-                  endIcon={<CheckIcon className="w-4 h-4" />}
-                  sx={{padding: 0, fontWeight: '600 !important'}}
-                  onClick={() => {
-                    const path = generatePath(PATHS.verifyIdentity.info, {id: app?.id || ''});
-                    void navigate(path, {replace: true});
-                  }}
-                >
-                  Verify Identity
-                </Button>
+                <>
+                  <Button
+                    variant="tertariary"
+                    startIcon={<CheckIcon className="w-4 h-4" />}
+                    sx={{padding: 0, fontWeight: '600 !important'}}
+                    onClick={() => {
+                      const path = generatePath(PATHS.verifyIdentity.info, {id: app?.id || ''});
+                      void navigate(path, {replace: true});
+                    }}
+                  >
+                    Verify Identity
+                  </Button>
+                  <Divider orientation="vertical" sx={{margin: '0 auto', height: '20px'}} />
+                </>
+              )}
+              {reIssueBadge && (
+                <>
+                  <Button
+                    variant="tertariary"
+                    startIcon={<IdCardIcon className="w-4 h-4" />}
+                    sx={{padding: 0, fontWeight: '600 !important'}}
+                    onClick={() => {
+                      analyticsTrack('CLICK_REISSUE_BADGE_AGENTIC_SERVICE', {
+                        type: app?.type
+                      });
+                      setShowBadgeForm(true);
+                    }}
+                  >
+                    Re-Issue Badge
+                  </Button>
+                  <Divider orientation="vertical" sx={{margin: '0 auto', height: '20px'}} />
+                </>
               )}
               <Button
                 variant="tertariary"
-                endIcon={<DownloadIcon className="w-4 h-4" />}
+                startIcon={<DownloadIcon className="w-4 h-4" />}
                 sx={{padding: 0, fontWeight: '600 !important'}}
                 onClick={handleDownloadBadge}
               >
                 Download
               </Button>
+              <Divider orientation="vertical" sx={{margin: '0 auto', height: '20px'}} />
               <Button
                 variant="tertariary"
-                endIcon={<ExpandIcon className="w-4 h-4" />}
+                startIcon={<ExpandIcon className="w-[14px] h-[14px]" />}
                 sx={{padding: 0, fontWeight: '600 !important'}}
                 onClick={() => {
                   analyticsTrack('CLICK_VIEW_BADGE_AGENTIC_SERVICE');
@@ -206,20 +232,10 @@ export const BadgeCard = ({
             </div>
             <ScrollShadowWrapper className="max-h-[50vh] overflow-auto">
               {view === 'credential' && (
-                <CodeBlock
-                  containerProps={{maxWidth: '40vw'}}
-                  showLineNumbers
-                  wrapLongLines
-                  text={JSON.stringify(contentToShow, null, 2)}
-                />
+                <CodeBlock containerProps={{maxWidth: '40vw'}} wrapLongLines text={JSON.stringify(contentToShow, null, 2)} />
               )}
               {view === 'claims' && (
-                <CodeBlock
-                  containerProps={{maxWidth: '40vw'}}
-                  showLineNumbers
-                  wrapLongLines
-                  text={JSON.stringify(contentToShow, null, 2)}
-                />
+                <CodeBlock containerProps={{maxWidth: '40vw'}} wrapLongLines text={JSON.stringify(contentToShow, null, 2)} />
               )}
               {view === 'jose' && (
                 <div className="border border-solid border-[#d5dff7] p-4 w-full rounded-[6px] bg-[#fbfcfe] relative">
@@ -251,7 +267,7 @@ export const BadgeCard = ({
             </Button>
           </div>
           <ModalContent>
-            <CodeBlock showLineNumbers wrapLongLines text={JSON.stringify(data?.verifiableCredential, null, 2)} />
+            <CodeBlock wrapLongLines text={JSON.stringify(data?.verifiableCredential, null, 2)} />
           </ModalContent>
         </Modal>
       )}

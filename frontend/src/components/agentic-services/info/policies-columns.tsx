@@ -6,8 +6,9 @@
 import {AgenticServiceType} from '@/components/shared/agentic-services/agentic-service-type';
 import DateHover from '@/components/ui/date-hover';
 import {useGetAgenticService} from '@/queries';
-import {Policy} from '@/types/api/policy';
-import {GeneralSize, Skeleton, Tag, TagStatus, Typography} from '@outshift/spark-design';
+import {Policy, RuleAction} from '@/types/api/policy';
+import {GeneralSize, Skeleton, Tag, Tags, TagStatus, Typography} from '@outshift/spark-design';
+import {BanIcon, CheckIcon} from 'lucide-react';
 import {MRT_ColumnDef} from 'material-react-table';
 import {useMemo} from 'react';
 
@@ -45,17 +46,41 @@ export const PoliciesColumns = (): MRT_ColumnDef<Policy, any>[] => {
         accessorKey: 'rules',
         header: 'Rules',
         Cell: ({row}) => {
-          if (!row.original.rules || row.original.rules.length === 0) {
-            return (
-              <Tag status={TagStatus.Info} size={GeneralSize.Small}>
-                No Rules
-              </Tag>
-            );
-          }
+          const total = row.original.rules?.length || 0;
+          const totalAllow = row.original.rules?.filter((rule) => rule.action === RuleAction.RULE_ACTION_ALLOW).length || 0;
+          const totalDeny = row.original.rules?.filter((rule) => rule.action === RuleAction.RULE_ACTION_DENY).length || 0;
           return (
-            <Tag status={TagStatus.Info} size={GeneralSize.Small}>
-              {row.original.rules.length} Rule{row.original.rules.length > 1 ? 's' : ''}
-            </Tag>
+            <Tags
+              size={GeneralSize.Small}
+              items={[
+                {
+                  valueFormatter: () => (
+                    <Typography variant="captionMedium">
+                      Total: <b>{total}</b>
+                    </Typography>
+                  )
+                },
+                {
+                  valueFormatter: () => (
+                    <div className="flex items-center gap-1">
+                      <CheckIcon className="w-4 h-4 text-[#00B285]" />
+                      {totalAllow}
+                    </div>
+                  )
+                },
+                {
+                  valueFormatter: () => (
+                    <div className="flex items-center gap-1">
+                      <BanIcon className="w-3 h-3 text-[#C0244C]" />
+                      {totalDeny}
+                    </div>
+                  )
+                }
+              ]}
+              shouldTruncate
+              maxTooltipTags={3}
+              showOnlyFirst={false}
+            />
           );
         }
       },

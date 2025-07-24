@@ -26,7 +26,7 @@ export const PolicyContent = ({policy}: {policy?: Policy}) => {
       {
         keyProp: 'Assigned To',
         value: (
-          <Link href={generatePath(PATHS.agenticServices.info, {id: policy?.assignedTo || ''})}>
+          <Link href={generatePath(PATHS.agenticServices.info.base, {id: policy?.assignedTo || ''})}>
             <div className="flex items-center gap-2">
               <AgenticServiceType type={data?.type} showLabel={false} />
               <Typography variant="body2">{data?.name ?? 'Not provided'}</Typography>

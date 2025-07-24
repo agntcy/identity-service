@@ -31,16 +31,30 @@ interface FilterSectionProps<T> {
   searchFieldProps?: SearchFieldProps;
   dropDowns?: CustomDropdownProps<T>[];
   title?: string;
+  sameLine?: boolean;
   isLoading?: boolean;
 }
 
-export const FilterSections = <T,>({title, isLoading = true, searchFieldProps, dropDowns}: FilterSectionProps<T>) => {
+export const FilterSections = <T,>({
+  title,
+  isLoading = true,
+  sameLine = false,
+  searchFieldProps,
+  dropDowns
+}: FilterSectionProps<T>) => {
   const debounced = useDebouncedCallback((value) => {
     searchFieldProps?.onChangeCallback?.(value);
   }, 250);
 
   return (
-    <Stack marginBottom="16px">
+    <Stack
+      marginBottom="16px"
+      sx={{
+        ...(sameLine
+          ? {flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}
+          : {flexDirection: 'column'})
+      }}
+    >
       {isLoading ? (
         <Skeleton sx={{width: '200px', height: '20px'}} />
       ) : (
@@ -50,16 +64,29 @@ export const FilterSections = <T,>({title, isLoading = true, searchFieldProps, d
           </Typography>
         )
       )}
-      <Stack direction="row" gap={2} alignItems="center" justifyContent="end">
-        {searchFieldProps && (
-          <SearchField
-            sx={{'& .MuiInputBase-root': {marginTop: 0, width: '320px', height: '36px'}}}
-            {...searchFieldProps}
-            onChangeCallback={debounced}
-          />
-        )}
-        {dropDowns?.map((dropdown, index) => <CustomDropdown<T> key={index} {...dropdown} />)}
-      </Stack>
+      {sameLine ? (
+        <>
+          {searchFieldProps && (
+            <SearchField
+              sx={{'& .MuiInputBase-root': {marginTop: 0, width: '320px', height: '36px'}}}
+              {...searchFieldProps}
+              onChangeCallback={debounced}
+            />
+          )}
+          {dropDowns?.map((dropdown, index) => <CustomDropdown<T> key={index} {...dropdown} />)}
+        </>
+      ) : (
+        <Stack direction="row" gap={2} alignItems="center" justifyContent="end">
+          {searchFieldProps && (
+            <SearchField
+              sx={{'& .MuiInputBase-root': {marginTop: 0, width: '320px', height: '36px'}}}
+              {...searchFieldProps}
+              onChangeCallback={debounced}
+            />
+          )}
+          {dropDowns?.map((dropdown, index) => <CustomDropdown<T> key={index} {...dropdown} />)}
+        </Stack>
+      )}
     </Stack>
   );
 };

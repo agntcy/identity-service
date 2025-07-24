@@ -18,7 +18,6 @@ const EditAgenticService: React.FC = () => {
   return (
     <BasePage
       title="Edit Agentic Service"
-      useBorder
       breadcrumbs={[
         {
           text: 'Agentic Services',
@@ -26,7 +25,7 @@ const EditAgenticService: React.FC = () => {
         },
         {
           text: data?.name || 'Agentic Service',
-          link: generatePath(PATHS.agenticServices.info, {id: id || ''})
+          link: generatePath(PATHS.agenticServices.info.base, {id: id || ''})
         },
         {
           text: 'Edit'

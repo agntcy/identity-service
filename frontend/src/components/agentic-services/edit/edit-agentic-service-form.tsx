@@ -70,7 +70,7 @@ export const EditAgenticServiceForm = ({app}: {app?: App}) => {
           description: 'Agentic service edited successfully.',
           type: 'success'
         });
-        const path = generatePath(PATHS.agenticServices.info, {id: app?.id ?? ''});
+        const path = generatePath(PATHS.agenticServices.info.base, {id: app?.id ?? ''});
         void navigate(path, {replace: true});
       },
       onError: () => {

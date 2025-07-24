@@ -5,17 +5,7 @@
  */
 
 import {Card, CardContent} from '@/components/ui/card';
-import {
-  Accordion,
-  Divider,
-  EmptyState,
-  GeneralSize,
-  Pagination,
-  Table,
-  Tag,
-  TagStatus,
-  Typography
-} from '@outshift/spark-design';
+import {Accordion, Divider, EmptyState, GeneralSize, Pagination, Table, Tag, Typography} from '@outshift/spark-design';
 import {useCallback, useMemo, useState} from 'react';
 import KeyValue, {KeyValuePair} from '@/components/ui/key-value';
 import {AgenticServiceType} from '@/components/shared/agentic-services/agentic-service-type';
@@ -237,7 +227,7 @@ export const PolicyReview = () => {
                             <Tag size={GeneralSize.Medium}>
                               {rule.tasks?.length || 0} {rule?.tasks?.length && rule?.tasks?.length > 1 ? 'Tasks' : 'Task'}
                             </Tag>
-                            <Tag status={TagStatus.Info} size={GeneralSize.Medium}>
+                            <Tag size={GeneralSize.Medium}>
                               <Typography variant="captionSemibold">
                                 Approval: <b>{rule.needsApproval ? 'Yes' : 'No'}</b>
                               </Typography>

@@ -50,11 +50,23 @@ export const BasePage = ({
 
   useEffect(() => {
     if (subNav) {
-      const href = window.location.href;
-      const currentTab = subNav.findIndex((item) => item.href && href.includes(item.href));
-      if (currentTab !== -1) {
-        setTab(currentTab);
+      const currentPath = window.location.pathname;
+
+      // First try to find exact match
+      let currentTab = subNav.findIndex((item) => item.href === currentPath);
+
+      // If no exact match, try to find partial match
+      if (currentTab === -1) {
+        currentTab = subNav.findIndex((item) => item.href && currentPath.includes(item.href));
       }
+
+      // If still no match, try reverse match (href contains current path)
+      if (currentTab === -1) {
+        currentTab = subNav.findIndex((item) => item.href && item.href.includes(currentPath));
+      }
+
+      // Set the tab if a match is found, otherwise default to 0
+      setTab(currentTab !== -1 ? currentTab : 0);
     }
   }, [subNav]);
 

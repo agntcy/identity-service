@@ -3,7 +3,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {InfoAgenticService} from '@/components/agentic-services/info/info-agentic-service';
 import {BasePage} from '@/components/layout/base-page';
 import {BadgeModalForm} from '@/components/shared/agentic-services/badge-modal-form';
 import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-renderer';
@@ -14,13 +13,12 @@ import {useGetAgenticService} from '@/queries';
 import {PATHS} from '@/router/paths';
 import {useFeatureFlagsStore} from '@/store';
 import {Button, toast} from '@outshift/spark-design';
-import {IdCardIcon, PencilIcon, Trash2Icon} from 'lucide-react';
+import {PencilIcon, Trash2Icon} from 'lucide-react';
 import {useCallback, useState} from 'react';
-import {generatePath, useNavigate, useParams} from 'react-router-dom';
+import {generatePath, Outlet, useNavigate, useParams} from 'react-router-dom';
 import {useShallow} from 'zustand/react/shallow';
 
-const AgenticServiceInfo: React.FC = () => {
-  const [showReissueBadge, setShowReissueBadge] = useState<boolean>(false);
+const InfoAgenticService: React.FC = () => {
   const [showBadgeForm, setShowBadgeForm] = useState<boolean>(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState<boolean>(false);
 
@@ -69,7 +67,6 @@ const AgenticServiceInfo: React.FC = () => {
   return (
     <BasePage
       title="Agentic Service"
-      useBorder
       breadcrumbs={[
         {
           text: 'Agentic Services',
@@ -79,6 +76,24 @@ const AgenticServiceInfo: React.FC = () => {
           text: data?.name || 'Agentic Service'
         }
       ]}
+      subNav={
+        isTbacEnable
+          ? [
+              {
+                label: 'About',
+                href: generatePath(PATHS.agenticServices.info.base, {id: id || ''})
+              },
+              {
+                label: 'Policies Assigned To',
+                href: generatePath(PATHS.agenticServices.info.policiesAssignedTo, {id: id || ''})
+              },
+              {
+                label: 'Policies Used By',
+                href: generatePath(PATHS.agenticServices.info.policiesUsedBy, {id: id || ''})
+              }
+            ]
+          : undefined
+      }
       rightSideItems={
         isError || isLoading ? null : (
           <div className="flex items-center gap-4">
@@ -112,21 +127,6 @@ const AgenticServiceInfo: React.FC = () => {
             >
               Edit
             </Button>
-            {showReissueBadge && (
-              <Button
-                onClick={() => {
-                  analyticsTrack('CLICK_REISSUE_BADGE_AGENTIC_SERVICE', {
-                    type: data?.type
-                  });
-                  setShowBadgeForm(true);
-                }}
-                startIcon={<IdCardIcon className="w-4 h-4" />}
-                variant="primary"
-                sx={{fontWeight: '600 !important'}}
-              >
-                Re-Issue Badge
-              </Button>
-            )}
           </div>
         )
       }
@@ -143,7 +143,7 @@ const AgenticServiceInfo: React.FC = () => {
           }
         }}
       >
-        <InfoAgenticService app={data} onChangeReissueBadge={(value) => setShowReissueBadge(value)} />
+        <Outlet context={{app: data}} />
         {data && (
           <BadgeModalForm
             app={data}
@@ -192,4 +192,4 @@ const AgenticServiceInfo: React.FC = () => {
   );
 };
 
-export default AgenticServiceInfo;
+export default InfoAgenticService;

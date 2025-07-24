@@ -1,4 +1,3 @@
-/* eslint-disable indent */
 /**
  * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
  * SPDX-License-Identifier: Apache-2.0
@@ -7,41 +6,11 @@
 import {ContentApiKey} from '@/components/api-key/content-api-key';
 import {BasePage} from '@/components/layout/base-page';
 import {PATHS} from '@/router/paths';
-import {useFeatureFlagsStore} from '@/store';
-import React, {useMemo} from 'react';
-import {useShallow} from 'zustand/react/shallow';
+import React from 'react';
+import {useOutletContext} from 'react-router-dom';
 
 const ApiKey: React.FC = () => {
-  const {isTbacEnable} = useFeatureFlagsStore(
-    useShallow((state) => ({
-      isTbacEnable: state.featureFlags.isTbacEnable
-    }))
-  );
-
-  const subNav = useMemo(() => {
-    return [
-      {
-        label: 'Identity Provider',
-        href: PATHS.settings.identityProvider.base
-      },
-      {
-        label: 'API Key',
-        href: PATHS.settings.apiKey
-      },
-      ...(isTbacEnable
-        ? [
-            {
-              label: 'Devices',
-              href: PATHS.settings.devices.base
-            }
-          ]
-        : []),
-      {
-        label: 'Organizations & Users',
-        href: PATHS.settings.organizationsAndUsers.base
-      }
-    ];
-  }, [isTbacEnable]);
+  const {subNav} = useOutletContext<{subNav: {label: string; href: string}[]}>();
 
   return (
     <BasePage

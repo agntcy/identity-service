@@ -1,4 +1,3 @@
-/* eslint-disable indent */
 /**
  * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
  * SPDX-License-Identifier: Apache-2.0
@@ -10,9 +9,9 @@ import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-render
 import {useAnalytics} from '@/hooks';
 import {useGetSettings} from '@/queries';
 import {PATHS} from '@/router/paths';
-import {useFeatureFlagsStore, useSettingsStore} from '@/store';
-import {useMemo} from 'react';
-import {useNavigate} from 'react-router-dom';
+import {useSettingsStore} from '@/store';
+import {useNavigate, useOutletContext} from 'react-router-dom';
+
 import {useShallow} from 'zustand/react/shallow';
 
 const IdentityProvider: React.FC = () => {
@@ -26,36 +25,7 @@ const IdentityProvider: React.FC = () => {
     }))
   );
 
-  const {isTbacEnable} = useFeatureFlagsStore(
-    useShallow((state) => ({
-      isTbacEnable: state.featureFlags.isTbacEnable
-    }))
-  );
-
-  const subNav = useMemo(() => {
-    return [
-      {
-        label: 'Identity Provider',
-        href: PATHS.settings.identityProvider.base
-      },
-      {
-        label: 'API Key',
-        href: PATHS.settings.apiKey
-      },
-      ...(isTbacEnable
-        ? [
-            {
-              label: 'Devices',
-              href: PATHS.settings.devices.base
-            }
-          ]
-        : []),
-      {
-        label: 'Organizations & Users',
-        href: PATHS.settings.organizationsAndUsers.base
-      }
-    ];
-  }, [isTbacEnable]);
+  const {subNav} = useOutletContext<{subNav: {label: string; href: string}[]}>();
 
   const {analyticsTrack} = useAnalytics();
 

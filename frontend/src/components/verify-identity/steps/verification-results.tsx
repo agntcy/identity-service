@@ -143,7 +143,6 @@ export const VerificationResults = () => {
               <ScrollShadowWrapper className="max-h-[60vh] overflow-auto">
                 <CodeBlock
                   containerProps={{maxWidth: '40vw'}}
-                  showLineNumbers
                   wrapLongLines
                   text={JSON.stringify(results?.document || {}, null, 2)}
                 />

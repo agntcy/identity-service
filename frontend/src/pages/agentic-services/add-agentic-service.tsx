@@ -14,7 +14,6 @@ const AddAgenticService: React.FC = () => {
   return (
     <BasePage
       title="Add Agentic Service"
-      useBorder
       breadcrumbs={[
         {
           text: 'Agentic Services',
