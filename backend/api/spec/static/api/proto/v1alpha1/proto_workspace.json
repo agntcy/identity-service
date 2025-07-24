@@ -3071,6 +3071,30 @@
               "defaultValue": ""
             }
           ]
+        },
+        {
+          "name": "TestDeviceRequest",
+          "longName": "TestDeviceRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.TestDeviceRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "device_id",
+              "description": "The device id.",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
         }
       ],
       "services": [
@@ -3165,6 +3189,28 @@
                     {
                       "method": "DELETE",
                       "pattern": "/v1alpha1/device/{device_id}"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "TestDevice",
+              "description": "Send a test notification to a registered device to see if it's well configured.",
+              "requestType": "TestDeviceRequest",
+              "requestLongType": "TestDeviceRequest",
+              "requestFullType": "agntcy.identity.platform.v1alpha1.TestDeviceRequest",
+              "requestStreaming": false,
+              "responseType": "Empty",
+              "responseLongType": ".google.protobuf.Empty",
+              "responseFullType": "google.protobuf.Empty",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "POST",
+                      "pattern": "/v1alpha1/device/{device_id}/test"
                     }
                   ]
                 }

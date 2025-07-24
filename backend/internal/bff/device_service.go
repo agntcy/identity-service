@@ -24,6 +24,7 @@ type DeviceService interface {
 		query *string,
 	) (*pagination.Pageable[devicetypes.Device], error)
 	DeleteDevice(ctx context.Context, deviceID string) error
+	TestDevice(ctx context.Context, deviceID string) error
 }
 
 type deviceService struct {
@@ -127,6 +128,20 @@ func (s *deviceService) DeleteDevice(ctx context.Context, deviceID string) error
 	}
 
 	err = s.deviceRepository.DeleteDevice(ctx, device)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *deviceService) TestDevice(ctx context.Context, deviceID string) error {
+	device, err := s.deviceRepository.GetDevice(ctx, deviceID)
+	if err != nil {
+		return errutil.Err(err, "failed to get device")
+	}
+
+	err = s.notificationService.SendInfoNotification(ctx, device, "This is a test notification!")
 	if err != nil {
 		return err
 	}
