@@ -13,6 +13,7 @@ import (
 	"github.com/agntcy/identity/pkg/joseutil"
 	"github.com/agntcy/identity/pkg/jwk"
 	"github.com/agntcy/identity/pkg/keystore"
+	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/google/uuid"
 )
 
@@ -48,6 +49,24 @@ func NewVaultKeyStore(
 	}
 
 	store, err := keystore.NewKeyService(keystore.VaultStorage, config)
+	if err != nil {
+		return nil, err
+	}
+
+	return &VaultKeyStore{
+		store: store,
+	}, nil
+}
+
+func NewAwsSmKeyStore(awsCfg *aws.Config, kmsKeyID *string) (KeyStore, error) {
+	config := keystore.AwsSmStorageConfig{
+		AwsCfg:      awsCfg,
+		MountPath:   "pyramid",
+		KeyBasePath: "keys",
+		KmsKeyID:    kmsKeyID,
+	}
+
+	store, err := keystore.NewKeyService(keystore.AwsSmStorage, config)
 	if err != nil {
 		return nil, err
 	}
