@@ -39,7 +39,7 @@ export default defineConfig(({mode}) => {
       VitePWA({
         mode: mode === 'development' ? 'development' : 'production',
         registerType: 'autoUpdate',
-        includeAssets: ['favicon.ico', 'apple-touch-icon-180x180.png', 'maskable-icon-512x512.png'],
+        includeAssets: ['favicon.svg', 'apple-touch-icon-180x180.png', 'maskable-icon-512x512.png'],
         srcDir: 'src/lib',
         filename: 'sw.ts',
         injectRegister: 'inline',

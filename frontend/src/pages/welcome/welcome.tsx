@@ -3,10 +3,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {Button, Divider, Link, Typography} from '@outshift/spark-design';
+import {Button, Link, Typography} from '@outshift/spark-design';
 import {useAuth} from '@/hooks';
 import {docs} from '@/utils/docs';
-import AgntcyLogo from '@/assets/agntcy-logo.svg?react';
+import LogoWelcome from '@/assets/logo-welcome.svg?react';
+import PoweredLogo from '@/assets/powered-logo.svg?react';
 import * as CookieConsentVanilla from 'vanilla-cookieconsent';
 import '@/styles/welcome.css';
 
@@ -16,17 +17,18 @@ const Welcome = () => {
     <div className="h-screen w-screen fixed top-0 left-0 z-50 bg-[#00142B] relative">
       <div>
         <div className="flex items-center justify-center h-screen">
-          <div className="space-y-12">
-            <div className="flex gap-6 md:gap-12 justify-center px-4 md:px-0">
-              <div className="welcome-title md:max-w-[200px] lg:max-w-[394px] font-[400] leading-[34px] md:leading-[64px] text-[30px] md:text-[50px] lg:text-[60px]">
+          <div className="space-y-8 md:space-y-12">
+            <div className="space-y-4">
+              <div className="welcome-title mx-auto w-fit font-[400] leading-[34px] md:leading-[64px] text-[25px] md:text-[50px] lg:text-[60px]">
                 Get started with
               </div>
-              <div className="px-1">
-                <Divider orientation="vertical" sx={{margin: '0 auto'}} />
-              </div>
-              <div className="md:space-y-2">
-                <AgntcyLogo className="w-[170px] md:w-[300px] lg:w-[416px] h-fit md:h-[94px]" />
-                <div className="welcome-product-name text-[20px] md:text-[40px] lg:text-[46.19px]">Agent Identity</div>
+              <div className='flex justify-center items-center'>
+                <div>
+                  <LogoWelcome className="max-w-[350px] md:max-w-[700px] lg:max-w-[914px]  max-h-[44px] md:max-h-[74px] lg:max-h-[94px]" />
+                  <div className="flex justify-end">
+                    <PoweredLogo className="max-w-[150px] max-h-[20px] md:max-w-[220px] md:max-h-[30px] lg:max-w-[331px] lg:max-h-[35px]" />
+                  </div>
+                </div>
               </div>
             </div>
             <div className="welcome-main-card mx-auto max-w-[350px] md:max-w-[700px] lg:max-w-[914px] h-fit md:h-[350px] px-[80px] flex flex-col justify-center items-center">
