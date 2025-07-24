@@ -163,6 +163,87 @@ func (x *ListPoliciesRequest) GetRulesForAppIds() []string {
 	return nil
 }
 
+type GetPoliciesCountRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetPoliciesCountRequest) Reset() {
+	*x = GetPoliciesCountRequest{}
+	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetPoliciesCountRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetPoliciesCountRequest) ProtoMessage() {}
+
+func (x *GetPoliciesCountRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetPoliciesCountRequest.ProtoReflect.Descriptor instead.
+func (*GetPoliciesCountRequest) Descriptor() ([]byte, []int) {
+	return file_agntcy_identity_platform_v1alpha1_policy_service_proto_rawDescGZIP(), []int{2}
+}
+
+type GetPoliciesCountResponse struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The total count
+	Total         int64 `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetPoliciesCountResponse) Reset() {
+	*x = GetPoliciesCountResponse{}
+	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetPoliciesCountResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetPoliciesCountResponse) ProtoMessage() {}
+
+func (x *GetPoliciesCountResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetPoliciesCountResponse.ProtoReflect.Descriptor instead.
+func (*GetPoliciesCountResponse) Descriptor() ([]byte, []int) {
+	return file_agntcy_identity_platform_v1alpha1_policy_service_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *GetPoliciesCountResponse) GetTotal() int64 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
 type CreatePolicyRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// A human-readable name for the Policy.
@@ -177,7 +258,7 @@ type CreatePolicyRequest struct {
 
 func (x *CreatePolicyRequest) Reset() {
 	*x = CreatePolicyRequest{}
-	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[2]
+	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -189,7 +270,7 @@ func (x *CreatePolicyRequest) String() string {
 func (*CreatePolicyRequest) ProtoMessage() {}
 
 func (x *CreatePolicyRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[2]
+	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -202,7 +283,7 @@ func (x *CreatePolicyRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreatePolicyRequest.ProtoReflect.Descriptor instead.
 func (*CreatePolicyRequest) Descriptor() ([]byte, []int) {
-	return file_agntcy_identity_platform_v1alpha1_policy_service_proto_rawDescGZIP(), []int{2}
+	return file_agntcy_identity_platform_v1alpha1_policy_service_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *CreatePolicyRequest) GetName() string {
@@ -236,7 +317,7 @@ type GetPolicyRequest struct {
 
 func (x *GetPolicyRequest) Reset() {
 	*x = GetPolicyRequest{}
-	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[3]
+	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -248,7 +329,7 @@ func (x *GetPolicyRequest) String() string {
 func (*GetPolicyRequest) ProtoMessage() {}
 
 func (x *GetPolicyRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[3]
+	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -261,7 +342,7 @@ func (x *GetPolicyRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetPolicyRequest.ProtoReflect.Descriptor instead.
 func (*GetPolicyRequest) Descriptor() ([]byte, []int) {
-	return file_agntcy_identity_platform_v1alpha1_policy_service_proto_rawDescGZIP(), []int{3}
+	return file_agntcy_identity_platform_v1alpha1_policy_service_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *GetPolicyRequest) GetPolicyId() string {
@@ -287,7 +368,7 @@ type UpdatePolicyRequest struct {
 
 func (x *UpdatePolicyRequest) Reset() {
 	*x = UpdatePolicyRequest{}
-	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[4]
+	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -299,7 +380,7 @@ func (x *UpdatePolicyRequest) String() string {
 func (*UpdatePolicyRequest) ProtoMessage() {}
 
 func (x *UpdatePolicyRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[4]
+	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -312,7 +393,7 @@ func (x *UpdatePolicyRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdatePolicyRequest.ProtoReflect.Descriptor instead.
 func (*UpdatePolicyRequest) Descriptor() ([]byte, []int) {
-	return file_agntcy_identity_platform_v1alpha1_policy_service_proto_rawDescGZIP(), []int{4}
+	return file_agntcy_identity_platform_v1alpha1_policy_service_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *UpdatePolicyRequest) GetPolicyId() string {
@@ -353,7 +434,7 @@ type DeletePolicyRequest struct {
 
 func (x *DeletePolicyRequest) Reset() {
 	*x = DeletePolicyRequest{}
-	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[5]
+	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -365,7 +446,7 @@ func (x *DeletePolicyRequest) String() string {
 func (*DeletePolicyRequest) ProtoMessage() {}
 
 func (x *DeletePolicyRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[5]
+	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -378,7 +459,7 @@ func (x *DeletePolicyRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeletePolicyRequest.ProtoReflect.Descriptor instead.
 func (*DeletePolicyRequest) Descriptor() ([]byte, []int) {
-	return file_agntcy_identity_platform_v1alpha1_policy_service_proto_rawDescGZIP(), []int{5}
+	return file_agntcy_identity_platform_v1alpha1_policy_service_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *DeletePolicyRequest) GetPolicyId() string {
@@ -400,7 +481,7 @@ type ListRulesResponse struct {
 
 func (x *ListRulesResponse) Reset() {
 	*x = ListRulesResponse{}
-	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[6]
+	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -412,7 +493,7 @@ func (x *ListRulesResponse) String() string {
 func (*ListRulesResponse) ProtoMessage() {}
 
 func (x *ListRulesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[6]
+	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -425,7 +506,7 @@ func (x *ListRulesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListRulesResponse.ProtoReflect.Descriptor instead.
 func (*ListRulesResponse) Descriptor() ([]byte, []int) {
-	return file_agntcy_identity_platform_v1alpha1_policy_service_proto_rawDescGZIP(), []int{6}
+	return file_agntcy_identity_platform_v1alpha1_policy_service_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *ListRulesResponse) GetRules() []*Rule {
@@ -458,7 +539,7 @@ type ListRulesRequest struct {
 
 func (x *ListRulesRequest) Reset() {
 	*x = ListRulesRequest{}
-	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[7]
+	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -470,7 +551,7 @@ func (x *ListRulesRequest) String() string {
 func (*ListRulesRequest) ProtoMessage() {}
 
 func (x *ListRulesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[7]
+	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -483,7 +564,7 @@ func (x *ListRulesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListRulesRequest.ProtoReflect.Descriptor instead.
 func (*ListRulesRequest) Descriptor() ([]byte, []int) {
-	return file_agntcy_identity_platform_v1alpha1_policy_service_proto_rawDescGZIP(), []int{7}
+	return file_agntcy_identity_platform_v1alpha1_policy_service_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *ListRulesRequest) GetPolicyId() string {
@@ -534,7 +615,7 @@ type CreateRuleRequest struct {
 
 func (x *CreateRuleRequest) Reset() {
 	*x = CreateRuleRequest{}
-	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[8]
+	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -546,7 +627,7 @@ func (x *CreateRuleRequest) String() string {
 func (*CreateRuleRequest) ProtoMessage() {}
 
 func (x *CreateRuleRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[8]
+	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -559,7 +640,7 @@ func (x *CreateRuleRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateRuleRequest.ProtoReflect.Descriptor instead.
 func (*CreateRuleRequest) Descriptor() ([]byte, []int) {
-	return file_agntcy_identity_platform_v1alpha1_policy_service_proto_rawDescGZIP(), []int{8}
+	return file_agntcy_identity_platform_v1alpha1_policy_service_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *CreateRuleRequest) GetPolicyId() string {
@@ -616,7 +697,7 @@ type GetRuleRequest struct {
 
 func (x *GetRuleRequest) Reset() {
 	*x = GetRuleRequest{}
-	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[9]
+	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -628,7 +709,7 @@ func (x *GetRuleRequest) String() string {
 func (*GetRuleRequest) ProtoMessage() {}
 
 func (x *GetRuleRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[9]
+	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -641,7 +722,7 @@ func (x *GetRuleRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetRuleRequest.ProtoReflect.Descriptor instead.
 func (*GetRuleRequest) Descriptor() ([]byte, []int) {
-	return file_agntcy_identity_platform_v1alpha1_policy_service_proto_rawDescGZIP(), []int{9}
+	return file_agntcy_identity_platform_v1alpha1_policy_service_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *GetRuleRequest) GetPolicyId() string {
@@ -680,7 +761,7 @@ type UpdateRuleRequest struct {
 
 func (x *UpdateRuleRequest) Reset() {
 	*x = UpdateRuleRequest{}
-	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[10]
+	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -692,7 +773,7 @@ func (x *UpdateRuleRequest) String() string {
 func (*UpdateRuleRequest) ProtoMessage() {}
 
 func (x *UpdateRuleRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[10]
+	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -705,7 +786,7 @@ func (x *UpdateRuleRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateRuleRequest.ProtoReflect.Descriptor instead.
 func (*UpdateRuleRequest) Descriptor() ([]byte, []int) {
-	return file_agntcy_identity_platform_v1alpha1_policy_service_proto_rawDescGZIP(), []int{10}
+	return file_agntcy_identity_platform_v1alpha1_policy_service_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *UpdateRuleRequest) GetPolicyId() string {
@@ -769,7 +850,7 @@ type DeleteRuleRequest struct {
 
 func (x *DeleteRuleRequest) Reset() {
 	*x = DeleteRuleRequest{}
-	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[11]
+	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -781,7 +862,7 @@ func (x *DeleteRuleRequest) String() string {
 func (*DeleteRuleRequest) ProtoMessage() {}
 
 func (x *DeleteRuleRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[11]
+	mi := &file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -794,7 +875,7 @@ func (x *DeleteRuleRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteRuleRequest.ProtoReflect.Descriptor instead.
 func (*DeleteRuleRequest) Descriptor() ([]byte, []int) {
-	return file_agntcy_identity_platform_v1alpha1_policy_service_proto_rawDescGZIP(), []int{11}
+	return file_agntcy_identity_platform_v1alpha1_policy_service_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *DeleteRuleRequest) GetPolicyId() string {
@@ -830,7 +911,10 @@ const file_agntcy_identity_platform_v1alpha1_policy_service_proto_rawDesc = "" +
 	"\x11rules_for_app_ids\x18\x05 \x03(\tR\x0erulesForAppIdsB\a\n" +
 	"\x05_pageB\a\n" +
 	"\x05_sizeB\b\n" +
-	"\x06_query\"\x81\x01\n" +
+	"\x06_query\"\x19\n" +
+	"\x17GetPoliciesCountRequest\"0\n" +
+	"\x18GetPoliciesCountResponse\x12\x14\n" +
+	"\x05total\x18\x01 \x01(\x03R\x05total\"\x81\x01\n" +
 	"\x13CreatePolicyRequest\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12%\n" +
 	"\vdescription\x18\x02 \x01(\tH\x00R\vdescription\x88\x01\x01\x12\x1f\n" +
@@ -886,9 +970,10 @@ const file_agntcy_identity_platform_v1alpha1_policy_service_proto_rawDesc = "" +
 	"\x0f_needs_approval\"I\n" +
 	"\x11DeleteRuleRequest\x12\x1b\n" +
 	"\tpolicy_id\x18\x01 \x01(\tR\bpolicyId\x12\x17\n" +
-	"\arule_id\x18\x02 \x01(\tR\x06ruleId2\xd9\x0e\n" +
+	"\arule_id\x18\x02 \x01(\tR\x06ruleId2\xbd\x10\n" +
 	"\rPolicyService\x12\xbb\x01\n" +
-	"\fListPolicies\x126.agntcy.identity.platform.v1alpha1.ListPoliciesRequest\x1a7.agntcy.identity.platform.v1alpha1.ListPoliciesResponse\":\x92A\x1d\x12\rList Policies*\fListPolicies\x82\xd3\xe4\x93\x02\x14\x12\x12/v1alpha1/policies\x12\xb3\x01\n" +
+	"\fListPolicies\x126.agntcy.identity.platform.v1alpha1.ListPoliciesRequest\x1a7.agntcy.identity.platform.v1alpha1.ListPoliciesResponse\":\x92A\x1d\x12\rList Policies*\fListPolicies\x82\xd3\xe4\x93\x02\x14\x12\x12/v1alpha1/policies\x12\xe1\x01\n" +
+	"\x10GetPoliciesCount\x12:.agntcy.identity.platform.v1alpha1.GetPoliciesCountRequest\x1a;.agntcy.identity.platform.v1alpha1.GetPoliciesCountResponse\"T\x92A-\x12\x19Get policies total count.*\x10GetPoliciesCount\x82\xd3\xe4\x93\x02\x1e\x12\x1c/v1alpha1/policies/all/count\x12\xb3\x01\n" +
 	"\tGetPolicy\x123.agntcy.identity.platform.v1alpha1.GetPolicyRequest\x1a).agntcy.identity.platform.v1alpha1.Policy\"F\x92A\x1d\x12\x10Get Policy by Id*\tGetPolicy\x82\xd3\xe4\x93\x02 \x12\x1e/v1alpha1/policies/{policy_id}\x12\xb0\x01\n" +
 	"\fCreatePolicy\x126.agntcy.identity.platform.v1alpha1.CreatePolicyRequest\x1a).agntcy.identity.platform.v1alpha1.Policy\"=\x92A\x1d\x12\rCreate Policy*\fCreatePolicy\x82\xd3\xe4\x93\x02\x17:\x01*\"\x12/v1alpha1/policies\x12\xbc\x01\n" +
 	"\fUpdatePolicy\x126.agntcy.identity.platform.v1alpha1.UpdatePolicyRequest\x1a).agntcy.identity.platform.v1alpha1.Policy\"I\x92A\x1d\x12\rUpdate Policy*\fUpdatePolicy\x82\xd3\xe4\x93\x02#:\x01*2\x1e/v1alpha1/policies/{policy_id}\x12\xa6\x01\n" +
@@ -919,55 +1004,59 @@ func file_agntcy_identity_platform_v1alpha1_policy_service_proto_rawDescGZIP() [
 	return file_agntcy_identity_platform_v1alpha1_policy_service_proto_rawDescData
 }
 
-var file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
+var file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
 var file_agntcy_identity_platform_v1alpha1_policy_service_proto_goTypes = []any{
-	(*ListPoliciesResponse)(nil),   // 0: agntcy.identity.platform.v1alpha1.ListPoliciesResponse
-	(*ListPoliciesRequest)(nil),    // 1: agntcy.identity.platform.v1alpha1.ListPoliciesRequest
-	(*CreatePolicyRequest)(nil),    // 2: agntcy.identity.platform.v1alpha1.CreatePolicyRequest
-	(*GetPolicyRequest)(nil),       // 3: agntcy.identity.platform.v1alpha1.GetPolicyRequest
-	(*UpdatePolicyRequest)(nil),    // 4: agntcy.identity.platform.v1alpha1.UpdatePolicyRequest
-	(*DeletePolicyRequest)(nil),    // 5: agntcy.identity.platform.v1alpha1.DeletePolicyRequest
-	(*ListRulesResponse)(nil),      // 6: agntcy.identity.platform.v1alpha1.ListRulesResponse
-	(*ListRulesRequest)(nil),       // 7: agntcy.identity.platform.v1alpha1.ListRulesRequest
-	(*CreateRuleRequest)(nil),      // 8: agntcy.identity.platform.v1alpha1.CreateRuleRequest
-	(*GetRuleRequest)(nil),         // 9: agntcy.identity.platform.v1alpha1.GetRuleRequest
-	(*UpdateRuleRequest)(nil),      // 10: agntcy.identity.platform.v1alpha1.UpdateRuleRequest
-	(*DeleteRuleRequest)(nil),      // 11: agntcy.identity.platform.v1alpha1.DeleteRuleRequest
-	(*Policy)(nil),                 // 12: agntcy.identity.platform.v1alpha1.Policy
-	(*v1alpha1.PagedResponse)(nil), // 13: agntcy.identity.platform.shared.v1alpha1.PagedResponse
-	(*Rule)(nil),                   // 14: agntcy.identity.platform.v1alpha1.Rule
-	(RuleAction)(0),                // 15: agntcy.identity.platform.v1alpha1.RuleAction
-	(*emptypb.Empty)(nil),          // 16: google.protobuf.Empty
+	(*ListPoliciesResponse)(nil),     // 0: agntcy.identity.platform.v1alpha1.ListPoliciesResponse
+	(*ListPoliciesRequest)(nil),      // 1: agntcy.identity.platform.v1alpha1.ListPoliciesRequest
+	(*GetPoliciesCountRequest)(nil),  // 2: agntcy.identity.platform.v1alpha1.GetPoliciesCountRequest
+	(*GetPoliciesCountResponse)(nil), // 3: agntcy.identity.platform.v1alpha1.GetPoliciesCountResponse
+	(*CreatePolicyRequest)(nil),      // 4: agntcy.identity.platform.v1alpha1.CreatePolicyRequest
+	(*GetPolicyRequest)(nil),         // 5: agntcy.identity.platform.v1alpha1.GetPolicyRequest
+	(*UpdatePolicyRequest)(nil),      // 6: agntcy.identity.platform.v1alpha1.UpdatePolicyRequest
+	(*DeletePolicyRequest)(nil),      // 7: agntcy.identity.platform.v1alpha1.DeletePolicyRequest
+	(*ListRulesResponse)(nil),        // 8: agntcy.identity.platform.v1alpha1.ListRulesResponse
+	(*ListRulesRequest)(nil),         // 9: agntcy.identity.platform.v1alpha1.ListRulesRequest
+	(*CreateRuleRequest)(nil),        // 10: agntcy.identity.platform.v1alpha1.CreateRuleRequest
+	(*GetRuleRequest)(nil),           // 11: agntcy.identity.platform.v1alpha1.GetRuleRequest
+	(*UpdateRuleRequest)(nil),        // 12: agntcy.identity.platform.v1alpha1.UpdateRuleRequest
+	(*DeleteRuleRequest)(nil),        // 13: agntcy.identity.platform.v1alpha1.DeleteRuleRequest
+	(*Policy)(nil),                   // 14: agntcy.identity.platform.v1alpha1.Policy
+	(*v1alpha1.PagedResponse)(nil),   // 15: agntcy.identity.platform.shared.v1alpha1.PagedResponse
+	(*Rule)(nil),                     // 16: agntcy.identity.platform.v1alpha1.Rule
+	(RuleAction)(0),                  // 17: agntcy.identity.platform.v1alpha1.RuleAction
+	(*emptypb.Empty)(nil),            // 18: google.protobuf.Empty
 }
 var file_agntcy_identity_platform_v1alpha1_policy_service_proto_depIdxs = []int32{
-	12, // 0: agntcy.identity.platform.v1alpha1.ListPoliciesResponse.policies:type_name -> agntcy.identity.platform.v1alpha1.Policy
-	13, // 1: agntcy.identity.platform.v1alpha1.ListPoliciesResponse.pagination:type_name -> agntcy.identity.platform.shared.v1alpha1.PagedResponse
-	14, // 2: agntcy.identity.platform.v1alpha1.ListRulesResponse.rules:type_name -> agntcy.identity.platform.v1alpha1.Rule
-	13, // 3: agntcy.identity.platform.v1alpha1.ListRulesResponse.pagination:type_name -> agntcy.identity.platform.shared.v1alpha1.PagedResponse
-	15, // 4: agntcy.identity.platform.v1alpha1.CreateRuleRequest.action:type_name -> agntcy.identity.platform.v1alpha1.RuleAction
-	15, // 5: agntcy.identity.platform.v1alpha1.UpdateRuleRequest.action:type_name -> agntcy.identity.platform.v1alpha1.RuleAction
+	14, // 0: agntcy.identity.platform.v1alpha1.ListPoliciesResponse.policies:type_name -> agntcy.identity.platform.v1alpha1.Policy
+	15, // 1: agntcy.identity.platform.v1alpha1.ListPoliciesResponse.pagination:type_name -> agntcy.identity.platform.shared.v1alpha1.PagedResponse
+	16, // 2: agntcy.identity.platform.v1alpha1.ListRulesResponse.rules:type_name -> agntcy.identity.platform.v1alpha1.Rule
+	15, // 3: agntcy.identity.platform.v1alpha1.ListRulesResponse.pagination:type_name -> agntcy.identity.platform.shared.v1alpha1.PagedResponse
+	17, // 4: agntcy.identity.platform.v1alpha1.CreateRuleRequest.action:type_name -> agntcy.identity.platform.v1alpha1.RuleAction
+	17, // 5: agntcy.identity.platform.v1alpha1.UpdateRuleRequest.action:type_name -> agntcy.identity.platform.v1alpha1.RuleAction
 	1,  // 6: agntcy.identity.platform.v1alpha1.PolicyService.ListPolicies:input_type -> agntcy.identity.platform.v1alpha1.ListPoliciesRequest
-	3,  // 7: agntcy.identity.platform.v1alpha1.PolicyService.GetPolicy:input_type -> agntcy.identity.platform.v1alpha1.GetPolicyRequest
-	2,  // 8: agntcy.identity.platform.v1alpha1.PolicyService.CreatePolicy:input_type -> agntcy.identity.platform.v1alpha1.CreatePolicyRequest
-	4,  // 9: agntcy.identity.platform.v1alpha1.PolicyService.UpdatePolicy:input_type -> agntcy.identity.platform.v1alpha1.UpdatePolicyRequest
-	5,  // 10: agntcy.identity.platform.v1alpha1.PolicyService.DeletePolicy:input_type -> agntcy.identity.platform.v1alpha1.DeletePolicyRequest
-	7,  // 11: agntcy.identity.platform.v1alpha1.PolicyService.ListRules:input_type -> agntcy.identity.platform.v1alpha1.ListRulesRequest
-	9,  // 12: agntcy.identity.platform.v1alpha1.PolicyService.GetRule:input_type -> agntcy.identity.platform.v1alpha1.GetRuleRequest
-	8,  // 13: agntcy.identity.platform.v1alpha1.PolicyService.CreateRule:input_type -> agntcy.identity.platform.v1alpha1.CreateRuleRequest
-	10, // 14: agntcy.identity.platform.v1alpha1.PolicyService.UpdateRule:input_type -> agntcy.identity.platform.v1alpha1.UpdateRuleRequest
-	11, // 15: agntcy.identity.platform.v1alpha1.PolicyService.DeleteRule:input_type -> agntcy.identity.platform.v1alpha1.DeleteRuleRequest
-	0,  // 16: agntcy.identity.platform.v1alpha1.PolicyService.ListPolicies:output_type -> agntcy.identity.platform.v1alpha1.ListPoliciesResponse
-	12, // 17: agntcy.identity.platform.v1alpha1.PolicyService.GetPolicy:output_type -> agntcy.identity.platform.v1alpha1.Policy
-	12, // 18: agntcy.identity.platform.v1alpha1.PolicyService.CreatePolicy:output_type -> agntcy.identity.platform.v1alpha1.Policy
-	12, // 19: agntcy.identity.platform.v1alpha1.PolicyService.UpdatePolicy:output_type -> agntcy.identity.platform.v1alpha1.Policy
-	16, // 20: agntcy.identity.platform.v1alpha1.PolicyService.DeletePolicy:output_type -> google.protobuf.Empty
-	6,  // 21: agntcy.identity.platform.v1alpha1.PolicyService.ListRules:output_type -> agntcy.identity.platform.v1alpha1.ListRulesResponse
-	14, // 22: agntcy.identity.platform.v1alpha1.PolicyService.GetRule:output_type -> agntcy.identity.platform.v1alpha1.Rule
-	14, // 23: agntcy.identity.platform.v1alpha1.PolicyService.CreateRule:output_type -> agntcy.identity.platform.v1alpha1.Rule
-	14, // 24: agntcy.identity.platform.v1alpha1.PolicyService.UpdateRule:output_type -> agntcy.identity.platform.v1alpha1.Rule
-	16, // 25: agntcy.identity.platform.v1alpha1.PolicyService.DeleteRule:output_type -> google.protobuf.Empty
-	16, // [16:26] is the sub-list for method output_type
-	6,  // [6:16] is the sub-list for method input_type
+	2,  // 7: agntcy.identity.platform.v1alpha1.PolicyService.GetPoliciesCount:input_type -> agntcy.identity.platform.v1alpha1.GetPoliciesCountRequest
+	5,  // 8: agntcy.identity.platform.v1alpha1.PolicyService.GetPolicy:input_type -> agntcy.identity.platform.v1alpha1.GetPolicyRequest
+	4,  // 9: agntcy.identity.platform.v1alpha1.PolicyService.CreatePolicy:input_type -> agntcy.identity.platform.v1alpha1.CreatePolicyRequest
+	6,  // 10: agntcy.identity.platform.v1alpha1.PolicyService.UpdatePolicy:input_type -> agntcy.identity.platform.v1alpha1.UpdatePolicyRequest
+	7,  // 11: agntcy.identity.platform.v1alpha1.PolicyService.DeletePolicy:input_type -> agntcy.identity.platform.v1alpha1.DeletePolicyRequest
+	9,  // 12: agntcy.identity.platform.v1alpha1.PolicyService.ListRules:input_type -> agntcy.identity.platform.v1alpha1.ListRulesRequest
+	11, // 13: agntcy.identity.platform.v1alpha1.PolicyService.GetRule:input_type -> agntcy.identity.platform.v1alpha1.GetRuleRequest
+	10, // 14: agntcy.identity.platform.v1alpha1.PolicyService.CreateRule:input_type -> agntcy.identity.platform.v1alpha1.CreateRuleRequest
+	12, // 15: agntcy.identity.platform.v1alpha1.PolicyService.UpdateRule:input_type -> agntcy.identity.platform.v1alpha1.UpdateRuleRequest
+	13, // 16: agntcy.identity.platform.v1alpha1.PolicyService.DeleteRule:input_type -> agntcy.identity.platform.v1alpha1.DeleteRuleRequest
+	0,  // 17: agntcy.identity.platform.v1alpha1.PolicyService.ListPolicies:output_type -> agntcy.identity.platform.v1alpha1.ListPoliciesResponse
+	3,  // 18: agntcy.identity.platform.v1alpha1.PolicyService.GetPoliciesCount:output_type -> agntcy.identity.platform.v1alpha1.GetPoliciesCountResponse
+	14, // 19: agntcy.identity.platform.v1alpha1.PolicyService.GetPolicy:output_type -> agntcy.identity.platform.v1alpha1.Policy
+	14, // 20: agntcy.identity.platform.v1alpha1.PolicyService.CreatePolicy:output_type -> agntcy.identity.platform.v1alpha1.Policy
+	14, // 21: agntcy.identity.platform.v1alpha1.PolicyService.UpdatePolicy:output_type -> agntcy.identity.platform.v1alpha1.Policy
+	18, // 22: agntcy.identity.platform.v1alpha1.PolicyService.DeletePolicy:output_type -> google.protobuf.Empty
+	8,  // 23: agntcy.identity.platform.v1alpha1.PolicyService.ListRules:output_type -> agntcy.identity.platform.v1alpha1.ListRulesResponse
+	16, // 24: agntcy.identity.platform.v1alpha1.PolicyService.GetRule:output_type -> agntcy.identity.platform.v1alpha1.Rule
+	16, // 25: agntcy.identity.platform.v1alpha1.PolicyService.CreateRule:output_type -> agntcy.identity.platform.v1alpha1.Rule
+	16, // 26: agntcy.identity.platform.v1alpha1.PolicyService.UpdateRule:output_type -> agntcy.identity.platform.v1alpha1.Rule
+	18, // 27: agntcy.identity.platform.v1alpha1.PolicyService.DeleteRule:output_type -> google.protobuf.Empty
+	17, // [17:28] is the sub-list for method output_type
+	6,  // [6:17] is the sub-list for method input_type
 	6,  // [6:6] is the sub-list for extension type_name
 	6,  // [6:6] is the sub-list for extension extendee
 	0,  // [0:6] is the sub-list for field type_name
@@ -981,19 +1070,19 @@ func file_agntcy_identity_platform_v1alpha1_policy_service_proto_init() {
 	file_agntcy_identity_platform_v1alpha1_policy_proto_init()
 	file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[0].OneofWrappers = []any{}
 	file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[1].OneofWrappers = []any{}
-	file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[2].OneofWrappers = []any{}
 	file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[4].OneofWrappers = []any{}
 	file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[6].OneofWrappers = []any{}
-	file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[7].OneofWrappers = []any{}
 	file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[8].OneofWrappers = []any{}
+	file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[9].OneofWrappers = []any{}
 	file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[10].OneofWrappers = []any{}
+	file_agntcy_identity_platform_v1alpha1_policy_service_proto_msgTypes[12].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_agntcy_identity_platform_v1alpha1_policy_service_proto_rawDesc), len(file_agntcy_identity_platform_v1alpha1_policy_service_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   12,
+			NumMessages:   14,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

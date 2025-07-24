@@ -215,3 +215,17 @@ func (s *PolicyService) UpdateRule(
 
 	return converters.FromRule(rule), nil
 }
+
+func (s *PolicyService) GetPoliciesCount(
+	ctx context.Context,
+	req *identity_platform_sdk_go.GetPoliciesCountRequest,
+) (*identity_platform_sdk_go.GetPoliciesCountResponse, error) {
+	total, err := s.policyService.CountAllPolicies(ctx)
+	if err != nil {
+		return nil, grpcutil.BadRequestError(err)
+	}
+
+	return &identity_platform_sdk_go.GetPoliciesCountResponse{
+		Total: total,
+	}, nil
+}

@@ -65,6 +65,7 @@ type PolicyService interface {
 		needsApproval bool,
 		action policytypes.RuleAction,
 	) (*policytypes.Rule, error)
+	CountAllPolicies(ctx context.Context) (int64, error)
 }
 
 type policyService struct {
@@ -301,6 +302,15 @@ func (s *policyService) UpdateRule(
 	}
 
 	return rule, nil
+}
+
+func (s *policyService) CountAllPolicies(ctx context.Context) (int64, error) {
+	total, err := s.policyRepository.CountAllPolicies(ctx)
+	if err != nil {
+		return 0, errutil.Err(err, "error while counting policies")
+	}
+
+	return total, nil
 }
 
 func (s *policyService) validateTasks(

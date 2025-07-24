@@ -26,6 +26,15 @@ service PolicyService {
     };
   }
 
+  // Get policies total count.
+  rpc GetPoliciesCount(GetPoliciesCountRequest) returns (GetPoliciesCountResponse) {
+    option (google.api.http) = {get: "/v1alpha1/policies/all/count"};
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "GetPoliciesCount";
+      summary: "Get policies total count.";
+    };
+  }
+
   // Get Policy by id
   rpc GetPolicy(GetPolicyRequest) returns (Policy) {
     option (google.api.http) = {get: "/v1alpha1/policies/{policy_id}"};
@@ -151,6 +160,13 @@ message ListPoliciesRequest {
 
   // A filter used to fetch policies where the rules applies for the specified Agentic Services
   repeated string rules_for_app_ids = 5;
+}
+
+message GetPoliciesCountRequest {}
+
+message GetPoliciesCountResponse {
+  // The total count
+  int64 total = 1;
 }
 
 message CreatePolicyRequest {

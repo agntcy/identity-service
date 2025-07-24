@@ -595,6 +595,25 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /v1alpha1/policies/all/count:
+        get:
+            tags:
+                - PolicyService
+            description: Get policies total count.
+            operationId: PolicyService_GetPoliciesCount
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetPoliciesCountResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /v1alpha1/policies/{policyId}:
         get:
             tags:
@@ -1203,6 +1222,12 @@ components:
                     items:
                         $ref: '#/components/schemas/AppTypeCountEntry'
                     description: The apps count per app type
+                total:
+                    type: string
+                    description: The total count
+        GetPoliciesCountResponse:
+            type: object
+            properties:
                 total:
                     type: string
                     description: The total count
