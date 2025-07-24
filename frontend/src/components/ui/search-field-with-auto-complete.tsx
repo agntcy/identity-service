@@ -121,7 +121,6 @@ export const SearchFieldWithAutocomplete = forwardRef(function SearchFieldWithAu
     <Autocomplete
       ref={ref}
       options={options}
-      freeSolo={true}
       fullWidth={false}
       loading={loading}
       openOnFocus={true}
@@ -160,6 +159,18 @@ export const SearchFieldWithAutocomplete = forwardRef(function SearchFieldWithAu
             },
             '.MuiAutocomplete-listbox': {
               maxHeight: '50vh'
+            },
+            '.MuiAutocomplete-noOptions': {
+              padding: 0,
+              textAlign: 'center',
+              color: theme.palette.vars.baseTextWeak,
+              ...theme.typography.subtitle2
+            },
+            '.MuiAutocomplete-loading': {
+              padding: 0,
+              textAlign: 'center',
+              color: theme.palette.vars.baseTextWeak,
+              ...theme.typography.subtitle2
             }
           }
         }

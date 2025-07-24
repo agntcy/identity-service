@@ -56,36 +56,44 @@ const Layout = () => {
       className="fixed"
     >
       <BannerProvider>
-        <Header />
-        <ResizablePanelGroup direction="horizontal" onLayout={onLayout}>
-          <ResizablePanel
-            hidden={isMobile}
-            defaultSize={layout[0]}
-            collapsedSize={defaultCollapsedLayout[0]}
-            minSize={10}
-            maxSize={15}
-            collapsible={true}
-            onCollapse={() => {
-              setIsCollapsed(true);
-            }}
-            onExpand={() => {
-              setIsCollapsed(false);
-            }}
-            className={cn(
-              'transition-all duration-300 ease-in-out',
-              isCollapsed && 'min-w-[88px] max-w-[88px]',
-              !isCollapsed && 'min-w-[264px] max-w-[264px]'
-            )}
-          >
-            <SideNav isCollapsed={isCollapsed} onChangeCollapsed={(value) => setIsCollapsed(value as boolean)} />
-          </ResizablePanel>
-          <ResizablePanel defaultSize={defaultLayout[1]} collapsible={false} minSize={30}>
-            <main className="h-full">
-              <Outlet />
-            </main>
-          </ResizablePanel>
-        </ResizablePanelGroup>
-        <Footer />
+        <div
+          style={{
+            height: '100%',
+            width: '100%'
+          }}
+          className="fixed"
+        >
+          <Header />
+          <ResizablePanelGroup direction="horizontal" onLayout={onLayout}>
+            <ResizablePanel
+              hidden={isMobile}
+              defaultSize={layout[0]}
+              collapsedSize={defaultCollapsedLayout[0]}
+              minSize={10}
+              maxSize={15}
+              collapsible={true}
+              onCollapse={() => {
+                setIsCollapsed(true);
+              }}
+              onExpand={() => {
+                setIsCollapsed(false);
+              }}
+              className={cn(
+                'transition-all duration-300 ease-in-out',
+                isCollapsed && 'min-w-[88px] max-w-[88px]',
+                !isCollapsed && 'min-w-[264px] max-w-[264px]'
+              )}
+            >
+              <SideNav isCollapsed={isCollapsed} onChangeCollapsed={(value) => setIsCollapsed(value as boolean)} />
+            </ResizablePanel>
+            <ResizablePanel defaultSize={defaultLayout[1]} collapsible={false} minSize={30}>
+              <main className="h-full">
+                <Outlet />
+              </main>
+            </ResizablePanel>
+          </ResizablePanelGroup>
+          <Footer />
+        </div>
       </BannerProvider>
     </ResizablePanelGroup>
   );

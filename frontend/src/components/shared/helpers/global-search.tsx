@@ -9,7 +9,6 @@ import {
   SearchFieldWithAutocompleteOption
 } from '@/components/ui/search-field-with-auto-complete';
 import {generatePath, useNavigate} from 'react-router-dom';
-import {ListItemIcon, ListItemText, Typography} from '@mui/material';
 import {App} from '@/types/api/app';
 import {Policy} from '@/types/api/policy';
 import {useCallback, useMemo, useState} from 'react';
@@ -18,36 +17,20 @@ import {AgenticServiceType} from '../agentic-services/agentic-service-type';
 import {PATHS} from '@/router/paths';
 import {useFeatureFlagsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
-import {GeneralSize, Tag, Tags, TagStatus} from '@outshift/spark-design';
+import {GeneralSize, OverflowTooltip, Tag, TagStatus} from '@outshift/spark-design';
+
 type GlobalSearchOptionType = App | Policy;
 
 const ApplicationListItem = ({app}: {app: App}) => (
-  <div className="flex items-center">
-    <ListItemIcon>
-      <AgenticServiceType type={app.type} showLabel={false} />
-    </ListItemIcon>
-    <ListItemText
-      primary={
-        <Tags
-          size={GeneralSize.Small}
-          items={[
-            {
-              valueFormatter: () => app.name || 'Unknown Application'
-            },
-            ...(app.description
-              ? [
-                  {
-                    valueFormatter: () => app.description || undefined
-                  }
-                ]
-              : [])
-          ]}
-          showOnlyFirst={false}
-          shouldTruncate
-          maxTooltipTags={2}
-        />
-      }
-    />
+  <div className="flex items-center gap-2">
+    <div className="min-w-0 max-w-[300px]">
+      <Tag size={GeneralSize.Small}>
+        <div className="flex items-center min-w-0 gap-2">
+          <AgenticServiceType type={app?.type} showLabel={false} />
+          <OverflowTooltip someLongText={app?.name || 'Unknown Service'} value={app?.name || 'Unknown Service'} />
+        </div>
+      </Tag>
+    </div>
   </div>
 );
 
@@ -55,40 +38,29 @@ const PolicyListItem = ({policy}: {policy: Policy}) => {
   const {data} = useGetAgenticService(policy.assignedTo);
   return (
     <div className="flex items-center gap-2">
-      <ListItemText
-        primary={
-          <Tags
-            size={GeneralSize.Small}
-            items={[
-              {
-                valueFormatter: () => policy.name || 'Unknown Policy'
-              },
-              ...(policy.description
-                ? [
-                    {
-                      valueFormatter: () => policy.description || undefined
-                    }
-                  ]
-                : [])
-            ]}
-            showOnlyFirst={false}
-            shouldTruncate
-            maxTooltipTags={2}
-          />
-        }
-      />
+      <div className="min-w-0 max-w-[100px]">
+        <Tag size={GeneralSize.Small}>
+          <div className="min-w-0">
+            <OverflowTooltip someLongText={policy?.name || 'Unknown Policy'} value={policy?.name || 'Unknown Policy'} />
+          </div>
+        </Tag>
+      </div>
       <Tag status={TagStatus.Info} size={GeneralSize.Small}>
         {policy.rules?.length ?? 0} Rule{(policy.rules?.length ?? 0) > 1 ? 's' : ''}
       </Tag>
-      <Tag size={GeneralSize.Small}>
-        <div className="flex items-center gap-2">
-          <AgenticServiceType type={data?.type} showLabel={false} />
-          <Typography variant="body2">{data?.name ?? 'Not provided'}</Typography>
-        </div>
-      </Tag>
+      <div className="min-w-0 max-w-[100px]">
+        <Tag size={GeneralSize.Small}>
+          <div className="flex items-center min-w-0 gap-2">
+            <AgenticServiceType type={data?.type} showLabel={false} />
+            <OverflowTooltip someLongText={data?.name || 'Unknown Service'} value={data?.name || 'Unknown Service'} />
+          </div>
+        </Tag>
+      </div>
     </div>
   );
 };
+
+const SIZE = 10;
 
 export const GlobalSearch = () => {
   const [query, setQuery] = useState('');
@@ -103,14 +75,16 @@ export const GlobalSearch = () => {
 
   const {data: dataAgenticServices, isLoading: loadingAgenticServices} = useGetAgenticServices(
     {
-      query: query
+      query: query,
+      size: SIZE
     },
     !!query
   );
 
   const {data: dataPolicies, isLoading: loadingPolicies} = useGetPolicies({
     query: {
-      query: query
+      query: query,
+      size: SIZE
     },
     enable: !!query && isTbacEnable
   });

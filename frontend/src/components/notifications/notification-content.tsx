@@ -108,7 +108,7 @@ export const NotificationContent = ({
         classNameOverlay={index > 0 ? 'inset-full' : ''}
         className="max-h-screen space-y-4"
         style={{
-          height: `calc(${65 + index * 1}vh - 56px)`,
+          height: `calc(${70 + index * 1}vh - 56px)`,
           zIndex: 3000 + zIndex,
           pointerEvents: index === 0 ? 'auto' : 'none',
           transform: `scale(${1 - index * 0.035}) translate3d(0px, ${-16 * (index + 0.035)}px, 0px)`,
@@ -148,7 +148,7 @@ export const NotificationContent = ({
         </div>
         {notification?.type === NotificationType.APPROVAL_REQUEST && (
           <DrawerFooter>
-            <div className="flex justify-between gap-8 py-4">
+            <div className="flex justify-between gap-12 pb-8">
               <Button
                 variant="outlined"
                 sx={{
