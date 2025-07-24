@@ -13,7 +13,6 @@ import {
   Pagination,
   Table,
   Tag,
-  TagStatus,
   Typography
 } from '@outshift/spark-design';
 import {useCallback, useMemo, useState} from 'react';
@@ -131,6 +130,7 @@ export const RulesContent = ({policy}: {policy?: Policy}) => {
                       <div className="flex justify-between items-start gap-4 mb-4">
                         <div className="w-full">
                           <Accordion
+                            defaultExpanded={index === 0}
                             title={rule.name || `Rule ${index + 1}`}
                             subTitle={
                               (
@@ -144,10 +144,7 @@ export const RulesContent = ({policy}: {policy?: Policy}) => {
                                     {rule.tasks?.length || 0}{' '}
                                     {rule.tasks?.length && rule.tasks?.length > 1 ? 'Tasks' : 'Task'}
                                   </Tag>
-                                  <Tag
-                                    status={rule.needsApproval ? TagStatus.Positive : TagStatus.Negative}
-                                    size={GeneralSize.Small}
-                                  >
+                                  <Tag size={GeneralSize.Small}>
                                     <Typography variant="captionSemibold">
                                       Approval: <b>{rule.needsApproval ? 'Yes' : 'No'}</b>
                                     </Typography>

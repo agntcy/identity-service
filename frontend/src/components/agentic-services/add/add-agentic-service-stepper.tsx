@@ -48,7 +48,7 @@ const FormStepperComponent = () => {
           description: 'Agentic service added successfully.',
           type: 'success'
         });
-        const path = generatePath(PATHS.agenticServices.info, {
+        const path = generatePath(PATHS.agenticServices.info.base, {
           id: resp.data.id
         });
         void navigate(path, {replace: true});

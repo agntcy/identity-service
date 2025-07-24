@@ -20,7 +20,6 @@ const VerifyIdentity: React.FC = () => {
   return (
     <BasePage
       title="Verify Identity"
-      useBorder
       rightSideItems={
         <Link href={docs('verify')} openInNewTab>
           <div className="flex items-center gap-1">

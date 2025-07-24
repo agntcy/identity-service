@@ -10,7 +10,7 @@ import {useCallback} from 'react';
 import {useFieldArray, UseFormReturn, useWatch} from 'react-hook-form';
 import {Button, Divider, IconButton, Tooltip, Typography} from '@mui/material';
 import {PolicyLogicyFormValues} from '@/schemas/policy-logic-schema';
-import {Accordion, GeneralSize, Tag, TagStatus} from '@outshift/spark-design';
+import {Accordion, GeneralSize, Tag} from '@outshift/spark-design';
 import {RuleAction} from '@/types/api/policy';
 import {RuleForm} from './rule-form';
 import {labels} from '@/constants/labels';
@@ -77,7 +77,7 @@ export const PolicyLogic = ({
         <Tag size={GeneralSize.Medium}>
           {rule?.tasks?.length || 0} {rule?.tasks?.length && rule?.tasks?.length > 1 ? 'Tasks' : 'Task'}
         </Tag>
-        <Tag status={rule.needsApproval ? TagStatus.Positive : TagStatus.Negative} size={GeneralSize.Small}>
+        <Tag size={GeneralSize.Small}>
           <Typography variant="captionSemibold">
             Approval: <b>{rule.needsApproval ? 'Yes' : 'No'}</b>
           </Typography>

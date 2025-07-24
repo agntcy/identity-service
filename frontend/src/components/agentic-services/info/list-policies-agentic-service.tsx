@@ -17,7 +17,7 @@ import {ListRules} from '@/components/shared/list-rules/list-rules';
 import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-renderer';
 import {PoliciesColumns} from './policies-columns';
 
-export const ListPoliciesAgenticService = ({appId, mode = 'assinged'}: {appId?: string; mode: 'assinged' | 'used-by'}) => {
+export const ListPoliciesAgenticService = ({appId, mode = 'assigned'}: {appId?: string; mode: 'assigned' | 'used-by'}) => {
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: 0,
     pageSize: 15
@@ -35,7 +35,7 @@ export const ListPoliciesAgenticService = ({appId, mode = 'assinged'}: {appId?: 
       page: pagination.pageIndex + 1,
       size: pagination.pageSize,
       query: query,
-      appIds: appId && mode === 'assinged' ? [appId] : undefined,
+      appIds: appId && mode === 'assigned' ? [appId] : undefined,
       rulesForAppIds: appId && mode === 'used-by' ? [appId] : undefined
     }
   });

@@ -14,7 +14,7 @@ import DateHover from '@/components/ui/date-hover';
 import {useAnalytics} from '@/hooks';
 import {BadgeCard} from '@/components/shared/agentic-services/badge-card';
 
-export const AboutAgenticService = ({
+export const ContentAboutAgenticService = ({
   app,
   onChangeReissueBadge
 }: {
@@ -98,6 +98,7 @@ export const AboutAgenticService = ({
           <div className="w-full">
             <BadgeCard
               verifyIdentity={true}
+              reIssueBadge={true}
               app={app}
               navigateTo={false}
               onBadgeChanged={(badge) => {

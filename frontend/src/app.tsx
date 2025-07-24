@@ -47,10 +47,10 @@ const App = () => {
               <ApiProvider>
                 <QueryProvider>
                   <Toaster
-                    offset={isMobile ? undefined : {bottom: '64px', right: '16px'}}
+                    offset={isMobile ? undefined : {top: '64px', right: '16px'}}
                     expand={false}
                     duration={3500}
-                    position={isMobile ? 'top-center' : 'bottom-right'}
+                    position={isMobile ? 'top-center' : 'top-right'}
                   />
                   <FeatureFlagsProvider>
                     <PwaProvider>
