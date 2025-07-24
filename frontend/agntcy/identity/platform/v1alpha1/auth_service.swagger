@@ -247,7 +247,7 @@
           "title": "UpdatedAt records the timestamp of the last update to the App"
         }
       },
-      "description": "Identity Platform App."
+      "description": "Identity Service App."
     },
     "v1alpha1AppInfoResponse": {
       "type": "object",

@@ -4,12 +4,12 @@
  */
 
 import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-renderer';
-import {useAddDevice, useDeleteDevice} from '@/mutations';
+import {useAddDevice, useDeleteDevice, useTestDevice} from '@/mutations';
 import {useGetDevices} from '@/queries';
 import {EmptyState, Table, toast, Typography} from '@outshift/spark-design';
 import React, {useCallback, useMemo, useState} from 'react';
 import {ConfirmModal} from '../ui/confirm-modal';
-import {useAnalytics, useAuth} from '@/hooks';
+import {useAnalytics} from '@/hooks';
 import {Device} from '@/types/api/device';
 import {PATHS} from '@/router/paths';
 import {QRCodeModal} from '../shared/helpers/qr-code-modal';
@@ -46,8 +46,6 @@ export const ListDevices: React.FC = () => {
   const dataCount = useMemo(() => {
     return Number(data?.pagination?.total);
   }, [data?.pagination?.total]);
-
-  const {authInfo} = useAuth();
 
   const {analyticsTrack} = useAnalytics();
 
@@ -93,6 +91,25 @@ export const ListDevices: React.FC = () => {
     }
   });
 
+  const testDeviceMutation = useTestDevice({
+    callbacks: {
+      onSuccess: () => {
+        toast({
+          title: 'Device Test',
+          description: 'Notification sent to the device successfully.',
+          type: 'success'
+        });
+      },
+      onError: () => {
+        toast({
+          title: 'Error Testing Device',
+          description: 'An error occurred while testing the device. Please try again.',
+          type: 'error'
+        });
+      }
+    }
+  });
+
   const link = useMemo(() => {
     if (tempDevice) {
       const path = `${PATHS.onboardDevice.base}?id=${tempDevice.id}`;
@@ -130,6 +147,13 @@ export const ListDevices: React.FC = () => {
     analyticsTrack('CLICK_ADD_DEVICE');
     addDeviceMutation.mutate({});
   }, [addDeviceMutation, analyticsTrack]);
+
+  const handleOnTestDevice = useCallback(
+    (id?: string) => {
+      testDeviceMutation.mutate(id!);
+    },
+    [testDeviceMutation]
+  );
 
   return (
     <>
@@ -182,10 +206,10 @@ export const ListDevices: React.FC = () => {
             renderRowActionMenuItems={({row}) => {
               return [
                 <MenuItem
-                  disabled
                   key="test-device"
                   onClick={() => {
                     analyticsTrack('CLICK_TEST_DEVICE');
+                    handleOnTestDevice(row.original.id);
                   }}
                   sx={{display: 'flex', alignItems: 'center', gap: '8px'}}
                 >

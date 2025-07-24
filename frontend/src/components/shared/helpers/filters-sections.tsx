@@ -126,7 +126,8 @@ const CustomDropdown = <T,>({treeData, onSelectValues, isSearchFieldEnabled, ...
       updateCheckbox={updateCheckbox}
       isSearchFieldEnabled={isSearchFieldEnabled}
       popOverPaperSx={{
-        width: 'fit-content'
+        width: 'fit-content',
+        height: 'fit-content'
       }}
       {...props}
     />

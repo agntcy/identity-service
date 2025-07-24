@@ -168,6 +168,39 @@
           "Device"
         ]
       }
+    },
+    "/v1alpha1/device/{deviceId}/test": {
+      "post": {
+        "summary": "Send a test notification to a registered device to see if it's well configured.",
+        "operationId": "TestDevice",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "deviceId",
+            "description": "The device id.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Device"
+        ]
+      }
     }
   },
   "definitions": {

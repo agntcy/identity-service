@@ -117,6 +117,29 @@
         ]
       }
     },
+    "/v1alpha1/policies/all/count": {
+      "get": {
+        "summary": "Get policies total count.",
+        "operationId": "GetPoliciesCount",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1alpha1GetPoliciesCountResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Policy"
+        ]
+      }
+    },
     "/v1alpha1/policies/{policyId}": {
       "get": {
         "summary": "Get Policy by Id",
@@ -555,6 +578,16 @@
         }
       }
     },
+    "v1alpha1GetPoliciesCountResponse": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "string",
+          "format": "int64",
+          "title": "The total count"
+        }
+      }
+    },
     "v1alpha1ListPoliciesResponse": {
       "type": "object",
       "properties": {
@@ -652,7 +685,7 @@
           "title": "UpdatedAt records the timestamp of the last update to the Policy"
         }
       },
-      "description": "Identity Platform Policy."
+      "description": "Identity Service Policy."
     },
     "v1alpha1Rule": {
       "type": "object",
@@ -699,7 +732,7 @@
           "title": "UpdatedAt records the timestamp of the last update to the Rule"
         }
       },
-      "title": "Identity Platform Policy Rule"
+      "title": "Identity Service Policy Rule"
     },
     "v1alpha1RuleAction": {
       "type": "string",
@@ -734,7 +767,7 @@
           "description": "A tool name for the Task."
         }
       },
-      "title": "Identity Platform Policy Task"
+      "title": "Identity Service Policy Task"
     }
   }
 }

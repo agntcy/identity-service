@@ -22,6 +22,9 @@ const InfoAgenticService: React.FC = () => {
   const [showBadgeForm, setShowBadgeForm] = useState<boolean>(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState<boolean>(false);
 
+  const isPoliciesAssignedTo = window.location.pathname.includes('policies-assigned-to');
+  const isPoliciesUsedBy = window.location.pathname.includes('policies-used-by');
+
   const {id} = useParams<{id: string}>();
 
   const {data, isLoading, error, isError, refetch} = useGetAgenticService(id);
@@ -73,8 +76,26 @@ const InfoAgenticService: React.FC = () => {
           link: PATHS.agenticServices.base
         },
         {
-          text: data?.name || 'Agentic Service'
-        }
+          text: data?.name || 'Agentic Service',
+          link:
+            isPoliciesAssignedTo || isPoliciesUsedBy
+              ? generatePath(PATHS.agenticServices.info.base, {id: id || ''})
+              : undefined
+        },
+        ...(isPoliciesAssignedTo
+          ? [
+              {
+                text: 'Policies Assigned To'
+              }
+            ]
+          : []),
+        ...(isPoliciesUsedBy
+          ? [
+              {
+                text: 'Policies Used By'
+              }
+            ]
+          : [])
       ]}
       subNav={
         isTbacEnable

@@ -1,5 +1,5 @@
 /**
- * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+ * Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -173,7 +173,7 @@ export interface RpcStatus {
   details?: GoogleprotobufAny[];
 }
 
-/** Identity Platform App. */
+/** Identity Service App. */
 export interface V1Alpha1App {
   /** A unique identifier for the App. */
   id?: string;
