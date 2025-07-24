@@ -17,7 +17,7 @@ jobs:
   #################################################################################
   call-sonar-scan:
     name: Call SonarQube scan
-    uses: cisco-eti/gh-reusable-workflows/.github/workflows/sonar-scan.yaml@production
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/sonar-scan.yaml@7394e9d90f15f0e8012272525298f606f7725038
     with:
       sonar-properties-file: "./.github/linters/sonar-project.properties"
       sonar-java-version: "17"
