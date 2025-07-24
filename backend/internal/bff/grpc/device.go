@@ -92,3 +92,15 @@ func (s *deviceService) DeleteDevice(
 
 	return &emptypb.Empty{}, nil
 }
+
+func (s *deviceService) TestDevice(
+	ctx context.Context,
+	req *identity_platform_sdk_go.TestDeviceRequest,
+) (*emptypb.Empty, error) {
+	err := s.deviceSrv.TestDevice(ctx, req.GetDeviceId())
+	if err != nil {
+		return nil, grpcutil.BadRequestError(err)
+	}
+
+	return &emptypb.Empty{}, nil
+}

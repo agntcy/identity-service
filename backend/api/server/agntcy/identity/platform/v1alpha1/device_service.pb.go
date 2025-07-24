@@ -289,6 +289,51 @@ func (x *DeleteDeviceRequest) GetDeviceId() string {
 	return ""
 }
 
+type TestDeviceRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The device id.
+	DeviceId      string `protobuf:"bytes,1,opt,name=device_id,json=deviceId,proto3" json:"device_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TestDeviceRequest) Reset() {
+	*x = TestDeviceRequest{}
+	mi := &file_agntcy_identity_platform_v1alpha1_device_service_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TestDeviceRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TestDeviceRequest) ProtoMessage() {}
+
+func (x *TestDeviceRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_agntcy_identity_platform_v1alpha1_device_service_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TestDeviceRequest.ProtoReflect.Descriptor instead.
+func (*TestDeviceRequest) Descriptor() ([]byte, []int) {
+	return file_agntcy_identity_platform_v1alpha1_device_service_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *TestDeviceRequest) GetDeviceId() string {
+	if x != nil {
+		return x.DeviceId
+	}
+	return ""
+}
+
 var File_agntcy_identity_platform_v1alpha1_device_service_proto protoreflect.FileDescriptor
 
 const file_agntcy_identity_platform_v1alpha1_device_service_proto_rawDesc = "" +
@@ -313,12 +358,17 @@ const file_agntcy_identity_platform_v1alpha1_device_service_proto_rawDesc = "" +
 	"pagination\x88\x01\x01B\r\n" +
 	"\v_pagination\"2\n" +
 	"\x13DeleteDeviceRequest\x12\x1b\n" +
-	"\tdevice_id\x18\x01 \x01(\tR\bdeviceId2\x9f\x06\n" +
+	"\tdevice_id\x18\x01 \x01(\tR\bdeviceId\"0\n" +
+	"\x11TestDeviceRequest\x12\x1b\n" +
+	"\tdevice_id\x18\x01 \x01(\tR\bdeviceId2\x88\b\n" +
 	"\rDeviceService\x12\xbd\x01\n" +
 	"\tAddDevice\x123.agntcy.identity.platform.v1alpha1.AddDeviceRequest\x1a).agntcy.identity.platform.v1alpha1.Device\"P\x92A-\x12 Add new device for approval flow*\tAddDevice\x82\xd3\xe4\x93\x02\x1a:\x06device\"\x10/v1alpha1/device\x12\xc6\x01\n" +
 	"\x0eRegisterDevice\x128.agntcy.identity.platform.v1alpha1.RegisterDeviceRequest\x1a\x16.google.protobuf.Empty\"b\x92A3\x12!Register device for approval flow*\x0eRegisterDevice\x82\xd3\xe4\x93\x02&:\x06device\"\x1c/v1alpha1/device/{device_id}\x12\xc3\x01\n" +
 	"\vListDevices\x125.agntcy.identity.platform.v1alpha1.ListDevicesRequest\x1a6.agntcy.identity.platform.v1alpha1.ListDevicesResponse\"E\x92A*\x12\x1bList all registered devices*\vListDevices\x82\xd3\xe4\x93\x02\x12\x12\x10/v1alpha1/device\x12\xb1\x01\n" +
-	"\fDeleteDevice\x126.agntcy.identity.platform.v1alpha1.DeleteDeviceRequest\x1a\x16.google.protobuf.Empty\"Q\x92A*\x12\x1aDelete a registered Device*\fDeleteDevice\x82\xd3\xe4\x93\x02\x1e*\x1c/v1alpha1/device/{device_id}\x1a\v\x92A\b\n" +
+	"\fDeleteDevice\x126.agntcy.identity.platform.v1alpha1.DeleteDeviceRequest\x1a\x16.google.protobuf.Empty\"Q\x92A*\x12\x1aDelete a registered Device*\fDeleteDevice\x82\xd3\xe4\x93\x02\x1e*\x1c/v1alpha1/device/{device_id}\x12\xe6\x01\n" +
+	"\n" +
+	"TestDevice\x124.agntcy.identity.platform.v1alpha1.TestDeviceRequest\x1a\x16.google.protobuf.Empty\"\x89\x01\x92A]\x12OSend a test notification to a registered device to see if it's well configured.*\n" +
+	"TestDevice\x82\xd3\xe4\x93\x02#\"!/v1alpha1/device/{device_id}/test\x1a\v\x92A\b\n" +
 	"\x06DeviceBkZigithub.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_gob\x06proto3"
 
 var (
@@ -333,32 +383,35 @@ func file_agntcy_identity_platform_v1alpha1_device_service_proto_rawDescGZIP() [
 	return file_agntcy_identity_platform_v1alpha1_device_service_proto_rawDescData
 }
 
-var file_agntcy_identity_platform_v1alpha1_device_service_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_agntcy_identity_platform_v1alpha1_device_service_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_agntcy_identity_platform_v1alpha1_device_service_proto_goTypes = []any{
 	(*AddDeviceRequest)(nil),       // 0: agntcy.identity.platform.v1alpha1.AddDeviceRequest
 	(*RegisterDeviceRequest)(nil),  // 1: agntcy.identity.platform.v1alpha1.RegisterDeviceRequest
 	(*ListDevicesRequest)(nil),     // 2: agntcy.identity.platform.v1alpha1.ListDevicesRequest
 	(*ListDevicesResponse)(nil),    // 3: agntcy.identity.platform.v1alpha1.ListDevicesResponse
 	(*DeleteDeviceRequest)(nil),    // 4: agntcy.identity.platform.v1alpha1.DeleteDeviceRequest
-	(*Device)(nil),                 // 5: agntcy.identity.platform.v1alpha1.Device
-	(*v1alpha1.PagedResponse)(nil), // 6: agntcy.identity.platform.shared.v1alpha1.PagedResponse
-	(*emptypb.Empty)(nil),          // 7: google.protobuf.Empty
+	(*TestDeviceRequest)(nil),      // 5: agntcy.identity.platform.v1alpha1.TestDeviceRequest
+	(*Device)(nil),                 // 6: agntcy.identity.platform.v1alpha1.Device
+	(*v1alpha1.PagedResponse)(nil), // 7: agntcy.identity.platform.shared.v1alpha1.PagedResponse
+	(*emptypb.Empty)(nil),          // 8: google.protobuf.Empty
 }
 var file_agntcy_identity_platform_v1alpha1_device_service_proto_depIdxs = []int32{
-	5, // 0: agntcy.identity.platform.v1alpha1.AddDeviceRequest.device:type_name -> agntcy.identity.platform.v1alpha1.Device
-	5, // 1: agntcy.identity.platform.v1alpha1.RegisterDeviceRequest.device:type_name -> agntcy.identity.platform.v1alpha1.Device
-	5, // 2: agntcy.identity.platform.v1alpha1.ListDevicesResponse.devices:type_name -> agntcy.identity.platform.v1alpha1.Device
-	6, // 3: agntcy.identity.platform.v1alpha1.ListDevicesResponse.pagination:type_name -> agntcy.identity.platform.shared.v1alpha1.PagedResponse
+	6, // 0: agntcy.identity.platform.v1alpha1.AddDeviceRequest.device:type_name -> agntcy.identity.platform.v1alpha1.Device
+	6, // 1: agntcy.identity.platform.v1alpha1.RegisterDeviceRequest.device:type_name -> agntcy.identity.platform.v1alpha1.Device
+	6, // 2: agntcy.identity.platform.v1alpha1.ListDevicesResponse.devices:type_name -> agntcy.identity.platform.v1alpha1.Device
+	7, // 3: agntcy.identity.platform.v1alpha1.ListDevicesResponse.pagination:type_name -> agntcy.identity.platform.shared.v1alpha1.PagedResponse
 	0, // 4: agntcy.identity.platform.v1alpha1.DeviceService.AddDevice:input_type -> agntcy.identity.platform.v1alpha1.AddDeviceRequest
 	1, // 5: agntcy.identity.platform.v1alpha1.DeviceService.RegisterDevice:input_type -> agntcy.identity.platform.v1alpha1.RegisterDeviceRequest
 	2, // 6: agntcy.identity.platform.v1alpha1.DeviceService.ListDevices:input_type -> agntcy.identity.platform.v1alpha1.ListDevicesRequest
 	4, // 7: agntcy.identity.platform.v1alpha1.DeviceService.DeleteDevice:input_type -> agntcy.identity.platform.v1alpha1.DeleteDeviceRequest
-	5, // 8: agntcy.identity.platform.v1alpha1.DeviceService.AddDevice:output_type -> agntcy.identity.platform.v1alpha1.Device
-	7, // 9: agntcy.identity.platform.v1alpha1.DeviceService.RegisterDevice:output_type -> google.protobuf.Empty
-	3, // 10: agntcy.identity.platform.v1alpha1.DeviceService.ListDevices:output_type -> agntcy.identity.platform.v1alpha1.ListDevicesResponse
-	7, // 11: agntcy.identity.platform.v1alpha1.DeviceService.DeleteDevice:output_type -> google.protobuf.Empty
-	8, // [8:12] is the sub-list for method output_type
-	4, // [4:8] is the sub-list for method input_type
+	5, // 8: agntcy.identity.platform.v1alpha1.DeviceService.TestDevice:input_type -> agntcy.identity.platform.v1alpha1.TestDeviceRequest
+	6, // 9: agntcy.identity.platform.v1alpha1.DeviceService.AddDevice:output_type -> agntcy.identity.platform.v1alpha1.Device
+	8, // 10: agntcy.identity.platform.v1alpha1.DeviceService.RegisterDevice:output_type -> google.protobuf.Empty
+	3, // 11: agntcy.identity.platform.v1alpha1.DeviceService.ListDevices:output_type -> agntcy.identity.platform.v1alpha1.ListDevicesResponse
+	8, // 12: agntcy.identity.platform.v1alpha1.DeviceService.DeleteDevice:output_type -> google.protobuf.Empty
+	8, // 13: agntcy.identity.platform.v1alpha1.DeviceService.TestDevice:output_type -> google.protobuf.Empty
+	9, // [9:14] is the sub-list for method output_type
+	4, // [4:9] is the sub-list for method input_type
 	4, // [4:4] is the sub-list for extension type_name
 	4, // [4:4] is the sub-list for extension extendee
 	0, // [0:4] is the sub-list for field type_name
@@ -378,7 +431,7 @@ func file_agntcy_identity_platform_v1alpha1_device_service_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_agntcy_identity_platform_v1alpha1_device_service_proto_rawDesc), len(file_agntcy_identity_platform_v1alpha1_device_service_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   5,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -62,6 +62,16 @@ service DeviceService {
       summary: "Delete a registered Device";
     };
   }
+
+  // Send a test notification to a registered device to see if it's well configured.
+  rpc TestDevice(TestDeviceRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {post: "/v1alpha1/device/{device_id}/test"};
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "TestDevice";
+      summary: "Send a test notification to a registered device to see if it's well configured.";
+    };
+  }
 }
 
 message AddDeviceRequest {
@@ -97,6 +107,11 @@ message ListDevicesResponse {
 }
 
 message DeleteDeviceRequest {
+  // The device id.
+  string device_id = 1;
+}
+
+message TestDeviceRequest {
   // The device id.
   string device_id = 1;
 }
