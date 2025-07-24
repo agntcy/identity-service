@@ -152,7 +152,7 @@ export const SideNav: React.FC<{
             })}
           </div>
         </div>
-        <div className={cn('absolute bottom-34 left-[24px]')}>
+        <div className={cn('absolute bottom-[250px] left-[24px]')}>
           <IconButton
             onClick={() => onChangeCollapsed?.(!isCollapsed)}
             sx={{
