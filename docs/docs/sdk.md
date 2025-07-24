@@ -24,7 +24,7 @@ To see more details about the development integration, you can refer to the [Dev
 To install the Python SDK for Agent Identity, you can use pip:
 
 ```bash
-pip install git+https://github.com/cisco-eti/identity-service-sdk@main#subdirectory=python
+pip install git+https://github.com/cisco-outshift-ai-agents/identity-service-sdk@main#subdirectory=python
 ```
 
 ### Example Usage
@@ -60,9 +60,6 @@ except Exception as e:
 Here is a basic example of how to use the Python SDK to issue a badge for an Agentic Service:
 
 ```python
-# Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
-# SPDX-License-Identifier: Apache-2.0
-
 from dotenv import load_dotenv
 from identityplatform.sdk import IdentityPlatformSdk as Sdk
 

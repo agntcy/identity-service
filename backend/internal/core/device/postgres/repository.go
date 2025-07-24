@@ -192,7 +192,7 @@ func (r *repository) ListRegisteredDevices(
 
 	if query != nil && *query != "" {
 		dbQuery = dbQuery.Where(
-			"id ILIKE @query OR name ILIKE @query",
+			"id ILIKE @query OR name ILIKE @query OR user_id ILIKE @query",
 			sql.Named("query", "%"+*query+"%"),
 		)
 	}
