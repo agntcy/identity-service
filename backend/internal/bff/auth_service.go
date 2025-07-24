@@ -346,20 +346,23 @@ func (s *authService) ExtAuthZ(
 		}
 	}
 
-	// We set the token to expire after 1 min.
-	// The reason we do this is because DUO and ORY
-	// generate the same access token in a 1 sec time window
-	// and agents can call other services multiple times
-	// during the same prompt which can lead to a failure.
-	// More Details: https://cisco-eti.atlassian.net/browse/PYRA-413
-	session.ExpireAfter(60 * time.Second)
+	if session.ExpiresAt == nil {
+		// We set the token to expire after 1 min.
+		// The reason we do this is because DUO and ORY
+		// generate the same access token in a 1 sec time window
+		// and agents can call other services multiple times
+		// during the same prompt which can lead to a failure.
+		// More Details: https://cisco-eti.atlassian.net/browse/PYRA-413
+		//nolint: mnd // obviously it's not a magic number
+		session.ExpireAfter(60 * time.Second)
 
-	err = s.authRepository.Update(ctx, session)
-	if err != nil {
-		return err
+		err = s.authRepository.Update(ctx, session)
+		if err != nil {
+			return err
+		}
 	}
 
-	return err
+	return nil
 }
 
 func (s *authService) ApproveToken(
