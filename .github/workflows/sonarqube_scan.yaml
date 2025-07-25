@@ -20,7 +20,7 @@ jobs:
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/sonar-scan.yaml@production
     with:
       sonar-properties-file: "./.github/linters/sonar-project.properties"
-      runner-docker-image: "ghcr.io/cisco-eti/sonar-scanner-cli:latest"
+      runner-docker-image: "ghcr.io/cisco-eti/sonar-cli-scanner:latest"
     secrets:
       vault-approle-role-id: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
       vault-approle-secret-id: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
