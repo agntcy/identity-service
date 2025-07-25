@@ -21,7 +21,7 @@ import {ConfirmModal} from '@/components/ui/confirm-modal';
 import {useSettingsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
 import {InviteUserModal} from '@/components/shared/organizations/invite-user-modal';
-import {FilterSections} from '@/components/shared/helpers/filters-sections';
+import {FilterSections} from '@/components/ui/filters-sections';
 
 export const ListOrganizations = () => {
   const [query, setQuery] = useState<string | undefined>(undefined);

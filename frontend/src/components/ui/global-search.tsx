@@ -13,7 +13,7 @@ import {App} from '@/types/api/app';
 import {Policy} from '@/types/api/policy';
 import {useCallback, useMemo, useState} from 'react';
 import {useGetAgenticService, useGetAgenticServices, useGetPolicies} from '@/queries';
-import {AgenticServiceType} from '../agentic-services/agentic-service-type';
+import {AgenticServiceType} from '../shared/agentic-services/agentic-service-type';
 import {PATHS} from '@/router/paths';
 import {useFeatureFlagsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';

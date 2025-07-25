@@ -8,7 +8,7 @@ import {useStepper} from '../stepper';
 import {useFormContext} from 'react-hook-form';
 import {FormControl, FormField, FormItem, FormLabel} from '@/components/ui/form';
 import {useEffect} from 'react';
-import {SharedProvider, SharedProviderProps} from '@/components/shared/helpers/shared-provider';
+import {SharedProvider, SharedProviderProps} from '@/components/ui/shared-provider';
 import {Input} from '@/components/ui/input';
 import {Typography} from '@outshift/spark-design';
 import {AgenticServiceFormValues} from '@/schemas/agentic-service-schema';
