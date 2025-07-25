@@ -178,7 +178,7 @@ self.addEventListener('push', async (event) => {
         }
 
         await sendNotification({...notificationData, id, timestamp: Date.now()});
-        await self.registration.showNotification('Agent Identity Service | AGNTCY', options);
+        await self.registration.showNotification('Outshift Agent Identity Service Powered by AGNTCY', options);
       }
     }
   } catch (error) {
