@@ -116,3 +116,14 @@ export const useGetRule = (policyId?: string, ruleId?: string) => {
     enabled: !!policyId && !!ruleId
   });
 };
+
+export const useGetPoliciesCount = ({enabled = true}: {enabled?: boolean}) => {
+  return useQuery({
+    queryKey: ['get-policies-total-count'],
+    queryFn: async () => {
+      const {data} = await PolicyAPI.getPoliciesCount();
+      return data;
+    },
+    enabled
+  });
+};
