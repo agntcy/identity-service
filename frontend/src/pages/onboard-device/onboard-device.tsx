@@ -7,13 +7,12 @@ import {PublicHeader} from '@/components/layout/public-header';
 import {ExternalLinkIcon} from 'lucide-react';
 import {docs} from '@/utils/docs';
 import {Link} from '@outshift/spark-design';
-import {Footer as SparkFooter} from '@outshift/spark-design';
-import * as CookieConsentVanilla from 'vanilla-cookieconsent';
 import {ContentOnBoardDevice} from '@/components/onboard-device/content-onboard-device';
 import {useSearchParams} from 'react-router-dom';
 import {useLocalStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
 import {useEffect} from 'react';
+import {Footer} from '@/components/layout/footer';
 
 const OnBoardDevice = () => {
   const [searchParams] = useSearchParams();
@@ -40,7 +39,7 @@ const OnBoardDevice = () => {
             userSection={
               <Link href={docs()} openInNewTab>
                 <div className="flex items-center gap-1">
-                  Explore
+                  <span className="hidden md:block">Explore</span>
                   <ExternalLinkIcon className="w-4 h-4 ml-1" />
                 </div>
               </Link>
@@ -49,17 +48,7 @@ const OnBoardDevice = () => {
           <div className="flex flex-col justify-center h-full">
             <ContentOnBoardDevice id={idDevice} />
           </div>
-          <SparkFooter
-            productName="Cisco Systems, Inc."
-            productLink="https://www.cisco.com/"
-            links={[
-              {
-                children: 'Cookies',
-                href: '#',
-                onClick: () => CookieConsentVanilla.showPreferences()
-              }
-            ]}
-          />
+          <Footer />
         </div>
       </div>
     </>

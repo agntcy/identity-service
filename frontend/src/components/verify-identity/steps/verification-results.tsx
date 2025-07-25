@@ -144,6 +144,7 @@ export const VerificationResults = () => {
                 <CodeBlock
                   containerProps={{maxWidth: '40vw'}}
                   wrapLongLines
+                  showLineNumbers
                   text={JSON.stringify(results?.document || {}, null, 2)}
                 />
               </ScrollShadowWrapper>

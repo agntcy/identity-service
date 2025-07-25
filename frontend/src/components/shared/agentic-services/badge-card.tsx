@@ -232,10 +232,20 @@ export const BadgeCard = ({
             </div>
             <ScrollShadowWrapper className="max-h-[50vh] overflow-auto">
               {view === 'credential' && (
-                <CodeBlock containerProps={{maxWidth: '40vw'}} wrapLongLines text={JSON.stringify(contentToShow, null, 2)} />
+                <CodeBlock
+                  showLineNumbers
+                  containerProps={{maxWidth: '40vw'}}
+                  wrapLongLines
+                  text={JSON.stringify(contentToShow, null, 2)}
+                />
               )}
               {view === 'claims' && (
-                <CodeBlock containerProps={{maxWidth: '40vw'}} wrapLongLines text={JSON.stringify(contentToShow, null, 2)} />
+                <CodeBlock
+                  showLineNumbers
+                  containerProps={{maxWidth: '40vw'}}
+                  wrapLongLines
+                  text={JSON.stringify(contentToShow, null, 2)}
+                />
               )}
               {view === 'jose' && (
                 <div className="border border-solid border-[#d5dff7] p-4 w-full rounded-[6px] bg-[#fbfcfe] relative">
@@ -267,7 +277,7 @@ export const BadgeCard = ({
             </Button>
           </div>
           <ModalContent>
-            <CodeBlock wrapLongLines text={JSON.stringify(data?.verifiableCredential, null, 2)} />
+            <CodeBlock showLineNumbers wrapLongLines text={JSON.stringify(data?.verifiableCredential, null, 2)} />
           </ModalContent>
         </Modal>
       )}
