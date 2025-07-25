@@ -4,10 +4,10 @@ sidebar_position: 2
 
 # Connecting an Identity Provider (IdP)
 
-This document provides a comprehensive guide on how to register a new issuer by connecting an Identity Provider (IdP) within the **Agent Identity Service**. Connecting an IdP is a crucial step for integrating external authentication and authorization services, such as Client Credentials, with your Agent Identity environment.
+This document provides a comprehensive guide on how to register a new issuer by connecting an Identity Provider (IdP) within the **Outshift Agent Identity Service**. Connecting an IdP is a crucial step for integrating external authentication and authorization services, such as Client Credentials, with your Agent Identity environment.
 This guide specifically details the process for configuring different Identity Providers, including Duo and Ory.
 
-To access the Identity Provider creation page within the **Agent Identity Service**:
+To access the Identity Provider creation page within the **Outshift Agent Identity Service**:
 
 1.  From the main dashboard, locate and click on **Settings** in the left-hand navigation menu.
 2.  Within the Settings section, select **Identity Provider**.
@@ -27,7 +27,7 @@ This guide specifically details the process for configuring Duo as an Identity P
 
 Before you begin the Identity Provider connection process, ensure you have the following:
 
-- **Access to Agent Identity:** You must have an administrator role or sufficient permissions within the Agent Identity application to access the Settings and connect Identity Providers.
+- **Access to Outshift Agent Identity Service:** You must have an administrator role or sufficient permissions within the Outshift Agent Identity Service to access the Settings and connect Identity Providers.
 - **Duo Security Account:** An active Duo Security account is required.
 - **Duo Application Details:** You must have an existing Duo application configured within your Duo Admin Panel. From this application, you will need to retrieve:
   - Your Duo **API Hostname**
@@ -66,7 +66,7 @@ Follow these steps to configure and register your Identity Provider:
 
 3.  **Save Configuration:**
     - Once all required details (Hostname, Integration Key, and Secret Key) have been accurately entered, click the **Save** button.
-    - Upon successful saving, your chosen Identity Provider will be registered and configured within Agent Identity.
+    - Upon successful saving, your chosen Identity Provider will be registered and configured within Outshift Agent Identity Service.
     - If you need to discard the entered information and cancel the creation process, click the **Cancel** button.
 
 ![Register Issuer With Duo Success](/img/register-issuer-duo-done.png)
@@ -79,10 +79,10 @@ This guide specifically details the process for configuring [Ory](https://consol
 
 Before you begin the Identity Provider connection process, ensure you have the following:
 
-- **Access to Agent Identity:** You must have an administrator role or sufficient permissions within the Agent Identity application to access the Settings and connect Identity Providers.
+- **Access to Outshift Agent Identity Service:** You must have an administrator role or sufficient permissions within the Outshift Agent Identity Service to access the Settings and connect Identity Providers.
 - **Ory Account:** An active [Ory](https://console.ory.sh/) account is required.
 - **Ory API Project Slug:** Navigate to your Ory Console and select project settings to find your project slug.
-- **Ory API Key:** Create a new API key in your Ory Console. This key will be used to authenticate requests from Agent Identity to Ory.
+- **Ory API Key:** Create a new API key in your Ory Console. This key will be used to authenticate requests from Outshift Agent Identity Service to Ory.
 
 :::tip[NOTE]
 Ory accounts are free to create, and you can use them to manage your identity providers.
@@ -111,13 +111,13 @@ Follow these steps to configure and register your Identity Provider:
     - After selecting your desired Identity Provider (e.g., Ory), the "Provider details" section will become active, prompting you for specific configuration parameters.
     - **Project Slug:** Enter the Ory project slug. This is a unique identifier for your Ory project and can be found in your Ory Console under project settings.
       - _Example:_ `mystifying-kapitsa-y0k3j7igbj`
-    - **API Key:** Provide the API Key. This key is used to authenticate requests from Agent Identity to Ory and is generated in your Ory Console.
+    - **API Key:** Provide the API Key. This key is used to authenticate requests from Outshift Agent Identity Service to Ory and is generated in your Ory Console.
 
 ![Register Issuer With Ory](/img/register-issuer-ory.png)
 
 3.  **Save Configuration:**
     - Once all required details (Hostname, Integration Key, and Secret Key) have been accurately entered, click the **Save** button.
-    - Upon successful saving, your chosen Identity Provider will be registered and configured within Agent Identity.
+    - Upon successful saving, your chosen Identity Provider will be registered and configured within Outshift Agent Identity Service.
     - If you need to discard the entered information and cancel the creation process, click the **Cancel** button.
 
 ![Register Issuer With Ory Success](/img/register-issuer-ory-done.png)
