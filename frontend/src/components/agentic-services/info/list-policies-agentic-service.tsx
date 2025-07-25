@@ -11,7 +11,7 @@ import {Card} from '@/components/ui/card';
 import {cn} from '@/lib/utils';
 import {generatePath, useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
-import {FilterSections} from '@/components/shared/helpers/filters-sections';
+import {FilterSections} from '@/components/ui/filters-sections';
 import {PlusIcon} from 'lucide-react';
 import {ListRules} from '@/components/shared/list-rules/list-rules';
 import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-renderer';

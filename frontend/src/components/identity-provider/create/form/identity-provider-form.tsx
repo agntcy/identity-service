@@ -7,7 +7,7 @@ import {Card, CardContent} from '@/components/ui/card';
 import {useFormContext} from 'react-hook-form';
 import {FormControl, FormField, FormItem, FormLabel} from '@/components/ui/form';
 import {IdentityProvidersFormValues} from '@/schemas/identity-provider-schema';
-import {SharedProvider, SharedProviderProps} from '@/components/shared/helpers/shared-provider';
+import {SharedProvider, SharedProviderProps} from '@/components/ui/shared-provider';
 import {Input} from '@/components/ui/input';
 import {PasswordInput} from '@/components/ui/password-input';
 import {Link, Typography} from '@outshift/spark-design';

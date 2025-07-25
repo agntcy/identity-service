@@ -12,13 +12,13 @@ import {ConfirmModal} from '../ui/confirm-modal';
 import {useAnalytics} from '@/hooks';
 import {Device} from '@/types/api/device';
 import {PATHS} from '@/router/paths';
-import {QRCodeModal} from '../shared/helpers/qr-code-modal';
+import {QRCodeModal} from '../ui/qr-code-modal';
 import {Card} from '../ui/card';
 import {Box, MenuItem} from '@mui/material';
 import {BellIcon, PlusIcon, Trash2Icon} from 'lucide-react';
 import {cn} from '@/lib/utils';
 import {DevicesColumns} from './devices-columns';
-import {FilterSections} from '../shared/helpers/filters-sections';
+import {FilterSections} from '../ui/filters-sections';
 import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
 
 export const ListDevices: React.FC = () => {

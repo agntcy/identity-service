@@ -12,7 +12,7 @@ import {AgenticServiceColumns} from './agentic-services-columns';
 import {Card} from '@/components/ui/card';
 import {generatePath, useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
-import {FilterSections} from '@/components/shared/helpers/filters-sections';
+import {FilterSections} from '@/components/ui/filters-sections';
 import {App, AppType} from '@/types/api/app';
 import {CheckIcon, IdCardIcon, PencilIcon, PlusIcon, Trash2Icon} from 'lucide-react';
 import {ConfirmModal} from '@/components/ui/confirm-modal';

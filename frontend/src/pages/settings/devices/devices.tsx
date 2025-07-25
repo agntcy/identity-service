@@ -5,7 +5,7 @@
 
 import {ListDevices} from '@/components/devices/list-devices';
 import {BasePage} from '@/components/layout/base-page';
-import {QRCodeModal} from '@/components/shared/helpers/qr-code-modal';
+import {QRCodeModal} from '@/components/ui/qr-code-modal';
 import {useAnalytics} from '@/hooks';
 import {useAddDevice} from '@/mutations';
 import {PATHS} from '@/router/paths';

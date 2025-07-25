@@ -19,7 +19,7 @@ import {useShallow} from 'zustand/react/shallow';
 import {ConfirmModal} from '@/components/ui/confirm-modal';
 import {useDeleteUser} from '@/mutations';
 import {InviteUserModal} from '@/components/shared/organizations/invite-user-modal';
-import {FilterSections} from '@/components/shared/helpers/filters-sections';
+import {FilterSections} from '@/components/ui/filters-sections';
 
 export const OrganizationInfo = ({
   tenant,

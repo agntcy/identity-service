@@ -146,6 +146,7 @@ export const SearchFieldWithAutocomplete = forwardRef(function SearchFieldWithAu
         });
         return limitedOptions;
       }}
+      sx={{'& fieldset': {borderWidth: '2px'}}}
       slotProps={{
         paper: {
           sx: {

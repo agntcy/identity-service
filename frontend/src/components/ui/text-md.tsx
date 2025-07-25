@@ -10,8 +10,8 @@ import remarkStringify from 'remark-stringify';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import rehypeRaw from 'rehype-raw';
-import 'katex/dist/katex.min.css';
 import {cn} from '@/lib/utils';
+import 'katex/dist/katex.min.css';
 
 interface LinkRendererProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   href?: string;
