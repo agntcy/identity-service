@@ -24,6 +24,7 @@ class DevicesAPIClass extends DevicesApi.Api<Device> {
   public registerDevice = this.v1Alpha1.registerDevice;
   public listDevices = this.v1Alpha1.listDevices;
   public deleteDevice = this.v1Alpha1.deleteDevice;
+  public testDevice = this.v1Alpha1.testDevice;
 
   protected handleLogout = () => {
     this.logout?.({

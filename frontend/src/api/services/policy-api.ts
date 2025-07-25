@@ -30,6 +30,7 @@ class PolicyAPIClass extends PolicyApi.Api<App> {
   public updatePolicy = this.v1Alpha1.updatePolicy;
   public updateRule = this.v1Alpha1.updateRule;
   public deleteRule = this.v1Alpha1.deleteRule;
+  public getPoliciesCount = this.v1Alpha1.getPoliciesCount;
 
   protected handleLogout = () => {
     this.logout?.({

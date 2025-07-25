@@ -3071,6 +3071,30 @@
               "defaultValue": ""
             }
           ]
+        },
+        {
+          "name": "TestDeviceRequest",
+          "longName": "TestDeviceRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.TestDeviceRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "device_id",
+              "description": "The device id.",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
         }
       ],
       "services": [
@@ -3165,6 +3189,28 @@
                     {
                       "method": "DELETE",
                       "pattern": "/v1alpha1/device/{device_id}"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "TestDevice",
+              "description": "Send a test notification to a registered device to see if it's well configured.",
+              "requestType": "TestDeviceRequest",
+              "requestLongType": "TestDeviceRequest",
+              "requestFullType": "agntcy.identity.platform.v1alpha1.TestDeviceRequest",
+              "requestStreaming": false,
+              "responseType": "Empty",
+              "responseLongType": ".google.protobuf.Empty",
+              "responseFullType": "google.protobuf.Empty",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "POST",
+                      "pattern": "/v1alpha1/device/{device_id}/test"
                     }
                   ]
                 }
@@ -3370,6 +3416,41 @@
               "type": "string",
               "longType": "string",
               "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "GetPoliciesCountRequest",
+          "longName": "GetPoliciesCountRequest",
+          "fullName": "agntcy.identity.platform.v1alpha1.GetPoliciesCountRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": false,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": []
+        },
+        {
+          "name": "GetPoliciesCountResponse",
+          "longName": "GetPoliciesCountResponse",
+          "fullName": "agntcy.identity.platform.v1alpha1.GetPoliciesCountResponse",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "total",
+              "description": "The total count",
+              "label": "",
+              "type": "int64",
+              "longType": "int64",
+              "fullType": "int64",
               "ismap": false,
               "isoneof": false,
               "oneofdecl": "",
@@ -3822,6 +3903,28 @@
                     {
                       "method": "GET",
                       "pattern": "/v1alpha1/policies"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "GetPoliciesCount",
+              "description": "Get policies total count.",
+              "requestType": "GetPoliciesCountRequest",
+              "requestLongType": "GetPoliciesCountRequest",
+              "requestFullType": "agntcy.identity.platform.v1alpha1.GetPoliciesCountRequest",
+              "requestStreaming": false,
+              "responseType": "GetPoliciesCountResponse",
+              "responseLongType": "GetPoliciesCountResponse",
+              "responseFullType": "agntcy.identity.platform.v1alpha1.GetPoliciesCountResponse",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "GET",
+                      "pattern": "/v1alpha1/policies/all/count"
                     }
                   ]
                 }

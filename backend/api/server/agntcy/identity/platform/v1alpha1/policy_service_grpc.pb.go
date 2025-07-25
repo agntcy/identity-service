@@ -23,16 +23,17 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	PolicyService_ListPolicies_FullMethodName = "/agntcy.identity.platform.v1alpha1.PolicyService/ListPolicies"
-	PolicyService_GetPolicy_FullMethodName    = "/agntcy.identity.platform.v1alpha1.PolicyService/GetPolicy"
-	PolicyService_CreatePolicy_FullMethodName = "/agntcy.identity.platform.v1alpha1.PolicyService/CreatePolicy"
-	PolicyService_UpdatePolicy_FullMethodName = "/agntcy.identity.platform.v1alpha1.PolicyService/UpdatePolicy"
-	PolicyService_DeletePolicy_FullMethodName = "/agntcy.identity.platform.v1alpha1.PolicyService/DeletePolicy"
-	PolicyService_ListRules_FullMethodName    = "/agntcy.identity.platform.v1alpha1.PolicyService/ListRules"
-	PolicyService_GetRule_FullMethodName      = "/agntcy.identity.platform.v1alpha1.PolicyService/GetRule"
-	PolicyService_CreateRule_FullMethodName   = "/agntcy.identity.platform.v1alpha1.PolicyService/CreateRule"
-	PolicyService_UpdateRule_FullMethodName   = "/agntcy.identity.platform.v1alpha1.PolicyService/UpdateRule"
-	PolicyService_DeleteRule_FullMethodName   = "/agntcy.identity.platform.v1alpha1.PolicyService/DeleteRule"
+	PolicyService_ListPolicies_FullMethodName     = "/agntcy.identity.platform.v1alpha1.PolicyService/ListPolicies"
+	PolicyService_GetPoliciesCount_FullMethodName = "/agntcy.identity.platform.v1alpha1.PolicyService/GetPoliciesCount"
+	PolicyService_GetPolicy_FullMethodName        = "/agntcy.identity.platform.v1alpha1.PolicyService/GetPolicy"
+	PolicyService_CreatePolicy_FullMethodName     = "/agntcy.identity.platform.v1alpha1.PolicyService/CreatePolicy"
+	PolicyService_UpdatePolicy_FullMethodName     = "/agntcy.identity.platform.v1alpha1.PolicyService/UpdatePolicy"
+	PolicyService_DeletePolicy_FullMethodName     = "/agntcy.identity.platform.v1alpha1.PolicyService/DeletePolicy"
+	PolicyService_ListRules_FullMethodName        = "/agntcy.identity.platform.v1alpha1.PolicyService/ListRules"
+	PolicyService_GetRule_FullMethodName          = "/agntcy.identity.platform.v1alpha1.PolicyService/GetRule"
+	PolicyService_CreateRule_FullMethodName       = "/agntcy.identity.platform.v1alpha1.PolicyService/CreateRule"
+	PolicyService_UpdateRule_FullMethodName       = "/agntcy.identity.platform.v1alpha1.PolicyService/UpdateRule"
+	PolicyService_DeleteRule_FullMethodName       = "/agntcy.identity.platform.v1alpha1.PolicyService/DeleteRule"
 )
 
 // PolicyServiceClient is the client API for PolicyService service.
@@ -43,6 +44,8 @@ const (
 type PolicyServiceClient interface {
 	// List Policies.
 	ListPolicies(ctx context.Context, in *ListPoliciesRequest, opts ...grpc.CallOption) (*ListPoliciesResponse, error)
+	// Get policies total count.
+	GetPoliciesCount(ctx context.Context, in *GetPoliciesCountRequest, opts ...grpc.CallOption) (*GetPoliciesCountResponse, error)
 	// Get Policy by id
 	GetPolicy(ctx context.Context, in *GetPolicyRequest, opts ...grpc.CallOption) (*Policy, error)
 	// Create a new Policy.
@@ -75,6 +78,16 @@ func (c *policyServiceClient) ListPolicies(ctx context.Context, in *ListPolicies
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListPoliciesResponse)
 	err := c.cc.Invoke(ctx, PolicyService_ListPolicies_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *policyServiceClient) GetPoliciesCount(ctx context.Context, in *GetPoliciesCountRequest, opts ...grpc.CallOption) (*GetPoliciesCountResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetPoliciesCountResponse)
+	err := c.cc.Invoke(ctx, PolicyService_GetPoliciesCount_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -179,6 +192,8 @@ func (c *policyServiceClient) DeleteRule(ctx context.Context, in *DeleteRuleRequ
 type PolicyServiceServer interface {
 	// List Policies.
 	ListPolicies(context.Context, *ListPoliciesRequest) (*ListPoliciesResponse, error)
+	// Get policies total count.
+	GetPoliciesCount(context.Context, *GetPoliciesCountRequest) (*GetPoliciesCountResponse, error)
 	// Get Policy by id
 	GetPolicy(context.Context, *GetPolicyRequest) (*Policy, error)
 	// Create a new Policy.
@@ -208,6 +223,9 @@ type UnimplementedPolicyServiceServer struct{}
 
 func (UnimplementedPolicyServiceServer) ListPolicies(context.Context, *ListPoliciesRequest) (*ListPoliciesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListPolicies not implemented")
+}
+func (UnimplementedPolicyServiceServer) GetPoliciesCount(context.Context, *GetPoliciesCountRequest) (*GetPoliciesCountResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPoliciesCount not implemented")
 }
 func (UnimplementedPolicyServiceServer) GetPolicy(context.Context, *GetPolicyRequest) (*Policy, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPolicy not implemented")
@@ -270,6 +288,24 @@ func _PolicyService_ListPolicies_Handler(srv interface{}, ctx context.Context, d
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(PolicyServiceServer).ListPolicies(ctx, req.(*ListPoliciesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PolicyService_GetPoliciesCount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPoliciesCountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PolicyServiceServer).GetPoliciesCount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PolicyService_GetPoliciesCount_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PolicyServiceServer).GetPoliciesCount(ctx, req.(*GetPoliciesCountRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -446,6 +482,10 @@ var PolicyService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListPolicies",
 			Handler:    _PolicyService_ListPolicies_Handler,
+		},
+		{
+			MethodName: "GetPoliciesCount",
+			Handler:    _PolicyService_GetPoliciesCount_Handler,
 		},
 		{
 			MethodName: "GetPolicy",

@@ -1,5 +1,5 @@
 /**
- * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+ * Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -412,6 +412,22 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         method: 'POST',
         body: device,
         type: ContentType.Json,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Device
+     * @name TestDevice
+     * @summary Send a test notification to a registered device to see if it's well configured.
+     * @request POST:/v1alpha1/device/{deviceId}/test
+     */
+    testDevice: (deviceId: string, params: RequestParams = {}) =>
+      this.request<object, RpcStatus>({
+        path: `/v1alpha1/device/${deviceId}/test`,
+        method: 'POST',
         format: 'json',
         ...params
       })

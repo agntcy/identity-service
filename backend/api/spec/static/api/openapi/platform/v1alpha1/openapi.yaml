@@ -1,4 +1,4 @@
-# Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+# Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
 # SPDX-License-Identifier: Apache-2.0
 
 # Generated with protoc-gen-openapi
@@ -497,6 +497,29 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /v1alpha1/device/{deviceId}/test:
+        post:
+            tags:
+                - DeviceService
+            description: Send a test notification to a registered device to see if it's well configured.
+            operationId: DeviceService_TestDevice
+            parameters:
+                - name: deviceId
+                  in: path
+                  description: The device id.
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /v1alpha1/policies:
         get:
             tags:
@@ -566,6 +589,25 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Policy'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1alpha1/policies/all/count:
+        get:
+            tags:
+                - PolicyService
+            description: Get policies total count.
+            operationId: PolicyService_GetPoliciesCount
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetPoliciesCountResponse'
                 default:
                     description: Default error response
                     content:
@@ -1180,6 +1222,12 @@ components:
                     items:
                         $ref: '#/components/schemas/AppTypeCountEntry'
                     description: The apps count per app type
+                total:
+                    type: string
+                    description: The total count
+        GetPoliciesCountResponse:
+            type: object
+            properties:
                 total:
                     type: string
                     description: The total count

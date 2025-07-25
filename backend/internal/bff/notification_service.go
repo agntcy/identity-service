@@ -38,6 +38,11 @@ type NotificationService interface {
 		calleeApp *apptypes.App,
 		toolName *string,
 	) error
+	SendInfoNotification(
+		ctx context.Context,
+		device *devicetypes.Device,
+		message string,
+	) error
 }
 
 type notificationService struct {
@@ -117,12 +122,27 @@ func (s *notificationService) SendOTPNotification(
 	)
 }
 
+func (s *notificationService) SendInfoNotification(
+	ctx context.Context,
+	device *devicetypes.Device,
+	message string,
+) error {
+	return s.sendWebPushNotification(
+		ctx,
+		&device.SubscriptionToken,
+		&devicetypes.Notification{
+			Body: message,
+			Type: devicetypes.NOTIFICATION_TYPE_INFO,
+		},
+	)
+}
+
 func (s *notificationService) sendWebPushNotification(
 	_ context.Context,
 	subscriptionToken *string,
 	notification *devicetypes.Notification,
 ) error {
-	if subscriptionToken == nil {
+	if subscriptionToken == nil || *subscriptionToken == "" {
 		return errutil.Err(
 			nil,
 			"subscription token cannot be nil",

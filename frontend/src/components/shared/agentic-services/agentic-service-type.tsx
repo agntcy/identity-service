@@ -22,9 +22,9 @@ export const AgenticServiceType = ({
 }) => {
   return (
     <div className={cn('flex items-center gap-2', className)}>
-      {type === AppType.APP_TYPE_MCP_SERVER && <MCPIcon className="h-[20px] w-[20px]" />}
+      {type === AppType.APP_TYPE_MCP_SERVER && <MCPIcon className="h-[16px] w-[16px]" />}
       {type === AppType.APP_TYPE_AGENT_OASF && <OASFIcon className="h-[20px] w-[20px]" />}
-      {type === AppType.APP_TYPE_AGENT_A2A && <A2AIcon className="h-[26px] w-[26px]" />}
+      {type === AppType.APP_TYPE_AGENT_A2A && <A2AIcon className="h-[20px] w-[20px]" />}
       {showLabel && (
         <Typography
           variant="body1"

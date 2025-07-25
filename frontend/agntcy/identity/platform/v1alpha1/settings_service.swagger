@@ -239,7 +239,7 @@
       "properties": {
         "apiKey": {
           "$ref": "#/definitions/v1alpha1ApiKey",
-          "description": "An API Key for the Identity Platform."
+          "description": "An API Key for the Identity Service."
         },
         "issuerSettings": {
           "$ref": "#/definitions/v1alpha1IssuerSettings",

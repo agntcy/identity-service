@@ -10,7 +10,7 @@ import {PATHS} from '@/router/paths';
 import {Link, Link as RouterLink} from 'react-router-dom';
 import {useFeatureFlagsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
-import {useGetAgenticServiceTotalCount, useGetPolicies, useGetSettings} from '@/queries';
+import {useGetAgenticServiceTotalCount, useGetPoliciesCount, useGetSettings} from '@/queries';
 import StatsCard, {Stat} from '../ui/stats-card';
 import {ProviderType} from '../shared/identity-provider/provider-type';
 import {useMemo} from 'react';
@@ -29,7 +29,7 @@ export const StatsDashboard = () => {
 
   const {data: dataSettings, isLoading: isLoadingSettings} = useGetSettings();
   const {data: dataAgenticServices, isLoading: isLoadingAgenticServices} = useGetAgenticServiceTotalCount();
-  const {data: dataPolicies, isLoading: isLoadingPolicies} = useGetPolicies({enable: isTbacEnable});
+  const {data: dataPolicies, isLoading: isLoadingPolicies} = useGetPoliciesCount({enabled: isTbacEnable});
 
   const statsInfo: Stat[] = useMemo(() => {
     const temp = [
@@ -50,7 +50,7 @@ export const StatsDashboard = () => {
     ];
     if (isTbacEnable) {
       temp.push({
-        value: <Link to={PATHS.policies.base}>{dataPolicies?.policies?.length || 0}</Link>,
+        value: <Link to={PATHS.policies.base}>{dataPolicies?.total || 0}</Link>,
         title: 'Total Policies',
         loading: isLoadingPolicies
       });
@@ -58,7 +58,7 @@ export const StatsDashboard = () => {
     return temp;
   }, [
     dataAgenticServices?.total,
-    dataPolicies?.policies?.length,
+    dataPolicies?.total,
     dataSettings?.issuerSettings?.idpType,
     isLoadingAgenticServices,
     isLoadingPolicies,

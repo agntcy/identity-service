@@ -392,7 +392,7 @@
           "title": "UpdatedAt records the timestamp of the last update to the App"
         }
       },
-      "description": "Identity Platform App."
+      "description": "Identity Service App."
     },
     "v1alpha1AppStatus": {
       "type": "string",
@@ -621,7 +621,7 @@
           "description": "A tool name for the Task."
         }
       },
-      "title": "Identity Platform Policy Task"
+      "title": "Identity Service Policy Task"
     },
     "v1alpha1VerifiableCredential": {
       "type": "object",
