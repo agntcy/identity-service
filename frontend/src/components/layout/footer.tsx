@@ -16,10 +16,10 @@ export const Footer = () => {
       <SparkFooter
         productNode={
           <div className="flex items-center gap-2 md:gap-4">
-            <FooterLogo className="w-[80px] lg:w-fit" />
+            <FooterLogo className="w-[90px] lg:w-fit" />
             <Link to="https://www.cisco.com/" target="_blank" rel="noopener noreferrer" style={{textDecoration: 'none'}}>
               <Typography variant="caption" sx={(theme) => ({color: theme.palette.vars.baseTextDefault})}>
-                <span className="text-[10px] lg:text-[12px]">© {new Date().getFullYear()} Cisco Systems, Inc.</span>
+                <span className="text-[11px] lg:text-[12px]">© {new Date().getFullYear()} Cisco Systems, Inc.</span>
               </Typography>
             </Link>
           </div>
