@@ -18,7 +18,7 @@ import {useFeatureFlagsStore, useSettingsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
 import {NotificationSettings} from '../shared/notifications/notification-settings';
 import {useGetDevices} from '@/queries';
-import {GlobalSearch} from '../ui/global-search';
+import {GlobalSearch} from '../shared/helpers/global-search';
 import OutshiftLogo from '@/assets/outshift-color.svg?react';
 import OutshiftIcon from '@/assets/outshift.svg?react';
 
