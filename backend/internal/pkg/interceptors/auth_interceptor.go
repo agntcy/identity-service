@@ -24,18 +24,18 @@ const (
 )
 
 var allowedServicesWithoutAuth = []string{
-	"/agoutshift.identity.service.v1alpha1.DeviceService/RegisterDevice",
-	"/agoutshift.identity.service.v1alpha1.BadgeService/VerifyBadge",
+	"/outshift.identity.service.v1alpha1.DeviceService/RegisterDevice",
+	"/outshift.identity.service.v1alpha1.BadgeService/VerifyBadge",
 	identity_service_sdk_go.AuthService_ApproveToken_FullMethodName,
 	"/grpc.health.v1.Health/Check",
 }
 
 var allowedServicesWithAppAuth = []string{
-	"/agoutshift.identity.service.v1alpha1.AuthService/AppInfo",
-	"/agoutshift.identity.service.v1alpha1.AuthService/Authorize",
-	"/agoutshift.identity.service.v1alpha1.AuthService/Token",
-	"/agoutshift.identity.service.v1alpha1.AuthService/ExtAuthz",
-	"/agoutshift.identity.service.v1alpha1.BadgeService/IssueBadge",
+	"/outshift.identity.service.v1alpha1.AuthService/AppInfo",
+	"/outshift.identity.service.v1alpha1.AuthService/Authorize",
+	"/outshift.identity.service.v1alpha1.AuthService/Token",
+	"/outshift.identity.service.v1alpha1.AuthService/ExtAuthz",
+	"/outshift.identity.service.v1alpha1.BadgeService/IssueBadge",
 }
 
 type AuthInterceptor struct {

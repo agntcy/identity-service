@@ -110,7 +110,7 @@ message ListAppsResponse {
   repeated App apps = 1;
 
   // Pagination response.
-  optional agoutshift.identity.service.shared.v1alpha1.PagedResponse pagination = 2;
+  optional outshift.identity.service.shared.v1alpha1.PagedResponse pagination = 2;
 }
 
 message ListAppsRequest {
@@ -137,7 +137,7 @@ message GetAppsCountRequest {
 
 message AppTypeCountEntry {
   // The type of the App
-  agoutshift.identity.service.v1alpha1.AppType key = 1;
+  outshift.identity.service.v1alpha1.AppType key = 1;
 
   // The count of apps of the given type
   int64 value = 2;
