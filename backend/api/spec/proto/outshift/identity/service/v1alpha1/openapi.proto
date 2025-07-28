@@ -1,0 +1,77 @@
+// Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package agntcy.identity.service.v1alpha1;
+
+import "openapiv3/annotations.proto";
+
+option go_package = "github.com/agntcy/identity-service/api/server/agntcy/identity/service/v1alpha1;identity_service_sdk_go";
+option (openapi.v3.document) = {
+  info: {
+    title: "Agent Identity Service API";
+    description: "Agent Identity Service API provides a set of endpoints for managing identity and access control within the Outshift ecosystem.";
+    version: "v1alpha1";
+    contact: {
+      name: "Outshift Team";
+      url: "https://github.com/agntcy/identity";
+      email: "identity@outshift.com";
+    }
+  }
+  servers: [
+    {
+      url: "http://localhost:4000";
+      description: "Local environment";
+    }
+  ]
+  security: {
+    additional_properties: [
+      {
+        name: "AccessToken";
+        value: {
+          value: []
+        }
+      },
+      {
+        name: "ApiKey";
+        value: {
+          value: []
+        }
+      }
+    ]
+  }
+  components: {
+    headers: {
+      additional_properties: [
+{}
+      ]
+    },
+    security_schemes: {
+      additional_properties: [
+        {
+          name: "AccessToken";
+          value: {
+            security_scheme: {
+              type: "http";
+              description: "An IAM JWT token issued to a user during an OIDC flow.";
+              scheme: "bearer";
+              bearer_format: "JWT";
+            }
+          }
+        },
+        {
+          name: "ApiKey";
+          value: {
+            security_scheme: {
+              type: "apiKey";
+              description: "An IAM Api key.";
+              in: "header",
+              name: "x-id-api-key";
+            }
+          }
+        }
+      ]
+    }
+  }
+};

@@ -1,0 +1,64 @@
+// Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package agntcy.identity.service.v1alpha1;
+
+import "agntcy/identity/service/v1alpha1/settings.proto";
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "github.com/agntcy/identity-service/api/server/agntcy/identity/service/v1alpha1;identity_service_sdk_go";
+
+// SettingsService manages settings.
+service SettingsService {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_tag) = {name: "Settings"};
+
+  // Get Settings
+  rpc GetSettings(GetSettingsRequest) returns (Settings) {
+    option (google.api.http) = {get: "/v1alpha1/settings"};
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "Get Settings";
+      summary: "Get Settings for the Tenant";
+    };
+  }
+
+  // Set up API Key
+  rpc SetApiKey(SetApiKeyRequest) returns (ApiKey) {
+    option (google.api.http) = {post: "/v1alpha1/settings/api-key"};
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Set up API Key"
+      description: "Create a new API Key for the Tenant. Revoke any previous API Key"
+    };
+  }
+
+  // Set up Issuer
+  rpc SetIssuer(SetIssuerRequest) returns (IssuerSettings) {
+    option (google.api.http) = {
+      post: "/v1alpha1/settings/issuer",
+      body: "*"
+    };
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "Set up Issuer";
+      summary: "Create and register Issuer for the Tenant. Revoke any previous Issuer.";
+    };
+  }
+}
+
+message GetSettingsRequest {
+  // Empty request for getting settings.
+}
+
+message SetApiKeyRequest {
+  // Empty request for setting up API Key.
+}
+
+message SetIssuerRequest {
+  // The Issuer Settings to set up.
+  IssuerSettings issuer_settings = 1 [(google.api.field_behavior) = REQUIRED];
+}
