@@ -16,14 +16,14 @@ export const PATHS = {
     info: '/verify-identity/:id'
   },
   agenticServices: {
-    base: '/agentic-platforms',
-    add: '/agentic-platforms/add',
+    base: '/agentic-services',
+    add: '/agentic-services/add',
     info: {
-      base: '/agentic-platforms/:id',
-      policiesAssignedTo: '/agentic-platforms/:id/policies-assigned-to',
-      policiesUsedBy: '/agentic-platforms/:id/policies-used-by'
+      base: '/agentic-services/:id',
+      policiesAssignedTo: '/agentic-services/:id/policies-assigned-to',
+      policiesUsedBy: '/agentic-services/:id/policies-used-by'
     },
-    edit: '/agentic-platforms/:id/edit'
+    edit: '/agentic-services/:id/edit'
   },
   policies: {
     base: '/policies',

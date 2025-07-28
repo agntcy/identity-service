@@ -7,7 +7,7 @@ import (
 	"context"
 	"errors"
 
-	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
+	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
 	"github.com/google/uuid"
 )
 

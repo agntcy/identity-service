@@ -10,11 +10,11 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/agntcy/identity-platform/internal/core/settings/types"
-	"github.com/agntcy/identity-platform/internal/pkg/errutil"
-	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
-	"github.com/agntcy/identity-platform/internal/pkg/strutil"
-	"github.com/agntcy/identity-platform/pkg/log"
+	"github.com/outshift/identity-service/internal/core/settings/types"
+	"github.com/outshift/identity-service/internal/pkg/errutil"
+	"github.com/outshift/identity-service/internal/pkg/ptrutil"
+	"github.com/outshift/identity-service/internal/pkg/strutil"
+	"github.com/outshift/identity-service/pkg/log"
 	oktasdk "github.com/okta/okta-sdk-golang/v5/okta"
 )
 
@@ -28,7 +28,7 @@ const (
 	oktaResponseType       = "token"
 	oktaGrantType          = "client_credentials"
 	oktaApplicationName    = "oidc_client"
-	oktaApplicationType    = "platform"
+	oktaApplicationType    = "service"
 )
 
 type OktaIdp struct {

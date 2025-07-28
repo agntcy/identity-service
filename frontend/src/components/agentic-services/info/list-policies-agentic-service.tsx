@@ -137,7 +137,7 @@ export const ListPoliciesAgenticService = ({appId, mode = 'assigned'}: {appId?: 
               >
                 <EmptyState
                   title="No policies found"
-                  description="No policies are currently in place. Click 'Add Policy' to create and apply one to your registered agentic platforms."
+                  description="No policies are currently in place. Click 'Add Policy' to create and apply one to your registered agentic services."
                   containerProps={{paddingBottom: '40px'}}
                   actionTitle="Add Policy"
                   actionCallback={() => {

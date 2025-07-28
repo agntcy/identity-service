@@ -46,16 +46,16 @@ const EditOrganization = React.lazy(() => import('@/pages/settings/organizations
 const InfoOrganization = React.lazy(() => import('@/pages/settings/organizations/info-organization'));
 
 // Agentic Services
-const AgenticServices = React.lazy(() => import('@/pages/agentic-platforms/agentic-platforms'));
-const AddAgenticService = React.lazy(() => import('@/pages/agentic-platforms/add-agentic-platform'));
-const EditAgenticService = React.lazy(() => import('@/pages/agentic-platforms/edit-agentic-platform'));
-const InfoAgenticService = React.lazy(() => import('@/pages/agentic-platforms/info/info-agentic-platform'));
-const AboutAgenticService = React.lazy(() => import('@/pages/agentic-platforms/info/about-agentic-platform'));
+const AgenticServices = React.lazy(() => import('@/pages/agentic-services/agentic-services'));
+const AddAgenticService = React.lazy(() => import('@/pages/agentic-services/add-agentic-service'));
+const EditAgenticService = React.lazy(() => import('@/pages/agentic-services/edit-agentic-service'));
+const InfoAgenticService = React.lazy(() => import('@/pages/agentic-services/info/info-agentic-service'));
+const AboutAgenticService = React.lazy(() => import('@/pages/agentic-services/info/about-agentic-service'));
 const PoliciesAssignedToAgenticService = React.lazy(
-  () => import('@/pages/agentic-platforms/info/policies-assigned-to-agentic-platform')
+  () => import('@/pages/agentic-services/info/policies-assigned-to-agentic-service')
 );
 const PoliciesUsedByAgenticService = React.lazy(
-  () => import('@/pages/agentic-platforms/info/policies-used-by-agentic-platform')
+  () => import('@/pages/agentic-services/info/policies-used-by-agentic-service')
 );
 
 // Policies
@@ -168,7 +168,7 @@ export const useRoutes = () => {
           {
             index: true,
             element: (
-              <NodeRoute pageTitle="agentic platforms">
+              <NodeRoute pageTitle="agentic services">
                 <AgenticServices />
               </NodeRoute>
             )
@@ -176,7 +176,7 @@ export const useRoutes = () => {
           {
             path: PATHS.agenticServices.add,
             element: (
-              <NodeRoute pageTitle="add agentic platform">
+              <NodeRoute pageTitle="add agentic service">
                 <AddAgenticService />
               </NodeRoute>
             ),
@@ -185,7 +185,7 @@ export const useRoutes = () => {
           {
             path: PATHS.agenticServices.edit,
             element: (
-              <NodeRoute pageTitle="edit agentic platform">
+              <NodeRoute pageTitle="edit agentic service">
                 <EditAgenticService />
               </NodeRoute>
             ),
@@ -203,7 +203,7 @@ export const useRoutes = () => {
               {
                 index: true,
                 element: (
-                  <NodeRoute pageTitle="agentic platform about">
+                  <NodeRoute pageTitle="agentic service about">
                     <AboutAgenticService />
                   </NodeRoute>
                 )
@@ -211,7 +211,7 @@ export const useRoutes = () => {
               {
                 path: PATHS.agenticServices.info.policiesAssignedTo,
                 element: (
-                  <NodeRoute pageTitle="agentic platform policies assigned to">
+                  <NodeRoute pageTitle="agentic service policies assigned to">
                     <PoliciesAssignedToAgenticService />
                   </NodeRoute>
                 ),
@@ -220,7 +220,7 @@ export const useRoutes = () => {
               {
                 path: PATHS.agenticServices.info.policiesUsedBy,
                 element: (
-                  <NodeRoute pageTitle="agentic platform policies used by">
+                  <NodeRoute pageTitle="agentic service policies used by">
                     <PoliciesUsedByAgenticService />
                   </NodeRoute>
                 ),

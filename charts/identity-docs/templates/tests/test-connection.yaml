@@ -14,5 +14,5 @@ spec:
     - name: wget
       image: busybox
       command: ['wget']
-      args: ['{{ include "identity-docs.fullname" . }}:{{ .Values.platform.http.port }}']
+      args: ['{{ include "identity-docs.fullname" . }}:{{ .Values.service.http.port }}']
   restartPolicy: Never

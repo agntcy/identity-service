@@ -8,7 +8,7 @@ image:
   pullPolicy: IfNotPresent
   tag: ""
 
-platform:
+service:
   type: ClusterIP
   http:
     port: 9091
@@ -29,7 +29,7 @@ ingress:
   domainPrefixHttp: a2a-agent-currency-exchange
   apiDomainName: dev.example.com
 
-platformAccount:
+serviceAccount:
   create: true
   name: ""
 

@@ -10,8 +10,8 @@ const VALID_PUBLIC_KEY = 'BIls0VvKWru2ofurFmgPGDNvb0T1sMyVi0zuga5zxYJOHl4lgKE4j3
 
 export const checkNotifications = () => {
   try {
-    if (!('platformWorker' in navigator)) {
-      console.log('❌ This browser does not support platform workers.');
+    if (!('serviceWorker' in navigator)) {
+      console.log('❌ This browser does not support service workers.');
       return false;
     }
     if (!('Notification' in window)) {
@@ -56,8 +56,8 @@ export const getNotificationPermissionState = async () => {
 };
 
 export const getSWRegistration = () => {
-  if ('platformWorker' in navigator) {
-    return navigator.platformWorker.ready;
+  if ('serviceWorker' in navigator) {
+    return navigator.serviceWorker.ready;
   }
   return Promise.reject(new Error('❌ Service workers are not supported in this browser.'));
 };

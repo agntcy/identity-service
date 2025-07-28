@@ -8,8 +8,8 @@ import (
 	"encoding/json"
 	"fmt"
 
-	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
-	"github.com/agntcy/identity-platform/internal/pkg/vault"
+	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
+	"github.com/outshift/identity-service/internal/pkg/vault"
 )
 
 type VaultCredentialStore struct {

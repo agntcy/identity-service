@@ -7,11 +7,11 @@ import (
 	"context"
 	"time"
 
-	devicecore "github.com/agntcy/identity-platform/internal/core/device"
-	devicetypes "github.com/agntcy/identity-platform/internal/core/device/types"
-	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
-	"github.com/agntcy/identity-platform/internal/pkg/errutil"
-	"github.com/agntcy/identity-platform/internal/pkg/pagination"
+	devicecore "github.com/outshift/identity-service/internal/core/device"
+	devicetypes "github.com/outshift/identity-service/internal/core/device/types"
+	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
+	"github.com/outshift/identity-service/internal/pkg/errutil"
+	"github.com/outshift/identity-service/internal/pkg/pagination"
 	"github.com/google/uuid"
 )
 

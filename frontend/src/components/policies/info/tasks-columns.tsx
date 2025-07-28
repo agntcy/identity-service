@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {AgenticServiceType} from '@/components/shared/agentic-platforms/agentic-platform-type';
+import {AgenticServiceType} from '@/components/shared/agentic-services/agentic-service-type';
 import {useGetAgenticService} from '@/queries';
 import {PATHS} from '@/router/paths';
 import {Task} from '@/types/api/policy';
@@ -22,7 +22,7 @@ const CellAgenticService = ({row}: {row: {original: Task}}) => {
   if (isError) {
     return (
       <Tag status={TagStatus.Negative} size={GeneralSize.Small}>
-        Error loading agentic platform
+        Error loading agentic service
       </Tag>
     );
   }

@@ -3,18 +3,18 @@
 
 syntax = "proto3";
 
-package agntcy.identity.platform.v1alpha1;
+package agoutshift.identity.service.v1alpha1;
 
-import "agntcy/identity/platform/shared/v1alpha1/pagination.proto";
-import "agntcy/identity/platform/v1alpha1/policy.proto";
+import "outshift/identity/service/shared/v1alpha1/pagination.proto";
+import "outshift/identity/service/v1alpha1/policy.proto";
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
-option go_package = "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_go";
+option go_package = "github.com/outshift/identity-service/api/server/outshift/identity/service/v1alpha1;identity_service_sdk_go";
 
 // PolicyService manages policy.
-platform PolicyService {
+service PolicyService {
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_tag) = {name: "Policy"};
 
   // List Policies.
@@ -142,7 +142,7 @@ message ListPoliciesResponse {
   repeated Policy policies = 1;
 
   // Pagination response.
-  optional agntcy.identity.platform.shared.v1alpha1.PagedResponse pagination = 2;
+  optional agoutshift.identity.service.shared.v1alpha1.PagedResponse pagination = 2;
 }
 
 message ListPoliciesRequest {
@@ -209,7 +209,7 @@ message ListRulesResponse {
   repeated Rule rules = 1;
 
   // Pagination response.
-  optional agntcy.identity.platform.shared.v1alpha1.PagedResponse pagination = 2;
+  optional agoutshift.identity.service.shared.v1alpha1.PagedResponse pagination = 2;
 }
 
 message ListRulesRequest {

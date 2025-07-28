@@ -7,7 +7,7 @@ import {
   V1Alpha1Device,
   V1Alpha1ListDevicesResponse,
   V1Alpha1PagedResponse
-} from '@/api/generated/identity/device_platform.swagger.api';
+} from '@/api/generated/identity/device_service.swagger.api';
 
 export type {
   V1Alpha1Device as Device,

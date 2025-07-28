@@ -7,18 +7,18 @@ import (
 	"context"
 	"errors"
 
-	identity_platform_sdk_go "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1"
-	"github.com/agntcy/identity-platform/internal/bff"
-	"github.com/agntcy/identity-platform/internal/bff/grpc/converters"
-	"github.com/agntcy/identity-platform/internal/pkg/errutil"
-	"github.com/agntcy/identity-platform/internal/pkg/grpcutil"
+	identity_service_sdk_go "github.com/outshift/identity-service/api/server/outshift/identity/service/v1alpha1"
+	"github.com/outshift/identity-service/internal/bff"
+	"github.com/outshift/identity-service/internal/bff/grpc/converters"
+	"github.com/outshift/identity-service/internal/pkg/errutil"
+	"github.com/outshift/identity-service/internal/pkg/grpcutil"
 )
 
 type BadgeService struct {
 	badgeService bff.BadgeService
 }
 
-func NewBadgeService(badgeService bff.BadgeService) identity_platform_sdk_go.BadgeServiceServer {
+func NewBadgeService(badgeService bff.BadgeService) identity_service_sdk_go.BadgeServiceServer {
 	return &BadgeService{
 		badgeService: badgeService,
 	}
@@ -26,8 +26,8 @@ func NewBadgeService(badgeService bff.BadgeService) identity_platform_sdk_go.Bad
 
 func (s *BadgeService) IssueBadge(
 	ctx context.Context,
-	in *identity_platform_sdk_go.IssueBadgeRequest,
-) (*identity_platform_sdk_go.Badge, error) {
+	in *identity_service_sdk_go.IssueBadgeRequest,
+) (*identity_service_sdk_go.Badge, error) {
 	if in == nil {
 		return nil, grpcutil.BadRequestError(errors.New("request is empty"))
 	}
@@ -56,8 +56,8 @@ func (s *BadgeService) IssueBadge(
 
 func (s *BadgeService) VerifyBadge(
 	ctx context.Context,
-	in *identity_platform_sdk_go.VerifyBadgeRequest,
-) (*identity_platform_sdk_go.VerificationResult, error) {
+	in *identity_service_sdk_go.VerifyBadgeRequest,
+) (*identity_service_sdk_go.VerificationResult, error) {
 	if in.Badge == "" {
 		return nil, grpcutil.BadRequestError(errors.New("badge or verifiable credential is empty"))
 	}

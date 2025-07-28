@@ -10,8 +10,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/agntcy/identity-platform/internal/pkg/httputil"
-	"github.com/agntcy/identity-platform/pkg/log"
+	"github.com/outshift/identity-service/internal/pkg/httputil"
+	"github.com/outshift/identity-service/pkg/log"
 )
 
 const wellKnownUrlSuffix = "/.well-known/agent.json"

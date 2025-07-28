@@ -15,7 +15,7 @@ import {
   BadgeServiceIssueBadgeBody,
   V1Alpha1CredentialStatus,
   V1Alpha1VerificationResult
-} from '@/api/generated/identity/badge_platform.swagger.api';
+} from '@/api/generated/identity/badge_service.swagger.api';
 
 export type {
   V1Alpha1Badge as Badge,

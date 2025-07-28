@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {AgenticServiceType} from '@/components/shared/agentic-platforms/agentic-platform-type';
-import {StatusAgenticService} from '@/components/shared/agentic-platforms/status-agentic-platform';
+import {AgenticServiceType} from '@/components/shared/agentic-services/agentic-service-type';
+import {StatusAgenticService} from '@/components/shared/agentic-services/status-agentic-service';
 import DateHover from '@/components/ui/date-hover';
 import {App} from '@/types/api/app';
 import {GeneralSize, Tag} from '@outshift/spark-design';

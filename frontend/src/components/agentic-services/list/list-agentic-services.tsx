@@ -8,7 +8,7 @@ import {ConditionalQueryRenderer} from '../../ui/conditional-query-renderer';
 import {Box, EmptyState, Link, MenuItem, SelectNodeType, Table, toast, Typography} from '@outshift/spark-design';
 import {useGetAgenticServices, useGetAgenticServiceTotalCount} from '@/queries';
 import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
-import {AgenticServiceColumns} from './agentic-platforms-columns';
+import {AgenticServiceColumns} from './agentic-services-columns';
 import {Card} from '@/components/ui/card';
 import {generatePath, useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
@@ -21,7 +21,7 @@ import {cn} from '@/lib/utils';
 import {useFeatureFlagsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
 import {useAnalytics} from '@/hooks';
-import {BadgeModalForm} from '@/components/shared/agentic-platforms/badge-modal-form';
+import {BadgeModalForm} from '@/components/shared/agentic-services/badge-modal-form';
 
 export const ListAgenticServices = () => {
   const [pagination, setPagination] = useState<MRT_PaginationState>({
@@ -102,14 +102,14 @@ export const ListAgenticServices = () => {
       onSuccess: () => {
         toast({
           title: 'Success',
-          description: 'Agentic platform deleted successfully.',
+          description: 'Agentic service deleted successfully.',
           type: 'success'
         });
       },
       onError: () => {
         toast({
           title: 'Error',
-          description: 'An error occurred while deleting the agentic platform. Please try again.',
+          description: 'An error occurred while deleting the agentic service. Please try again.',
           type: 'error'
         });
       }
@@ -277,7 +277,7 @@ export const ListAgenticServices = () => {
               >
                 <EmptyState
                   title="No Agentic Services"
-                  description="Currently, there are no agentic platforms available."
+                  description="Currently, there are no agentic services available."
                   containerProps={{paddingBottom: '40px'}}
                   actionTitle="Add Agentic Service"
                   actionCallback={() => {
@@ -300,12 +300,12 @@ export const ListAgenticServices = () => {
         title="Delete Agentic Service"
         description={
           <>
-            Are you sure you want to delete this agentic platform <b>{tempApp?.name}</b>? This action cannot be undone.
+            Are you sure you want to delete this agentic service <b>{tempApp?.name}</b>? This action cannot be undone.
             {isTbacEnable && (
               <>
                 <br />
                 <br />
-                <strong>Note:</strong> If this agentic platform is a TBAC platform, it will also remove the associated TBAC
+                <strong>Note:</strong> If this agentic service is a TBAC service, it will also remove the associated TBAC
                 policies.
                 <br />
                 <br />

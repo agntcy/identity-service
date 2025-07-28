@@ -4,7 +4,7 @@
  */
 
 import {BasePage} from '@/components/layout/base-page';
-import {BadgeModalForm} from '@/components/shared/agentic-platforms/badge-modal-form';
+import {BadgeModalForm} from '@/components/shared/agentic-services/badge-modal-form';
 import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-renderer';
 import {ConfirmModal} from '@/components/ui/confirm-modal';
 import {useAnalytics} from '@/hooks';
@@ -44,7 +44,7 @@ const InfoAgenticService: React.FC = () => {
       onSuccess: () => {
         toast({
           title: 'Success',
-          description: 'Agentic platform deleted successfully.',
+          description: 'Agentic service deleted successfully.',
           type: 'success'
         });
         void navigate(PATHS.agenticServices.base, {replace: true});
@@ -52,7 +52,7 @@ const InfoAgenticService: React.FC = () => {
       onError: () => {
         toast({
           title: 'Error',
-          description: 'An error occurred while deleting the agentic platform. Please try again.',
+          description: 'An error occurred while deleting the agentic service. Please try again.',
           type: 'error'
         });
       }
@@ -188,12 +188,12 @@ const InfoAgenticService: React.FC = () => {
           title="Delete Agentic Service"
           description={
             <>
-              Are you sure you want to delete this agentic platform <b>{data?.name}</b>? This action cannot be undone.
+              Are you sure you want to delete this agentic service <b>{data?.name}</b>? This action cannot be undone.
               {isTbacEnable && (
                 <>
                   <br />
                   <br />
-                  <strong>Note:</strong> If this agentic platform is a TBAC platform, it will also remove the associated TBAC
+                  <strong>Note:</strong> If this agentic service is a TBAC service, it will also remove the associated TBAC
                   policies.
                 </>
               )}

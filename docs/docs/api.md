@@ -32,7 +32,7 @@ You can generate an Agentic Service API Key from the Agent Identity settings pag
 
 ## Protodocs
 
-The Protodocs definition can be accessed [here](/protodocs/agntcy/identity/service/v1alpha1/app.proto).
+The Protodocs definition can be accessed [here](/protodocs/outshift/identity/service/v1alpha1/app.proto).
 
 ## OpenAPI Client
 

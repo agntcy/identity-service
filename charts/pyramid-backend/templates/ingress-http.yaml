@@ -26,10 +26,10 @@ spec:
     http:
       paths:
       - backend:
-          platform:
+          service:
             name: {{ include "pyramid-backend.fullname" . }}
             port:
-              number: {{ .Values.platform.http.port }}
+              number: {{ .Values.service.http.port }}
         path: /
         pathType: ImplementationSpecific
 {{- end }}

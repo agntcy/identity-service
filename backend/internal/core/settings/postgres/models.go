@@ -4,9 +4,9 @@
 package postgres
 
 import (
-	"github.com/agntcy/identity-platform/internal/core/settings/types"
-	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
-	"github.com/agntcy/identity-platform/internal/pkg/secrets"
+	"github.com/outshift/identity-service/internal/core/settings/types"
+	"github.com/outshift/identity-service/internal/pkg/ptrutil"
+	"github.com/outshift/identity-service/internal/pkg/secrets"
 	"github.com/google/uuid"
 )
 

@@ -119,7 +119,7 @@ const InfoPolicy: React.FC = () => {
               Are you sure you want to delete this policy? This action cannot be undone.
               <br />
               <br />
-              <strong>Note:</strong> Deleting a policy will remove it from all associated agentic platforms.
+              <strong>Note:</strong> Deleting a policy will remove it from all associated agentic services.
             </>
           }
           confirmButtonText="Delete"

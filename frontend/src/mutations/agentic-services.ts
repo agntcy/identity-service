@@ -5,7 +5,7 @@
 
 import {AxiosResponse} from 'axios';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
-import {AgenticServicesAPI} from '@/api/platforms';
+import {AgenticServicesAPI} from '@/api/services';
 import {App} from '@/types/api/app';
 
 interface PropsSettingsAgenticServices {
@@ -18,7 +18,7 @@ interface PropsSettingsAgenticServices {
 export const useCreateAgenticService = ({callbacks}: PropsSettingsAgenticServices) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['create-agentic-platform'],
+    mutationKey: ['create-agentic-service'],
     mutationFn: (data: App) => AgenticServicesAPI.createApp(data),
     onError: () => {
       if (callbacks?.onError) {
@@ -29,8 +29,8 @@ export const useCreateAgenticService = ({callbacks}: PropsSettingsAgenticService
       if (callbacks?.onSuccess) {
         callbacks.onSuccess(resp);
       }
-      await queryClient.invalidateQueries({queryKey: ['get-agentic-platforms']});
-      await queryClient.invalidateQueries({queryKey: ['get-agentic-platforms-total-count']});
+      await queryClient.invalidateQueries({queryKey: ['get-agentic-services']});
+      await queryClient.invalidateQueries({queryKey: ['get-agentic-services-total-count']});
     }
   });
 };
@@ -38,7 +38,7 @@ export const useCreateAgenticService = ({callbacks}: PropsSettingsAgenticService
 export const useUpdateAgenticService = ({callbacks}: PropsSettingsAgenticServices) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['update-agentic-platform'],
+    mutationKey: ['update-agentic-service'],
     mutationFn: ({id, data}: {id: string; data: App}) => AgenticServicesAPI.updateApp(id, data),
     onError: () => {
       if (callbacks?.onError) {
@@ -49,8 +49,8 @@ export const useUpdateAgenticService = ({callbacks}: PropsSettingsAgenticService
       if (callbacks?.onSuccess) {
         callbacks.onSuccess(resp);
       }
-      await queryClient.invalidateQueries({queryKey: ['get-agentic-platforms']});
-      await queryClient.invalidateQueries({queryKey: ['get-agentic-platform']});
+      await queryClient.invalidateQueries({queryKey: ['get-agentic-services']});
+      await queryClient.invalidateQueries({queryKey: ['get-agentic-service']});
     }
   });
 };
@@ -58,7 +58,7 @@ export const useUpdateAgenticService = ({callbacks}: PropsSettingsAgenticService
 export const useDeleteAgenticService = ({callbacks = {}}: PropsSettingsAgenticServices) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['delete-agentic-platform'],
+    mutationKey: ['delete-agentic-service'],
     mutationFn: (id: string) => AgenticServicesAPI.deleteApp(id),
     onError: () => {
       if (callbacks?.onError) {
@@ -69,8 +69,8 @@ export const useDeleteAgenticService = ({callbacks = {}}: PropsSettingsAgenticSe
       if (callbacks?.onSuccess) {
         callbacks.onSuccess(resp);
       }
-      await queryClient.invalidateQueries({queryKey: ['get-agentic-platforms']});
-      await queryClient.invalidateQueries({queryKey: ['get-agentic-platforms-total-count']});
+      await queryClient.invalidateQueries({queryKey: ['get-agentic-services']});
+      await queryClient.invalidateQueries({queryKey: ['get-agentic-services-total-count']});
     }
   });
 };

@@ -4,20 +4,20 @@
 package converters
 
 import (
-	identity_platform_sdk_go "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1"
-	settingstypes "github.com/agntcy/identity-platform/internal/core/settings/types"
-	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
-	"github.com/agntcy/identity-platform/internal/pkg/strutil"
+	identity_service_sdk_go "github.com/outshift/identity-service/api/server/outshift/identity/service/v1alpha1"
+	settingstypes "github.com/outshift/identity-service/internal/core/settings/types"
+	"github.com/outshift/identity-service/internal/pkg/ptrutil"
+	"github.com/outshift/identity-service/internal/pkg/strutil"
 )
 
 func FromOktaIdpSettings(
 	src *settingstypes.OktaIdpSettings,
-) *identity_platform_sdk_go.OktaIdpSettings {
+) *identity_service_sdk_go.OktaIdpSettings {
 	if src == nil {
 		return nil
 	}
 
-	return &identity_platform_sdk_go.OktaIdpSettings{
+	return &identity_service_sdk_go.OktaIdpSettings{
 		OrgUrl:     ptrutil.Ptr(src.OrgUrl),
 		ClientId:   ptrutil.Ptr(src.ClientID),
 		PrivateKey: ptrutil.Ptr(strutil.Mask(src.PrivateKey)),
@@ -25,7 +25,7 @@ func FromOktaIdpSettings(
 }
 
 func ToOktaIdpSettings(
-	src *identity_platform_sdk_go.OktaIdpSettings,
+	src *identity_service_sdk_go.OktaIdpSettings,
 ) *settingstypes.OktaIdpSettings {
 	if src == nil {
 		return nil
@@ -40,12 +40,12 @@ func ToOktaIdpSettings(
 
 func FromDuoIdpSettings(
 	src *settingstypes.DuoIdpSettings,
-) *identity_platform_sdk_go.DuoIdpSettings {
+) *identity_service_sdk_go.DuoIdpSettings {
 	if src == nil {
 		return nil
 	}
 
-	return &identity_platform_sdk_go.DuoIdpSettings{
+	return &identity_service_sdk_go.DuoIdpSettings{
 		Hostname:       ptrutil.Ptr(src.Hostname),
 		IntegrationKey: ptrutil.Ptr(src.IntegrationKey),
 		SecretKey:      ptrutil.Ptr(strutil.Mask(src.SecretKey)),
@@ -53,7 +53,7 @@ func FromDuoIdpSettings(
 }
 
 func ToDuoIdpSettings(
-	src *identity_platform_sdk_go.DuoIdpSettings,
+	src *identity_service_sdk_go.DuoIdpSettings,
 ) *settingstypes.DuoIdpSettings {
 	if src == nil {
 		return nil
@@ -68,19 +68,19 @@ func ToDuoIdpSettings(
 
 func FromOryIdpSettings(
 	src *settingstypes.OryIdpSettings,
-) *identity_platform_sdk_go.OryIdpSettings {
+) *identity_service_sdk_go.OryIdpSettings {
 	if src == nil {
 		return nil
 	}
 
-	return &identity_platform_sdk_go.OryIdpSettings{
+	return &identity_service_sdk_go.OryIdpSettings{
 		ProjectSlug: ptrutil.Ptr(src.ProjectSlug),
 		ApiKey:      ptrutil.Ptr(strutil.Mask(src.ApiKey)),
 	}
 }
 
 func ToOryIdpSettings(
-	src *identity_platform_sdk_go.OryIdpSettings,
+	src *identity_service_sdk_go.OryIdpSettings,
 ) *settingstypes.OryIdpSettings {
 	if src == nil {
 		return nil
@@ -94,13 +94,13 @@ func ToOryIdpSettings(
 
 func FromIssuerSettings(
 	src *settingstypes.IssuerSettings,
-) *identity_platform_sdk_go.IssuerSettings {
+) *identity_service_sdk_go.IssuerSettings {
 	if src == nil {
 		return nil
 	}
 
-	return &identity_platform_sdk_go.IssuerSettings{
-		IdpType:         ptrutil.Ptr(identity_platform_sdk_go.IdpType(src.IdpType)),
+	return &identity_service_sdk_go.IssuerSettings{
+		IdpType:         ptrutil.Ptr(identity_service_sdk_go.IdpType(src.IdpType)),
 		OktaIdpSettings: FromOktaIdpSettings(src.OktaIdpSettings),
 		DuoIdpSettings:  FromDuoIdpSettings(src.DuoIdpSettings),
 		OryIdpSettings:  FromOryIdpSettings(src.OryIdpSettings),
@@ -108,7 +108,7 @@ func FromIssuerSettings(
 }
 
 func ToIssuerSettings(
-	src *identity_platform_sdk_go.IssuerSettings,
+	src *identity_service_sdk_go.IssuerSettings,
 ) *settingstypes.IssuerSettings {
 	if src == nil {
 		return nil
@@ -124,22 +124,22 @@ func ToIssuerSettings(
 
 func FromApiKey(
 	src *settingstypes.ApiKey,
-) *identity_platform_sdk_go.ApiKey {
+) *identity_service_sdk_go.ApiKey {
 	if src == nil {
 		return nil
 	}
 
-	return &identity_platform_sdk_go.ApiKey{
+	return &identity_service_sdk_go.ApiKey{
 		ApiKey: ptrutil.Ptr(src.ApiKey),
 	}
 }
 
-func FromSettings(src *settingstypes.Settings) *identity_platform_sdk_go.Settings {
+func FromSettings(src *settingstypes.Settings) *identity_service_sdk_go.Settings {
 	if src == nil {
 		return nil
 	}
 
-	return &identity_platform_sdk_go.Settings{
+	return &identity_service_sdk_go.Settings{
 		IssuerSettings: FromIssuerSettings(src.IssuerSettings),
 		ApiKey:         FromApiKey(src.ApiKey),
 	}

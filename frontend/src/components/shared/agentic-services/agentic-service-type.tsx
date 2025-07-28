@@ -5,8 +5,8 @@
 
 import {AppType} from '@/types/api/app';
 import {cn} from '@/lib/utils';
-import MCPIcon from '@/assets/types-agentic-platforms/mcp.svg?react';
-import OASFIcon from '@/assets/types-agentic-platforms/agntcy.svg?react';
+import MCPIcon from '@/assets/types-agentic-services/mcp.svg?react';
+import OASFIcon from '@/assets/types-agentic-services/agntcy.svg?react';
 import A2AIcon from '@/assets/a2a-logo.svg?react';
 import {Typography} from '@mui/material';
 import {labels} from '@/constants/labels';

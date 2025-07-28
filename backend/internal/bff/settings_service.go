@@ -6,11 +6,11 @@ package bff
 import (
 	"context"
 
-	issuercore "github.com/agntcy/identity-platform/internal/core/issuer"
-	settingscore "github.com/agntcy/identity-platform/internal/core/settings"
-	settingstypes "github.com/agntcy/identity-platform/internal/core/settings/types"
-	"github.com/agntcy/identity-platform/internal/pkg/errutil"
-	outshiftiam "github.com/agntcy/identity-platform/internal/pkg/iam"
+	issuercore "github.com/outshift/identity-service/internal/core/issuer"
+	settingscore "github.com/outshift/identity-service/internal/core/settings"
+	settingstypes "github.com/outshift/identity-service/internal/core/settings/types"
+	"github.com/outshift/identity-service/internal/pkg/errutil"
+	outshiftiam "github.com/outshift/identity-service/internal/pkg/iam"
 )
 
 type SettingsService interface {

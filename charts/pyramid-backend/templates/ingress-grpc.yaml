@@ -26,10 +26,10 @@ spec:
     http:
       paths:
       - backend:
-          platform:
+          service:
             name: {{ include "pyramid-backend.fullname" . }}
             port:
-              number: {{ .Values.platform.grpc.port}}
+              number: {{ .Values.service.grpc.port}}
         path: /
         pathType: ImplementationSpecific
 {{- end }}

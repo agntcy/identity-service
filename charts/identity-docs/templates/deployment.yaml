@@ -28,7 +28,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      platformAccountName: {{ include "identity-docs.platformAccountName" . }}
+      serviceAccountName: {{ include "identity-docs.serviceAccountName" . }}
       {{- with .Values.podSecurityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}
@@ -43,7 +43,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: {{ .Values.platform.http.port }}
+              containerPort: {{ .Values.service.http.port }}
               protocol: TCP
           {{- with .Values.livenessProbe }}
           livenessProbe:

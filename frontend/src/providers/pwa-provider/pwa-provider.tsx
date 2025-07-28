@@ -70,7 +70,7 @@ export const PwaProvider: React.FC<React.PropsWithChildren> = ({children}) => {
       console.log('❌ SW registration error:', error);
       toast({
         title: 'SW Registration Error',
-        description: 'There was an error registering the platform worker. Please try again later.',
+        description: 'There was an error registering the service worker. Please try again later.',
         type: 'error',
         showCloseButton: false
       });

@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "agntcy/identity/platform/v1alpha1/policy_platform.proto",
+    "title": "outshift/identity/service/v1alpha1/policy_service.proto",
     "version": "version not set"
   },
   "tags": [

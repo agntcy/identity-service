@@ -51,12 +51,12 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
-Create the name of the platform account to use
+Create the name of the service account to use
 */}}
-{{- define "identity-sample-currency-exchange-a2a.platformAccountName" -}}
-{{- if .Values.platformAccount.create }}
-{{- default (include "identity-sample-currency-exchange-a2a.fullname" .) .Values.platformAccount.name }}
+{{- define "identity-sample-currency-exchange-a2a.serviceAccountName" -}}
+{{- if .Values.serviceAccount.create }}
+{{- default (include "identity-sample-currency-exchange-a2a.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
-{{- default "default" .Values.platformAccount.name }}
+{{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}

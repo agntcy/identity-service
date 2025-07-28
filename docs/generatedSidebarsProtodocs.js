@@ -4,5 +4,5 @@
  */
 
 
-module.exports = {"protodocs":[{"type":"category","label":"Files","items":[{"type":"category","label":"/agntcy/identity/platform","items":[{"type":"category","label":"/shared/v1alpha1","items":[{"type":"doc","id":"agntcy/identity/platform/shared/v1alpha1/pagination.proto"}]},{"type":"category","label":"/v1alpha1","items":[{"type":"doc","id":"agntcy/identity/platform/v1alpha1/app.proto"},{"type":"doc","id":"agntcy/identity/platform/v1alpha1/app_platform.proto"}]}]}]}]};
+module.exports = {"protodocs":[{"type":"category","label":"Files","items":[{"type":"category","label":"/outshift/identity/service","items":[{"type":"category","label":"/shared/v1alpha1","items":[{"type":"doc","id":"outshift/identity/service/shared/v1alpha1/pagination.proto"}]},{"type":"category","label":"/v1alpha1","items":[{"type":"doc","id":"outshift/identity/service/v1alpha1/app.proto"},{"type":"doc","id":"outshift/identity/service/v1alpha1/app_service.proto"}]}]}]}]};
   

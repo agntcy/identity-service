@@ -7,8 +7,8 @@ import (
 	"context"
 	"errors"
 
-	apptypes "github.com/agntcy/identity-platform/internal/core/app/types"
-	"github.com/agntcy/identity-platform/internal/core/policy/types"
+	apptypes "github.com/outshift/identity-service/internal/core/app/types"
+	"github.com/outshift/identity-service/internal/core/policy/types"
 	"github.com/agntcy/identity/pkg/log"
 )
 

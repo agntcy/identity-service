@@ -202,7 +202,7 @@ export const ListPolicies = () => {
               >
                 <EmptyState
                   title="No policies found"
-                  description="No policies are currently in place. Click 'Add Policy' to create and apply one to your registered agentic platforms."
+                  description="No policies are currently in place. Click 'Add Policy' to create and apply one to your registered agentic services."
                   containerProps={{paddingBottom: '40px'}}
                   actionTitle="Add Policy"
                   actionCallback={() => {
@@ -227,7 +227,7 @@ export const ListPolicies = () => {
             Are you sure you want to delete this policy? This action cannot be undone.
             <br />
             <br />
-            <strong>Note:</strong> Deleting a policy will remove it from all associated agentic platforms.
+            <strong>Note:</strong> Deleting a policy will remove it from all associated agentic services.
           </>
         }
         confirmButtonText="Delete"

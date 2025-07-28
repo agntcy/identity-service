@@ -8,11 +8,11 @@ import {CopyButton, toast, Typography} from '@outshift/spark-design';
 import {useMemo} from 'react';
 import {App} from '@/types/api/app';
 import KeyValue, {KeyValuePair} from '@/components/ui/key-value';
-import {AgenticServiceType} from '@/components/shared/agentic-platforms/agentic-platform-type';
-import {StatusAgenticService} from '@/components/shared/agentic-platforms/status-agentic-platform';
+import {AgenticServiceType} from '@/components/shared/agentic-services/agentic-service-type';
+import {StatusAgenticService} from '@/components/shared/agentic-services/status-agentic-service';
 import DateHover from '@/components/ui/date-hover';
 import {useAnalytics} from '@/hooks';
-import {BadgeCard} from '@/components/shared/agentic-platforms/badge-card';
+import {BadgeCard} from '@/components/shared/agentic-services/badge-card';
 
 export const ContentAboutAgenticService = ({
   app,

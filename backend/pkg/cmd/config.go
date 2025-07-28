@@ -4,7 +4,7 @@
 package cmd
 
 import (
-	"github.com/agntcy/identity-platform/pkg/log"
+	"github.com/outshift/identity-service/pkg/log"
 	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
 	"github.com/sirupsen/logrus"

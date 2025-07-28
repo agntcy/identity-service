@@ -5,7 +5,7 @@
 
 import {AxiosResponse} from 'axios';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
-import {DevicesAPI} from '@/api/platforms';
+import {DevicesAPI} from '@/api/services';
 import {Device} from '@/types/api/device';
 
 interface PropsSettingsDevices {

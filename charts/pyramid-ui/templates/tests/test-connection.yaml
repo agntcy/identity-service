@@ -14,5 +14,5 @@ spec:
     - name: wget
       image: busybox
       command: ['wget']
-      args: ['{{ include "pyramid-ui.fullname" . }}:{{ .Values.platform.port }}']
+      args: ['{{ include "pyramid-ui.fullname" . }}:{{ .Values.service.port }}']
   restartPolicy: Never

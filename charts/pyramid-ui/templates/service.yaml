@@ -8,11 +8,11 @@ metadata:
   labels:
     {{- include "pyramid-ui.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.platform.type }}
+  type: {{ .Values.service.type }}
   ports:
     - name: http
-      port: {{ .Values.platform.http.port }}
-      targetPort: {{ .Values.platform.http.targetPort }}
+      port: {{ .Values.service.http.port }}
+      targetPort: {{ .Values.service.http.targetPort }}
   selector:
     app.kubernetes.io/name: {{ .Chart.Name }}
     app.kubernetes.io/instance: {{ .Release.Name }}

@@ -8,7 +8,7 @@ image:
   pullPolicy: IfNotPresent
   tag: ""  
 
-platform:
+service:
   type: ClusterIP
   http:
     port: 5500
@@ -34,7 +34,7 @@ externalSecrets:
         key: ""  
         property: ARTIFACTORY_PASSWORD
 
-platformAccount:
+serviceAccount:
   create: true
   name: ""
 

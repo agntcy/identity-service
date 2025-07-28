@@ -11,7 +11,7 @@ image:
 namespace: ""
 imagePullSecrets: []
 
-platform:
+service:
   type: ClusterIP
   http:
     port: 4000
@@ -34,8 +34,8 @@ ingress:
       nginx.ingress.kubernetes.io/rewrite-target: /
       cert-manager.io/cluster-issuer: letsencrypt
 
-  domainPrefixHttp: api.pyramid-platform
-  domainPrefixGrpc: api.grpc.pyramid-platform
+  domainPrefixHttp: api.pyramid-service
+  domainPrefixGrpc: api.grpc.pyramid-service
   apiDomainName: ""
 
 externalSecrets:
@@ -57,10 +57,10 @@ configmap:
   GO_ENV: "development"
   LOG_LEVEL: "DebugLevel"
   API_URL: ""
-  DB_HOST: "pyramid-platform-postgresql"
+  DB_HOST: "pyramid-service-postgresql"
   DB_PORT: "5432"
   DB_USERNAME: "pyramid"
-  DB_NAME: "identity-platform"
+  DB_NAME: "identity-service"
 
   VAULT_HOST: "0.0.0.0"
   VAULT_PORT: "8200"
@@ -75,17 +75,17 @@ configmap:
   IAM_USER_CID: ""
   IAM_API_KEY_CID: ""
 
-platformAccount:
+serviceAccount:
   create: true
   name: ""
 
 postgresql:
-  fullnameOverride: "pyramid-platform-postgresql"
+  fullnameOverride: "pyramid-service-postgresql"
   enabled: true
   auth:
     enablePostgresUser: true
     username: pyramid
-    database: identity-platform
+    database: identity-service
   persistence:
     enabled: true
     size: 10Gi

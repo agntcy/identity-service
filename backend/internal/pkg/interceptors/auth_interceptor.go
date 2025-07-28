@@ -8,10 +8,10 @@ import (
 	"errors"
 	"strings"
 
-	identity_platform_sdk_go "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1"
-	"github.com/agntcy/identity-platform/internal/pkg/grpcutil"
-	outshiftiam "github.com/agntcy/identity-platform/internal/pkg/iam"
-	"github.com/agntcy/identity-platform/pkg/log"
+	identity_service_sdk_go "github.com/outshift/identity-service/api/server/outshift/identity/service/v1alpha1"
+	"github.com/outshift/identity-service/internal/pkg/grpcutil"
+	outshiftiam "github.com/outshift/identity-service/internal/pkg/iam"
+	"github.com/outshift/identity-service/pkg/log"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 )
@@ -24,18 +24,18 @@ const (
 )
 
 var allowedServicesWithoutAuth = []string{
-	"/agntcy.identity.platform.v1alpha1.DeviceService/RegisterDevice",
-	"/agntcy.identity.platform.v1alpha1.BadgeService/VerifyBadge",
-	identity_platform_sdk_go.AuthService_ApproveToken_FullMethodName,
+	"/agoutshift.identity.service.v1alpha1.DeviceService/RegisterDevice",
+	"/agoutshift.identity.service.v1alpha1.BadgeService/VerifyBadge",
+	identity_service_sdk_go.AuthService_ApproveToken_FullMethodName,
 	"/grpc.health.v1.Health/Check",
 }
 
 var allowedServicesWithAppAuth = []string{
-	"/agntcy.identity.platform.v1alpha1.AuthService/AppInfo",
-	"/agntcy.identity.platform.v1alpha1.AuthService/Authorize",
-	"/agntcy.identity.platform.v1alpha1.AuthService/Token",
-	"/agntcy.identity.platform.v1alpha1.AuthService/ExtAuthz",
-	"/agntcy.identity.platform.v1alpha1.BadgeService/IssueBadge",
+	"/agoutshift.identity.service.v1alpha1.AuthService/AppInfo",
+	"/agoutshift.identity.service.v1alpha1.AuthService/Authorize",
+	"/agoutshift.identity.service.v1alpha1.AuthService/Token",
+	"/agoutshift.identity.service.v1alpha1.AuthService/ExtAuthz",
+	"/agoutshift.identity.service.v1alpha1.BadgeService/IssueBadge",
 }
 
 type AuthInterceptor struct {
@@ -62,10 +62,10 @@ func (ti *AuthInterceptor) Unary(
 	info *grpc.UnaryServerInfo,
 	handler grpc.UnaryHandler,
 ) (interface{}, error) {
-	// Check non-auth platforms
+	// Check non-auth services
 	// Healthz, etc.
-	for _, platform := range allowedServicesWithoutAuth {
-		if info.FullMethod == platform {
+	for _, service := range allowedServicesWithoutAuth {
+		if info.FullMethod == service {
 			return handler(ctx, req)
 		}
 	}
@@ -94,9 +94,9 @@ func (ti *AuthInterceptor) Unary(
 			return nil, grpcutil.UnauthorizedError(err)
 		}
 	} else {
-		// Check the app auth platforms
+		// Check the app auth services
 		for _, allowed := range allowedServicesWithAppAuth {
-			log.Debug("Checking if : ", info.FullMethod, " is in allowed platforms with app auth", allowed)
+			log.Debug("Checking if : ", info.FullMethod, " is in allowed services with app auth", allowed)
 
 			if strings.Contains(info.FullMethod, allowed) {
 				// Authenticate an app against IAM Api Keys v1

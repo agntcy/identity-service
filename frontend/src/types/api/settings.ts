@@ -11,7 +11,7 @@ import {
   V1Alpha1OktaIdpSettings,
   V1Alpha1SetIssuerRequest,
   V1Alpha1Settings
-} from '@/api/generated/identity/settings_platform.swagger.api';
+} from '@/api/generated/identity/settings_service.swagger.api';
 
 export type {
   V1Alpha1ApiKey as ApiKey,

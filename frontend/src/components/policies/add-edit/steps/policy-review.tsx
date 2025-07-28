@@ -8,7 +8,7 @@ import {Card, CardContent} from '@/components/ui/card';
 import {Accordion, Divider, EmptyState, GeneralSize, Pagination, Table, Tag, Typography} from '@outshift/spark-design';
 import {useCallback, useMemo, useState} from 'react';
 import KeyValue, {KeyValuePair} from '@/components/ui/key-value';
-import {AgenticServiceType} from '@/components/shared/agentic-platforms/agentic-platform-type';
+import {AgenticServiceType} from '@/components/shared/agentic-services/agentic-service-type';
 import {useGetAgenticService, useGetGetTasksAgenticService} from '@/queries';
 import {Separator} from '@/components/ui/separator';
 import {labels} from '@/constants/labels';

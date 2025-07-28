@@ -4,7 +4,7 @@
  */
 
 import {defineStepper} from '@/components/ui/stepper';
-import {AgenticServiceSchema} from '@/schemas/agentic-platform-schema';
+import {AgenticServiceSchema} from '@/schemas/agentic-service-schema';
 import {z} from 'zod';
 
 export const {
@@ -20,13 +20,13 @@ export const {
   {
     id: 'agenticServiceForm',
     title: 'Agentic Service Type & Details',
-    description: 'Select the agentic platform type you want to use and enter the platform information',
+    description: 'Select the agentic service type you want to use and enter the service information',
     schema: AgenticServiceSchema
   },
   {
     id: 'confirmAgenticService',
     title: 'Register Agentic Service',
-    description: 'Confirm the registration of the agentic platform',
+    description: 'Confirm the registration of the agentic service',
     schema: z.object({})
   }
 );

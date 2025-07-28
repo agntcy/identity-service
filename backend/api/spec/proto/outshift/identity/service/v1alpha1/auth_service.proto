@@ -3,17 +3,17 @@
 
 syntax = "proto3";
 
-package agntcy.identity.platform.v1alpha1;
+package agoutshift.identity.service.v1alpha1;
 
-import "agntcy/identity/platform/v1alpha1/app.proto";
+import "outshift/identity/service/v1alpha1/app.proto";
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
-option go_package = "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_go";
+option go_package = "github.com/outshift/identity-service/api/server/outshift/identity/service/v1alpha1;identity_service_sdk_go";
 
 // AuthService manages auth.
-platform AuthService {
+service AuthService {
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_tag) = {name: "Auth"};
   // App info endpoint
   rpc AppInfo(google.protobuf.Empty) returns (AppInfoResponse) {

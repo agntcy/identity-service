@@ -7,12 +7,12 @@ import (
 	"context"
 	"errors"
 
-	badgecore "github.com/agntcy/identity-platform/internal/core/badge"
-	"github.com/agntcy/identity-platform/internal/core/badge/types"
-	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
-	"github.com/agntcy/identity-platform/internal/pkg/convertutil"
-	"github.com/agntcy/identity-platform/internal/pkg/errutil"
-	"github.com/agntcy/identity-platform/pkg/db"
+	badgecore "github.com/outshift/identity-service/internal/core/badge"
+	"github.com/outshift/identity-service/internal/core/badge/types"
+	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
+	"github.com/outshift/identity-service/internal/pkg/convertutil"
+	"github.com/outshift/identity-service/internal/pkg/errutil"
+	"github.com/outshift/identity-service/pkg/db"
 	"gorm.io/gorm"
 )
 

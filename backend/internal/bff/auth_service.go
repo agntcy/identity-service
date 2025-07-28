@@ -8,21 +8,21 @@ import (
 	"errors"
 	"time"
 
-	appcore "github.com/agntcy/identity-platform/internal/core/app"
-	apptypes "github.com/agntcy/identity-platform/internal/core/app/types"
-	authcore "github.com/agntcy/identity-platform/internal/core/auth"
-	authtypes "github.com/agntcy/identity-platform/internal/core/auth/types"
-	devicecore "github.com/agntcy/identity-platform/internal/core/device"
-	"github.com/agntcy/identity-platform/internal/core/identity"
-	idpcore "github.com/agntcy/identity-platform/internal/core/idp"
-	policycore "github.com/agntcy/identity-platform/internal/core/policy"
-	settingscore "github.com/agntcy/identity-platform/internal/core/settings"
-	settingstypes "github.com/agntcy/identity-platform/internal/core/settings/types"
-	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
-	"github.com/agntcy/identity-platform/internal/pkg/errutil"
-	"github.com/agntcy/identity-platform/internal/pkg/jwtutil"
-	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
-	"github.com/agntcy/identity-platform/pkg/log"
+	appcore "github.com/outshift/identity-service/internal/core/app"
+	apptypes "github.com/outshift/identity-service/internal/core/app/types"
+	authcore "github.com/outshift/identity-service/internal/core/auth"
+	authtypes "github.com/outshift/identity-service/internal/core/auth/types"
+	devicecore "github.com/outshift/identity-service/internal/core/device"
+	"github.com/outshift/identity-service/internal/core/identity"
+	idpcore "github.com/outshift/identity-service/internal/core/idp"
+	policycore "github.com/outshift/identity-service/internal/core/policy"
+	settingscore "github.com/outshift/identity-service/internal/core/settings"
+	settingstypes "github.com/outshift/identity-service/internal/core/settings/types"
+	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
+	"github.com/outshift/identity-service/internal/pkg/errutil"
+	"github.com/outshift/identity-service/internal/pkg/jwtutil"
+	"github.com/outshift/identity-service/internal/pkg/ptrutil"
+	"github.com/outshift/identity-service/pkg/log"
 	"github.com/agntcy/identity/pkg/oidc"
 )
 
@@ -350,7 +350,7 @@ func (s *authService) ExtAuthZ(
 		// We set the token to expire after 1 min.
 		// The reason we do this is because DUO and ORY
 		// generate the same access token in a 1 sec time window
-		// and agents can call other platforms multiple times
+		// and agents can call other services multiple times
 		// during the same prompt which can lead to a failure.
 		// More Details: https://cisco-eti.atlassian.net/browse/PYRA-413
 		//nolint: mnd // obviously it's not a magic number

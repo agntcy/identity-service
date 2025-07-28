@@ -37,7 +37,7 @@ export interface AuthConfig {
   configOptions?: AuthConfigOptions;
 }
 
-export interface AuthConfigOptions extends Omit<OktaAuthOptions, 'issuer' | 'clientId' | 'tokenManager' | 'platforms'> {
+export interface AuthConfigOptions extends Omit<OktaAuthOptions, 'issuer' | 'clientId' | 'tokenManager' | 'services'> {
   renew?: 'manual' | 'auto';
   devMode?: boolean;
   expireEarlySeconds?: number;

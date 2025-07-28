@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {ListPoliciesAgenticService} from '@/components/agentic-platforms/info/list-policies-agentic-platform';
+import {ListPoliciesAgenticService} from '@/components/agentic-services/info/list-policies-agentic-service';
 import {App} from '@/types/api/app';
 import {useOutletContext} from 'react-router-dom';
 

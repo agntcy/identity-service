@@ -5,10 +5,10 @@
 
 syntax = "proto3";
 
-package agntcy.identity.platform.v1alpha1;
+package agoutshift.identity.service.v1alpha1;
 
 // Package-wide variables from generator "generated".
-option go_package = "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_go";
+option go_package = "github.com/outshift/identity-service/api/server/outshift/identity/service/v1alpha1;identity_service_sdk_go";
 
 // An Identity API Key.
 message ApiKey {

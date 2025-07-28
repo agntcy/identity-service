@@ -7,9 +7,9 @@ import {Card, CardContent} from '@/components/ui/card';
 import {useStepper} from '../stepper';
 import {Typography} from '@outshift/spark-design';
 import {useMemo} from 'react';
-import {AgenticServiceFormValues} from '@/schemas/agentic-platform-schema';
+import {AgenticServiceFormValues} from '@/schemas/agentic-service-schema';
 import KeyValue, {KeyValuePair} from '@/components/ui/key-value';
-import {AgenticServiceType} from '@/components/shared/agentic-platforms/agentic-platform-type';
+import {AgenticServiceType} from '@/components/shared/agentic-services/agentic-service-type';
 
 export const ConfirmInfo = () => {
   const methods = useStepper();

@@ -11,9 +11,9 @@ import (
 	"path"
 	"time"
 
-	"github.com/agntcy/identity-platform/internal/core/settings/types"
-	"github.com/agntcy/identity-platform/internal/pkg/errutil"
-	"github.com/agntcy/identity-platform/pkg/log"
+	"github.com/outshift/identity-service/internal/core/settings/types"
+	"github.com/outshift/identity-service/internal/pkg/errutil"
+	"github.com/outshift/identity-service/pkg/log"
 	duosdk "github.com/duosecurity/duo_api_golang"
 	"github.com/google/uuid"
 )

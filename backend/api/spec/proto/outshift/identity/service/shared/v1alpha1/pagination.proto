@@ -3,9 +3,9 @@
 
 syntax = "proto3";
 
-package agntcy.identity.platform.shared.v1alpha1;
+package agoutshift.identity.service.shared.v1alpha1;
 
-option go_package = "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/shared/v1alpha1;identity_platform_shared_sdk_go";
+option go_package = "github.com/outshift/identity-service/api/server/outshift/identity/service/shared/v1alpha1;identity_service_shared_sdk_go";
 
 // Pagination response
 message PagedResponse {

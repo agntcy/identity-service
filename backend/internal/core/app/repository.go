@@ -6,8 +6,8 @@ package app
 import (
 	"context"
 
-	"github.com/agntcy/identity-platform/internal/core/app/types"
-	"github.com/agntcy/identity-platform/internal/pkg/pagination"
+	"github.com/outshift/identity-service/internal/core/app/types"
+	"github.com/outshift/identity-service/internal/pkg/pagination"
 )
 
 type Repository interface {

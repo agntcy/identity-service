@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/agntcy/identity-platform/pkg/log"
+	"github.com/outshift/identity-service/pkg/log"
 )
 
 func Err(err error, customMessage string) error {

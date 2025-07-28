@@ -67,7 +67,7 @@ export const config: CookieConsentConfig = {
             {
               title: 'Strictly necessary cookies',
               description:
-                'These cookies are necessary for the website to function and cannot be switched off in our systems. They are usually only set in response to actions made by you which amount to a request for platforms, such as setting your privacy preferences, logging in or filling in forms.    You can set your browser to block or alert you about these cookies, but some parts of the site will not then work. These cookies do not store any personally identifiable information.',
+                'These cookies are necessary for the website to function and cannot be switched off in our systems. They are usually only set in response to actions made by you which amount to a request for services, such as setting your privacy preferences, logging in or filling in forms.    You can set your browser to block or alert you about these cookies, but some parts of the site will not then work. These cookies do not store any personally identifiable information.',
               linkedCategory: 'necessary',
               cookieTable: {
                 headers: {
@@ -78,7 +78,7 @@ export const config: CookieConsentConfig = {
                   {
                     name: 'OneTrust',
                     description:
-                      "OneTrust LLC (OneTrust) is a provider of privacy management software platform. The company's platform supports organizations to adhere compliance with the data privacy, governance and security regulations across sectors and jurisdictions."
+                      "OneTrust LLC (OneTrust) is a provider of privacy management software service. The company's service supports organizations to adhere compliance with the data privacy, governance and security regulations across sectors and jurisdictions."
                   }
                 ]
               }
@@ -96,7 +96,7 @@ export const config: CookieConsentConfig = {
                   {
                     name: 'Segment',
                     domain: 'segment.com',
-                    description: 'Segment.io is an analytics platform for web applications.'
+                    description: 'Segment.io is an analytics service for web applications.'
                   }
                 ]
               }

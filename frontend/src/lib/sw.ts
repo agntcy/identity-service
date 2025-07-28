@@ -121,7 +121,7 @@ self.addEventListener('message', async (event) => {
     try {
       await self.skipWaiting();
     } catch (error) {
-      console.error('Error during platform worker skipWaiting:', error);
+      console.error('Error during service worker skipWaiting:', error);
     }
   } else if (event.data.type === 'CLOSE_NOTIFICATION') {
     try {

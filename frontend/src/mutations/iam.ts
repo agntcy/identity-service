@@ -5,7 +5,7 @@
 
 import {AxiosResponse} from 'axios';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
-import {IamAPI} from '@/api/platforms';
+import {IamAPI} from '@/api/services';
 import {InviteUserPayload, TenantReponse} from '@/types/api/iam';
 
 interface PropsSettingsTenant {
