@@ -4,7 +4,7 @@ sidebar_position: 3
 
 # Creating Agentic Service Identities
 
-This guide outlines the process of creating and registering Agentic Services within the **Outshift Agent Identity Service**, which involves establishing a unique identity for your service and subsequently issuing a badge for its discovery.
+This guide outlines the process of creating and registering Agentic Services within the AGNTCY **Agent Identity Service**, which involves establishing a unique identity for your service and subsequently issuing a badge for its discovery.
 
 ## 1. Create Agentic Service (Identity Creation)
 
@@ -44,7 +44,7 @@ If your Agentic Service can be accessed directly from the public internet, you c
 
 1.  During the "Register Agentic Service" step, you will be prompted to provide the **Deployment URL** for your service.
 2.  Enter the full URL where your service is hosted and accessible.
-3.  The platform will then perform online discovery using this URL.
+3.  The service will then perform online discovery using this URL.
 
 ![Issue the Badge using the UI](/img/issue-badge-online.png)
 

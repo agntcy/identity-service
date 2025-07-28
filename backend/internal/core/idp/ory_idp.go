@@ -1,4 +1,4 @@
-// Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+// Copyright 2025 Cisco Systems, Inc. and its affiliates
 // SPDX-License-Identifier: Apache-2.0
 
 package idp
@@ -9,10 +9,10 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/agntcy/identity-platform/internal/core/settings/types"
-	"github.com/agntcy/identity-platform/internal/pkg/errutil"
-	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
-	"github.com/agntcy/identity-platform/pkg/log"
+	"github.com/outshift/identity-service/internal/core/settings/types"
+	"github.com/outshift/identity-service/internal/pkg/errutil"
+	"github.com/outshift/identity-service/internal/pkg/ptrutil"
+	"github.com/outshift/identity-service/pkg/log"
 	orysdk "github.com/ory/client-go"
 )
 

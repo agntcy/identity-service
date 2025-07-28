@@ -1,4 +1,4 @@
-// Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+// Copyright 2025 Cisco Systems, Inc. and its affiliates
 // SPDX-License-Notificationentifier: Apache-2.0
 
 package bff
@@ -10,11 +10,11 @@ import (
 	"time"
 
 	webpush "github.com/SherClockHolmes/webpush-go"
-	apptypes "github.com/agntcy/identity-platform/internal/core/app/types"
-	authtypes "github.com/agntcy/identity-platform/internal/core/auth/types"
-	devicetypes "github.com/agntcy/identity-platform/internal/core/device/types"
-	"github.com/agntcy/identity-platform/internal/pkg/errutil"
-	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
+	apptypes "github.com/outshift/identity-service/internal/core/app/types"
+	authtypes "github.com/outshift/identity-service/internal/core/auth/types"
+	devicetypes "github.com/outshift/identity-service/internal/core/device/types"
+	"github.com/outshift/identity-service/internal/pkg/errutil"
+	"github.com/outshift/identity-service/internal/pkg/ptrutil"
 )
 
 const (

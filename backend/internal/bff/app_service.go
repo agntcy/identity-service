@@ -1,4 +1,4 @@
-// Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+// Copyright 2025 Cisco Systems, Inc. and its affiliates
 // SPDX-License-Appentifier: Apache-2.0
 
 package bff
@@ -10,20 +10,20 @@ import (
 	"slices"
 	"time"
 
-	appcore "github.com/agntcy/identity-platform/internal/core/app"
-	apptypes "github.com/agntcy/identity-platform/internal/core/app/types"
-	badgecore "github.com/agntcy/identity-platform/internal/core/badge"
-	identitycore "github.com/agntcy/identity-platform/internal/core/identity"
-	idpcore "github.com/agntcy/identity-platform/internal/core/idp"
-	policycore "github.com/agntcy/identity-platform/internal/core/policy"
-	policytypes "github.com/agntcy/identity-platform/internal/core/policy/types"
-	settingscore "github.com/agntcy/identity-platform/internal/core/settings"
-	"github.com/agntcy/identity-platform/internal/pkg/errutil"
-	outshiftiam "github.com/agntcy/identity-platform/internal/pkg/iam"
-	"github.com/agntcy/identity-platform/internal/pkg/pagination"
-	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
-	"github.com/agntcy/identity-platform/internal/pkg/strutil"
-	"github.com/agntcy/identity-platform/pkg/log"
+	appcore "github.com/outshift/identity-service/internal/core/app"
+	apptypes "github.com/outshift/identity-service/internal/core/app/types"
+	badgecore "github.com/outshift/identity-service/internal/core/badge"
+	identitycore "github.com/outshift/identity-service/internal/core/identity"
+	idpcore "github.com/outshift/identity-service/internal/core/idp"
+	policycore "github.com/outshift/identity-service/internal/core/policy"
+	policytypes "github.com/outshift/identity-service/internal/core/policy/types"
+	settingscore "github.com/outshift/identity-service/internal/core/settings"
+	"github.com/outshift/identity-service/internal/pkg/errutil"
+	outshiftiam "github.com/outshift/identity-service/internal/pkg/iam"
+	"github.com/outshift/identity-service/internal/pkg/pagination"
+	"github.com/outshift/identity-service/internal/pkg/ptrutil"
+	"github.com/outshift/identity-service/internal/pkg/strutil"
+	"github.com/outshift/identity-service/pkg/log"
 	"github.com/google/uuid"
 )
 

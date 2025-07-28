@@ -1,4 +1,4 @@
-// Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+// Copyright 2025 Cisco Systems, Inc. and its affiliates
 // SPDX-License-Settingsentifier: Apache-2.0
 
 package bff
@@ -10,17 +10,17 @@ import (
 	"errors"
 	"fmt"
 
-	appcore "github.com/agntcy/identity-platform/internal/core/app"
-	apptypes "github.com/agntcy/identity-platform/internal/core/app/types"
-	badgecore "github.com/agntcy/identity-platform/internal/core/badge"
-	badgea2a "github.com/agntcy/identity-platform/internal/core/badge/a2a"
-	badgemcp "github.com/agntcy/identity-platform/internal/core/badge/mcp"
-	badgetypes "github.com/agntcy/identity-platform/internal/core/badge/types"
-	identitycore "github.com/agntcy/identity-platform/internal/core/identity"
-	idpcore "github.com/agntcy/identity-platform/internal/core/idp"
-	policycore "github.com/agntcy/identity-platform/internal/core/policy"
-	settingscore "github.com/agntcy/identity-platform/internal/core/settings"
-	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
+	appcore "github.com/outshift/identity-service/internal/core/app"
+	apptypes "github.com/outshift/identity-service/internal/core/app/types"
+	badgecore "github.com/outshift/identity-service/internal/core/badge"
+	badgea2a "github.com/outshift/identity-service/internal/core/badge/a2a"
+	badgemcp "github.com/outshift/identity-service/internal/core/badge/mcp"
+	badgetypes "github.com/outshift/identity-service/internal/core/badge/types"
+	identitycore "github.com/outshift/identity-service/internal/core/identity"
+	idpcore "github.com/outshift/identity-service/internal/core/idp"
+	policycore "github.com/outshift/identity-service/internal/core/policy"
+	settingscore "github.com/outshift/identity-service/internal/core/settings"
+	"github.com/outshift/identity-service/internal/pkg/ptrutil"
 	"github.com/go-playground/validator/v10"
 )
 

@@ -1,10 +1,10 @@
-// Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+// Copyright 2025 Cisco Systems, Inc. and its affiliates
 // SPDX-License-Identifier: Apache-2.0
 
 package app_grpc_register
 
 import (
-	v1alpha1 "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1"
+	v1alpha1 "github.com/outshift/identity-service/api/server/outshift/identity/service/v1alpha1"
 )
 
 import (

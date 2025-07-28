@@ -4,7 +4,7 @@
 package strutil
 
 import (
-	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
+	"github.com/outshift/identity-service/internal/pkg/ptrutil"
 	"github.com/google/uuid"
 )
 

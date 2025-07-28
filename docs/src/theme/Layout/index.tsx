@@ -1,5 +1,5 @@
 /**
- * Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+ * Copyright 2025 Cisco Systems, Inc. and its affiliates
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -11,7 +11,7 @@ export default function CustomLayout(props) {
   const location = useLocation();
   useEffect(() => {
     const footerElements = document.getElementsByClassName("footer");
-    if (location.pathname.startsWith("/openapi/platform/v1alpha1")) {
+    if (location.pathname.startsWith("/openapi/service/v1alpha1")) {
       Array.from(footerElements).forEach((element) => {
         (element as HTMLElement).style.display = "none";
       });

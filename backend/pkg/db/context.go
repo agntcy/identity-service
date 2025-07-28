@@ -1,4 +1,4 @@
-// Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+// Copyright 2025 Cisco Systems, Inc. and its affiliates
 // SPDX-License-Identifier: Apache-2.0
 
 package db
@@ -9,7 +9,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/agntcy/identity-platform/pkg/log"
+	"github.com/outshift/identity-service/pkg/log"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"

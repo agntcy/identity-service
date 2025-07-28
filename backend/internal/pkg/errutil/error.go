@@ -1,4 +1,4 @@
-// Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+// Copyright 2025 Cisco Systems, Inc. and its affiliates
 // SPDX-License-Identifier: Apache-2.0
 
 package errutil
@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/agntcy/identity-platform/pkg/log"
+	"github.com/outshift/identity-service/pkg/log"
 )
 
 func Err(err error, customMessage string) error {

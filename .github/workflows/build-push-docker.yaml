@@ -364,7 +364,7 @@
               # Default: 1
               fetch-depth: ${{ inputs.fetch-depth }}
 
-            # we need qemu and buildx so we can build multiple platforms later
+            # we need qemu and buildx so we can build multiple services later
           - name: Set up QEMU
             id: qemu
             uses: docker/setup-qemu-action@29109295f81e9208d7d86ff1c6c12d2833863392 #v3.6.0

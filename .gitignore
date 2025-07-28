@@ -24,3 +24,4 @@ go.work
 vault-data/
 
 *.tgz
+sdk/python

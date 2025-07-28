@@ -1,5 +1,5 @@
 /**
- * Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+ * Copyright 2025 Cisco Systems, Inc. and its affiliates
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -71,10 +71,10 @@ const config: Config = {
       '@scalar/docusaurus',
       {
         label: 'OpenAPI',
-        route: '/openapi/platform/v1alpha1',
+        route: '/openapi/service/v1alpha1',
         showNavLink: true,
         configuration: {
-          url: '/api/openapi/platform/v1alpha1/openapi.yaml',
+          url: '/api/openapi/service/v1alpha1/openapi.yaml',
           hideDarkModeToggle: true,
           layout: 'modern',
           customCss: './src/css/custom.css'
@@ -116,7 +116,7 @@ const config: Config = {
           label: 'Docs',
         },
         {
-          to: 'protodocs/agntcy/identity/platform/v1alpha1/app.proto',
+          to: 'protodocs/outshift/identity/service/v1alpha1/app.proto',
           activeBasePath: 'protodocs',
           label: 'Protodocs',
           position: 'left',

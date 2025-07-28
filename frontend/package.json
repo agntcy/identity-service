@@ -106,8 +106,8 @@
   "engines": {
     "node": ">=20"
   },
-  "packageManager": "yarn@4.9.2",
   "workspaces": [
     "utils"
-  ]
+  ],
+  "packageManager": "yarn@4.9.2"
 }
