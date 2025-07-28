@@ -132,8 +132,7 @@ message CreateAppRequest {
   App app = 1;
 }
 
-message GetAppsCountRequest {
-}
+message GetAppsCountRequest {}
 
 message AppTypeCountEntry {
   // The type of the App
