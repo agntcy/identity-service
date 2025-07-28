@@ -19,7 +19,7 @@ require (
 
 require (
 	github.com/SherClockHolmes/webpush-go v1.4.0
-	github.com/agntcy/identity v0.0.13
+	github.com/agntcy/identity v0.0.14
 	github.com/agntcy/identity/api/client v0.0.0-20250724122148-33e94f9049ca
 	github.com/aws/aws-sdk-go-v2 v1.36.6
 	github.com/aws/aws-sdk-go-v2/config v1.29.18
