@@ -46,18 +46,9 @@ export default defineConfig(({mode}) => {
         base: '/',
         strategies: 'injectManifest',
         injectManifest: {
-          maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
-          minify: false,
-          enableWorkboxModulesLogs: true,
-          globPatterns: ['**/*.{js,css,html,svg,png,svg,ico}']
+          injectionPoint: undefined,
         },
         manifest: false,
-        workbox: {
-          globPatterns: ['**/*.{js,css,html,svg,png,svg,ico}'],
-          cleanupOutdatedCaches: true,
-          clientsClaim: true,
-          maximumFileSizeToCacheInBytes: 4 * 1024 * 1024 // 4MB
-        },
         devOptions: {
           enabled: mode === 'development',
           type: 'module',

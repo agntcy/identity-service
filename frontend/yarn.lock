@@ -4704,9 +4704,12 @@ __metadata:
     vite: "npm:^6.2.0"
     vite-plugin-pwa: "npm:^1.0.1"
     vite-plugin-svgr: "npm:^4.3.0"
+    workbox-cacheable-response: "npm:^7.3.0"
     workbox-core: "npm:^7.3.0"
+    workbox-expiration: "npm:^7.3.0"
     workbox-precaching: "npm:^7.3.0"
     workbox-routing: "npm:^7.3.0"
+    workbox-strategies: "npm:^7.3.0"
     workbox-window: "npm:^7.3.0"
     zod: "npm:^3.24.2"
     zustand: "npm:^5.0.5"
@@ -11925,7 +11928,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"workbox-cacheable-response@npm:7.3.0":
+"workbox-cacheable-response@npm:7.3.0, workbox-cacheable-response@npm:^7.3.0":
   version: 7.3.0
   resolution: "workbox-cacheable-response@npm:7.3.0"
   dependencies:
@@ -11941,7 +11944,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"workbox-expiration@npm:7.3.0":
+"workbox-expiration@npm:7.3.0, workbox-expiration@npm:^7.3.0":
   version: 7.3.0
   resolution: "workbox-expiration@npm:7.3.0"
   dependencies:
@@ -12015,7 +12018,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"workbox-strategies@npm:7.3.0":
+"workbox-strategies@npm:7.3.0, workbox-strategies@npm:^7.3.0":
   version: 7.3.0
   resolution: "workbox-strategies@npm:7.3.0"
   dependencies:
