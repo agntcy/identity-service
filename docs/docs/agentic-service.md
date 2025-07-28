@@ -23,7 +23,7 @@ The first step involves defining your Agentic Service, which automatically creat
 ![Create Agentic Service MCP Server](/img/agentic-service-mcp.png)
 
 4.  **Details:**
-    - **Name:** Enter a descriptive name for your Agentic Service (e.g., "Currency Exchange MCP Server"). This name will help you identify the service within the service.
+    - **Name:** Enter a descriptive name for your Agentic Service (e.g., "Currency Exchange MCP Server"). This name will help you identify the service within the platform.
     - **Description:** Provide a brief explanation of your service's purpose (e.g., "A Currency Exchange MCP Server").
 
 ![Create Agentic Service MCP Server](/img/agentic-service-mcp-2.png)
