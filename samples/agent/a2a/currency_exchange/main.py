@@ -36,7 +36,12 @@ logger = logging.getLogger(__name__)
     "--currency_exchange_mcp_server_url",
     default=os.getenv("CURRENCY_EXCHANGE_MCP_SERVER_URL", "http://localhost:9090/mcp"),
 )
-def main(host, port, azure_openai_endpoint, azure_openai_api_key, currency_exchange_mcp_server_url):
+@click.option(
+    "--agent-url", 
+    default=os.getenv("AGENT_URL", ""),
+)
+
+def main(host, port, azure_openai_endpoint, azure_openai_api_key, currency_exchange_mcp_server_url, agent_url):
     """Starts the Currency Agent server."""
 
     # Define auth scheme
@@ -56,10 +61,11 @@ def main(host, port, azure_openai_endpoint, azure_openai_api_key, currency_excha
             tags=["currency conversion", "currency exchange"],
             examples=["What is exchange rate between USD and GBP?"],
         )
+        public_url = agent_url if agent_url else f"http://{host}:{port}/"
         agent_card = AgentCard(
             name="Currency Agent",
             description="Helps with exchange rates for currencies",
-            url=f"http://{host}:{port}/",
+            url=public_url,
             version="1.0.0",
             defaultInputModes=CurrencyAgent.SUPPORTED_CONTENT_TYPES,
             defaultOutputModes=CurrencyAgent.SUPPORTED_CONTENT_TYPES,
