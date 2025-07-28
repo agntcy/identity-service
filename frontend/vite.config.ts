@@ -46,7 +46,7 @@ export default defineConfig(({mode}) => {
         base: '/',
         strategies: 'injectManifest',
         injectManifest: {
-          injectionPoint: undefined,
+          injectionPoint: undefined
         },
         manifest: false,
         devOptions: {
