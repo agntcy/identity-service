@@ -10,7 +10,7 @@
 package identity_service_sdk_go
 
 import (
-	_ "github.com/google/gnostic/openapiv3"
+	_ "github.com/google/gnostic-models/openapiv3"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
