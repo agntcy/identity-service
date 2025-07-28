@@ -6,11 +6,13 @@
 import {clientsClaim} from 'workbox-core';
 import {INotification, NotificationType} from '@/types/sw/notification';
 import {generateRandomId} from '@/utils/utils';
-import {cleanupOutdatedCaches, createHandlerBoundToURL, precacheAndRoute} from 'workbox-precaching';
-import {NavigationRoute, registerRoute} from 'workbox-routing';
+import {registerRoute} from 'workbox-routing';
 import config from '@/config';
 import {ApproveTokenRequest} from '@/types/api/auth';
 import {notificationUtils} from '@/utils/notification-store';
+import {ExpirationPlugin} from 'workbox-expiration';
+import {CacheableResponsePlugin} from 'workbox-cacheable-response';
+import {CacheFirst, NetworkFirst, StaleWhileRevalidate} from 'workbox-strategies';
 
 const ICON_PATH = '/pwa-192x192.png';
 const BADGE_PATH = '/pwa-64x64.png';
@@ -254,20 +256,40 @@ self.addEventListener('notificationclick', (event) => {
   }
 });
 
-// self.__WB_MANIFEST is default injection point
-precacheAndRoute(self.__WB_MANIFEST);
-
-// clean old assets
-cleanupOutdatedCaches();
-
-/** @type {RegExp[] | undefined} */
-let allowlist: undefined | RegExp[];
-if (import.meta.env.DEV) {
-  allowlist = [/^\/$/];
-}
-
-// to allow work offline
-registerRoute(new NavigationRoute(createHandlerBoundToURL('index.html'), {allowlist}));
-
 void self.skipWaiting();
 clientsClaim();
+
+// Avoid caching, force always go to the server
+registerRoute(
+  () => true,
+  new NetworkFirst({
+    cacheName: 'agent-identity-service-v1',
+    plugins: [new CacheableResponsePlugin({statuses: [-1]})]
+  })
+);
+
+// Cache CSS, JS, and Web Worker requests with a Stale While Revalidate strategy
+registerRoute(
+  ({request}) =>
+    request.destination === 'style' ||
+    request.destination === 'manifest' ||
+    request.destination === 'script' ||
+    request.destination === 'worker',
+  new StaleWhileRevalidate({
+    cacheName: 'assets',
+    plugins: [new CacheableResponsePlugin({statuses: [200]})]
+  })
+);
+
+// Cache images with a Cache First strategy
+registerRoute(
+  ({request}) => request.destination === 'image',
+  new CacheFirst({
+    cacheName: 'images',
+    plugins: [
+      new CacheableResponsePlugin({statuses: [200]}),
+      // 50 entries max, 30 days max
+      new ExpirationPlugin({maxEntries: 50, maxAgeSeconds: 60 * 60 * 24 * 30})
+    ]
+  })
+);
