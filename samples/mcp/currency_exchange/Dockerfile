@@ -10,6 +10,6 @@ COPY ./samples/mcp/currency_exchange/* .
 RUN pip install --no-cache-dir .
 
 # legit:ignore-pipeline
-RUN pip install --no-cache-dir git+https://github.com/cisco-outshift-ai-agents/identity-service-sdk.git#subdirectory=python 
+RUN pip install --no-cache-dir git+https://github.com/cisco-outshift-ai-agents/identity-service-sdk.git#subdirectory=python # legit:ignore-pipeline
 
 CMD ["python", "main.py"]
