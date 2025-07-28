@@ -115,11 +115,12 @@ const getIosDeviceName = (): DeviceInfo => {
 
 // get service utility
 const getPlatform = (): string => {
-  if (typeof navigator.userAgentData?.service === 'string') {
-    return navigator.userAgentData.service;
+  // Use platform property if available, otherwise fallback to userAgent
+  if (typeof navigator.userAgentData?.platform === 'string') {
+    return navigator.userAgentData.platform;
   }
-  if (typeof navigator.service === 'string') {
-    return navigator.service;
+  if (typeof navigator.platform === 'string') {
+    return navigator.platform;
   }
   return 'unknown';
 };
