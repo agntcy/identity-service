@@ -1,6 +1,6 @@
 github.com/SherClockHolmes/webpush-go v1.4.0 h1:ocnzNKWN23T9nvHi6IfyrQjkIc0oJWv1B1pULsf9i3s=
 github.com/SherClockHolmes/webpush-go v1.4.0/go.mod h1:XSq8pKX11vNV8MJEMwjrlTkxhAj1zKfxmyhdV7Pd6UA=
-github.com/agntcy/identity v0.0.13 h1:RWpxQVasHlnZtTN9xVeEJrAeJ4NtZ8fIRs+m+52AiuE=
+github.com/agntcy/identity v0.0.13 h1:g/iOM2IZ1/JDJZrGEFPTRdffMkF57/EvCvT2kF+NX9o=
 github.com/agntcy/identity v0.0.13/go.mod h1:zm7PjBID4Saen23vaRecrs6k50WOvgY9aATWB9hkUQM=
 github.com/agntcy/identity/api/client v0.0.0-20250724122148-33e94f9049ca h1:ZhAZmsQ1W4wICX8t0mdbfkTiBZbt6bGNxi11MarO5Yw=
 github.com/agntcy/identity/api/client v0.0.0-20250724122148-33e94f9049ca/go.mod h1:hpLI3UidcyPaOee9xtj7h4bsxUY7eEaX9E/DLLJKvGo=
