@@ -10,13 +10,13 @@ import "openapiv3/annotations.proto";
 option go_package = "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_go";
 option (openapi.v3.document) = {
   info: {
-    title: "Agent Identity API";
-    description: "Agent Identity API provides a set of endpoints for managing identity and access control within the AGNTCY ecosystem.";
+    title: "Agent Identity Service API";
+    description: "Agent Identity Service API provides a set of endpoints for managing identity and access control within the Outshift ecosystem.";
     version: "v1alpha1";
     contact: {
-      name: "AGNTCY Team";
+      name: "Outshift Team";
       url: "https://github.com/agntcy/identity";
-      email: "identity@agntcy.org";
+      email: "identity@outshift.com";
     }
   }
   servers: [

@@ -11,7 +11,7 @@ import type { ScalarOptions } from '@scalar/docusaurus'
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: 'Agent Identity',
+  title: 'Agent Identity Service',
   tagline: 'Create and manage identities for your MCP Servers, A2A Agents and OASF, with support for Task Based Access Control (TBAC).',
   favicon: 'img/favicon.png',
 
@@ -23,8 +23,8 @@ const config: Config = {
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'AGNTCY', // Usually your GitHub org/user name.
-  projectName: 'Agent Identity', // Usually your repo name.
+  organizationName: 'Outshift', // Usually your GitHub org/user name.
+  projectName: 'Agent Identity Service', // Usually your repo name.
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
@@ -102,7 +102,7 @@ const config: Config = {
       },
     },
     navbar: {
-      title: 'Agent Identity',
+      title: 'Agent Identity Service',
       logo: {
         alt: 'Identity Engine',
         src: 'img/logo.svg',
@@ -152,7 +152,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} AGNTCY. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Outshift. Built with Docusaurus.`,
     },
     prism: {
       theme: prismThemes.github,
