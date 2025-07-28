@@ -4,13 +4,24 @@
 [![Contributor-Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-fbab2c.svg)](CODE_OF_CONDUCT.md)
 
 <p align="center">
-  <a href="https://agntcy.org">
+  <a href="https://outshift.cisco.com/">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="img/_logo-Agntcy_White@2x.png" width="300">
-      <img alt="" src="img/_logo-Agntcy_FullColor@2x.png" width="300">
+      <source media="(prefers-color-scheme: dark)" srcset="img/logo-white.png" width="500">
+      <img alt="" src="img/logo-color.png" width="500">
     </picture>
   </a>
-  <br />
+</p>
+
+<p align="end" style="margin-top: -15px;">
+  <a href="https://agntcy.org/">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="img/agntcy-attribution-white.png" width="150">
+      <img alt="" src="img/agntcy-attribution-full-color.png" width="150">
+    </picture>
+  </a>
+</p>
+
+<p align="center">
   <caption>Welcome to the <b>Agent Identity Service</b> repository</caption>
 </p>
 

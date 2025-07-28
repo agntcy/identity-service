@@ -13,7 +13,7 @@ import type { ScalarOptions } from '@scalar/docusaurus'
 const config: Config = {
   title: 'Agent Identity Service',
   tagline: 'Create and manage identities for your MCP Servers, A2A Agents and OASF, with support for Task Based Access Control (TBAC).',
-  favicon: 'img/favicon.png',
+  favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
   url: 'https://identity.agntcy.org',
