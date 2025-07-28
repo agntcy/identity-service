@@ -1,4 +1,4 @@
-# Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+# Copyright 2025 Cisco Systems, Inc. and its affiliates
 # SPDX-License-Identifier: Apache-2.0
 
 .PHONY: do_generate_proto do_start_backend do_stop_backend do_start_docs do_stop_docs do_start_frontend do_stop_frontend
