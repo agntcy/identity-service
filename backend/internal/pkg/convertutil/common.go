@@ -7,7 +7,7 @@ import (
 	"encoding/json"
 	"reflect"
 
-	"github.com/agntcy/identity-platform/pkg/log"
+	"github.com/agntcy/identity-service/pkg/log"
 )
 
 func Convert[D any](src any) *D {

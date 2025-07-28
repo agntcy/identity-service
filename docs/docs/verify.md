@@ -34,7 +34,7 @@ To verify an identity using the AGNTICY Python SDK, follow these steps:
 2. **Use the following code snippet:**
 
 ```Python
-from identityplatform.sdk import IdentityPlatformSdk as Sdk
+from identityservice.sdk import IdentityPlatformSdk as Sdk
 
 from dotenv import load_dotenv
 load_dotenv()

@@ -9,8 +9,8 @@ import (
 	"fmt"
 	"slices"
 
-	"github.com/agntcy/identity-platform/internal/core/badge/mcp"
-	"github.com/agntcy/identity-platform/internal/core/policy/types"
+	"github.com/agntcy/identity-service/internal/core/badge/mcp"
+	"github.com/agntcy/identity-service/internal/core/policy/types"
 	"github.com/google/uuid"
 )
 

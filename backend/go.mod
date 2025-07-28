@@ -1,4 +1,4 @@
-module github.com/agntcy/identity-platform
+module github.com/agntcy/identity-service
 
 go 1.24.1
 

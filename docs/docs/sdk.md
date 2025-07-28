@@ -6,7 +6,7 @@ sidebar_position: 6
 
 ## Python SDK
 
-Outshift Agent Identity Service offers a [Python SDK](https://github.com/cisco-eti/identity-platform/tree/main/sdk/python).
+Agent Identity offers a [Python SDK](https://github.com/cisco-eti/identity-service/tree/main/sdk/python).
 
 The Python SDK package allows developers to use it as:
 
@@ -21,7 +21,7 @@ To see more details about the development integration, you can refer to the [Dev
 
 ### Local Installation
 
-To install the Python SDK for Outshift Agent Identity Service, you can use pip:
+To install the Python SDK for Agent Identity, you can use pip:
 
 ```bash
 pip install git+https://github.com/cisco-outshift-ai-agents/identity-service-sdk@main#subdirectory=python
@@ -35,7 +35,7 @@ Here is a basic example of how to use the Python SDK to verify a badge for an Ag
 
 ```python
 from dotenv import load_dotenv
-from identityplatform.sdk import IdentityPlatformSdk as Sdk
+from identityservice.sdk import IdentityPlatformSdk as Sdk
 
 load_dotenv()
 
@@ -61,7 +61,7 @@ Here is a basic example of how to use the Python SDK to issue a badge for an Age
 
 ```python
 from dotenv import load_dotenv
-from identityplatform.sdk import IdentityPlatformSdk as Sdk
+from identityservice.sdk import IdentityPlatformSdk as Sdk
 
 load_dotenv()
 

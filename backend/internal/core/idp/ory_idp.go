@@ -9,10 +9,10 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/agntcy/identity-platform/internal/core/settings/types"
-	"github.com/agntcy/identity-platform/internal/pkg/errutil"
-	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
-	"github.com/agntcy/identity-platform/pkg/log"
+	"github.com/agntcy/identity-service/internal/core/settings/types"
+	"github.com/agntcy/identity-service/internal/pkg/errutil"
+	"github.com/agntcy/identity-service/internal/pkg/ptrutil"
+	"github.com/agntcy/identity-service/pkg/log"
 	orysdk "github.com/ory/client-go"
 )
 

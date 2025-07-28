@@ -9,7 +9,7 @@ lint:
     # The specific files to exclude.
     exclude:
       # NOTE: UNIX paths will be properly accepted by both UNIX and Windows.
-      - api/spec/proto/agntcy/identity/platform/v1alpha1/badge.proto
+      - api/spec/proto/agntcy/identity/service/v1alpha1/badge.proto
 
   rules:
     remove:

@@ -6,19 +6,19 @@ toc_max_heading_level: 5
 
 # Development Guide
 
-This guide provides an overview of the development process for integrating with the **Outshift Agent Identity Service**, including issuing and verifying badges, and integrating the `TBAC` (Task-Based Access Control) system in your applications.
+This guide provides an overview of the development process for integrating with the **Agent Identity Service**, including issuing and verifying badges, and integrating the `TBAC` (Task-Based Access Control) system in your applications.
 
-Before you begin, ensure you have the necessary tools and access to the **Outshift Agent Identity Service**:
+Before you begin, ensure you have the necessary tools and access to the **Agent Identity Service**:
 
-- **Access to Outshift Agent Identity Service**: You must have an administrator role or sufficient permissions within the Outshift Agent Identity Service.
+- **Access to Agent Identity**: You must have an administrator role or sufficient permissions within the Agent Identity application.
 - **Development Environment**: Set up your development environment with the necessary tools, such as Python or any other programming language of your choice.
-- **API Keys**: Know how to obtain your Organization API Key and Agentic Service API Keys from the Outshift Agent Identity Service settings page. For more details, refer to the [API Access documentation](/docs/api).
-- **Python SDK**: Install the [Python SDK documentation](/docs/sdk#python-sdk) to interact with the Outshift Agent Identity Service API and perform operations like issuing badges.
+- **API Keys**: Know how to obtain your Organization API Key and Agentic Service API Keys from the Agent Identity settings page. For more details, refer to the [API Access documentation](/docs/api).
+- **Python SDK**: Install the [Python SDK documentation](/docs/sdk#python-sdk) to interact with the Agent Identity API and perform operations like issuing badges.
 - **Documentation**: Familiarize yourself with the [API documentation](/docs/api) and the [Python SDK documentation](/docs/sdk#python-sdk).
 
 :::tip[Endpoints]
 
-Most of the development examples are provided in Python, but you can also use other programming languages to interact with the Outshift Agent Identity Service API. The endpoints are accessible via REST and gRPC protocols.
+Most of the development examples are provided in Python, but you can also use other programming languages to interact with the Agent Identity API. The endpoints are accessible via REST and gRPC protocols.
 To see more details about the API access, you can refer to the [API](/docs/api) section of the documentation.
 
 :::
@@ -27,7 +27,7 @@ To see more details about the API access, you can refer to the [API](/docs/api) 
 
 ### Issuing a Badge
 
-To issue a badge for your Agentic Service, you can use the Python CLI or make direct API calls. The badge is essential for the discovery of your service and allows it to be recognized within the **Outshift Agent Identity Service**.
+To issue a badge for your Agentic Service, you can use the Python CLI or make direct API calls. The badge is essential for the discovery of your service and allows it to be recognized within the **Agent Identity Service**.
 
 Below is an example of how to issue a badge using the Python CLI:
 
@@ -47,7 +47,7 @@ Below is an example of how to verify a badge using the Python SDK:
 
 ```python
 from dotenv import load_dotenv
-from identityplatform.sdk import IdentityPlatformSdk as Sdk
+from identityservice.sdk import IdentityPlatformSdk as Sdk
 
 load_dotenv()
 
@@ -82,13 +82,13 @@ curl https://{REST_API_ENDPOINT}/badges/verify \
 
 ## Task-Based Access Control (`TBAC`) (Preview)
 
-The **Outshift Agent Identity Service** uses Task-Based Access Control (`TBAC`) to manage access between the agentic services. `TBAC` allows you to define the tasks that can be performed by each service and the permissions required to perform those tasks.
+The **Agent Identity Service** uses Task-Based Access Control (`TBAC`) to manage access between the agentic services. `TBAC` allows you to define the tasks that can be performed by each service and the permissions required to perform those tasks.
 
 In order to use `TBAC` effectively, you need to follow the following steps:
 
 1. **Create the Agentic Services and issue badges for them.**
 
-- Before you can define `TBAC` policies, you need to create your Agentic Services and issue badges for them. This process involves registering your services and ensuring they are discoverable within the **Outshift Agent Identity Service** (including localhost CLI). For detailed instructions on creating Agentic Services, refer to the [Agentic Services Documentation](/docs/agentic-service).
+- Before you can define `TBAC` policies, you need to create your Agentic Services and issue badges for them. This process involves registering your services and ensuring they are discoverable within the **Agent Identity Service** (including localhost CLI). For detailed instructions on creating Agentic Services, refer to the [Agentic Services Documentation](/docs/agentic-service).
 
 :::tip[NOTE]
 
@@ -116,7 +116,7 @@ For HTTPX-based applications, you can use the `IdentityPlatformAuth` class to in
 
 ```python
 # Other imports
-from identityplatform.auth.httpx import IdentityPlatformAuth
+from identityservice.auth.httpx import IdentityPlatformAuth
 
 timeout = httpx.Timeout(connect=None, read=None, write=None, pool=None)
 auth = IdentityPlatformAuth() # Instantiate the auth class
@@ -127,7 +127,7 @@ timeout=timeout, auth=auth
 # Do your HTTPX requests here
 ```
 
-You can see this class fully implemented in our [Financial Agentic Service](https://github.com/cisco-eti/identity-platform/blob/main/samples/agent/oasf/financial_assistant/currency_exchange_agent.py#L112).
+You can see this class fully implemented in our [Financial Agentic Service](https://github.com/cisco-eti/identity-service/blob/main/samples/agent/oasf/financial_assistant/currency_exchange_agent.py#L112).
 
 ##### Authorize using the A2A Starlette/FastAPI auth middleware
 
@@ -160,7 +160,7 @@ try:
 
 ```python
 # Other imports
-from identityplatform.auth.starlette import IdentityPlatformA2AMiddleware
+from identityservice.auth.starlette import IdentityPlatformA2AMiddleware
 
 # Start server
 app = server.build()
@@ -176,7 +176,7 @@ app.add_middleware(
 uvicorn.run(app, host=host, port=port)
 ```
 
-You can see this class fully implemented in our [Currency Exchange Agentic Service](https://github.com/cisco-eti/identity-platform/blob/main/samples/agent/a2a/currency_exchange/main.py#L91).
+You can see this class fully implemented in our [Currency Exchange Agentic Service](https://github.com/cisco-eti/identity-service/blob/main/samples/agent/a2a/currency_exchange/main.py#L91).
 
 ### MCP Integration using the Python SDK
 
@@ -194,7 +194,7 @@ Bellow you can find an example of how to use the `IdentityPlatformAuth` class wi
 
 ```python
 # Other imports
-from identityplatform.auth.httpx import IdentityPlatformAuth
+from identityservice.auth.httpx import IdentityPlatformAuth
 
 # Init auth
 auth = IdentityPlatformAuth()
@@ -217,7 +217,7 @@ self.graph = create_react_agent(
 )
 ```
 
-You can see this class fully implemented in our [Currency Exchange Agentic Service](https://github.com/cisco-eti/identity-platform/blob/main/samples/agent/a2a/currency_exchange/agent.py#L80).
+You can see this class fully implemented in our [Currency Exchange Agentic Service](https://github.com/cisco-eti/identity-service/blob/main/samples/agent/a2a/currency_exchange/agent.py#L80).
 
 Another example using MCP's `ClientSession` and `streamablehttp_client`:
 
@@ -225,7 +225,7 @@ Another example using MCP's `ClientSession` and `streamablehttp_client`:
 from mcp.client.streamable_http import streamablehttp_client
 from mcp import ClientSession
 
-from identityplatform.auth.httpx import IdentityPlatformAuth
+from identityservice.auth.httpx import IdentityPlatformAuth
 
 # Init auth
 auth = IdentityPlatformAuth()
@@ -251,7 +251,7 @@ For MCP(Model Context Protocl) based applications using Starlette, you can use t
 
 ```python
 # Other imports
-from identityplatform.auth.starlette import IdentityPlatformMCPMiddleware
+from identityservice.auth.starlette import IdentityPlatformMCPMiddleware
 
 # Start server
 app = server.build()
@@ -265,7 +265,7 @@ app.add_middleware(
 uvicorn.run(app, host=host, port=port)
 ```
 
-You can see this class fully implemented in our [Currency Exchange MCP Server](https://github.com/cisco-eti/identity-platform/blob/main/samples/mcp/currency_exchange/main.py#L103).
+You can see this class fully implemented in our [Currency Exchange MCP Server](https://github.com/cisco-eti/identity-service/blob/main/samples/mcp/currency_exchange/main.py#L103).
 
 ### Standard Starlette/FastAPI auth middleware
 
@@ -276,7 +276,7 @@ We also support standard Starlette or FastAPI applications, you can use the `Ide
 from starlette.applications import Starlette
 from starlette.middleware import Middleware
 
-from identityplatform.auth.starlette import IdentityPlatformAuthMiddleware
+from identityservice.auth.starlette import IdentityPlatformAuthMiddleware
 
 routes = ...
 

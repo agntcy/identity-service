@@ -78,7 +78,7 @@ export const config: CookieConsentConfig = {
                   {
                     name: 'OneTrust',
                     description:
-                      "OneTrust LLC (OneTrust) is a provider of privacy management software platform. The company's platform supports organizations to adhere compliance with the data privacy, governance and security regulations across sectors and jurisdictions."
+                      "OneTrust LLC (OneTrust) is a provider of privacy management software service. The company's service supports organizations to adhere compliance with the data privacy, governance and security regulations across sectors and jurisdictions."
                   }
                 ]
               }

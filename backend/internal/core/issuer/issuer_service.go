@@ -7,11 +7,11 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/agntcy/identity-platform/internal/core/identity"
-	idpcore "github.com/agntcy/identity-platform/internal/core/idp"
-	settingstypes "github.com/agntcy/identity-platform/internal/core/settings/types"
-	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
-	"github.com/agntcy/identity-platform/internal/pkg/errutil"
+	"github.com/agntcy/identity-service/internal/core/identity"
+	idpcore "github.com/agntcy/identity-service/internal/core/idp"
+	settingstypes "github.com/agntcy/identity-service/internal/core/settings/types"
+	identitycontext "github.com/agntcy/identity-service/internal/pkg/context"
+	"github.com/agntcy/identity-service/internal/pkg/errutil"
 )
 
 type Service interface {

@@ -8,9 +8,9 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/agntcy/identity-platform/internal/pkg/errutil"
-	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
-	"github.com/agntcy/identity-platform/pkg/log"
+	"github.com/agntcy/identity-service/internal/pkg/errutil"
+	"github.com/agntcy/identity-service/internal/pkg/ptrutil"
+	"github.com/agntcy/identity-service/pkg/log"
 	"gorm.io/gorm/schema"
 )
 

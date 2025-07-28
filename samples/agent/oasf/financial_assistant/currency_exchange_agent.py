@@ -11,7 +11,7 @@ from a2a.client import A2AClient
 from a2a.types import (GetTaskRequest, GetTaskResponse, MessageSendParams,
                        SendMessageRequest, SendMessageResponse,
                        SendMessageSuccessResponse, Task, TaskQueryParams)
-from identityplatform.auth.httpx import IdentityPlatformAuth
+from identityservice.auth.httpx import IdentityPlatformAuth
 from langgraph.prebuilt import InjectedState
 
 logger = logging.getLogger(__name__)

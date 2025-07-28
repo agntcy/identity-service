@@ -6,7 +6,7 @@ import logging
 from collections.abc import AsyncIterable
 from typing import Any, Dict, Literal
 
-from identityplatform.auth.httpx import IdentityPlatformAuth
+from identityservice.auth.httpx import IdentityPlatformAuth
 from langchain_core.messages import AIMessage, ToolMessage
 from langchain_mcp_adapters.client import MultiServerMCPClient
 from langchain_openai import ChatOpenAI

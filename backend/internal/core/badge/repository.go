@@ -6,7 +6,7 @@ package badge
 import (
 	"context"
 
-	"github.com/agntcy/identity-platform/internal/core/badge/types"
+	"github.com/agntcy/identity-service/internal/core/badge/types"
 )
 
 type Repository interface {

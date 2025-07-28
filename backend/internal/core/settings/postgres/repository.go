@@ -7,11 +7,11 @@ import (
 	"context"
 	"errors"
 
-	settingscore "github.com/agntcy/identity-platform/internal/core/settings"
-	"github.com/agntcy/identity-platform/internal/core/settings/types"
-	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
-	"github.com/agntcy/identity-platform/internal/pkg/errutil"
-	"github.com/agntcy/identity-platform/pkg/db"
+	settingscore "github.com/agntcy/identity-service/internal/core/settings"
+	"github.com/agntcy/identity-service/internal/core/settings/types"
+	identitycontext "github.com/agntcy/identity-service/internal/pkg/context"
+	"github.com/agntcy/identity-service/internal/pkg/errutil"
+	"github.com/agntcy/identity-service/pkg/db"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )

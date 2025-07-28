@@ -6,23 +6,23 @@ package converters
 import (
 	"time"
 
-	identity_platform_sdk_go "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1"
-	apptypes "github.com/agntcy/identity-platform/internal/core/app/types"
-	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
+	identity_service_sdk_go "github.com/agntcy/identity-service/api/server/agntcy/identity/service/v1alpha1"
+	apptypes "github.com/agntcy/identity-service/internal/core/app/types"
+	"github.com/agntcy/identity-service/internal/pkg/ptrutil"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-func FromApp(src *apptypes.App) *identity_platform_sdk_go.App {
+func FromApp(src *apptypes.App) *identity_service_sdk_go.App {
 	if src == nil {
 		return nil
 	}
 
-	return &identity_platform_sdk_go.App{
+	return &identity_service_sdk_go.App{
 		Id:                 ptrutil.Ptr(src.ID),
 		Name:               src.Name,
 		Description:        src.Description,
-		Type:               ptrutil.Ptr(identity_platform_sdk_go.AppType(src.Type)),
-		Status:             ptrutil.Ptr(identity_platform_sdk_go.AppStatus(src.Status)),
+		Type:               ptrutil.Ptr(identity_service_sdk_go.AppType(src.Type)),
+		Status:             ptrutil.Ptr(identity_service_sdk_go.AppStatus(src.Status)),
 		ApiKey:             ptrutil.Ptr(src.ApiKey),
 		CreatedAt:          newTimestamp(&src.CreatedAt),
 		UpdatedAt:          newTimestamp(src.UpdatedAt),
@@ -30,7 +30,7 @@ func FromApp(src *apptypes.App) *identity_platform_sdk_go.App {
 	}
 }
 
-func ToApp(src *identity_platform_sdk_go.App) *apptypes.App {
+func ToApp(src *identity_service_sdk_go.App) *apptypes.App {
 	if src == nil {
 		return nil
 	}

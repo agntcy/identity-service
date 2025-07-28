@@ -9,7 +9,7 @@ import httpx
 import uvicorn
 from dotenv import load_dotenv
 from fastapi import FastAPI
-from identityplatform.auth.starlette import IdentityPlatformMCPMiddleware
+from identityservice.auth.starlette import IdentityPlatformMCPMiddleware
 from mcp.server.fastmcp import FastMCP
 
 load_dotenv()

@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 """Main entry point for the Financial Assistant Agent server."""
 
-from identityplatform.auth.httpx import IdentityPlatformAuth
+from identityservice.auth.httpx import IdentityPlatformAuth
 from langchain_mcp_adapters.client import MultiServerMCPClient
 from langchain_openai import ChatOpenAI
 from langgraph.checkpoint.memory import MemorySaver

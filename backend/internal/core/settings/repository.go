@@ -6,7 +6,7 @@ package settings
 import (
 	"context"
 
-	"github.com/agntcy/identity-platform/internal/core/settings/types"
+	"github.com/agntcy/identity-service/internal/core/settings/types"
 )
 
 type Repository interface {

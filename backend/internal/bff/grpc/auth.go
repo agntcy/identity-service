@@ -6,13 +6,13 @@ package grpc
 import (
 	"context"
 
-	identity_platform_sdk_go "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1"
-	"github.com/agntcy/identity-platform/internal/bff"
-	"github.com/agntcy/identity-platform/internal/bff/grpc/converters"
-	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
-	"github.com/agntcy/identity-platform/internal/pkg/errutil"
-	"github.com/agntcy/identity-platform/internal/pkg/grpcutil"
-	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
+	identity_service_sdk_go "github.com/agntcy/identity-service/api/server/agntcy/identity/service/v1alpha1"
+	"github.com/agntcy/identity-service/internal/bff"
+	"github.com/agntcy/identity-service/internal/bff/grpc/converters"
+	identitycontext "github.com/agntcy/identity-service/internal/pkg/context"
+	"github.com/agntcy/identity-service/internal/pkg/errutil"
+	"github.com/agntcy/identity-service/internal/pkg/grpcutil"
+	"github.com/agntcy/identity-service/internal/pkg/ptrutil"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -24,7 +24,7 @@ type authService struct {
 func NewAuthService(
 	authSrv bff.AuthService,
 	appSrv bff.AppService,
-) identity_platform_sdk_go.AuthServiceServer {
+) identity_service_sdk_go.AuthServiceServer {
 	return &authService{
 		authSrv: authSrv,
 		appSrv:  appSrv,
@@ -34,7 +34,7 @@ func NewAuthService(
 func (s *authService) AppInfo(
 	ctx context.Context,
 	req *emptypb.Empty,
-) (*identity_platform_sdk_go.AppInfoResponse, error) {
+) (*identity_service_sdk_go.AppInfoResponse, error) {
 	if ctx == nil {
 		return nil, errutil.Err(
 			nil,
@@ -60,15 +60,15 @@ func (s *authService) AppInfo(
 		)
 	}
 
-	return &identity_platform_sdk_go.AppInfoResponse{
+	return &identity_service_sdk_go.AppInfoResponse{
 		App: converters.FromApp(app),
 	}, nil
 }
 
 func (s *authService) Authorize(
 	ctx context.Context,
-	req *identity_platform_sdk_go.AuthorizeRequest,
-) (*identity_platform_sdk_go.AuthorizeResponse, error) {
+	req *identity_service_sdk_go.AuthorizeRequest,
+) (*identity_service_sdk_go.AuthorizeResponse, error) {
 	session, err := s.authSrv.Authorize(
 		ctx,
 		req.AppId,
@@ -82,15 +82,15 @@ func (s *authService) Authorize(
 		)
 	}
 
-	return &identity_platform_sdk_go.AuthorizeResponse{
+	return &identity_service_sdk_go.AuthorizeResponse{
 		AuthorizationCode: ptrutil.DerefStr(session.AuthorizationCode),
 	}, nil
 }
 
 func (s *authService) Token(
 	ctx context.Context,
-	req *identity_platform_sdk_go.TokenRequest,
-) (*identity_platform_sdk_go.TokenResponse, error) {
+	req *identity_service_sdk_go.TokenRequest,
+) (*identity_service_sdk_go.TokenResponse, error) {
 	if req.AuthorizationCode == "" {
 		return nil, grpcutil.BadRequestError(
 			errutil.Err(
@@ -114,14 +114,14 @@ func (s *authService) Token(
 		)
 	}
 
-	return &identity_platform_sdk_go.TokenResponse{
+	return &identity_service_sdk_go.TokenResponse{
 		AccessToken: ptrutil.DerefStr(session.AccessToken),
 	}, nil
 }
 
 func (s *authService) ExtAuthz(
 	ctx context.Context,
-	req *identity_platform_sdk_go.ExtAuthzRequest,
+	req *identity_service_sdk_go.ExtAuthzRequest,
 ) (*emptypb.Empty, error) {
 	err := s.authSrv.ExtAuthZ(
 		ctx,
@@ -140,7 +140,7 @@ func (s *authService) ExtAuthz(
 
 func (s *authService) ApproveToken(
 	ctx context.Context,
-	req *identity_platform_sdk_go.ApproveTokenRequest,
+	req *identity_service_sdk_go.ApproveTokenRequest,
 ) (*emptypb.Empty, error) {
 	err := s.authSrv.ApproveToken(
 		ctx,

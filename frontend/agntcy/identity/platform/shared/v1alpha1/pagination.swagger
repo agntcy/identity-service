@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "agntcy/identity/platform/shared/v1alpha1/pagination.proto",
+    "title": "agntcy/identity/service/shared/v1alpha1/pagination.proto",
     "version": "version not set"
   },
   "consumes": [

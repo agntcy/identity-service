@@ -8,8 +8,8 @@ import (
 	"crypto/cipher"
 	"encoding/base64"
 
-	"github.com/agntcy/identity-platform/pkg/cmd"
-	"github.com/agntcy/identity-platform/pkg/log"
+	"github.com/agntcy/identity-service/pkg/cmd"
+	"github.com/agntcy/identity-service/pkg/log"
 )
 
 // Encrypts a secret

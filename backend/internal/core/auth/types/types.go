@@ -6,8 +6,8 @@ package types
 import (
 	"time"
 
-	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
-	"github.com/agntcy/identity-platform/internal/pkg/strutil"
+	"github.com/agntcy/identity-service/internal/pkg/ptrutil"
+	"github.com/agntcy/identity-service/internal/pkg/strutil"
 	"github.com/google/uuid"
 )
 

@@ -14,7 +14,7 @@ from a2a.server.tasks import InMemoryTaskStore
 from a2a.types import (AgentCapabilities, AgentCard, AgentSkill,
                        HTTPAuthSecurityScheme, SecurityScheme)
 from dotenv import load_dotenv
-from identityplatform.auth.starlette import IdentityPlatformA2AMiddleware
+from identityservice.auth.starlette import IdentityPlatformA2AMiddleware
 
 from agent import CurrencyAgent
 from agent_executor import CurrencyAgentExecutor

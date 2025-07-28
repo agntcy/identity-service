@@ -8,10 +8,10 @@ import (
 	"errors"
 	"strings"
 
-	identity_platform_sdk_go "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1"
-	"github.com/agntcy/identity-platform/internal/pkg/grpcutil"
-	outshiftiam "github.com/agntcy/identity-platform/internal/pkg/iam"
-	"github.com/agntcy/identity-platform/pkg/log"
+	identity_service_sdk_go "github.com/agntcy/identity-service/api/server/agntcy/identity/service/v1alpha1"
+	"github.com/agntcy/identity-service/internal/pkg/grpcutil"
+	outshiftiam "github.com/agntcy/identity-service/internal/pkg/iam"
+	"github.com/agntcy/identity-service/pkg/log"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 )
@@ -24,18 +24,18 @@ const (
 )
 
 var allowedServicesWithoutAuth = []string{
-	"/agntcy.identity.platform.v1alpha1.DeviceService/RegisterDevice",
-	"/agntcy.identity.platform.v1alpha1.BadgeService/VerifyBadge",
-	identity_platform_sdk_go.AuthService_ApproveToken_FullMethodName,
+	"/agntcy.identity.service.v1alpha1.DeviceService/RegisterDevice",
+	"/agntcy.identity.service.v1alpha1.BadgeService/VerifyBadge",
+	identity_service_sdk_go.AuthService_ApproveToken_FullMethodName,
 	"/grpc.health.v1.Health/Check",
 }
 
 var allowedServicesWithAppAuth = []string{
-	"/agntcy.identity.platform.v1alpha1.AuthService/AppInfo",
-	"/agntcy.identity.platform.v1alpha1.AuthService/Authorize",
-	"/agntcy.identity.platform.v1alpha1.AuthService/Token",
-	"/agntcy.identity.platform.v1alpha1.AuthService/ExtAuthz",
-	"/agntcy.identity.platform.v1alpha1.BadgeService/IssueBadge",
+	"/agntcy.identity.service.v1alpha1.AuthService/AppInfo",
+	"/agntcy.identity.service.v1alpha1.AuthService/Authorize",
+	"/agntcy.identity.service.v1alpha1.AuthService/Token",
+	"/agntcy.identity.service.v1alpha1.AuthService/ExtAuthz",
+	"/agntcy.identity.service.v1alpha1.BadgeService/IssueBadge",
 }
 
 type AuthInterceptor struct {

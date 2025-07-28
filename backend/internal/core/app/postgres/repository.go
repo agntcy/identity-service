@@ -9,14 +9,14 @@ import (
 	"errors"
 	"fmt"
 
-	appcore "github.com/agntcy/identity-platform/internal/core/app"
-	"github.com/agntcy/identity-platform/internal/core/app/types"
-	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
-	"github.com/agntcy/identity-platform/internal/pkg/convertutil"
-	"github.com/agntcy/identity-platform/internal/pkg/errutil"
-	"github.com/agntcy/identity-platform/internal/pkg/gormutil"
-	"github.com/agntcy/identity-platform/internal/pkg/pagination"
-	"github.com/agntcy/identity-platform/pkg/db"
+	appcore "github.com/agntcy/identity-service/internal/core/app"
+	"github.com/agntcy/identity-service/internal/core/app/types"
+	identitycontext "github.com/agntcy/identity-service/internal/pkg/context"
+	"github.com/agntcy/identity-service/internal/pkg/convertutil"
+	"github.com/agntcy/identity-service/internal/pkg/errutil"
+	"github.com/agntcy/identity-service/internal/pkg/gormutil"
+	"github.com/agntcy/identity-service/internal/pkg/pagination"
+	"github.com/agntcy/identity-service/pkg/db"
 	"gorm.io/gorm"
 )
 
