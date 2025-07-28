@@ -106,7 +106,7 @@ The tasks available for `TBAC` are automatically discovered from the Agentic Ser
 :::warning[IMPORTANT]
 When using the Python SDK for `TBAC`, you need to provide in your environment the following variables:
 
-- `IDENTITY_PLATFORM_API_KEY`: Your Agentic Service API Key. You can obtain this key from the Agent Services details page.
+- `IDENTITY_SERVICE_API_KEY`: Your Agentic Service API Key. You can obtain this key from the Agent Services details page.
 
 :::
 
@@ -183,7 +183,7 @@ You can see this class fully implemented in our [Currency Exchange Agentic Servi
 :::warning[IMPORTANT]
 When using the Python SDK for `TBAC`, you need to provide in your environment the following variables:
 
-- `IDENTITY_PLATFORM_API_KEY`: Your Agentic Service API Key. You can obtain this key from the Agent Services details page.
+- `IDENTITY_SERVICE_API_KEY`: Your Agentic Service API Key. You can obtain this key from the Agent Services details page.
 
 :::
 
