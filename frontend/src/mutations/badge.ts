@@ -6,7 +6,7 @@
 import {AxiosResponse} from 'axios';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {Badge, IssueBadgeBody, VerificationResult, VerifyBadgeRequest} from '@/types/api/badge';
-import {BadgeAPI} from '@/api/services/badge-api';
+import {BadgeAPI} from '@/api/platforms/badge-api';
 
 interface PropsSettingsVerificationResult {
   callbacks?: {
@@ -53,7 +53,7 @@ export const useIssueBadge = ({callbacks}: PropsSetIdentityBadge) => {
       if (callbacks?.onSuccess) {
         callbacks.onSuccess(resp);
       }
-      await queryClient.invalidateQueries({queryKey: ['get-agentic-service-badge']});
+      await queryClient.invalidateQueries({queryKey: ['get-agentic-platform-badge']});
     }
   });
 };

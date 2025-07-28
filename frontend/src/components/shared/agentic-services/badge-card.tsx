@@ -126,7 +126,7 @@ export const BadgeCard = ({
     if (isError && showError && !isLoading) {
       toast({
         title: 'Fetching Badge',
-        description: 'There was an error fetching the badge for this agentic service.',
+        description: 'There was an error fetching the badge for this agentic platform.',
         type: 'info'
       });
     }
@@ -142,7 +142,7 @@ export const BadgeCard = ({
         useRelativeLoader
         emptyListStateProps={{
           title: 'No Badge',
-          description: 'Create a badge for your agentic service to enable verifiable credentials.',
+          description: 'Create a badge for your agentic platform to enable verifiable credentials.',
           actionTitle: 'Create Badge',
           actionCallback: () => {
             analyticsTrack('CLICK_NAVIGATION_CREATE_BADGE_AGENTIC_SERVICE');

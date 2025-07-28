@@ -14,7 +14,7 @@ import {useAnalytics, useAuth} from '@/hooks';
 import {OrganizationsDrawer} from './organizations-drawer';
 import {OverflowTooltip, TooltipProps} from '@outshift/spark-design';
 import SettingsIcon from '@/assets/sidebar/settings.svg?react';
-import AgenticServicesLogo from '@/assets/sidebar/agentic-services.svg?react';
+import AgenticServicesLogo from '@/assets/sidebar/agentic-platforms.svg?react';
 import PoliciesLogo from '@/assets/sidebar/access-policies.svg?react';
 import VerifyIdentityLogo from '@/assets/sidebar/verify-identity.svg?react';
 import {useFeatureFlagsStore} from '@/store';

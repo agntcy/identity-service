@@ -10,7 +10,7 @@ import {Input} from '@/components/ui/input';
 import {validateForm} from '@/lib/utils';
 import {useUpdateAgenticService} from '@/mutations';
 import {PATHS} from '@/router/paths';
-import {AgenticServiceFormValues, AgenticServiceSchema} from '@/schemas/agentic-service-schema';
+import {AgenticServiceFormValues, AgenticServiceSchema} from '@/schemas/agentic-platform-schema';
 import {App, AppType} from '@/types/api/app';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {Button, toast, Typography} from '@outshift/spark-design';
@@ -67,7 +67,7 @@ export const EditAgenticServiceForm = ({app}: {app?: App}) => {
       onSuccess: () => {
         toast({
           title: 'Success',
-          description: 'Agentic service edited successfully.',
+          description: 'Agentic platform edited successfully.',
           type: 'success'
         });
         const path = generatePath(PATHS.agenticServices.info.base, {id: app?.id ?? ''});
@@ -76,7 +76,7 @@ export const EditAgenticServiceForm = ({app}: {app?: App}) => {
       onError: () => {
         toast({
           title: 'Error',
-          description: 'An error occurred while editing the agentic service. Please try again.',
+          description: 'An error occurred while editing the agentic platform. Please try again.',
           type: 'error'
         });
       }

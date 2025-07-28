@@ -28,10 +28,10 @@ spec:
     http:
       paths:
       - backend:
-          service:
+          platform:
             name: {{ include "identity-sample-financial-assist-oasf.fullname" . }}
             port:
-              number: {{ .Values.service.http.port}}
+              number: {{ .Values.platform.http.port}}
         path: /
         pathType: Prefix
 {{- end }}

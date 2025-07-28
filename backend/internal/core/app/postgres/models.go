@@ -7,8 +7,8 @@ import (
 	"database/sql"
 	"time"
 
-	"github.com/agntcy/identity-service/internal/core/app/types"
-	"github.com/agntcy/identity-service/internal/pkg/pgutil"
+	"github.com/agntcy/identity-platform/internal/core/app/types"
+	"github.com/agntcy/identity-platform/internal/pkg/pgutil"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )

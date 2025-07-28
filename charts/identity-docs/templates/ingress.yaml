@@ -25,10 +25,10 @@ spec:
     http:
       paths:
       - backend:
-          service:
+          platform:
             name: {{ include "identity-docs.fullname" . }}
             port:
-              number: {{ .Values.service.http.port}}
+              number: {{ .Values.platform.http.port}}
         path: /
         pathType: ImplementationSpecific
 {{- end }}

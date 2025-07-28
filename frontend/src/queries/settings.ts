@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {SettingsAPI} from '@/api/services';
+import {SettingsAPI} from '@/api/platforms';
 import {useQuery} from '@tanstack/react-query';
 
 export const useGetSettings = () => {

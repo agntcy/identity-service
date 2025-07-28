@@ -5,7 +5,7 @@
 
 export * from './iam-api';
 export * from './settings-api';
-export * from './agentic-services-api';
+export * from './agentic-platforms-api';
 export * from './policy-api';
 export * from './devices-api';
 export * from './auth-api';

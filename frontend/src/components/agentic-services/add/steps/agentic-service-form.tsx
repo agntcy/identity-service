@@ -11,7 +11,7 @@ import {useEffect} from 'react';
 import {SharedProvider, SharedProviderProps} from '@/components/ui/shared-provider';
 import {Input} from '@/components/ui/input';
 import {Typography} from '@outshift/spark-design';
-import {AgenticServiceFormValues} from '@/schemas/agentic-service-schema';
+import {AgenticServiceFormValues} from '@/schemas/agentic-platform-schema';
 import {AppType} from '@/types/api/app';
 import OasfLogo from '@/assets/oasf.svg?react';
 import McpLogo from '@/assets/mcp.svg?react';

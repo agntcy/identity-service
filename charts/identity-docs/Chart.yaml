@@ -3,13 +3,13 @@
 
 apiVersion: v2
 name: identity-docs
-description: A Helm chart for identity documentation service
+description: A Helm chart for identity documentation platform
 type: application
 version: 0.0.2
 appVersion: "0.0.1"
 
 maintainers:
   - name: identity
-    url: https://github.com/cisco-eti/identity-service/blob/main/MAINTAINERS.md
+    url: https://github.com/cisco-eti/identity-platform/blob/main/MAINTAINERS.md
 sources:
-  - https://github.com/cisco-eti/identity-service
+  - https://github.com/cisco-eti/identity-platform

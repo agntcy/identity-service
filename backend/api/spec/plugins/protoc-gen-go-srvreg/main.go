@@ -31,9 +31,9 @@ func main() {
 	}.Run(func(gp *protogen.Plugin) error {
 		gp.SupportedFeatures = uint64(pluginpb.CodeGeneratorResponse_FEATURE_PROTO3_OPTIONAL)
 
-		gen := gp.NewGeneratedFile("service_registrer.pb.go", "")
+		gen := gp.NewGeneratedFile("platform_registrer.pb.go", "")
 
-		services := make([]*ServiceData, 0)
+		platforms := make([]*ServiceData, 0)
 
 		for _, name := range gp.Request.FileToGenerate {
 			file := gp.FilesByPath[name]
@@ -47,8 +47,8 @@ func main() {
 				}
 			}
 
-			for _, service := range file.Services {
-				server := fmt.Sprintf("%sServer", service.GoName)
+			for _, platform := range file.Services {
+				server := fmt.Sprintf("%sServer", platform.GoName)
 				data := &ServiceData{
 					ServerName: server,
 					ServerType: gen.QualifiedGoIdent(pkg.Ident(server)),
@@ -58,17 +58,17 @@ func main() {
 					RegisterHttpHandlerFunc: "",
 				}
 
-				if slices.Contains(httpServices, service.GoName) {
+				if slices.Contains(httpServices, platform.GoName) {
 					data.RegisterHttpHandlerFunc = gen.QualifiedGoIdent(
-						pkg.Ident(fmt.Sprintf("Register%sHandler", service.GoName)),
+						pkg.Ident(fmt.Sprintf("Register%sHandler", platform.GoName)),
 					)
 				}
 
-				services = append(services, data)
+				platforms = append(platforms, data)
 			}
 		}
 
-		data, err := readTemplate(registerTmpl, services)
+		data, err := readTemplate(registerTmpl, platforms)
 		if err != nil {
 			return err
 		}
@@ -78,14 +78,14 @@ func main() {
 	})
 }
 
-func readTemplate(path string, services []*ServiceData) ([]byte, error) {
+func readTemplate(path string, platforms []*ServiceData) ([]byte, error) {
 	tmpl, err := template.New("splunk_enterprise").Parse(path)
 	if err != nil {
 		return nil, err
 	}
 
 	data := RegisterTemplateData{
-		Services: services,
+		Services: platforms,
 	}
 	var buf bytes.Buffer
 

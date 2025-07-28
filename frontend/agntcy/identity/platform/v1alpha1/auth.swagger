@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "agntcy/identity/service/v1alpha1/auth.proto",
+    "title": "agntcy/identity/platform/v1alpha1/auth.proto",
     "version": "version not set"
   },
   "consumes": [

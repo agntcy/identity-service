@@ -7,13 +7,13 @@ import (
 	"context"
 	"errors"
 
-	identity_service_sdk_go "github.com/agntcy/identity-service/api/server/agntcy/identity/service/v1alpha1"
-	"github.com/agntcy/identity-service/internal/bff"
-	"github.com/agntcy/identity-service/internal/bff/grpc/converters"
-	apptypes "github.com/agntcy/identity-service/internal/core/app/types"
-	"github.com/agntcy/identity-service/internal/pkg/convertutil"
-	"github.com/agntcy/identity-service/internal/pkg/grpcutil"
-	"github.com/agntcy/identity-service/internal/pkg/pagination"
+	identity_platform_sdk_go "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1"
+	"github.com/agntcy/identity-platform/internal/bff"
+	"github.com/agntcy/identity-platform/internal/bff/grpc/converters"
+	apptypes "github.com/agntcy/identity-platform/internal/core/app/types"
+	"github.com/agntcy/identity-platform/internal/pkg/convertutil"
+	"github.com/agntcy/identity-platform/internal/pkg/grpcutil"
+	"github.com/agntcy/identity-platform/internal/pkg/pagination"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -27,7 +27,7 @@ type appService struct {
 func NewAppService(
 	appSrv bff.AppService,
 	badgeSrv bff.BadgeService,
-) identity_service_sdk_go.AppServiceServer {
+) identity_platform_sdk_go.AppServiceServer {
 	return &appService{
 		appSrv:   appSrv,
 		badgeSrv: badgeSrv,
@@ -36,8 +36,8 @@ func NewAppService(
 
 func (s *appService) CreateApp(
 	ctx context.Context,
-	req *identity_service_sdk_go.CreateAppRequest,
-) (*identity_service_sdk_go.App, error) {
+	req *identity_platform_sdk_go.CreateAppRequest,
+) (*identity_platform_sdk_go.App, error) {
 	app := converters.ToApp(req.GetApp())
 	if app == nil {
 		return nil, grpcutil.BadRequestError(errors.New("app cannot be nil"))
@@ -53,8 +53,8 @@ func (s *appService) CreateApp(
 
 func (s *appService) ListApps(
 	ctx context.Context,
-	req *identity_service_sdk_go.ListAppsRequest,
-) (*identity_service_sdk_go.ListAppsResponse, error) {
+	req *identity_platform_sdk_go.ListAppsRequest,
+) (*identity_platform_sdk_go.ListAppsResponse, error) {
 	paginationFilter := pagination.PaginationFilter{
 		Page:        req.Page,
 		Size:        req.Size,
@@ -74,7 +74,7 @@ func (s *appService) ListApps(
 		return nil, grpcutil.BadRequestError(err)
 	}
 
-	return &identity_service_sdk_go.ListAppsResponse{
+	return &identity_platform_sdk_go.ListAppsResponse{
 		Apps:       convertutil.ConvertSlice(apps.Items, converters.FromApp),
 		Pagination: pagination.ConvertToPagedResponse(paginationFilter, apps),
 	}, nil
@@ -82,22 +82,22 @@ func (s *appService) ListApps(
 
 func (s *appService) GetAppsCount(
 	ctx context.Context,
-	req *identity_service_sdk_go.GetAppsCountRequest,
-) (*identity_service_sdk_go.GetAppsCountResponse, error) {
+	req *identity_platform_sdk_go.GetAppsCountRequest,
+) (*identity_platform_sdk_go.GetAppsCountResponse, error) {
 	totalCount, err := s.appSrv.CountAllApps(ctx)
 	if err != nil {
 		return nil, grpcutil.BadRequestError(err)
 	}
 
-	return &identity_service_sdk_go.GetAppsCountResponse{
+	return &identity_platform_sdk_go.GetAppsCountResponse{
 		Total: totalCount,
 	}, nil
 }
 
 func (s *appService) GetApp(
 	ctx context.Context,
-	req *identity_service_sdk_go.GetAppRequest,
-) (*identity_service_sdk_go.App, error) {
+	req *identity_platform_sdk_go.GetAppRequest,
+) (*identity_platform_sdk_go.App, error) {
 	if req.GetAppId() == "" {
 		return nil, grpcutil.BadRequestError(errors.New("app ID cannot be empty"))
 	}
@@ -112,8 +112,8 @@ func (s *appService) GetApp(
 
 func (s *appService) UpdateApp(
 	ctx context.Context,
-	req *identity_service_sdk_go.UpdateAppRequest,
-) (*identity_service_sdk_go.App, error) {
+	req *identity_platform_sdk_go.UpdateAppRequest,
+) (*identity_platform_sdk_go.App, error) {
 	app := converters.ToApp(req.GetApp())
 	if app == nil {
 		return nil, grpcutil.BadRequestError(errors.New("app cannot be nil"))
@@ -131,7 +131,7 @@ func (s *appService) UpdateApp(
 
 func (s *appService) DeleteApp(
 	ctx context.Context,
-	req *identity_service_sdk_go.DeleteAppRequest,
+	req *identity_platform_sdk_go.DeleteAppRequest,
 ) (*emptypb.Empty, error) {
 	err := s.appSrv.DeleteApp(ctx, req.AppId)
 	if err != nil {
@@ -143,8 +143,8 @@ func (s *appService) DeleteApp(
 
 func (s *appService) GetBadge(
 	ctx context.Context,
-	in *identity_service_sdk_go.GetBadgeRequest,
-) (*identity_service_sdk_go.Badge, error) {
+	in *identity_platform_sdk_go.GetBadgeRequest,
+) (*identity_platform_sdk_go.Badge, error) {
 	badge, err := s.badgeSrv.GetBadge(ctx, in.AppId)
 	if err != nil {
 		return nil, grpcutil.NotFoundError(err)
@@ -155,17 +155,17 @@ func (s *appService) GetBadge(
 
 func (s *appService) GetTasks(
 	ctx context.Context,
-	in *identity_service_sdk_go.GetTasksRequest,
-) (*identity_service_sdk_go.GetTasksResponse, error) {
+	in *identity_platform_sdk_go.GetTasksRequest,
+) (*identity_platform_sdk_go.GetTasksResponse, error) {
 	tasksPerAppType, err := s.appSrv.GetTasksPerAppType(ctx, in.GetExcludeAppIds())
 	if err != nil {
 		return nil, grpcutil.BadRequestError(err)
 	}
 
-	result := make(map[string]*identity_service_sdk_go.GetTasksResponse_TaskList)
+	result := make(map[string]*identity_platform_sdk_go.GetTasksResponse_TaskList)
 
 	for appType, tasks := range tasksPerAppType {
-		result[appType.String()] = &identity_service_sdk_go.GetTasksResponse_TaskList{
+		result[appType.String()] = &identity_platform_sdk_go.GetTasksResponse_TaskList{
 			Tasks: convertutil.ConvertSlice(
 				tasks,
 				converters.FromTask,
@@ -173,7 +173,7 @@ func (s *appService) GetTasks(
 		}
 	}
 
-	return &identity_service_sdk_go.GetTasksResponse{
+	return &identity_platform_sdk_go.GetTasksResponse{
 		Result: result,
 	}, nil
 }

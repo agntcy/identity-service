@@ -1,5 +1,5 @@
 {
-  "name": "agent-identity-service-frontend",
+  "name": "agent-identity-platform-frontend",
   "private": true,
   "version": "0.0.0",
   "type": "module",

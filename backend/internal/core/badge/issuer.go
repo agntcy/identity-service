@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/agntcy/identity-service/internal/core/badge/types"
+	"github.com/agntcy/identity-platform/internal/core/badge/types"
 	"github.com/agntcy/identity/pkg/joseutil"
 	"github.com/agntcy/identity/pkg/jwk"
 	"github.com/google/uuid"

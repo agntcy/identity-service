@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {AgenticServiceType} from '@/components/shared/agentic-services/agentic-service-type';
+import {AgenticServiceType} from '@/components/shared/agentic-platforms/agentic-platform-type';
 import DateHover from '@/components/ui/date-hover';
 import {useGetAgenticService} from '@/queries';
 import {Policy, RuleAction} from '@/types/api/policy';
@@ -22,7 +22,7 @@ const CellAgenticService = ({row}: {row: {original: Policy}}) => {
   if (isError) {
     return (
       <Tag status={TagStatus.Negative} size={GeneralSize.Small}>
-        Error loading agentic service
+        Error loading agentic platform
       </Tag>
     );
   }

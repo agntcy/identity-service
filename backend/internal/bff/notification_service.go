@@ -10,11 +10,11 @@ import (
 	"time"
 
 	webpush "github.com/SherClockHolmes/webpush-go"
-	apptypes "github.com/agntcy/identity-service/internal/core/app/types"
-	authtypes "github.com/agntcy/identity-service/internal/core/auth/types"
-	devicetypes "github.com/agntcy/identity-service/internal/core/device/types"
-	"github.com/agntcy/identity-service/internal/pkg/errutil"
-	"github.com/agntcy/identity-service/internal/pkg/ptrutil"
+	apptypes "github.com/agntcy/identity-platform/internal/core/app/types"
+	authtypes "github.com/agntcy/identity-platform/internal/core/auth/types"
+	devicetypes "github.com/agntcy/identity-platform/internal/core/device/types"
+	"github.com/agntcy/identity-platform/internal/pkg/errutil"
+	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
 )
 
 const (

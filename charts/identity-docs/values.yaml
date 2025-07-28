@@ -8,12 +8,12 @@ image:
   pullPolicy: IfNotPresent
   tag: ""
 
-namespace: identity-service-dev
+namespace: identity-platform-dev
 
 imagePullSecrets:
   - name: ecr-credentials
 
-service:
+platform:
   type: ClusterIP
   http:
     port: 80
@@ -31,6 +31,6 @@ ingress:
   domainPrefixHttp: identity-docs
   apiDomainName: example.domain.com
 
-serviceAccount:
+platformAccount:
   create: true 
   name: ""

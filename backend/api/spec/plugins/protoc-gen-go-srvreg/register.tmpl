@@ -8,24 +8,24 @@ import (
 )
 
 type GrpcServiceRegister struct {
-{{ range $service := .Services }}
-    {{ $service.ServerName }} {{ $service.ServerType }}
+{{ range $platform := .Services }}
+    {{ $platform.ServerName }} {{ $platform.ServerType }}
 {{ end }}
 }
 
 func (r GrpcServiceRegister) RegisterGrpcHandlers(grpcServer *grpc.Server) {
-{{ range $service := .Services }}
-    if r.{{ $service.ServerName }} != nil {
-		{{ $service.RegisterGrpcServerFunc }}(grpcServer, r.{{ $service.ServerName }})
+{{ range $platform := .Services }}
+    if r.{{ $platform.ServerName }} != nil {
+		{{ $platform.RegisterGrpcServerFunc }}(grpcServer, r.{{ $platform.ServerName }})
 	}
 {{ end }}
 }
 
 func (r GrpcServiceRegister) RegisterHttpHandlers(ctx context.Context, mux *runtime.ServeMux, conn *grpc.ClientConn) error {
-{{ range $service := .Services }}
-	{{ if ne $service.RegisterHttpHandlerFunc "" }}
-    if r.{{ $service.ServerName }} != nil {
-        err := {{ $service.RegisterHttpHandlerFunc }}(ctx, mux, conn)
+{{ range $platform := .Services }}
+	{{ if ne $platform.RegisterHttpHandlerFunc "" }}
+    if r.{{ $platform.ServerName }} != nil {
+        err := {{ $platform.RegisterHttpHandlerFunc }}(ctx, mux, conn)
 		if err != nil {
 			return err
 		}

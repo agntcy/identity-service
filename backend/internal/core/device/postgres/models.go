@@ -6,8 +6,8 @@ package postgres
 import (
 	"time"
 
-	"github.com/agntcy/identity-service/internal/core/device/types"
-	"github.com/agntcy/identity-service/internal/pkg/ptrutil"
+	"github.com/agntcy/identity-platform/internal/core/device/types"
+	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
 	"github.com/google/uuid"
 )
 

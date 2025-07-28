@@ -38,8 +38,8 @@ export const NotificationsProvider: React.FC<PropsWithChildren> = ({children}) =
           await notificationUtils.removeNotification(notification.id);
         }
         await loadNotifications();
-        if ('serviceWorker' in navigator) {
-          const registration = await navigator.serviceWorker.ready;
+        if ('platformWorker' in navigator) {
+          const registration = await navigator.platformWorker.ready;
           if (registration.active) {
             registration.active.postMessage({
               type: 'CLOSE_NOTIFICATION',
@@ -134,12 +134,12 @@ export const NotificationsProvider: React.FC<PropsWithChildren> = ({children}) =
         void handleReceiveNotification(event.data.payload as INotification);
       }
     };
-    if ('serviceWorker' in navigator && isMobile && enabled) {
-      navigator.serviceWorker.addEventListener('message', listenerPushNotification);
+    if ('platformWorker' in navigator && isMobile && enabled) {
+      navigator.platformWorker.addEventListener('message', listenerPushNotification);
     }
     return () => {
-      if ('serviceWorker' in navigator && isMobile && enabled) {
-        navigator.serviceWorker.removeEventListener('message', listenerPushNotification);
+      if ('platformWorker' in navigator && isMobile && enabled) {
+        navigator.platformWorker.removeEventListener('message', listenerPushNotification);
       }
     };
   }, [handleReceiveNotification, isMobile, enabled]);
@@ -150,12 +150,12 @@ export const NotificationsProvider: React.FC<PropsWithChildren> = ({children}) =
         void handleRemoveNotification(event.data.payload as INotification);
       }
     };
-    if ('serviceWorker' in navigator && isMobile && enabled) {
-      navigator.serviceWorker.addEventListener('message', listenerRemoveNotification);
+    if ('platformWorker' in navigator && isMobile && enabled) {
+      navigator.platformWorker.addEventListener('message', listenerRemoveNotification);
     }
     return () => {
-      if ('serviceWorker' in navigator && isMobile && enabled) {
-        navigator.serviceWorker.removeEventListener('message', listenerRemoveNotification);
+      if ('platformWorker' in navigator && isMobile && enabled) {
+        navigator.platformWorker.removeEventListener('message', listenerRemoveNotification);
       }
     };
   }, [handleRemoveNotification, isMobile, enabled]);

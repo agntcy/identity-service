@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {AddAgenticServiceStepper} from '@/components/agentic-services/add/add-agentic-service-stepper';
+import {AddAgenticServiceStepper} from '@/components/agentic-platforms/add/add-agentic-platform-stepper';
 import {BasePage} from '@/components/layout/base-page';
 import {PATHS} from '@/router/paths';
 import {docs} from '@/utils/docs';
@@ -24,7 +24,7 @@ const AddAgenticService: React.FC = () => {
         }
       ]}
       rightSideItems={
-        <Link href={docs('agentic-service')} openInNewTab>
+        <Link href={docs('agentic-platform')} openInNewTab>
           <div className="flex items-center gap-1">
             View Documentation
             <ExternalLinkIcon className="w-4 h-4 ml-1" />

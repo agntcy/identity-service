@@ -5,7 +5,7 @@
 
 import {AxiosResponse} from 'axios';
 import {useMutation} from '@tanstack/react-query';
-import {AuthAPI} from '@/api/services';
+import {AuthAPI} from '@/api/platforms';
 import {ApproveTokenRequest} from '@/types/api/auth';
 
 interface PropSettingsAuth {

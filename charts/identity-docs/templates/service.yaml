@@ -8,10 +8,10 @@ metadata:
   labels:
     {{- include "identity-docs.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ .Values.platform.type }}
   ports:
     - name: http
-      port: {{ .Values.service.http.port }}
-      targetPort: {{ .Values.service.http.targetPort }}
+      port: {{ .Values.platform.http.port }}
+      targetPort: {{ .Values.platform.http.targetPort }}
   selector:
     {{- include "identity-docs.selectorLabels" . | nindent 4 }}

@@ -13,7 +13,7 @@ import {
   V1Alpha1CreatePolicyRequest,
   PolicyServiceCreateRuleBody,
   V1Alpha1RuleAction
-} from '@/api/generated/identity/policy_service.swagger.api';
+} from '@/api/generated/identity/policy_platform.swagger.api';
 
 export type {
   V1Alpha1ListPoliciesResponse as ListPoliciesResponse,

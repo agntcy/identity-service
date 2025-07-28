@@ -6,7 +6,7 @@ package auth
 import (
 	"context"
 
-	"github.com/agntcy/identity-service/internal/core/auth/types"
+	"github.com/agntcy/identity-platform/internal/core/auth/types"
 )
 
 type Repository interface {

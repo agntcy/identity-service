@@ -14,5 +14,5 @@ spec:
     - name: wget
       image: busybox
       command: ['wget']
-      args: ['{{ include "identity-sample-currency-exchange-mcp.fullname" . }}:{{ .Values.service.port }}']
+      args: ['{{ include "identity-sample-currency-exchange-mcp.fullname" . }}:{{ .Values.platform.port }}']
   restartPolicy: Never

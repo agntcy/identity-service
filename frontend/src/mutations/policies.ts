@@ -5,7 +5,7 @@
 
 import {AxiosResponse} from 'axios';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
-import {PolicyAPI} from '@/api/services';
+import {PolicyAPI} from '@/api/platforms';
 import {CreatePolicyRequest, CreateRuleBody, Policy, Rule} from '@/types/api/policy';
 
 interface PropsSettingsPolicies {

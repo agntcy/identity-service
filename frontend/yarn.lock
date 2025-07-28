@@ -4344,9 +4344,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/project-service@npm:8.34.1":
+"@typescript-eslint/project-platform@npm:8.34.1":
   version: 8.34.1
-  resolution: "@typescript-eslint/project-service@npm:8.34.1"
+  resolution: "@typescript-eslint/project-platform@npm:8.34.1"
   dependencies:
     "@typescript-eslint/tsconfig-utils": "npm:^8.34.1"
     "@typescript-eslint/types": "npm:^8.34.1"
@@ -4357,9 +4357,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/project-service@npm:8.38.0":
+"@typescript-eslint/project-platform@npm:8.38.0":
   version: 8.38.0
-  resolution: "@typescript-eslint/project-service@npm:8.38.0"
+  resolution: "@typescript-eslint/project-platform@npm:8.38.0"
   dependencies:
     "@typescript-eslint/tsconfig-utils": "npm:^8.38.0"
     "@typescript-eslint/types": "npm:^8.38.0"
@@ -4457,7 +4457,7 @@ __metadata:
   version: 8.34.1
   resolution: "@typescript-eslint/typescript-estree@npm:8.34.1"
   dependencies:
-    "@typescript-eslint/project-service": "npm:8.34.1"
+    "@typescript-eslint/project-platform": "npm:8.34.1"
     "@typescript-eslint/tsconfig-utils": "npm:8.34.1"
     "@typescript-eslint/types": "npm:8.34.1"
     "@typescript-eslint/visitor-keys": "npm:8.34.1"
@@ -4477,7 +4477,7 @@ __metadata:
   version: 8.38.0
   resolution: "@typescript-eslint/typescript-estree@npm:8.38.0"
   dependencies:
-    "@typescript-eslint/project-service": "npm:8.38.0"
+    "@typescript-eslint/project-platform": "npm:8.38.0"
     "@typescript-eslint/tsconfig-utils": "npm:8.38.0"
     "@typescript-eslint/types": "npm:8.38.0"
     "@typescript-eslint/visitor-keys": "npm:8.38.0"
@@ -4621,9 +4621,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"agent-identity-service-frontend@workspace:.":
+"agent-identity-platform-frontend@workspace:.":
   version: 0.0.0-use.local
-  resolution: "agent-identity-service-frontend@workspace:."
+  resolution: "agent-identity-platform-frontend@workspace:."
   dependencies:
     "@emotion/react": "npm:^11.14.0"
     "@emotion/styled": "npm:^11.14.0"

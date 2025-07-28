@@ -11,16 +11,16 @@ import (
 	"net"
 	"strings"
 
-	badgetypes "github.com/agntcy/identity-service/internal/core/badge/types"
-	idpcore "github.com/agntcy/identity-service/internal/core/idp"
-	"github.com/agntcy/identity-service/internal/pkg/convertutil"
-	"github.com/agntcy/identity-service/internal/pkg/errutil"
-	"github.com/agntcy/identity-service/internal/pkg/httputil"
-	"github.com/agntcy/identity-service/internal/pkg/ptrutil"
-	"github.com/agntcy/identity-service/pkg/log"
-	idsdk "github.com/agntcy/identity/api/client/client/id_service"
-	issuersdk "github.com/agntcy/identity/api/client/client/issuer_service"
-	vcsdk "github.com/agntcy/identity/api/client/client/vc_service"
+	badgetypes "github.com/agntcy/identity-platform/internal/core/badge/types"
+	idpcore "github.com/agntcy/identity-platform/internal/core/idp"
+	"github.com/agntcy/identity-platform/internal/pkg/convertutil"
+	"github.com/agntcy/identity-platform/internal/pkg/errutil"
+	"github.com/agntcy/identity-platform/internal/pkg/httputil"
+	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
+	"github.com/agntcy/identity-platform/pkg/log"
+	idsdk "github.com/agntcy/identity/api/client/client/id_platform"
+	issuersdk "github.com/agntcy/identity/api/client/client/issuer_platform"
+	vcsdk "github.com/agntcy/identity/api/client/client/vc_platform"
 	identitymodels "github.com/agntcy/identity/api/client/models"
 	"github.com/agntcy/identity/pkg/oidc"
 	httptransport "github.com/go-openapi/runtime/client"
@@ -68,7 +68,7 @@ type Service interface {
 }
 
 // The verificationService struct implements the VerificationService interface
-type service struct {
+type platform struct {
 	issuerClient          issuersdk.ClientService
 	idClient              idsdk.ClientService
 	vcClient              vcsdk.ClientService
@@ -90,7 +90,7 @@ func NewService(
 		nil,
 	)
 
-	return &service{
+	return &platform{
 		issuerClient:          issuersdk.New(transport, strfmt.Default),
 		idClient:              idsdk.New(transport, strfmt.Default),
 		vcClient:              vcsdk.New(transport, strfmt.Default),
@@ -100,7 +100,7 @@ func NewService(
 	}
 }
 
-func (s *service) RegisterIssuer(
+func (s *platform) RegisterIssuer(
 	ctx context.Context,
 	clientCredentials *idpcore.ClientCredentials, organizationID string,
 ) (*Issuer, error) {
@@ -144,7 +144,7 @@ func (s *service) RegisterIssuer(
 	log.Debug("Using issuer: ", issuer)
 	log.Debug("Using proof: ", proof)
 
-	// Perform the registration with the identity service
+	// Perform the registration with the identity platform
 	_, err = s.issuerClient.RegisterIssuer(&issuersdk.RegisterIssuerParams{
 		Body: &identitymodels.V1alpha1RegisterIssuerRequest{
 			Issuer: issuer,
@@ -156,7 +156,7 @@ func (s *service) RegisterIssuer(
 		(s.uniqueIssuerPerTenant || !strings.Contains(err.Error(), issuerExistsError)) {
 		return nil, errutil.Err(
 			err,
-			"error registering issuer with identity service",
+			"error registering issuer with identity platform",
 		)
 	}
 
@@ -166,7 +166,7 @@ func (s *service) RegisterIssuer(
 	}, nil
 }
 
-func (s *service) GenerateID(
+func (s *platform) GenerateID(
 	ctx context.Context,
 	clientCredentials *idpcore.ClientCredentials,
 	issuer *Issuer,
@@ -190,21 +190,21 @@ func (s *service) GenerateID(
 	if err != nil {
 		return "", errutil.Err(
 			err,
-			"error generating ID with identity service",
+			"error generating ID with identity platform",
 		)
 	}
 
 	if resp == nil || resp.Payload == nil || resp.Payload.ResolverMetadata == nil {
 		return "", errutil.Err(
 			nil,
-			"error generating ID with identity service",
+			"error generating ID with identity platform",
 		)
 	}
 
 	return resp.Payload.ResolverMetadata.ID, nil
 }
 
-func (s *service) PublishVerifiableCredential(
+func (s *platform) PublishVerifiableCredential(
 	ctx context.Context,
 	clientCredentials *idpcore.ClientCredentials,
 	vc *badgetypes.VerifiableCredential,
@@ -261,7 +261,7 @@ func (s *service) PublishVerifiableCredential(
 	return nil
 }
 
-func (s *service) getCommonName(
+func (s *platform) getCommonName(
 	clientCredentials *idpcore.ClientCredentials,
 ) string {
 	if clientCredentials.ClientSecret != "" {
@@ -271,7 +271,7 @@ func (s *service) getCommonName(
 	return clientCredentials.Issuer
 }
 
-func (s *service) generateProof(
+func (s *platform) generateProof(
 	ctx context.Context,
 	clientCredentials *idpcore.ClientCredentials,
 	keyId string,
@@ -321,7 +321,7 @@ func (s *service) generateProof(
 	return proof, nil
 }
 
-func (s *service) VerifyVerifiableCredential(
+func (s *platform) VerifyVerifiableCredential(
 	ctx context.Context,
 	vc *string,
 ) (*badgetypes.VerificationResult, error) {
@@ -364,7 +364,7 @@ func (s *service) VerifyVerifiableCredential(
 	}, nil
 }
 
-func (s *service) RevokeVerifiableCredential(
+func (s *platform) RevokeVerifiableCredential(
 	ctx context.Context,
 	clientCredentials *idpcore.ClientCredentials,
 	vc *badgetypes.VerifiableCredential,

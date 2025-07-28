@@ -14,7 +14,7 @@ import {PolicyFormValues} from '@/schemas/policy-schema';
 import {Textarea} from '@/components/ui/textarea';
 import {useGetAgenticServices} from '@/queries';
 import {Skeleton} from '@mui/material';
-import {AgenticServiceType} from '@/components/shared/agentic-services/agentic-service-type';
+import {AgenticServiceType} from '@/components/shared/agentic-platforms/agentic-platform-type';
 
 export const PolicyForm = ({isLoading = false}: {isLoading?: boolean}) => {
   const {control, reset, formState} = useFormContext<PolicyFormValues>();
@@ -29,10 +29,10 @@ export const PolicyForm = ({isLoading = false}: {isLoading?: boolean}) => {
   }, [data]);
 
   const optionAgenticServices = useMemo(() => {
-    return agenticServices.map((service) => ({
-      label: service.name ?? 'Unknown Service',
-      value: service.id ?? '',
-      icon: <AgenticServiceType type={service.type} showLabel={false} />
+    return agenticServices.map((platform) => ({
+      label: platform.name ?? 'Unknown Service',
+      value: platform.id ?? '',
+      icon: <AgenticServiceType type={platform.type} showLabel={false} />
     }));
   }, [agenticServices]);
 
@@ -128,7 +128,7 @@ export const PolicyForm = ({isLoading = false}: {isLoading?: boolean}) => {
                                   fontSize={14}
                                   sx={(theme) => ({color: theme.palette.vars.baseTextWeak})}
                                 >
-                                  Select agentic service...
+                                  Select agentic platform...
                                 </Typography>
                               );
                             }
@@ -155,7 +155,7 @@ export const PolicyForm = ({isLoading = false}: {isLoading?: boolean}) => {
                                   fontSize={14}
                                   sx={(theme) => ({color: theme.palette.vars.baseTextWeak})}
                                 >
-                                  No agentic services available
+                                  No agentic platforms available
                                 </Typography>
                               </div>
                             </MenuItem>

@@ -5,7 +5,7 @@
 
 import {AxiosResponse} from 'axios';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
-import {SettingsAPI} from '@/api/services';
+import {SettingsAPI} from '@/api/platforms';
 import {ApiKey, IssuerSettings, SetIssuerRequest} from '@/types/api/settings';
 
 interface PropsSettingsApiKey {

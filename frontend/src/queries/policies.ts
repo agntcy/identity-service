@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {PolicyAPI} from '@/api/services';
+import {PolicyAPI} from '@/api/platforms';
 import {keepPreviousData, useQuery} from '@tanstack/react-query';
 import qs from 'qs';
 

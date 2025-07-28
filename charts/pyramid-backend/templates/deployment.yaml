@@ -28,7 +28,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "pyramid-backend.serviceAccountName" . }}
+      platformAccountName: {{ include "pyramid-backend.platformAccountName" . }}
       {{- with .Values.podSecurityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}
@@ -43,9 +43,9 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: {{ .Values.service.http.targetPort }}
+              containerPort: {{ .Values.platform.http.targetPort }}
             - name: grpc
-              containerPort: {{ .Values.service.grpc.targetPort }}
+              containerPort: {{ .Values.platform.grpc.targetPort }}
           envFrom:
           - configMapRef:
               name: {{ .Release.Name }}-configmap-backend

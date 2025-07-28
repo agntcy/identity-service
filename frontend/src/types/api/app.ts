@@ -11,7 +11,7 @@ import {
   V1Alpha1ListAppsResponse,
   V1Alpha1PagedResponse,
   V1Alpha1AppStatus
-} from '@/api/generated/identity/app_service.swagger.api';
+} from '@/api/generated/identity/app_platform.swagger.api';
 
 export type {
   V1Alpha1App as App,

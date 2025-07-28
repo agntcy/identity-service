@@ -11,9 +11,9 @@ import {z} from 'zod';
 import {Form} from '@/components/ui/form';
 import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from '@/components/ui/accordion';
 import {Button, toast, Typography} from '@outshift/spark-design';
-import {AgenticServicForm} from './steps/agentic-service-form';
+import {AgenticServicForm} from './steps/agentic-platform-form';
 import {ConfirmInfo} from './steps/confirm-info';
-import {AgenticServiceFormValues, AgenticServiceSchema} from '@/schemas/agentic-service-schema';
+import {AgenticServiceFormValues, AgenticServiceSchema} from '@/schemas/agentic-platform-schema';
 import {validateForm} from '@/lib/utils';
 import {useCreateAgenticService} from '@/mutations';
 import {generatePath, useNavigate} from 'react-router-dom';
@@ -45,7 +45,7 @@ const FormStepperComponent = () => {
       onSuccess: (resp) => {
         toast({
           title: 'Success',
-          description: 'Agentic service added successfully.',
+          description: 'Agentic platform added successfully.',
           type: 'success'
         });
         const path = generatePath(PATHS.agenticServices.info.base, {
@@ -56,7 +56,7 @@ const FormStepperComponent = () => {
       onError: () => {
         toast({
           title: 'Error',
-          description: 'Failed to add agentic service. Please check the details and try again.',
+          description: 'Failed to add agentic platform. Please check the details and try again.',
           type: 'error'
         });
       }

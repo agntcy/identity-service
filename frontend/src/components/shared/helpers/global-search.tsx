@@ -13,7 +13,7 @@ import {App} from '@/types/api/app';
 import {Policy} from '@/types/api/policy';
 import {useCallback, useMemo, useState} from 'react';
 import {useGetAgenticService, useGetAgenticServices, useGetPolicies} from '@/queries';
-import {AgenticServiceType} from '../agentic-services/agentic-service-type';
+import {AgenticServiceType} from '../agentic-platforms/agentic-platform-type';
 import {PATHS} from '@/router/paths';
 import {useFeatureFlagsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
@@ -92,7 +92,7 @@ export const GlobalSearch = () => {
   const dataSources = useMemo(() => {
     return [
       {
-        id: 'agentic-services',
+        id: 'agentic-platforms',
         items: dataAgenticServices?.apps?.sort((a, b) => (a.name ?? '').localeCompare(b.name ?? '')) || [],
         renderer: (item: GlobalSearchOptionType) => <ApplicationListItem app={item} />
       },
@@ -110,7 +110,7 @@ export const GlobalSearch = () => {
 
   const dataLabels = useMemo(() => {
     return {
-      'agentic-services': 'Agentic Services',
+      'agentic-platforms': 'Agentic Services',
       ...(isTbacEnable ? {policies: 'Policies'} : {})
     };
   }, [isTbacEnable]);
@@ -134,7 +134,7 @@ export const GlobalSearch = () => {
     }
     const typedOption = option as SearchFieldWithAutocompleteOption<GlobalSearchOptionType>;
     switch (typedOption.category) {
-      case 'agentic-services': {
+      case 'agentic-platforms': {
         const path = generatePath(PATHS.agenticServices.info.base, {
           id: typedOption.entity.id
         });

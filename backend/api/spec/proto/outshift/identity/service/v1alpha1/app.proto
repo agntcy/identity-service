@@ -5,12 +5,12 @@
 
 syntax = "proto3";
 
-package agntcy.identity.service.v1alpha1;
+package agntcy.identity.platform.v1alpha1;
 
 import "google/protobuf/timestamp.proto";
 
 // Package-wide variables from generator "generated".
-option go_package = "github.com/agntcy/identity-service/api/server/agntcy/identity/service/v1alpha1;identity_service_sdk_go";
+option go_package = "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_go";
 
 // Identity Service App.
 message App {

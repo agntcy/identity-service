@@ -7,18 +7,18 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/agntcy/identity-service/internal/core/identity"
-	idpcore "github.com/agntcy/identity-service/internal/core/idp"
-	settingstypes "github.com/agntcy/identity-service/internal/core/settings/types"
-	identitycontext "github.com/agntcy/identity-service/internal/pkg/context"
-	"github.com/agntcy/identity-service/internal/pkg/errutil"
+	"github.com/agntcy/identity-platform/internal/core/identity"
+	idpcore "github.com/agntcy/identity-platform/internal/core/idp"
+	settingstypes "github.com/agntcy/identity-platform/internal/core/settings/types"
+	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
+	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 )
 
 type Service interface {
 	SetIssuer(ctx context.Context, issuerSettings *settingstypes.IssuerSettings) error
 }
 
-type service struct {
+type platform struct {
 	identityService identity.Service
 	idpFactory      idpcore.IdpFactory
 	credentialStore idpcore.CredentialStore
@@ -29,14 +29,14 @@ func NewService(
 	idpFactory idpcore.IdpFactory,
 	credentialStore idpcore.CredentialStore,
 ) Service {
-	return &service{
+	return &platform{
 		identityService: identityService,
 		idpFactory:      idpFactory,
 		credentialStore: credentialStore,
 	}
 }
 
-func (s *service) SetIssuer(
+func (s *platform) SetIssuer(
 	ctx context.Context,
 	issuerSettings *settingstypes.IssuerSettings,
 ) error {
@@ -76,7 +76,7 @@ func (s *service) SetIssuer(
 		return errutil.Err(err, "unable to store client credentials")
 	}
 
-	// Register the issuer with the identity service.
+	// Register the issuer with the identity platform.
 	issuer, err := s.identityService.RegisterIssuer(
 		ctx,
 		clientCredentials,

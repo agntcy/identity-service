@@ -7,10 +7,10 @@ import (
 	"encoding/json"
 	"time"
 
-	app "github.com/agntcy/identity-service/internal/core/app/postgres"
-	"github.com/agntcy/identity-service/internal/core/badge/types"
-	"github.com/agntcy/identity-service/internal/pkg/convertutil"
-	"github.com/agntcy/identity-service/pkg/log"
+	app "github.com/agntcy/identity-platform/internal/core/app/postgres"
+	"github.com/agntcy/identity-platform/internal/core/badge/types"
+	"github.com/agntcy/identity-platform/internal/pkg/convertutil"
+	"github.com/agntcy/identity-platform/pkg/log"
 	"github.com/lib/pq"
 )
 

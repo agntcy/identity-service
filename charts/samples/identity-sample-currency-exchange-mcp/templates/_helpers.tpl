@@ -51,12 +51,12 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
-Create the name of the service account to use
+Create the name of the platform account to use
 */}}
-{{- define "identity-sample-currency-exchange-mcp.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include "identity-sample-currency-exchange-mcp.fullname" .) .Values.serviceAccount.name }}
+{{- define "identity-sample-currency-exchange-mcp.platformAccountName" -}}
+{{- if .Values.platformAccount.create }}
+{{- default (include "identity-sample-currency-exchange-mcp.fullname" .) .Values.platformAccount.name }}
 {{- else }}
-{{- default "default" .Values.serviceAccount.name }}
+{{- default "default" .Values.platformAccount.name }}
 {{- end }}
 {{- end }}

@@ -9,7 +9,7 @@ import (
 	"net"
 	"path"
 
-	identitycontext "github.com/agntcy/identity-service/internal/pkg/context"
+	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
 	"github.com/agntcy/identity/pkg/joseutil"
 	"github.com/agntcy/identity/pkg/jwk"
 	"github.com/agntcy/identity/pkg/keystore"

@@ -8,7 +8,7 @@ image:
   pullPolicy: IfNotPresent
   tag: "latest"
 
-service:
+platform:
   type: ClusterIP
   http:
     port: 9090
@@ -29,7 +29,7 @@ ingress:
   domainPrefixHttp: mcp-server-currency-exchange
   apiDomainName: dev.example.com
 
-serviceAccount:
+platformAccount:
   create: true
   name: ""
 configmap:

@@ -4,18 +4,18 @@
 package converters
 
 import (
-	identity_service_sdk_go "github.com/agntcy/identity-service/api/server/agntcy/identity/service/v1alpha1"
-	policytypes "github.com/agntcy/identity-service/internal/core/policy/types"
-	"github.com/agntcy/identity-service/internal/pkg/convertutil"
-	"github.com/agntcy/identity-service/internal/pkg/ptrutil"
+	identity_platform_sdk_go "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1"
+	policytypes "github.com/agntcy/identity-platform/internal/core/policy/types"
+	"github.com/agntcy/identity-platform/internal/pkg/convertutil"
+	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
 )
 
-func FromPolicy(src *policytypes.Policy) *identity_service_sdk_go.Policy {
+func FromPolicy(src *policytypes.Policy) *identity_platform_sdk_go.Policy {
 	if src == nil {
 		return nil
 	}
 
-	return &identity_service_sdk_go.Policy{
+	return &identity_platform_sdk_go.Policy{
 		Id:          ptrutil.Ptr(src.ID),
 		Name:        ptrutil.Ptr(src.Name),
 		Description: ptrutil.Ptr(src.Description),
@@ -26,7 +26,7 @@ func FromPolicy(src *policytypes.Policy) *identity_service_sdk_go.Policy {
 	}
 }
 
-func ToPolicy(src *identity_service_sdk_go.Policy) *policytypes.Policy {
+func ToPolicy(src *identity_platform_sdk_go.Policy) *policytypes.Policy {
 	if src == nil {
 		return nil
 	}
@@ -40,24 +40,24 @@ func ToPolicy(src *identity_service_sdk_go.Policy) *policytypes.Policy {
 	}
 }
 
-func FromRule(src *policytypes.Rule) *identity_service_sdk_go.Rule {
+func FromRule(src *policytypes.Rule) *identity_platform_sdk_go.Rule {
 	if src == nil {
 		return nil
 	}
 
-	return &identity_service_sdk_go.Rule{
+	return &identity_platform_sdk_go.Rule{
 		Id:            ptrutil.Ptr(src.ID),
 		Name:          ptrutil.Ptr(src.Name),
 		Description:   ptrutil.Ptr(src.Description),
 		NeedsApproval: ptrutil.Ptr(src.NeedsApproval),
 		Tasks:         convertutil.ConvertSlice(src.Tasks, FromTask),
-		Action:        ptrutil.Ptr(identity_service_sdk_go.RuleAction(src.Action)),
+		Action:        ptrutil.Ptr(identity_platform_sdk_go.RuleAction(src.Action)),
 		CreatedAt:     newTimestamp(&src.CreatedAt),
 		UpdatedAt:     newTimestamp(src.UpdatedAt),
 	}
 }
 
-func ToRule(src *identity_service_sdk_go.Rule) *policytypes.Rule {
+func ToRule(src *identity_platform_sdk_go.Rule) *policytypes.Rule {
 	if src == nil {
 		return nil
 	}
@@ -72,12 +72,12 @@ func ToRule(src *identity_service_sdk_go.Rule) *policytypes.Rule {
 	}
 }
 
-func FromTask(src *policytypes.Task) *identity_service_sdk_go.Task {
+func FromTask(src *policytypes.Task) *identity_platform_sdk_go.Task {
 	if src == nil {
 		return nil
 	}
 
-	return &identity_service_sdk_go.Task{
+	return &identity_platform_sdk_go.Task{
 		Id:       ptrutil.Ptr(src.ID),
 		Name:     ptrutil.Ptr(src.Name),
 		AppId:    ptrutil.Ptr(src.AppID),
@@ -85,7 +85,7 @@ func FromTask(src *policytypes.Task) *identity_service_sdk_go.Task {
 	}
 }
 
-func ToTask(src *identity_service_sdk_go.Task) *policytypes.Task {
+func ToTask(src *identity_platform_sdk_go.Task) *policytypes.Task {
 	if src == nil {
 		return nil
 	}

@@ -4,7 +4,7 @@
  */
 
 import {AxiosError, AxiosHeaders, AxiosResponse, InternalAxiosRequestConfig} from 'axios';
-import * as SettingsApi from '../generated/identity/settings_service.swagger.api';
+import * as SettingsApi from '../generated/identity/settings_platform.swagger.api';
 import {AuthInfo} from '@/types/okta';
 import config from '@/config';
 import {Settings} from '@/types/api/settings';

@@ -32,7 +32,7 @@ export const createOktaInstance = ({issuer, clientId, config}: {issuer: string; 
     if (config?.expireEarlySeconds && process.env.NODE_ENV !== 'production') {
       tokenManager.expireEarlySeconds = config.expireEarlySeconds;
     }
-    const services: ServiceManagerOptions = {
+    const platforms: ServiceManagerOptions = {
       autoRenew: config?.renew === 'auto',
       autoRemove: config?.renew === 'auto',
       renewOnTabActivation: config?.renewOnTabActivation,
@@ -45,7 +45,7 @@ export const createOktaInstance = ({issuer, clientId, config}: {issuer: string; 
       clientId: clientId,
       transformAuthState: transformAuthState as any,
       tokenManager: tokenManager,
-      services: services,
+      platforms: platforms,
     });
   } catch (error) {
     console.debug(error);

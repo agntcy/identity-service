@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {ListAgenticServices} from '@/components/agentic-services/list/list-agentic-services';
+import {ListAgenticServices} from '@/components/agentic-platforms/list/list-agentic-platforms';
 import {BasePage} from '@/components/layout/base-page';
 import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-renderer';
 import {useAnalytics} from '@/hooks';

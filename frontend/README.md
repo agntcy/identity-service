@@ -123,7 +123,7 @@ frontend/
 │   ├── components/   # Reusable UI components
 │   ├── pages/        # Page components
 │   ├── hooks/        # Custom React hooks
-│   ├── services/     # API services
+│   ├── platforms/     # API platforms
 │   ├── stores/       # Zustand stores
 │   ├── types/        # TypeScript type definitions
 │   └── utils/        # Utility functions

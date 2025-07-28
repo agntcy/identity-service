@@ -6,9 +6,9 @@ package policy
 import (
 	"context"
 
-	apptypes "github.com/agntcy/identity-service/internal/core/app/types"
-	"github.com/agntcy/identity-service/internal/core/policy/types"
-	"github.com/agntcy/identity-service/internal/pkg/pagination"
+	apptypes "github.com/agntcy/identity-platform/internal/core/app/types"
+	"github.com/agntcy/identity-platform/internal/core/policy/types"
+	"github.com/agntcy/identity-platform/internal/pkg/pagination"
 )
 
 type Repository interface {

@@ -4,11 +4,11 @@
 package postgres
 
 import (
-	apptypes "github.com/agntcy/identity-service/internal/core/app/types"
-	types "github.com/agntcy/identity-service/internal/core/auth/types"
-	devicetypes "github.com/agntcy/identity-service/internal/core/device/types"
-	"github.com/agntcy/identity-service/internal/pkg/secrets"
-	"github.com/agntcy/identity-service/internal/pkg/strutil"
+	apptypes "github.com/agntcy/identity-platform/internal/core/app/types"
+	types "github.com/agntcy/identity-platform/internal/core/auth/types"
+	devicetypes "github.com/agntcy/identity-platform/internal/core/device/types"
+	"github.com/agntcy/identity-platform/internal/pkg/secrets"
+	"github.com/agntcy/identity-platform/internal/pkg/strutil"
 	"github.com/google/uuid"
 )
 

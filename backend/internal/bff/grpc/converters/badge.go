@@ -4,24 +4,24 @@
 package converters
 
 import (
-	identity_service_sdk_go "github.com/agntcy/identity-service/api/server/agntcy/identity/service/v1alpha1"
-	badgetypes "github.com/agntcy/identity-service/internal/core/badge/types"
-	"github.com/agntcy/identity-service/internal/pkg/convertutil"
-	"github.com/agntcy/identity-service/internal/pkg/ptrutil"
+	identity_platform_sdk_go "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1"
+	badgetypes "github.com/agntcy/identity-platform/internal/core/badge/types"
+	"github.com/agntcy/identity-platform/internal/pkg/convertutil"
+	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
 )
 
-func FromBadge(src *badgetypes.Badge) *identity_service_sdk_go.Badge {
+func FromBadge(src *badgetypes.Badge) *identity_platform_sdk_go.Badge {
 	if src == nil {
 		return nil
 	}
 
-	return &identity_service_sdk_go.Badge{
+	return &identity_platform_sdk_go.Badge{
 		VerifiableCredential: FromVerifiableCredential(&src.VerifiableCredential),
 		AppId:                ptrutil.Ptr(src.AppID),
 	}
 }
 
-func ToBadge(src *identity_service_sdk_go.Badge) *badgetypes.Badge {
+func ToBadge(src *identity_platform_sdk_go.Badge) *badgetypes.Badge {
 	if src == nil {
 		return nil
 	}
@@ -34,19 +34,19 @@ func ToBadge(src *identity_service_sdk_go.Badge) *badgetypes.Badge {
 
 func FromCredentialSchema(
 	src *badgetypes.CredentialSchema,
-) *identity_service_sdk_go.CredentialSchema {
+) *identity_platform_sdk_go.CredentialSchema {
 	if src == nil {
 		return nil
 	}
 
-	return &identity_service_sdk_go.CredentialSchema{
+	return &identity_platform_sdk_go.CredentialSchema{
 		Type: ptrutil.Ptr(src.Type),
 		Id:   ptrutil.Ptr(src.ID),
 	}
 }
 
 func ToCredentialSchema(
-	src *identity_service_sdk_go.CredentialSchema,
+	src *identity_platform_sdk_go.CredentialSchema,
 ) *badgetypes.CredentialSchema {
 	if src == nil {
 		return nil
@@ -60,32 +60,32 @@ func ToCredentialSchema(
 
 func FromCredentialStatus(
 	src *badgetypes.CredentialStatus,
-) *identity_service_sdk_go.CredentialStatus {
+) *identity_platform_sdk_go.CredentialStatus {
 	if src == nil {
 		return nil
 	}
 
-	return &identity_service_sdk_go.CredentialStatus{
+	return &identity_platform_sdk_go.CredentialStatus{
 		Id:        ptrutil.Ptr(src.ID),
 		Type:      ptrutil.Ptr(src.Type),
 		CreatedAt: newTimestamp(&src.CreatedAt),
-		Purpose:   ptrutil.Ptr(identity_service_sdk_go.CredentialStatusPurpose(src.Purpose)),
+		Purpose:   ptrutil.Ptr(identity_platform_sdk_go.CredentialStatusPurpose(src.Purpose)),
 	}
 }
 
-func FromProof(src *badgetypes.Proof) *identity_service_sdk_go.Proof {
+func FromProof(src *badgetypes.Proof) *identity_platform_sdk_go.Proof {
 	if src == nil {
 		return nil
 	}
 
-	return &identity_service_sdk_go.Proof{
+	return &identity_platform_sdk_go.Proof{
 		Type:         ptrutil.Ptr(src.Type),
 		ProofPurpose: ptrutil.Ptr(src.ProofPurpose),
 		ProofValue:   ptrutil.Ptr(src.ProofValue),
 	}
 }
 
-func ToProof(src *identity_service_sdk_go.Proof) *badgetypes.Proof {
+func ToProof(src *identity_platform_sdk_go.Proof) *badgetypes.Proof {
 	if src == nil {
 		return nil
 	}
@@ -99,12 +99,12 @@ func ToProof(src *identity_service_sdk_go.Proof) *badgetypes.Proof {
 
 func FromVerifiableCredential(
 	src *badgetypes.VerifiableCredential,
-) *identity_service_sdk_go.VerifiableCredential {
+) *identity_platform_sdk_go.VerifiableCredential {
 	if src == nil {
 		return nil
 	}
 
-	return &identity_service_sdk_go.VerifiableCredential{
+	return &identity_platform_sdk_go.VerifiableCredential{
 		Context:           src.Context,
 		Type:              src.Type,
 		Issuer:            ptrutil.Ptr(src.Issuer),
@@ -125,7 +125,7 @@ func FromVerifiableCredential(
 }
 
 func ToVerifiableCredential(
-	src *identity_service_sdk_go.VerifiableCredential,
+	src *identity_platform_sdk_go.VerifiableCredential,
 ) *badgetypes.VerifiableCredential {
 	if src == nil {
 		return nil
@@ -147,18 +147,18 @@ func ToVerifiableCredential(
 	}
 }
 
-func FromBadgeClaims(src *badgetypes.BadgeClaims) *identity_service_sdk_go.BadgeClaims {
+func FromBadgeClaims(src *badgetypes.BadgeClaims) *identity_platform_sdk_go.BadgeClaims {
 	if src == nil {
 		return nil
 	}
 
-	return &identity_service_sdk_go.BadgeClaims{
+	return &identity_platform_sdk_go.BadgeClaims{
 		Id:    ptrutil.Ptr(src.ID),
 		Badge: ptrutil.Ptr(src.Badge),
 	}
 }
 
-func ToBadgeClaims(src *identity_service_sdk_go.BadgeClaims) *badgetypes.BadgeClaims {
+func ToBadgeClaims(src *identity_platform_sdk_go.BadgeClaims) *badgetypes.BadgeClaims {
 	if src == nil {
 		return nil
 	}
@@ -169,12 +169,12 @@ func ToBadgeClaims(src *identity_service_sdk_go.BadgeClaims) *badgetypes.BadgeCl
 	}
 }
 
-func FromVerificationResult(src *badgetypes.VerificationResult) *identity_service_sdk_go.VerificationResult {
+func FromVerificationResult(src *badgetypes.VerificationResult) *identity_platform_sdk_go.VerificationResult {
 	if src == nil {
 		return nil
 	}
 
-	return &identity_service_sdk_go.VerificationResult{
+	return &identity_platform_sdk_go.VerificationResult{
 		Status:                       ptrutil.Ptr(src.Status),
 		Document:                     FromVerifiableCredential(src.Document),
 		MediaType:                    ptrutil.Ptr(src.MediaType),
@@ -185,12 +185,12 @@ func FromVerificationResult(src *badgetypes.VerificationResult) *identity_servic
 	}
 }
 
-func FromErrorInfo(src *badgetypes.ErrorInfo) *identity_service_sdk_go.ErrorInfo {
+func FromErrorInfo(src *badgetypes.ErrorInfo) *identity_platform_sdk_go.ErrorInfo {
 	if src == nil {
 		return nil
 	}
 
-	return &identity_service_sdk_go.ErrorInfo{
+	return &identity_platform_sdk_go.ErrorInfo{
 		Reason:  ptrutil.Ptr(src.Reason),
 		Message: ptrutil.Ptr(src.Message),
 	}

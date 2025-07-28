@@ -7,8 +7,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/agntcy/identity-service/internal/core/settings/types"
-	"github.com/agntcy/identity-service/internal/pkg/errutil"
+	"github.com/agntcy/identity-platform/internal/core/settings/types"
+	"github.com/agntcy/identity-platform/internal/pkg/errutil"
 )
 
 type IdpFactory interface {

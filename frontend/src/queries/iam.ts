@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {IamAPI} from '@/api/services';
+import {IamAPI} from '@/api/platforms';
 import {useQuery} from '@tanstack/react-query';
 
 export const useGetTenants = () => {

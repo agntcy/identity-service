@@ -11,30 +11,30 @@ import (
 	"os/signal"
 	"time"
 
-	identity_service_api "github.com/agntcy/identity-service/api/server"
-	"github.com/agntcy/identity-service/internal/bff"
-	bffgrpc "github.com/agntcy/identity-service/internal/bff/grpc"
-	apppg "github.com/agntcy/identity-service/internal/core/app/postgres"
-	authpg "github.com/agntcy/identity-service/internal/core/auth/postgres"
-	badgecore "github.com/agntcy/identity-service/internal/core/badge"
-	badgea2a "github.com/agntcy/identity-service/internal/core/badge/a2a"
-	badgemcp "github.com/agntcy/identity-service/internal/core/badge/mcp"
-	badgepg "github.com/agntcy/identity-service/internal/core/badge/postgres"
-	devicepg "github.com/agntcy/identity-service/internal/core/device/postgres"
-	identitycore "github.com/agntcy/identity-service/internal/core/identity"
-	idpcore "github.com/agntcy/identity-service/internal/core/idp"
-	"github.com/agntcy/identity-service/internal/core/issuer"
-	policycore "github.com/agntcy/identity-service/internal/core/policy"
-	policypg "github.com/agntcy/identity-service/internal/core/policy/postgres"
-	settingspg "github.com/agntcy/identity-service/internal/core/settings/postgres"
-	"github.com/agntcy/identity-service/internal/pkg/grpcutil"
-	outshiftiam "github.com/agntcy/identity-service/internal/pkg/iam"
-	"github.com/agntcy/identity-service/internal/pkg/interceptors"
-	"github.com/agntcy/identity-service/internal/pkg/vault"
-	"github.com/agntcy/identity-service/pkg/cmd"
-	"github.com/agntcy/identity-service/pkg/db"
-	"github.com/agntcy/identity-service/pkg/grpcserver"
-	"github.com/agntcy/identity-service/pkg/log"
+	identity_platform_api "github.com/agntcy/identity-platform/api/server"
+	"github.com/agntcy/identity-platform/internal/bff"
+	bffgrpc "github.com/agntcy/identity-platform/internal/bff/grpc"
+	apppg "github.com/agntcy/identity-platform/internal/core/app/postgres"
+	authpg "github.com/agntcy/identity-platform/internal/core/auth/postgres"
+	badgecore "github.com/agntcy/identity-platform/internal/core/badge"
+	badgea2a "github.com/agntcy/identity-platform/internal/core/badge/a2a"
+	badgemcp "github.com/agntcy/identity-platform/internal/core/badge/mcp"
+	badgepg "github.com/agntcy/identity-platform/internal/core/badge/postgres"
+	devicepg "github.com/agntcy/identity-platform/internal/core/device/postgres"
+	identitycore "github.com/agntcy/identity-platform/internal/core/identity"
+	idpcore "github.com/agntcy/identity-platform/internal/core/idp"
+	"github.com/agntcy/identity-platform/internal/core/issuer"
+	policycore "github.com/agntcy/identity-platform/internal/core/policy"
+	policypg "github.com/agntcy/identity-platform/internal/core/policy/postgres"
+	settingspg "github.com/agntcy/identity-platform/internal/core/settings/postgres"
+	"github.com/agntcy/identity-platform/internal/pkg/grpcutil"
+	outshiftiam "github.com/agntcy/identity-platform/internal/pkg/iam"
+	"github.com/agntcy/identity-platform/internal/pkg/interceptors"
+	"github.com/agntcy/identity-platform/internal/pkg/vault"
+	"github.com/agntcy/identity-platform/pkg/cmd"
+	"github.com/agntcy/identity-platform/pkg/db"
+	"github.com/agntcy/identity-platform/pkg/grpcserver"
+	"github.com/agntcy/identity-platform/pkg/log"
 	"github.com/agntcy/identity/pkg/oidc"
 	awsconfig "github.com/aws/aws-sdk-go-v2/config"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -240,7 +240,7 @@ func main() {
 	a2aClient := badgea2a.NewDiscoveryClient()
 	mcpClient := badgemcp.NewDiscoveryClient()
 
-	// Identity service
+	// Identity platform
 	identityService := identitycore.NewService(
 		config.IdentityHost,
 		config.IdentityPort,
@@ -254,7 +254,7 @@ func main() {
 
 	policyEvaluator := policycore.NewEvaluator(policyRepository)
 
-	// Create internal services
+	// Create internal platforms
 	appSrv := bff.NewAppService(
 		appRepository,
 		settingsRepository,
@@ -311,7 +311,7 @@ func main() {
 		notificationSrv,
 	)
 
-	register := identity_service_api.GrpcServiceRegister{
+	register := identity_platform_api.GrpcServiceRegister{
 		AppServiceServer:      bffgrpc.NewAppService(appSrv, badgeSrv),
 		SettingsServiceServer: bffgrpc.NewSettingsService(settingsSrv),
 		BadgeServiceServer:    bffgrpc.NewBadgeService(badgeSrv),

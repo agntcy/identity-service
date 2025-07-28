@@ -10,10 +10,10 @@ import {MonitorDownIcon} from 'lucide-react';
 import {useCallback, useEffect, useState} from 'react';
 
 interface BeforeInstallPromptEvent extends Event {
-  readonly services: string[];
+  readonly platforms: string[];
   readonly userChoice: Promise<{
     outcome: 'accepted' | 'dismissed';
-    service: string;
+    platform: string;
   }>;
   prompt(): Promise<void>;
 }

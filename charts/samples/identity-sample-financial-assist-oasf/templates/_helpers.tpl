@@ -51,12 +51,12 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
-Create the name of the service account to use
+Create the name of the platform account to use
 */}}
-{{- define "identity-sample-financial-assist-oasf.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include "identity-sample-financial-assist-oasf.fullname" .) .Values.serviceAccount.name }}
+{{- define "identity-sample-financial-assist-oasf.platformAccountName" -}}
+{{- if .Values.platformAccount.create }}
+{{- default (include "identity-sample-financial-assist-oasf.fullname" .) .Values.platformAccount.name }}
 {{- else }}
-{{- default "default" .Values.serviceAccount.name }}
+{{- default "default" .Values.platformAccount.name }}
 {{- end }}
 {{- end }}

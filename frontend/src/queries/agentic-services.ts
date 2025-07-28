@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {AgenticServicesAPI} from '@/api/services';
+import {AgenticServicesAPI} from '@/api/platforms';
 import {AppType} from '@/types/api/app';
 import {keepPreviousData, useQuery} from '@tanstack/react-query';
 import qs from 'qs';
@@ -14,7 +14,7 @@ export const useGetAgenticServices = (
 ) => {
   return useQuery({
     queryKey: [
-      'get-agentic-services',
+      'get-agentic-platforms',
       {
         page: query?.page,
         size: query?.size,
@@ -45,7 +45,7 @@ export const useGetAgenticServices = (
 
 export const useGetAgenticService = (id?: string) => {
   return useQuery({
-    queryKey: ['get-agentic-service', id],
+    queryKey: ['get-agentic-platform', id],
     queryFn: async () => {
       const {data} = await AgenticServicesAPI.getApp(id!);
       return data;
@@ -56,7 +56,7 @@ export const useGetAgenticService = (id?: string) => {
 
 export const useGetAgenticServiceBadge = (id?: string) => {
   return useQuery({
-    queryKey: ['get-agentic-service-badge', id],
+    queryKey: ['get-agentic-platform-badge', id],
     queryFn: async () => {
       const {data} = await AgenticServicesAPI.getAppBadge(id!);
       return data;
@@ -69,7 +69,7 @@ export const useGetAgenticServiceBadge = (id?: string) => {
 export const useGetGetTasksAgenticService = (query?: {excludeAppIds?: string[]}) => {
   return useQuery({
     queryKey: [
-      'get-tasks-agentic-service',
+      'get-tasks-agentic-platform',
       {
         excludeAppIds: query?.excludeAppIds
       }
@@ -93,7 +93,7 @@ export const useGetGetTasksAgenticService = (query?: {excludeAppIds?: string[]})
 
 export const useGetAgenticServiceTotalCount = () => {
   return useQuery({
-    queryKey: ['get-agentic-services-total-count'],
+    queryKey: ['get-agentic-platforms-total-count'],
     queryFn: async () => {
       const {data} = await AgenticServicesAPI.getAppsCount();
       return data;

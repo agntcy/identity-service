@@ -5,6 +5,6 @@
 
 export * from './iam';
 export * from './settings';
-export * from './agentic-services';
+export * from './agentic-platforms';
 export * from './policies';
 export * from './devices';
