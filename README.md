@@ -13,8 +13,8 @@
   <div align="right">
     <a href="https://agntcy.org/">
       <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="img/agntcy-attribution-white.png" width="150">
-        <img alt="" src="img/agntcy-attribution-full-color.png" width="150">
+        <source media="(prefers-color-scheme: dark)" srcset="img/agntcy-attribution-white.png" width="200">
+        <img alt="" src="img/agntcy-attribution-full-color.png" width="200">
       </picture>
     </a>
   </div>
