@@ -35,7 +35,7 @@ Here is a basic example of how to use the Python SDK to verify a badge for an Ag
 
 ```python
 from dotenv import load_dotenv
-from identityservice.sdk import IdentityPlatformSdk as Sdk
+from identityservice.sdk import IdentityServiceSdk as Sdk
 
 load_dotenv()
 
@@ -61,7 +61,7 @@ Here is a basic example of how to use the Python SDK to issue a badge for an Age
 
 ```python
 from dotenv import load_dotenv
-from identityservice.sdk import IdentityPlatformSdk as Sdk
+from identityservice.sdk import IdentityServiceSdk as Sdk
 
 load_dotenv()
 

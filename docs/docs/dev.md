@@ -47,7 +47,7 @@ Below is an example of how to verify a badge using the Python SDK:
 
 ```python
 from dotenv import load_dotenv
-from identityservice.sdk import IdentityPlatformSdk as Sdk
+from identityservice.sdk import IdentityServiceSdk as Sdk
 
 load_dotenv()
 
@@ -112,14 +112,14 @@ When using the Python SDK for `TBAC`, you need to provide in your environment th
 
 ##### Invoke using HTTPX Auth Class
 
-For HTTPX-based applications, you can use the `IdentityPlatformAuth` class to integrate `TBAC`. This class provides an easy way to authorize Agentic Services and manage access tokens.
+For HTTPX-based applications, you can use the `IdentityServiceAuth` class to integrate `TBAC`. This class provides an easy way to authorize Agentic Services and manage access tokens.
 
 ```python
 # Other imports
-from identityservice.auth.httpx import IdentityPlatformAuth
+from identityservice.auth.httpx import IdentityServiceAuth
 
 timeout = httpx.Timeout(connect=None, read=None, write=None, pool=None)
-auth = IdentityPlatformAuth() # Instantiate the auth class
+auth = IdentityServiceAuth() # Instantiate the auth class
 async with httpx.AsyncClient(
 timeout=timeout, auth=auth
 ) as httpx_client:
@@ -131,13 +131,13 @@ You can see this class fully implemented in our [Financial Agentic Service](http
 
 ##### Authorize using the A2A Starlette/FastAPI auth middleware
 
-For A2A (Agent-to-Agent) based applications using Starlette, you can use the `IdentityPlatformA2AAuthMiddleware` to integrate `TBAC`. This middleware automatically handles authorization for incoming requests:
+For A2A (Agent-to-Agent) based applications using Starlette, you can use the `IdentityServiceA2AAuthMiddleware` to integrate `TBAC`. This middleware automatically handles authorization for incoming requests:
 
 - **Define a security scheme in your A2A Card**
 
 ```python
 # Define auth scheme
-AUTH_SCHEME = "IdentityPlatformAuthScheme"
+AUTH_SCHEME = "IdentityServiceAuthScheme"
 auth_scheme = HTTPAuthSecurityScheme(
   scheme="bearer",
   bearerFormat="JWT",
@@ -160,14 +160,14 @@ try:
 
 ```python
 # Other imports
-from identityservice.auth.starlette import IdentityPlatformA2AMiddleware
+from identityservice.auth.starlette import IdentityServiceA2AMiddleware
 
 # Start server
 app = server.build()
 
-# Add IdentityPlatformMiddleware for authentication
+# Add IdentityServiceMiddleware for authentication
 app.add_middleware(
-    IdentityPlatformA2AMiddleware, # Define the middleware
+    IdentityServiceA2AMiddleware, # Define the middleware
     agent_card=agent_card,
     public_paths=["/.well-known/agent.json"],
 )
@@ -189,15 +189,15 @@ When using the Python SDK for `TBAC`, you need to provide in your environment th
 
 ##### MCP ClientSession using HTTPX Auth Class
 
-For HTTPX-based applications, you can use the `IdentityPlatformAuth` class to integrate `TBAC`. This class provides an easy way to authorize Agentic Services and manage access tokens.
-Bellow you can find an example of how to use the `IdentityPlatformAuth` class with HTTPX and Langchain's `MultiServerMCPClient` MCP adapter:
+For HTTPX-based applications, you can use the `IdentityServiceAuth` class to integrate `TBAC`. This class provides an easy way to authorize Agentic Services and manage access tokens.
+Bellow you can find an example of how to use the `IdentityServiceAuth` class with HTTPX and Langchain's `MultiServerMCPClient` MCP adapter:
 
 ```python
 # Other imports
-from identityservice.auth.httpx import IdentityPlatformAuth
+from identityservice.auth.httpx import IdentityServiceAuth
 
 # Init auth
-auth = IdentityPlatformAuth()
+auth = IdentityServiceAuth()
 
 # Load tools from the MCP Server
 client = MultiServerMCPClient(
@@ -205,7 +205,7 @@ client = MultiServerMCPClient(
         "some_mcp_server": {
             "url": mcp_server_url,
             "transport": "streamable_http",
-            "auth": auth, # Use the IdentityPlatformAuth for authorization
+            "auth": auth, # Use the IdentityServiceAuth for authorization
         },
     }
 )
@@ -225,13 +225,13 @@ Another example using MCP's `ClientSession` and `streamablehttp_client`:
 from mcp.client.streamable_http import streamablehttp_client
 from mcp import ClientSession
 
-from identityservice.auth.httpx import IdentityPlatformAuth
+from identityservice.auth.httpx import IdentityServiceAuth
 
 # Init auth
-auth = IdentityPlatformAuth()
+auth = IdentityServiceAuth()
 
 async def main():
-    # Connect to a streamable HTTP server using the IdentityPlatformAuth for authorization
+    # Connect to a streamable HTTP server using the IdentityServiceAuth for authorization
     async with streamablehttp_client("example/mcp", auth=auth) as (
         read_stream,
         write_stream,
@@ -247,18 +247,18 @@ async def main():
 
 ##### Authorize using the MCP Starlette/FastAPI auth middleware
 
-For MCP(Model Context Protocl) based applications using Starlette, you can use the `IdentityPlatformMCPAuthMiddleware` to integrate `TBAC`. This middleware automatically handles authorization for incoming requests:
+For MCP(Model Context Protocl) based applications using Starlette, you can use the `IdentityServiceMCPAuthMiddleware` to integrate `TBAC`. This middleware automatically handles authorization for incoming requests:
 
 ```python
 # Other imports
-from identityservice.auth.starlette import IdentityPlatformMCPMiddleware
+from identityservice.auth.starlette import IdentityServiceMCPMiddleware
 
 # Start server
 app = server.build()
 
-# Add IdentityPlatformMiddleware for authentication
+# Add IdentityServiceMiddleware for authentication
 app.add_middleware(
-    IdentityPlatformMCPMiddleware, # Define the middleware
+    IdentityServiceMCPMiddleware, # Define the middleware
 )
 
 # Run the application
@@ -269,19 +269,19 @@ You can see this class fully implemented in our [Currency Exchange MCP Server](h
 
 ### Standard Starlette/FastAPI auth middleware
 
-We also support standard Starlette or FastAPI applications, you can use the `IdentityPlatformAuthMiddleware` to integrate `TBAC`. This middleware automatically handles authorization for incoming requests.
+We also support standard Starlette or FastAPI applications, you can use the `IdentityServiceAuthMiddleware` to integrate `TBAC`. This middleware automatically handles authorization for incoming requests.
 
 ```python
 # Other imports
 from starlette.applications import Starlette
 from starlette.middleware import Middleware
 
-from identityservice.auth.starlette import IdentityPlatformAuthMiddleware
+from identityservice.auth.starlette import IdentityServiceAuthMiddleware
 
 routes = ...
 
 middleware = [
-  IdentityPlatformAuthMiddleware(public_paths=[])
+  IdentityServiceAuthMiddleware(public_paths=[])
 ]
 
 app = Starlette(routes=routes, middleware=middleware)

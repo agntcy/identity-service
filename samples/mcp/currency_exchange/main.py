@@ -9,7 +9,7 @@ import httpx
 import uvicorn
 from dotenv import load_dotenv
 from fastapi import FastAPI
-from identityservice.auth.starlette import IdentityPlatformMCPMiddleware
+from identityservice.auth.starlette import IdentityServiceMCPMiddleware
 from mcp.server.fastmcp import FastMCP
 
 load_dotenv()
@@ -98,9 +98,9 @@ def get_currency_exchange_rate(
 
 app = FastAPI(lifespan=lambda _: mcp.session_manager.run())
 
-# Add IdentityPlatformMiddleware for authentication
+# Add IdentityServiceMiddleware for authentication
 app.add_middleware(
-    IdentityPlatformMCPMiddleware,
+    IdentityServiceMCPMiddleware,
 )
 
 app.mount("/", mcp.streamable_http_app())

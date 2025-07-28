@@ -14,7 +14,7 @@ from a2a.server.tasks import InMemoryTaskStore
 from a2a.types import (AgentCapabilities, AgentCard, AgentSkill,
                        HTTPAuthSecurityScheme, SecurityScheme)
 from dotenv import load_dotenv
-from identityservice.auth.starlette import IdentityPlatformA2AMiddleware
+from identityservice.auth.starlette import IdentityServiceA2AMiddleware
 
 from agent import CurrencyAgent
 from agent_executor import CurrencyAgentExecutor
@@ -40,7 +40,7 @@ def main(host, port, azure_openai_endpoint, azure_openai_api_key, currency_excha
     """Starts the Currency Agent server."""
 
     # Define auth scheme
-    AUTH_SCHEME = "IdentityPlatformAuthScheme"
+    AUTH_SCHEME = "IdentityServiceAuthScheme"
     auth_scheme = HTTPAuthSecurityScheme(
         scheme="bearer",
         bearerFormat="JWT",
@@ -87,9 +87,9 @@ def main(host, port, azure_openai_endpoint, azure_openai_api_key, currency_excha
         # Start server
         app = server.build()
 
-        # Add IdentityPlatformMiddleware for authentication
+        # Add IdentityServiceMiddleware for authentication
         app.add_middleware(
-            IdentityPlatformA2AMiddleware,
+            IdentityServiceA2AMiddleware,
             agent_card=agent_card,
             public_paths=["/.well-known/agent.json"],
         )
