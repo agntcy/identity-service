@@ -3,11 +3,11 @@
 
 syntax = "proto3";
 
-package agoutshift.identity.service.v1alpha1;
+package outshift.identity.service.v1alpha1;
 
-import "outshift/identity/service/v1alpha1/settings.proto";
 import "google/api/annotations.proto";
 import "google/api/field_behavior.proto";
+import "outshift/identity/service/v1alpha1/settings.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
 option go_package = "github.com/outshift/identity-service/api/server/outshift/identity/service/v1alpha1;identity_service_sdk_go";

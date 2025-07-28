@@ -3,7 +3,7 @@
 
 syntax = "proto3";
 
-package agoutshift.identity.service.shared.v1alpha1;
+package outshift.identity.service.shared.v1alpha1;
 
 option go_package = "github.com/outshift/identity-service/api/server/outshift/identity/service/shared/v1alpha1;identity_service_shared_sdk_go";
 

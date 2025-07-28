@@ -6,7 +6,7 @@
 set -o errexit
 set -o nounset
 
-PROTO_PACKAGE_NAME="agoutshift.identity.service.v1alpha1"
+PROTO_PACKAGE_NAME="outshift.identity.service.v1alpha1"
 PROTO_PLATFORM_FILE_PATH="outshift/identity/service/v1alpha1/"
 
 get_module_name_from_package() {

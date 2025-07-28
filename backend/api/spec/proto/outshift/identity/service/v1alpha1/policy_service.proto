@@ -3,12 +3,12 @@
 
 syntax = "proto3";
 
-package agoutshift.identity.service.v1alpha1;
+package outshift.identity.service.v1alpha1;
 
-import "outshift/identity/service/shared/v1alpha1/pagination.proto";
-import "outshift/identity/service/v1alpha1/policy.proto";
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
+import "outshift/identity/service/shared/v1alpha1/pagination.proto";
+import "outshift/identity/service/v1alpha1/policy.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
 option go_package = "github.com/outshift/identity-service/api/server/outshift/identity/service/v1alpha1;identity_service_sdk_go";
@@ -162,7 +162,8 @@ message ListPoliciesRequest {
   repeated string rules_for_app_ids = 5;
 }
 
-message GetPoliciesCountRequest {}
+message GetPoliciesCountRequest {
+}
 
 message GetPoliciesCountResponse {
   // The total count

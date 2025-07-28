@@ -5,7 +5,7 @@
 
 syntax = "proto3";
 
-package agoutshift.identity.service.v1alpha1;
+package outshift.identity.service.v1alpha1;
 
 import "google/protobuf/timestamp.proto";
 
