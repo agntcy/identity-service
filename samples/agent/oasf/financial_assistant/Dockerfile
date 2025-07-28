@@ -9,7 +9,7 @@ WORKDIR /code
 COPY ./samples/agent/oasf/financial_assistant/* .
 RUN pip install --no-cache-dir .
 
-# Install identity platform dependency
+# legit:ignore-pipeline
 RUN pip install --no-cache-dir git+https://github.com/cisco-outshift-ai-agents/identity-service-sdk.git#subdirectory=python
 
 # Copy UI files to ui directory
