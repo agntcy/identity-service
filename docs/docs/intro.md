@@ -4,16 +4,16 @@ sidebar_position: 1
 
 # Overview
 
-Welcome to the comprehensive documentation for **Agent Identity Service**, a foundational service within the AGNTCY ecosystem designed for robust digital identity management. This section provides a high-level overview of Agent Identity Service's purpose, key functionalities, and how you can begin leveraging its capabilities.
+Welcome to the comprehensive documentation for **Outshift Agent Identity Service** (hereafter referred to as "Agent Identity Service"), a foundational service for robust digital identity management. This section provides a high-level overview of Agent Identity Service's purpose, key functionalities, and how you can begin leveraging its capabilities.
 
 ![Welcome](/img/overview.png)
 
-### What is Agent Identity?
+### What is the Agent Identity Service?
 
 Agent Identity Service serves as the central hub for managing and verifying digital identities for your Agentic Services. In today's interconnected digital landscape, secure and reliable identity management is paramount. Agent Identity Service addresses this need by providing a streamlined service to:
 
 - **Verify** the authenticity of existing identity badges.
-- **Register** new Agentic Services, establishing their unique identities within the AGNTCY framework.
+- **Register** new Agentic Services, establishing their unique identities.
 
 Whether you are integrating existing services or deploying new ones, Agent Identity Service ensures that all your components—including MCP Servers, A2A Agents, and OASF—are properly identified and managed.
 
@@ -57,7 +57,7 @@ This functionality empowers developers to establish new identities for their AI 
 
 Access to Agent Identity Service's full suite of features, particularly for creating and managing identities, requires user authentication.
 
-- **Log In**: If you already have an AGNTCY account, use the "**Log In**" option to access your dashboard and manage your Agentic Service identities.
+- **Log In**: If you already have an account, use the "**Log In**" option to access your dashboard and manage your Agentic Service identities.
 - **Sign Up**: If you are new to Agent Identity Service, select "**Sign Up**" to create a new account and begin your journey with secure identity management.
 
 For more in-depth instructions, tutorials, and advanced configurations, please navigate through the specific sections of our comprehensive documentation.
