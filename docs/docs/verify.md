@@ -6,9 +6,9 @@ sidebar_position: 4
 
 ## Using the User Interface
 
-The "Verify Identity" screen allows users to verify a digital badge, typically a JOSE (JSON Object Signing and Encryption) enveloped badge. This screen is designed for quick and secure verification, and **does not require the user to be logged in** to access or utilize its features.
+The "Verify Identity" screen allows users to verify a digital badge, typically a JOSE (JSON Object Signing and Encryption) enveloped badge. This screen is designed for quick and secure verification.
 
-1.  **Access the Screen**: Navigate to the "Verify Identity" page. No login is required.
+1.  **Access the Screen**: Navigate to the "Verify Identity" page.
 
 ![Verify Identity](/img/verify-identity.png)
 
@@ -27,9 +27,9 @@ We support both the JOSE enveloped badge or the full JSON badge content that you
 
 ## Using the Python SDK
 
-To verify an identity using the AGNTICY Python SDK, follow these steps:
+To verify an identity using the Python SDK, follow these steps:
 
-1. **Install the Python SDK:** Ensure you have the AGNTICY Python SDK installed. Refer to [this API section](/docs/api#python-sdk) of the documentation for detailed installation instructions.
+1. **Install the Python SDK:** Ensure you have the Python SDK installed. Refer to [this API section](/docs/api#python-sdk) of the documentation for detailed installation instructions.
 
 2. **Use the following code snippet:**
 
