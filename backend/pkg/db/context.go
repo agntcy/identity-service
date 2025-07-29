@@ -48,7 +48,7 @@ func (d *context) Connect() error {
 	// Check SSL
 	sslMode := "disable"
 	if d.useSSL {
-		sslMode = "enable"
+		sslMode = "require" // https://www.postgresql.org/docs/current/libpq-ssl.html#LIBPQ-SSL-PROTECTION
 	}
 
 	// Set dsn
