@@ -6,9 +6,9 @@ sidebar_position: 6
 
 :::info[Endpoints]
 
-- **REST API Endpoint**: https://api.identity-service.staging.outshift.ai
-- **gRPC API Endpoint**: api.grpc.identity-service.staging.outshift.ai
-- **UI Endpoint**: https://identity.staging.outshift.ai
+- **REST API Endpoint**: https://api.identity-service.outshift.com
+- **gRPC API Endpoint**: api.grpc.identity-service.outshift.com
+- **UI Endpoint**: https://agent-identity.outshift.com
 
 :::
 
