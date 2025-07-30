@@ -256,6 +256,9 @@ self.addEventListener('notificationclick', (event) => {
   }
 });
 
+// Disable Workbox dev logs in production
+self.__WB_DISABLE_DEV_LOGS = true
+
 void self.skipWaiting();
 clientsClaim();
 

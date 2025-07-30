@@ -47,12 +47,14 @@ export const RulesContent = ({policy}: {policy?: Policy}) => {
 
   const {analyticsTrack} = useAnalytics();
 
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+  const handleClick = (event: React.MouseEvent<HTMLElement>, rule: Rule) => {
     setAnchorEl(event.currentTarget);
+    setTempRule(rule);
   };
 
   const handleClose = () => {
     setAnchorEl(null);
+    setTempRule(undefined);
   };
 
   const handlePaginationRulesChange = useCallback((event: React.ChangeEvent<unknown>, value: number) => {
@@ -209,7 +211,7 @@ export const RulesContent = ({policy}: {policy?: Policy}) => {
                               width: '24px',
                               height: '24px'
                             })}
-                            onClick={handleClick}
+                            onClick={(e) => handleClick(e, rule)}
                           >
                             <EllipsisVerticalIcon className="h-4 w-4" />
                           </IconButton>
@@ -227,7 +229,6 @@ export const RulesContent = ({policy}: {policy?: Policy}) => {
                             sx={{display: 'flex', alignItems: 'center', gap: '8px'}}
                             onClick={() => {
                               analyticsTrack('CLICK_EDIT_RULE_POLICY');
-                              setTempRule(rule);
                               setIsEdit(true);
                             }}
                           >
@@ -240,7 +241,6 @@ export const RulesContent = ({policy}: {policy?: Policy}) => {
                             key="delete-rule"
                             onClick={() => {
                               analyticsTrack('CLICK_DELETE_RULE_POLICY');
-                              setTempRule(rule);
                               setIsDelete(true);
                             }}
                             sx={{display: 'flex', alignItems: 'center', gap: '8px'}}
