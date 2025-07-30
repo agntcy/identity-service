@@ -19,8 +19,7 @@ import {useShallow} from 'zustand/react/shallow';
 import {NotificationSettings} from '../shared/notifications/notification-settings';
 import {useGetDevices} from '@/queries';
 import {GlobalSearch} from '../shared/helpers/global-search';
-import OutshiftLogo from '@/assets/outshift-color.svg?react';
-import OutshiftIcon from '@/assets/outshift.svg?react';
+import Logo from '@/assets/header/header.svg?react';
 
 export const Header = () => {
   const {isMobile} = useWindowSize();
@@ -42,23 +41,9 @@ export const Header = () => {
   return (
     <>
       <SparkHeader
-        title={
-          <Link to={PATHS.dashboard} className="mt-1 lg:ml-1">
-            <Typography
-              variant="h1"
-              fontWeight={700}
-              fontSize={isMobile ? '16px' : '18px'}
-              lineHeight="18px"
-              sx={() => ({color: 'black'})}
-            >
-              Agent Identity Service
-            </Typography>
-          </Link>
-        }
         logo={
           <Link to={PATHS.dashboard}>
-            <OutshiftLogo className="h-[44px] hidden lg:block" />
-            <OutshiftIcon className="h-[44px] w-[44px] lg:hidden" />
+            <Logo className="w-[250px] md:w-[300px] lg:w-full" />
           </Link>
         }
         customSearchNode={
