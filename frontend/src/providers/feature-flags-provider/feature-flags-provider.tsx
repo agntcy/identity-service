@@ -38,7 +38,7 @@ export const FeatureFlagsProvider = ({children}: React.PropsWithChildren) => {
         clean();
         entitlements.forEach((entitlement, index, array) => {
           if (entitlement === EntitlementsSchema.Enum.TBAC) {
-            setFeatureFlags({isTbacEnable: true});
+            setFeatureFlags({isTbacEnabled: true});
           }
           if (index === array.length - 1) {
             setIsReady(true);

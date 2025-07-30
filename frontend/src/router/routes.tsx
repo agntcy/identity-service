@@ -8,15 +8,17 @@ import {useCallback, useMemo} from 'react';
 import {PATHS} from './paths';
 import {NodeRoute} from '@/components/router/node-route';
 import NotFound from '@/components/router/404';
-import Layout from '@/components/layout/layout';
 import {Navigate} from 'react-router-dom';
 import React from 'react';
 import {SecureRoute} from '@/components/router/secure-route';
 import {Loading} from '@/components/ui/loading';
-import {SettingsProvider} from '@/providers/settings-provider/settings-provider';
 import {useFeatureFlagsStore, useSettingsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
 import {useWindowSize} from '@/hooks';
+
+// Components
+const Layout = React.lazy(() => import('@/components/layout/layout'));
+const SettingsProvider = React.lazy(() => import('@/providers/settings-provider/settings-provider'));
 
 // Welcome
 const Welcome = React.lazy(() => import('@/pages/welcome/welcome'));
@@ -106,9 +108,11 @@ export const generateRoutes = (routes: Route[]): Route[] => {
       path: PATHS.basePath,
       element: (
         <SecureRoute redirectPath={PATHS.welcome}>
-          <SettingsProvider>
-            <Layout />
-          </SettingsProvider>
+          <NodeRoute>
+            <SettingsProvider>
+              <Layout />
+            </SettingsProvider>
+          </NodeRoute>
         </SecureRoute>
       ),
       children: [
@@ -134,9 +138,9 @@ export const useRoutes = () => {
     }))
   );
 
-  const {isTbacEnable} = useFeatureFlagsStore(
+  const {isTbacEnabled} = useFeatureFlagsStore(
     useShallow((store) => ({
-      isTbacEnable: store.featureFlags.isTbacEnable
+      isTbacEnabled: store.featureFlags.isTbacEnabled
     }))
   );
 
@@ -215,7 +219,7 @@ export const useRoutes = () => {
                     <PoliciesAssignedToAgenticService />
                   </NodeRoute>
                 ),
-                disabled: !isTbacEnable
+                disabled: !isTbacEnabled
               },
               {
                 path: PATHS.agenticServices.info.policiesUsedBy,
@@ -224,7 +228,7 @@ export const useRoutes = () => {
                     <PoliciesUsedByAgenticService />
                   </NodeRoute>
                 ),
-                disabled: !isTbacEnable
+                disabled: !isTbacEnabled
               }
             ]
           },
@@ -262,7 +266,7 @@ export const useRoutes = () => {
       },
       {
         path: PATHS.policies.base,
-        disabled: !isTbacEnable || isMobile,
+        disabled: !isTbacEnabled || isMobile,
         children: [
           {
             index: true,
@@ -343,7 +347,7 @@ export const useRoutes = () => {
           },
           {
             path: PATHS.settings.devices.base,
-            disabled: !isTbacEnable || isMobile,
+            disabled: !isTbacEnabled || isMobile,
             children: [
               {
                 index: true,
@@ -410,7 +414,7 @@ export const useRoutes = () => {
         ]
       }
     ];
-  }, [isAdmin, isEmptyIdp, isMobile, isTbacEnable]);
+  }, [isAdmin, isEmptyIdp, isMobile, isTbacEnabled]);
 
   const removeDisabledRoutes = useCallback((routes: Route[]): Route[] => {
     return routes

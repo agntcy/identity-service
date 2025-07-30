@@ -107,9 +107,9 @@ const UserSection = ({
     }))
   );
 
-  const {isTbacEnable} = useFeatureFlagsStore(
+  const {isTbacEnabled} = useFeatureFlagsStore(
     useShallow((store) => ({
-      isTbacEnable: store.featureFlags.isTbacEnable
+      isTbacEnabled: store.featureFlags.isTbacEnabled
     }))
   );
 
@@ -213,7 +213,7 @@ const UserSection = ({
           </div>
         </div>
         <Divider />
-        {isMobile && isTbacEnable && hasDevices && (
+        {isMobile && isTbacEnabled && hasDevices && (
           <MenuItem
             disableRipple
             onClick={() => {

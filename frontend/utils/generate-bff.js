@@ -83,7 +83,7 @@ const path = require('path');
 
     // Generate the code
     shell.echo(chalk.grey('Generating the code...'));
-    shell.rm('-rf', '../agntcy');
+    shell.rm('-rf', '../outshift');
     shell.rm('-rf', '../src/api/generated');
     shell.cd('../../backend/api/spec');
     doGenerateAll();

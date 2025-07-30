@@ -33,9 +33,9 @@ const InfoAgenticService: React.FC = () => {
 
   const {analyticsTrack} = useAnalytics();
 
-  const {isTbacEnable} = useFeatureFlagsStore(
+  const {isTbacEnabled} = useFeatureFlagsStore(
     useShallow((state) => ({
-      isTbacEnable: state.featureFlags.isTbacEnable
+      isTbacEnabled: state.featureFlags.isTbacEnabled
     }))
   );
 
@@ -98,7 +98,7 @@ const InfoAgenticService: React.FC = () => {
           : [])
       ]}
       subNav={
-        isTbacEnable
+        isTbacEnabled
           ? [
               {
                 label: 'About',
@@ -189,7 +189,7 @@ const InfoAgenticService: React.FC = () => {
           description={
             <>
               Are you sure you want to delete this agentic service <b>{data?.name}</b>? This action cannot be undone.
-              {isTbacEnable && (
+              {isTbacEnabled && (
                 <>
                   <br />
                   <br />
