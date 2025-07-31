@@ -59,7 +59,7 @@ const AgentServices: React.FC = () => {
           actionTitle: 'Connect Identity Provider',
           actionCallback: () => {
             analyticsTrack('CLICK_NAVIGATION_CONNECT_IDENTITY_PROVIDER');
-            void navigate(PATHS.settings.identityProvider.connection, {replace: true});
+            void navigate(PATHS.settings.identityProvider.connection);
           }
         }}
       >

@@ -157,7 +157,7 @@ export const ListAgenticServices = () => {
                   type: row.original.type
                 });
                 const path = generatePath(PATHS.agenticServices.info.base, {id: row.original?.id});
-                void navigate(path, {replace: true});
+                void navigate(path);
               }
             })}
             renderTopToolbar={() => (
@@ -205,7 +205,7 @@ export const ListAgenticServices = () => {
                       type: row.original.type
                     });
                     const path = generatePath(PATHS.verifyIdentity.info, {id: row.original.id});
-                    void navigate(path, {replace: true});
+                    void navigate(path);
                   }}
                   sx={{display: 'flex', alignItems: 'center', gap: '8px'}}
                 >
@@ -237,7 +237,7 @@ export const ListAgenticServices = () => {
                       type: row.original.type
                     });
                     const path = generatePath(PATHS.agenticServices.edit, {id: row.original.id});
-                    void navigate(path, {replace: true});
+                    void navigate(path);
                   }}
                   sx={{display: 'flex', alignItems: 'center', gap: '8px'}}
                 >
@@ -282,7 +282,7 @@ export const ListAgenticServices = () => {
                   actionTitle="Add Agentic Service"
                   actionCallback={() => {
                     analyticsTrack('CLICK_NAVIGATION_ADD_AGENTIC_SERVICE');
-                    void navigate(PATHS.agenticServices.add, {replace: true});
+                    void navigate(PATHS.agenticServices.add);
                   }}
                   actionButtonProps={{
                     sx: {fontWeight: '600 !important'},
