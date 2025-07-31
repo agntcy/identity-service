@@ -17,28 +17,29 @@ These keys are essential for authenticating and securing interactions between Ag
 ### Accessing API Keys
 
 1. **Navigate to API Keys**:
-From the "Settings" menu on the left-hand navigation panel, select the "API Key" tab.
+   From the "Settings" menu on the left-hand navigation panel, select the "API Key" tab.
 
-![Access API Keys Section](/img/Settings_APIKeys_00.png)
+![Access API Keys Section](/img/Settings_APIKey_00.png)
 
 ### Creating an API Key
 
 1. **Create API Key:**
-If no API Keys are found, click on the "+ Create API Key" button to initiate the creation process.
-![Create API Key](/img/Settings_APIKeys_01.png)
+   If no API Keys are found, click on the "+ Create API Key" button to initiate the creation process.
+   ![Create API Key](/img/Settings_APIKey_01.png)
 
 2. **Generate API Key:**
-Upon clicking "Create API Key," the system will generate a new API Key for use.
-![Generate API Key](/img/Settings_APIKeys_02.png)
+   Upon clicking "Create API Key," the system will generate a new API Key for use.
+   ![Generate API Key](/img/Settings_APIKey_02.png)
 
 ### Managing API Keys
-1. **Viewing API Keys:**
-The API Keys tab will display all existing keys. Each key can be copied for use by clicking the copy icon next to it.
-![Generate API Key](/img/Settings_APIKeys_02.png)
 
-3. **Refresh API Key:**
-To refresh an existing API Key, click the "Refresh" button. This will generate a new key and invalidate the old one.
-![Generate API Key](/img/Settings_APIKeys_02.png)
+1. **Viewing API Keys:**
+   The API Keys tab will display all existing keys. Each key can be copied for use by clicking the copy icon next to it.
+   ![Generate API Key](/img/Settings_APIKey_02.png)
+
+2. **Refresh API Key:**
+   To refresh an existing API Key, click the "Refresh" button. This will generate a new key and invalidate the old one.
+   ![Generate API Key](/img/Settings_APIKey_02.png)
 
 ## Devices
 
@@ -49,8 +50,9 @@ This guide details the process of adding a new device and managing existing ones
 ### Adding a New Device
 
 Follow these steps to register and configure your device:
- 
+
 1. **Access the Devices Section:**
+
 - From the main dashboard, locate and click on Settings in the left-hand navigation menu.
 - Within the Settings section, select Devices.
 - On the Devices management page, click the + Add Device button to initiate the connection wizard.
@@ -58,6 +60,7 @@ Follow these steps to register and configure your device:
 ![Access Devices Section](/img/Settings_DEVICE_01.png)
 
 2. **Onboard Your Device:**
+
 - A pop-up window titled "Onboard Device" will appear, displaying a QR code. This QR code is unique to your session and is used to link your mobile device.
 
 ![Device popup](/img/Settings_DEVICE_02.png)
@@ -67,6 +70,7 @@ Follow these steps to register and configure your device:
 ![Mobile device scan](/img/Settings_DEVICE_03.png)
 
 3. **Enable Notifications on Your Mobile Device:**
+
 - After scanning the QR code, your mobile device will open a web page. Initially, you might see a "Notification Status: Push Notifications Not Supported" message.
 
 ![Mobile page](/img/Settings_DEVICE_04.png)
@@ -93,10 +97,12 @@ Follow these steps to register and configure your device:
 Once a device is successfully added, you can view and manage it from the Devices section in the Agent Identity Service portal.
 
 1. **Viewing Registered Devices:**
+
 - The Devices dashboard will now display a list of your registered devices, including details such as the device name (e.g., "iPhone (iOS 18.5) - Safari"), User ID, and the "Created At" timestamp.
-![Mobile Device Registered](/img/Settings_DEVICE_10.png)
+  ![Mobile Device Registered](/img/Settings_DEVICE_10.png)
 
 3. **Testing Device Notifications:**
+
 - To ensure your device is receiving notifications correctly, you can send a test notification.
 - Locate the desired device in the list and click the options menu next to its entry.
 
@@ -108,13 +114,13 @@ Once a device is successfully added, you can view and manage it from the Devices
 ![Mobile Device notification testing](/img/Settings_DEVICE_12.png)
 
 5. **Deleting a Device:**
+
 - If a device is no longer needed or you wish to remove it from your account, you can delete it.
 - From the options menu next to the device entry, select Delete.
 
 ![Mobile Device Deletion](/img/Settings_DEVICE_11.png)
 
 - Confirm the deletion when prompted.
-
 
 ## Organizations & Users
 
@@ -124,37 +130,36 @@ This section is crucial for defining user access and maintaining organizational 
 ### Accessing Organizations & Users
 
 1. **Navigate to Organizations & Users:**
-From the "Settings" menu, select the "Organizations & Users" tab to view existing organizations.
+   From the "Settings" menu, select the "Organizations & Users" tab to view existing organizations.
 
-![Access Orgs and Users Section](/img/Settings_APIKeys_00.png)
+![Access Orgs and Users Section](/img/Settings_APIKey_00.png)
 
 ### Creating and Managing Organizations
 
 1. **Create New Organization:**
-Click on the "+ New Organization" button to start the organization creation wizard.
+   Click on the "+ New Organization" button to start the organization creation wizard.
 
 ![Create new organization](/img/Settings_ORG_01.png)
 
 2. **Confirmation and Creation:**
-A dialog box will appear asking for confirmation to create a new organization. Click "Continue" to proceed.
+   A dialog box will appear asking for confirmation to create a new organization. Click "Continue" to proceed.
 
 ![Create new organization](/img/Settings_ORG_02.png)
 
 3. **Organization Listing:**
-Once created, the organization will appear in the list. You can manage existing organizations by selecting options such as "Invite," "Edit," or "Delete."
+   Once created, the organization will appear in the list. You can manage existing organizations by selecting options such as "Invite," "Edit," or "Delete."
 
 ![Create new organization](/img/Settings_ORG_03.png)
 
 ### Inviting Users
 
 1. **Invite User:**
-Click on "Invite User" to open the user invitation interface.
-![Invite user](/img/Settings_ORG_04.png)
+   Click on "Invite User" to open the user invitation interface.
+   ![Invite user](/img/Settings_ORG_04.png)
 
-3. **Enter User Details:**
-Provide the email of the user you wish to invite and click "Invite" to send an invitation.
+2. **Enter User Details:**
+   Provide the email of the user you wish to invite and click "Invite" to send an invitation.
 
 ![Invite user details](/img/Settings_ORG_05.png)
-
 
 ### Managing Users
