@@ -13,13 +13,14 @@ import {useFeatureFlagsStore} from '@/store';
 
 const TIME_OUT = 10; //seconds
 
+const ENABLE_FEATURE_FLAGS = false;
+
 export const FeatureFlagsProvider = ({children}: React.PropsWithChildren) => {
   const [controller, setController] = useState<boolean>(true);
 
-  const {setFeatureFlags, setIsReady, clean} = useFeatureFlagsStore(
+  const {setFeatureFlags, clean} = useFeatureFlagsStore(
     useShallow((store) => ({
       setFeatureFlags: store.setFeatureFlags,
-      setIsReady: store.setIsReady,
       clean: store.clean
     }))
   );
@@ -28,36 +29,39 @@ export const FeatureFlagsProvider = ({children}: React.PropsWithChildren) => {
   const {data, isLoading, isError} = useGetTenant(authInfo?.user?.tenant?.id || '');
 
   useEffect(() => {
-    if (!authInfo || !authInfo.isAuthenticated) {
-      setIsReady(true);
-      return setController(false);
-    }
-    if (data) {
-      const entitlements = data.entitlements;
-      if (entitlements && entitlements.length > 0) {
-        clean();
-        entitlements.forEach((entitlement, index, array) => {
-          if (entitlement === EntitlementsSchema.Enum.TBAC) {
-            setFeatureFlags({isTbacEnabled: true});
-          }
-          if (index === array.length - 1) {
-            setIsReady(true);
-            setController(false);
-          }
-        });
+    if (ENABLE_FEATURE_FLAGS) {
+      if (!authInfo || !authInfo.isAuthenticated) {
+        return setController(false);
+      }
+      if (data) {
+        const entitlements = data.entitlements;
+        if (entitlements && entitlements.length > 0) {
+          clean();
+          entitlements.forEach((entitlement, index, array) => {
+            if (entitlement === EntitlementsSchema.Enum.TBAC) {
+              setFeatureFlags({isTbacEnabled: true});
+            }
+            if (index === array.length - 1) {
+              setController(false);
+            }
+          });
+        } else {
+          setController(false);
+        }
       } else {
-        setIsReady(true);
-        setController(false);
+        if (!authInfo?.isAuthenticated || isError) {
+          setController(false);
+        }
       }
     } else {
-      if (!authInfo?.isAuthenticated || isError) {
-        setIsReady(true);
-        setController(false);
-      }
+      setController(false);
     }
-  }, [authInfo, clean, data, isError, setFeatureFlags, setIsReady]);
+  }, [authInfo, clean, data, isError, setFeatureFlags]);
 
   useEffect(() => {
+    if (!ENABLE_FEATURE_FLAGS) {
+      return;
+    }
     const timer = setTimeout(() => {
       setController(false);
     }, TIME_OUT * 1000);
@@ -65,6 +69,10 @@ export const FeatureFlagsProvider = ({children}: React.PropsWithChildren) => {
       clearTimeout(timer);
     };
   }, []);
+
+  if (!ENABLE_FEATURE_FLAGS) {
+    return children;
+  }
 
   if (isLoading || controller) {
     return <Loading />;
