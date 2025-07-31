@@ -73,13 +73,19 @@ Follow these steps to register and configure your device:
 
 - After scanning the QR code, your mobile device will open a web page. Initially, you might see a "Notification Status: Push Notifications Not Supported" message.
 
+<div style={{maxWidth: '300px'}}>
 ![Mobile page](/img/Settings_DEVICE_04.png)
+</div>
 
 - To enable notifications, you may need to add the Agent Identity Service web page to your mobile device's home screen. Access your browser's options (e.g., the share icon on iOS) and select "Add to Home Screen".
 
+<div style={{maxWidth: '300px'}}>
 ![Mobile Device Home setting](/img/Settings_DEVICE_05.png)
+</div>
 
+<div style={{maxWidth: '300px'}}>
 ![Mobile Device Home setting](/img/Settings_DEVICE_06.png)
+</div>
 
 - Confirm the addition. An icon for the Agent Identity Service will appear on your home screen.
 
@@ -87,11 +93,15 @@ Follow these steps to register and configure your device:
 
 - Open the newly created home screen application. You will be prompted to authorize notifications. Select Authorize.
 
-![Mobile Device Home authorize notifications](/img/Settings_DEVICE_08.png)
+<div style={{maxWidth: '300px'}}>
+![Mobile Device notification status](/img/Settings_DEVICE_09.png)
+</div>
 
 - Upon successful authorization, the "Notification Status" on the web page should update to "Push Notifications Enabled".
 
-![Mobile Device notification status](/img/Settings_DEVICE_09.png)
+<div style={{maxWidth: '300px'}}>
+![Mobile Device notification status](/img/Settings_DEVICE_08.png)
+</div>
 
 ### Managing Registered Devices
 
@@ -100,7 +110,8 @@ Once a device is successfully added, you can view and manage it from the Devices
 1. **Viewing Registered Devices:**
 
 - The Devices dashboard will now display a list of your registered devices, including details such as the device name (e.g., "iPhone (iOS 18.5) - Safari"), User ID, and the "Created At" timestamp.
-  ![Mobile Device Registered](/img/Settings_DEVICE_10.png)
+
+![Mobile Device Registered](/img/Settings_DEVICE_10.png)
 
 3. **Testing Device Notifications:**
 
@@ -156,7 +167,8 @@ This section is crucial for defining user access and maintaining organizational 
 
 1. **Invite User:**
    Click on "Invite User" to open the user invitation interface.
-   ![Invite user](/img/Settings_ORG_04.png)
+
+![Invite user](/img/Settings_ORG_04.png)
 
 2. **Enter User Details:**
    Provide the email of the user you wish to invite and click "Invite" to send an invitation.
