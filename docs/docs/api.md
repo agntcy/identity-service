@@ -6,8 +6,8 @@ sidebar_position: 6
 
 :::info[Endpoints]
 
-- **REST API Endpoint**: https://api.identity-service.outshift.com
-- **gRPC API Endpoint**: api.grpc.identity-service.outshift.com
+- **REST API Endpoint**: https://api.agent-identity.outshift.com
+- **gRPC API Endpoint**: api.grpc.agent-identity.outshift.com
 - **UI Endpoint**: https://agent-identity.outshift.com
 
 :::
