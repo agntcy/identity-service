@@ -15,7 +15,7 @@ type FeatureFlagsStore = {
 };
 
 const initialState: FeatureFlags = {
-  isTbacEnable: false
+  isTbacEnabled: false
 };
 
 export const useFeatureFlagsStore = create<FeatureFlagsStore>(

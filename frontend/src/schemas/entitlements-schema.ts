@@ -9,6 +9,6 @@ export const EntitlementsSchema = z.enum(['TBAC']);
 export type Entitlements = z.infer<typeof EntitlementsSchema>;
 
 export const FeatureFlagsSchemas = z.object({
-  isTbacEnable: z.boolean()
+  isTbacEnabled: z.boolean()
 });
 export type FeatureFlags = z.infer<typeof FeatureFlagsSchemas>;

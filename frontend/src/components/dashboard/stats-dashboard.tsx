@@ -19,9 +19,9 @@ import {WelcomeName} from './welcome-name';
 import {useAnalytics} from '@/hooks';
 
 export const StatsDashboard = () => {
-  const {isTbacEnable} = useFeatureFlagsStore(
+  const {isTbacEnabled} = useFeatureFlagsStore(
     useShallow((state) => ({
-      isTbacEnable: state.featureFlags.isTbacEnable
+      isTbacEnabled: state.featureFlags.isTbacEnabled
     }))
   );
 
@@ -29,7 +29,7 @@ export const StatsDashboard = () => {
 
   const {data: dataSettings, isLoading: isLoadingSettings} = useGetSettings();
   const {data: dataAgenticServices, isLoading: isLoadingAgenticServices} = useGetAgenticServiceTotalCount();
-  const {data: dataPolicies, isLoading: isLoadingPolicies} = useGetPoliciesCount({enabled: isTbacEnable});
+  const {data: dataPolicies, isLoading: isLoadingPolicies} = useGetPoliciesCount({enabled: isTbacEnabled});
 
   const statsInfo: Stat[] = useMemo(() => {
     const temp = [
@@ -48,7 +48,7 @@ export const StatsDashboard = () => {
         loading: isLoadingAgenticServices
       }
     ];
-    if (isTbacEnable) {
+    if (isTbacEnabled) {
       temp.push({
         value: <Link to={PATHS.policies.base}>{dataPolicies?.total || 0}</Link>,
         title: 'Total Policies',
@@ -63,7 +63,7 @@ export const StatsDashboard = () => {
     isLoadingAgenticServices,
     isLoadingPolicies,
     isLoadingSettings,
-    isTbacEnable
+    isTbacEnabled
   ]);
 
   return (
@@ -74,7 +74,7 @@ export const StatsDashboard = () => {
           <StatsCard
             className={cn(
               'grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 p-4',
-              !isTbacEnable && 'md:grid-cols-2 lg:grid-cols-2'
+              !isTbacEnabled && 'md:grid-cols-2 lg:grid-cols-2'
             )}
             stats={statsInfo}
           />
@@ -132,7 +132,7 @@ export const StatsDashboard = () => {
               </div>
             </div>
           </div>
-          {isTbacEnable && (
+          {isTbacEnabled && (
             <div className="card-flex-group min-w-[384px] bg-[#FBFCFE] rounded-[8px] flex-col flex justify-start items-center px-20 py-12 hidden md:block">
               <div className="flex flex-col justify-between min-h-[150px]">
                 <div>

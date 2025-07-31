@@ -11,7 +11,7 @@ import {useSettingsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
 import {Loading} from '@/components/ui/loading';
 
-export const SettingsProvider = ({children}: {children: React.ReactNode}) => {
+const SettingsProvider = ({children}: {children: React.ReactNode}) => {
   const {data: dataSettings, isError: isErrorSettings, isLoading: isLoadingSettings} = useGetSettings();
   const {data: dataSession, isError: isErrorSession, isLoading: isLoadingSession} = useGetSession();
 
@@ -68,3 +68,5 @@ export const SettingsProvider = ({children}: {children: React.ReactNode}) => {
 
   return children;
 };
+
+export default SettingsProvider;

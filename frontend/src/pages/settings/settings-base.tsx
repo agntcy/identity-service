@@ -11,9 +11,9 @@ import {Outlet} from 'react-router-dom';
 import {useShallow} from 'zustand/react/shallow';
 
 const SettingsBase: React.FC = () => {
-  const {isTbacEnable} = useFeatureFlagsStore(
+  const {isTbacEnabled} = useFeatureFlagsStore(
     useShallow((state) => ({
-      isTbacEnable: state.featureFlags.isTbacEnable
+      isTbacEnabled: state.featureFlags.isTbacEnabled
     }))
   );
 
@@ -27,7 +27,7 @@ const SettingsBase: React.FC = () => {
         label: 'API Key',
         href: PATHS.settings.apiKey
       },
-      ...(isTbacEnable
+      ...(isTbacEnabled
         ? [
             {
               label: 'Devices',
@@ -40,7 +40,7 @@ const SettingsBase: React.FC = () => {
         href: PATHS.settings.organizationsAndUsers.base
       }
     ];
-  }, [isTbacEnable]);
+  }, [isTbacEnabled]);
 
   return <Outlet context={{subNav}} />;
 };

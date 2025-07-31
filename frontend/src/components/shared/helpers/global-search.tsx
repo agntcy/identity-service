@@ -67,9 +67,9 @@ export const GlobalSearch = () => {
 
   const navigate = useNavigate();
 
-  const {isTbacEnable} = useFeatureFlagsStore(
+  const {isTbacEnabled} = useFeatureFlagsStore(
     useShallow((state) => ({
-      isTbacEnable: state.featureFlags.isTbacEnable
+      isTbacEnabled: state.featureFlags.isTbacEnabled
     }))
   );
 
@@ -86,7 +86,7 @@ export const GlobalSearch = () => {
       query: query,
       size: SIZE
     },
-    enable: !!query && isTbacEnable
+    enable: !!query && isTbacEnabled
   });
 
   const dataSources = useMemo(() => {
@@ -96,7 +96,7 @@ export const GlobalSearch = () => {
         items: dataAgenticServices?.apps?.sort((a, b) => (a.name ?? '').localeCompare(b.name ?? '')) || [],
         renderer: (item: GlobalSearchOptionType) => <ApplicationListItem app={item} />
       },
-      ...(isTbacEnable
+      ...(isTbacEnabled
         ? [
             {
               id: 'policies',
@@ -106,14 +106,14 @@ export const GlobalSearch = () => {
           ]
         : [])
     ];
-  }, [dataAgenticServices?.apps, dataPolicies?.policies, isTbacEnable]);
+  }, [dataAgenticServices?.apps, dataPolicies?.policies, isTbacEnabled]);
 
   const dataLabels = useMemo(() => {
     return {
       'agentic-services': 'Agentic Services',
-      ...(isTbacEnable ? {policies: 'Policies'} : {})
+      ...(isTbacEnabled ? {policies: 'Policies'} : {})
     };
-  }, [isTbacEnable]);
+  }, [isTbacEnabled]);
 
   const options = useMemo(() => {
     return dataSources.reduce((acc, ds) => {
@@ -160,7 +160,7 @@ export const GlobalSearch = () => {
       onChange={handleChange}
       onSearch={handleChangeQuery}
       serverFiltering={true}
-      loading={loadingAgenticServices || (isTbacEnable && loadingPolicies)}
+      loading={loadingAgenticServices || (isTbacEnabled && loadingPolicies)}
       options={options as any}
       labels={dataLabels}
     />

@@ -55,9 +55,9 @@ export const ListAgenticServices = () => {
 
   const {analyticsTrack} = useAnalytics();
 
-  const {isTbacEnable} = useFeatureFlagsStore(
+  const {isTbacEnabled} = useFeatureFlagsStore(
     useShallow((state) => ({
-      isTbacEnable: state.featureFlags.isTbacEnable
+      isTbacEnabled: state.featureFlags.isTbacEnabled
     }))
   );
 
@@ -301,7 +301,7 @@ export const ListAgenticServices = () => {
         description={
           <>
             Are you sure you want to delete this agentic service <b>{tempApp?.name}</b>? This action cannot be undone.
-            {isTbacEnable && (
+            {isTbacEnabled && (
               <>
                 <br />
                 <br />
