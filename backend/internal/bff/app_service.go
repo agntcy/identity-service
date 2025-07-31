@@ -10,6 +10,7 @@ import (
 	"slices"
 	"time"
 
+	"github.com/google/uuid"
 	appcore "github.com/outshift/identity-service/internal/core/app"
 	apptypes "github.com/outshift/identity-service/internal/core/app/types"
 	badgecore "github.com/outshift/identity-service/internal/core/badge"
@@ -24,7 +25,6 @@ import (
 	"github.com/outshift/identity-service/internal/pkg/ptrutil"
 	"github.com/outshift/identity-service/internal/pkg/strutil"
 	"github.com/outshift/identity-service/pkg/log"
-	"github.com/google/uuid"
 )
 
 type AppService interface {
@@ -175,9 +175,11 @@ func (s *appService) UpdateApp(
 		return nil, err
 	}
 
-	_, err = s.taskService.UpdateOrCreateForAgent(ctx, app.ID, ptrutil.DerefStr(app.Name))
-	if err != nil {
-		return nil, fmt.Errorf("error trying to update tasks: %w", err)
+	if storedApp.Type != apptypes.APP_TYPE_MCP_SERVER {
+		_, err = s.taskService.UpdateOrCreateForAgent(ctx, app.ID, ptrutil.DerefStr(app.Name))
+		if err != nil {
+			return nil, fmt.Errorf("error trying to update tasks: %w", err)
+		}
 	}
 
 	apiKey, err := s.iamClient.GetAppApiKey(ctx, app.ID)
