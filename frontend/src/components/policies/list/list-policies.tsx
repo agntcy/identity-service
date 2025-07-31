@@ -124,7 +124,7 @@ export const ListPolicies = () => {
                 }
                 analyticsTrack('CLICK_NAVIGATION_POLICY_INFO');
                 const path = generatePath(PATHS.policies.info, {id: row.original?.id});
-                void navigate(path, {replace: true});
+                void navigate(path);
               }
             })}
             renderTopToolbar={() => (
@@ -165,7 +165,7 @@ export const ListPolicies = () => {
                   onClick={() => {
                     analyticsTrack('CLICK_NAVIGATION_EDIT_POLICY');
                     const path = generatePath(PATHS.policies.edit, {id: row.original?.id});
-                    void navigate(path, {replace: true});
+                    void navigate(path);
                   }}
                 >
                   <PencilIcon className="w-4 h-4" color="#062242" />
@@ -207,7 +207,7 @@ export const ListPolicies = () => {
                   actionTitle="Add Policy"
                   actionCallback={() => {
                     analyticsTrack('CLICK_NAVIGATION_ADD_POLICY');
-                    void navigate(PATHS.policies.create, {replace: true});
+                    void navigate(PATHS.policies.create);
                   }}
                   actionButtonProps={{
                     sx: {fontWeight: '600 !important'},

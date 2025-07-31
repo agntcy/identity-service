@@ -143,7 +143,7 @@ const InfoAgenticService: React.FC = () => {
                   type: data?.type
                 });
                 const path = generatePath(PATHS.agenticServices.edit, {id: id || ''});
-                void navigate(path, {replace: true});
+                void navigate(path);
               }}
             >
               Edit

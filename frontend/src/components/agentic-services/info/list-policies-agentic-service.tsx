@@ -91,7 +91,7 @@ export const ListPoliciesAgenticService = ({appId, mode = 'assigned'}: {appId?: 
                   return;
                 }
                 const path = generatePath(PATHS.policies.info, {id: row.original?.id});
-                void navigate(path, {replace: true});
+                void navigate(path);
               }
             })}
             renderTopToolbar={() => (
@@ -141,7 +141,7 @@ export const ListPoliciesAgenticService = ({appId, mode = 'assigned'}: {appId?: 
                   containerProps={{paddingBottom: '40px'}}
                   actionTitle="Add Policy"
                   actionCallback={() => {
-                    void navigate(PATHS.policies.create, {replace: true});
+                    void navigate(PATHS.policies.create);
                   }}
                   actionButtonProps={{
                     sx: {fontWeight: '600 !important'},

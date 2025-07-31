@@ -164,7 +164,7 @@ export const BadgeCard = ({
                     sx={{padding: 0, fontWeight: '600 !important'}}
                     onClick={() => {
                       const path = generatePath(PATHS.verifyIdentity.info, {id: app?.id || ''});
-                      void navigate(path, {replace: true});
+                      void navigate(path);
                     }}
                   >
                     Verify Identity

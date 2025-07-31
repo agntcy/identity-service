@@ -152,7 +152,7 @@ export const ListOrganizations = () => {
                   const path = generatePath(PATHS.settings.organizationsAndUsers.info, {
                     id: row.original?.id
                   });
-                  void navigate(path, {replace: true});
+                  void navigate(path);
                 }
               }
             })}
@@ -197,7 +197,7 @@ export const ListOrganizations = () => {
                     const path = generatePath(PATHS.settings.organizationsAndUsers.edit, {
                       id: row.original.id
                     });
-                    void navigate(path, {replace: true});
+                    void navigate(path);
                   }}
                   sx={{display: 'flex', alignItems: 'center', gap: '8px'}}
                 >
