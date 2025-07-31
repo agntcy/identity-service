@@ -78,6 +78,7 @@ Follow these steps to register and configure your device:
 - To enable notifications, you may need to add the Agent Identity Service web page to your mobile device's home screen. Access your browser's options (e.g., the share icon on iOS) and select "Add to Home Screen".
 
 ![Mobile Device Home setting](/img/Settings_DEVICE_05.png)
+
 ![Mobile Device Home setting](/img/Settings_DEVICE_06.png)
 
 - Confirm the addition. An icon for the Agent Identity Service will appear on your home screen.
