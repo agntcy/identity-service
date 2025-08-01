@@ -106,14 +106,14 @@ export const useGetPolicyRules = ({
   });
 };
 
-export const useGetRule = (policyId?: string, ruleId?: string) => {
+export const useGetRule = (policyId?: string, ruleId?: string, enabled = true) => {
   return useQuery({
     queryKey: ['get-rule', policyId, ruleId],
     queryFn: async () => {
       const {data} = await PolicyAPI.getRule(policyId!, ruleId!);
       return data;
     },
-    enabled: !!policyId && !!ruleId
+    enabled: !!policyId && !!ruleId && enabled
   });
 };
 
