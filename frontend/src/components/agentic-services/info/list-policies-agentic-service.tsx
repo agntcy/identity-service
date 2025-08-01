@@ -9,7 +9,7 @@ import {useGetPolicies} from '@/queries';
 import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
 import {Card} from '@/components/ui/card';
 import {cn} from '@/lib/utils';
-import {generatePath, useNavigate} from 'react-router-dom';
+import {generatePath, useNavigate, useSearchParams} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
 import {FilterSections} from '@/components/ui/filters-sections';
 import {PlusIcon} from 'lucide-react';
@@ -18,9 +18,10 @@ import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-render
 import {PoliciesColumns} from './policies-columns';
 
 export const ListPoliciesAgenticService = ({appId, mode = 'assigned'}: {appId?: string; mode: 'assigned' | 'used-by'}) => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [pagination, setPagination] = useState<MRT_PaginationState>({
-    pageIndex: 0,
-    pageSize: 15
+    pageIndex: Number(searchParams.get('page')) || 0,
+    pageSize: Number(searchParams.get('size')) || 15
   });
   const [sorting, setSorting] = useState<MRT_SortingState>([
     {
@@ -28,7 +29,7 @@ export const ListPoliciesAgenticService = ({appId, mode = 'assigned'}: {appId?: 
       desc: true
     }
   ]);
-  const [query, setQuery] = useState<string | undefined>(undefined);
+  const [query, setQuery] = useState<string | undefined>(searchParams.get('query') || undefined);
 
   const {data, isLoading, error, refetch} = useGetPolicies({
     query: {
@@ -54,9 +55,32 @@ export const ListPoliciesAgenticService = ({appId, mode = 'assigned'}: {appId?: 
   const handleQueryChange = useCallback(
     (value: string) => {
       setQuery(value);
-      setPagination((prev) => ({...prev, pageIndex: 0}));
+      const newSearchParams = new URLSearchParams(searchParams);
+      if (value) {
+        newSearchParams.set('query', value);
+      } else {
+        newSearchParams.delete('query');
+      }
+      setSearchParams(newSearchParams);
     },
-    [setQuery, setPagination]
+    [searchParams, setSearchParams]
+  );
+
+  const handlePaginationChange = useCallback(
+    (updaterOrValue: MRT_PaginationState | ((old: MRT_PaginationState) => MRT_PaginationState)) => {
+      setPagination(updaterOrValue);
+      const newSearchParams = new URLSearchParams(searchParams);
+      if (typeof updaterOrValue === 'function') {
+        const newPagination = updaterOrValue(pagination);
+        newSearchParams.set('page', String(newPagination.pageIndex + 1));
+        newSearchParams.set('size', String(newPagination.pageSize));
+      } else {
+        newSearchParams.set('page', String(updaterOrValue.pageIndex + 1));
+        newSearchParams.set('size', String(updaterOrValue.pageSize));
+      }
+      setSearchParams(newSearchParams);
+    },
+    [pagination, searchParams, setSearchParams]
   );
 
   return (
@@ -119,7 +143,7 @@ export const ListPoliciesAgenticService = ({appId, mode = 'assigned'}: {appId?: 
             }}
             manualPagination={true}
             manualFiltering={true}
-            onPaginationChange={setPagination}
+            onPaginationChange={handlePaginationChange}
             rowCount={Number(data?.pagination?.total) || 0}
             rowsPerPageOptions={[1, 15, 25, 50, 100]}
             state={{pagination, sorting}}

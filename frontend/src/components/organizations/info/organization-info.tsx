@@ -20,6 +20,7 @@ import {ConfirmModal} from '@/components/ui/confirm-modal';
 import {useDeleteUser} from '@/mutations';
 import {InviteUserModal} from '@/components/shared/organizations/invite-user-modal';
 import {FilterSections} from '@/components/ui/filters-sections';
+import {useSearchParams} from 'react-router-dom';
 
 export const OrganizationInfo = ({
   tenant,
@@ -30,10 +31,11 @@ export const OrganizationInfo = ({
   showInviteUserModal: boolean;
   onChangeInviteUser: (value: boolean) => void;
 }) => {
-  const [query, setQuery] = useState<string | undefined>(undefined);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [query, setQuery] = useState<string | undefined>(searchParams.get('query') || undefined);
   const [pagination, setPagination] = useState<MRT_PaginationState>({
-    pageIndex: 0,
-    pageSize: 10
+    pageIndex: Number(searchParams.get('page')) || 0,
+    pageSize: Number(searchParams.get('size')) || 10
   });
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
   const [groupId, setGroupId] = useState<string | undefined>();
@@ -103,8 +105,32 @@ export const OrganizationInfo = ({
   const handleQueryChange = useCallback(
     (value: string) => {
       setQuery(value);
+      const newSearchParams = new URLSearchParams(searchParams);
+      if (value) {
+        newSearchParams.set('query', value);
+      } else {
+        newSearchParams.delete('query');
+      }
+      setSearchParams(newSearchParams);
     },
-    [setQuery]
+    [searchParams, setSearchParams]
+  );
+
+  const handlePaginationChange = useCallback(
+    (updaterOrValue: MRT_PaginationState | ((old: MRT_PaginationState) => MRT_PaginationState)) => {
+      setPagination(updaterOrValue);
+      const newSearchParams = new URLSearchParams(searchParams);
+      if (typeof updaterOrValue === 'function') {
+        const newPagination = updaterOrValue(pagination);
+        newSearchParams.set('page', String(newPagination.pageIndex + 1));
+        newSearchParams.set('size', String(newPagination.pageSize));
+      } else {
+        newSearchParams.set('page', String(updaterOrValue.pageIndex + 1));
+        newSearchParams.set('size', String(updaterOrValue.pageSize));
+      }
+      setSearchParams(newSearchParams);
+    },
+    [pagination, searchParams, setSearchParams]
   );
 
   return (
@@ -147,7 +173,7 @@ export const OrganizationInfo = ({
                 border: '1px solid #D5DFF7'
               }
             }}
-            onPaginationChange={setPagination}
+            onPaginationChange={handlePaginationChange}
             rowCount={dataCount}
             rowsPerPageOptions={[1, 10, 25, 50, 100]}
             state={{pagination, sorting}}

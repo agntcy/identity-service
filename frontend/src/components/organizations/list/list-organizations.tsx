@@ -14,7 +14,7 @@ import {Typography} from '@mui/material';
 import {PencilIcon, Trash2Icon, UserRoundPlusIcon} from 'lucide-react';
 import {cn} from '@/lib/utils';
 import {useAnalytics, useAuth} from '@/hooks';
-import {generatePath, useNavigate} from 'react-router-dom';
+import {generatePath, useNavigate, useSearchParams} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
 import {useDeleteTenant} from '@/mutations';
 import {ConfirmModal} from '@/components/ui/confirm-modal';
@@ -24,10 +24,11 @@ import {InviteUserModal} from '@/components/shared/organizations/invite-user-mod
 import {FilterSections} from '@/components/ui/filters-sections';
 
 export const ListOrganizations = () => {
-  const [query, setQuery] = useState<string | undefined>(undefined);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [query, setQuery] = useState<string | undefined>(searchParams.get('query') || undefined);
   const [pagination, setPagination] = useState<MRT_PaginationState>({
-    pageIndex: 0,
-    pageSize: 10
+    pageIndex: Number(searchParams.get('page')) || 0,
+    pageSize: Number(searchParams.get('size')) || 10
   });
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
   const [tenantId, setTenantId] = useState<string | undefined>(undefined);
@@ -100,7 +101,24 @@ export const ListOrganizations = () => {
     (value: string) => {
       setQuery(value);
     },
-    [setQuery]
+    []
+  );
+
+  const handlePaginationChange = useCallback(
+    (updaterOrValue: MRT_PaginationState | ((old: MRT_PaginationState) => MRT_PaginationState)) => {
+      setPagination(updaterOrValue);
+      // const newSearchParams = new URLSearchParams(searchParams);
+      // if (typeof updaterOrValue === 'function') {
+      //   const newPagination = updaterOrValue(pagination);
+      //   newSearchParams.set('page', String(newPagination.pageIndex + 1));
+      //   newSearchParams.set('size', String(newPagination.pageSize));
+      // } else {
+      //   newSearchParams.set('page', String(updaterOrValue.pageIndex + 1));
+      //   newSearchParams.set('size', String(updaterOrValue.pageSize));
+      // }
+      // setSearchParams(newSearchParams);
+    },
+    []
   );
 
   return (
@@ -166,7 +184,7 @@ export const ListOrganizations = () => {
                 border: '1px solid #D5DFF7'
               }
             }}
-            onPaginationChange={setPagination}
+            onPaginationChange={handlePaginationChange}
             rowCount={dataCount}
             rowsPerPageOptions={[1, 10, 25, 50, 100]}
             state={{pagination, sorting}}

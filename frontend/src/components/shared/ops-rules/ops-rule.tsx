@@ -41,9 +41,9 @@ export const OpsRule = ({policy, rule, isDelete, isEdit, isAdd, onClose}: OpsRul
     onClose?.();
   }, [onClose]);
 
-  if ((isError || !policy || !rule) && !isAdd) {
-    return;
-  }
+  // if ((isError || !policy || !rule) && !isAdd) {
+  //   return;
+  // }
 
   if (isLoading) {
     return (

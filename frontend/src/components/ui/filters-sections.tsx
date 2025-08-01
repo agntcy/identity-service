@@ -129,6 +129,11 @@ const CustomDropdown = <T,>({treeData, onSelectValues, isSearchFieldEnabled, ...
         width: 'fit-content',
         height: 'fit-content'
       }}
+      buttonProps={{
+        style: {
+          height: '36px'
+        }
+      }}
       {...props}
     />
   );
