@@ -28,12 +28,14 @@ const CellAgenticService = ({row}: {row: {original: Task}}) => {
   }
 
   return (
-    <Link href={generatePath(PATHS.agenticServices.info.base, {id: row.original.appId || ''})}>
+    <Tag size={GeneralSize.Small}>
       <div className="flex items-center gap-2">
         <AgenticServiceType type={data?.type} showLabel={false} />
-        <Typography variant="body2">{data?.name ?? 'Not provided'}</Typography>
+        <Link href={generatePath(PATHS.agenticServices.info.base, {id: row.original.appId || ''})}>
+          <Typography variant="body2">{data?.name ?? 'Not provided'}</Typography>
+        </Link>
       </div>
-    </Link>
+    </Tag>
   );
 };
 
