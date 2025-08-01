@@ -28,10 +28,12 @@ const CellAgenticService = ({row}: {row: {original: Policy}}) => {
   }
 
   return (
-    <div className="flex items-center gap-2">
-      <AgenticServiceType type={data?.type} showLabel={false} />
-      <Typography variant="body2">{data?.name ?? 'Not provided'}</Typography>
-    </div>
+    <Tag size={GeneralSize.Small}>
+      <div className="flex items-center gap-2">
+        <AgenticServiceType type={data?.type} showLabel={false} />
+        <Typography variant="body2">{data?.name ?? 'Not provided'}</Typography>
+      </div>
+    </Tag>
   );
 };
 
