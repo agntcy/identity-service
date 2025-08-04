@@ -21,13 +21,14 @@ import {RuleAction} from '@/types/api/policy';
 import {RuleFormValues} from '@/schemas/rule-schema';
 import {TagActionTask} from '@/components/shared/policies/tag-action-task';
 import {AppType} from '@/types/api/app';
+import {ROWS_PER_PAGE_OPTION, DEFAULT_ROWS_PER_PAGE} from '@/constants/pagination';
 
 const PAGE_SIZE = 5;
 
 export const PolicyReview = () => {
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: 0,
-    pageSize: 15
+    pageSize: DEFAULT_ROWS_PER_PAGE
   });
   const [pageRules, setPageRules] = useState(1);
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
@@ -165,7 +166,7 @@ export const PolicyReview = () => {
         onPaginationChange={setPagination}
         onSortingChange={setSorting}
         rowCount={dataTask.length}
-        rowsPerPageOptions={[1, 15, 25, 50, 100]}
+        rowsPerPageOptions={ROWS_PER_PAGE_OPTION}
         state={{pagination, sorting}}
         title={{label: 'Tasks', count: dataTask.length}}
         muiBottomToolbarProps={{

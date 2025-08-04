@@ -86,7 +86,7 @@ export const GlobalSearch = () => {
       query: query,
       size: SIZE
     },
-    enable: !!query && isTbacEnabled
+    enabled: !!query && isTbacEnabled
   });
 
   const dataSources = useMemo(() => {

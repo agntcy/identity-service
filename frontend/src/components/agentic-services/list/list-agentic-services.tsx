@@ -23,12 +23,13 @@ import {useFeatureFlagsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
 import {useAnalytics} from '@/hooks';
 import {BadgeModalForm} from '@/components/shared/agentic-services/badge-modal-form';
+import {DEFAULT_ROWS_PER_PAGE, ROWS_PER_PAGE_OPTION} from '@/constants/pagination';
 
 export const ListAgenticServices = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: Number(searchParams.get('page')) || 0,
-    pageSize: Number(searchParams.get('size')) || 15
+    pageSize: Number(searchParams.get('size')) || DEFAULT_ROWS_PER_PAGE
   });
   const [sorting, setSorting] = useState<MRT_SortingState>([
     {
@@ -74,22 +75,22 @@ export const ListAgenticServices = () => {
         value: AppType.APP_TYPE_AGENT_A2A,
         valueFormatter: () => 'A2A Agent',
         isSelectable: true,
-        isSelected: true
+        isSelected: appTypeFilters.includes(AppType.APP_TYPE_AGENT_A2A)
       },
       {
         value: AppType.APP_TYPE_AGENT_OASF,
         valueFormatter: () => 'OASF',
         isSelectable: true,
-        isSelected: true
+        isSelected: appTypeFilters.includes(AppType.APP_TYPE_AGENT_OASF)
       },
       {
         value: AppType.APP_TYPE_MCP_SERVER,
         valueFormatter: () => 'MCP Server',
         isSelectable: true,
-        isSelected: true
+        isSelected: appTypeFilters.includes(AppType.APP_TYPE_MCP_SERVER)
       }
     ];
-  }, []);
+  }, [appTypeFilters]);
 
   const handleQueryChange = useCallback(
     (value: string) => {
@@ -217,6 +218,9 @@ export const ListAgenticServices = () => {
                   }
                 ]}
                 isLoading={isLoading}
+                onClickRefresh={() => {
+                  void refetch();
+                }}
               />
             )}
             enableColumnResizing
@@ -233,7 +237,7 @@ export const ListAgenticServices = () => {
             manualFiltering={true}
             onPaginationChange={handlePaginationChange}
             rowCount={Number(data?.pagination?.total) || 0}
-            rowsPerPageOptions={[1, 15, 25, 50, 100]}
+            rowsPerPageOptions={ROWS_PER_PAGE_OPTION}
             state={{pagination, sorting}}
             onSortingChange={setSorting}
             renderRowActionMenuItems={({row}) => {

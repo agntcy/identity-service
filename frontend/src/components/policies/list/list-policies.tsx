@@ -20,12 +20,13 @@ import {Policy} from '@/types/api/policy';
 import {useDeletePolicy} from '@/mutations';
 import {ListRules} from '@/components/shared/list-rules/list-rules';
 import {useAnalytics} from '@/hooks';
+import {DEFAULT_ROWS_PER_PAGE, ROWS_PER_PAGE_OPTION} from '@/constants/pagination';
 
 export const ListPolicies = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: Number(searchParams.get('page')) || 0,
-    pageSize: Number(searchParams.get('size')) || 15
+    pageSize: Number(searchParams.get('size')) || DEFAULT_ROWS_PER_PAGE
   });
   const [sorting, setSorting] = useState<MRT_SortingState>([
     {
@@ -178,7 +179,7 @@ export const ListPolicies = () => {
             manualFiltering={true}
             onPaginationChange={handlePaginationChange}
             rowCount={Number(data?.pagination?.total) || 0}
-            rowsPerPageOptions={[1, 15, 25, 50, 100]}
+            rowsPerPageOptions={ROWS_PER_PAGE_OPTION}
             state={{pagination, sorting}}
             onSortingChange={setSorting}
             renderRowActionMenuItems={({row}) => {

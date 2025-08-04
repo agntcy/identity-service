@@ -9,7 +9,7 @@ import qs from 'qs';
 
 export const useGetPolicies = ({
   query,
-  enable = true
+  enabled = true
 }: {
   query?: {
     page?: number;
@@ -18,7 +18,7 @@ export const useGetPolicies = ({
     appIds?: string[];
     rulesForAppIds?: string[];
   };
-  enable?: boolean;
+  enabled?: boolean;
 }) => {
   return useQuery({
     queryKey: [
@@ -30,7 +30,7 @@ export const useGetPolicies = ({
         appIds: query?.appIds,
         rulesForAppIds: query?.rulesForAppIds
       },
-      enable
+      enabled
     ],
     queryFn: async () => {
       const {data} = await PolicyAPI.listPolicies(
@@ -49,7 +49,7 @@ export const useGetPolicies = ({
       );
       return data;
     },
-    enabled: enable !== false,
+    enabled: enabled !== false,
     placeholderData: keepPreviousData
   });
 };

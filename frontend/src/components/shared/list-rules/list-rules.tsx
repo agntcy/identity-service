@@ -16,11 +16,12 @@ import {RulesColumns} from './rules-columns';
 import {OpsRule} from '../ops-rules/ops-rule';
 import {Policy, Rule} from '@/types/api/policy';
 import {useAnalytics} from '@/hooks';
+import {ROWS_PER_PAGE_OPTION, DEFAULT_ROWS_PER_PAGE} from '@/constants/pagination';
 
 export const ListRules = ({policy, showRulesOps = false}: {policy?: Policy; showRulesOps?: boolean}) => {
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: 0,
-    pageSize: 15
+    pageSize: DEFAULT_ROWS_PER_PAGE
   });
   const [sorting, setSorting] = useState<MRT_SortingState>([
     {
@@ -103,7 +104,7 @@ export const ListRules = ({policy, showRulesOps = false}: {policy?: Policy; show
             manualFiltering={true}
             onPaginationChange={setPagination}
             rowCount={Number(data?.pagination?.total) || 0}
-            rowsPerPageOptions={[1, 15, 25, 50, 100]}
+            rowsPerPageOptions={ROWS_PER_PAGE_OPTION}
             state={{pagination, sorting}}
             onSortingChange={setSorting}
             muiBottomToolbarProps={{
