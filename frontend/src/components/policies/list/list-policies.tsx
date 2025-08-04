@@ -10,7 +10,6 @@ import {useGetPolicies} from '@/queries';
 import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
 import {PoliciesColumns} from './policies-columns';
 import {Card} from '@/components/ui/card';
-import {cn} from '@/lib/utils';
 import {generatePath, useNavigate, useSearchParams} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
 import {FilterSections} from '@/components/ui/filters-sections';
@@ -38,7 +37,7 @@ export const ListPolicies = () => {
   const [tempPolicy, setTempPolicy] = useState<Policy | undefined>(undefined);
   const [showActionsModal, setShowActionsModal] = useState<boolean>(false);
 
-  const {data, isLoading, error, refetch} = useGetPolicies({
+  const {data, isFetching, error, refetch} = useGetPolicies({
     query: {
       page: pagination.pageIndex + 1,
       size: pagination.pageSize,
@@ -131,11 +130,11 @@ export const ListPolicies = () => {
         }}
         useLoading={false}
       >
-        <Card className={cn(!isLoading && 'p-0')} variant="secondary">
+        <Card className="p-0" variant="secondary">
           <Table
             columns={PoliciesColumns()}
             data={dataPolicies}
-            isLoading={isLoading || deleteMutation.isPending}
+            isLoading={isFetching || deleteMutation.isPending}
             muiTableBodyRowProps={({row, isDetailPanel}) => ({
               sx: {
                 cursor: 'pointer',
@@ -160,7 +159,10 @@ export const ListPolicies = () => {
                   value: query,
                   onChangeCallback: handleQueryChange
                 }}
-                isLoading={isLoading}
+                isLoading={isFetching}
+                onClickRefresh={() => {
+                  void refetch();
+                }}
               />
             )}
             enableColumnResizing

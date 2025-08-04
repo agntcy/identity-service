@@ -18,7 +18,6 @@ import {App, AppType} from '@/types/api/app';
 import {CheckIcon, IdCardIcon, PencilIcon, PlusIcon, Trash2Icon} from 'lucide-react';
 import {ConfirmModal} from '@/components/ui/confirm-modal';
 import {useDeleteAgenticService} from '@/mutations';
-import {cn} from '@/lib/utils';
 import {useFeatureFlagsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
 import {useAnalytics} from '@/hooks';
@@ -50,7 +49,7 @@ export const ListAgenticServices = () => {
       : [AppType.APP_TYPE_AGENT_A2A, AppType.APP_TYPE_AGENT_OASF, AppType.APP_TYPE_MCP_SERVER]
   );
 
-  const {data, isLoading, error, refetch} = useGetAgenticServices({
+  const {data, isFetching, error, refetch} = useGetAgenticServices({
     page: pagination.pageIndex + 1,
     size: pagination.pageSize,
     query: query,
@@ -181,11 +180,11 @@ export const ListAgenticServices = () => {
         }}
         useLoading={false}
       >
-        <Card className={cn(!isLoading && 'p-0')} variant="secondary">
+        <Card className="p-0" variant="secondary">
           <Table
             columns={AgenticServiceColumns()}
             data={data?.apps || []}
-            isLoading={isLoading || deleteMutation.isPending}
+            isLoading={isFetching || deleteMutation.isPending}
             muiTableBodyRowProps={({row}) => ({
               sx: {
                 cursor: 'pointer',
@@ -217,7 +216,7 @@ export const ListAgenticServices = () => {
                     onSelectValues: handleTypeFilterChange
                   }
                 ]}
-                isLoading={isLoading}
+                isLoading={isFetching}
                 onClickRefresh={() => {
                   void refetch();
                 }}

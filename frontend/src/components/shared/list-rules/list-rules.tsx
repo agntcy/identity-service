@@ -9,7 +9,6 @@ import {Box, EmptyState, MenuItem, Table, Typography} from '@outshift/spark-desi
 import {useGetPolicyRules} from '@/queries';
 import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
 import {Card} from '@/components/ui/card';
-import {cn} from '@/lib/utils';
 import {FilterSections} from '@/components/ui/filters-sections';
 import {PencilIcon, PlusIcon, Trash2Icon} from 'lucide-react';
 import {RulesColumns} from './rules-columns';
@@ -35,7 +34,7 @@ export const ListRules = ({policy, showRulesOps = false}: {policy?: Policy; show
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [isAdd, setIsAdd] = useState<boolean>(false);
 
-  const {data, isLoading, error, refetch} = useGetPolicyRules({
+  const {data, isFetching, error, refetch} = useGetPolicyRules({
     policyId: policy?.id,
     query: {
       page: pagination.pageIndex + 1,
@@ -69,13 +68,13 @@ export const ListRules = ({policy, showRulesOps = false}: {policy?: Policy; show
         }}
         useLoading={false}
       >
-        <Card className={cn(!isLoading && 'p-0')} variant="secondary">
+        <Card className="p-0" variant="secondary">
           <Table
             enableColumnResizing
             densityCompact
             columns={RulesColumns()}
             data={data?.rules || []}
-            isLoading={isLoading}
+            isLoading={isFetching}
             muiTableBodyRowProps={() => ({
               sx: {cursor: 'default'}
             })}
@@ -88,7 +87,10 @@ export const ListRules = ({policy, showRulesOps = false}: {policy?: Policy; show
                   onChangeCallback: handleQueryChange
                 }}
                 sameLine
-                isLoading={isLoading}
+                isLoading={isFetching}
+                onClickRefresh={() => {
+                  void refetch();
+                }}
               />
             )}
             enableRowActions

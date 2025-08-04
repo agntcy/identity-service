@@ -9,7 +9,6 @@ import {MenuItem, Table, toast, Typography} from '@outshift/spark-design';
 import {useGetUsersGroup} from '@/queries';
 import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
 import {Card} from '@/components/ui/card';
-import {cn} from '@/lib/utils';
 import {TenantReponse} from '@/types/api/iam';
 import {UsersColumns} from './users-columns';
 import {Trash2Icon} from 'lucide-react';
@@ -45,7 +44,7 @@ export const OrganizationInfo = ({
 
   const {analyticsTrack} = useAnalytics();
 
-  const {data: dataUsers, isLoading: isLoadingUsers, error: errorUsers, refetch} = useGetUsersGroup(groupId || '');
+  const {data: dataUsers, isFetching: isLoadingUsers, error: errorUsers, refetch} = useGetUsersGroup(groupId || '');
 
   const {authInfo} = useAuth();
   const currentUserName = authInfo?.user?.username;
@@ -116,17 +115,18 @@ export const OrganizationInfo = ({
     <>
       <ConditionalQueryRenderer
         itemName="Users"
-        data={groupId && dataUsers?.users}
+        data={true}
         error={errorGroups || errorUsers}
-        isLoading={isLoadingGroups || isLoadingUsers}
+        isLoading={false}
         useRelativeLoader
         errorListStateProps={{
           actionCallback: () => {
             void refetch();
           }
         }}
+        useLoading={false}
       >
-        <Card className={cn(!(isLoadingGroups || isLoadingUsers) && 'p-0')} variant="secondary">
+        <Card className="p-0" variant="secondary">
           <Table
             columns={UsersColumns()}
             data={filterData}
@@ -140,6 +140,9 @@ export const OrganizationInfo = ({
                   onChangeCallback: handleQueryChange
                 }}
                 isLoading={isLoadingUsers || isLoadingGroups}
+                onClickRefresh={() => {
+                  void refetch();
+                }}
               />
             )}
             enableColumnResizing

@@ -16,7 +16,6 @@ import {QRCodeModal} from '../ui/qr-code-modal';
 import {Card} from '../ui/card';
 import {Box, MenuItem} from '@mui/material';
 import {BellIcon, PlusIcon, Trash2Icon} from 'lucide-react';
-import {cn} from '@/lib/utils';
 import {DevicesColumns} from './devices-columns';
 import {FilterSections} from '../ui/filters-sections';
 import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
@@ -40,7 +39,7 @@ export const ListDevices: React.FC = () => {
   const [tempDevice, setTempDevice] = useState<Device | undefined>();
   const [showActionsModal, setShowActionsModal] = useState<boolean>(false);
 
-  const {data, error, isLoading, refetch} = useGetDevices({
+  const {data, error, isFetching, refetch} = useGetDevices({
     page: pagination.pageIndex + 1,
     size: pagination.pageSize,
     query: query
@@ -197,11 +196,11 @@ export const ListDevices: React.FC = () => {
         }}
         useLoading={false}
       >
-        <Card className={cn(!isLoading && 'p-0')} variant="secondary">
+        <Card className="p-0" variant="secondary">
           <Table
             columns={DevicesColumns()}
             data={data?.devices || []}
-            isLoading={isLoading || deleteMutation.isPending}
+            isLoading={isFetching || deleteMutation.isPending}
             renderTopToolbar={() => (
               <FilterSections
                 title={`${dataCount ?? 0} ${dataCount > 1 ? 'Devices' : 'Device'}`}
@@ -210,7 +209,10 @@ export const ListDevices: React.FC = () => {
                   value: query,
                   onChangeCallback: handleQueryChange
                 }}
-                isLoading={isLoading}
+                isLoading={isFetching}
+                onClickRefresh={() => {
+                  void refetch();
+                }}
               />
             )}
             enableColumnResizing

@@ -12,7 +12,6 @@ import {OrganizationsColumns} from './organizations-columns';
 import {Card} from '@/components/ui/card';
 import {Typography} from '@mui/material';
 import {PencilIcon, Trash2Icon, UserRoundPlusIcon} from 'lucide-react';
-import {cn} from '@/lib/utils';
 import {useAnalytics, useAuth} from '@/hooks';
 import {generatePath, useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
@@ -35,7 +34,7 @@ export const ListOrganizations = () => {
   const [openActionsModal, setOpenActionsModal] = useState<boolean>(false);
   const [showInviteUserModal, setShowInviteUserModal] = useState<boolean>(false);
 
-  const {data, isLoading, refetch, error} = useGetTenants();
+  const {data, isFetching, refetch, error} = useGetTenants();
   const {authInfo, logout} = useAuth();
   const currentTenantId = authInfo?.user?.tenant?.id;
 
@@ -112,21 +111,22 @@ export const ListOrganizations = () => {
     <>
       <ConditionalQueryRenderer
         itemName="Organizations"
-        data={data?.tenants}
+        data={true}
         error={error}
-        isLoading={isLoading}
+        isLoading={false}
         useRelativeLoader
         errorListStateProps={{
           actionCallback: () => {
             void refetch();
           }
         }}
+        useLoading={false}
       >
-        <Card className={cn(!isLoading && 'p-0')} variant="secondary">
+        <Card className="p-0" variant="secondary">
           <Table
             columns={OrganizationsColumns()}
             data={filterData}
-            isLoading={isLoading}
+            isLoading={isFetching}
             renderTopToolbar={() => (
               <FilterSections
                 title={`${dataCount} ${dataCount > 1 ? 'Organizations' : 'Organization'}`}
@@ -135,7 +135,10 @@ export const ListOrganizations = () => {
                   value: query,
                   onChangeCallback: handleQueryChange
                 }}
-                isLoading={isLoading}
+                isLoading={isFetching}
+                onClickRefresh={() => {
+                  void refetch();
+                }}
               />
             )}
             muiTableBodyRowProps={({row}) => ({
