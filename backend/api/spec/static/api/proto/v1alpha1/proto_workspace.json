@@ -75,6 +75,56 @@
       "services": []
     },
     {
+      "name": "outshift/identity/service/shared/v1alpha1/sorting.proto",
+      "description": "",
+      "package": "outshift.identity.service.shared.v1alpha1",
+      "hasEnums": false,
+      "hasExtensions": false,
+      "hasMessages": true,
+      "hasServices": false,
+      "enums": [],
+      "extensions": [],
+      "messages": [
+        {
+          "name": "ColumnSort",
+          "longName": "ColumnSort",
+          "fullName": "outshift.identity.service.shared.v1alpha1.ColumnSort",
+          "description": "Sorting configuration for lists.",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "id",
+              "description": "The column ID to sort by",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            },
+            {
+              "name": "desc",
+              "description": "Whether to sort in descending order (true) or ascending order (false)",
+              "label": "",
+              "type": "bool",
+              "longType": "bool",
+              "fullType": "bool",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        }
+      ],
+      "services": []
+    },
+    {
       "name": "outshift/identity/service/v1alpha1/app.proto",
       "description": "",
       "package": "outshift.identity.service.v1alpha1",
@@ -1478,6 +1528,18 @@
               "type": "AppType",
               "longType": "AppType",
               "fullType": "outshift.identity.service.v1alpha1.AppType",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            },
+            {
+              "name": "sorting",
+              "description": "The sorting configuration",
+              "label": "repeated",
+              "type": "ColumnSort",
+              "longType": "outshift.identity.service.shared.v1alpha1.ColumnSort",
+              "fullType": "outshift.identity.service.shared.v1alpha1.ColumnSort",
               "ismap": false,
               "isoneof": false,
               "oneofdecl": "",

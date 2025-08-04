@@ -9,6 +9,7 @@ import "google/api/annotations.proto";
 import "google/api/client.proto";
 import "google/protobuf/empty.proto";
 import "outshift/identity/service/shared/v1alpha1/pagination.proto";
+import "outshift/identity/service/shared/v1alpha1/sorting.proto";
 import "outshift/identity/service/v1alpha1/app.proto";
 import "outshift/identity/service/v1alpha1/badge.proto";
 import "outshift/identity/service/v1alpha1/policy.proto";
@@ -125,6 +126,9 @@ message ListAppsRequest {
 
   // The app type filter
   repeated AppType types = 4;
+
+  // The sorting configuration
+  repeated outshift.identity.service.shared.v1alpha1.ColumnSort sorting = 5;
 }
 
 message CreateAppRequest {

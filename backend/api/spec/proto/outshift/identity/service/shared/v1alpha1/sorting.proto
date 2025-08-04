@@ -1,0 +1,17 @@
+// Copyright 2025 Cisco Systems, Inc. and its affiliates
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package outshift.identity.service.shared.v1alpha1;
+
+option go_package = "github.com/outshift/identity-service/api/server/outshift/identity/service/shared/v1alpha1;identity_service_shared_sdk_go";
+
+// Sorting configuration for lists.
+message ColumnSort {
+  // The column ID to sort by
+  string id = 1;
+
+  // Whether to sort in descending order (true) or ascending order (false)
+  bool desc = 2;
+}
