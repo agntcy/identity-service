@@ -16,15 +16,17 @@ import {QRCodeModal} from '../ui/qr-code-modal';
 import {Card} from '../ui/card';
 import {Box, MenuItem} from '@mui/material';
 import {BellIcon, PlusIcon, Trash2Icon} from 'lucide-react';
-import {cn} from '@/lib/utils';
 import {DevicesColumns} from './devices-columns';
 import {FilterSections} from '../ui/filters-sections';
 import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
+import {useSearchParams} from 'react-router-dom';
+import {DEFAULT_ROWS_PER_PAGE, ROWS_PER_PAGE_OPTION} from '@/constants/pagination';
 
 export const ListDevices: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [pagination, setPagination] = useState<MRT_PaginationState>({
-    pageIndex: 0,
-    pageSize: 15
+    pageIndex: Number(searchParams.get('page')) || 0,
+    pageSize: Number(searchParams.get('size')) || DEFAULT_ROWS_PER_PAGE
   });
   const [sorting, setSorting] = useState<MRT_SortingState>([
     {
@@ -32,12 +34,12 @@ export const ListDevices: React.FC = () => {
       desc: true
     }
   ]);
-  const [query, setQuery] = useState<string | undefined>(undefined);
+  const [query, setQuery] = useState<string | undefined>(searchParams.get('query') || undefined);
   const [openQrCodeModal, setQrCodeModal] = useState(false);
   const [tempDevice, setTempDevice] = useState<Device | undefined>();
   const [showActionsModal, setShowActionsModal] = useState<boolean>(false);
 
-  const {data, error, isLoading, refetch} = useGetDevices({
+  const {data, error, isFetching, refetch} = useGetDevices({
     page: pagination.pageIndex + 1,
     size: pagination.pageSize,
     query: query
@@ -139,14 +141,38 @@ export const ListDevices: React.FC = () => {
   const handleQueryChange = useCallback(
     (value: string) => {
       setQuery(value);
+      const newSearchParams = new URLSearchParams(searchParams);
+      if (value) {
+        newSearchParams.set('query', value);
+      } else {
+        newSearchParams.delete('query');
+      }
+      setSearchParams(newSearchParams);
     },
-    [setQuery]
+    [searchParams, setSearchParams]
   );
 
   const handleOnAddDevice = useCallback(() => {
     analyticsTrack('CLICK_ADD_DEVICE');
     addDeviceMutation.mutate({});
   }, [addDeviceMutation, analyticsTrack]);
+
+  const handlePaginationChange = useCallback(
+    (updaterOrValue: MRT_PaginationState | ((old: MRT_PaginationState) => MRT_PaginationState)) => {
+      setPagination(updaterOrValue);
+      const newSearchParams = new URLSearchParams(searchParams);
+      if (typeof updaterOrValue === 'function') {
+        const newPagination = updaterOrValue(pagination);
+        newSearchParams.set('page', String(newPagination.pageIndex + 1));
+        newSearchParams.set('size', String(newPagination.pageSize));
+      } else {
+        newSearchParams.set('page', String(updaterOrValue.pageIndex + 1));
+        newSearchParams.set('size', String(updaterOrValue.pageSize));
+      }
+      setSearchParams(newSearchParams);
+    },
+    [pagination, searchParams, setSearchParams]
+  );
 
   const handleOnTestDevice = useCallback(
     (id?: string) => {
@@ -170,11 +196,11 @@ export const ListDevices: React.FC = () => {
         }}
         useLoading={false}
       >
-        <Card className={cn(!isLoading && 'p-0')} variant="secondary">
+        <Card className="p-0" variant="secondary">
           <Table
             columns={DevicesColumns()}
             data={data?.devices || []}
-            isLoading={isLoading || deleteMutation.isPending}
+            isLoading={isFetching || deleteMutation.isPending}
             renderTopToolbar={() => (
               <FilterSections
                 title={`${dataCount ?? 0} ${dataCount > 1 ? 'Devices' : 'Device'}`}
@@ -183,7 +209,10 @@ export const ListDevices: React.FC = () => {
                   value: query,
                   onChangeCallback: handleQueryChange
                 }}
-                isLoading={isLoading}
+                isLoading={isFetching}
+                onClickRefresh={() => {
+                  void refetch();
+                }}
               />
             )}
             enableColumnResizing
@@ -198,9 +227,9 @@ export const ListDevices: React.FC = () => {
             }}
             manualPagination={true}
             manualFiltering={true}
-            onPaginationChange={setPagination}
+            onPaginationChange={handlePaginationChange}
             rowCount={Number(data?.pagination?.total) || 0}
-            rowsPerPageOptions={[1, 15, 25, 50, 100]}
+            rowsPerPageOptions={ROWS_PER_PAGE_OPTION}
             state={{pagination, sorting}}
             onSortingChange={setSorting}
             renderRowActionMenuItems={({row}) => {

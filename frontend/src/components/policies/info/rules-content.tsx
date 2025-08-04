@@ -19,6 +19,7 @@ import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-render
 import {useGetPolicyRules} from '@/queries';
 import {useAnalytics} from '@/hooks';
 import {ActionMenuItem, ActionsMenu} from '@/components/ui/actions-menu';
+import {DEFAULT_ROWS_PER_PAGE, ROWS_PER_PAGE_OPTION} from '@/constants/pagination';
 
 const PAGE_SIZE = 5;
 
@@ -26,7 +27,7 @@ export const RulesContent = ({policy}: {policy?: Policy}) => {
   const [pageRules, setPageRules] = useState(1);
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: 0,
-    pageSize: 5
+    pageSize: DEFAULT_ROWS_PER_PAGE
   });
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
   const [tempRule, setTempRule] = useState<Rule | undefined>(undefined);
@@ -181,7 +182,7 @@ export const RulesContent = ({policy}: {policy?: Policy}) => {
                                 onPaginationChange={setPagination}
                                 onSortingChange={setSorting}
                                 rowCount={rule.tasks?.length || 0}
-                                rowsPerPageOptions={[1, 10, 25, 50, 100]}
+                                rowsPerPageOptions={ROWS_PER_PAGE_OPTION}
                                 state={{pagination, sorting}}
                                 title={{label: 'Tasks', count: rule?.tasks?.length || 0}}
                                 muiBottomToolbarProps={{

@@ -12,7 +12,6 @@ import {OrganizationsColumns} from './organizations-columns';
 import {Card} from '@/components/ui/card';
 import {Typography} from '@mui/material';
 import {PencilIcon, Trash2Icon, UserRoundPlusIcon} from 'lucide-react';
-import {cn} from '@/lib/utils';
 import {useAnalytics, useAuth} from '@/hooks';
 import {generatePath, useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
@@ -22,19 +21,20 @@ import {useSettingsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
 import {InviteUserModal} from '@/components/shared/organizations/invite-user-modal';
 import {FilterSections} from '@/components/ui/filters-sections';
+import {DEFAULT_ROWS_PER_PAGE, ROWS_PER_PAGE_OPTION} from '@/constants/pagination';
 
 export const ListOrganizations = () => {
-  const [query, setQuery] = useState<string | undefined>(undefined);
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: 0,
-    pageSize: 10
+    pageSize: DEFAULT_ROWS_PER_PAGE
   });
+  const [query, setQuery] = useState<string | undefined>(undefined);
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
   const [tenantId, setTenantId] = useState<string | undefined>(undefined);
   const [openActionsModal, setOpenActionsModal] = useState<boolean>(false);
   const [showInviteUserModal, setShowInviteUserModal] = useState<boolean>(false);
 
-  const {data, isLoading, refetch, error} = useGetTenants();
+  const {data, isFetching, refetch, error} = useGetTenants();
   const {authInfo, logout} = useAuth();
   const currentTenantId = authInfo?.user?.tenant?.id;
 
@@ -96,32 +96,37 @@ export const ListOrganizations = () => {
     setOpenActionsModal(false);
   }, [analyticsTrack, deleteTenantMutation, tenantId]);
 
-  const handleQueryChange = useCallback(
-    (value: string) => {
-      setQuery(value);
+  const handleQueryChange = useCallback((value: string) => {
+    setQuery(value);
+  }, []);
+
+  const handlePaginationChange = useCallback(
+    (updaterOrValue: MRT_PaginationState | ((old: MRT_PaginationState) => MRT_PaginationState)) => {
+      setPagination(updaterOrValue);
     },
-    [setQuery]
+    []
   );
 
   return (
     <>
       <ConditionalQueryRenderer
         itemName="Organizations"
-        data={data?.tenants}
+        data={true}
         error={error}
-        isLoading={isLoading}
+        isLoading={false}
         useRelativeLoader
         errorListStateProps={{
           actionCallback: () => {
             void refetch();
           }
         }}
+        useLoading={false}
       >
-        <Card className={cn(!isLoading && 'p-0')} variant="secondary">
+        <Card className="p-0" variant="secondary">
           <Table
             columns={OrganizationsColumns()}
             data={filterData}
-            isLoading={isLoading}
+            isLoading={isFetching}
             renderTopToolbar={() => (
               <FilterSections
                 title={`${dataCount} ${dataCount > 1 ? 'Organizations' : 'Organization'}`}
@@ -130,7 +135,10 @@ export const ListOrganizations = () => {
                   value: query,
                   onChangeCallback: handleQueryChange
                 }}
-                isLoading={isLoading}
+                isLoading={isFetching}
+                onClickRefresh={() => {
+                  void refetch();
+                }}
               />
             )}
             muiTableBodyRowProps={({row}) => ({
@@ -166,9 +174,9 @@ export const ListOrganizations = () => {
                 border: '1px solid #D5DFF7'
               }
             }}
-            onPaginationChange={setPagination}
+            onPaginationChange={handlePaginationChange}
             rowCount={dataCount}
-            rowsPerPageOptions={[1, 10, 25, 50, 100]}
+            rowsPerPageOptions={ROWS_PER_PAGE_OPTION}
             state={{pagination, sorting}}
             onSortingChange={setSorting}
             renderRowActionMenuItems={({row}) => {

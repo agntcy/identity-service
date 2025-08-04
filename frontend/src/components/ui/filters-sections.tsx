@@ -4,18 +4,23 @@
  */
 
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
+import {cn} from '@/lib/utils';
 import {
   DropdownAutocompleteTree,
   DropdownAutocompleteTreeProps,
+  IconButton,
   SearchField,
   SearchFieldProps,
   SelectNodeType,
   Skeleton,
   Stack,
+  toast,
+  Tooltip,
   Typography,
   useDropdownAutocompleteTree
 } from '@outshift/spark-design';
-import {useEffect} from 'react';
+import {RotateCwIcon} from 'lucide-react';
+import {useCallback, useEffect} from 'react';
 import {useDebouncedCallback} from 'use-debounce';
 
 interface CustomDropdownProps<T>
@@ -33,6 +38,7 @@ interface FilterSectionProps<T> {
   title?: string;
   sameLine?: boolean;
   isLoading?: boolean;
+  onClickRefresh?: () => void;
 }
 
 export const FilterSections = <T,>({
@@ -40,11 +46,21 @@ export const FilterSections = <T,>({
   isLoading = true,
   sameLine = false,
   searchFieldProps,
-  dropDowns
+  dropDowns,
+  onClickRefresh
 }: FilterSectionProps<T>) => {
   const debounced = useDebouncedCallback((value) => {
     searchFieldProps?.onChangeCallback?.(value);
   }, 250);
+
+  const handleClickOnRefresh = useCallback(() => {
+    toast({
+      title: 'Refreshing...',
+      type: 'info',
+      description: 'Refreshing the data, please wait...'
+    });
+    onClickRefresh?.();
+  }, [onClickRefresh]);
 
   return (
     <Stack
@@ -56,7 +72,10 @@ export const FilterSections = <T,>({
       }}
     >
       {isLoading ? (
-        <Skeleton sx={{width: '200px', height: '20px'}} />
+        <div className="flex items-center gap-2 h-[28px]">
+          <Skeleton variant="circular" width={24} height={24} />
+          <Skeleton variant="text" sx={{width: '50px'}} />
+        </div>
       ) : (
         title && (
           <Typography variant="h6" sx={(theme) => ({color: theme.palette.vars.baseTextStrong})}>
@@ -64,29 +83,41 @@ export const FilterSections = <T,>({
           </Typography>
         )
       )}
-      {sameLine ? (
-        <>
-          {searchFieldProps && (
-            <SearchField
-              sx={{'& .MuiInputBase-root': {marginTop: 0, width: '320px', height: '36px'}}}
-              {...searchFieldProps}
-              onChangeCallback={debounced}
-            />
-          )}
-          {dropDowns?.map((dropdown, index) => <CustomDropdown<T> key={index} {...dropdown} />)}
-        </>
-      ) : (
-        <Stack direction="row" gap={2} alignItems="center" justifyContent="end">
-          {searchFieldProps && (
-            <SearchField
-              sx={{'& .MuiInputBase-root': {marginTop: 0, width: '320px', height: '36px'}}}
-              {...searchFieldProps}
-              onChangeCallback={debounced}
-            />
-          )}
-          {dropDowns?.map((dropdown, index) => <CustomDropdown<T> key={index} {...dropdown} />)}
-        </Stack>
-      )}
+      <Stack direction="row" gap={2} alignItems="center" justifyContent="end">
+        {searchFieldProps && (
+          <SearchField
+            sx={{'& .MuiInputBase-root': {marginTop: 0, width: '320px', height: '36px'}}}
+            {...searchFieldProps}
+            onChangeCallback={debounced}
+          />
+        )}
+        {dropDowns?.map((dropdown, index) => <CustomDropdown<T> key={index} {...dropdown} />)}
+        {onClickRefresh && (
+          <Tooltip title="Refresh">
+            <IconButton
+              size="small"
+              onClick={handleClickOnRefresh}
+              sx={(theme) => ({
+                border: `1px solid ${theme?.palette.vars.controlBorderDefault}`,
+                borderRadius: '4px',
+                padding: '4px',
+                width: '36px',
+                height: '36px',
+                '&:hover': {
+                  border: `1px solid ${theme?.palette.vars.controlBorderDefault}`,
+                  backgroundColor: 'transparent'
+                },
+                '&.MuiSvgIcon-root, svg': {
+                  width: '20px',
+                  height: '20px'
+                }
+              })}
+            >
+              <RotateCwIcon className={cn(isLoading && 'animate-spin')} />
+            </IconButton>
+          </Tooltip>
+        )}
+      </Stack>
     </Stack>
   );
 };
@@ -128,6 +159,11 @@ const CustomDropdown = <T,>({treeData, onSelectValues, isSearchFieldEnabled, ...
       popOverPaperSx={{
         width: 'fit-content',
         height: 'fit-content'
+      }}
+      buttonProps={{
+        style: {
+          height: '36px'
+        }
       }}
       {...props}
     />

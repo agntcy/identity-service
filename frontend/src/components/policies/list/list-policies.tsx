@@ -10,8 +10,7 @@ import {useGetPolicies} from '@/queries';
 import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
 import {PoliciesColumns} from './policies-columns';
 import {Card} from '@/components/ui/card';
-import {cn} from '@/lib/utils';
-import {generatePath, useNavigate} from 'react-router-dom';
+import {generatePath, useNavigate, useSearchParams} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
 import {FilterSections} from '@/components/ui/filters-sections';
 import {PencilIcon, PlusIcon, Trash2Icon} from 'lucide-react';
@@ -20,11 +19,13 @@ import {Policy} from '@/types/api/policy';
 import {useDeletePolicy} from '@/mutations';
 import {ListRules} from '@/components/shared/list-rules/list-rules';
 import {useAnalytics} from '@/hooks';
+import {DEFAULT_ROWS_PER_PAGE, ROWS_PER_PAGE_OPTION} from '@/constants/pagination';
 
 export const ListPolicies = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [pagination, setPagination] = useState<MRT_PaginationState>({
-    pageIndex: 0,
-    pageSize: 15
+    pageIndex: Number(searchParams.get('page')) || 0,
+    pageSize: Number(searchParams.get('size')) || DEFAULT_ROWS_PER_PAGE
   });
   const [sorting, setSorting] = useState<MRT_SortingState>([
     {
@@ -32,11 +33,11 @@ export const ListPolicies = () => {
       desc: true
     }
   ]);
-  const [query, setQuery] = useState<string | undefined>(undefined);
+  const [query, setQuery] = useState<string | undefined>(searchParams.get('query') || undefined);
   const [tempPolicy, setTempPolicy] = useState<Policy | undefined>(undefined);
   const [showActionsModal, setShowActionsModal] = useState<boolean>(false);
 
-  const {data, isLoading, error, refetch} = useGetPolicies({
+  const {data, isFetching, error, refetch} = useGetPolicies({
     query: {
       page: pagination.pageIndex + 1,
       size: pagination.pageSize,
@@ -60,9 +61,32 @@ export const ListPolicies = () => {
   const handleQueryChange = useCallback(
     (value: string) => {
       setQuery(value);
-      setPagination((prev) => ({...prev, pageIndex: 0}));
+      const newSearchParams = new URLSearchParams(searchParams);
+      if (value) {
+        newSearchParams.set('query', value);
+      } else {
+        newSearchParams.delete('query');
+      }
+      setSearchParams(newSearchParams);
     },
-    [setQuery, setPagination]
+    [searchParams, setSearchParams]
+  );
+
+  const handlePaginationChange = useCallback(
+    (updaterOrValue: MRT_PaginationState | ((old: MRT_PaginationState) => MRT_PaginationState)) => {
+      setPagination(updaterOrValue);
+      const newSearchParams = new URLSearchParams(searchParams);
+      if (typeof updaterOrValue === 'function') {
+        const newPagination = updaterOrValue(pagination);
+        newSearchParams.set('page', String(newPagination.pageIndex + 1));
+        newSearchParams.set('size', String(newPagination.pageSize));
+      } else {
+        newSearchParams.set('page', String(updaterOrValue.pageIndex + 1));
+        newSearchParams.set('size', String(updaterOrValue.pageSize));
+      }
+      setSearchParams(newSearchParams);
+    },
+    [pagination, searchParams, setSearchParams]
   );
 
   const deleteMutation = useDeletePolicy({
@@ -106,11 +130,11 @@ export const ListPolicies = () => {
         }}
         useLoading={false}
       >
-        <Card className={cn(!isLoading && 'p-0')} variant="secondary">
+        <Card className="p-0" variant="secondary">
           <Table
             columns={PoliciesColumns()}
             data={dataPolicies}
-            isLoading={isLoading || deleteMutation.isPending}
+            isLoading={isFetching || deleteMutation.isPending}
             muiTableBodyRowProps={({row, isDetailPanel}) => ({
               sx: {
                 cursor: 'pointer',
@@ -135,7 +159,10 @@ export const ListPolicies = () => {
                   value: query,
                   onChangeCallback: handleQueryChange
                 }}
-                isLoading={isLoading}
+                isLoading={isFetching}
+                onClickRefresh={() => {
+                  void refetch();
+                }}
               />
             )}
             enableColumnResizing
@@ -152,9 +179,9 @@ export const ListPolicies = () => {
             }}
             manualPagination={true}
             manualFiltering={true}
-            onPaginationChange={setPagination}
+            onPaginationChange={handlePaginationChange}
             rowCount={Number(data?.pagination?.total) || 0}
-            rowsPerPageOptions={[1, 15, 25, 50, 100]}
+            rowsPerPageOptions={ROWS_PER_PAGE_OPTION}
             state={{pagination, sorting}}
             onSortingChange={setSorting}
             renderRowActionMenuItems={({row}) => {

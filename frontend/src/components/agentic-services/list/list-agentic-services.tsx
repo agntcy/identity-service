@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 /**
  * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
  * SPDX-License-Identifier: Apache-2.0
@@ -10,23 +11,24 @@ import {useGetAgenticServices, useGetAgenticServiceTotalCount} from '@/queries';
 import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
 import {AgenticServiceColumns} from './agentic-services-columns';
 import {Card} from '@/components/ui/card';
-import {generatePath, useNavigate} from 'react-router-dom';
+import {generatePath, useNavigate, useSearchParams} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
 import {FilterSections} from '@/components/ui/filters-sections';
 import {App, AppType} from '@/types/api/app';
 import {CheckIcon, IdCardIcon, PencilIcon, PlusIcon, Trash2Icon} from 'lucide-react';
 import {ConfirmModal} from '@/components/ui/confirm-modal';
 import {useDeleteAgenticService} from '@/mutations';
-import {cn} from '@/lib/utils';
 import {useFeatureFlagsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
 import {useAnalytics} from '@/hooks';
 import {BadgeModalForm} from '@/components/shared/agentic-services/badge-modal-form';
+import {DEFAULT_ROWS_PER_PAGE, ROWS_PER_PAGE_OPTION} from '@/constants/pagination';
 
 export const ListAgenticServices = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [pagination, setPagination] = useState<MRT_PaginationState>({
-    pageIndex: 0,
-    pageSize: 15
+    pageIndex: Number(searchParams.get('page')) || 0,
+    pageSize: Number(searchParams.get('size')) || DEFAULT_ROWS_PER_PAGE
   });
   const [sorting, setSorting] = useState<MRT_SortingState>([
     {
@@ -34,17 +36,20 @@ export const ListAgenticServices = () => {
       desc: true
     }
   ]);
-  const [query, setQuery] = useState<string | undefined>(undefined);
+  const [query, setQuery] = useState<string | undefined>(searchParams.get('query') || undefined);
   const [tempApp, setTempApp] = useState<App | undefined>(undefined);
   const [showBadgeForm, setShowBadgeForm] = useState<boolean>(false);
   const [showActionsModal, setShowActionsModal] = useState<boolean>(false);
-  const [appTypeFilters, setAppTypeFilters] = useState<AppType[]>([
-    AppType.APP_TYPE_AGENT_A2A,
-    AppType.APP_TYPE_AGENT_OASF,
-    AppType.APP_TYPE_MCP_SERVER
-  ]);
+  const [appTypeFilters, setAppTypeFilters] = useState<AppType[]>(
+    searchParams.get('types')
+      ? searchParams
+          .get('types')!
+          .split(',')
+          .map((type) => type as AppType)
+      : [AppType.APP_TYPE_AGENT_A2A, AppType.APP_TYPE_AGENT_OASF, AppType.APP_TYPE_MCP_SERVER]
+  );
 
-  const {data, isLoading, error, refetch} = useGetAgenticServices({
+  const {data, isFetching, error, refetch} = useGetAgenticServices({
     page: pagination.pageIndex + 1,
     size: pagination.pageSize,
     query: query,
@@ -69,33 +74,68 @@ export const ListAgenticServices = () => {
         value: AppType.APP_TYPE_AGENT_A2A,
         valueFormatter: () => 'A2A Agent',
         isSelectable: true,
-        isSelected: true
+        isSelected: appTypeFilters.includes(AppType.APP_TYPE_AGENT_A2A)
       },
       {
         value: AppType.APP_TYPE_AGENT_OASF,
         valueFormatter: () => 'OASF',
         isSelectable: true,
-        isSelected: true
+        isSelected: appTypeFilters.includes(AppType.APP_TYPE_AGENT_OASF)
       },
       {
         value: AppType.APP_TYPE_MCP_SERVER,
         valueFormatter: () => 'MCP Server',
         isSelectable: true,
-        isSelected: true
+        isSelected: appTypeFilters.includes(AppType.APP_TYPE_MCP_SERVER)
       }
     ];
-  }, []);
+  }, [appTypeFilters]);
 
   const handleQueryChange = useCallback(
     (value: string) => {
       setQuery(value);
+      const newSearchParams = new URLSearchParams(searchParams);
+      if (value) {
+        newSearchParams.set('query', value);
+      } else {
+        newSearchParams.delete('query');
+      }
+      setSearchParams(newSearchParams);
     },
-    [setQuery]
+    [searchParams, setSearchParams]
   );
 
-  const handleTypeFilterChange = useCallback((selectedValues: SelectNodeType<AppType>[]) => {
-    setAppTypeFilters(selectedValues.map((node) => node.value as AppType));
-  }, []);
+  const handlePaginationChange = useCallback(
+    (updaterOrValue: MRT_PaginationState | ((old: MRT_PaginationState) => MRT_PaginationState)) => {
+      setPagination(updaterOrValue);
+      const newSearchParams = new URLSearchParams(searchParams);
+      if (typeof updaterOrValue === 'function') {
+        const newPagination = updaterOrValue(pagination);
+        newSearchParams.set('page', String(newPagination.pageIndex + 1));
+        newSearchParams.set('size', String(newPagination.pageSize));
+      } else {
+        newSearchParams.set('page', String(updaterOrValue.pageIndex + 1));
+        newSearchParams.set('size', String(updaterOrValue.pageSize));
+      }
+      setSearchParams(newSearchParams);
+    },
+    [pagination, searchParams, setSearchParams]
+  );
+
+  const handleTypeFilterChange = useCallback(
+    (selectedValues: SelectNodeType<AppType>[]) => {
+      const selectedTypes = selectedValues.map((node) => node.value as AppType);
+      setAppTypeFilters(selectedTypes);
+      const newSearchParams = new URLSearchParams(searchParams);
+      if (selectedTypes.length > 0) {
+        newSearchParams.set('types', selectedTypes.join(','));
+      } else {
+        newSearchParams.delete('types');
+      }
+      setSearchParams(newSearchParams);
+    },
+    [searchParams, setSearchParams]
+  );
 
   const deleteMutation = useDeleteAgenticService({
     callbacks: {
@@ -140,11 +180,11 @@ export const ListAgenticServices = () => {
         }}
         useLoading={false}
       >
-        <Card className={cn(!isLoading && 'p-0')} variant="secondary">
+        <Card className="p-0" variant="secondary">
           <Table
             columns={AgenticServiceColumns()}
             data={data?.apps || []}
-            isLoading={isLoading || deleteMutation.isPending}
+            isLoading={isFetching || deleteMutation.isPending}
             muiTableBodyRowProps={({row}) => ({
               sx: {
                 cursor: 'pointer',
@@ -176,7 +216,10 @@ export const ListAgenticServices = () => {
                     onSelectValues: handleTypeFilterChange
                   }
                 ]}
-                isLoading={isLoading}
+                isLoading={isFetching}
+                onClickRefresh={() => {
+                  void refetch();
+                }}
               />
             )}
             enableColumnResizing
@@ -191,9 +234,9 @@ export const ListAgenticServices = () => {
             }}
             manualPagination={true}
             manualFiltering={true}
-            onPaginationChange={setPagination}
+            onPaginationChange={handlePaginationChange}
             rowCount={Number(data?.pagination?.total) || 0}
-            rowsPerPageOptions={[1, 15, 25, 50, 100]}
+            rowsPerPageOptions={ROWS_PER_PAGE_OPTION}
             state={{pagination, sorting}}
             onSortingChange={setSorting}
             renderRowActionMenuItems={({row}) => {
