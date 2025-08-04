@@ -92,8 +92,10 @@ type ListAppsRequest struct {
 	Query *string `protobuf:"bytes,3,opt,name=query,proto3,oneof" json:"query,omitempty"`
 	// The app type filter
 	Types []AppType `protobuf:"varint,4,rep,packed,name=types,proto3,enum=outshift.identity.service.v1alpha1.AppType" json:"types,omitempty"`
-	// The sorting configuration
-	Sorting       []*v1alpha1.ColumnSort `protobuf:"bytes,5,rep,name=sorting,proto3" json:"sorting,omitempty"`
+	// The column ID to sort by
+	SortColumn *string `protobuf:"bytes,5,opt,name=sort_column,json=sortColumn,proto3,oneof" json:"sort_column,omitempty"`
+	// Whether to sort in descending order (true) or ascending order (false)
+	SortDesc      *bool `protobuf:"varint,6,opt,name=sort_desc,json=sortDesc,proto3,oneof" json:"sort_desc,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -156,11 +158,18 @@ func (x *ListAppsRequest) GetTypes() []AppType {
 	return nil
 }
 
-func (x *ListAppsRequest) GetSorting() []*v1alpha1.ColumnSort {
-	if x != nil {
-		return x.Sorting
+func (x *ListAppsRequest) GetSortColumn() string {
+	if x != nil && x.SortColumn != nil {
+		return *x.SortColumn
 	}
-	return nil
+	return ""
+}
+
+func (x *ListAppsRequest) GetSortDesc() bool {
+	if x != nil && x.SortDesc != nil {
+		return *x.SortDesc
+	}
+	return false
 }
 
 type CreateAppRequest struct {
@@ -679,22 +688,27 @@ var File_outshift_identity_service_v1alpha1_app_service_proto protoreflect.FileD
 
 const file_outshift_identity_service_v1alpha1_app_service_proto_rawDesc = "" +
 	"\n" +
-	"4outshift/identity/service/v1alpha1/app_service.proto\x12\"outshift.identity.service.v1alpha1\x1a\x1cgoogle/api/annotations.proto\x1a\x17google/api/client.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a:outshift/identity/service/shared/v1alpha1/pagination.proto\x1a7outshift/identity/service/shared/v1alpha1/sorting.proto\x1a,outshift/identity/service/v1alpha1/app.proto\x1a.outshift/identity/service/v1alpha1/badge.proto\x1a/outshift/identity/service/v1alpha1/policy.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\"\xbd\x01\n" +
+	"4outshift/identity/service/v1alpha1/app_service.proto\x12\"outshift.identity.service.v1alpha1\x1a\x1cgoogle/api/annotations.proto\x1a\x17google/api/client.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a:outshift/identity/service/shared/v1alpha1/pagination.proto\x1a,outshift/identity/service/v1alpha1/app.proto\x1a.outshift/identity/service/v1alpha1/badge.proto\x1a/outshift/identity/service/v1alpha1/policy.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\"\xbd\x01\n" +
 	"\x10ListAppsResponse\x12;\n" +
 	"\x04apps\x18\x01 \x03(\v2'.outshift.identity.service.v1alpha1.AppR\x04apps\x12]\n" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v28.outshift.identity.service.shared.v1alpha1.PagedResponseH\x00R\n" +
 	"pagination\x88\x01\x01B\r\n" +
-	"\v_pagination\"\x8e\x02\n" +
+	"\v_pagination\"\xa3\x02\n" +
 	"\x0fListAppsRequest\x12\x17\n" +
 	"\x04page\x18\x01 \x01(\x05H\x00R\x04page\x88\x01\x01\x12\x17\n" +
 	"\x04size\x18\x02 \x01(\x05H\x01R\x04size\x88\x01\x01\x12\x19\n" +
 	"\x05query\x18\x03 \x01(\tH\x02R\x05query\x88\x01\x01\x12A\n" +
-	"\x05types\x18\x04 \x03(\x0e2+.outshift.identity.service.v1alpha1.AppTypeR\x05types\x12O\n" +
-	"\asorting\x18\x05 \x03(\v25.outshift.identity.service.shared.v1alpha1.ColumnSortR\asortingB\a\n" +
+	"\x05types\x18\x04 \x03(\x0e2+.outshift.identity.service.v1alpha1.AppTypeR\x05types\x12$\n" +
+	"\vsort_column\x18\x05 \x01(\tH\x03R\n" +
+	"sortColumn\x88\x01\x01\x12 \n" +
+	"\tsort_desc\x18\x06 \x01(\bH\x04R\bsortDesc\x88\x01\x01B\a\n" +
 	"\x05_pageB\a\n" +
 	"\x05_sizeB\b\n" +
-	"\x06_query\"M\n" +
+	"\x06_queryB\x0e\n" +
+	"\f_sort_columnB\f\n" +
+	"\n" +
+	"_sort_desc\"M\n" +
 	"\x10CreateAppRequest\x129\n" +
 	"\x03app\x18\x01 \x01(\v2'.outshift.identity.service.v1alpha1.AppR\x03app\"\x15\n" +
 	"\x13GetAppsCountRequest\"h\n" +
@@ -768,44 +782,42 @@ var file_outshift_identity_service_v1alpha1_app_service_proto_goTypes = []any{
 	(*App)(nil),                       // 14: outshift.identity.service.v1alpha1.App
 	(*v1alpha1.PagedResponse)(nil),    // 15: outshift.identity.service.shared.v1alpha1.PagedResponse
 	(AppType)(0),                      // 16: outshift.identity.service.v1alpha1.AppType
-	(*v1alpha1.ColumnSort)(nil),       // 17: outshift.identity.service.shared.v1alpha1.ColumnSort
-	(*Task)(nil),                      // 18: outshift.identity.service.v1alpha1.Task
-	(*emptypb.Empty)(nil),             // 19: google.protobuf.Empty
-	(*Badge)(nil),                     // 20: outshift.identity.service.v1alpha1.Badge
+	(*Task)(nil),                      // 17: outshift.identity.service.v1alpha1.Task
+	(*emptypb.Empty)(nil),             // 18: google.protobuf.Empty
+	(*Badge)(nil),                     // 19: outshift.identity.service.v1alpha1.Badge
 }
 var file_outshift_identity_service_v1alpha1_app_service_proto_depIdxs = []int32{
 	14, // 0: outshift.identity.service.v1alpha1.ListAppsResponse.apps:type_name -> outshift.identity.service.v1alpha1.App
 	15, // 1: outshift.identity.service.v1alpha1.ListAppsResponse.pagination:type_name -> outshift.identity.service.shared.v1alpha1.PagedResponse
 	16, // 2: outshift.identity.service.v1alpha1.ListAppsRequest.types:type_name -> outshift.identity.service.v1alpha1.AppType
-	17, // 3: outshift.identity.service.v1alpha1.ListAppsRequest.sorting:type_name -> outshift.identity.service.shared.v1alpha1.ColumnSort
-	14, // 4: outshift.identity.service.v1alpha1.CreateAppRequest.app:type_name -> outshift.identity.service.v1alpha1.App
-	16, // 5: outshift.identity.service.v1alpha1.AppTypeCountEntry.key:type_name -> outshift.identity.service.v1alpha1.AppType
-	4,  // 6: outshift.identity.service.v1alpha1.GetAppsCountResponse.counts:type_name -> outshift.identity.service.v1alpha1.AppTypeCountEntry
-	14, // 7: outshift.identity.service.v1alpha1.UpdateAppRequest.app:type_name -> outshift.identity.service.v1alpha1.App
-	13, // 8: outshift.identity.service.v1alpha1.GetTasksResponse.result:type_name -> outshift.identity.service.v1alpha1.GetTasksResponse.ResultEntry
-	18, // 9: outshift.identity.service.v1alpha1.GetTasksResponse.TaskList.tasks:type_name -> outshift.identity.service.v1alpha1.Task
-	12, // 10: outshift.identity.service.v1alpha1.GetTasksResponse.ResultEntry.value:type_name -> outshift.identity.service.v1alpha1.GetTasksResponse.TaskList
-	1,  // 11: outshift.identity.service.v1alpha1.AppService.ListApps:input_type -> outshift.identity.service.v1alpha1.ListAppsRequest
-	3,  // 12: outshift.identity.service.v1alpha1.AppService.GetAppsCount:input_type -> outshift.identity.service.v1alpha1.GetAppsCountRequest
-	6,  // 13: outshift.identity.service.v1alpha1.AppService.GetApp:input_type -> outshift.identity.service.v1alpha1.GetAppRequest
-	2,  // 14: outshift.identity.service.v1alpha1.AppService.CreateApp:input_type -> outshift.identity.service.v1alpha1.CreateAppRequest
-	7,  // 15: outshift.identity.service.v1alpha1.AppService.UpdateApp:input_type -> outshift.identity.service.v1alpha1.UpdateAppRequest
-	8,  // 16: outshift.identity.service.v1alpha1.AppService.DeleteApp:input_type -> outshift.identity.service.v1alpha1.DeleteAppRequest
-	9,  // 17: outshift.identity.service.v1alpha1.AppService.GetBadge:input_type -> outshift.identity.service.v1alpha1.GetBadgeRequest
-	10, // 18: outshift.identity.service.v1alpha1.AppService.GetTasks:input_type -> outshift.identity.service.v1alpha1.GetTasksRequest
-	0,  // 19: outshift.identity.service.v1alpha1.AppService.ListApps:output_type -> outshift.identity.service.v1alpha1.ListAppsResponse
-	5,  // 20: outshift.identity.service.v1alpha1.AppService.GetAppsCount:output_type -> outshift.identity.service.v1alpha1.GetAppsCountResponse
-	14, // 21: outshift.identity.service.v1alpha1.AppService.GetApp:output_type -> outshift.identity.service.v1alpha1.App
-	14, // 22: outshift.identity.service.v1alpha1.AppService.CreateApp:output_type -> outshift.identity.service.v1alpha1.App
-	14, // 23: outshift.identity.service.v1alpha1.AppService.UpdateApp:output_type -> outshift.identity.service.v1alpha1.App
-	19, // 24: outshift.identity.service.v1alpha1.AppService.DeleteApp:output_type -> google.protobuf.Empty
-	20, // 25: outshift.identity.service.v1alpha1.AppService.GetBadge:output_type -> outshift.identity.service.v1alpha1.Badge
-	11, // 26: outshift.identity.service.v1alpha1.AppService.GetTasks:output_type -> outshift.identity.service.v1alpha1.GetTasksResponse
-	19, // [19:27] is the sub-list for method output_type
-	11, // [11:19] is the sub-list for method input_type
-	11, // [11:11] is the sub-list for extension type_name
-	11, // [11:11] is the sub-list for extension extendee
-	0,  // [0:11] is the sub-list for field type_name
+	14, // 3: outshift.identity.service.v1alpha1.CreateAppRequest.app:type_name -> outshift.identity.service.v1alpha1.App
+	16, // 4: outshift.identity.service.v1alpha1.AppTypeCountEntry.key:type_name -> outshift.identity.service.v1alpha1.AppType
+	4,  // 5: outshift.identity.service.v1alpha1.GetAppsCountResponse.counts:type_name -> outshift.identity.service.v1alpha1.AppTypeCountEntry
+	14, // 6: outshift.identity.service.v1alpha1.UpdateAppRequest.app:type_name -> outshift.identity.service.v1alpha1.App
+	13, // 7: outshift.identity.service.v1alpha1.GetTasksResponse.result:type_name -> outshift.identity.service.v1alpha1.GetTasksResponse.ResultEntry
+	17, // 8: outshift.identity.service.v1alpha1.GetTasksResponse.TaskList.tasks:type_name -> outshift.identity.service.v1alpha1.Task
+	12, // 9: outshift.identity.service.v1alpha1.GetTasksResponse.ResultEntry.value:type_name -> outshift.identity.service.v1alpha1.GetTasksResponse.TaskList
+	1,  // 10: outshift.identity.service.v1alpha1.AppService.ListApps:input_type -> outshift.identity.service.v1alpha1.ListAppsRequest
+	3,  // 11: outshift.identity.service.v1alpha1.AppService.GetAppsCount:input_type -> outshift.identity.service.v1alpha1.GetAppsCountRequest
+	6,  // 12: outshift.identity.service.v1alpha1.AppService.GetApp:input_type -> outshift.identity.service.v1alpha1.GetAppRequest
+	2,  // 13: outshift.identity.service.v1alpha1.AppService.CreateApp:input_type -> outshift.identity.service.v1alpha1.CreateAppRequest
+	7,  // 14: outshift.identity.service.v1alpha1.AppService.UpdateApp:input_type -> outshift.identity.service.v1alpha1.UpdateAppRequest
+	8,  // 15: outshift.identity.service.v1alpha1.AppService.DeleteApp:input_type -> outshift.identity.service.v1alpha1.DeleteAppRequest
+	9,  // 16: outshift.identity.service.v1alpha1.AppService.GetBadge:input_type -> outshift.identity.service.v1alpha1.GetBadgeRequest
+	10, // 17: outshift.identity.service.v1alpha1.AppService.GetTasks:input_type -> outshift.identity.service.v1alpha1.GetTasksRequest
+	0,  // 18: outshift.identity.service.v1alpha1.AppService.ListApps:output_type -> outshift.identity.service.v1alpha1.ListAppsResponse
+	5,  // 19: outshift.identity.service.v1alpha1.AppService.GetAppsCount:output_type -> outshift.identity.service.v1alpha1.GetAppsCountResponse
+	14, // 20: outshift.identity.service.v1alpha1.AppService.GetApp:output_type -> outshift.identity.service.v1alpha1.App
+	14, // 21: outshift.identity.service.v1alpha1.AppService.CreateApp:output_type -> outshift.identity.service.v1alpha1.App
+	14, // 22: outshift.identity.service.v1alpha1.AppService.UpdateApp:output_type -> outshift.identity.service.v1alpha1.App
+	18, // 23: outshift.identity.service.v1alpha1.AppService.DeleteApp:output_type -> google.protobuf.Empty
+	19, // 24: outshift.identity.service.v1alpha1.AppService.GetBadge:output_type -> outshift.identity.service.v1alpha1.Badge
+	11, // 25: outshift.identity.service.v1alpha1.AppService.GetTasks:output_type -> outshift.identity.service.v1alpha1.GetTasksResponse
+	18, // [18:26] is the sub-list for method output_type
+	10, // [10:18] is the sub-list for method input_type
+	10, // [10:10] is the sub-list for extension type_name
+	10, // [10:10] is the sub-list for extension extendee
+	0,  // [0:10] is the sub-list for field type_name
 }
 
 func init() { file_outshift_identity_service_v1alpha1_app_service_proto_init() }

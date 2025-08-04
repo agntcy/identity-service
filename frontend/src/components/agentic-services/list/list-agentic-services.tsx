@@ -31,10 +31,15 @@ export const ListAgenticServices = () => {
     pageSize: Number(searchParams.get('size')) || DEFAULT_ROWS_PER_PAGE
   });
   const [sorting, setSorting] = useState<MRT_SortingState>([
-    {
-      id: 'createdAt',
-      desc: true
-    }
+    searchParams.get('sortColumn') && searchParams.get('sortDesc')
+      ? {
+          id: searchParams.get('sortColumn')!,
+          desc: searchParams.get('sortDesc') === 'true'
+        }
+      : {
+          id: 'createdAt',
+          desc: true
+        }
   ]);
   const [query, setQuery] = useState<string | undefined>(searchParams.get('query') || undefined);
   const [tempApp, setTempApp] = useState<App | undefined>(undefined);
@@ -53,7 +58,9 @@ export const ListAgenticServices = () => {
     page: pagination.pageIndex + 1,
     size: pagination.pageSize,
     query: query,
-    types: appTypeFilters
+    types: appTypeFilters,
+    sortColumn: sorting[0]?.id,
+    sortDesc: sorting[0]?.desc
   });
 
   const {data: dataCount} = useGetAgenticServiceTotalCount();
@@ -90,6 +97,33 @@ export const ListAgenticServices = () => {
       }
     ];
   }, [appTypeFilters]);
+
+  const handleSortingChange = useCallback(
+    (updaterOrValue: MRT_SortingState | ((old: MRT_SortingState) => MRT_SortingState)) => {
+      setSorting(updaterOrValue);
+      const newSearchParams = new URLSearchParams(searchParams);
+      if (typeof updaterOrValue === 'function') {
+        const newSorting = updaterOrValue(sorting);
+        if (newSorting.length > 0) {
+          newSearchParams.set('sortColumn', newSorting[0].id);
+          newSearchParams.set('sortDesc', String(newSorting[0].desc));
+        } else {
+          newSearchParams.delete('sortColumn');
+          newSearchParams.delete('sortDesc');
+        }
+      } else {
+        if (updaterOrValue.length > 0) {
+          newSearchParams.set('sortColumn', updaterOrValue[0].id);
+          newSearchParams.set('sortDesc', String(updaterOrValue[0].desc));
+        } else {
+          newSearchParams.delete('sortColumn');
+          newSearchParams.delete('sortDesc');
+        }
+      }
+      setSearchParams(newSearchParams);
+    },
+    [searchParams, setSearchParams, sorting]
+  );
 
   const handleQueryChange = useCallback(
     (value: string) => {
@@ -235,11 +269,12 @@ export const ListAgenticServices = () => {
             }}
             manualPagination={true}
             manualFiltering={true}
+            manualSorting={true}
             onPaginationChange={handlePaginationChange}
             rowCount={Number(data?.pagination?.total) || 0}
             rowsPerPageOptions={ROWS_PER_PAGE_OPTION}
             state={{pagination, sorting}}
-            onSortingChange={setSorting}
+            onSortingChange={handleSortingChange}
             renderRowActionMenuItems={({row}) => {
               return [
                 <MenuItem

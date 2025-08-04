@@ -14,6 +14,7 @@ import (
 	"github.com/outshift/identity-service/internal/pkg/convertutil"
 	"github.com/outshift/identity-service/internal/pkg/grpcutil"
 	"github.com/outshift/identity-service/internal/pkg/pagination"
+	"github.com/outshift/identity-service/internal/pkg/sorting"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -63,13 +64,18 @@ func (s *appService) ListApps(
 
 	appTypes := make([]apptypes.AppType, 0)
 
+	sortBy := sorting.Sorting{
+		SortColumn: req.SortColumn,
+		SortDesc:   req.SortDesc,
+	}
+
 	if req.Types != nil {
 		for _, typ := range req.Types {
 			appTypes = append(appTypes, apptypes.AppType(typ))
 		}
 	}
 
-	apps, err := s.appSrv.ListApps(ctx, paginationFilter, req.Query, appTypes)
+	apps, err := s.appSrv.ListApps(ctx, paginationFilter, req.Query, appTypes, sortBy)
 	if err != nil {
 		return nil, grpcutil.BadRequestError(err)
 	}

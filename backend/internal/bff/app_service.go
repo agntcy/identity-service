@@ -23,6 +23,7 @@ import (
 	outshiftiam "github.com/outshift/identity-service/internal/pkg/iam"
 	"github.com/outshift/identity-service/internal/pkg/pagination"
 	"github.com/outshift/identity-service/internal/pkg/ptrutil"
+	"github.com/outshift/identity-service/internal/pkg/sorting"
 	"github.com/outshift/identity-service/internal/pkg/strutil"
 	"github.com/outshift/identity-service/pkg/log"
 )
@@ -36,6 +37,7 @@ type AppService interface {
 		paginationFilter pagination.PaginationFilter,
 		query *string,
 		appTypes []apptypes.AppType,
+		sortBy sorting.Sorting,
 	) (*pagination.Pageable[apptypes.App], error)
 	CountAllApps(ctx context.Context) (int64, error)
 	DeleteApp(ctx context.Context, appID string) error
@@ -230,6 +232,7 @@ func (s *appService) ListApps(
 	paginationFilter pagination.PaginationFilter,
 	query *string,
 	appTypes []apptypes.AppType,
+	sortBy sorting.Sorting,
 ) (*pagination.Pageable[apptypes.App], error) {
 	appTypes = slices.DeleteFunc(appTypes, func(typ apptypes.AppType) bool {
 		return typ == apptypes.APP_TYPE_UNSPECIFIED
@@ -244,7 +247,7 @@ func (s *appService) ListApps(
 	// 	}, nil
 	// }
 
-	page, err := s.appRepository.GetAllApps(ctx, paginationFilter, query, appTypes)
+	page, err := s.appRepository.GetAllApps(ctx, paginationFilter, query, appTypes, sortBy)
 	if err != nil {
 		return nil, err
 	}

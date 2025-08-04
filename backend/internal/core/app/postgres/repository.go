@@ -16,6 +16,7 @@ import (
 	"github.com/outshift/identity-service/internal/pkg/errutil"
 	"github.com/outshift/identity-service/internal/pkg/gormutil"
 	"github.com/outshift/identity-service/internal/pkg/pagination"
+	"github.com/outshift/identity-service/internal/pkg/sorting"
 	"github.com/outshift/identity-service/pkg/db"
 	"gorm.io/gorm"
 )
@@ -108,6 +109,7 @@ func (r *repository) GetAllApps(
 	paginationFilter pagination.PaginationFilter,
 	query *string,
 	appTypes []types.AppType,
+	sortBy sorting.Sorting,
 ) (*pagination.Pageable[types.App], error) {
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
@@ -127,6 +129,30 @@ func (r *repository) GetAllApps(
 
 	if len(appTypes) > 0 {
 		dbQuery = dbQuery.Where("type IN ?", appTypes)
+	}
+
+	if sortBy.SortColumn != nil && *sortBy.SortColumn != "" {
+		allowedSortFields := map[string]string{
+			"id":                 "id",
+			"name":               "name",
+			"description":        "description",
+			"type":               "type",
+			"resolverMetadataId": "resolver_metadata_id",
+			"createdAt":          "created_at",
+			"updatedAt":          "updated_at",
+		}
+
+		dbColumn, exists := allowedSortFields[*sortBy.SortColumn]
+		if !exists {
+			return nil, errutil.Err(nil, fmt.Sprintf("invalid sort field: %s", *sortBy.SortColumn))
+		}
+
+		direction := "ASC"
+		if sortBy.SortDesc != nil && *sortBy.SortDesc {
+			direction = "DESC"
+		}
+
+		dbQuery = dbQuery.Order(fmt.Sprintf("%s %s", dbColumn, direction))
 	}
 
 	dbQuery = dbQuery.Session(&gorm.Session{}) // https://gorm.io/docs/method_chaining.html#Reusability-and-Safety

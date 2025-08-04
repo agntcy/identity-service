@@ -54,6 +54,16 @@ paths:
                             - APP_TYPE_MCP_SERVER
                         type: string
                         format: enum
+                - name: sortColumn
+                  in: query
+                  description: The column ID to sort by
+                  schema:
+                    type: string
+                - name: sortDesc
+                  in: query
+                  description: Whether to sort in descending order (true) or ascending order (false)
+                  schema:
+                    type: boolean
             responses:
                 "200":
                     description: OK

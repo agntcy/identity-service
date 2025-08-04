@@ -74,6 +74,20 @@
               ]
             },
             "collectionFormat": "multi"
+          },
+          {
+            "name": "sortColumn",
+            "description": "The column ID to sort by",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "sortDesc",
+            "description": "Whether to sort in descending order (true) or ascending order (false)",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
           }
         ],
         "tags": [
