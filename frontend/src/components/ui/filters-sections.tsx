@@ -38,12 +38,14 @@ interface FilterSectionProps<T> {
   title?: string;
   sameLine?: boolean;
   isLoading?: boolean;
+  isRefetching?: boolean;
   onClickRefresh?: () => void;
 }
 
 export const FilterSections = <T,>({
   title,
   isLoading = true,
+  isRefetching = false,
   sameLine = false,
   searchFieldProps,
   dropDowns,
@@ -113,7 +115,7 @@ export const FilterSections = <T,>({
                 }
               })}
             >
-              <RotateCwIcon className={cn(isLoading && 'animate-spin')} />
+              <RotateCwIcon className={cn(isRefetching && 'animate-spin')} />
             </IconButton>
           </Tooltip>
         )}

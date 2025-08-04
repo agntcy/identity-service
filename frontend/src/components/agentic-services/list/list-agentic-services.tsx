@@ -49,7 +49,7 @@ export const ListAgenticServices = () => {
       : [AppType.APP_TYPE_AGENT_A2A, AppType.APP_TYPE_AGENT_OASF, AppType.APP_TYPE_MCP_SERVER]
   );
 
-  const {data, isFetching, error, refetch} = useGetAgenticServices({
+  const {data, isFetching, isRefetching, error, refetch} = useGetAgenticServices({
     page: pagination.pageIndex + 1,
     size: pagination.pageSize,
     query: query,
@@ -217,6 +217,7 @@ export const ListAgenticServices = () => {
                   }
                 ]}
                 isLoading={isFetching}
+                isRefetching={isRefetching}
                 onClickRefresh={() => {
                   void refetch();
                 }}

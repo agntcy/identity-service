@@ -31,7 +31,7 @@ export const ListPoliciesAgenticService = ({appId, mode = 'assigned'}: {appId?: 
   ]);
   const [query, setQuery] = useState<string | undefined>(searchParams.get('query') || undefined);
 
-  const {data, isFetching, error, refetch} = useGetPolicies({
+  const {data, isFetching, isRefetching, error, refetch} = useGetPolicies({
     query: {
       page: pagination.pageIndex + 1,
       size: pagination.pageSize,
@@ -127,6 +127,7 @@ export const ListPoliciesAgenticService = ({appId, mode = 'assigned'}: {appId?: 
                   onChangeCallback: handleQueryChange
                 }}
                 isLoading={isFetching}
+                isRefetching={isRefetching}
                 onClickRefresh={() => {
                   void refetch();
                 }}

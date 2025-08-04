@@ -34,7 +34,7 @@ export const ListOrganizations = () => {
   const [openActionsModal, setOpenActionsModal] = useState<boolean>(false);
   const [showInviteUserModal, setShowInviteUserModal] = useState<boolean>(false);
 
-  const {data, isFetching, refetch, error} = useGetTenants();
+  const {data, isFetching, isRefetching, refetch, error} = useGetTenants();
   const {authInfo, logout} = useAuth();
   const currentTenantId = authInfo?.user?.tenant?.id;
 
@@ -136,6 +136,7 @@ export const ListOrganizations = () => {
                   onChangeCallback: handleQueryChange
                 }}
                 isLoading={isFetching}
+                isRefetching={isRefetching}
                 onClickRefresh={() => {
                   void refetch();
                 }}

@@ -34,7 +34,7 @@ export const ListRules = ({policy, showRulesOps = false}: {policy?: Policy; show
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [isAdd, setIsAdd] = useState<boolean>(false);
 
-  const {data, isFetching, error, refetch} = useGetPolicyRules({
+  const {data, isFetching, isRefetching, error, refetch} = useGetPolicyRules({
     policyId: policy?.id,
     query: {
       page: pagination.pageIndex + 1,
@@ -88,6 +88,7 @@ export const ListRules = ({policy, showRulesOps = false}: {policy?: Policy; show
                 }}
                 sameLine
                 isLoading={isFetching}
+                isRefetching={isRefetching}
                 onClickRefresh={() => {
                   void refetch();
                 }}

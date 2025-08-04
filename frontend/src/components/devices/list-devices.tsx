@@ -39,7 +39,7 @@ export const ListDevices: React.FC = () => {
   const [tempDevice, setTempDevice] = useState<Device | undefined>();
   const [showActionsModal, setShowActionsModal] = useState<boolean>(false);
 
-  const {data, error, isFetching, refetch} = useGetDevices({
+  const {data, error, isFetching, isRefetching, refetch} = useGetDevices({
     page: pagination.pageIndex + 1,
     size: pagination.pageSize,
     query: query
@@ -210,6 +210,7 @@ export const ListDevices: React.FC = () => {
                   onChangeCallback: handleQueryChange
                 }}
                 isLoading={isFetching}
+                isRefetching={isRefetching}
                 onClickRefresh={() => {
                   void refetch();
                 }}

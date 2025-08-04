@@ -44,7 +44,13 @@ export const OrganizationInfo = ({
 
   const {analyticsTrack} = useAnalytics();
 
-  const {data: dataUsers, isFetching: isLoadingUsers, error: errorUsers, refetch} = useGetUsersGroup(groupId || '');
+  const {
+    data: dataUsers,
+    isFetching: isLoadingUsers,
+    isRefetching,
+    error: errorUsers,
+    refetch
+  } = useGetUsersGroup(groupId || '');
 
   const {authInfo} = useAuth();
   const currentUserName = authInfo?.user?.username;
@@ -139,6 +145,7 @@ export const OrganizationInfo = ({
                   value: query,
                   onChangeCallback: handleQueryChange
                 }}
+                isRefetching={isRefetching}
                 isLoading={isLoadingUsers || isLoadingGroups}
                 onClickRefresh={() => {
                   void refetch();

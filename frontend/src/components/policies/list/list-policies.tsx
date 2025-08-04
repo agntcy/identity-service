@@ -37,7 +37,7 @@ export const ListPolicies = () => {
   const [tempPolicy, setTempPolicy] = useState<Policy | undefined>(undefined);
   const [showActionsModal, setShowActionsModal] = useState<boolean>(false);
 
-  const {data, isFetching, error, refetch} = useGetPolicies({
+  const {data, isFetching, isRefetching, error, refetch} = useGetPolicies({
     query: {
       page: pagination.pageIndex + 1,
       size: pagination.pageSize,
@@ -160,6 +160,7 @@ export const ListPolicies = () => {
                   onChangeCallback: handleQueryChange
                 }}
                 isLoading={isFetching}
+                isRefetching={isRefetching}
                 onClickRefresh={() => {
                   void refetch();
                 }}
