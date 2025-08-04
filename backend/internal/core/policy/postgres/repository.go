@@ -165,7 +165,8 @@ func (r *repository) DeletePolicies(ctx context.Context, policies ...*types.Poli
 			model := newPolicyModel(policy, tenantID)
 
 			err := r.dbContext.Client().
-				Exec("DELETE FROM rule_tasks WHERE rule_id IN (SELECT id from rules where policy_id = ?)", model.ID).Error
+				Exec("DELETE FROM rule_tasks WHERE rule_id IN (SELECT id from rules where policy_id = ?)", model.ID).
+				Error
 			if err != nil {
 				return err
 			}
@@ -283,7 +284,10 @@ func (r *repository) GetPolicyByID(ctx context.Context, id string) (*types.Polic
 	return policy.ToCoreType(), nil
 }
 
-func (r *repository) GetPoliciesByAppID(ctx context.Context, appID string) ([]*types.Policy, error) {
+func (r *repository) GetPoliciesByAppID(
+	ctx context.Context,
+	appID string,
+) ([]*types.Policy, error) {
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
 		return nil, identitycontext.ErrTenantNotFound
@@ -476,19 +480,21 @@ func (r *repository) GetAllPolicies(
 		RuleUpdatedAt     sql.NullTime     `gorm:"column:r__updated_at"`
 	}
 
-	err := dbQuery.Scopes(gormutil.Paginate(paginationFilter)).
-		Table("policies").
-		Select(`
-			policies.*,
-			rules.id as r__id,
-			rules.name as r__name,
-			rules.description as r__description,
-			rules.policy_id as r__policy_id,
-			rules.action as r__action,
-			rules.needs_approval as r__needs_approval,
-			rules.created_at as r__created_at,
-			rules.updated_at as r__updated_at
-		`).
+	err := r.dbContext.Client().Table(`(?) AS derived`,
+		dbQuery.
+			Table("policies").
+			Select(`
+				policies.*,
+				rules.id as r__id,
+				rules.name as r__name,
+				rules.description as r__description,
+				rules.policy_id as r__policy_id,
+				rules.action as r__action,
+				rules.needs_approval as r__needs_approval,
+				rules.created_at as r__created_at,
+				rules.updated_at as r__updated_at
+			`),
+	).Scopes(gormutil.Paginate(paginationFilter)).
 		Find(&rows).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -609,7 +615,11 @@ func (r *repository) CountAllPolicies(ctx context.Context) (int64, error) {
 
 	var totalPolicies int64
 
-	err := r.dbContext.Client().Model(&Policy{}).Where("tenant_id = ?", tenantID).Count(&totalPolicies).Error
+	err := r.dbContext.Client().
+		Model(&Policy{}).
+		Where("tenant_id = ?", tenantID).
+		Count(&totalPolicies).
+		Error
 	if err != nil {
 		return 0, errutil.Err(err, "there was an error counting the policies")
 	}
