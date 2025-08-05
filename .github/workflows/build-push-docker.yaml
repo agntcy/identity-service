@@ -404,7 +404,7 @@
           #region ECR LOGIN
           #region: PRIVATE ECR
           - name: Configure Private ECR AWS Credentials
-            uses: aws-actions/configure-aws-credentials@b47578312673ae6fa5b5096b330d9fbac3d116df #v4.2.1
+            uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a #v4.3.1
             with:
               role-to-assume: ${{ env.AWS_ROLE_GH_ACTIONS_ACCESS_ECR }}
               aws-region: ${{ inputs.private-ecr-region != '' && inputs.private-ecr-region || env.AWS_ECR_REGION }}
@@ -529,7 +529,7 @@
 
           #region: PUBLIC ECR
           - name: Configure Public ECR AWS Credentials
-            uses: aws-actions/configure-aws-credentials@b47578312673ae6fa5b5096b330d9fbac3d116df #v2
+            uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a #v2
             if: ${{ inputs.ecr-public-login }}
             with:
               role-to-assume: ${{ env.AWS_ROLE_GH_ACTIONS_ACCESS_ECR }}
@@ -653,7 +653,7 @@
 
           #region: PUBLIC ECR
           - name: Configure Public ECR AWS Credentials
-            uses: aws-actions/configure-aws-credentials@b47578312673ae6fa5b5096b330d9fbac3d116df #v2
+            uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a #v2
             if: ${{ inputs.ecr-public-enabled }}
             with:
               role-to-assume: ${{ env.AWS_ROLE_GH_ACTIONS_ACCESS_ECR }}
