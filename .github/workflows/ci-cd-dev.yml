@@ -22,7 +22,7 @@ jobs:
     name: checkout & unit test
     runs-on: ${{ vars.UBUNTU_RUNNER }}
     container:
-      image: ${{ vars.SRE_BUILD_IMAGE }}
+      image: ${{ vars.DEFAULT_CONTAINER_RUNNER }}
       options: --user root
       credentials:
         username: ${{ secrets.GHCR_USERNAME }}
@@ -68,7 +68,7 @@ jobs:
       ghcr-org-token: ${{ secrets.GHCR_TOKEN }}
 
     with:
-      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      runner-group: ${{ vars.DEFAULT_ARC_RUNNERS }}
       ### REQUIRED
       ### Docker image name
       image-name: "${{ github.event.repository.name }}"
@@ -101,7 +101,7 @@ jobs:
       ghcr-org-token: ${{ secrets.GHCR_TOKEN }}
 
     with:
-      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      runner-group: ${{ vars.DEFAULT_ARC_RUNNERS }}
       ### REQUIRED
       ### Docker image name
       image-name: "${{ github.event.repository.name }}-mcp-server-currency-exchange"
@@ -134,7 +134,7 @@ jobs:
       ghcr-org-token: ${{ secrets.GHCR_TOKEN }}
 
     with:
-      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      runner-group: ${{ vars.DEFAULT_ARC_RUNNERS }}
       ### REQUIRED
       ### Docker image name
       image-name: "${{ github.event.repository.name }}-a2a-agent-currency-exchange"
@@ -167,7 +167,7 @@ jobs:
       ghcr-org-token: ${{ secrets.GHCR_TOKEN }}
 
     with:
-      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      runner-group: ${{ vars.DEFAULT_ARC_RUNNERS }}
       ### REQUIRED
       ### Docker image name
       image-name: "${{ github.event.repository.name }}-oasf-agent-financial-assistant"
@@ -201,7 +201,7 @@ jobs:
       artifactory_password: ${{ secrets.ARTIFACTORY_PASSWORD }}
 
     with:
-      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      runner-group: ${{ vars.DEFAULT_ARC_RUNNERS }}
       ### REQUIRED
       ### Docker image name
       image-name: "${{ github.event.repository.name }}-ui"
@@ -232,7 +232,7 @@ jobs:
       ghcr-token: ${{ secrets.GHCR_TOKEN }}
       ghcr-org-token: ${{ secrets.GHCR_TOKEN }}
     with:
-      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      runner-group: ${{ vars.DEFAULT_ARC_RUNNERS }}
       ### REQUIRED
       ### Docker image name
       image-name: "${{ github.event.repository.name }}-docs"
@@ -258,7 +258,7 @@ jobs:
     needs: [checkout-unit-tests]
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@a663a51a68f4158da24f29d7859dabb891586d5c #main
     with:
-      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      runner-group: ${{ vars.DEFAULT_ARC_RUNNERS }}
       enable-chartmuseum: true
       enable-private-ecr: false
       enable-public-ecr: false
@@ -277,7 +277,7 @@ jobs:
     needs: [checkout-unit-tests]
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@a663a51a68f4158da24f29d7859dabb891586d5c #main
     with:
-      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      runner-group: ${{ vars.DEFAULT_ARC_RUNNERS }}
       enable-chartmuseum: true
       enable-private-ecr: false
       enable-public-ecr: false
@@ -296,7 +296,7 @@ jobs:
     needs: [checkout-unit-tests]
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@a663a51a68f4158da24f29d7859dabb891586d5c #main
     with:
-      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      runner-group: ${{ vars.DEFAULT_ARC_RUNNERS }}
       enable-chartmuseum: true
       enable-private-ecr: false
       enable-public-ecr: false
@@ -315,7 +315,7 @@ jobs:
     needs: [checkout-unit-tests]
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@a663a51a68f4158da24f29d7859dabb891586d5c #main
     with:
-      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      runner-group: ${{ vars.DEFAULT_ARC_RUNNERS }}
       enable-chartmuseum: true
       enable-private-ecr: false
       enable-public-ecr: false
@@ -334,7 +334,7 @@ jobs:
     needs: [checkout-unit-tests]
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@a663a51a68f4158da24f29d7859dabb891586d5c #main
     with:
-      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      runner-group: ${{ vars.DEFAULT_ARC_RUNNERS }}
       enable-chartmuseum: true
       enable-private-ecr: false
       enable-public-ecr: false
@@ -353,7 +353,7 @@ jobs:
     needs: [checkout-unit-tests]
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@a663a51a68f4158da24f29d7859dabb891586d5c #main
     with:
-      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      runner-group: ${{ vars.DEFAULT_ARC_RUNNERS }}
       enable-chartmuseum: true
       enable-private-ecr: false
       enable-public-ecr: false
