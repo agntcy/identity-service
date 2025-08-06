@@ -20,7 +20,7 @@ import {
   useDropdownAutocompleteTree
 } from '@outshift/spark-design';
 import {RotateCwIcon} from 'lucide-react';
-import {useCallback, useEffect} from 'react';
+import {useCallback, useEffect, useRef} from 'react';
 import {useDebouncedCallback} from 'use-debounce';
 
 interface CustomDropdownProps<T>
@@ -125,6 +125,8 @@ export const FilterSections = <T,>({
 };
 
 const CustomDropdown = <T,>({treeData, onSelectValues, isSearchFieldEnabled, ...props}: CustomDropdownProps<T>) => {
+  const hasInitialized = useRef(false);
+
   const {
     flattenedTreeOptions,
     onSelectAllChange,
@@ -141,7 +143,13 @@ const CustomDropdown = <T,>({treeData, onSelectValues, isSearchFieldEnabled, ...
   });
 
   useEffect(() => {
-    onSelectValues?.(selectedValues);
+    if (!hasInitialized.current) {
+      hasInitialized.current = true;
+      return; // Skip the first render
+    }
+    if (hasInitialized.current) {
+      onSelectValues?.(selectedValues);
+    }
   }, [selectedValues, onSelectValues]);
 
   return (

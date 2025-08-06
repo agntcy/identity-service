@@ -23,6 +23,7 @@ import {useShallow} from 'zustand/react/shallow';
 import {useAnalytics} from '@/hooks';
 import {BadgeModalForm} from '@/components/shared/agentic-services/badge-modal-form';
 import {DEFAULT_ROWS_PER_PAGE, ROWS_PER_PAGE_OPTION} from '@/constants/pagination';
+import {isEqual} from 'lodash';
 
 export const ListAgenticServices = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -53,6 +54,9 @@ export const ListAgenticServices = () => {
           .map((type) => type as AppType)
       : [AppType.APP_TYPE_AGENT_A2A, AppType.APP_TYPE_AGENT_OASF, AppType.APP_TYPE_MCP_SERVER]
   );
+
+  console.log(sorting);
+  console.log(appTypeFilters);
 
   const {data, isFetching, isRefetching, error, refetch} = useGetAgenticServices({
     page: pagination.pageIndex + 1,
@@ -127,14 +131,17 @@ export const ListAgenticServices = () => {
 
   const handleQueryChange = useCallback(
     (value: string) => {
-      setQuery(value);
-      const newSearchParams = new URLSearchParams(searchParams);
       if (value) {
+        setQuery(value);
+        const newSearchParams = new URLSearchParams(searchParams);
         newSearchParams.set('query', value);
+        setSearchParams(newSearchParams);
       } else {
+        setQuery(undefined);
+        const newSearchParams = new URLSearchParams(searchParams);
         newSearchParams.delete('query');
+        setSearchParams(newSearchParams);
       }
-      setSearchParams(newSearchParams);
     },
     [searchParams, setSearchParams]
   );
@@ -159,16 +166,19 @@ export const ListAgenticServices = () => {
   const handleTypeFilterChange = useCallback(
     (selectedValues: SelectNodeType<AppType>[]) => {
       const selectedTypes = selectedValues.map((node) => node.value as AppType);
-      setAppTypeFilters(selectedTypes);
-      const newSearchParams = new URLSearchParams(searchParams);
-      if (selectedTypes.length > 0) {
-        newSearchParams.set('types', selectedTypes.join(','));
-      } else {
-        newSearchParams.delete('types');
+      if (!isEqual(selectedTypes, appTypeFilters)) {
+        console.log('Selected Types:', selectedTypes);
+        setAppTypeFilters(selectedTypes);
+        const newSearchParams = new URLSearchParams(searchParams);
+        if (selectedTypes.length > 0) {
+          newSearchParams.set('types', selectedTypes.join(','));
+        } else {
+          newSearchParams.delete('types');
+        }
+        setSearchParams(newSearchParams);
       }
-      setSearchParams(newSearchParams);
     },
-    [searchParams, setSearchParams]
+    [appTypeFilters, searchParams, setSearchParams]
   );
 
   const deleteMutation = useDeleteAgenticService({

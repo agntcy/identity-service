@@ -12,7 +12,7 @@ import {ApproveTokenRequest} from '@/types/api/auth';
 import {notificationUtils} from '@/utils/notification-store';
 import {ExpirationPlugin} from 'workbox-expiration';
 import {CacheableResponsePlugin} from 'workbox-cacheable-response';
-import {CacheFirst, NetworkFirst, StaleWhileRevalidate} from 'workbox-strategies';
+import {CacheFirst, NetworkFirst, NetworkOnly, StaleWhileRevalidate} from 'workbox-strategies';
 
 const ICON_PATH = '/pwa-192x192.png';
 const BADGE_PATH = '/pwa-64x64.png';
@@ -262,9 +262,12 @@ self.__WB_DISABLE_DEV_LOGS = true;
 void self.skipWaiting();
 clientsClaim();
 
-// Avoid caching, force always go to the server
+// Skip caching for v1alpha1 API endpoints - always go to network
+registerRoute(({url}) => url.pathname.includes('v1alpha1'), new NetworkOnly());
+
+// Avoid caching, force always go to the server (but exclude v1alpha1)
 registerRoute(
-  () => true,
+  ({url}) => !url.pathname.includes('v1alpha1'),
   new NetworkFirst({
     cacheName: 'agent-identity-service-v1',
     plugins: [new CacheableResponsePlugin({statuses: [-1]})]

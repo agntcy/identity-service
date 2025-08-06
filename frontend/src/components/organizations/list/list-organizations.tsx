@@ -97,7 +97,11 @@ export const ListOrganizations = () => {
   }, [analyticsTrack, deleteTenantMutation, tenantId]);
 
   const handleQueryChange = useCallback((value: string) => {
-    setQuery(value);
+    if (value) {
+      setQuery(value);
+    } else {
+      setQuery(undefined);
+    }
   }, []);
 
   const handlePaginationChange = useCallback(

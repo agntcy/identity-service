@@ -45,7 +45,11 @@ export const ListRules = ({policy, showRulesOps = false}: {policy?: Policy; show
 
   const handleQueryChange = useCallback(
     (value: string) => {
-      setQuery(value);
+      if (value) {
+        setQuery(value);
+      } else {
+        setQuery(undefined);
+      }
       setPagination((prev) => ({...prev, pageIndex: 0}));
     },
     [setQuery, setPagination]

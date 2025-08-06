@@ -140,14 +140,17 @@ export const ListDevices: React.FC = () => {
 
   const handleQueryChange = useCallback(
     (value: string) => {
-      setQuery(value);
-      const newSearchParams = new URLSearchParams(searchParams);
       if (value) {
+        setQuery(value);
+        const newSearchParams = new URLSearchParams(searchParams);
         newSearchParams.set('query', value);
+        setSearchParams(newSearchParams);
       } else {
+        setQuery(undefined);
+        const newSearchParams = new URLSearchParams(searchParams);
         newSearchParams.delete('query');
+        setSearchParams(newSearchParams);
       }
-      setSearchParams(newSearchParams);
     },
     [searchParams, setSearchParams]
   );
