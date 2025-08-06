@@ -669,10 +669,3 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       })
   };
 }
-   body: body,
-        type: ContentType.Json,
-        format: 'json',
-        ...params
-      })
-  };
-}
