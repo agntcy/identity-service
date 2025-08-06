@@ -3,7 +3,7 @@
 
 package sorting
 
-type Pageable[T any] struct {
+type Sorting struct {
 	SortColumn *string
 	SortDesc   *bool
 }
