@@ -437,7 +437,6 @@ func (r *repository) GetAllPolicies(
 	}
 
 	dbQuery := r.dbContext.Client().
-		Joins("LEFT JOIN rules ON rules.policy_id = policies.id").
 		Where("policies.tenant_id = ?", tenantID)
 
 	if query != nil && *query != "" {
@@ -480,21 +479,30 @@ func (r *repository) GetAllPolicies(
 		RuleUpdatedAt     sql.NullTime     `gorm:"column:r__updated_at"`
 	}
 
-	err := r.dbContext.Client().Table(`(?) AS derived`,
-		dbQuery.
-			Table("policies").
-			Select(`
-				policies.*,
-				rules.id as r__id,
-				rules.name as r__name,
-				rules.description as r__description,
-				rules.policy_id as r__policy_id,
-				rules.action as r__action,
-				rules.needs_approval as r__needs_approval,
-				rules.created_at as r__created_at,
-				rules.updated_at as r__updated_at
-			`),
-	).Scopes(gormutil.Paginate(paginationFilter)).
+	err := r.dbContext.Client().
+		Table(`(?) AS main`,
+			dbQuery.
+				Table("policies").
+				Select(`
+					policies.*,
+					rules.id as r__id,
+					rules.name as r__name,
+					rules.description as r__description,
+					rules.policy_id as r__policy_id,
+					rules.action as r__action,
+					rules.needs_approval as r__needs_approval,
+					rules.created_at as r__created_at,
+					rules.updated_at as r__updated_at
+				`).
+				Joins("LEFT JOIN rules ON rules.policy_id = policies.id"),
+		).
+		Select(`*`).
+		Where("main.id IN (?)",
+			dbQuery.
+				Table("policies").
+				Select(`id`).
+				Scopes(gormutil.Paginate(paginationFilter)),
+		).
 		Find(&rows).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
