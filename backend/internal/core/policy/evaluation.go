@@ -7,9 +7,9 @@ import (
 	"context"
 	"errors"
 
+	"github.com/agntcy/identity/pkg/log"
 	apptypes "github.com/outshift/identity-service/internal/core/app/types"
 	"github.com/outshift/identity-service/internal/core/policy/types"
-	"github.com/agntcy/identity/pkg/log"
 )
 
 type Evaluator interface {

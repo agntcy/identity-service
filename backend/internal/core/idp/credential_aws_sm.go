@@ -9,10 +9,10 @@ import (
 	"errors"
 	"fmt"
 
-	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
-	"github.com/outshift/identity-service/internal/pkg/ptrutil"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/secretsmanager"
+	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
+	"github.com/outshift/identity-service/internal/pkg/ptrutil"
 )
 
 type AwsSmCredentialStore struct {

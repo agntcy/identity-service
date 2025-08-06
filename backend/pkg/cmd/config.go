@@ -4,9 +4,9 @@
 package cmd
 
 import (
-	"github.com/outshift/identity-service/pkg/log"
 	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
+	"github.com/outshift/identity-service/pkg/log"
 	"github.com/sirupsen/logrus"
 )
 
