@@ -155,7 +155,9 @@ func (r *repository) GetAllApps(
 		dbQuery = dbQuery.Order(fmt.Sprintf("%s %s", dbColumn, direction))
 	}
 
-	dbQuery = dbQuery.Session(&gorm.Session{}) // https://gorm.io/docs/method_chaining.html#Reusability-and-Safety
+	dbQuery = dbQuery.Session(
+		&gorm.Session{},
+	) // https://gorm.io/docs/method_chaining.html#Reusability-and-Safety
 
 	var apps []*App
 
@@ -195,7 +197,11 @@ func (r *repository) CountAllApps(ctx context.Context) (int64, error) {
 
 	var totalApps int64
 
-	err := r.dbContext.Client().Model(&App{}).Where("tenant_id = ?", tenantID).Count(&totalApps).Error
+	err := r.dbContext.Client().
+		Model(&App{}).
+		Where("tenant_id = ?", tenantID).
+		Count(&totalApps).
+		Error
 	if err != nil {
 		return 0, errutil.Err(err, "there was an error counting the apps")
 	}
