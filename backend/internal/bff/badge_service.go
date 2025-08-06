@@ -10,6 +10,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/go-playground/validator/v10"
 	appcore "github.com/outshift/identity-service/internal/core/app"
 	apptypes "github.com/outshift/identity-service/internal/core/app/types"
 	badgecore "github.com/outshift/identity-service/internal/core/badge"
@@ -21,7 +22,6 @@ import (
 	policycore "github.com/outshift/identity-service/internal/core/policy"
 	settingscore "github.com/outshift/identity-service/internal/core/settings"
 	"github.com/outshift/identity-service/internal/pkg/ptrutil"
-	"github.com/go-playground/validator/v10"
 )
 
 type issueInput struct {

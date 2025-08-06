@@ -9,8 +9,8 @@ import (
 	"crypto/sha256"
 	"encoding/gob"
 
-	"github.com/outshift/identity-service/pkg/log"
 	"github.com/eko/gocache/lib/v4/cache"
+	"github.com/outshift/identity-service/pkg/log"
 )
 
 // Get from cache

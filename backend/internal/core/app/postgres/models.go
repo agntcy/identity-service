@@ -7,9 +7,9 @@ import (
 	"database/sql"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/outshift/identity-service/internal/core/app/types"
 	"github.com/outshift/identity-service/internal/pkg/pgutil"
-	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 

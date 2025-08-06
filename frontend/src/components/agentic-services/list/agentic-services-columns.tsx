@@ -30,6 +30,7 @@ export const AgenticServiceColumns = (): MRT_ColumnDef<App, any>[] => {
     {
       accessorKey: 'status',
       header: 'Badge Status',
+      enableSorting: false,
       Cell: ({row}) => {
         return <StatusAgenticService status={row.original.status} />;
       }

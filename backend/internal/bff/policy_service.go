@@ -11,6 +11,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/google/uuid"
 	appcore "github.com/outshift/identity-service/internal/core/app"
 	apptypes "github.com/outshift/identity-service/internal/core/app/types"
 	policycore "github.com/outshift/identity-service/internal/core/policy"
@@ -19,7 +20,6 @@ import (
 	"github.com/outshift/identity-service/internal/pkg/pagination"
 	"github.com/outshift/identity-service/internal/pkg/ptrutil"
 	"github.com/outshift/identity-service/internal/pkg/strutil"
-	"github.com/google/uuid"
 )
 
 type PolicyService interface {

@@ -8,6 +8,7 @@ import (
 	"errors"
 	"time"
 
+	"github.com/google/uuid"
 	sessioncore "github.com/outshift/identity-service/internal/core/auth"
 	"github.com/outshift/identity-service/internal/core/auth/types"
 	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
@@ -16,7 +17,6 @@ import (
 	"github.com/outshift/identity-service/internal/pkg/secrets"
 	"github.com/outshift/identity-service/internal/pkg/strutil"
 	"github.com/outshift/identity-service/pkg/db"
-	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 

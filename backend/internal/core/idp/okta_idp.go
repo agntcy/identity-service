@@ -10,12 +10,12 @@ import (
 	"net/http"
 	"strings"
 
+	oktasdk "github.com/okta/okta-sdk-golang/v5/okta"
 	"github.com/outshift/identity-service/internal/core/settings/types"
 	"github.com/outshift/identity-service/internal/pkg/errutil"
 	"github.com/outshift/identity-service/internal/pkg/ptrutil"
 	"github.com/outshift/identity-service/internal/pkg/strutil"
 	"github.com/outshift/identity-service/pkg/log"
-	oktasdk "github.com/okta/okta-sdk-golang/v5/okta"
 )
 
 const (

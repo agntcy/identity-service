@@ -9,10 +9,10 @@ import (
 	urllib "net/url"
 	"strings"
 
-	"github.com/outshift/identity-service/internal/pkg/errutil"
-	"github.com/outshift/identity-service/pkg/log"
 	"github.com/mark3labs/mcp-go/client"
 	"github.com/mark3labs/mcp-go/mcp"
+	"github.com/outshift/identity-service/internal/pkg/errutil"
+	"github.com/outshift/identity-service/pkg/log"
 )
 
 const (

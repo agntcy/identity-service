@@ -23,6 +23,7 @@ import {useShallow} from 'zustand/react/shallow';
 import {useAnalytics} from '@/hooks';
 import {BadgeModalForm} from '@/components/shared/agentic-services/badge-modal-form';
 import {DEFAULT_ROWS_PER_PAGE, ROWS_PER_PAGE_OPTION} from '@/constants/pagination';
+import {isEqual} from 'lodash';
 
 export const ListAgenticServices = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -31,10 +32,15 @@ export const ListAgenticServices = () => {
     pageSize: Number(searchParams.get('size')) || DEFAULT_ROWS_PER_PAGE
   });
   const [sorting, setSorting] = useState<MRT_SortingState>([
-    {
-      id: 'createdAt',
-      desc: true
-    }
+    searchParams.get('sortColumn') && searchParams.get('sortDesc')
+      ? {
+          id: searchParams.get('sortColumn')!,
+          desc: searchParams.get('sortDesc') === 'true'
+        }
+      : {
+          id: 'createdAt',
+          desc: true
+        }
   ]);
   const [query, setQuery] = useState<string | undefined>(searchParams.get('query') || undefined);
   const [tempApp, setTempApp] = useState<App | undefined>(undefined);
@@ -49,11 +55,16 @@ export const ListAgenticServices = () => {
       : [AppType.APP_TYPE_AGENT_A2A, AppType.APP_TYPE_AGENT_OASF, AppType.APP_TYPE_MCP_SERVER]
   );
 
+  console.log(sorting);
+  console.log(appTypeFilters);
+
   const {data, isFetching, isRefetching, error, refetch} = useGetAgenticServices({
     page: pagination.pageIndex + 1,
     size: pagination.pageSize,
     query: query,
-    types: appTypeFilters
+    types: appTypeFilters,
+    sortColumn: sorting[0]?.id,
+    sortDesc: sorting[0]?.desc
   });
 
   const {data: dataCount} = useGetAgenticServiceTotalCount();
@@ -91,16 +102,46 @@ export const ListAgenticServices = () => {
     ];
   }, [appTypeFilters]);
 
-  const handleQueryChange = useCallback(
-    (value: string) => {
-      setQuery(value);
+  const handleSortingChange = useCallback(
+    (updaterOrValue: MRT_SortingState | ((old: MRT_SortingState) => MRT_SortingState)) => {
+      setSorting(updaterOrValue);
       const newSearchParams = new URLSearchParams(searchParams);
-      if (value) {
-        newSearchParams.set('query', value);
+      if (typeof updaterOrValue === 'function') {
+        const newSorting = updaterOrValue(sorting);
+        if (newSorting.length > 0) {
+          newSearchParams.set('sortColumn', newSorting[0].id);
+          newSearchParams.set('sortDesc', String(newSorting[0].desc));
+        } else {
+          newSearchParams.delete('sortColumn');
+          newSearchParams.delete('sortDesc');
+        }
       } else {
-        newSearchParams.delete('query');
+        if (updaterOrValue.length > 0) {
+          newSearchParams.set('sortColumn', updaterOrValue[0].id);
+          newSearchParams.set('sortDesc', String(updaterOrValue[0].desc));
+        } else {
+          newSearchParams.delete('sortColumn');
+          newSearchParams.delete('sortDesc');
+        }
       }
       setSearchParams(newSearchParams);
+    },
+    [searchParams, setSearchParams, sorting]
+  );
+
+  const handleQueryChange = useCallback(
+    (value: string) => {
+      if (value) {
+        setQuery(value);
+        const newSearchParams = new URLSearchParams(searchParams);
+        newSearchParams.set('query', value);
+        setSearchParams(newSearchParams);
+      } else {
+        setQuery(undefined);
+        const newSearchParams = new URLSearchParams(searchParams);
+        newSearchParams.delete('query');
+        setSearchParams(newSearchParams);
+      }
     },
     [searchParams, setSearchParams]
   );
@@ -125,16 +166,19 @@ export const ListAgenticServices = () => {
   const handleTypeFilterChange = useCallback(
     (selectedValues: SelectNodeType<AppType>[]) => {
       const selectedTypes = selectedValues.map((node) => node.value as AppType);
-      setAppTypeFilters(selectedTypes);
-      const newSearchParams = new URLSearchParams(searchParams);
-      if (selectedTypes.length > 0) {
-        newSearchParams.set('types', selectedTypes.join(','));
-      } else {
-        newSearchParams.delete('types');
+      if (!isEqual(selectedTypes, appTypeFilters)) {
+        console.log('Selected Types:', selectedTypes);
+        setAppTypeFilters(selectedTypes);
+        const newSearchParams = new URLSearchParams(searchParams);
+        if (selectedTypes.length > 0) {
+          newSearchParams.set('types', selectedTypes.join(','));
+        } else {
+          newSearchParams.delete('types');
+        }
+        setSearchParams(newSearchParams);
       }
-      setSearchParams(newSearchParams);
     },
-    [searchParams, setSearchParams]
+    [appTypeFilters, searchParams, setSearchParams]
   );
 
   const deleteMutation = useDeleteAgenticService({
@@ -235,11 +279,12 @@ export const ListAgenticServices = () => {
             }}
             manualPagination={true}
             manualFiltering={true}
+            manualSorting={true}
             onPaginationChange={handlePaginationChange}
             rowCount={Number(data?.pagination?.total) || 0}
             rowsPerPageOptions={ROWS_PER_PAGE_OPTION}
             state={{pagination, sorting}}
-            onSortingChange={setSorting}
+            onSortingChange={handleSortingChange}
             renderRowActionMenuItems={({row}) => {
               return [
                 <MenuItem

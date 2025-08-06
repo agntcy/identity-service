@@ -8,6 +8,7 @@ import (
 	"errors"
 	"time"
 
+	"github.com/agntcy/identity/pkg/oidc"
 	appcore "github.com/outshift/identity-service/internal/core/app"
 	apptypes "github.com/outshift/identity-service/internal/core/app/types"
 	authcore "github.com/outshift/identity-service/internal/core/auth"
@@ -23,8 +24,9 @@ import (
 	"github.com/outshift/identity-service/internal/pkg/jwtutil"
 	"github.com/outshift/identity-service/internal/pkg/ptrutil"
 	"github.com/outshift/identity-service/pkg/log"
-	"github.com/agntcy/identity/pkg/oidc"
 )
+
+const waitForDeviceApprovalTime = 500 // milliseconds
 
 type AuthService interface {
 	Authorize(
@@ -425,7 +427,15 @@ func (s *authService) sendDeviceOTP(
 		return nil, err
 	}
 
-	err = s.notifService.SendOTPNotification(ctx, device, session, otp, callerApp, calleeApp, toolName)
+	err = s.notifService.SendOTPNotification(
+		ctx,
+		device,
+		session,
+		otp,
+		callerApp,
+		calleeApp,
+		toolName,
+	)
 	if err != nil {
 		return nil, errutil.Err(err, "unable to send notification")
 	}
@@ -434,7 +444,7 @@ func (s *authService) sendDeviceOTP(
 }
 
 func (s *authService) waitForDeviceApproval(ctx context.Context, otpID string) error {
-	tick := 500 * time.Millisecond
+	tick := waitForDeviceApprovalTime * time.Millisecond
 
 	loopErr := s.activeWaitLoop(
 		authtypes.SessionDeviceOTPDuration,

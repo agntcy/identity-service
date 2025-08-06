@@ -566,6 +566,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
          *  - APP_TYPE_MCP_SERVER: Agent MCP Server App Type.
          */
         types?: ('APP_TYPE_UNSPECIFIED' | 'APP_TYPE_AGENT_A2A' | 'APP_TYPE_AGENT_OASF' | 'APP_TYPE_MCP_SERVER')[];
+        /** The column ID to sort by */
+        sortColumn?: string;
+        /** Whether to sort in descending order (true) or ascending order (false) */
+        sortDesc?: boolean;
       },
       params: RequestParams = {}
     ) =>

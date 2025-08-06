@@ -11,11 +11,11 @@ import (
 	"path"
 	"time"
 
+	duosdk "github.com/duosecurity/duo_api_golang"
+	"github.com/google/uuid"
 	"github.com/outshift/identity-service/internal/core/settings/types"
 	"github.com/outshift/identity-service/internal/pkg/errutil"
 	"github.com/outshift/identity-service/pkg/log"
-	duosdk "github.com/duosecurity/duo_api_golang"
-	"github.com/google/uuid"
 )
 
 const (

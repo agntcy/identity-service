@@ -91,7 +91,11 @@ type ListAppsRequest struct {
 	// The search query
 	Query *string `protobuf:"bytes,3,opt,name=query,proto3,oneof" json:"query,omitempty"`
 	// The app type filter
-	Types         []AppType `protobuf:"varint,4,rep,packed,name=types,proto3,enum=outshift.identity.service.v1alpha1.AppType" json:"types,omitempty"`
+	Types []AppType `protobuf:"varint,4,rep,packed,name=types,proto3,enum=outshift.identity.service.v1alpha1.AppType" json:"types,omitempty"`
+	// The column ID to sort by
+	SortColumn *string `protobuf:"bytes,5,opt,name=sort_column,json=sortColumn,proto3,oneof" json:"sort_column,omitempty"`
+	// Whether to sort in descending order (true) or ascending order (false)
+	SortDesc      *bool `protobuf:"varint,6,opt,name=sort_desc,json=sortDesc,proto3,oneof" json:"sort_desc,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -152,6 +156,20 @@ func (x *ListAppsRequest) GetTypes() []AppType {
 		return x.Types
 	}
 	return nil
+}
+
+func (x *ListAppsRequest) GetSortColumn() string {
+	if x != nil && x.SortColumn != nil {
+		return *x.SortColumn
+	}
+	return ""
+}
+
+func (x *ListAppsRequest) GetSortDesc() bool {
+	if x != nil && x.SortDesc != nil {
+		return *x.SortDesc
+	}
+	return false
 }
 
 type CreateAppRequest struct {
@@ -676,15 +694,21 @@ const file_outshift_identity_service_v1alpha1_app_service_proto_rawDesc = "" +
 	"\n" +
 	"pagination\x18\x02 \x01(\v28.outshift.identity.service.shared.v1alpha1.PagedResponseH\x00R\n" +
 	"pagination\x88\x01\x01B\r\n" +
-	"\v_pagination\"\xbd\x01\n" +
+	"\v_pagination\"\xa3\x02\n" +
 	"\x0fListAppsRequest\x12\x17\n" +
 	"\x04page\x18\x01 \x01(\x05H\x00R\x04page\x88\x01\x01\x12\x17\n" +
 	"\x04size\x18\x02 \x01(\x05H\x01R\x04size\x88\x01\x01\x12\x19\n" +
 	"\x05query\x18\x03 \x01(\tH\x02R\x05query\x88\x01\x01\x12A\n" +
-	"\x05types\x18\x04 \x03(\x0e2+.outshift.identity.service.v1alpha1.AppTypeR\x05typesB\a\n" +
+	"\x05types\x18\x04 \x03(\x0e2+.outshift.identity.service.v1alpha1.AppTypeR\x05types\x12$\n" +
+	"\vsort_column\x18\x05 \x01(\tH\x03R\n" +
+	"sortColumn\x88\x01\x01\x12 \n" +
+	"\tsort_desc\x18\x06 \x01(\bH\x04R\bsortDesc\x88\x01\x01B\a\n" +
 	"\x05_pageB\a\n" +
 	"\x05_sizeB\b\n" +
-	"\x06_query\"M\n" +
+	"\x06_queryB\x0e\n" +
+	"\f_sort_columnB\f\n" +
+	"\n" +
+	"_sort_desc\"M\n" +
 	"\x10CreateAppRequest\x129\n" +
 	"\x03app\x18\x01 \x01(\v2'.outshift.identity.service.v1alpha1.AppR\x03app\"\x15\n" +
 	"\x13GetAppsCountRequest\"h\n" +

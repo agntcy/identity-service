@@ -9,11 +9,11 @@ import (
 	"io"
 	"net/http"
 
+	orysdk "github.com/ory/client-go"
 	"github.com/outshift/identity-service/internal/core/settings/types"
 	"github.com/outshift/identity-service/internal/pkg/errutil"
 	"github.com/outshift/identity-service/internal/pkg/ptrutil"
 	"github.com/outshift/identity-service/pkg/log"
-	orysdk "github.com/ory/client-go"
 )
 
 const (

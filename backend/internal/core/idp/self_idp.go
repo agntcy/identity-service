@@ -7,8 +7,8 @@ import (
 	"context"
 	"errors"
 
-	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
 	"github.com/google/uuid"
+	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
 )
 
 type SelfIdp struct{}

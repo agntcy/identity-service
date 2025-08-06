@@ -8,6 +8,7 @@ import (
 
 	"github.com/outshift/identity-service/internal/core/app/types"
 	"github.com/outshift/identity-service/internal/pkg/pagination"
+	"github.com/outshift/identity-service/internal/pkg/sorting"
 )
 
 type Repository interface {
@@ -25,6 +26,7 @@ type Repository interface {
 		paginationFilter pagination.PaginationFilter,
 		query *string,
 		appTypes []types.AppType,
+		sortBy sorting.Sorting,
 	) (*pagination.Pageable[types.App], error)
 	CountAllApps(ctx context.Context) (int64, error)
 	GetAppsByID(ctx context.Context, ids []string) ([]*types.App, error)

@@ -125,6 +125,12 @@ message ListAppsRequest {
 
   // The app type filter
   repeated AppType types = 4;
+
+  // The column ID to sort by
+  optional string sort_column = 5;
+
+  // Whether to sort in descending order (true) or ascending order (false)
+  optional bool sort_desc = 6;
 }
 
 message CreateAppRequest {

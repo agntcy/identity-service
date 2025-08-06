@@ -16,6 +16,7 @@ import (
 	"github.com/outshift/identity-service/internal/pkg/errutil"
 	"github.com/outshift/identity-service/internal/pkg/gormutil"
 	"github.com/outshift/identity-service/internal/pkg/pagination"
+	"github.com/outshift/identity-service/internal/pkg/sorting"
 	"github.com/outshift/identity-service/pkg/db"
 	"gorm.io/gorm"
 )
@@ -108,6 +109,7 @@ func (r *repository) GetAllApps(
 	paginationFilter pagination.PaginationFilter,
 	query *string,
 	appTypes []types.AppType,
+	sortBy sorting.Sorting,
 ) (*pagination.Pageable[types.App], error) {
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
@@ -129,7 +131,33 @@ func (r *repository) GetAllApps(
 		dbQuery = dbQuery.Where("type IN ?", appTypes)
 	}
 
-	dbQuery = dbQuery.Session(&gorm.Session{}) // https://gorm.io/docs/method_chaining.html#Reusability-and-Safety
+	if sortBy.SortColumn != nil && *sortBy.SortColumn != "" {
+		allowedSortFields := map[string]string{
+			"id":                 "id",
+			"name":               "name",
+			"description":        "description",
+			"type":               "type",
+			"resolverMetadataId": "resolver_metadata_id",
+			"createdAt":          "created_at",
+			"updatedAt":          "updated_at",
+		}
+
+		dbColumn, exists := allowedSortFields[*sortBy.SortColumn]
+		if !exists {
+			return nil, errutil.Err(nil, fmt.Sprintf("invalid sort field: %s", *sortBy.SortColumn))
+		}
+
+		direction := "ASC"
+		if sortBy.SortDesc != nil && *sortBy.SortDesc {
+			direction = "DESC"
+		}
+
+		dbQuery = dbQuery.Order(fmt.Sprintf("%s %s", dbColumn, direction))
+	}
+
+	dbQuery = dbQuery.Session(
+		&gorm.Session{},
+	) // https://gorm.io/docs/method_chaining.html#Reusability-and-Safety
 
 	var apps []*App
 
@@ -169,7 +197,11 @@ func (r *repository) CountAllApps(ctx context.Context) (int64, error) {
 
 	var totalApps int64
 
-	err := r.dbContext.Client().Model(&App{}).Where("tenant_id = ?", tenantID).Count(&totalApps).Error
+	err := r.dbContext.Client().
+		Model(&App{}).
+		Where("tenant_id = ?", tenantID).
+		Count(&totalApps).
+		Error
 	if err != nil {
 		return 0, errutil.Err(err, "there was an error counting the apps")
 	}

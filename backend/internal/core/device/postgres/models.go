@@ -6,9 +6,9 @@ package postgres
 import (
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/outshift/identity-service/internal/core/device/types"
 	"github.com/outshift/identity-service/internal/pkg/ptrutil"
-	"github.com/google/uuid"
 )
 
 type Device struct {

@@ -14,15 +14,15 @@ import (
 	"strings"
 	"time"
 
-	identitycache "github.com/outshift/identity-service/internal/pkg/cache"
-	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
-	"github.com/outshift/identity-service/internal/pkg/httputil"
-	"github.com/outshift/identity-service/pkg/log"
 	freecache "github.com/coocood/freecache"
 	"github.com/eko/gocache/lib/v4/cache"
 	"github.com/eko/gocache/lib/v4/store"
 	freecache_store "github.com/eko/gocache/store/freecache/v4"
 	jwtverifier "github.com/okta/okta-jwt-verifier-golang"
+	identitycache "github.com/outshift/identity-service/internal/pkg/cache"
+	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
+	"github.com/outshift/identity-service/internal/pkg/httputil"
+	"github.com/outshift/identity-service/pkg/log"
 )
 
 // ------------------------ GLOBAL -------------------- //
