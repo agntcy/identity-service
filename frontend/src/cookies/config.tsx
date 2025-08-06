@@ -3,7 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {show, type CookieConsentConfig} from 'vanilla-cookieconsent';
+import {links} from '@/constants/links';
+import {type CookieConsentConfig} from 'vanilla-cookieconsent';
 
 export const config: CookieConsentConfig = {
   guiOptions: {
@@ -19,9 +20,6 @@ export const config: CookieConsentConfig = {
       equalWeightButtons: true,
       flipButtons: false
     }
-  },
-  onFirstConsent: function () {
-    show();
   },
   categories: {
     necessary: {
@@ -49,7 +47,7 @@ export const config: CookieConsentConfig = {
           acceptNecessaryBtn: 'Reject all',
           showPreferencesBtn: 'Manage preferences',
           footer: `
-            <a href="https://www.cisco.com/c/en/us/about/legal/privacy-full.html" target="_blank">Privacy Policy</a>
+            <a href="${links.privacyPolicy}" target="_blank">Privacy Policy</a>
           `
         },
         preferencesModal: {

@@ -8,6 +8,7 @@ import * as CookieConsentVanilla from 'vanilla-cookieconsent';
 import {useWindowSize} from '@/hooks';
 import {Link} from 'react-router-dom';
 import FooterLogo from '@/assets/footer/footer.svg?react';
+import {links} from '@/constants/links';
 
 export const Footer = () => {
   const {isMobile} = useWindowSize();
@@ -35,12 +36,12 @@ export const Footer = () => {
                 },
                 {
                   children: 'Terms & Conditions',
-                  href: 'https://www.cisco.com/c/en/us/about/legal/terms-conditions.html',
+                  href: links.termsAndConditions,
                   openInNewTab: true
                 },
                 {
                   children: 'Privacy Policy',
-                  href: 'https://www.cisco.com/c/en/us/about/legal/privacy-full.html',
+                  href: links.privacyPolicy,
                   openInNewTab: true
                 },
                 {
