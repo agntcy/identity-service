@@ -9,6 +9,7 @@ import {docs} from '@/utils/docs';
 import LandingLogo from '@/assets/welcome/landing.svg?react';
 import * as CookieConsentVanilla from 'vanilla-cookieconsent';
 import '@/styles/welcome.css';
+import {links} from '@/constants/links';
 
 const Welcome = () => {
   const {login, register} = useAuth();
@@ -80,7 +81,7 @@ const Welcome = () => {
                 </div>
                 <div className="flex justify-center gap-4 mx-auto pt-8 md:pt-2">
                   <Link
-                    href="https://www.cisco.com/c/en/us/about/legal/terms-conditions.html"
+                    href={links.termsAndConditions}
                     openInNewTab
                     fontStyle={{
                       fontWeight: 400,
@@ -93,7 +94,7 @@ const Welcome = () => {
                     <span className="text-[10px] md:text-[12px]">Terms & Conditions</span>
                   </Link>
                   <Link
-                    href="https://www.cisco.com/c/en/us/about/legal/privacy-full.html"
+                    href={links.privacyPolicy}
                     openInNewTab
                     fontStyle={{
                       fontWeight: 400,
