@@ -420,7 +420,7 @@
           #region GHCR LOGIN
           - name: GHCR Docker Login
             if: ${{ inputs.ghcr-enabled }}
-            uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772 #v3
+            uses: docker/login-action@184bdaa0721073962dff0199f1fb9940f07167d1 #v3
             with:
               registry: ghcr.io
               username: ${{ secrets.ghcr-username  }}
@@ -430,7 +430,7 @@
           #region Artifactory Devhub LOGIN
           - name: Artifactory Devhub Docker Login
             if: ${{ inputs.artifactory-devhub-enabled }}
-            uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772 #v3
+            uses: docker/login-action@184bdaa0721073962dff0199f1fb9940f07167d1 #v3
             with:
               registry: ${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}
               username: ${{ env.ARTIFACTORY_USER }}
