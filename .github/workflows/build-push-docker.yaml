@@ -41,7 +41,7 @@
             description: Runner's docker image
             required: false
             type: string
-            default: ${{ vars.SRE_BUILD_IMAGE }}
+            default: ${{ vars.DEFAULT_CONTAINER_RUNNER }}
           fetch-tags:
             description: Whether to fetch all tags
             required: false
