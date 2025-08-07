@@ -153,7 +153,7 @@ jobs:
   call-helm-publish-mcp-server-currency-exchange:
     name: Helm publish mcp-server-currency-exchange
     needs: [checkout]
-    uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@a663a51a68f4158da24f29d7859dabb891586d5c #main
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@production
     with:
       runner-group: ${{ vars.DEFAULT_ARC_RUNNERS }}
       enable-chartmuseum: true
@@ -172,7 +172,7 @@ jobs:
   call-helm-publish-identity-sample-currency-exchange-a2a:
     name: Helm publish identity-sample-currency-exchange-a2a
     needs: [checkout]
-    uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@a663a51a68f4158da24f29d7859dabb891586d5c #main
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@production
     with:
       runner-group: ${{ vars.DEFAULT_ARC_RUNNERS }}
       enable-chartmuseum: true
@@ -191,7 +191,7 @@ jobs:
   call-helm-publish-identity-sample-financial-assist-oasf:
     name: Helm publish identity-sample-financial-assist-oasf
     needs: [checkout]
-    uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@a663a51a68f4158da24f29d7859dabb891586d5c #main
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@production
     with:
       runner-group: ${{ vars.DEFAULT_ARC_RUNNERS }}
       enable-chartmuseum: true

@@ -230,7 +230,7 @@ jobs:
   call-helm-publish-backend:
     name: Helm publish Backend
     needs: [checkout-unit-tests]
-    uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@a663a51a68f4158da24f29d7859dabb891586d5c #main
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@production
     with:
       runner-group: ${{ vars.DEFAULT_ARC_RUNNERS }}
       enable-chartmuseum: true
@@ -249,7 +249,7 @@ jobs:
   call-helm-publish-ui:
     name: Helm publish UI
     needs: [checkout-unit-tests]
-    uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@a663a51a68f4158da24f29d7859dabb891586d5c #main
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@production
     with:
       runner-group: ${{ vars.DEFAULT_ARC_RUNNERS }}
       enable-chartmuseum: true
@@ -268,7 +268,7 @@ jobs:
   call-helm-publish-docs:
     name: Helm publish Docs
     needs: [checkout-unit-tests]
-    uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@a663a51a68f4158da24f29d7859dabb891586d5c #main
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@production
     with:
       runner-group: ${{ vars.DEFAULT_ARC_RUNNERS }}
       enable-chartmuseum: true
