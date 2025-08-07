@@ -23,14 +23,15 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AppService_ListApps_FullMethodName     = "/outshift.identity.service.v1alpha1.AppService/ListApps"
-	AppService_GetAppsCount_FullMethodName = "/outshift.identity.service.v1alpha1.AppService/GetAppsCount"
-	AppService_GetApp_FullMethodName       = "/outshift.identity.service.v1alpha1.AppService/GetApp"
-	AppService_CreateApp_FullMethodName    = "/outshift.identity.service.v1alpha1.AppService/CreateApp"
-	AppService_UpdateApp_FullMethodName    = "/outshift.identity.service.v1alpha1.AppService/UpdateApp"
-	AppService_DeleteApp_FullMethodName    = "/outshift.identity.service.v1alpha1.AppService/DeleteApp"
-	AppService_GetBadge_FullMethodName     = "/outshift.identity.service.v1alpha1.AppService/GetBadge"
-	AppService_GetTasks_FullMethodName     = "/outshift.identity.service.v1alpha1.AppService/GetTasks"
+	AppService_ListApps_FullMethodName         = "/outshift.identity.service.v1alpha1.AppService/ListApps"
+	AppService_GetAppsCount_FullMethodName     = "/outshift.identity.service.v1alpha1.AppService/GetAppsCount"
+	AppService_GetApp_FullMethodName           = "/outshift.identity.service.v1alpha1.AppService/GetApp"
+	AppService_CreateApp_FullMethodName        = "/outshift.identity.service.v1alpha1.AppService/CreateApp"
+	AppService_UpdateApp_FullMethodName        = "/outshift.identity.service.v1alpha1.AppService/UpdateApp"
+	AppService_DeleteApp_FullMethodName        = "/outshift.identity.service.v1alpha1.AppService/DeleteApp"
+	AppService_RefreshAppApiKey_FullMethodName = "/outshift.identity.service.v1alpha1.AppService/RefreshAppApiKey"
+	AppService_GetBadge_FullMethodName         = "/outshift.identity.service.v1alpha1.AppService/GetBadge"
+	AppService_GetTasks_FullMethodName         = "/outshift.identity.service.v1alpha1.AppService/GetTasks"
 )
 
 // AppServiceClient is the client API for AppService service.
@@ -51,6 +52,8 @@ type AppServiceClient interface {
 	UpdateApp(ctx context.Context, in *UpdateAppRequest, opts ...grpc.CallOption) (*App, error)
 	// Delete an existing App.
 	DeleteApp(ctx context.Context, in *DeleteAppRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// Refresh the api-key for an App.
+	RefreshAppApiKey(ctx context.Context, in *RefreshAppApiKeyRequest, opts ...grpc.CallOption) (*App, error)
 	// Get the current badge issued for the App.
 	GetBadge(ctx context.Context, in *GetBadgeRequest, opts ...grpc.CallOption) (*Badge, error)
 	// Get the list of tasks of all apps
@@ -125,6 +128,16 @@ func (c *appServiceClient) DeleteApp(ctx context.Context, in *DeleteAppRequest, 
 	return out, nil
 }
 
+func (c *appServiceClient) RefreshAppApiKey(ctx context.Context, in *RefreshAppApiKeyRequest, opts ...grpc.CallOption) (*App, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(App)
+	err := c.cc.Invoke(ctx, AppService_RefreshAppApiKey_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *appServiceClient) GetBadge(ctx context.Context, in *GetBadgeRequest, opts ...grpc.CallOption) (*Badge, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Badge)
@@ -163,6 +176,8 @@ type AppServiceServer interface {
 	UpdateApp(context.Context, *UpdateAppRequest) (*App, error)
 	// Delete an existing App.
 	DeleteApp(context.Context, *DeleteAppRequest) (*emptypb.Empty, error)
+	// Refresh the api-key for an App.
+	RefreshAppApiKey(context.Context, *RefreshAppApiKeyRequest) (*App, error)
 	// Get the current badge issued for the App.
 	GetBadge(context.Context, *GetBadgeRequest) (*Badge, error)
 	// Get the list of tasks of all apps
@@ -193,6 +208,9 @@ func (UnimplementedAppServiceServer) UpdateApp(context.Context, *UpdateAppReques
 }
 func (UnimplementedAppServiceServer) DeleteApp(context.Context, *DeleteAppRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteApp not implemented")
+}
+func (UnimplementedAppServiceServer) RefreshAppApiKey(context.Context, *RefreshAppApiKeyRequest) (*App, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RefreshAppApiKey not implemented")
 }
 func (UnimplementedAppServiceServer) GetBadge(context.Context, *GetBadgeRequest) (*Badge, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetBadge not implemented")
@@ -328,6 +346,24 @@ func _AppService_DeleteApp_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AppService_RefreshAppApiKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RefreshAppApiKeyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AppServiceServer).RefreshAppApiKey(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AppService_RefreshAppApiKey_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AppServiceServer).RefreshAppApiKey(ctx, req.(*RefreshAppApiKeyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _AppService_GetBadge_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetBadgeRequest)
 	if err := dec(in); err != nil {
@@ -394,6 +430,10 @@ var AppService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteApp",
 			Handler:    _AppService_DeleteApp_Handler,
+		},
+		{
+			MethodName: "RefreshAppApiKey",
+			Handler:    _AppService_RefreshAppApiKey_Handler,
 		},
 		{
 			MethodName: "GetBadge",

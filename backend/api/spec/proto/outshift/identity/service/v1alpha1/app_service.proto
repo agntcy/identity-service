@@ -88,9 +88,7 @@ service AppService {
 
   // Refresh the api-key for an App.
   rpc RefreshAppApiKey(RefreshAppApiKeyRequest) returns (App) {
-    option (google.api.http) = {
-      get: "/v1alpha1/apps/{app_id}/api-key/refresh"
-    };
+    option (google.api.http) = {get: "/v1alpha1/apps/{app_id}/api-key/refresh"};
 
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       operation_id: "RefreshAppApiKey";
@@ -150,8 +148,7 @@ message CreateAppRequest {
   App app = 1;
 }
 
-message GetAppsCountRequest {
-}
+message GetAppsCountRequest {}
 
 message AppTypeCountEntry {
   // The type of the App

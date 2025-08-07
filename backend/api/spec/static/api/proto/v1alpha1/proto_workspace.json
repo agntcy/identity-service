@@ -1546,6 +1546,30 @@
           ]
         },
         {
+          "name": "RefreshAppApiKeyRequest",
+          "longName": "RefreshAppApiKeyRequest",
+          "fullName": "outshift.identity.service.v1alpha1.RefreshAppApiKeyRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "app_id",
+              "description": "App Id to refresh the API Key for.",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
           "name": "UpdateAppRequest",
           "longName": "UpdateAppRequest",
           "fullName": "outshift.identity.service.v1alpha1.UpdateAppRequest",
@@ -1718,6 +1742,28 @@
                     {
                       "method": "DELETE",
                       "pattern": "/v1alpha1/apps/{app_id}"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "RefreshAppApiKey",
+              "description": "Refresh the api-key for an App.",
+              "requestType": "RefreshAppApiKeyRequest",
+              "requestLongType": "RefreshAppApiKeyRequest",
+              "requestFullType": "outshift.identity.service.v1alpha1.RefreshAppApiKeyRequest",
+              "requestStreaming": false,
+              "responseType": "App",
+              "responseLongType": "App",
+              "responseFullType": "outshift.identity.service.v1alpha1.App",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "GET",
+                      "pattern": "/v1alpha1/apps/{app_id}/api-key/refresh"
                     }
                   ]
                 }
