@@ -4,8 +4,8 @@
  */
 
 import {Card, CardContent} from '@/components/ui/card';
-import {CopyButton, toast, Typography} from '@outshift/spark-design';
-import {useMemo} from 'react';
+import {CopyButton, IconButton, toast, Typography} from '@outshift/spark-design';
+import {useCallback, useMemo, useState} from 'react';
 import {App} from '@/types/api/app';
 import KeyValue, {KeyValuePair} from '@/components/ui/key-value';
 import {AgenticServiceType} from '@/components/shared/agentic-services/agentic-service-type';
@@ -13,6 +13,9 @@ import {StatusAgenticService} from '@/components/shared/agentic-services/status-
 import DateHover from '@/components/ui/date-hover';
 import {useAnalytics} from '@/hooks';
 import {BadgeCard} from '@/components/shared/agentic-services/badge-card';
+import {Menu, MenuItem, Tooltip} from '@mui/material';
+import {EllipsisVerticalIcon, RefreshCcwIcon} from 'lucide-react';
+import {ConfirmModal} from '@/components/ui/confirm-modal';
 
 export const ContentAboutAgenticService = ({
   app,
@@ -21,6 +24,10 @@ export const ContentAboutAgenticService = ({
   app?: App;
   onChangeReissueBadge?: (value: boolean) => void;
 }) => {
+  const [openActionsModal, setOpenActionsModal] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+
   const {analyticsTrack} = useAnalytics();
 
   const keyValuePairs = useMemo(() => {
@@ -53,6 +60,24 @@ export const ContentAboutAgenticService = ({
     return temp;
   }, [app]);
 
+  const handleClick = useCallback((event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  }, []);
+
+  const handleClose = useCallback(() => {
+    setAnchorEl(null);
+  }, []);
+
+  const handleChangeActionsModal = useCallback((value: boolean) => {
+    setOpenActionsModal(value);
+  }, []);
+
+  const handleConfirmAction = useCallback(() => {
+    analyticsTrack('CLICK_CONFIRM_REFRESH_API_KEY_AGENTIC_SERVICE');
+    // setApiKeyMutation.mutate();
+    handleChangeActionsModal(false);
+  }, [analyticsTrack, handleChangeActionsModal]);
+
   return (
     <>
       <div className="space-y-4">
@@ -68,11 +93,47 @@ export const ContentAboutAgenticService = ({
                 <KeyValue pairs={keyValuePairs} useCard={false} orientation="vertical" />
               </CardContent>
             </Card>
-            <Card className="text-start space-y-4" variant="secondary">
+            <Card className="text-start space-y-6" variant="secondary">
               <div className="flex justify-between items-center">
                 <Typography variant="subtitle1" fontWeight={600}>
                   API Key
                 </Typography>
+                <div>
+                  <Tooltip title="Actions" arrow>
+                    <IconButton
+                      sx={(theme) => ({
+                        color: theme.palette.vars.baseTextDefault,
+                        width: '24px',
+                        height: '24px'
+                      })}
+                      onClick={handleClick}
+                    >
+                      <EllipsisVerticalIcon className="h-4 w-4" />
+                    </IconButton>
+                  </Tooltip>
+                  <Menu
+                    transformOrigin={{horizontal: 'right', vertical: 'top'}}
+                    anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                    onClick={handleClose}
+                  >
+                    <MenuItem
+                      key="refresh-api-key"
+                      onClick={() => {
+                        analyticsTrack('CLICK_REFRESH_API_KEY_AGENTIC_SERVICE');
+                        handleChangeActionsModal(true);
+                      }}
+                      sx={{display: 'flex', alignItems: 'center', gap: '8px'}}
+                    >
+                      <RefreshCcwIcon className="w-4 h-4" color="#062242" />
+                      <Typography variant="body2" color="#062242">
+                        Refresh
+                      </Typography>
+                    </MenuItem>
+                  </Menu>
+                </div>
               </div>
               <CardContent className="p-0 space-y-4">
                 <div className="bg-[#FBFCFE] border border-[#D5DFF7] rounded-[6px] w-fit py-2 px-4 flex justify-between items-center gap-8 w-full">
@@ -113,6 +174,13 @@ export const ContentAboutAgenticService = ({
           </div>
         </div>
       </div>
+      <ConfirmModal
+        open={openActionsModal}
+        title="Confirm Action"
+        description="Are you sure you want to refresh the API Key of the Agentic Service? This will invalidate the current key."
+        onCancel={() => handleChangeActionsModal(false)}
+        onConfirm={handleConfirmAction}
+      />
     </>
   );
 };
