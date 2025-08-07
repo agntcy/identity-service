@@ -125,8 +125,7 @@ jobs:
   call-docker-build-push-ui:
     name: Call Docker Build ui
     needs: [checkout-unit-tests]
-    uses: ./.github/workflows/build-push-docker.yaml
-
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/build-push-docker.yaml@production
     secrets:
       # Only needed if with:ecr-enabled or with:gar-enabled is true below
       vault-approle-role-id: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
@@ -134,7 +133,6 @@ jobs:
       ghcr-username: ${{ secrets.GHCR_USERNAME }}
       ghcr-token: ${{ secrets.GHCR_TOKEN }}
       ghcr-org-token: ${{ secrets.GHCR_TOKEN }}
-      artifactory_password: ${{ secrets.ARTIFACTORY_PASSWORD }}
 
     with:
       runner-group: ${{ vars.DEFAULT_ARC_RUNNERS }}
@@ -155,6 +153,7 @@ jobs:
       artifactory-devhub-enabled: false
       ghcr-enabled: true
       ghcr-org-registry: ${{ vars.GHCR_REGISTRY }}
+      build-args: "--no-cache --build-arg ARTIFACTORY_PASSWORD=${{ secrets.ARTIFACTORY_PASSWORD }}"
 
   ################################# Corona & blackduck ###########################
   ################################################################################
