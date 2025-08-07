@@ -669,6 +669,22 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags App
+     * @name RefreshAppApiKey
+     * @summary Refresh the API Key for an App
+     * @request GET:/v1alpha1/apps/{appId}/api-key/refresh
+     */
+    refreshAppApiKey: (appId: string, params: RequestParams = {}) =>
+      this.request<V1Alpha1App, RpcStatus>({
+        path: `/v1alpha1/apps/${appId}/api-key/refresh`,
+        method: 'GET',
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags App
      * @name GetAppBadge
      * @summary Get the current badge issued for the App
      * @request GET:/v1alpha1/apps/{appId}/badge

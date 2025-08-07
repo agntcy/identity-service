@@ -28,6 +28,7 @@ class AgenticServicesAPIClass extends AgenticServiceApi.Api<App> {
   public getAppsCount = this.v1Alpha1.getAppsCount;
   public getAppBadge = this.v1Alpha1.getAppBadge;
   public getTasks = this.v1Alpha1.getTasks;
+  public refreshAppApiKey = this.v1Alpha1.refreshAppApiKey;
 
   protected handleLogout = () => {
     this.logout?.({

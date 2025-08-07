@@ -433,10 +433,3 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       })
   };
 }
-ice/${deviceId}/test`,
-        method: 'POST',
-        format: 'json',
-        ...params
-      })
-  };
-}

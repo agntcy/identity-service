@@ -16,6 +16,8 @@ import {BadgeCard} from '@/components/shared/agentic-services/badge-card';
 import {Menu, MenuItem, Tooltip} from '@mui/material';
 import {EllipsisVerticalIcon, RefreshCcwIcon} from 'lucide-react';
 import {ConfirmModal} from '@/components/ui/confirm-modal';
+import {useRefreshAgenticServiceApiKey} from '@/mutations';
+import {LoaderRelative} from '@/components/ui/loading';
 
 export const ContentAboutAgenticService = ({
   app,
@@ -60,6 +62,25 @@ export const ContentAboutAgenticService = ({
     return temp;
   }, [app]);
 
+  const refreshApiKeyMutation = useRefreshAgenticServiceApiKey({
+    callbacks: {
+      onSuccess: () => {
+        toast({
+          title: 'API Key refreshed successfully',
+          description: 'The API Key has been refreshed. Please update your applications accordingly.',
+          type: 'success'
+        });
+      },
+      onError: () => {
+        toast({
+          title: 'Error refreshing API Key',
+          description: 'There was an error refreshing the API Key. Please try again later.',
+          type: 'error'
+        });
+      }
+    }
+  });
+
   const handleClick = useCallback((event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   }, []);
@@ -74,9 +95,9 @@ export const ContentAboutAgenticService = ({
 
   const handleConfirmAction = useCallback(() => {
     analyticsTrack('CLICK_CONFIRM_REFRESH_API_KEY_AGENTIC_SERVICE');
-    // setApiKeyMutation.mutate();
+    refreshApiKeyMutation.mutate(app?.id || '');
     handleChangeActionsModal(false);
-  }, [analyticsTrack, handleChangeActionsModal]);
+  }, [analyticsTrack, app?.id, handleChangeActionsModal, refreshApiKeyMutation]);
 
   return (
     <>
@@ -93,7 +114,7 @@ export const ContentAboutAgenticService = ({
                 <KeyValue pairs={keyValuePairs} useCard={false} orientation="vertical" />
               </CardContent>
             </Card>
-            <Card className="text-start space-y-6" variant="secondary">
+            <Card className="text-start space-y-4" variant="secondary">
               <div className="flex justify-between items-center">
                 <Typography variant="subtitle1" fontWeight={600}>
                   API Key
@@ -136,23 +157,29 @@ export const ContentAboutAgenticService = ({
                 </div>
               </div>
               <CardContent className="p-0 space-y-4">
-                <div className="bg-[#FBFCFE] border border-[#D5DFF7] rounded-[6px] w-fit py-2 px-4 flex justify-between items-center gap-8 w-full">
-                  <Typography variant="body2">
-                    {app?.apiKey ? `${'*'.repeat(20)}${app.apiKey.slice(-5)}` : 'No API Key available'}
-                  </Typography>
-                  <CopyButton
-                    text={app?.apiKey || ''}
-                    style={{border: 'none'}}
-                    onCopy={() => {
-                      analyticsTrack('CLICK_COPY_API_KEY_AGENTIC_SERVICE');
-                      toast({
-                        title: 'API Key copied to clipboard',
-                        description: 'You can now use this API Key in your applications.',
-                        type: 'success'
-                      });
-                    }}
-                  />
-                </div>
+                {refreshApiKeyMutation.isPending ? (
+                  <div>
+                    <LoaderRelative />
+                  </div>
+                ) : (
+                  <div className="bg-[#FBFCFE] border border-[#D5DFF7] rounded-[6px] w-fit py-2 px-4 flex justify-between items-center gap-8 w-full">
+                    <Typography variant="body2">
+                      {app?.apiKey ? `${'*'.repeat(20)}${app.apiKey.slice(-5)}` : 'No API Key available'}
+                    </Typography>
+                    <CopyButton
+                      text={app?.apiKey || ''}
+                      style={{border: 'none'}}
+                      onCopy={() => {
+                        analyticsTrack('CLICK_COPY_API_KEY_AGENTIC_SERVICE');
+                        toast({
+                          title: 'API Key copied to clipboard',
+                          description: 'You can now use this API Key in your applications.',
+                          type: 'success'
+                        });
+                      }}
+                    />
+                  </div>
+                )}
               </CardContent>
             </Card>
           </div>
