@@ -190,6 +190,9 @@ jobs:
     name: Call Docker Build ui
     needs: [checkout-unit-tests]
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/build-push-docker.yaml@production
+    env:
+      # Set the environment variable for the Docker build
+      ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
 
     secrets:
       # Only needed if with:ecr-enabled or with:gar-enabled is true below
@@ -249,7 +252,6 @@ jobs:
       artifactory-devhub-enabled: false
       ghcr-enabled: true
       ghcr-org-registry: ${{ vars.GHCR_REGISTRY }}
-      build-args: "--no-cache --build-arg ARTIFACTORY_PASSWORD=${{ secrets.ARTIFACTORY_PASSWORD }}"
 
   # ################################## Helm Publish #################################
   # #################################################################################

@@ -153,7 +153,6 @@ jobs:
       artifactory-devhub-enabled: false
       ghcr-enabled: true
       ghcr-org-registry: ${{ vars.GHCR_REGISTRY }}
-      build-args: "--no-cache --build-arg ARTIFACTORY_PASSWORD=${{ secrets.ARTIFACTORY_PASSWORD }}"
 
   ################################# Corona & blackduck ###########################
   ################################################################################
