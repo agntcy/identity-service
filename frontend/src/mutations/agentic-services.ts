@@ -74,3 +74,23 @@ export const useDeleteAgenticService = ({callbacks = {}}: PropsSettingsAgenticSe
     }
   });
 };
+
+export const useRefreshAgenticServiceApiKey = ({callbacks}: PropsSettingsAgenticServices) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ['refresh-agentic-service-api-key'],
+    mutationFn: (id: string) => AgenticServicesAPI.refreshAppApiKey(id),
+    onError: () => {
+      if (callbacks?.onError) {
+        callbacks.onError();
+      }
+    },
+    onSuccess: async (resp) => {
+      if (callbacks?.onSuccess) {
+        callbacks.onSuccess(resp);
+      }
+      await queryClient.invalidateQueries({queryKey: ['get-agentic-services']});
+      await queryClient.invalidateQueries({queryKey: ['get-agentic-service']});
+    }
+  });
+};

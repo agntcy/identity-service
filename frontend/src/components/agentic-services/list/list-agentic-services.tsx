@@ -55,9 +55,6 @@ export const ListAgenticServices = () => {
       : [AppType.APP_TYPE_AGENT_A2A, AppType.APP_TYPE_AGENT_OASF, AppType.APP_TYPE_MCP_SERVER]
   );
 
-  console.log(sorting);
-  console.log(appTypeFilters);
-
   const {data, isFetching, isRefetching, error, refetch} = useGetAgenticServices({
     page: pagination.pageIndex + 1,
     size: pagination.pageSize,
@@ -167,7 +164,6 @@ export const ListAgenticServices = () => {
     (selectedValues: SelectNodeType<AppType>[]) => {
       const selectedTypes = selectedValues.map((node) => node.value as AppType);
       if (!isEqual(selectedTypes, appTypeFilters)) {
-        console.log('Selected Types:', selectedTypes);
         setAppTypeFilters(selectedTypes);
         const newSearchParams = new URLSearchParams(searchParams);
         if (selectedTypes.length > 0) {

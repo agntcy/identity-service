@@ -252,6 +252,38 @@
         ]
       }
     },
+    "/v1alpha1/apps/{appId}/api-key/refresh": {
+      "get": {
+        "summary": "Refresh the API Key for an App",
+        "operationId": "RefreshAppApiKey",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1alpha1App"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "appId",
+            "description": "App Id to refresh the API Key for.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      }
+    },
     "/v1alpha1/apps/{appId}/badge": {
       "get": {
         "summary": "Get the current badge issued for the App",
