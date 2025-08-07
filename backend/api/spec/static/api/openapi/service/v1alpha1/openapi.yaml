@@ -199,6 +199,32 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /v1alpha1/apps/{appId}/api-key/refresh:
+        get:
+            tags:
+                - AppService
+            description: Refresh the api-key for an App.
+            operationId: AppService_RefreshAppApiKey
+            parameters:
+                - name: appId
+                  in: path
+                  description: App Id to refresh the API Key for.
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/App'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /v1alpha1/apps/{appId}/badge:
         get:
             tags:

@@ -147,6 +147,22 @@ func (s *appService) DeleteApp(
 	return &emptypb.Empty{}, nil
 }
 
+func (s *appService) RefreshAppApiKey(
+	ctx context.Context,
+	req *identity_service_sdk_go.RefreshAppApiKeyRequest,
+) (*identity_service_sdk_go.App, error) {
+	if req.GetAppId() == "" {
+		return nil, grpcutil.BadRequestError(errors.New("app ID cannot be empty"))
+	}
+
+	app, err := s.appSrv.RefreshAppApiKey(ctx, req.GetAppId())
+	if err != nil {
+		return nil, grpcutil.BadRequestError(err)
+	}
+
+	return converters.FromApp(app), nil
+}
+
 func (s *appService) GetBadge(
 	ctx context.Context,
 	in *identity_service_sdk_go.GetBadgeRequest,
