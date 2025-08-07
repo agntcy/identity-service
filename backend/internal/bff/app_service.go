@@ -41,6 +41,7 @@ type AppService interface {
 	) (*pagination.Pageable[apptypes.App], error)
 	CountAllApps(ctx context.Context) (int64, error)
 	DeleteApp(ctx context.Context, appID string) error
+	RefreshAppApiKey(ctx context.Context, appID string) (*apptypes.App, error)
 	GetTasksPerAppType(
 		ctx context.Context,
 		excludeAppIDs []string,
@@ -317,6 +318,34 @@ func (s *appService) DeleteApp(ctx context.Context, appID string) error {
 	}
 
 	return nil
+}
+
+func (s *appService) RefreshAppApiKey(
+	ctx context.Context,
+	appID string,
+) (*apptypes.App, error) {
+	if appID == "" {
+		return nil, errutil.Err(nil, "app ID cannot be empty")
+	}
+
+	app, err := s.appRepository.GetApp(ctx, appID)
+	if err != nil {
+		return nil, errutil.Err(err, "unable to fetch app")
+	}
+
+	apiKey, err := s.iamClient.RefreshAppApiKey(ctx, app.ID)
+	if err != nil {
+		return nil, errutil.Err(err, "failed to refresh API key")
+	}
+
+	app.ApiKey = apiKey.Secret
+
+	err = s.appRepository.UpdateApp(ctx, app)
+	if err != nil {
+		return nil, errutil.Err(err, "unable to update app with new API key")
+	}
+
+	return app, nil
 }
 
 func (s *appService) GetTasksPerAppType(
