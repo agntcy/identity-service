@@ -1,0 +1,786 @@
+# Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
+---
+    name: Docker Build and Push
+
+    on:
+
+      # REUSABLE WORKFLOW with INPUTS
+      # to keep this workflow simple, assumptions are made:
+        # - Able to push to AWS ECR
+        # - you want to use GitHub cache for buildx image layers
+        # - Builds on push to default_branch will have a unique tag of `YYYY.MM.DD-SHA`
+        # - Builds on push to default_branch will have a reusable tag of `latest` (useful for easy human testing, not servers)
+        # - Builds on a tag push with semver will also have a reusable tag of `latest` and also a semver tag
+
+      workflow_call:
+        # allow reuse of this workflow in other repos
+        inputs:
+          runner:
+            description: Github hosted runner or Self hosted runner
+            required: false
+            type: string
+            default: ${{ vars.UBUNTU_RUNNER }}
+          runner-group:
+            description: Github hosted large runner group (this is used by default)
+            required: false
+            type: string
+            default: SRE-Large-Runners
+          runner-options:
+            description: Runner options to set for runner configuration
+            required: false
+            type: string
+            default: "--user root"
+          continue-on-error:
+            description: Whether to skip the status update for this job
+            required: false
+            type: boolean
+            default: false
+          runner-docker-image:
+            description: Runner's docker image
+            required: false
+            type: string
+            default: ${{ vars.SRE_BUILD_IMAGE }}
+          fetch-tags:
+            description: Whether to fetch all tags
+            required: false
+            type: boolean
+            default: false
+          fetch-depth:
+            description: Number of commits to fetch
+            required: false
+            type: number
+            default: 1
+          checkout-submodules:
+            description: Whether to checkout all submodules
+            required: false
+            type: boolean
+            default: false
+          use-basic-build:
+            description: Whether to use the basic docker build command
+            required: false
+            type: boolean
+            default: true
+          use-build-script:
+            description: Whether to use your own build docker script
+            required: false
+            type: boolean
+            default: false
+          script-extra-args:
+            description: Extra arguments to pass to the build script
+            required: false
+            type: string
+            default: ''
+          use-maven-cache:
+            description: Whether to use Maven cache to shorten maven builds
+            required: false
+            type: boolean
+            default: false
+          cache-dependency-path:
+            description: The path to the dependencies to cache
+            required: false
+            type: string
+            default: '**/pom.xml'
+          repository:
+            description: Git repository to checkout (in case of dispatch trigger)
+            required: false
+            type: string
+            default: ${{ github.repository }}
+          branch:
+            description: Git repository branch
+            required: false
+            type: string
+            default: ${{ github.ref }}
+          context:
+            description: Docker context (path) to start build from
+            # To set to a subdir, use format of "{{defaultContext}}:mysubdir"
+            required: false
+            type: string
+            default: "."
+          dockerfile:
+            description: Dockerfile to build, relative to context path
+            required: false
+            type: string
+            default: "Dockerfile"
+          build-args:
+            description: Dockerfile to build, relative to context path
+            required: false
+            type: string
+            default: "--no-cache"
+          setup-go:
+            description: Setup Go
+            required: false
+            type: boolean
+            default: false
+          go-version:
+            description: Go version
+            required: false
+            type: string
+            default: '1.21.0'
+          upload-image-as-artifact:
+            description: Upload image as artifact
+            required: false
+            type: boolean
+            default: false
+          artifact-image-name:
+            description: Artifact image name
+            required: false
+            type: string
+            default: ${{ github.event.repository.name }}
+          artifact-image-file-path:
+            description: Artifact image file path
+            required: false
+            type: string
+            default: ${{ inputs.dockerfile }}
+          artifact-image-retention-days:
+            description: Artifact image retention days
+            required: false
+            type: number
+            default: 7
+          harbor-login:
+            description: Login to Harbor
+            required: false
+            default: false
+            type: boolean
+          harbor-enabled:
+            description: Enable publishing to Harbor
+            required: false
+            default: false
+            type: boolean
+          harbor-repository-name:
+            description: Harbor project name
+            required: false
+            default: ""
+            type: string
+          harbor-multi-tag:
+            description: Enable multi-tagging for Harbor images
+            required: false
+            default: true
+            type: boolean
+          ecr-enabled:
+            description: Log into AWS PRIVATE ECR
+            required: false
+            default: false
+            type: boolean
+          ecr-public-login:
+            description: Log into AWS PUBLIC ECR for custom script
+            required: false
+            default: false
+            type: boolean
+          ecr-public-enabled:
+            description: Log into AWS PUBLIC ECR
+            required: false
+            default: false
+            type: boolean
+          private-ecr-region:
+            description: AWS PRIVATE ECR region
+            required: false
+            default: ''
+            type: string
+          public-ecr-region:
+            description: AWS PUBLIC ECR region
+            required: false
+            default: ''
+            type: string
+          ghcr-enabled:
+            description: Log into GHCR
+            required: false
+            default: true
+            type: boolean
+          artifactory-devhub-enabled:
+            description: Artifactory devhub registry enabled
+            required: false
+            default: false
+            type: boolean
+          artifactory-repository-name:
+            description: Artifactory devhub docker repository
+            required: false
+            default: "outshift-docker"
+            type: string
+          ghcr-org-registry:
+            description: GHCR Registry
+            required: false
+            default: "ghcr.io/cisco-eti"
+            type: string
+          image-name:
+            description: docker image name
+            required: false
+            type: string
+            default: ${{ github.event.repository.name }}
+          image-custom-tag:
+            description: docker image custom tag
+            required: false
+            type: string
+            default: ""
+          git-tag-type:
+            description: git tag type (major, minor or patch)
+            required: false
+            type: string
+            default: minor
+          push:
+            description: Push image to registry(s) (force push, is not required push is based on registry enabled)
+            required: false
+            type: boolean
+            default: true
+          download-build-artifact-enabled:
+            description: Enable download artifact from go build
+            required: false
+            default: false
+            type: boolean
+          artifact-build-name:
+            description: the name of the previous job artifact
+            required: false
+            type: string
+            default: ${{ github.event.repository.name }}
+          artifact-build-download-path:
+            description: the path where the artifact will be download to.
+            required: false
+            type: string
+            default: ./build/
+          npm-github-registry-enabled:
+            description: Enable Github as NPM artifacts registry
+            required: false
+            default: false
+            type: boolean
+          research-websites:
+            description: whether to build research websites or not
+            required: false
+            default: false
+            type: boolean
+          research-websites-env:
+            description: research websites env
+            required: false
+            default: 'dev'
+            type: string
+          research-admin-origin:
+            description: research admin origin url used for research websites build
+            required: false
+            type: string
+          outshift-websites:
+            description: whether to build outshift websites or not
+            required: false
+            default: false
+            type: boolean
+          websites-env:
+            description: outshift-websites env to build
+            required: false
+            default: 'dev'
+            type: string
+          outshift-website-origin:
+            description: outshift-websites origin
+            required: false
+            type: string
+          outshift-website-admin-origin:
+            description: outshift-websites admin origin
+            required: false
+            type: string
+          strapi-api-url:
+            description: strapi api url
+            required: false
+            type: string
+
+        secrets:
+          vault-approle-role-id:
+            description: Vault Approle role id for default (eticloud) namespace
+            required: true
+          vault-approle-secret-id:
+            description: Vault Approle secret id for websites namespace
+            required: false
+          vault-websites-approle-role-id:
+            description: Vault Approle role id for websites namespace
+            required: false
+          vault-websites-approle-secret-id:
+            description: Vault Approle secret id for default (eticloud) namespace
+            required: false
+          vault-venture-approle-role-id:
+            description: Vault Approle role id for a specific venture namespace
+            required: false
+          vault-venture-approle-secret-id:
+            description: Vault Approle secret id for a specific venture namespace
+            required: false
+          ghcr-username:
+            description: GHCR docker registry username
+            required: true
+          ghcr-token:
+            description: GHCR docker registry token
+            required: true
+          ghcr-org-token:
+            description: GHCR docker registry token
+            required: true
+          artifactory_password:
+            description: Artifactory password
+            required: true
+
+    permissions:
+      contents: read
+      id-token: write
+      packages: write # needed to push docker image ecr
+
+    jobs:
+      build-image:
+
+        name: Build & Push docker image
+        runs-on:
+          group: ${{ inputs.runner-group }}
+        continue-on-error: ${{ inputs.continue-on-error }}
+        container:
+          image: ${{ inputs.runner-docker-image }}
+          options: ${{ inputs.runner-options }}
+          credentials:
+            username: ${{ secrets.ghcr-username }}
+            password: ${{ secrets.ghcr-token }}
+
+        env:
+          BRANCH: ${{ github.head_ref || github.ref_name }}
+          NEXT_PUBLIC_STRAPI_READ_TOKEN: ""
+
+        steps:
+          -
+            name: Checkout repository
+            uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+            with:
+              repository: ${{ inputs.repository }}
+              # The branch, tag or SHA to checkout, otherwise, uses the default branch.
+              ref: ${{ inputs.branch }}
+              # token default value is {{ github.token }}
+              token: ${{ secrets.ghcr-org-token }}
+              # Relative path under $GITHUB_WORKSPACE to place the repository
+              path: ''
+              # Whether to execute `git clean -ffdx && git reset --hard HEAD` before fetching
+              # Default: true
+              clean: true
+              # Whether to download Git-LFS files
+              # Default: false
+              lfs: ''
+              # Whether to checkout submodules: `true` to checkout submodules or `recursive` to
+              # recursively checkout submodules.
+              # Default: false
+              submodules: ${{ inputs.checkout-submodules }}
+              # Whether to fetch tags, even if fetch-depth > 0.
+              # Default: false
+              fetch-tags: ${{ inputs.fetch-tags }}
+              # Number of commits to fetch. 0 indicates all history for all branches and tags.
+              # Default: 1
+              fetch-depth: ${{ inputs.fetch-depth }}
+
+            # we need qemu and buildx so we can build multiple services later
+          - name: Set up QEMU
+            id: qemu
+            uses: docker/setup-qemu-action@29109295f81e9208d7d86ff1c6c12d2833863392 #v3.6.0
+
+            # BuildKit (used with `docker buildx`) is the best way to build images
+          - name: Set up Docker Buildx
+            id: buildx
+            uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435 #v3
+
+            # Approle strategy: create single/multiple ? less privilige
+            # For now, we defined single vault secret that contains all secrets but we can split and import by job
+          - name: Import Vault Secrets
+            uses: hashicorp/vault-action@4c06c5ccf5c0761b6029f56cfb1dcf5565918a3b #v3.4.0
+            with:
+              url:  ${{ vars.KEEPER_URL }}
+              method: approle
+              roleId: ${{ secrets.vault-approle-role-id }}
+              secretId: ${{ secrets.vault-approle-secret-id }}
+              namespace: ${{ vars.VAULT_NAMESPACE }}
+              secrets: |
+                ${{ vars.VAULT_SECRET_PATH }}  AWS_ROLE_GH_ACTIONS_ACCESS_ECR            | AWS_ROLE_GH_ACTIONS_ACCESS_ECR ;
+                ${{ vars.VAULT_SECRET_PATH }}  AWS_ECR_REGION                            | AWS_ECR_REGION ;
+                ${{ vars.VAULT_SECRET_PATH }}  AWS_PUBLIC_ECR_REGION                     | AWS_PUBLIC_ECR_REGION ;
+                ${{ vars.VAULT_SECRET_PATH }}  GHCR_USERNAME                             | GHCR_USERNAME ;
+                ${{ vars.VAULT_SECRET_PATH }}  GIT_EMAIL                                 | GIT_EMAIL ;
+                ${{ vars.VAULT_SECRET_PATH }}  GIT_USERNAME                              | GIT_USERNAME ;
+                ${{ vars.VAULT_SECRET_PATH }}  GHEC_PAT                                  | GHEC_PAT;
+                ${{ vars.VAULT_SECRET_PATH }}  HARBOR_REGISTRY                           | HARBOR_REGISTRY;
+                ${{ vars.VAULT_SECRET_PATH }}  HARBOR_PANOPTICA_IMAGES_TOKEN             | HARBOR_PANOPTICA_IMAGES_TOKEN;
+                ${{ vars.VAULT_SECRET_PATH }}  HARBOR_PANOPTICA_IMAGES_USERNAME          | HARBOR_PANOPTICA_IMAGES_USERNAME;
+                ${{ vars.VAULT_SECRET_PATH }}  HARBOR_REGISTRY_CNAPP_ROBOT_ACCOUNT_NAME  | HARBOR_REGISTRY_CNAPP_ROBOT_ACCOUNT_NAME;
+                ${{ vars.VAULT_SECRET_PATH }}  HARBOR_REGISTRY_CNAPP_ROBOT_ACCOUNT_TOKEN | HARBOR_REGISTRY_CNAPP_ROBOT_ACCOUNT_TOKEN;
+                ${{ vars.VAULT_SECRET_PATH }}  ARTIFACTORY_DEVHUB_REGISTRY               | ARTIFACTORY_DEVHUB_REGISTRY;
+                ${{ vars.VAULT_SECRET_PATH }}  ARTIFACTORY_USER                          | ARTIFACTORY_USER;
+                ${{ vars.VAULT_SECRET_PATH }}  ARTIFACTORY_DEVHUB_DOCKER_TOKEN           | ARTIFACTORY_DEVHUB_DOCKER_TOKEN
+
+          #region ECR LOGIN
+          #region: PRIVATE ECR
+          - name: Configure Private ECR AWS Credentials
+            uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a #v4.3.1
+            with:
+              role-to-assume: ${{ env.AWS_ROLE_GH_ACTIONS_ACCESS_ECR }}
+              aws-region: ${{ inputs.private-ecr-region != '' && inputs.private-ecr-region || env.AWS_ECR_REGION }}
+
+          - name: Display AWS Identity
+            run: aws sts get-caller-identity
+
+          - name: Login to Amazon Private ECR
+            id: login-ecr
+            uses: aws-actions/amazon-ecr-login@062b18b96a7aff071d4dc91bc00c4c1a7945b076 #v2.0.1
+          #endregion
+
+          #region GHCR LOGIN
+          - name: GHCR Docker Login
+            if: ${{ inputs.ghcr-enabled }}
+            uses: docker/login-action@184bdaa0721073962dff0199f1fb9940f07167d1 #v3
+            with:
+              registry: ghcr.io
+              username: ${{ secrets.ghcr-username  }}
+              password: ${{ secrets.ghcr-token }}
+          #endregion
+
+          #region Artifactory Devhub LOGIN
+          - name: Artifactory Devhub Docker Login
+            if: ${{ inputs.artifactory-devhub-enabled }}
+            uses: docker/login-action@184bdaa0721073962dff0199f1fb9940f07167d1 #v3
+            with:
+              registry: ${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}
+              username: ${{ env.ARTIFACTORY_USER }}
+              password: ${{ env.ARTIFACTORY_DEVHUB_DOCKER_TOKEN }}
+          #endregion
+
+
+          ############################# Build Docker ##########################
+          #region BUILD DOCKER
+          - name: Utils
+            env:
+              ARTIFACTORY_PASSWORD: ${{ secrets.artifactory_password }}
+            run: |
+              if [ "${{ inputs.setup-go }}" = "true" ]; then
+                echo "BUILD_ARGS=--build-arg GITHUB_TOKEN=${{ env.GHEC_PAT }}" >> "$GITHUB_ENV"
+              else
+                echo "BUILD_ARGS=--build-arg ARTIFACTORY_PASSWORD=${{ env.ARTIFACTORY_PASSWORD }}" >> "$GITHUB_ENV"
+              fi
+              if [ "${{ inputs.npm-github-registry-enabled }}" = "true" ]; then
+                echo "NPM_TOKEN=${{ env.GHEC_PAT }}" >> "$GITHUB_ENV"
+                echo "SECRET_ARG=--build-arg NPM_TOKEN=${{ env.GHEC_PAT }}" >> "$GITHUB_ENV"
+              else
+                echo "SECRET_ARG=" >> "$GITHUB_ENV"
+              fi
+              {
+                echo "DATE=$(date +'%Y-%m-%d')"
+                echo "GIT_BRANCH=$BRANCH" | sed 's/\//_/g'
+                echo "SHA=$(git rev-parse --short HEAD)"
+              } >> "$GITHUB_ENV"
+              git config --global --add safe.directory '*'
+            shell: bash
+
+          - name: Download Build Artifact
+            if: ${{ inputs.download-build-artifact-enabled }}
+            uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 #v4
+            with:
+              name: ${{ inputs.artifact-build-name }}
+              path: ${{ inputs.artifact-build-download-path }}
+
+          - name: Cache Local Maven Dependencies
+            if: ${{ inputs.use-maven-cache }}
+            uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 #v3
+            with:
+              path: ~/.m2/repository
+              key: ${{ runner.os }}-maven-${{ hashFiles(inputs.cache-dependency-path) }}
+              enableCrossOsArchive: true
+              restore-keys: |
+                  ${{ runner.os }}-maven-
+
+            # websites Config
+          - name: Import Websites Vault Secrets
+            if: ${{ inputs.research-websites || inputs.outshift-websites }}
+            uses: hashicorp/vault-action@4c06c5ccf5c0761b6029f56cfb1dcf5565918a3b #v3.4.0
+            with:
+              url:  ${{ vars.KEEPER_URL }}
+              method: approle
+              roleId: ${{ secrets.vault-websites-approle-role-id }}
+              secretId: ${{ secrets.vault-websites-approle-secret-id }}
+              namespace: ${{ vars.VAULT_WEBSITES_NAMESPACE }}
+              secrets: |
+                secret/data/${{ inputs.research-websites-env }}/${{ vars.RESEARCH_WEBSITES_VAULT_SECRET_PATH }}  NEXT_PUBLIC_STRAPI_READ_TOKEN  | NEXT_PUBLIC_STRAPI_READ_TOKEN  ;
+                secret/data/${{ inputs.websites-env }}/${{ vars.WEBSITES_VAULT_SECRET_PATH }}  STRAPI_API_KEY    | STRAPI_API_KEY  ;
+                secret/data/${{ inputs.websites-env }}/${{ vars.WEBSITES_VAULT_SECRET_PATH }}  RESEARCH_STRAPI_API_KEY | RESEARCH_STRAPI_API_KEY  ;
+
+          - name: Outshift Research websites Prepare
+            if: ${{ inputs.research-websites }}
+            run: |
+              echo "ADMIN_ORIGIN=${{ inputs.research-admin-origin }}" >> "$GITHUB_ENV"
+              echo "NEXT_PUBLIC_STRAPI_READ_TOKEN=${{ env.NEXT_PUBLIC_STRAPI_READ_TOKEN }}" >> "$GITHUB_ENV"
+            shell: bash
+
+          - name: Outshift websites Prepare
+            if: ${{ inputs.outshift-websites }}
+            run: |
+              {
+                echo "ORIGIN=${{ inputs.outshift-website-origin }}"
+                echo "ADMIN_ORIGIN=${{ inputs.outshift-website-admin-origin }}"
+                echo "STRAPI_API_URL=${{ inputs.strapi-api-url }}"
+                echo "RESEARCH_ADMIN_ORIGIN=${{ inputs.research-admin-origin }}"
+                echo "STRAPI_API_KEY=${{ env.STRAPI_API_KEY }}"
+                echo "RESEARCH_STRAPI_API_KEY=${{ env.RESEARCH_STRAPI_API_KEY }}"
+              } >> "$GITHUB_ENV"
+            shell: bash
+
+          - name: Build Docker Image
+            if: ${{ inputs.use-build-script != true }}
+            env:
+              ADMIN_ORIGIN: ${{ env.ADMIN_ORIGIN }}
+            run: |
+              figlet -w 140 'BUILD DOCKER' || true
+              echo "$SHA"
+              # Disable SC2086 deliberately to allow word splitting for build args
+              # shellcheck disable=SC2086
+              docker build $BUILD_ARGS $SECRET_ARG -t "${{ inputs.image-name }}:latest" -f "${{ inputs.dockerfile }}" "${{ inputs.context }}"
+            shell: bash
+
+          #region: PUBLIC ECR
+          - name: Configure Public ECR AWS Credentials
+            uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a #v2
+            if: ${{ inputs.ecr-public-login }}
+            with:
+              role-to-assume: ${{ env.AWS_ROLE_GH_ACTIONS_ACCESS_ECR }}
+              aws-region: ${{ inputs.public-ecr-region != '' && inputs.public-ecr-region || env.AWS_PUBLIC_ECR_REGION }}
+
+          - name: Login to Amazon Public ECR
+            if: ${{ inputs.ecr-public-login }}
+            id: login-public-ecr-custom
+            uses: aws-actions/amazon-ecr-login@062b18b96a7aff071d4dc91bc00c4c1a7945b076 #v2.0.1
+            with:
+              # Recommeded
+              mask-password: 'true'
+              registry-type: public
+          #endregion
+
+          #region: Login to Harbor
+          - name: Login to Harbor registry
+            if: ${{ inputs.harbor-login || inputs.harbor-enabled }}
+            run: |
+              sh +x
+              docker login ${{ env.HARBOR_REGISTRY }} -u '${{ env.HARBOR_PANOPTICA_IMAGES_USERNAME }}' -p '${{ env.HARBOR_PANOPTICA_IMAGES_TOKEN }}'
+            shell: bash
+          #endregion
+
+          - name: Build Docker Image With Script
+            if: ${{ inputs.use-build-script }}
+            env:
+              ECR_PUBLIC_REGISTRY: ${{ steps.login-public-ecr-custom.outputs.registry }}
+            run: |
+              figlet -w 140 'BUILD DOCKER' || true
+              echo "$SHA"
+              "$GITHUB_WORKSPACE/build/build-docker.sh" --image "${{ inputs.image-name }}:latest" --path "${{ inputs.dockerfile }}" --args "$BUILD_ARGS" ${{ inputs.script-extra-args }}
+            shell: bash
+
+          - name: Upload Image as Artifact
+            if: ${{ inputs.upload-image-as-artifact }}
+            uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 #v4
+            with:
+              name: ${{ inputs.artifact-image-name }}
+              path: "${{ github.workspace }}/${{ inputs.artifact-image-file-path }}"
+              retention-days: ${{ inputs.artifact-image-retention-days }}
+
+          ############################# Publish Docker ########################
+          #region Push Docker Image
+          - name: Push Docker Image to GHCR
+            if: ${{ inputs.ghcr-enabled }}
+            env:
+              GHCR_REGISTRY: ${{ inputs.ghcr-org-registry }}
+              DATE: ${{ env.DATE }}
+            run: |-
+              figlet -w 140 'PUSH DOCKER TO GHCR' || true
+              if [[ -n "${{ inputs.image-custom-tag }}" ]]; then
+                docker tag "${{ inputs.image-name }}:latest" "$GHCR_REGISTRY/${{ inputs.image-name }}:${{ inputs.image-custom-tag }}"
+                echo "Publishing to repository: $GHCR_REGISTRY/${{inputs.image-name}}, with tag: ${{ inputs.image-custom-tag }}"
+                docker push "$GHCR_REGISTRY/${{ inputs.image-name }}:${{ inputs.image-custom-tag }}"
+              elif [[ $GITHUB_REF == 'refs/heads/main' ]]; then
+                docker tag "${{ inputs.image-name }}:latest" "$GHCR_REGISTRY/${{ inputs.image-name }}:latest"
+                echo "Publishing to repository: $GHCR_REGISTRY/${{inputs.image-name}}, with tag: latest"
+                docker tag "${{ inputs.image-name }}:latest" "$GHCR_REGISTRY/${{ inputs.image-name }}:ref-$SHA"
+
+                docker push "$GHCR_REGISTRY/${{ inputs.image-name }}:latest"
+                docker push "$GHCR_REGISTRY/${{ inputs.image-name }}:ref-$SHA"
+              else
+                # Any branch different than main
+                docker tag "${{ inputs.image-name }}:latest" "$GHCR_REGISTRY/${{ inputs.image-name }}:dev-$SHA"
+                echo "Publishing to repository: $GHCR_REGISTRY/${{inputs.image-name}}, with tag: dev-$SHA"
+                docker push "$GHCR_REGISTRY/${{ inputs.image-name }}:dev-$SHA"
+              fi
+              docker tag "${{ inputs.image-name }}:latest" "$GHCR_REGISTRY/${{ inputs.image-name }}:$GIT_BRANCH"
+              docker tag "${{ inputs.image-name }}:latest" "$GHCR_REGISTRY/${{ inputs.image-name }}:$DATE-$SHA"
+
+              echo "Publishing to repository: $GHCR_REGISTRY/${{ inputs.image-name }}, with tag: $GIT_BRANCH"
+              docker push "$GHCR_REGISTRY/${{ inputs.image-name }}:$GIT_BRANCH"
+              echo "Publishing to repository: $GHCR_REGISTRY/${{ inputs.image-name }}, with tag: $DATE-$SHA"
+              docker push "$GHCR_REGISTRY/${{ inputs.image-name }}:$DATE-$SHA"
+            shell: bash
+
+          - name: Push Docker Image to AWS ECR
+            if: ${{ inputs.ecr-enabled }}
+            env:
+              ECR_PRIVATE_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+              DATE: ${{ env.DATE }}
+            run: |-
+              figlet -w 140 'PUSH DOCKER TO ECR' || true
+              echo "$DATE-$SHA"
+
+              repository_exists=$(aws ecr describe-repositories --repository-names "${{ inputs.image-name }}" --no-cli-pager 2>/dev/null || true )
+              if [[ -z "$repository_exists" ]]; then
+                echo "Repository [${{ inputs.image-name }}] does not exist! Creating..."
+                aws ecr create-repository --no-cli-pager --repository-name "${{ inputs.image-name }}"
+              fi
+
+              aws ecr describe-repositories --no-cli-pager --repository-names "${{ inputs.image-name }}"
+
+              if [[ -n "${{ inputs.image-custom-tag }}" ]]; then
+                docker tag "${{ inputs.image-name }}:latest" "$ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}:${{ inputs.image-custom-tag }}"
+                echo "Publishing to repository: $ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}, with tag: ${{ inputs.image-custom-tag }}"
+                docker push "$ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}:${{ inputs.image-custom-tag }}"
+              elif [[ $GITHUB_REF == 'refs/heads/main' ]]; then
+                docker tag "${{ inputs.image-name }}:latest" "$ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}:latest"
+                docker tag "${{ inputs.image-name }}:latest" "$ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}:ref-$SHA"
+
+                echo "Publishing to repository $ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}, with tag: latest"
+                docker push "$ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}:latest"
+                echo "Publishing to repository $ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}, with tag: ref-$SHA"
+                docker push "$ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}:ref-$SHA"
+              else
+                docker tag "${{ inputs.image-name }}:latest" "$ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}:dev-$SHA"
+                echo "Publishing to repository: $ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}, with tag: dev-$SHA"
+                docker push "$ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}:dev-$SHA"
+              fi
+
+              docker tag "${{ inputs.image-name }}:latest" "$ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}:$GIT_BRANCH"
+              docker tag "${{ inputs.image-name }}:latest" "$ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}:$DATE-$SHA"
+
+              echo "Publishing to repository: $ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}, with tag: $GIT_BRANCH"
+              docker push "$ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}:$GIT_BRANCH"
+              echo " Publishing to repository $ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}, with tag: $DATE-$SHA"
+              docker push "$ECR_PRIVATE_REGISTRY/${{ inputs.image-name }}:$DATE-$SHA"
+            shell: bash
+
+          #region: PUBLIC ECR
+          - name: Configure Public ECR AWS Credentials
+            uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a #v2
+            if: ${{ inputs.ecr-public-enabled }}
+            with:
+              role-to-assume: ${{ env.AWS_ROLE_GH_ACTIONS_ACCESS_ECR }}
+              aws-region: ${{ inputs.public-ecr-region != '' && inputs.public-ecr-region || env.AWS_PUBLIC_ECR_REGION }}
+
+          - name: Login to Amazon Public ECR
+            if: ${{ inputs.ecr-public-enabled }}
+            id: login-public-ecr
+            uses: aws-actions/amazon-ecr-login@062b18b96a7aff071d4dc91bc00c4c1a7945b076 #v2.0.1
+            with:
+              # Recommeded
+              mask-password: 'true'
+              registry-type: public
+          #endregion
+
+          - name: Push Docker Image to AWS PUBLIC ECR
+            if: ${{ inputs.ecr-public-enabled }}
+            env:
+              ECR_PUBLIC_REGISTRY: ${{ steps.login-public-ecr.outputs.registry }}
+              DATE: ${{ env.DATE }}
+            run: |-
+              figlet -w 140 'PUSH DOCKER TO ECR' || true
+              echo "$DATE-$SHA"
+
+              repository_exists=$(aws ecr-public describe-repositories --repository-names "${{ inputs.image-name }}" --no-cli-pager 2>/dev/null || true )
+              if [[ -z "$repository_exists" ]]; then
+                echo "Repository [${{ inputs.image-name }}] does not exist! Creating..."
+                aws ecr-public create-repository --no-cli-pager --repository-name "${{ inputs.image-name }}"
+              fi
+
+              aws ecr-public describe-repositories --no-cli-pager --repository-names "${{ inputs.image-name }}"
+
+              if [[ -n "${{ inputs.image-custom-tag }}" ]]; then
+                docker tag "${{ inputs.image-name }}:latest" "$ECR_PUBLIC_REGISTRY/ciscoeti/${{ inputs.image-name }}:${{ inputs.image-custom-tag }}"
+                echo "Pushing in to repository: $ECR_PUBLIC_REGISTRY/ciscoeti/${{ inputs.image-name }}, with tag: ${{ inputs.image-custom-tag }}"
+                docker push "$ECR_PUBLIC_REGISTRY/ciscoeti/${{ inputs.image-name }}:${{ inputs.image-custom-tag }}"
+              elif [[ $GITHUB_REF == 'refs/heads/main' ]]; then
+                docker tag "${{ inputs.image-name }}:latest" "$ECR_PUBLIC_REGISTRY/${{ inputs.image-name }}:latest"
+                docker tag "${{ inputs.image-name }}:latest" "$ECR_PUBLIC_REGISTRY/${{ inputs.image-name }}:ref-$SHA"
+                echo "Pushing into repository: $ECR_PUBLIC_REGISTRY/${{ inputs.image-name }}, with tag: latest"
+                docker push "$ECR_PUBLIC_REGISTRY/${{ inputs.image-name }}:latest"
+                echo "Pushing into repository: $ECR_PUBLIC_REGISTRY/${{ inputs.image-name }}, with tag: ref-$SHA"
+                docker push "$ECR_PUBLIC_REGISTRY/${{ inputs.image-name }}:ref-$SHA"
+              else
+                docker tag "${{ inputs.image-name }}:latest" "$ECR_PUBLIC_REGISTRY/${{ inputs.image-name }}:dev-$SHA"
+                echo "Pushing in to repository: $ECR_PUBLIC_REGISTRY/${{ inputs.image-name }}, with tag: dev-$SHA"
+                docker push "$ECR_PUBLIC_REGISTRY/${{ inputs.image-name }}:dev-$SHA"
+              fi
+
+              docker tag "${{ inputs.image-name }}:latest" "$ECR_PUBLIC_REGISTRY/ciscoeti/${{ inputs.image-name }}:$GIT_BRANCH"
+              docker tag "${{ inputs.image-name }}:latest" "$ECR_PUBLIC_REGISTRY/ciscoeti/${{ inputs.image-name }}:$DATE-$SHA"
+
+              echo "Publishing to repository: $ECR_PUBLIC_REGISTRY/ciscoeti/${{ inputs.image-name }}, with tag: $GIT_BRANCH"
+              docker push "$ECR_PUBLIC_REGISTRY/ciscoeti/${{ inputs.image-name }}:$GIT_BRANCH"
+              echo "Publishing to repository: $ECR_PUBLIC_REGISTRY/ciscoeti/${{ inputs.image-name }}, with tag: $DATE-$SHA"
+              docker push "$ECR_PUBLIC_REGISTRY/ciscoeti/${{ inputs.image-name }}:$DATE-$SHA"
+            shell: bash
+
+          - name: Push Docker Image to Harbor
+            if: ${{ inputs.harbor-enabled }}
+            env:
+              DATE: ${{ env.DATE }}
+            run: |-
+              figlet -w 140 'PUSH DOCKER TO Harbor' || true
+
+              if [[ -n "${{ inputs.image-custom-tag }}" ]]; then
+                docker tag "${{ inputs.image-name }}:latest" "${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}:${{ inputs.image-custom-tag }}"
+                echo "Pushing into ${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name}}, with tag: ${{ inputs.image-custom-tag }}"
+                docker push "${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}:${{ inputs.image-custom-tag }}"
+              elif [[ $GITHUB_REF == 'refs/heads/main' ]]; then
+                docker tag "${{ inputs.image-name }}:latest" "${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}:latest"
+                docker tag "${{ inputs.image-name }}:latest" "${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}:ref-$SHA"
+                echo "Pushing into repository: ${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}, with tag: latest"
+                docker push "${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}:latest"
+                echo "Pushing into repository: ${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}, with tag: ref-$SHA"
+                docker push "${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}:ref-$SHA"
+              else
+                docker tag "${{ inputs.image-name }}:latest" "${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}:dev-$SHA"
+                echo "Publishing to repository: ${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}, with tag: dev-$SHA"
+                docker push "${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}:dev-$SHA"
+              fi
+
+              if [[ "${{ inputs.harbor-multi-tag }}" == "true" ]]; then
+                docker tag "${{ inputs.image-name }}:latest" "${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}:$GIT_BRANCH"
+                docker tag "${{ inputs.image-name }}:latest" "${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}:$DATE-$SHA"
+
+                echo "Publishing to repository: ${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}, with tag $GIT_BRANCH"
+                docker push "${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}:$GIT_BRANCH"
+                echo "Publishing to repository: ${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}, with tag $DATE-$SHA"
+                docker push "${{ env.HARBOR_REGISTRY }}/${{inputs.harbor-repository-name}}/${{ inputs.image-name }}:$DATE-$SHA"
+              fi
+            shell: bash
+            #endregion
+
+
+          - name: Push Docker Image to Artifactory Devhub
+            if: ${{ inputs.artifactory-devhub-enabled }}
+            env:
+              DATE: ${{ env.DATE }}
+            run: |-
+              figlet -w 140 'PUSH DOCKER TO Artifactory Devhub' || true
+
+              if [[ -n "${{ inputs.image-custom-tag }}" ]]; then
+                docker tag "${{ inputs.image-name }}:latest" "${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}:${{ inputs.image-custom-tag }}"
+                echo "Publishing to repository: ${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}, with tag: ${{ inputs.image-custom-tag }}"
+                docker push "${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}:${{ inputs.image-custom-tag }}"
+              elif [[ $GITHUB_REF == 'refs/heads/main' ]]; then
+                docker tag "${{ inputs.image-name }}:latest" "${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}:latest"
+                docker tag "${{ inputs.image-name }}:latest" "${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}:ref-$SHA"
+                echo "Publishing to repository: ${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}, with tag: latest"
+                docker push "${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}:latest"
+                echo "Publishing to repository: ${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}, with tag: ref-$SHA"
+                docker push "${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}:ref-$SHA"
+              else
+                docker tag "${{ inputs.image-name }}:latest" "${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}:dev-$SHA"
+                echo "Publishing to repository: ${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}, with tag: dev-$SHA"
+                docker push "${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}:dev-$SHA"
+              fi
+
+              if [[ "${{ inputs.harbor-multi-tag }}" == "true" ]]; then
+                docker tag "${{ inputs.image-name }}:latest" "${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}:$GIT_BRANCH"
+                docker tag "${{ inputs.image-name }}:latest" "${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}:$DATE-$SHA"
+
+                echo "Publishing to repository: ${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}, with tag: $GIT_BRANCH"
+                docker push "${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}:$GIT_BRANCH"
+                echo "Publishing to repository: ${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}, with tag: $DATE-$SHA"
+                docker push "${{ env.ARTIFACTORY_DEVHUB_REGISTRY }}/${{inputs.artifactory-repository-name}}/${{ inputs.image-name }}:$DATE-$SHA"
+              fi
+            shell: bash
+            #endregion

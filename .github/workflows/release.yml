@@ -125,7 +125,7 @@ jobs:
   call-docker-build-push-ui:
     name: Call Docker Build ui
     needs: [checkout-unit-tests]
-    uses: cisco-eti/gh-reusable-workflows/.github/workflows/build-push-docker.yaml@production
+    uses: ./.github/workflows/build-push-docker.yaml
 
     secrets:
       # Only needed if with:ecr-enabled or with:gar-enabled is true below
