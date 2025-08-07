@@ -198,6 +198,7 @@ jobs:
       ghcr-username: ${{ secrets.GHCR_USERNAME }}
       ghcr-token: ${{ secrets.GHCR_TOKEN }}
       ghcr-org-token: ${{ secrets.GHCR_TOKEN }}
+      artifactory_password: ${{ secrets.ARTIFACTORY_PASSWORD }}
 
     with:
       runner-group: ${{ vars.DEFAULT_ARC_RUNNERS }}
