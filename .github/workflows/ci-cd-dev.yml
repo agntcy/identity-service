@@ -218,6 +218,7 @@ jobs:
       artifactory-devhub-enabled: false
       ghcr-enabled: true
       ghcr-org-registry: ${{ vars.GHCR_REGISTRY }}
+      build-args: "--no-cache --build-arg ARTIFACTORY_PASSWORD=${{ env.ARTIFACTORY_PASSWORD }}"
 
   call-docker-build-push-docs:
     name: Call Docker Build docs
@@ -249,6 +250,7 @@ jobs:
       artifactory-devhub-enabled: false
       ghcr-enabled: true
       ghcr-org-registry: ${{ vars.GHCR_REGISTRY }}
+      build-args: "--no-cache --build-arg ARTIFACTORY_PASSWORD=${{ env.ARTIFACTORY_PASSWORD }}"
 
   # ################################## Helm Publish #################################
   # #################################################################################
