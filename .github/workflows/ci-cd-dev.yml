@@ -57,7 +57,7 @@ jobs:
   call-docker-build-push-backend:
     name: Call Docker Build backend
     needs: [checkout-unit-tests]
-    uses: cisco-eti/gh-reusable-workflows/.github/workflows/build-push-docker.yaml@production
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/build-push-docker.yaml@MarwaOuledElHadjAli-patch-1
 
     secrets:
       # Only needed if with:ecr-enabled or with:gar-enabled is true below
