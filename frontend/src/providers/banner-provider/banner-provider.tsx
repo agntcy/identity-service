@@ -77,6 +77,8 @@ export const BannerProvider: React.FC<{children: ReactNode}> = ({children}) => {
                   {...banner}
                   onClose={() => removeBanner(banner.id)}
                   sx={{
+                    borderLeft: 'none',
+                    borderRight: 'none',
                     '& .MuiAlert-icon': {
                       visibility: isMobile || isTablet ? 'hidden' : 'visible'
                     }

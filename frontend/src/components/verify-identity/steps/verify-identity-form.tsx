@@ -12,7 +12,7 @@ import {Divider, toast, Typography} from '@outshift/spark-design';
 import {FileUpload} from '@/components/ui/file-upload';
 import {VerifyIdentityFormValues} from '@/schemas/verify-identity-schema';
 import {Textarea} from '@/components/ui/textarea';
-import {parseJwt} from '@/utils/utils';
+import {jwtDecode} from 'jwt-decode';
 
 export const VerifyIdentityForm = ({isLoading = false}: {isLoading?: boolean}) => {
   const {control, watch, reset, setValue, setError} = useFormContext<VerifyIdentityFormValues>();
@@ -27,7 +27,7 @@ export const VerifyIdentityForm = ({isLoading = false}: {isLoading?: boolean}) =
           const decodedContent = new TextDecoder().decode(content);
           const VC = JSON.parse(decodedContent);
           const proofValue = (VC.proof?.proofValue || VC?.proofValue || VC) as string | undefined;
-          const decodeJwt = parseJwt(proofValue || '');
+          const decodeJwt = jwtDecode(proofValue!);
           if (proofValue && decodeJwt) {
             setValue('badgeContent', JSON.stringify(decodedContent));
             setValue('proofValue', proofValue);
@@ -63,7 +63,7 @@ export const VerifyIdentityForm = ({isLoading = false}: {isLoading?: boolean}) =
       try {
         const VC = JSON.parse(badge);
         const proofValue = (VC.proof?.proofValue || VC?.proofValue || VC) as string | undefined;
-        const decodeJwt = parseJwt(proofValue || '');
+        const decodeJwt = jwtDecode(proofValue!);
         if (proofValue && decodeJwt) {
           setValue('proofValue', proofValue);
         } else {

@@ -20,11 +20,11 @@ import {useVerifyBadge} from '@/mutations/badge';
 import {VerificationResults} from './steps/verification-results';
 import {useAnalytics} from '@/hooks';
 import {Badge} from '@/types/api/badge';
-import {parseJwt} from '@/utils/utils';
-import {Card} from '../ui/card';
-import {LoaderRelative} from '../ui/loading';
 import {useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
+import {jwtDecode} from 'jwt-decode';
+import {Card} from '../ui/card';
+import {LoaderRelative} from '../ui/loading';
 
 export const VerifyIdentityStepper = ({badge}: {badge?: Badge}) => {
   return (
@@ -109,7 +109,7 @@ const FormStepperComponent = ({badge}: {badge?: Badge}) => {
     if (badge?.verifiableCredential) {
       const VC = badge.verifiableCredential;
       const proofValue = VC?.proof?.proofValue;
-      const decodeJwt = parseJwt(proofValue || '');
+      const decodeJwt = jwtDecode(proofValue!);
       if (proofValue && decodeJwt) {
         form.reset({
           proofValue: proofValue
