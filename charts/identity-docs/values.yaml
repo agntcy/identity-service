@@ -34,6 +34,3 @@ ingress:
 serviceAccount:
   create: true 
   name: ""
-
-configmap:
-  MAZE_ID: ""
