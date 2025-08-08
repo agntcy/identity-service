@@ -7,7 +7,7 @@ import config from '@/config';
 import {Helmet} from 'react-helmet-async';
 
 export const Maze = () => {
-  if (!config.MAZE_API_KEY) {
+  if (!config.MAZE_ID) {
     return null;
   }
 
@@ -33,7 +33,7 @@ export const Maze = () => {
              s.async = true;
              a.getElementsByTagName('head')[0].appendChild(s);
              m.mazeUniversalSnippetApiKey = e;
-           })(window, document, 'https://snippet.maze.co/maze-universal-loader.js', '${config.MAZE_API_KEY}');
+           })(window, document, 'https://snippet.maze.co/maze-universal-loader.js', '${config.MAZE_ID}');
          `}
       </script>
     </Helmet>
