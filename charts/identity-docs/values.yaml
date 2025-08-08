@@ -36,4 +36,4 @@ serviceAccount:
   name: ""
 
 configmap:
-  MAZE_API_KEY: ""
+  MAZE_ID: ""

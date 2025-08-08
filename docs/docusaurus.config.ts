@@ -170,7 +170,7 @@ const config: Config = {
     "docusaurus-json-schema-plugin"
   ],
 
-  scripts: process.env.MAZE_API_KEY ? [
+  scripts: process.env.MAZE_ID ? [
     {
       src: 'data:text/javascript;charset=utf-8,' + encodeURIComponent(`
         (function (m, a, z, e) {
@@ -191,7 +191,7 @@ const config: Config = {
           s.async = true;
           a.getElementsByTagName('head')[0].appendChild(s);
           m.mazeUniversalSnippetApiKey = e;
-        })(window, document, 'https://snippet.maze.co/maze-universal-loader.js', '${process.env.MAZE_API_KEY}');
+        })(window, document, 'https://snippet.maze.co/maze-universal-loader.js', '${process.env.MAZE_ID}');
       `),
       async: false,
     }
