@@ -23,6 +23,7 @@ import {useWindowSize} from './hooks';
 import {Manifest} from './components/shared/manifest/manifest';
 import {NotificationUtilsProvider} from './providers/notification-utils-provider/notification-utils-provider';
 import {ErrorPageBoundary} from './components/router/error-page-boundary';
+import {Maze} from './components/shared/maze/maze';
 
 const App = () => {
   const {isMobile} = useWindowSize();
@@ -42,6 +43,7 @@ const App = () => {
       >
         <HelmetProvider>
           <Manifest />
+          <Maze />
           <AuthProvider>
             <AnalyticsProvider>
               <ApiProvider>
