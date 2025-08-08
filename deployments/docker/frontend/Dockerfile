@@ -54,7 +54,7 @@ RUN mkdir ./nginx/logs && \
 RUN sed -i 's/<script id="vite-plugin-pwa:inline-sw">/<script id="vite-plugin-pwa:inline-sw" nonce="c28133ca-0587-459b-9d44-7015cde0ef83">/g' ./dist/index.html
 
 # Add SSI vars
-RUN sed -i 's/<head>/<head>\<script nonce="111dd4a0-4c4e-43a9-8eb4-6446ad2e10c7" language="javascript"\>window.apiUrl=`\<!--#echo var="apiUrl"--\>`;window.logLevel=`\<!--#echo var="logLevel"--\>`;window.segmentId=`\<!--#echo var="segmentId"--\>`;window.iamProductId=`\<!--#echo var="iamProductId"--\>`;window.iamUi=`\<!--#echo var="iamUi"--\>`;window.iamApi=`\<!--#echo var="iamApi"--\>`;window.iamOidcClientId=`\<!--#echo var="iamOidcClientId"--\>`;window.iamOidcIssuer=`\<!--#echo var="iamOidcIssuer"--\>`;window.docsUrl=`\<!--#echo var="docsUrl"--\>`;<\/script>/g' ./dist/index.html
+RUN sed -i 's/<head>/<head>\<script nonce="111dd4a0-4c4e-43a9-8eb4-6446ad2e10c7" language="javascript"\>window.apiUrl=`\<!--#echo var="apiUrl"--\>`;window.logLevel=`\<!--#echo var="logLevel"--\>`;window.segmentId=`\<!--#echo var="segmentId"--\>`;window.iamProductId=`\<!--#echo var="iamProductId"--\>`;window.iamUi=`\<!--#echo var="iamUi"--\>`;window.iamApi=`\<!--#echo var="iamApi"--\>`;window.iamOidcClientId=`\<!--#echo var="iamOidcClientId"--\>`;window.iamOidcIssuer=`\<!--#echo var="iamOidcIssuer"--\>`;window.docsUrl=`\<!--#echo var="docsUrl"--\>`;window.mazeApiKey=`\<!--#echo var="mazeApiKey"--\>`;<\/script>/g' ./dist/index.html
 
 # Set non root user
 USER web
