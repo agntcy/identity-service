@@ -34,3 +34,6 @@ ingress:
 serviceAccount:
   create: true 
   name: ""
+
+configmap:
+  MAZE_API_KEY: ""
