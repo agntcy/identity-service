@@ -262,6 +262,12 @@ self.__WB_DISABLE_DEV_LOGS = true;
 void self.skipWaiting();
 clientsClaim();
 
+// Skip Maze analytics script - let it handle its own requests
+registerRoute(
+  ({url}) => url.hostname === 'snippet.maze.co',
+  new NetworkOnly()
+);
+
 // Skip caching for v1alpha1 API endpoints - always go to network
 registerRoute(({url}) => url.pathname.includes('v1alpha1'), new NetworkOnly());
 
