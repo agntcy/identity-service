@@ -174,6 +174,7 @@ const config: Config = {
     {
       src: 'data:text/javascript;charset=utf-8,' + encodeURIComponent(`
         (function (m, a, z, e) {
+          window.mazeId = '${process.env.MAZE_ID}';
           var s, t;
           try {
             t = m.sessionStorage.getItem('maze-us');
