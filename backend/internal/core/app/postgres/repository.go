@@ -104,6 +104,36 @@ func (r *repository) GetApp(
 	return app.ToCoreType(), nil
 }
 
+func (r *repository) GetAppByResolverMetadataID(
+	ctx context.Context,
+	resolverMetadataID string,
+) (*types.App, error) {
+	var app App
+
+	// Get the tenant ID from the context
+	tenantID, ok := identitycontext.GetTenantID(ctx)
+	if !ok {
+		return nil, identitycontext.ErrTenantNotFound
+	}
+
+	result := r.dbContext.Client().First(&app, map[string]any{
+		"resolver_metadata_id": resolverMetadataID,
+		"tenant_id":            tenantID,
+	})
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return nil, errutil.Err(
+				result.Error, "app not found")
+		}
+
+		return nil, errutil.Err(
+			result.Error, "there was an error fetching the app",
+		)
+	}
+
+	return app.ToCoreType(), nil
+}
+
 func (r *repository) GetAllApps(
 	ctx context.Context,
 	paginationFilter pagination.PaginationFilter,

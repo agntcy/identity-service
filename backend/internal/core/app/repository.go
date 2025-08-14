@@ -21,6 +21,10 @@ type Repository interface {
 		ctx context.Context,
 		id string,
 	) (*types.App, error)
+	GetAppByResolverMetadataID(
+		ctx context.Context,
+		resolverMetadataID string,
+	) (*types.App, error)
 	GetAllApps(
 		ctx context.Context,
 		paginationFilter pagination.PaginationFilter,
