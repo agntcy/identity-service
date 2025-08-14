@@ -1083,9 +1083,9 @@ components:
         AuthorizeRequest:
             type: object
             properties:
-                appId:
+                resolverMetadataId:
                     type: string
-                    description: The app id for which authorization is requested.
+                    description: The resolver metadata id for which authorization is requested.
                 toolName:
                     type: string
                     description: The MCP Server tool name.

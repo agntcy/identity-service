@@ -71,7 +71,7 @@ func (s *authService) Authorize(
 ) (*identity_service_sdk_go.AuthorizeResponse, error) {
 	session, err := s.authSrv.Authorize(
 		ctx,
-		req.AppId,
+		req.ResolverMetadataId,
 		req.ToolName,
 		req.UserToken,
 	)

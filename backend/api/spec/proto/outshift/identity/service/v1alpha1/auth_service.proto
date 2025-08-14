@@ -84,8 +84,8 @@ message AppInfoResponse {
 }
 
 message AuthorizeRequest {
-  // The app id for which authorization is requested.
-  optional string app_id = 1;
+  // The resolver metadata id for which authorization is requested.
+  optional string resolver_metadata_id = 1;
 
   // The MCP Server tool name.
   optional string tool_name = 2;

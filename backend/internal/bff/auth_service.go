@@ -31,7 +31,7 @@ const waitForDeviceApprovalTime = 500 // milliseconds
 type AuthService interface {
 	Authorize(
 		ctx context.Context,
-		appID, toolName, userToken *string,
+		resolverMetadataID, toolName, userToken *string,
 	) (*authtypes.Session, error)
 	Token(
 		ctx context.Context,
@@ -89,7 +89,7 @@ func NewAuthService(
 
 func (s *authService) Authorize(
 	ctx context.Context,
-	appID, toolName, _ *string,
+	resolverMetadataID, toolName, _ *string,
 ) (*authtypes.Session, error) {
 	// Get calling identity from context
 	ownerAppID, ok := identitycontext.GetAppID(ctx)
@@ -98,6 +98,18 @@ func (s *authService) Authorize(
 			nil,
 			"app ID not found in context",
 		)
+	}
+
+	// If resolverMetadataID is provided, get appID
+	var appID *string
+
+	if resolverMetadataID != nil && *resolverMetadataID != "" {
+		app, err := s.appRepository.GetAppByResolverMetadataID(ctx, *resolverMetadataID)
+		if err != nil {
+			return nil, errutil.Err(err, "app not found by resolver metadata ID")
+		}
+
+		appID = &app.ID
 	}
 
 	if appID != nil && *appID == ownerAppID {
