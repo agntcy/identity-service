@@ -25,3 +25,5 @@ vault-data/
 
 *.tgz
 sdk/python
+
+.env.*
