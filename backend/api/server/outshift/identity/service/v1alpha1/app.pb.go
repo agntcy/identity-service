@@ -9,6 +9,7 @@
 package identity_service_sdk_go
 
 import (
+	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -259,19 +260,19 @@ var File_outshift_identity_service_v1alpha1_app_proto protoreflect.FileDescripto
 
 const file_outshift_identity_service_v1alpha1_app_proto_rawDesc = "" +
 	"\n" +
-	",outshift/identity/service/v1alpha1/app.proto\x12\"outshift.identity.service.v1alpha1\x1a\x1fgoogle/protobuf/timestamp.proto\"\xb8\x04\n" +
-	"\x03App\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x17\n" +
-	"\x04name\x18\x02 \x01(\tH\x01R\x04name\x88\x01\x01\x12%\n" +
-	"\vdescription\x18\x03 \x01(\tH\x02R\vdescription\x88\x01\x01\x12D\n" +
-	"\x04type\x18\x04 \x01(\x0e2+.outshift.identity.service.v1alpha1.AppTypeH\x03R\x04type\x88\x01\x01\x125\n" +
-	"\x14resolver_metadata_id\x18\x05 \x01(\tH\x04R\x12resolverMetadataId\x88\x01\x01\x12\x1c\n" +
-	"\aapi_key\x18\x06 \x01(\tH\x05R\x06apiKey\x88\x01\x01\x12J\n" +
-	"\x06status\x18\a \x01(\x0e2-.outshift.identity.service.v1alpha1.AppStatusH\x06R\x06status\x88\x01\x01\x12>\n" +
+	",outshift/identity/service/v1alpha1/app.proto\x12\"outshift.identity.service.v1alpha1\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xe5\x04\n" +
+	"\x03App\x12\x18\n" +
+	"\x02id\x18\x01 \x01(\tB\x03\xe0A\x03H\x00R\x02id\x88\x01\x01\x12\x1c\n" +
+	"\x04name\x18\x02 \x01(\tB\x03\xe0A\x02H\x01R\x04name\x88\x01\x01\x12*\n" +
+	"\vdescription\x18\x03 \x01(\tB\x03\xe0A\x01H\x02R\vdescription\x88\x01\x01\x12I\n" +
+	"\x04type\x18\x04 \x01(\x0e2+.outshift.identity.service.v1alpha1.AppTypeB\x03\xe0A\x02H\x03R\x04type\x88\x01\x01\x12:\n" +
+	"\x14resolver_metadata_id\x18\x05 \x01(\tB\x03\xe0A\x03H\x04R\x12resolverMetadataId\x88\x01\x01\x12!\n" +
+	"\aapi_key\x18\x06 \x01(\tB\x03\xe0A\x03H\x05R\x06apiKey\x88\x01\x01\x12O\n" +
+	"\x06status\x18\a \x01(\x0e2-.outshift.identity.service.v1alpha1.AppStatusB\x03\xe0A\x03H\x06R\x06status\x88\x01\x01\x12C\n" +
 	"\n" +
-	"created_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampH\aR\tcreatedAt\x88\x01\x01\x12>\n" +
+	"created_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampB\x03\xe0A\x03H\aR\tcreatedAt\x88\x01\x01\x12C\n" +
 	"\n" +
-	"updated_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampH\bR\tupdatedAt\x88\x01\x01B\x05\n" +
+	"updated_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampB\x03\xe0A\x03H\bR\tupdatedAt\x88\x01\x01B\x05\n" +
 	"\x03_idB\a\n" +
 	"\x05_nameB\x0e\n" +
 	"\f_descriptionB\a\n" +

@@ -999,9 +999,13 @@ components:
                     type: string
             description: An Identity API Key.
         App:
+            required:
+                - name
+                - type
             type: object
             properties:
                 id:
+                    readOnly: true
                     type: string
                     description: A unique identifier for the App.
                 name:
@@ -1020,12 +1024,15 @@ components:
                     description: The type of the App.
                     format: enum
                 resolverMetadataId:
+                    readOnly: true
                     type: string
                     description: The DID value
                 apiKey:
+                    readOnly: true
                     type: string
                     description: The API Key Secret for the App.
                 status:
+                    readOnly: true
                     enum:
                         - APP_STATUS_UNSPECIFIED
                         - APP_STATUS_ACTIVE
@@ -1035,10 +1042,12 @@ components:
                     description: The status of the App
                     format: enum
                 createdAt:
+                    readOnly: true
                     type: string
                     description: CreatedAt records the timestamp of when the App was initially created
                     format: date-time
                 updatedAt:
+                    readOnly: true
                     type: string
                     description: UpdatedAt records the timestamp of the last update to the App
                     format: date-time
@@ -1208,6 +1217,7 @@ components:
             type: object
             properties:
                 id:
+                    readOnly: true
                     type: string
                     description: A unique identifier for the Device.
                 userId:
@@ -1220,6 +1230,7 @@ components:
                     type: string
                     description: The device human-readable name.
                 createdAt:
+                    readOnly: true
                     type: string
                     description: The creation time of the Device.
                     format: date-time
@@ -1336,14 +1347,18 @@ components:
                     type: string
                     description: The OASF schema in a base64 encoded format
         IssuerSettings:
+            required:
+                - idpType
             type: object
             properties:
                 issuerId:
+                    readOnly: true
                     type: string
                     description: |-
                         A unique identifier for the Issuer.
                          This is typically the Issuer's ID in the Identity.
                 keyId:
+                    readOnly: true
                     type: string
                     description: |-
                         A unique identifier for the Key.
@@ -1456,9 +1471,14 @@ components:
                     format: int32
             description: Pagination response
         Policy:
+            required:
+                - name
+                - assignedTo
+                - rules
             type: object
             properties:
                 id:
+                    readOnly: true
                     type: string
                     description: A unique identifier for the Policy.
                 name:
@@ -1476,10 +1496,12 @@ components:
                         $ref: '#/components/schemas/Rule'
                     description: All the rules that apply to this Policy.
                 createdAt:
+                    readOnly: true
                     type: string
                     description: CreatedAt records the timestamp of when the Policy was initially created
                     format: date-time
                 updatedAt:
+                    readOnly: true
                     type: string
                     description: UpdatedAt records the timestamp of the last update to the Policy
                     format: date-time
@@ -1500,9 +1522,15 @@ components:
                 A data integrity proof provides information about the proof mechanism,
                  parameters required to verify that proof, and the proof value itself.
         Rule:
+            required:
+                - name
+                - tasks
+                - action
+                - needsApproval
             type: object
             properties:
                 id:
+                    readOnly: true
                     type: string
                     description: A unique identifier for the Rule.
                 name:
@@ -1512,6 +1540,7 @@ components:
                     type: string
                     description: A human-readable description for the Rule.
                 policyId:
+                    readOnly: true
                     type: string
                 tasks:
                     type: array
@@ -1530,10 +1559,12 @@ components:
                     type: boolean
                     description: Need User Approval for this Rule.
                 createdAt:
+                    readOnly: true
                     type: string
                     description: CreatedAt records the timestamp of when the Rule was initially created
                     format: date-time
                 updatedAt:
+                    readOnly: true
                     type: string
                     description: UpdatedAt records the timestamp of the last update to the Rule
                     format: date-time
@@ -1551,6 +1582,7 @@ components:
             type: object
             properties:
                 apiKey:
+                    readOnly: true
                     allOf:
                         - $ref: '#/components/schemas/ApiKey'
                     description: An API Key for the Identity Service.
@@ -1579,18 +1611,23 @@ components:
             type: object
             properties:
                 id:
+                    readOnly: true
                     type: string
                     description: A unique identifier for the Task.
                 name:
+                    readOnly: true
                     type: string
                     description: A human-readable name for the Task.
                 description:
+                    readOnly: true
                     type: string
                     description: A human-readable description for the Task.
                 appId:
+                    readOnly: true
                     type: string
                     description: An application ID for the Task.
                 toolName:
+                    readOnly: true
                     type: string
                     description: A tool name for the Task.
             description: Identity Service Policy Task

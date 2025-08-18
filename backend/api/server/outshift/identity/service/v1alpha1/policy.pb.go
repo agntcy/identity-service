@@ -9,6 +9,7 @@
 package identity_service_sdk_go
 
 import (
+	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -376,36 +377,36 @@ var File_outshift_identity_service_v1alpha1_policy_proto protoreflect.FileDescri
 
 const file_outshift_identity_service_v1alpha1_policy_proto_rawDesc = "" +
 	"\n" +
-	"/outshift/identity/service/v1alpha1/policy.proto\x12\"outshift.identity.service.v1alpha1\x1a\x1fgoogle/protobuf/timestamp.proto\"\x91\x03\n" +
-	"\x06Policy\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x17\n" +
-	"\x04name\x18\x02 \x01(\tH\x01R\x04name\x88\x01\x01\x12%\n" +
-	"\vdescription\x18\x03 \x01(\tH\x02R\vdescription\x88\x01\x01\x12$\n" +
-	"\vassigned_to\x18\x04 \x01(\tH\x03R\n" +
-	"assignedTo\x88\x01\x01\x12>\n" +
-	"\x05rules\x18\x05 \x03(\v2(.outshift.identity.service.v1alpha1.RuleR\x05rules\x12>\n" +
+	"/outshift/identity/service/v1alpha1/policy.proto\x12\"outshift.identity.service.v1alpha1\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xb4\x03\n" +
+	"\x06Policy\x12\x18\n" +
+	"\x02id\x18\x01 \x01(\tB\x03\xe0A\x03H\x00R\x02id\x88\x01\x01\x12\x1c\n" +
+	"\x04name\x18\x02 \x01(\tB\x03\xe0A\x02H\x01R\x04name\x88\x01\x01\x12*\n" +
+	"\vdescription\x18\x03 \x01(\tB\x03\xe0A\x01H\x02R\vdescription\x88\x01\x01\x12)\n" +
+	"\vassigned_to\x18\x04 \x01(\tB\x03\xe0A\x02H\x03R\n" +
+	"assignedTo\x88\x01\x01\x12C\n" +
+	"\x05rules\x18\x05 \x03(\v2(.outshift.identity.service.v1alpha1.RuleB\x03\xe0A\x02R\x05rules\x12C\n" +
 	"\n" +
-	"created_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampH\x04R\tcreatedAt\x88\x01\x01\x12>\n" +
+	"created_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampB\x03\xe0A\x03H\x04R\tcreatedAt\x88\x01\x01\x12C\n" +
 	"\n" +
-	"updated_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampH\x05R\tupdatedAt\x88\x01\x01B\x05\n" +
+	"updated_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampB\x03\xe0A\x03H\x05R\tupdatedAt\x88\x01\x01B\x05\n" +
 	"\x03_idB\a\n" +
 	"\x05_nameB\x0e\n" +
 	"\f_descriptionB\x0e\n" +
 	"\f_assigned_toB\r\n" +
 	"\v_created_atB\r\n" +
-	"\v_updated_at\"\xa0\x04\n" +
-	"\x04Rule\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x17\n" +
-	"\x04name\x18\x02 \x01(\tH\x01R\x04name\x88\x01\x01\x12%\n" +
-	"\vdescription\x18\x03 \x01(\tH\x02R\vdescription\x88\x01\x01\x12 \n" +
-	"\tpolicy_id\x18\x04 \x01(\tH\x03R\bpolicyId\x88\x01\x01\x12>\n" +
-	"\x05tasks\x18\x05 \x03(\v2(.outshift.identity.service.v1alpha1.TaskR\x05tasks\x12K\n" +
-	"\x06action\x18\x06 \x01(\x0e2..outshift.identity.service.v1alpha1.RuleActionH\x04R\x06action\x88\x01\x01\x12*\n" +
-	"\x0eneeds_approval\x18\a \x01(\bH\x05R\rneedsApproval\x88\x01\x01\x12>\n" +
+	"\v_updated_at\"\xcd\x04\n" +
+	"\x04Rule\x12\x18\n" +
+	"\x02id\x18\x01 \x01(\tB\x03\xe0A\x03H\x00R\x02id\x88\x01\x01\x12\x1c\n" +
+	"\x04name\x18\x02 \x01(\tB\x03\xe0A\x02H\x01R\x04name\x88\x01\x01\x12*\n" +
+	"\vdescription\x18\x03 \x01(\tB\x03\xe0A\x01H\x02R\vdescription\x88\x01\x01\x12%\n" +
+	"\tpolicy_id\x18\x04 \x01(\tB\x03\xe0A\x03H\x03R\bpolicyId\x88\x01\x01\x12C\n" +
+	"\x05tasks\x18\x05 \x03(\v2(.outshift.identity.service.v1alpha1.TaskB\x03\xe0A\x02R\x05tasks\x12P\n" +
+	"\x06action\x18\x06 \x01(\x0e2..outshift.identity.service.v1alpha1.RuleActionB\x03\xe0A\x02H\x04R\x06action\x88\x01\x01\x12/\n" +
+	"\x0eneeds_approval\x18\a \x01(\bB\x03\xe0A\x02H\x05R\rneedsApproval\x88\x01\x01\x12C\n" +
 	"\n" +
-	"created_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampH\x06R\tcreatedAt\x88\x01\x01\x12>\n" +
+	"created_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampB\x03\xe0A\x03H\x06R\tcreatedAt\x88\x01\x01\x12C\n" +
 	"\n" +
-	"updated_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampH\aR\tupdatedAt\x88\x01\x01B\x05\n" +
+	"updated_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampB\x03\xe0A\x03H\aR\tupdatedAt\x88\x01\x01B\x05\n" +
 	"\x03_idB\a\n" +
 	"\x05_nameB\x0e\n" +
 	"\f_descriptionB\f\n" +
@@ -414,13 +415,13 @@ const file_outshift_identity_service_v1alpha1_policy_proto_rawDesc = "" +
 	"\a_actionB\x11\n" +
 	"\x0f_needs_approvalB\r\n" +
 	"\v_created_atB\r\n" +
-	"\v_updated_at\"\xd2\x01\n" +
-	"\x04Task\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x17\n" +
-	"\x04name\x18\x02 \x01(\tH\x01R\x04name\x88\x01\x01\x12%\n" +
-	"\vdescription\x18\x03 \x01(\tH\x02R\vdescription\x88\x01\x01\x12\x1a\n" +
-	"\x06app_id\x18\x04 \x01(\tH\x03R\x05appId\x88\x01\x01\x12 \n" +
-	"\ttool_name\x18\x05 \x01(\tH\x04R\btoolName\x88\x01\x01B\x05\n" +
+	"\v_updated_at\"\xeb\x01\n" +
+	"\x04Task\x12\x18\n" +
+	"\x02id\x18\x01 \x01(\tB\x03\xe0A\x03H\x00R\x02id\x88\x01\x01\x12\x1c\n" +
+	"\x04name\x18\x02 \x01(\tB\x03\xe0A\x03H\x01R\x04name\x88\x01\x01\x12*\n" +
+	"\vdescription\x18\x03 \x01(\tB\x03\xe0A\x03H\x02R\vdescription\x88\x01\x01\x12\x1f\n" +
+	"\x06app_id\x18\x04 \x01(\tB\x03\xe0A\x03H\x03R\x05appId\x88\x01\x01\x12%\n" +
+	"\ttool_name\x18\x05 \x01(\tB\x03\xe0A\x03H\x04R\btoolName\x88\x01\x01B\x05\n" +
 	"\x03_idB\a\n" +
 	"\x05_nameB\x0e\n" +
 	"\f_descriptionB\t\n" +

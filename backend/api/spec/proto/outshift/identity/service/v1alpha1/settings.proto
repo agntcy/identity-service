@@ -7,6 +7,8 @@ syntax = "proto3";
 
 package outshift.identity.service.v1alpha1;
 
+import "google/api/field_behavior.proto";
+
 // Package-wide variables from generator "generated".
 option go_package = "github.com/outshift/identity-service/api/server/outshift/identity/service/v1alpha1;identity_service_sdk_go";
 
@@ -28,23 +30,23 @@ message DuoIdpSettings {
 message IssuerSettings {
   // A unique identifier for the Issuer.
   // This is typically the Issuer's ID in the Identity.
-  optional string issuer_id = 1;
+  optional string issuer_id = 1 [(.google.api.field_behavior) = OUTPUT_ONLY];
 
   // A unique identifier for the Key.
   // This is typically the Key's ID in the vault provider.
-  optional string key_id = 2;
+  optional string key_id = 2 [(.google.api.field_behavior) = OUTPUT_ONLY];
 
   // The type of the IdP.
-  optional IdpType idp_type = 3;
+  optional IdpType idp_type = 3 [(.google.api.field_behavior) = REQUIRED];
 
   // Settings for the Duo Identity Provider.
-  optional DuoIdpSettings duo_idp_settings = 4;
+  optional DuoIdpSettings duo_idp_settings = 4 [(.google.api.field_behavior) = OPTIONAL];
 
   // Settings for the Okta Identity Provider.
-  optional OktaIdpSettings okta_idp_settings = 5;
+  optional OktaIdpSettings okta_idp_settings = 5 [(.google.api.field_behavior) = OPTIONAL];
 
   // Settings for the Ory Identity Provider.
-  optional OryIdpSettings ory_idp_settings = 6;
+  optional OryIdpSettings ory_idp_settings = 6 [(.google.api.field_behavior) = OPTIONAL];
 }
 
 // Okta IdP Settings
@@ -66,10 +68,10 @@ message OryIdpSettings {
 // Identity Settings
 message Settings {
   // An API Key for the Identity Service.
-  optional ApiKey api_key = 1;
+  optional ApiKey api_key = 1 [(.google.api.field_behavior) = OUTPUT_ONLY];
 
   // Settings for the Issuer.
-  optional IssuerSettings issuer_settings = 2;
+  optional IssuerSettings issuer_settings = 2 [(.google.api.field_behavior) = OPTIONAL];
 }
 
 // Type
