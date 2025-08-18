@@ -9,6 +9,7 @@
 package identity_service_sdk_go
 
 import (
+	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -456,7 +457,7 @@ var File_outshift_identity_service_v1alpha1_settings_proto protoreflect.FileDesc
 
 const file_outshift_identity_service_v1alpha1_settings_proto_rawDesc = "" +
 	"\n" +
-	"1outshift/identity/service/v1alpha1/settings.proto\x12\"outshift.identity.service.v1alpha1\"2\n" +
+	"1outshift/identity/service/v1alpha1/settings.proto\x12\"outshift.identity.service.v1alpha1\x1a\x1fgoogle/api/field_behavior.proto\"2\n" +
 	"\x06ApiKey\x12\x1c\n" +
 	"\aapi_key\x18\x01 \x01(\tH\x00R\x06apiKey\x88\x01\x01B\n" +
 	"\n" +
@@ -468,14 +469,14 @@ const file_outshift_identity_service_v1alpha1_settings_proto_rawDesc = "" +
 	"secret_key\x18\x03 \x01(\tH\x02R\tsecretKey\x88\x01\x01B\v\n" +
 	"\t_hostnameB\x12\n" +
 	"\x10_integration_keyB\r\n" +
-	"\v_secret_key\"\xad\x04\n" +
-	"\x0eIssuerSettings\x12 \n" +
-	"\tissuer_id\x18\x01 \x01(\tH\x00R\bissuerId\x88\x01\x01\x12\x1a\n" +
-	"\x06key_id\x18\x02 \x01(\tH\x01R\x05keyId\x88\x01\x01\x12K\n" +
-	"\bidp_type\x18\x03 \x01(\x0e2+.outshift.identity.service.v1alpha1.IdpTypeH\x02R\aidpType\x88\x01\x01\x12a\n" +
-	"\x10duo_idp_settings\x18\x04 \x01(\v22.outshift.identity.service.v1alpha1.DuoIdpSettingsH\x03R\x0eduoIdpSettings\x88\x01\x01\x12d\n" +
-	"\x11okta_idp_settings\x18\x05 \x01(\v23.outshift.identity.service.v1alpha1.OktaIdpSettingsH\x04R\x0foktaIdpSettings\x88\x01\x01\x12a\n" +
-	"\x10ory_idp_settings\x18\x06 \x01(\v22.outshift.identity.service.v1alpha1.OryIdpSettingsH\x05R\x0eoryIdpSettings\x88\x01\x01B\f\n" +
+	"\v_secret_key\"\xcb\x04\n" +
+	"\x0eIssuerSettings\x12%\n" +
+	"\tissuer_id\x18\x01 \x01(\tB\x03\xe0A\x03H\x00R\bissuerId\x88\x01\x01\x12\x1f\n" +
+	"\x06key_id\x18\x02 \x01(\tB\x03\xe0A\x03H\x01R\x05keyId\x88\x01\x01\x12P\n" +
+	"\bidp_type\x18\x03 \x01(\x0e2+.outshift.identity.service.v1alpha1.IdpTypeB\x03\xe0A\x02H\x02R\aidpType\x88\x01\x01\x12f\n" +
+	"\x10duo_idp_settings\x18\x04 \x01(\v22.outshift.identity.service.v1alpha1.DuoIdpSettingsB\x03\xe0A\x01H\x03R\x0eduoIdpSettings\x88\x01\x01\x12i\n" +
+	"\x11okta_idp_settings\x18\x05 \x01(\v23.outshift.identity.service.v1alpha1.OktaIdpSettingsB\x03\xe0A\x01H\x04R\x0foktaIdpSettings\x88\x01\x01\x12f\n" +
+	"\x10ory_idp_settings\x18\x06 \x01(\v22.outshift.identity.service.v1alpha1.OryIdpSettingsB\x03\xe0A\x01H\x05R\x0eoryIdpSettings\x88\x01\x01B\f\n" +
 	"\n" +
 	"_issuer_idB\t\n" +
 	"\a_key_idB\v\n" +
@@ -498,10 +499,10 @@ const file_outshift_identity_service_v1alpha1_settings_proto_rawDesc = "" +
 	"\aapi_key\x18\x02 \x01(\tH\x01R\x06apiKey\x88\x01\x01B\x0f\n" +
 	"\r_project_slugB\n" +
 	"\n" +
-	"\b_api_key\"\xd6\x01\n" +
-	"\bSettings\x12H\n" +
-	"\aapi_key\x18\x01 \x01(\v2*.outshift.identity.service.v1alpha1.ApiKeyH\x00R\x06apiKey\x88\x01\x01\x12`\n" +
-	"\x0fissuer_settings\x18\x02 \x01(\v22.outshift.identity.service.v1alpha1.IssuerSettingsH\x01R\x0eissuerSettings\x88\x01\x01B\n" +
+	"\b_api_key\"\xe0\x01\n" +
+	"\bSettings\x12M\n" +
+	"\aapi_key\x18\x01 \x01(\v2*.outshift.identity.service.v1alpha1.ApiKeyB\x03\xe0A\x03H\x00R\x06apiKey\x88\x01\x01\x12e\n" +
+	"\x0fissuer_settings\x18\x02 \x01(\v22.outshift.identity.service.v1alpha1.IssuerSettingsB\x03\xe0A\x01H\x01R\x0eissuerSettings\x88\x01\x01B\n" +
 	"\n" +
 	"\b_api_keyB\x12\n" +
 	"\x10_issuer_settings*m\n" +

@@ -7,6 +7,7 @@ syntax = "proto3";
 
 package outshift.identity.service.v1alpha1;
 
+import "google/api/field_behavior.proto";
 import "google/protobuf/timestamp.proto";
 
 // Package-wide variables from generator "generated".
@@ -15,72 +16,72 @@ option go_package = "github.com/outshift/identity-service/api/server/outshift/id
 // Identity Service Policy.
 message Policy {
   // A unique identifier for the Policy.
-  optional string id = 1;
+  optional string id = 1 [(.google.api.field_behavior) = OUTPUT_ONLY];
 
   // A human-readable name for the Policy.
-  optional string name = 2;
+  optional string name = 2 [(.google.api.field_behavior) = REQUIRED];
 
   // A human-readable description for the Policy.
-  optional string description = 3;
+  optional string description = 3 [(.google.api.field_behavior) = OPTIONAL];
 
   // The requester application that this Policy applies to.
-  optional string assigned_to = 4;
+  optional string assigned_to = 4 [(.google.api.field_behavior) = REQUIRED];
 
   // All the rules that apply to this Policy.
-  repeated Rule rules = 5;
+  repeated Rule rules = 5 [(.google.api.field_behavior) = REQUIRED];
 
   // CreatedAt records the timestamp of when the Policy was initially created
-  optional .google.protobuf.Timestamp created_at = 6;
+  optional .google.protobuf.Timestamp created_at = 6 [(.google.api.field_behavior) = OUTPUT_ONLY];
 
   // UpdatedAt records the timestamp of the last update to the Policy
-  optional .google.protobuf.Timestamp updated_at = 7;
+  optional .google.protobuf.Timestamp updated_at = 7 [(.google.api.field_behavior) = OUTPUT_ONLY];
 }
 
 // Identity Service Policy Rule
 message Rule {
   // A unique identifier for the Rule.
-  optional string id = 1;
+  optional string id = 1 [(.google.api.field_behavior) = OUTPUT_ONLY];
 
   // A human-readable name for the Rule.
-  optional string name = 2;
+  optional string name = 2 [(.google.api.field_behavior) = REQUIRED];
 
   // A human-readable description for the Rule.
-  optional string description = 3;
+  optional string description = 3 [(.google.api.field_behavior) = OPTIONAL];
 
-  optional string policy_id = 4;
+  optional string policy_id = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
 
   // The tasks that this Rule applies to.
-  repeated Task tasks = 5;
+  repeated Task tasks = 5 [(.google.api.field_behavior) = REQUIRED];
 
   // The action applied for the rule when calling the specified tasks
-  optional RuleAction action = 6;
+  optional RuleAction action = 6 [(.google.api.field_behavior) = REQUIRED];
 
   // Need User Approval for this Rule.
-  optional bool needs_approval = 7;
+  optional bool needs_approval = 7 [(.google.api.field_behavior) = REQUIRED];
 
   // CreatedAt records the timestamp of when the Rule was initially created
-  optional .google.protobuf.Timestamp created_at = 8;
+  optional .google.protobuf.Timestamp created_at = 8 [(.google.api.field_behavior) = OUTPUT_ONLY];
 
   // UpdatedAt records the timestamp of the last update to the Rule
-  optional .google.protobuf.Timestamp updated_at = 9;
+  optional .google.protobuf.Timestamp updated_at = 9 [(.google.api.field_behavior) = OUTPUT_ONLY];
 }
 
 // Identity Service Policy Task
 message Task {
   // A unique identifier for the Task.
-  optional string id = 1;
+  optional string id = 1 [(.google.api.field_behavior) = OUTPUT_ONLY];
 
   // A human-readable name for the Task.
-  optional string name = 2;
+  optional string name = 2 [(.google.api.field_behavior) = OUTPUT_ONLY];
 
   // A human-readable description for the Task.
-  optional string description = 3;
+  optional string description = 3 [(.google.api.field_behavior) = OUTPUT_ONLY];
 
   // An application ID for the Task.
-  optional string app_id = 4;
+  optional string app_id = 4 [(.google.api.field_behavior) = OUTPUT_ONLY];
 
   // A tool name for the Task.
-  optional string tool_name = 5;
+  optional string tool_name = 5 [(.google.api.field_behavior) = OUTPUT_ONLY];
 }
 
 enum RuleAction {

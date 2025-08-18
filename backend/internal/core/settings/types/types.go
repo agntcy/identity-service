@@ -71,30 +71,38 @@ type OryIdpSettings struct {
 type IssuerSettings struct {
 	// A unique identifier for the Issuer.
 	// This is typically the Issuer's ID in the Identity.
+	// +field_behavior:OUTPUT_ONLY
 	IssuerID string `json:"issuer_id,omitempty" protobuf:"bytes,1,opt,name=issuer_id"`
 
 	// A unique identifier for the Key.
 	// This is typically the Key's ID in the vault provider.
+	// +field_behavior:OUTPUT_ONLY
 	KeyID string `json:"key_id,omitempty" protobuf:"bytes,2,opt,name=key_id"`
 
 	// The type of the IdP.
+	// +field_behavior:REQUIRED
 	IdpType IdpType `json:"idp_type,omitempty" protobuf:"bytes,3,opt,name=idp_type"`
 
 	// Settings for the Duo Identity Provider.
+	// +field_behavior:OPTIONAL
 	DuoIdpSettings *DuoIdpSettings `json:"duo_idp_settings,omitempty" protobuf:"bytes,4,opt,name=duo_idp_settings"`
 
 	// Settings for the Okta Identity Provider.
+	// +field_behavior:OPTIONAL
 	OktaIdpSettings *OktaIdpSettings `json:"okta_idp_settings,omitempty" protobuf:"bytes,5,opt,name=okta_idp_settings"`
 
 	// Settings for the Ory Identity Provider.
+	// +field_behavior:OPTIONAL
 	OryIdpSettings *OryIdpSettings `json:"ory_idp_settings,omitempty" protobuf:"bytes,6,opt,name=ory_idp_settings"`
 }
 
 // Identity Settings
 type Settings struct {
 	// An API Key for the Identity Service.
+	// +field_behavior:OUTPUT_ONLY
 	ApiKey *ApiKey `json:"api_key,omitempty" protobuf:"bytes,1,opt,name=api_key"`
 
 	// Settings for the Issuer.
+	// +field_behavior:OPTIONAL
 	IssuerSettings *IssuerSettings `json:"issuer_settings,omitempty" protobuf:"bytes,2,opt,name=issuer_settings"`
 }

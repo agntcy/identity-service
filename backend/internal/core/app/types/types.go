@@ -82,30 +82,39 @@ func (s AppStatus) MarshalText() ([]byte, error) {
 // Identity Service App.
 type App struct {
 	// A unique identifier for the App.
+	// +field_behavior:OUTPUT_ONLY
 	ID string `json:"id,omitempty" protobuf:"bytes,1,opt,name=id"`
 
 	// A human-readable name for the App.
+	// +field_behavior:REQUIRED
 	Name *string `json:"name,omitempty" protobuf:"bytes,2,opt,name=name"`
 
 	// A human-readable description for the App.
+	// +field_behavior:OPTIONAL
 	Description *string `json:"description,omitempty" protobuf:"bytes,3,opt,name=description"`
 
 	// The type of the App.
+	// +field_behavior:REQUIRED
 	Type AppType `json:"type,omitempty" protobuf:"bytes,4,opt,name=type"`
 
 	// The DID value
+	// +field_behavior:OUTPUT_ONLY
 	ResolverMetadataID string `json:"resolver_metadata_id,omitempty" protobuf:"bytes,5,opt,name=resolver_metadata_id"`
 
 	// The API Key Secret for the App.
+	// +field_behavior:OUTPUT_ONLY
 	ApiKey string `json:"api_key" protobuf:"bytes,6,opt,name=api_key"`
 
 	// The status of the App
+	// +field_behavior:OUTPUT_ONLY
 	Status AppStatus `json:"status" protobuf:"bytes,7,opt,name=status"`
 
 	// CreatedAt records the timestamp of when the App was initially created
+	// +field_behavior:OUTPUT_ONLY
 	CreatedAt time.Time `json:"created_at" protobuf:"google.protobuf.Timestamp,8,opt,name=created_at"`
 
 	// UpdatedAt records the timestamp of the last update to the App
+	// +field_behavior:OUTPUT_ONLY
 	UpdatedAt *time.Time `json:"updated_at,omitempty" protobuf:"google.protobuf.Timestamp,9,opt,name=updated_at"`
 
 	DeletedAt *time.Time `json:"-" protobuf:"-"`

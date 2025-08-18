@@ -9,6 +9,7 @@
 package identity_service_sdk_go
 
 import (
+	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -311,7 +312,7 @@ var File_outshift_identity_service_v1alpha1_device_proto protoreflect.FileDescri
 
 const file_outshift_identity_service_v1alpha1_device_proto_rawDesc = "" +
 	"\n" +
-	"/outshift/identity/service/v1alpha1/device.proto\x12\"outshift.identity.service.v1alpha1\x1a\x1fgoogle/protobuf/timestamp.proto\"\xf7\x02\n" +
+	"/outshift/identity/service/v1alpha1/device.proto\x12\"outshift.identity.service.v1alpha1\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\xf7\x02\n" +
 	"\x13ApprovalRequestInfo\x12\"\n" +
 	"\n" +
 	"caller_app\x18\x01 \x01(\tH\x00R\tcallerApp\x88\x01\x01\x12\"\n" +
@@ -331,14 +332,14 @@ const file_outshift_identity_service_v1alpha1_device_proto_rawDesc = "" +
 	"\n" +
 	"_device_idB\r\n" +
 	"\v_session_idB\x15\n" +
-	"\x13_timeout_in_seconds\"\x8a\x02\n" +
-	"\x06Device\x12\x13\n" +
-	"\x02id\x18\x01 \x01(\tH\x00R\x02id\x88\x01\x01\x12\x1c\n" +
-	"\auser_id\x18\x02 \x01(\tH\x01R\x06userId\x88\x01\x01\x122\n" +
-	"\x12subscription_token\x18\x03 \x01(\tH\x02R\x11subscriptionToken\x88\x01\x01\x12\x17\n" +
-	"\x04name\x18\x04 \x01(\tH\x03R\x04name\x88\x01\x01\x12>\n" +
+	"\x13_timeout_in_seconds\"\xa3\x02\n" +
+	"\x06Device\x12\x18\n" +
+	"\x02id\x18\x01 \x01(\tB\x03\xe0A\x03H\x00R\x02id\x88\x01\x01\x12!\n" +
+	"\auser_id\x18\x02 \x01(\tB\x03\xe0A\x01H\x01R\x06userId\x88\x01\x01\x127\n" +
+	"\x12subscription_token\x18\x03 \x01(\tB\x03\xe0A\x01H\x02R\x11subscriptionToken\x88\x01\x01\x12\x1c\n" +
+	"\x04name\x18\x04 \x01(\tB\x03\xe0A\x01H\x03R\x04name\x88\x01\x01\x12C\n" +
 	"\n" +
-	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampH\x04R\tcreatedAt\x88\x01\x01B\x05\n" +
+	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampB\x03\xe0A\x03H\x04R\tcreatedAt\x88\x01\x01B\x05\n" +
 	"\x03_idB\n" +
 	"\n" +
 	"\b_user_idB\x15\n" +
