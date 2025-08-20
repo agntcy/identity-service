@@ -93,7 +93,7 @@ type Rule struct {
 
 	// UpdatedAt records the timestamp of the last update to the Rule
 	// +field_behavior:OUTPUT_ONLY
-	UpdatedAt *time.Time `json:"updated_at,omitempty" protobuf:"google.protobuf.Timestamp,9,opt,name=updated_at"`
+	UpdatedAt *time.Time `json:"updated_at,omitempty" protobuf:"-"`
 }
 
 // This function checks whether a Rule is allowing appID to be called.
@@ -144,7 +144,7 @@ type Policy struct {
 
 	// UpdatedAt records the timestamp of the last update to the Policy
 	// +field_behavior:OUTPUT_ONLY
-	UpdatedAt *time.Time `json:"updated_at,omitempty" protobuf:"google.protobuf.Timestamp,7,opt,name=updated_at"`
+	UpdatedAt *time.Time `json:"updated_at,omitempty" protobuf:"-"`
 }
 
 func (p *Policy) CanInvoke(appID, toolName string) *Rule {
