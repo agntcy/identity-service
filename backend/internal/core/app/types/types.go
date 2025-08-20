@@ -114,8 +114,8 @@ type App struct {
 	CreatedAt time.Time `json:"created_at" protobuf:"google.protobuf.Timestamp,8,opt,name=created_at"`
 
 	// UpdatedAt records the timestamp of the last update to the App
-	// +field_behavior:OUTPUT_ONLY
-	UpdatedAt *time.Time `json:"updated_at,omitempty" protobuf:"google.protobuf.Timestamp,9,opt,name=updated_at"`
+	UpdatedAt *time.Time `json:"updated_at,omitempty" protobuf:"-"`
 
+	// DeletedAt records the timestamp of when the App was deleted
 	DeletedAt *time.Time `json:"-" protobuf:"-"`
 }

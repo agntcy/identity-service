@@ -76,8 +76,7 @@ type IssuerSettings struct {
 
 	// A unique identifier for the Key.
 	// This is typically the Key's ID in the vault provider.
-	// +field_behavior:OUTPUT_ONLY
-	KeyID string `json:"key_id,omitempty" protobuf:"bytes,2,opt,name=key_id"`
+	KeyID string `json:"key_id,omitempty" protobuf:"-"`
 
 	// The type of the IdP.
 	// +field_behavior:REQUIRED
