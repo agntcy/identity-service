@@ -11,7 +11,7 @@ import (
 
 	webpush "github.com/SherClockHolmes/webpush-go"
 	apptypes "github.com/outshift/identity-service/internal/core/app/types"
-	authtypes "github.com/outshift/identity-service/internal/core/auth/types"
+	authtypes "github.com/outshift/identity-service/internal/core/auth/types/int"
 	devicetypes "github.com/outshift/identity-service/internal/core/device/types"
 	"github.com/outshift/identity-service/internal/pkg/errutil"
 	"github.com/outshift/identity-service/internal/pkg/ptrutil"

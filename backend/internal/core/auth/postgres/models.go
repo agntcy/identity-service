@@ -6,7 +6,7 @@ package postgres
 import (
 	"github.com/google/uuid"
 	apptypes "github.com/outshift/identity-service/internal/core/app/types"
-	types "github.com/outshift/identity-service/internal/core/auth/types"
+	types "github.com/outshift/identity-service/internal/core/auth/types/int"
 	devicetypes "github.com/outshift/identity-service/internal/core/device/types"
 	"github.com/outshift/identity-service/internal/pkg/secrets"
 	"github.com/outshift/identity-service/internal/pkg/strutil"

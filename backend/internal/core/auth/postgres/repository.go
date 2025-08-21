@@ -10,7 +10,7 @@ import (
 
 	"github.com/google/uuid"
 	sessioncore "github.com/outshift/identity-service/internal/core/auth"
-	"github.com/outshift/identity-service/internal/core/auth/types"
+	types "github.com/outshift/identity-service/internal/core/auth/types/int"
 	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
 	"github.com/outshift/identity-service/internal/pkg/errutil"
 	"github.com/outshift/identity-service/internal/pkg/ptrutil"
@@ -132,7 +132,10 @@ func (r *postgresRepository) Update(ctx context.Context, session *types.Session)
 	return nil
 }
 
-func (r *postgresRepository) CreateDeviceOTP(ctx context.Context, otp *types.SessionDeviceOTP) error {
+func (r *postgresRepository) CreateDeviceOTP(
+	ctx context.Context,
+	otp *types.SessionDeviceOTP,
+) error {
 	model := newSessionDeviceOTPModel(otp)
 
 	result := r.dbContext.Client().Create(model)

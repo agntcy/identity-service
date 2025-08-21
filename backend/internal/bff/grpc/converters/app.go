@@ -25,7 +25,6 @@ func FromApp(src *apptypes.App) *identity_service_sdk_go.App {
 		Status:             ptrutil.Ptr(identity_service_sdk_go.AppStatus(src.Status)),
 		ApiKey:             ptrutil.Ptr(src.ApiKey),
 		CreatedAt:          newTimestamp(&src.CreatedAt),
-		UpdatedAt:          newTimestamp(src.UpdatedAt),
 		ResolverMetadataId: ptrutil.Ptr(src.ResolverMetadataID),
 	}
 }

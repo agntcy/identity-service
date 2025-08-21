@@ -22,7 +22,6 @@ func FromPolicy(src *policytypes.Policy) *identity_service_sdk_go.Policy {
 		AssignedTo:  ptrutil.Ptr(src.AssignedTo),
 		Rules:       convertutil.ConvertSlice(src.Rules, FromRule),
 		CreatedAt:   newTimestamp(&src.CreatedAt),
-		UpdatedAt:   newTimestamp(src.UpdatedAt),
 	}
 }
 
@@ -53,7 +52,6 @@ func FromRule(src *policytypes.Rule) *identity_service_sdk_go.Rule {
 		Tasks:         convertutil.ConvertSlice(src.Tasks, FromTask),
 		Action:        ptrutil.Ptr(identity_service_sdk_go.RuleAction(src.Action)),
 		CreatedAt:     newTimestamp(&src.CreatedAt),
-		UpdatedAt:     newTimestamp(src.UpdatedAt),
 	}
 }
 

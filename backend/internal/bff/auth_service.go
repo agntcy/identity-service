@@ -12,7 +12,7 @@ import (
 	appcore "github.com/outshift/identity-service/internal/core/app"
 	apptypes "github.com/outshift/identity-service/internal/core/app/types"
 	authcore "github.com/outshift/identity-service/internal/core/auth"
-	authtypes "github.com/outshift/identity-service/internal/core/auth/types"
+	authtypes "github.com/outshift/identity-service/internal/core/auth/types/int"
 	devicecore "github.com/outshift/identity-service/internal/core/device"
 	"github.com/outshift/identity-service/internal/core/identity"
 	idpcore "github.com/outshift/identity-service/internal/core/idp"

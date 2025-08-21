@@ -6,7 +6,7 @@ package auth
 import (
 	"context"
 
-	"github.com/outshift/identity-service/internal/core/auth/types"
+	types "github.com/outshift/identity-service/internal/core/auth/types/int"
 )
 
 type Repository interface {
@@ -17,5 +17,8 @@ type Repository interface {
 	CreateDeviceOTP(ctx context.Context, otp *types.SessionDeviceOTP) error
 	GetDeviceOTP(ctx context.Context, id string) (*types.SessionDeviceOTP, error)
 	UpdateDeviceOTP(ctx context.Context, otp *types.SessionDeviceOTP) error
-	GetDeviceOTPByValue(ctx context.Context, deviceID, sessionID, value string) (*types.SessionDeviceOTP, error)
+	GetDeviceOTPByValue(
+		ctx context.Context,
+		deviceID, sessionID, value string,
+	) (*types.SessionDeviceOTP, error)
 }
