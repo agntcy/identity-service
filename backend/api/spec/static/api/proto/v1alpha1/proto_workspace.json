@@ -247,18 +247,6 @@
               "isoneof": true,
               "oneofdecl": "_created_at",
               "defaultValue": ""
-            },
-            {
-              "name": "updated_at",
-              "description": "UpdatedAt records the timestamp of the last update to the App",
-              "label": "optional",
-              "type": "Timestamp",
-              "longType": "google.protobuf.Timestamp",
-              "fullType": "google.protobuf.Timestamp",
-              "ismap": false,
-              "isoneof": true,
-              "oneofdecl": "_updated_at",
-              "defaultValue": ""
             }
           ]
         }
@@ -917,18 +905,6 @@
               "isoneof": true,
               "oneofdecl": "_created_at",
               "defaultValue": ""
-            },
-            {
-              "name": "updated_at",
-              "description": "UpdatedAt records the timestamp of the last update to the Policy",
-              "label": "optional",
-              "type": "Timestamp",
-              "longType": "google.protobuf.Timestamp",
-              "fullType": "google.protobuf.Timestamp",
-              "ismap": false,
-              "isoneof": true,
-              "oneofdecl": "_updated_at",
-              "defaultValue": ""
             }
           ]
         },
@@ -1036,18 +1012,6 @@
               "ismap": false,
               "isoneof": true,
               "oneofdecl": "_created_at",
-              "defaultValue": ""
-            },
-            {
-              "name": "updated_at",
-              "description": "UpdatedAt records the timestamp of the last update to the Rule",
-              "label": "optional",
-              "type": "Timestamp",
-              "longType": "google.protobuf.Timestamp",
-              "fullType": "google.protobuf.Timestamp",
-              "ismap": false,
-              "isoneof": true,
-              "oneofdecl": "_updated_at",
               "defaultValue": ""
             }
           ]
@@ -4343,18 +4307,6 @@
               "ismap": false,
               "isoneof": true,
               "oneofdecl": "_issuer_id",
-              "defaultValue": ""
-            },
-            {
-              "name": "key_id",
-              "description": "A unique identifier for the Key.\nThis is typically the Key's ID in the vault provider.",
-              "label": "optional",
-              "type": "string",
-              "longType": "string",
-              "fullType": "string",
-              "ismap": false,
-              "isoneof": true,
-              "oneofdecl": "_key_id",
               "defaultValue": ""
             },
             {

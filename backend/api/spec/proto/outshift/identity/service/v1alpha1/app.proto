@@ -35,9 +35,6 @@ message App {
 
   // CreatedAt records the timestamp of when the App was initially created
   optional .google.protobuf.Timestamp created_at = 8 [(.google.api.field_behavior) = OUTPUT_ONLY];
-
-  // UpdatedAt records the timestamp of the last update to the App
-  optional .google.protobuf.Timestamp updated_at = 9 [(.google.api.field_behavior) = OUTPUT_ONLY];
 }
 
 enum AppStatus {

@@ -32,9 +32,6 @@ message Policy {
 
   // CreatedAt records the timestamp of when the Policy was initially created
   optional .google.protobuf.Timestamp created_at = 6 [(.google.api.field_behavior) = OUTPUT_ONLY];
-
-  // UpdatedAt records the timestamp of the last update to the Policy
-  optional .google.protobuf.Timestamp updated_at = 7 [(.google.api.field_behavior) = OUTPUT_ONLY];
 }
 
 // Identity Service Policy Rule
@@ -61,9 +58,6 @@ message Rule {
 
   // CreatedAt records the timestamp of when the Rule was initially created
   optional .google.protobuf.Timestamp created_at = 8 [(.google.api.field_behavior) = OUTPUT_ONLY];
-
-  // UpdatedAt records the timestamp of the last update to the Rule
-  optional .google.protobuf.Timestamp updated_at = 9 [(.google.api.field_behavior) = OUTPUT_ONLY];
 }
 
 // Identity Service Policy Task

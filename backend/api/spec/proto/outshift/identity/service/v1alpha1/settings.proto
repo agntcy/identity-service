@@ -32,10 +32,6 @@ message IssuerSettings {
   // This is typically the Issuer's ID in the Identity.
   optional string issuer_id = 1 [(.google.api.field_behavior) = OUTPUT_ONLY];
 
-  // A unique identifier for the Key.
-  // This is typically the Key's ID in the vault provider.
-  optional string key_id = 2 [(.google.api.field_behavior) = OUTPUT_ONLY];
-
   // The type of the IdP.
   optional IdpType idp_type = 3 [(.google.api.field_behavior) = REQUIRED];
 

@@ -1046,11 +1046,6 @@ components:
                     type: string
                     description: CreatedAt records the timestamp of when the App was initially created
                     format: date-time
-                updatedAt:
-                    readOnly: true
-                    type: string
-                    description: UpdatedAt records the timestamp of the last update to the App
-                    format: date-time
             description: Identity Service App.
         AppInfoResponse:
             type: object
@@ -1357,12 +1352,6 @@ components:
                     description: |-
                         A unique identifier for the Issuer.
                          This is typically the Issuer's ID in the Identity.
-                keyId:
-                    readOnly: true
-                    type: string
-                    description: |-
-                        A unique identifier for the Key.
-                         This is typically the Key's ID in the vault provider.
                 idpType:
                     enum:
                         - IDP_TYPE_UNSPECIFIED
@@ -1500,11 +1489,6 @@ components:
                     type: string
                     description: CreatedAt records the timestamp of when the Policy was initially created
                     format: date-time
-                updatedAt:
-                    readOnly: true
-                    type: string
-                    description: UpdatedAt records the timestamp of the last update to the Policy
-                    format: date-time
             description: Identity Service Policy.
         Proof:
             type: object
@@ -1562,11 +1546,6 @@ components:
                     readOnly: true
                     type: string
                     description: CreatedAt records the timestamp of when the Rule was initially created
-                    format: date-time
-                updatedAt:
-                    readOnly: true
-                    type: string
-                    description: UpdatedAt records the timestamp of the last update to the Rule
                     format: date-time
             description: Identity Service Policy Rule
         SetIssuerRequest:
