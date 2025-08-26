@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	urllib "net/url"
 	"strings"
+	"time"
 
 	"github.com/mark3labs/mcp-go/client"
 	"github.com/mark3labs/mcp-go/mcp"
@@ -16,10 +17,12 @@ import (
 )
 
 const (
-	mcpSuffix                   = "/mcp"
-	sseSuffix                   = "/sse"
-	McpClientTypeSSE            = "sse"
-	McpClientTypeStreamableHTTP = "streamable-http"
+	mcpToolsDiscoveryTimeout     = 30 * time.Second
+	mcpResourcesDiscoveryTimeout = 2 * time.Second
+	mcpSuffix                    = "/mcp"
+	sseSuffix                    = "/sse"
+	McpClientTypeSSE             = "sse"
+	McpClientTypeStreamableHTTP  = "streamable-http"
 )
 
 // The discoverClient interface defines the core methods for
@@ -117,11 +120,15 @@ func (d *discoveryClient) Discover(
 		_ = mcpClient.Close()
 	}()
 
+	// Give it a timeout to discover tools
+	tCtx, tCancel := context.WithTimeout(ctx, mcpToolsDiscoveryTimeout)
+	defer tCancel()
+
 	// Discover MCP server
 	// First the tools
 	toolsRequest := mcp.ListToolsRequest{}
 
-	toolsList, err := mcpClient.ListTools(ctx, toolsRequest)
+	toolsList, err := mcpClient.ListTools(tCtx, toolsRequest)
 	if err != nil {
 		return nil, errutil.Err(
 			err,
@@ -129,13 +136,21 @@ func (d *discoveryClient) Discover(
 		)
 	}
 
+	log.Debug("Discovered ", len(toolsList.Tools), " tools from MCP server")
+
+	// Give it a timeout to discover resources
+	rCtx, rCancel := context.WithTimeout(ctx, mcpResourcesDiscoveryTimeout)
+	defer rCancel()
+
 	// After that the resources
 	resourcesRequest := mcp.ListResourcesRequest{}
 
-	resourcesList, err := mcpClient.ListResources(ctx, resourcesRequest)
+	resourcesList, err := mcpClient.ListResources(rCtx, resourcesRequest)
 	if err != nil {
 		log.Warn("Failed to discover MCP resources, continuing without them: ", err)
 	}
+
+	log.Debug("Parsing discovered MCP tools and resources")
 
 	// Parse the tools and resources
 	// Get the first batch of tools
@@ -143,6 +158,8 @@ func (d *discoveryClient) Discover(
 
 	for index := range toolsList.Tools {
 		tool := toolsList.Tools[index]
+
+		log.Debug("Processing tool: ", tool.Name)
 
 		// Convert parameters to JSON string
 		jsonParams, err := json.Marshal(tool.InputSchema)
@@ -167,6 +184,8 @@ func (d *discoveryClient) Discover(
 		})
 	}
 
+	log.Debug("Discovered ", len(availableTools), " tools from MCP server")
+
 	// Get the first batch of resources
 	availableResources := make([]*McpResource, 0)
 
@@ -181,6 +200,8 @@ func (d *discoveryClient) Discover(
 			})
 		}
 	}
+
+	log.Debug("Discovered ", len(availableResources), " resources from MCP server")
 
 	urlObj, err := urllib.Parse(url)
 	if err != nil {
