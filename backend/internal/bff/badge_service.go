@@ -21,7 +21,9 @@ import (
 	idpcore "github.com/outshift/identity-service/internal/core/idp"
 	policycore "github.com/outshift/identity-service/internal/core/policy"
 	settingscore "github.com/outshift/identity-service/internal/core/settings"
+	"github.com/outshift/identity-service/internal/pkg/errutil"
 	"github.com/outshift/identity-service/internal/pkg/ptrutil"
+	"github.com/outshift/identity-service/pkg/log"
 )
 
 type issueInput struct {
@@ -143,13 +145,17 @@ func (s *badgeService) IssueBadge(
 
 	claims, badgeType, err := s.createBadgeClaims(ctx, app, &in)
 	if err != nil {
-		return nil, err
+		return nil, errutil.Err(err, "unable to create badge claims")
 	}
+
+	log.Debug("Creating badge with claims: ", claims)
 
 	privKey, err := s.keyStore.RetrievePrivKey(ctx, settings.KeyID)
 	if err != nil {
-		return nil, fmt.Errorf("unable to retrieve private key: %w", err)
+		return nil, errutil.Err(err, "unable to retrieve private key")
 	}
+
+	log.Debug("Using private key: ", privKey)
 
 	badge, err := badgecore.Issue(
 		app.ID,
@@ -159,12 +165,14 @@ func (s *badgeService) IssueBadge(
 		privKey,
 	)
 	if err != nil {
-		return nil, fmt.Errorf("unable to issue badge: %w", err)
+		return nil, errutil.Err(err, "unable to issue badge")
 	}
+
+	log.Debug("Issued badge: ", badge)
 
 	clientCredentials, err := s.credentialStore.Get(ctx, app.ID)
 	if err != nil {
-		return nil, fmt.Errorf("unable to fetch client credentials: %w", err)
+		return nil, errutil.Err(err, "unable to get client credentials")
 	}
 
 	issuer := identitycore.Issuer{
