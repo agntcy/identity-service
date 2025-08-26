@@ -431,9 +431,14 @@ func tryGetErrorInfo(err error) (*identitymodels.V1alpha1ErrorInfo, error) {
 	if errors.As(err, &apiErr) {
 		payload := apiErr.GetPayload()
 		for _, detail := range payload.Details {
-			if reason, ok := detail.GoogleprotobufAny["reason"]; ok {
+			if reasonAny, ok := detail.GoogleprotobufAny["reason"]; ok {
+				reason, ok := reasonAny.(string)
+				if !ok {
+					return nil, fmt.Errorf("unable to cast %s to string", reasonAny)
+				}
+
 				return &identitymodels.V1alpha1ErrorInfo{
-					Reason: identitymodels.NewV1alpha1ErrorReason(identitymodels.V1alpha1ErrorReason(reason.(string))),
+					Reason: identitymodels.NewV1alpha1ErrorReason(identitymodels.V1alpha1ErrorReason(reason)),
 				}, nil
 			}
 		}

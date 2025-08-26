@@ -74,7 +74,7 @@ func main() {
 		MinTime: time.Duration(
 			config.ServerGrpcKeepAliveEnvorcementPolicyMinTime,
 		) * time.Second, // If a client pings more than once every X seconds, terminate the connection
-		PermitWithoutStream: config.ServerGrpcKeepAliveEnvorcementPolicyPermitWithoutStream, // Allow pings even when there are no active streams
+		PermitWithoutStream: config.ServerGrpcKeepAliveEnforcementPolicyPermitWithoutStream, // Allow pings even when there are no active streams
 	}
 
 	var kasp = keepalive.ServerParameters{
@@ -174,16 +174,16 @@ func main() {
 	}()
 
 	// Create repositories
-	appRepository := apppg.NewRepository(dbContext)
-	settingsRepository := settingspg.NewRepository(dbContext)
-	badgeRepository := badgepg.NewRepository(dbContext)
-	deviceRepository := devicepg.NewRepository(dbContext)
-	authRepository := authpg.NewRepository(dbContext)
-	policyRepository := policypg.NewRepository(dbContext)
+	appRepository := apppg.NewRepository(dbContext.Client())
+	settingsRepository := settingspg.NewRepository(dbContext.Client())
+	badgeRepository := badgepg.NewRepository(dbContext.Client())
+	deviceRepository := devicepg.NewRepository(dbContext.Client())
+	authRepository := authpg.NewRepository(dbContext.Client())
+	policyRepository := policypg.NewRepository(dbContext.Client())
 
 	// Get the token depending on the environment
 	token := ""
-	if config.GoEnv != "production" {
+	if !config.IsProd() {
 		// In dev mode, we use the root token
 		token = os.Getenv("VAULT_DEV_ROOT_TOKEN")
 	}
@@ -385,13 +385,14 @@ func main() {
 		AllowCredentials: true,
 
 		// Enable Debugging for testing, consider disabling in production
-		Debug: true,
+		Debug: config.IsDev(),
 	}
 
 	// Check current env
-	if config.GoEnv != "development" {
+	if !config.IsDev() {
 		options.Debug = false
 	}
+
 	c := cors.New(options)
 
 	gwServer := &http.Server{
