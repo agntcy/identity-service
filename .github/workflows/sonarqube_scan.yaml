@@ -34,6 +34,13 @@ jobs:
         run: |
           go test ./... -covermode=atomic -coverprofile=coverage.out
 
+      - name: Normalize Go coverage paths (module -> repo paths)
+        run: |
+          # Sonar needs paths relative to repo (e.g. backend/...),
+          # but Go may emit module import paths in coverage.out (github.com/agntcy/identity-platform/...).
+          # Rewrite those to backend/... so Sonar can map them to indexed sources.
+          sed -i 's#github.com/agntcy/identity-platform/#backend/#g' backend/coverage.out
+
       - name: Import Vault Secret
         uses: hashicorp/vault-action@4c06c5ccf5c0761b6029f56cfb1dcf5565918a3b # v3.4.0
         with:
