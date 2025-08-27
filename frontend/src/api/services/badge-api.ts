@@ -37,6 +37,16 @@ class BadgeAPIClass extends BadgeApi.Api<Badge> {
     if (this.authInfo?.accessToken?.accessToken) {
       config.headers['Authorization'] = `Bearer ${this.authInfo.accessToken.accessToken}`;
     }
+    try {
+      if (this.analytics) {
+        void this.analytics.track('API_REQUEST', {
+          method: config.method,
+          url: config.url
+        });
+      }
+    } catch (error) {
+      console.error('Analytics tracking error:', error);
+    }
     return config;
   };
 
