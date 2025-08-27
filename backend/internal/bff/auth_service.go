@@ -109,37 +109,30 @@ func (s *authService) Authorize(
 		)
 	}
 
+	_, err := s.appRepository.GetApp(ctx, ownerAppID)
+	if err != nil {
+		return nil, errutil.Err(err, "app not found")
+	}
+
 	// If resolverMetadataID is provided, get appID
 	var appID *string
 
+	// When resolverMetadataID is not provided, it means the session is for all apps
+	// Policy will be evaluated on the external authorization step
 	if resolverMetadataID != nil && *resolverMetadataID != "" {
 		app, err := s.appRepository.GetAppByResolverMetadataID(ctx, *resolverMetadataID)
 		if err != nil {
 			return nil, errutil.Err(err, "app not found by resolver metadata ID")
 		}
 
-		appID = &app.ID
-	}
-
-	if appID != nil && *appID == ownerAppID {
-		return nil, errutil.Err(
-			nil,
-			"cannot authorize the same app",
-		)
-	}
-
-	_, err := s.appRepository.GetApp(ctx, ownerAppID)
-	if err != nil {
-		return nil, errutil.Err(err, "app not found")
-	}
-
-	// When appID is not provided, it means the session is for all apps
-	// Policy will be evaluated on the external authorization step
-	if appID != nil && *appID != "" {
-		app, err := s.appRepository.GetApp(ctx, *appID)
-		if err != nil {
-			return nil, errutil.Err(err, "app not found")
+		if app.ID == ownerAppID {
+			return nil, errutil.Err(
+				nil,
+				"cannot authorize the same app",
+			)
 		}
+
+		appID = &app.ID
 
 		// Evaluate the session based on existing policies
 		_, err = s.policyEvaluator.Evaluate(ctx, app, ownerAppID, ptrutil.DerefStr(toolName))

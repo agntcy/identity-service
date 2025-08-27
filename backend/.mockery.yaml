@@ -1,27 +1,29 @@
 ---
 all: false
-dir: "{{.InterfaceDir}}/mocks"
-with-expecter: true
-outpkg: "mocks"
-mockname: "{{.InterfaceName}}"
-filename: "{{.InterfaceNameSnake}}.go"
+dir: '{{.InterfaceDir}}/mocks'
+structname: '{{.InterfaceName}}'
+filename: "{{.InterfaceName | snakecase}}.go"
+pkgname: mocks
+template: testify
+template-data:
+  unroll-variadic: true
 packages:
-  github.com/outshift/identity-service/internal/core/auth:
-    interfaces:
-      Repository:
   github.com/outshift/identity-service/internal/core/app:
     interfaces:
-      Repository:
+      Repository: {}
+  github.com/outshift/identity-service/internal/core/auth:
+    interfaces:
+      Repository: {}
   github.com/outshift/identity-service/internal/core/badge:
     interfaces:
-      Repository:
+      Repository: {}
   github.com/outshift/identity-service/internal/core/device:
     interfaces:
-      Repository:
+      Repository: {}
   github.com/outshift/identity-service/internal/core/policy:
     interfaces:
-      Repository:
-      Evaluator:
+      Evaluator: {}
+      Repository: {}
   github.com/outshift/identity-service/internal/core/settings:
     interfaces:
-      Repository:
+      Repository: {}
