@@ -23,10 +23,19 @@ import (
 	"github.com/outshift/identity-service/internal/pkg/errutil"
 	"github.com/outshift/identity-service/internal/pkg/jwtutil"
 	"github.com/outshift/identity-service/internal/pkg/ptrutil"
+	"github.com/outshift/identity-service/internal/pkg/strutil"
 	"github.com/outshift/identity-service/pkg/log"
 )
 
-const waitForDeviceApprovalTime = 500 // milliseconds
+const (
+	// Default length for authorization codes
+	codeLength = 128
+
+	// Default session duration for authorization codes and consumption
+	sessionDuration = 5 * time.Minute
+
+	waitForDeviceApprovalTime = 500 // milliseconds
+)
 
 type AuthService interface {
 	Authorize(
@@ -141,9 +150,11 @@ func (s *authService) Authorize(
 
 	// Create new session
 	session, err := s.authRepository.Create(ctx, &authtypes.Session{
-		OwnerAppID: ownerAppID,
-		AppID:      appID,
-		ToolName:   toolName,
+		OwnerAppID:        ownerAppID,
+		AppID:             appID,
+		ToolName:          toolName,
+		AuthorizationCode: ptrutil.Ptr(strutil.Random(codeLength)),
+		ExpiresAt:         ptrutil.Ptr(time.Now().Add(sessionDuration).Unix()),
 	})
 	if err != nil {
 		return nil, errutil.Err(

@@ -13,19 +13,9 @@ import (
 	types "github.com/outshift/identity-service/internal/core/auth/types/int"
 	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
 	"github.com/outshift/identity-service/internal/pkg/errutil"
-	"github.com/outshift/identity-service/internal/pkg/ptrutil"
 	"github.com/outshift/identity-service/internal/pkg/secrets"
-	"github.com/outshift/identity-service/internal/pkg/strutil"
 	"github.com/outshift/identity-service/pkg/db"
 	"gorm.io/gorm"
-)
-
-const (
-	// Default length for authorization codes
-	codeLength = 128
-
-	// Default session duration for authorization codes and consumption
-	sessionDuration = 5 * time.Minute
 )
 
 type postgresRepository struct {
@@ -43,12 +33,6 @@ func (r *postgresRepository) Create(
 	session *types.Session,
 ) (*types.Session, error) {
 	model := newSessionModel(session)
-
-	// Generate a new auth code
-	model.AuthorizationCode = ptrutil.Ptr(strutil.Random(codeLength))
-
-	// Add expiration time
-	model.ExpiresAt = ptrutil.Ptr(time.Now().Add(sessionDuration).Unix())
 
 	result := r.dbContext.Client().Create(model)
 	if result.Error != nil {
