@@ -46,7 +46,8 @@ export default defineConfig([globalIgnores([
         "plugin:react-hooks/recommended",
         "plugin:@typescript-eslint/recommended",
         "plugin:@typescript-eslint/recommended-requiring-type-checking",
-        "plugin:@tanstack/eslint-plugin-query/recommended"
+        "plugin:@tanstack/eslint-plugin-query/recommended",
+        "plugin:vitest-globals/recommended"
     )),
 
     plugins: {
