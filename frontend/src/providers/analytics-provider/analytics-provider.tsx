@@ -34,7 +34,14 @@ export const AnalyticsProvider = ({children}: React.PropsWithChildren) => {
   useEffect(() => {
     if (analytics && isConsentGiven) {
       if (authInfo?.isAuthenticated) {
-        void analytics.identify('USER_LOGGED_IN', {
+        void analytics.identify(authInfo.user?.username, {
+          userId: authInfo.user?.username,
+          name: authInfo.user?.name,
+          email: authInfo.user?.username,
+          orgId: authInfo.user?.tenant?.id,
+          orgName: authInfo.user?.tenant?.name
+        });
+        void analytics.track('USER_LOGGED_IN', {
           userId: authInfo.user?.username,
           name: authInfo.user?.name,
           email: authInfo.user?.username,
