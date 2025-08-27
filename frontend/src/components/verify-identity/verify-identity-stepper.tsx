@@ -90,7 +90,7 @@ const FormStepperComponent = ({badge}: {badge?: Badge}) => {
       });
       return;
     }
-    analyticsTrack('CLICK_VERIFY_IDENTITY_VERIFY');
+    analyticsTrack('CLICK_VERIFY_BADGE');
     verifyIdentityMutation.mutate({
       badge: values.proofValue
     });
@@ -192,7 +192,7 @@ const FormStepperComponent = ({badge}: {badge?: Badge}) => {
                           <Button
                             variant="tertariary"
                             onClick={() => {
-                              analyticsTrack('CLICK_VERIFY_IDENTITY_CANCEL');
+                              analyticsTrack('CLICK_VERIFY_BADGE_CANCEL');
                               handleOnClear();
                             }}
                             sx={{

@@ -9,10 +9,12 @@ import {AuthInfo} from '@/types/okta';
 import config from '@/config';
 import {httpErrorsAuth, USER_NOT_AUTH} from '@/constants/http-errors';
 import {App} from '@/types/api/app';
+import {AnalyticsBrowser} from '@segment/analytics-next';
 
 class AgenticServicesAPIClass extends AgenticServiceApi.Api<App> {
   protected authInfo: AuthInfo | null | undefined;
   protected retry = false;
+  protected analytics: AnalyticsBrowser | undefined;
   protected tokenExpiredHttpHandler?: () => Promise<AuthInfo | undefined>;
   protected logout?: (params: {
     revokeAccessToken?: boolean;
@@ -99,6 +101,10 @@ class AgenticServicesAPIClass extends AgenticServiceApi.Api<App> {
     this.tokenExpiredHttpHandler = handlers.tokenExpiredHttpHandler;
     this.logout = handlers.logout;
   }
+
+  public setAnalytics = (analytics?: AnalyticsBrowser) => {
+    this.analytics = analytics;
+  };
 }
 
 export const AgenticServicesAPI = new AgenticServicesAPIClass({baseURL: config.API_HOST});

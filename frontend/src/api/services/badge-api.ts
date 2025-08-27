@@ -9,10 +9,12 @@ import {AuthInfo} from '@/types/okta';
 import config from '@/config';
 import {httpErrorsAuth, USER_NOT_AUTH} from '@/constants/http-errors';
 import {Badge} from '@/types/api/badge';
+import {AnalyticsBrowser} from '@segment/analytics-next';
 
 class BadgeAPIClass extends BadgeApi.Api<Badge> {
   protected authInfo: AuthInfo | null | undefined;
   protected retry = false;
+  protected analytics: AnalyticsBrowser | undefined;
   protected tokenExpiredHttpHandler?: () => Promise<AuthInfo | undefined>;
   protected logout?: (params: {
     revokeAccessToken?: boolean;
@@ -92,6 +94,10 @@ class BadgeAPIClass extends BadgeApi.Api<Badge> {
     this.tokenExpiredHttpHandler = handlers.tokenExpiredHttpHandler;
     this.logout = handlers.logout;
   }
+
+  public setAnalytics = (analytics?: AnalyticsBrowser) => {
+    this.analytics = analytics;
+  };
 }
 
 export const BadgeAPI = new BadgeAPIClass({baseURL: config.API_HOST});

@@ -9,10 +9,12 @@ import {AuthInfo} from '@/types/okta';
 import config from '@/config';
 import {httpErrorsAuth, USER_NOT_AUTH} from '@/constants/http-errors';
 import {Device} from '@/types/api/device';
+import {AnalyticsBrowser} from '@segment/analytics-next';
 
 class DevicesAPIClass extends DevicesApi.Api<Device> {
   protected authInfo: AuthInfo | null | undefined;
   protected retry = false;
+  protected analytics: AnalyticsBrowser | undefined;
   protected tokenExpiredHttpHandler?: () => Promise<AuthInfo | undefined>;
   protected logout?: (params: {
     revokeAccessToken?: boolean;
@@ -95,6 +97,10 @@ class DevicesAPIClass extends DevicesApi.Api<Device> {
     this.tokenExpiredHttpHandler = handlers.tokenExpiredHttpHandler;
     this.logout = handlers.logout;
   }
+
+  public setAnalytics = (analytics?: AnalyticsBrowser) => {
+    this.analytics = analytics;
+  };
 }
 
 export const DevicesAPI = new DevicesAPIClass({baseURL: config.API_HOST});
