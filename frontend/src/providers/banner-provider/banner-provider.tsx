@@ -32,7 +32,7 @@ export const BannerProvider: React.FC<{children: ReactNode}> = ({children}) => {
             purposes only.
           </span>{' '}
           <a className="underline text-[10px] lg:text-[16px]" href={docs()} target="_blank" rel="noopener noreferrer">
-            Learn more
+            Service Documentation
           </a>
         </>
       ),
