@@ -8,7 +8,7 @@ repos:
     rev: v1.2.0
     hooks:
       - id: addlicense # Add license header to files
-        args: ["-ignore", "**/node_modules/**", "-ignore", "**/vendor/**", "-c", "Cisco Systems, Inc. and its affiliates", "-l", "Apache-2.0", "-s=only", "."]
+        args: ["-ignore", "**/node_modules/**", "-ignore", "**/vendor/**", "-ignore", "**/.mockery.yaml", "-c", "Cisco Systems, Inc. and its affiliates", "-l", "Apache-2.0", "-s=only", "."]
 
   - repo: https://github.com/tekwizely/pre-commit-golang
     rev: v1.0.0-rc.2
