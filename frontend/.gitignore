@@ -40,3 +40,5 @@ dist-ssr
 !.yarn/versions
 
 dev-dist
+
+coverage
