@@ -4,7 +4,7 @@
  */
 
 import {Button, Link, Typography} from '@outshift/spark-design';
-import {useAuth} from '@/hooks';
+import {useAnalytics, useAuth} from '@/hooks';
 import {docs} from '@/utils/docs';
 import LandingLogo from '@/assets/welcome/landing.svg?react';
 import * as CookieConsentVanilla from 'vanilla-cookieconsent';
@@ -13,6 +13,7 @@ import {links} from '@/constants/links';
 
 const Welcome = () => {
   const {login, register} = useAuth();
+  const {analyticsTrack} = useAnalytics();
   return (
     <div className="h-screen w-screen fixed top-0 left-0 z-50 bg-[#00142B] relative">
       <div>
@@ -57,7 +58,10 @@ const Welcome = () => {
                 <div className="flex justify-center items-center gap-4 pt-6 md:pt-0">
                   <Button
                     variant="outlined"
-                    onClick={() => login?.()}
+                    onClick={() => {
+                      analyticsTrack('CLICK_LOGIN');
+                      login?.();
+                    }}
                     sx={{
                       fontWeight: '600 !important',
                       color: '#FBFCFE !important',
@@ -67,7 +71,10 @@ const Welcome = () => {
                     <span className="text-[12px] md:text-[16px] text-[#FBAF45]">Log In</span>
                   </Button>
                   <Button
-                    onClick={() => register?.()}
+                    onClick={() => {
+                      analyticsTrack('CLICK_SIGN_UP');
+                      register?.();
+                    }}
                     sx={{
                       fontWeight: '600 !important',
                       background: '#FBAF45 !important',

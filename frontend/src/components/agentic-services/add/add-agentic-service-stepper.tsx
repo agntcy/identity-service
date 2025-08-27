@@ -43,6 +43,11 @@ const FormStepperComponent = () => {
   const mutationCreate = useCreateAgenticService({
     callbacks: {
       onSuccess: (resp) => {
+        analyticsTrack('SAVE_AGENTIC_SERVICE ', {
+          serviceType: resp.data.type,
+          serviceId: resp.data.id,
+          serviceName: resp.data.name
+        });
         toast({
           title: 'Success',
           description: 'Agentic service added successfully.',
@@ -100,7 +105,8 @@ const FormStepperComponent = () => {
   const handleSave = useCallback(() => {
     const values = form.getValues() as AgenticServiceFormValues;
     analyticsTrack('CLICK_SAVE_NEW_AGENTIC_SERVICE', {
-      type: values.type
+      type: values.type,
+      name: values.name
     });
     mutationCreate.mutate({
       type: values.type,

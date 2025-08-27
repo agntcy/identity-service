@@ -30,7 +30,10 @@ export const CreateIdentityProvider = () => {
 
   const mutationSetIdentityProvider = useSetIdentityProvider({
     callbacks: {
-      onSuccess: () => {
+      onSuccess: (resp) => {
+        analyticsTrack('SAVE_IDENTITY_PROVIDER_CONNECTION', {
+          identityProvider: resp.data.idpType
+        });
         toast({
           title: 'Success',
           description: 'Identity provider connected successfully.',
