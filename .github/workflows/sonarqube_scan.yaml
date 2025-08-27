@@ -33,6 +33,7 @@ jobs:
         with:
           go-version-file: backend/go.mod
           cache: true
+          cache-dependency-path: backend/go.sum
 
       - name: Run Go tests with coverage
         working-directory: backend
@@ -40,8 +41,11 @@ jobs:
           go test ./... -covermode=atomic -coverprofile=coverage.out
 
       - name: Normalize Go coverage paths (module -> repo paths)
+        working-directory: backend
         run: |
-          sed -i 's#github.com/agntcy/identity-platform/#backend/#g' backend/coverage.out
+          MODULE_PATH=$(go list -m)
+          echo "Detected Go module: ${MODULE_PATH}"
+          sed -i "s#${MODULE_PATH}/#backend/#g" coverage.out
 
       - name: Import Vault Secret
         uses: hashicorp/vault-action@4c06c5ccf5c0761b6029f56cfb1dcf5565918a3b # v3.4.0
