@@ -1,28 +1,57 @@
 # Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
 # SPDX-License-Identifier: Apache-2.0
 
-name: sonarqube test
+name: sonarqube scan
 on:
-  # We want pull requests so we can build (test) but not push to image registry
   push:
     branches:
       - 'PYRA-361-add-sonarqube-scan'
-# Grant read access for GITHUB_TOKEN on all jobs
+
 permissions:
-  id-token: write # This is required for requesting the JWT
-  contents: read  # This is required for actions/checkout
-  packages: write # Needed to push docker image to GAR or ECR
+  id-token: write 
+  contents: read  
+  packages: write 
 jobs:
   ################################## SonarQube  Scan ##############################
   #################################################################################
-  call-sonar-scan:
-    name: Call SonarQube scan
-    uses: cisco-eti/gh-reusable-workflows/.github/workflows/sonar-scan.yaml@production
-    with:
-      sonar-properties-file: "./.github/linters/sonar-project.properties"
-      runner-docker-image: "ghcr.io/cisco-eti/sonar-cli-scanner:latest"
-    secrets:
-      vault-approle-role-id: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
-      vault-approle-secret-id: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
-      ghcr-username: ${{ secrets.GHCR_USERNAME }}
-      ghcr-token: ${{ secrets.GHCR_TOKEN }}
+  sonar-go-tests-and-scan:
+    name: Go tests + SonarQube scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository (full history)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: backend/go.mod
+          cache: true
+
+      - name: Run Go tests with coverage
+        working-directory: backend
+        run: |
+          go test ./... -covermode=atomic -coverprofile=coverage.out
+
+      - name: Import Vault Secret
+        uses: hashicorp/vault-action@4c06c5ccf5c0761b6029f56cfb1dcf5565918a3b # v3.4.0
+        with:
+          url: ${{ vars.KEEPER_URL }}
+          method: approle
+          roleId: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
+          secretId: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
+          namespace: ${{ vars.VAULT_NAMESPACE }}
+          secrets: |
+            ${{ vars.VAULT_SECRET_PATH }}  SONAR_CLOUD_URL   | SONAR_URL ;
+            ${{ vars.VAULT_SECRET_PATH }}  SONAR_CLOUD_TOKEN | SONAR_TOKEN
+
+      - name: SonarQube scan
+        uses: sonarsource/sonarqube-scan-action@v2
+        env:
+          SONAR_TOKEN: ${{ env.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ env.SONAR_URL }}
+        with:
+          args: >-
+            -Dproject.settings=.github/linters/sonar-project.properties
+            -Dsonar.qualitygate.wait=true
