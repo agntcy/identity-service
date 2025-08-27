@@ -1,6 +1,7 @@
 # Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
 # SPDX-License-Identifier: Apache-2.0
 
+---
 name: sonarqube scan
 on:
   push:
@@ -11,9 +12,9 @@ on:
       - main
 
 permissions:
-  id-token: write 
-  contents: read  
-  packages: write 
+  id-token: write
+  contents: read
+  packages: write
 jobs:
   ################################## SonarQube  Scan ##############################
   #################################################################################
@@ -24,6 +25,7 @@ jobs:
       - name: Checkout repository (full history)
         uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4
         with:
+          persist-credentials: false
           fetch-depth: 0
 
       - name: Set up Go
