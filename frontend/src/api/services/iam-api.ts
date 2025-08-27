@@ -15,11 +15,13 @@ import {
   InviteUserPayload,
   TenantReponse
 } from '@/types/api/iam';
+import {AnalyticsBrowser} from '@segment/analytics-next';
 
 class IamAPIClass {
   protected authInfo: AuthInfo | null | undefined;
   public instance: AxiosInstance;
   protected retry = false;
+  protected analytics: AnalyticsBrowser | undefined;
   protected tokenExpiredHttpHandler?: () => Promise<AuthInfo | undefined>;
   protected logout?: (params: {
     revokeAccessToken?: boolean;
@@ -107,6 +109,16 @@ class IamAPIClass {
     if (this.authInfo?.accessToken?.accessToken) {
       config.headers['Authorization'] = `Bearer ${this.authInfo.accessToken.accessToken}`;
     }
+    try {
+      if (this.analytics) {
+        void this.analytics.track('API_REQUEST', {
+          method: config.method,
+          url: config.url
+        });
+      }
+    } catch (error) {
+      console.error('Analytics tracking error:', error);
+    }
     return config;
   };
 
@@ -162,6 +174,10 @@ class IamAPIClass {
     this.tokenExpiredHttpHandler = handlers.tokenExpiredHttpHandler;
     this.logout = handlers.logout;
   }
+
+  public setAnalytics = (analytics?: AnalyticsBrowser) => {
+    this.analytics = analytics;
+  };
 }
 
 export const IamAPI = new IamAPIClass();

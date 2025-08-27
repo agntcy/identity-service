@@ -1,4 +1,4 @@
-// Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+// Copyright 2025 Cisco Systems, Inc. and its affiliates
 // SPDX-License-Deviceentifier: Apache-2.0
 
 package bff
@@ -7,12 +7,12 @@ import (
 	"context"
 	"time"
 
-	devicecore "github.com/agntcy/identity-platform/internal/core/device"
-	devicetypes "github.com/agntcy/identity-platform/internal/core/device/types"
-	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
-	"github.com/agntcy/identity-platform/internal/pkg/errutil"
-	"github.com/agntcy/identity-platform/internal/pkg/pagination"
 	"github.com/google/uuid"
+	devicecore "github.com/outshift/identity-service/internal/core/device"
+	devicetypes "github.com/outshift/identity-service/internal/core/device/types"
+	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
+	"github.com/outshift/identity-service/internal/pkg/errutil"
+	"github.com/outshift/identity-service/internal/pkg/pagination"
 )
 
 type DeviceService interface {
@@ -24,6 +24,7 @@ type DeviceService interface {
 		query *string,
 	) (*pagination.Pageable[devicetypes.Device], error)
 	DeleteDevice(ctx context.Context, deviceID string) error
+	TestDevice(ctx context.Context, deviceID string) error
 }
 
 type deviceService struct {
@@ -127,6 +128,20 @@ func (s *deviceService) DeleteDevice(ctx context.Context, deviceID string) error
 	}
 
 	err = s.deviceRepository.DeleteDevice(ctx, device)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *deviceService) TestDevice(ctx context.Context, deviceID string) error {
+	device, err := s.deviceRepository.GetDevice(ctx, deviceID)
+	if err != nil {
+		return errutil.Err(err, "failed to get device")
+	}
+
+	err = s.notificationService.SendInfoNotification(ctx, device, "This is a test notification!")
 	if err != nil {
 		return err
 	}

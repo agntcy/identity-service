@@ -1,4 +1,4 @@
-// Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+// Copyright 2025 Cisco Systems, Inc. and its affiliates
 // SPDX-License-Identifier: Apache-2.0
 
 package identity
@@ -11,13 +11,6 @@ import (
 	"net"
 	"strings"
 
-	badgetypes "github.com/agntcy/identity-platform/internal/core/badge/types"
-	idpcore "github.com/agntcy/identity-platform/internal/core/idp"
-	"github.com/agntcy/identity-platform/internal/pkg/convertutil"
-	"github.com/agntcy/identity-platform/internal/pkg/errutil"
-	"github.com/agntcy/identity-platform/internal/pkg/httputil"
-	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
-	"github.com/agntcy/identity-platform/pkg/log"
 	idsdk "github.com/agntcy/identity/api/client/client/id_service"
 	issuersdk "github.com/agntcy/identity/api/client/client/issuer_service"
 	vcsdk "github.com/agntcy/identity/api/client/client/vc_service"
@@ -25,6 +18,13 @@ import (
 	"github.com/agntcy/identity/pkg/oidc"
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
+	badgetypes "github.com/outshift/identity-service/internal/core/badge/types"
+	idpcore "github.com/outshift/identity-service/internal/core/idp"
+	"github.com/outshift/identity-service/internal/pkg/convertutil"
+	"github.com/outshift/identity-service/internal/pkg/errutil"
+	"github.com/outshift/identity-service/internal/pkg/httputil"
+	"github.com/outshift/identity-service/internal/pkg/ptrutil"
+	"github.com/outshift/identity-service/pkg/log"
 )
 
 const (

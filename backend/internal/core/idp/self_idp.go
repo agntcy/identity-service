@@ -1,4 +1,4 @@
-// Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+// Copyright 2025 Cisco Systems, Inc. and its affiliates
 // SPDX-License-Settingsentifier: Apache-2.0
 
 package idp
@@ -7,8 +7,8 @@ import (
 	"context"
 	"errors"
 
-	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
 	"github.com/google/uuid"
+	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
 )
 
 type SelfIdp struct{}

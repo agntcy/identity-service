@@ -4,31 +4,22 @@
  */
 
 import {Card, CardContent} from '@/components/ui/card';
-import {
-  Accordion,
-  Divider,
-  EmptyState,
-  GeneralSize,
-  MenuItem,
-  Pagination,
-  Table,
-  Tag,
-  TagStatus,
-  Typography
-} from '@outshift/spark-design';
+import {Accordion, Divider, EmptyState, GeneralSize, Pagination, Table, Tag, Typography} from '@outshift/spark-design';
 import {useCallback, useMemo, useState} from 'react';
 import {Policy, Rule, RuleAction} from '@/types/api/policy';
 import {Separator} from '@/components/ui/separator';
 import {labels} from '@/constants/labels';
 import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
-import {Box, Button, IconButton, Menu, Tooltip} from '@mui/material';
-import {EllipsisVerticalIcon, PencilIcon, PlusIcon, Trash2Icon} from 'lucide-react';
+import {Box, Button} from '@mui/material';
+import {PencilIcon, PlusIcon, Trash2Icon} from 'lucide-react';
 import {TagActionTask} from '@/components/shared/policies/tag-action-task';
 import {TasksColumns} from './tasks-columns';
 import {OpsRule} from '@/components/shared/ops-rules/ops-rule';
 import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-renderer';
 import {useGetPolicyRules} from '@/queries';
 import {useAnalytics} from '@/hooks';
+import {ActionMenuItem, ActionsMenu} from '@/components/ui/actions-menu';
+import {DEFAULT_ROWS_PER_PAGE, ROWS_PER_PAGE_OPTION} from '@/constants/pagination';
 
 const PAGE_SIZE = 5;
 
@@ -36,25 +27,15 @@ export const RulesContent = ({policy}: {policy?: Policy}) => {
   const [pageRules, setPageRules] = useState(1);
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: 0,
-    pageSize: 5
+    pageSize: DEFAULT_ROWS_PER_PAGE
   });
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
   const [tempRule, setTempRule] = useState<Rule | undefined>(undefined);
   const [isDelete, setIsDelete] = useState<boolean>(false);
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [isAdd, setIsAdd] = useState<boolean>(false);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
 
   const {analyticsTrack} = useAnalytics();
-
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   const handlePaginationRulesChange = useCallback((event: React.ChangeEvent<unknown>, value: number) => {
     setPageRules(value);
@@ -79,6 +60,34 @@ export const RulesContent = ({policy}: {policy?: Policy}) => {
     setIsEdit(false);
     setIsAdd(false);
   }, []);
+
+  const getMenuItems = useCallback(
+    (rule: Rule): ActionMenuItem[] => [
+      {
+        key: 'edit-rule',
+        label: 'Edit',
+        icon: <PencilIcon className="w-4 h-4" color="#062242" />,
+        textColor: '#1A1F27',
+        onClick: () => {
+          analyticsTrack('CLICK_EDIT_RULE_POLICY');
+          setTempRule(rule);
+          setIsEdit(true);
+        }
+      },
+      {
+        key: 'delete-rule',
+        label: 'Delete',
+        icon: <Trash2Icon className="w-4 h-4" color="#C62953" />,
+        textColor: '#C0244C',
+        onClick: () => {
+          analyticsTrack('CLICK_DELETE_RULE_POLICY');
+          setTempRule(rule);
+          setIsDelete(true);
+        }
+      }
+    ],
+    [analyticsTrack, setTempRule, setIsEdit, setIsDelete]
+  );
 
   return (
     <>
@@ -131,6 +140,7 @@ export const RulesContent = ({policy}: {policy?: Policy}) => {
                       <div className="flex justify-between items-start gap-4 mb-4">
                         <div className="w-full">
                           <Accordion
+                            defaultExpanded={index === 0}
                             title={rule.name || `Rule ${index + 1}`}
                             subTitle={
                               (
@@ -144,10 +154,7 @@ export const RulesContent = ({policy}: {policy?: Policy}) => {
                                     {rule.tasks?.length || 0}{' '}
                                     {rule.tasks?.length && rule.tasks?.length > 1 ? 'Tasks' : 'Task'}
                                   </Tag>
-                                  <Tag
-                                    status={rule.needsApproval ? TagStatus.Positive : TagStatus.Negative}
-                                    size={GeneralSize.Small}
-                                  >
+                                  <Tag size={GeneralSize.Small}>
                                     <Typography variant="captionSemibold">
                                       Approval: <b>{rule.needsApproval ? 'Yes' : 'No'}</b>
                                     </Typography>
@@ -175,7 +182,7 @@ export const RulesContent = ({policy}: {policy?: Policy}) => {
                                 onPaginationChange={setPagination}
                                 onSortingChange={setSorting}
                                 rowCount={rule.tasks?.length || 0}
-                                rowsPerPageOptions={[1, 10, 25, 50, 100]}
+                                rowsPerPageOptions={ROWS_PER_PAGE_OPTION}
                                 state={{pagination, sorting}}
                                 title={{label: 'Tasks', count: rule?.tasks?.length || 0}}
                                 muiBottomToolbarProps={{
@@ -205,55 +212,7 @@ export const RulesContent = ({policy}: {policy?: Policy}) => {
                             </div>
                           </Accordion>
                         </div>
-                        <Tooltip title="Actions" arrow>
-                          <IconButton
-                            sx={(theme) => ({
-                              color: theme.palette.vars.baseTextDefault,
-                              width: '24px',
-                              height: '24px'
-                            })}
-                            onClick={handleClick}
-                          >
-                            <EllipsisVerticalIcon className="h-4 w-4" />
-                          </IconButton>
-                        </Tooltip>
-                        <Menu
-                          transformOrigin={{horizontal: 'right', vertical: 'top'}}
-                          anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
-                          anchorEl={anchorEl}
-                          open={open}
-                          onClose={handleClose}
-                          onClick={handleClose}
-                        >
-                          <MenuItem
-                            key="edit-rule"
-                            sx={{display: 'flex', alignItems: 'center', gap: '8px'}}
-                            onClick={() => {
-                              analyticsTrack('CLICK_EDIT_RULE_POLICY');
-                              setTempRule(rule);
-                              setIsEdit(true);
-                            }}
-                          >
-                            <PencilIcon className="w-4 h-4" color="#062242" />
-                            <Typography variant="body2" color="#1A1F27">
-                              Edit
-                            </Typography>
-                          </MenuItem>
-                          <MenuItem
-                            key="delete-rule"
-                            onClick={() => {
-                              analyticsTrack('CLICK_DELETE_RULE_POLICY');
-                              setTempRule(rule);
-                              setIsDelete(true);
-                            }}
-                            sx={{display: 'flex', alignItems: 'center', gap: '8px'}}
-                          >
-                            <Trash2Icon className="w-4 h-4" color="#C62953" />
-                            <Typography variant="body2" color="#C0244C">
-                              Delete
-                            </Typography>
-                          </MenuItem>
-                        </Menu>
+                        <ActionsMenu items={getMenuItems(rule)} />
                       </div>
                       <div className="my-6">
                         <Divider />

@@ -7,6 +7,7 @@ import {AgenticServiceType} from '@/components/shared/agentic-services/agentic-s
 import {StatusAgenticService} from '@/components/shared/agentic-services/status-agentic-service';
 import DateHover from '@/components/ui/date-hover';
 import {App} from '@/types/api/app';
+import {GeneralSize, Tag} from '@outshift/spark-design';
 import {MRT_ColumnDef} from 'material-react-table';
 
 export const AgenticServiceColumns = (): MRT_ColumnDef<App, any>[] => {
@@ -19,12 +20,17 @@ export const AgenticServiceColumns = (): MRT_ColumnDef<App, any>[] => {
       accessorKey: 'type',
       header: 'Type',
       Cell: ({row}) => {
-        return <AgenticServiceType type={row.original.type} />;
+        return (
+          <Tag size={GeneralSize.Small}>
+            <AgenticServiceType type={row.original.type} />
+          </Tag>
+        );
       }
     },
     {
       accessorKey: 'status',
       header: 'Badge Status',
+      enableSorting: false,
       Cell: ({row}) => {
         return <StatusAgenticService status={row.original.status} />;
       }

@@ -3,12 +3,11 @@
 
 FROM python:3.12-slim
 
+RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /code
 COPY ./samples/agent/a2a/currency_exchange/* .
-COPY ./sdk/python/ ./sdk/python/
 RUN pip install --no-cache-dir .
-
-# Install identity service dependency
-RUN pip install ./sdk/python/
+RUN pip install --no-cache-dir git+https://github.com/cisco-outshift-ai-agents/identity-service-sdk.git#subdirectory=python # legit:ignore-pipeline
 
 CMD ["python", "main.py"]

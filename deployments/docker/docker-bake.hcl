@@ -1,4 +1,4 @@
-# Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+# Copyright 2025 Cisco Systems, Inc. and its affiliates
 # SPDX-License-Identifier: Apache-2.0
 
 # Docker build args
@@ -24,7 +24,7 @@ target "_common" {
   output = [
     "type=image",
   ]
-  platforms = [
+  services = [
     "linux/amd64",
     "linux/arm64",
   ]

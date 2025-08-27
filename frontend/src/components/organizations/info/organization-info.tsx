@@ -9,7 +9,6 @@ import {MenuItem, Table, toast, Typography} from '@outshift/spark-design';
 import {useGetUsersGroup} from '@/queries';
 import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
 import {Card} from '@/components/ui/card';
-import {cn} from '@/lib/utils';
 import {TenantReponse} from '@/types/api/iam';
 import {UsersColumns} from './users-columns';
 import {Trash2Icon} from 'lucide-react';
@@ -19,7 +18,8 @@ import {useShallow} from 'zustand/react/shallow';
 import {ConfirmModal} from '@/components/ui/confirm-modal';
 import {useDeleteUser} from '@/mutations';
 import {InviteUserModal} from '@/components/shared/organizations/invite-user-modal';
-import {FilterSections} from '@/components/shared/helpers/filters-sections';
+import {FilterSections} from '@/components/ui/filters-sections';
+import {DEFAULT_ROWS_PER_PAGE, ROWS_PER_PAGE_OPTION} from '@/constants/pagination';
 
 export const OrganizationInfo = ({
   tenant,
@@ -33,7 +33,7 @@ export const OrganizationInfo = ({
   const [query, setQuery] = useState<string | undefined>(undefined);
   const [pagination, setPagination] = useState<MRT_PaginationState>({
     pageIndex: 0,
-    pageSize: 10
+    pageSize: DEFAULT_ROWS_PER_PAGE
   });
   const [sorting, setSorting] = useState<MRT_SortingState>([]);
   const [groupId, setGroupId] = useState<string | undefined>();
@@ -44,7 +44,13 @@ export const OrganizationInfo = ({
 
   const {analyticsTrack} = useAnalytics();
 
-  const {data: dataUsers, isLoading: isLoadingUsers, error: errorUsers, refetch} = useGetUsersGroup(groupId || '');
+  const {
+    data: dataUsers,
+    isFetching: isLoadingUsers,
+    isRefetching,
+    error: errorUsers,
+    refetch
+  } = useGetUsersGroup(groupId || '');
 
   const {authInfo} = useAuth();
   const currentUserName = authInfo?.user?.username;
@@ -100,28 +106,37 @@ export const OrganizationInfo = ({
     setOpenActionsModal(false);
   }, [analyticsTrack, deleteUserMutation, tenant?.id, userId]);
 
-  const handleQueryChange = useCallback(
-    (value: string) => {
+  const handleQueryChange = useCallback((value: string) => {
+    if (value) {
       setQuery(value);
+    } else {
+      setQuery(undefined);
+    }
+  }, []);
+
+  const handlePaginationChange = useCallback(
+    (updaterOrValue: MRT_PaginationState | ((old: MRT_PaginationState) => MRT_PaginationState)) => {
+      setPagination(updaterOrValue);
     },
-    [setQuery]
+    []
   );
 
   return (
     <>
       <ConditionalQueryRenderer
         itemName="Users"
-        data={groupId && dataUsers?.users}
+        data={true}
         error={errorGroups || errorUsers}
-        isLoading={isLoadingGroups || isLoadingUsers}
+        isLoading={false}
         useRelativeLoader
         errorListStateProps={{
           actionCallback: () => {
             void refetch();
           }
         }}
+        useLoading={false}
       >
-        <Card className={cn(!(isLoadingGroups || isLoadingUsers) && 'p-0')} variant="secondary">
+        <Card className="p-0" variant="secondary">
           <Table
             columns={UsersColumns()}
             data={filterData}
@@ -134,7 +149,11 @@ export const OrganizationInfo = ({
                   value: query,
                   onChangeCallback: handleQueryChange
                 }}
+                isRefetching={isRefetching}
                 isLoading={isLoadingUsers || isLoadingGroups}
+                onClickRefresh={() => {
+                  void refetch();
+                }}
               />
             )}
             enableColumnResizing
@@ -147,9 +166,9 @@ export const OrganizationInfo = ({
                 border: '1px solid #D5DFF7'
               }
             }}
-            onPaginationChange={setPagination}
+            onPaginationChange={handlePaginationChange}
             rowCount={dataCount}
-            rowsPerPageOptions={[1, 10, 25, 50, 100]}
+            rowsPerPageOptions={ROWS_PER_PAGE_OPTION}
             state={{pagination, sorting}}
             onSortingChange={setSorting}
             muiBottomToolbarProps={{

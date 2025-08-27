@@ -4,7 +4,7 @@
 package gormutil
 
 import (
-	"github.com/agntcy/identity-platform/internal/pkg/pagination"
+	"github.com/outshift/identity-service/internal/pkg/pagination"
 	"gorm.io/gorm"
 )
 

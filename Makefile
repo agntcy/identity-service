@@ -1,11 +1,15 @@
-# Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+# Copyright 2025 Cisco Systems, Inc. and its affiliates
 # SPDX-License-Identifier: Apache-2.0
 
-.PHONY: do_generate_proto do_start_backend do_stop_backend do_start_docs do_stop_docs do_start_frontend do_stop_frontend
+.PHONY: do_generate_proto do_generate_mocks do_start_backend do_stop_backend do_start_docs do_stop_docs do_start_frontend do_stop_frontend
 
 do_generate_proto:
 	cd scripts/proto && ./generate.sh
 	@echo "Generated proto files"
+
+do_generate_mocks:
+	cd scripts && ./mockery.sh
+	@echo "Generated GO mocks with Mockery"
 
 do_start_backend:
 	@./deployments/scripts/backend/launch.sh ${dev}
@@ -35,6 +39,8 @@ do_start_frontend:
 
 
 generate_proto: do_generate_proto
+
+generate_mocks: do_generate_mocks
 
 stop_backend: do_stop_backend
 start_backend: do_start_backend

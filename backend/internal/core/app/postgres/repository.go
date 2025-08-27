@@ -1,4 +1,4 @@
-// Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+// Copyright 2025 Cisco Systems, Inc. and its affiliates
 // SPDX-License-Identifier: Apache-2.0
 
 package postgres
@@ -9,14 +9,15 @@ import (
 	"errors"
 	"fmt"
 
-	appcore "github.com/agntcy/identity-platform/internal/core/app"
-	"github.com/agntcy/identity-platform/internal/core/app/types"
-	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
-	"github.com/agntcy/identity-platform/internal/pkg/convertutil"
-	"github.com/agntcy/identity-platform/internal/pkg/errutil"
-	"github.com/agntcy/identity-platform/internal/pkg/gormutil"
-	"github.com/agntcy/identity-platform/internal/pkg/pagination"
-	"github.com/agntcy/identity-platform/pkg/db"
+	appcore "github.com/outshift/identity-service/internal/core/app"
+	"github.com/outshift/identity-service/internal/core/app/types"
+	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
+	"github.com/outshift/identity-service/internal/pkg/convertutil"
+	"github.com/outshift/identity-service/internal/pkg/errutil"
+	"github.com/outshift/identity-service/internal/pkg/gormutil"
+	"github.com/outshift/identity-service/internal/pkg/pagination"
+	"github.com/outshift/identity-service/internal/pkg/sorting"
+	"github.com/outshift/identity-service/pkg/db"
 	"gorm.io/gorm"
 )
 
@@ -103,11 +104,42 @@ func (r *repository) GetApp(
 	return app.ToCoreType(), nil
 }
 
+func (r *repository) GetAppByResolverMetadataID(
+	ctx context.Context,
+	resolverMetadataID string,
+) (*types.App, error) {
+	var app App
+
+	// Get the tenant ID from the context
+	tenantID, ok := identitycontext.GetTenantID(ctx)
+	if !ok {
+		return nil, identitycontext.ErrTenantNotFound
+	}
+
+	result := r.dbContext.Client().First(&app, map[string]any{
+		"resolver_metadata_id": resolverMetadataID,
+		"tenant_id":            tenantID,
+	})
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return nil, errutil.Err(
+				result.Error, "app not found")
+		}
+
+		return nil, errutil.Err(
+			result.Error, "there was an error fetching the app",
+		)
+	}
+
+	return app.ToCoreType(), nil
+}
+
 func (r *repository) GetAllApps(
 	ctx context.Context,
 	paginationFilter pagination.PaginationFilter,
 	query *string,
 	appTypes []types.AppType,
+	sortBy sorting.Sorting,
 ) (*pagination.Pageable[types.App], error) {
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
@@ -129,7 +161,33 @@ func (r *repository) GetAllApps(
 		dbQuery = dbQuery.Where("type IN ?", appTypes)
 	}
 
-	dbQuery = dbQuery.Session(&gorm.Session{}) // https://gorm.io/docs/method_chaining.html#Reusability-and-Safety
+	if sortBy.SortColumn != nil && *sortBy.SortColumn != "" {
+		allowedSortFields := map[string]string{
+			"id":                 "id",
+			"name":               "name",
+			"description":        "description",
+			"type":               "type",
+			"resolverMetadataId": "resolver_metadata_id",
+			"createdAt":          "created_at",
+			"updatedAt":          "updated_at",
+		}
+
+		dbColumn, exists := allowedSortFields[*sortBy.SortColumn]
+		if !exists {
+			return nil, errutil.Err(nil, fmt.Sprintf("invalid sort field: %s", *sortBy.SortColumn))
+		}
+
+		direction := "ASC"
+		if sortBy.SortDesc != nil && *sortBy.SortDesc {
+			direction = "DESC"
+		}
+
+		dbQuery = dbQuery.Order(fmt.Sprintf("%s %s", dbColumn, direction))
+	}
+
+	dbQuery = dbQuery.Session(
+		&gorm.Session{},
+	) // https://gorm.io/docs/method_chaining.html#Reusability-and-Safety
 
 	var apps []*App
 
@@ -169,7 +227,11 @@ func (r *repository) CountAllApps(ctx context.Context) (int64, error) {
 
 	var totalApps int64
 
-	err := r.dbContext.Client().Model(&App{}).Where("tenant_id = ?", tenantID).Count(&totalApps).Error
+	err := r.dbContext.Client().
+		Model(&App{}).
+		Where("tenant_id = ?", tenantID).
+		Count(&totalApps).
+		Error
 	if err != nil {
 		return 0, errutil.Err(err, "there was an error counting the apps")
 	}

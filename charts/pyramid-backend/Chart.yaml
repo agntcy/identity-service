@@ -5,14 +5,14 @@ apiVersion: v2
 name: pyramid-backend
 description: A Helm chart for pyramid backend
 type: application
-version: 0.1.6
+version: 0.1.7
 appVersion: "0.0.1"
 
 maintainers:
   - name: identity
-    url: https://github.com/cisco-eti/identity-platform/blob/main/MAINTAINERS.md
+    url: https://github.com/cisco-eti/identity-service/blob/main/MAINTAINERS.md
 sources:
-  - https://github.com/cisco-eti/identity-platform
+  - https://github.com/cisco-eti/identity-service
 
 dependencies:
   - name: postgresql

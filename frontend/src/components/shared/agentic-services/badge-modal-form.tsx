@@ -61,6 +61,11 @@ export const BadgeModalForm = ({
   const createBadge = useIssueBadge({
     callbacks: {
       onSuccess: (resp) => {
+        analyticsTrack('BADGE_CREATED', {
+          serviceType: app.type,
+          serviceId: app.id,
+          badgeId: resp.data.verifiableCredential?.id
+        });
         toast({
           title: 'Badge created successfully',
           description: 'You can now use this badge in your applications.',
@@ -68,8 +73,8 @@ export const BadgeModalForm = ({
         });
         onBadgeCreated?.(resp.data);
         if (navigateTo) {
-          const path = generatePath(PATHS.agenticServices.info, {id: app.id});
-          void navigate(path, {replace: true});
+          const path = generatePath(PATHS.agenticServices.info.base, {id: app.id});
+          void navigate(path);
         }
       },
       onError: () => {

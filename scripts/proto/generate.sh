@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+# Copyright 2025 Cisco Systems, Inc. and its affiliates
 # SPDX-License-Identifier: Apache-2.0
 
 
@@ -19,7 +19,7 @@ reset_generated_pb_go
 
 cd docker &&
   docker compose -f buf-compose.yaml build --no-cache &&
-  docker compose -f buf-compose.yaml run --rm -w /identity/code/api/spec buf-go run.sh
+  docker compose -f buf-compose.yaml run --rm -w /identity/code/backend/api/spec buf-go run.sh
 docker rmi docker-buf-go
 
 cd ..

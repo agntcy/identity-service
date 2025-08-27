@@ -9,7 +9,7 @@ import {keepPreviousData, useQuery} from '@tanstack/react-query';
 import qs from 'qs';
 
 export const useGetAgenticServices = (
-  query?: {page?: number; size?: number; query?: string; types?: AppType[]},
+  query?: {page?: number; size?: number; query?: string; types?: AppType[]; sortColumn?: string; sortDesc?: boolean},
   enabled = true
 ) => {
   return useQuery({
@@ -19,7 +19,9 @@ export const useGetAgenticServices = (
         page: query?.page,
         size: query?.size,
         query: query?.query,
-        types: query?.types
+        types: query?.types,
+        sortColumn: query?.sortColumn,
+        sortDesc: query?.sortDesc
       }
     ],
     queryFn: async () => {
@@ -28,7 +30,9 @@ export const useGetAgenticServices = (
           page: query?.page,
           size: query?.size,
           query: query?.query,
-          types: query?.types
+          types: query?.types,
+          sortColumn: query?.sortColumn,
+          sortDesc: query?.sortDesc
         },
         {
           paramsSerializer: (params) => {

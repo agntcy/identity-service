@@ -39,25 +39,16 @@ export default defineConfig(({mode}) => {
       VitePWA({
         mode: mode === 'development' ? 'development' : 'production',
         registerType: 'autoUpdate',
-        includeAssets: ['favicon.ico', 'apple-touch-icon-180x180.png', 'maskable-icon-512x512.png'],
+        includeAssets: ['favicon.svg', 'apple-touch-icon-180x180.png', 'maskable-icon-512x512.png'],
         srcDir: 'src/lib',
         filename: 'sw.ts',
         injectRegister: 'inline',
         base: '/',
         strategies: 'injectManifest',
         injectManifest: {
-          maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
-          minify: false,
-          enableWorkboxModulesLogs: true,
-          globPatterns: ['**/*.{js,css,html,svg,png,svg,ico}']
+          injectionPoint: undefined
         },
         manifest: false,
-        workbox: {
-          globPatterns: ['**/*.{js,css,html,svg,png,svg,ico}'],
-          cleanupOutdatedCaches: true,
-          clientsClaim: true,
-          maximumFileSizeToCacheInBytes: 4 * 1024 * 1024 // 4MB
-        },
         devOptions: {
           enabled: mode === 'development',
           type: 'module',

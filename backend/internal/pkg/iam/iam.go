@@ -14,15 +14,15 @@ import (
 	"strings"
 	"time"
 
-	identitycache "github.com/agntcy/identity-platform/internal/pkg/cache"
-	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
-	"github.com/agntcy/identity-platform/internal/pkg/httputil"
-	"github.com/agntcy/identity-platform/pkg/log"
 	freecache "github.com/coocood/freecache"
 	"github.com/eko/gocache/lib/v4/cache"
 	"github.com/eko/gocache/lib/v4/store"
 	freecache_store "github.com/eko/gocache/store/freecache/v4"
 	jwtverifier "github.com/okta/okta-jwt-verifier-golang"
+	identitycache "github.com/outshift/identity-service/internal/pkg/cache"
+	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
+	"github.com/outshift/identity-service/internal/pkg/httputil"
+	"github.com/outshift/identity-service/pkg/log"
 )
 
 // ------------------------ GLOBAL -------------------- //
@@ -100,6 +100,7 @@ type Client interface {
 	) (newCtx context.Context, err error)
 	GetTenantApiKey(ctx context.Context) (apiKey ApiKey, err error)
 	GetAppApiKey(ctx context.Context, appID string) (apiKey ApiKey, err error)
+	RefreshAppApiKey(ctx context.Context, appID string) (apiKey ApiKey, err error)
 	CreateTenantApiKey(ctx context.Context) (apiKey ApiKey, err error)
 	CreateAppApiKey(ctx context.Context, appID string) (apiKey ApiKey, err error)
 	RevokeTenantApiKey(ctx context.Context) (err error)
@@ -289,6 +290,60 @@ func (c *HttpClient) GetAppApiKey(ctx context.Context, appID string) (ApiKey, er
 	}
 
 	return apiKey, nil
+}
+
+// RefreshAppApiKey refreshes the Api Key for the app. If no Api Key exists, an empty Api Key is returned.
+func (c *HttpClient) RefreshAppApiKey(ctx context.Context, appID string) (ApiKey, error) {
+	if appID == "" {
+		return ApiKey{}, errors.New("missing appID")
+	}
+
+	if !c.multitenant {
+		return c.GetTenantApiKey(ctx)
+	}
+
+	tenantID, ok := identitycontext.GetTenantID(ctx)
+	if !ok {
+		return ApiKey{}, identitycontext.ErrTenantNotFound
+	}
+
+	log.Debug(
+		fmt.Sprintf(
+			"Refreshing Api Key for app %s (tenant: %s)",
+			appID,
+			tenantID,
+		),
+	)
+
+	apiKey, err := c.getApiKeyByApp(ctx, appID, tenantID)
+	if err != nil {
+		return ApiKey{}, err
+	}
+
+	if apiKey == (ApiKey{}) {
+		log.Debug("Api Key for app " + appID + " not found. Creating a new one")
+		return c.CreateAppApiKey(ctx, appID)
+	}
+
+	log.Debug("Revoking existing Api Key ", apiKey.ID)
+
+	// Revoke the existing Api Key
+	revokeErr := c.revokeApiKey(ctx, &apiKey)
+	if revokeErr != nil {
+		return ApiKey{}, errors.New("could not revoke existing Api Key: " + revokeErr.Error())
+	}
+
+	log.Debug("Revoked existing Api Key ", apiKey.ID)
+
+	log.Debug("Creating new Api Key for app ", appID)
+
+	// Create a new Api Key
+	newApiKey, createErr := c.CreateAppApiKey(ctx, appID)
+	if createErr != nil {
+		return ApiKey{}, errors.New("could not create new Api Key: " + createErr.Error())
+	}
+
+	return newApiKey, nil
 }
 
 // CreateTenantApiKey creates an Api Key for a tenant. The Api Key is unique per tenant.

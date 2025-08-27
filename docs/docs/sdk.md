@@ -1,14 +1,12 @@
 ---
-sidebar_position: 6
+sidebar_position: 8
 ---
 
 # SDK
 
 ## Python SDK
 
-Agent Identity offers a [Python SDK](https://github.com/cisco-eti/identity-platform/tree/main/sdk/python).
-
-The Python SDK package allows developers to use it as:
+Agent Identity offers a Python SDK package allowing developers to use it as:
 
 - A CLI to interact with local Agentic Services (issue a badge). See the [Agentic Service Creation](/docs/agentic-service#b-service-not-accessible-from-the-internet-including-localhost-and-development-deployments) for example usage when the Agentic Service is not accessible from the internet.
 - A SDK to integrate `TBAC` for Agentic Services in your Python applications.
@@ -19,12 +17,12 @@ To see more details about the development integration, you can refer to the [Dev
 
 :::
 
-### Local Installation
+### Installation
 
 To install the Python SDK for Agent Identity, you can use pip:
 
 ```bash
-pip install git+https://github.com/cisco-outshift-ai-agents/identity-service-sdk@main#subdirectory=python
+pip install identity-service-sdk
 ```
 
 ### Example Usage
@@ -35,7 +33,7 @@ Here is a basic example of how to use the Python SDK to verify a badge for an Ag
 
 ```python
 from dotenv import load_dotenv
-from identityplatform.sdk import IdentityPlatformSdk as Sdk
+from identityservice.sdk import IdentityServiceSdk as Sdk
 
 load_dotenv()
 
@@ -61,7 +59,7 @@ Here is a basic example of how to use the Python SDK to issue a badge for an Age
 
 ```python
 from dotenv import load_dotenv
-from identityplatform.sdk import IdentityPlatformSdk as Sdk
+from identityservice.sdk import IdentityServiceSdk as Sdk
 
 load_dotenv()
 

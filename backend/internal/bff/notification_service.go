@@ -1,4 +1,4 @@
-// Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+// Copyright 2025 Cisco Systems, Inc. and its affiliates
 // SPDX-License-Notificationentifier: Apache-2.0
 
 package bff
@@ -10,11 +10,11 @@ import (
 	"time"
 
 	webpush "github.com/SherClockHolmes/webpush-go"
-	apptypes "github.com/agntcy/identity-platform/internal/core/app/types"
-	authtypes "github.com/agntcy/identity-platform/internal/core/auth/types"
-	devicetypes "github.com/agntcy/identity-platform/internal/core/device/types"
-	"github.com/agntcy/identity-platform/internal/pkg/errutil"
-	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
+	apptypes "github.com/outshift/identity-service/internal/core/app/types"
+	authtypes "github.com/outshift/identity-service/internal/core/auth/types/int"
+	devicetypes "github.com/outshift/identity-service/internal/core/device/types"
+	"github.com/outshift/identity-service/internal/pkg/errutil"
+	"github.com/outshift/identity-service/internal/pkg/ptrutil"
 )
 
 const (
@@ -37,6 +37,11 @@ type NotificationService interface {
 		callerApp *apptypes.App,
 		calleeApp *apptypes.App,
 		toolName *string,
+	) error
+	SendInfoNotification(
+		ctx context.Context,
+		device *devicetypes.Device,
+		message string,
 	) error
 }
 
@@ -117,12 +122,27 @@ func (s *notificationService) SendOTPNotification(
 	)
 }
 
+func (s *notificationService) SendInfoNotification(
+	ctx context.Context,
+	device *devicetypes.Device,
+	message string,
+) error {
+	return s.sendWebPushNotification(
+		ctx,
+		&device.SubscriptionToken,
+		&devicetypes.Notification{
+			Body: message,
+			Type: devicetypes.NOTIFICATION_TYPE_INFO,
+		},
+	)
+}
+
 func (s *notificationService) sendWebPushNotification(
 	_ context.Context,
 	subscriptionToken *string,
 	notification *devicetypes.Notification,
 ) error {
-	if subscriptionToken == nil {
+	if subscriptionToken == nil || *subscriptionToken == "" {
 		return errutil.Err(
 			nil,
 			"subscription token cannot be nil",

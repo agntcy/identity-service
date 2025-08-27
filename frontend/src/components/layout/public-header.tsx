@@ -3,39 +3,19 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {Button, Header, Typography} from '@outshift/spark-design';
+import {Button, Header} from '@outshift/spark-design';
 import {Link} from 'react-router-dom';
-import Logo from '@/assets/logo-app-bar.svg?react';
-import LogoIcon from '@/assets/icon-agntcy.svg?react';
-import {useAuth, useWindowSize} from '@/hooks';
+import {useAuth} from '@/hooks';
 import {ReactNode} from 'react';
-import {PATHS} from '@/router/paths';
+import Logo from '@/assets/header/header.svg?react';
 
 export const PublicHeader = ({userSection}: {userSection?: ReactNode}) => {
   const {login, register} = useAuth();
-  const {isMobile} = useWindowSize();
-
   return (
     <Header
-      title={
-        <Link to={PATHS.basePath}>
-          <div className="mt-1 md:mt-0">
-            <Typography
-              variant="h1"
-              fontWeight={700}
-              fontSize={isMobile ? '16px' : '18px'}
-              lineHeight="18px"
-              sx={(theme) => ({color: theme.palette.vars.brandTextSecondary})}
-            >
-              Agent Identity
-            </Typography>
-          </div>
-        </Link>
-      }
       logo={
         <Link to="https://agntcy.org/" target="_blank" rel="noopener noreferrer">
-          <Logo className="hidden md:block" />
-          <LogoIcon className="w-8 h-8 md:hidden" />
+          <Logo className="w-[250px] md:w-[300px] lg:w-full" />
         </Link>
       }
       position="fixed"

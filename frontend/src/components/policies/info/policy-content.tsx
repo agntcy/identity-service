@@ -4,7 +4,7 @@
  */
 
 import {Card, CardContent} from '@/components/ui/card';
-import {Link, Typography} from '@outshift/spark-design';
+import {GeneralSize, Link, Tag, Typography} from '@outshift/spark-design';
 import {useMemo} from 'react';
 import KeyValue, {KeyValuePair} from '@/components/ui/key-value';
 import {AgenticServiceType} from '@/components/shared/agentic-services/agentic-service-type';
@@ -26,12 +26,14 @@ export const PolicyContent = ({policy}: {policy?: Policy}) => {
       {
         keyProp: 'Assigned To',
         value: (
-          <Link href={generatePath(PATHS.agenticServices.info, {id: policy?.assignedTo || ''})}>
+          <Tag size={GeneralSize.Small}>
             <div className="flex items-center gap-2">
               <AgenticServiceType type={data?.type} showLabel={false} />
-              <Typography variant="body2">{data?.name ?? 'Not provided'}</Typography>
+              <Link href={generatePath(PATHS.agenticServices.info.base, {id: policy?.assignedTo || ''})}>
+                <Typography variant="body2">{data?.name ?? 'Not provided'}</Typography>
+              </Link>
             </div>
-          </Link>
+          </Tag>
         )
       },
       {

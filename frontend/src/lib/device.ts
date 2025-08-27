@@ -113,8 +113,9 @@ const getIosDeviceName = (): DeviceInfo => {
   };
 };
 
-// get platform utility
+// get service utility
 const getPlatform = (): string => {
+  // Use platform property if available, otherwise fallback to userAgent
   if (typeof navigator.userAgentData?.platform === 'string') {
     return navigator.userAgentData.platform;
   }
@@ -126,8 +127,8 @@ const getPlatform = (): string => {
 
 // get device name for desktop
 const getDesktopDeviceName = (): DeviceInfo => {
-  const platform = getPlatform();
-  const osName = desktopDeviceMapping.get(platform) ?? 'Unknown';
+  const service = getPlatform();
+  const osName = desktopDeviceMapping.get(service) ?? 'Unknown';
 
   // Get browser info
   const ua = window.navigator.userAgent;

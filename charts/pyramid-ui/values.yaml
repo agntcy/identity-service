@@ -50,3 +50,6 @@ configmap:
   VITE_IAM_UI: ""
   VITE_IAM_API: ""
   VITE_IAM_OIDC_ISSUER: ""
+  
+  VITE_SEGMENT_ID: ""
+  VITE_MAZE_ID: ""

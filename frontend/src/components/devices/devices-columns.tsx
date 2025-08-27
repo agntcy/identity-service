@@ -14,6 +14,10 @@ export const DevicesColumns = (): MRT_ColumnDef<Device, any>[] => {
       header: 'Name'
     },
     {
+      accessorKey: 'userId',
+      header: 'User ID'
+    },
+    {
       accessorKey: 'createdAt',
       header: 'Created At',
       Cell: ({row}) => {

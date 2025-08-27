@@ -6,9 +6,9 @@ sidebar_position: 6
 
 :::info[Endpoints]
 
-- **REST API Endpoint**: https://api.identity-platform.staging.outshift.ai
-- **gRPC API Endpoint**: api.grpc.identity-platform.staging.outshift.ai
-- **UI Endpoint**: https://identity.staging.outshift.ai
+- **REST API Endpoint**: https://api.agent-identity.outshift.com
+- **gRPC API Endpoint**: api.grpc.agent-identity.outshift.com
+- **UI Endpoint**: https://agent-identity.outshift.com
 
 :::
 
@@ -32,10 +32,10 @@ You can generate an Agentic Service API Key from the Agent Identity settings pag
 
 ## Protodocs
 
-The Protodocs definition can be accessed [here](/protodocs/agntcy/identity/platform/v1alpha1/app.proto).
+The Protodocs definition can be accessed [here](/protodocs/outshift/identity/service/v1alpha1/app.proto).
 
 ## OpenAPI Client
 
 The OpenAPI Client provides a way to interact with the Agent Identity API using standard HTTP requests. You can use any HTTP client library to make requests to the API endpoints defined in the OpenAPI specification.
 
-The OpenAPI specification for the Agent Identity API can be found [here](/openapi/platform/v1alpha1).
+The OpenAPI specification for the Agent Identity API can be found [here](/openapi/service/v1alpha1).

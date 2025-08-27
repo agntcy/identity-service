@@ -17,7 +17,7 @@ RUN curl -sSL \
 
 RUN go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest
 RUN go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest
-RUN go install github.com/google/gnostic/cmd/protoc-gen-openapi@latest
+RUN go install github.com/google/gnostic/cmd/protoc-gen-openapi@v0.7.0
 RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 RUN go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 RUN go install github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc@latest
@@ -43,7 +43,7 @@ ENV Identity_ROOT="/identity"
 
 COPY scripts/proto/docker/run.sh .
 COPY scripts/proto/docker/protoc.sh .
-COPY ./backend ./local/github.com/agntcy/identity-platform
+COPY ./backend ./local/github.com/outshift/identity-service
 COPY scripts/proto/docker/protos ./third_party/protos
 
 RUN chmod +x run.sh && \

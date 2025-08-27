@@ -1,0 +1,30 @@
+---
+title: auth.proto
+hide_title: true
+---
+
+import { ProtoMessage, ProtoServiceMethod, ProtoEnum } from '@theme/ProtoFile';
+
+# `auth.proto`
+_**path** outshift/identity/service/v1alpha1/auth.proto_
+
+_**package** outshift.identity.service.v1alpha1_
+
+
+
+---
+
+## Messages
+
+
+### `Session`
+<ProtoMessage key={0} message={{"name":"Session","longName":"Session","fullName":"outshift.identity.service.v1alpha1.Session","description":"Identity Service Session","hasExtensions":false,"hasFields":true,"hasOneofs":true,"extensions":[],"fields":[{"name":"id","description":"A unique identifier for the Session.","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_id","defaultValue":""},{"name":"owner_app_id","description":"The owner application ID for which the Session is created.","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_owner_app_id","defaultValue":""},{"name":"app_id","description":"The application ID associated with the Session.","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_app_id","defaultValue":""},{"name":"tool_name","description":"The tool name associated with the Session.","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_tool_name","defaultValue":""},{"name":"user_id","description":"The user ID associated with the Session.","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_user_id","defaultValue":""},{"name":"access_token","description":"The access token associated with the Session.","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_access_token","defaultValue":""},{"name":"code","description":"The authorization code associated with the Session.","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_code","defaultValue":""},{"name":"created_at","description":"The creation time of the Session.","label":"optional","type":"int64","longType":"int64","fullType":"int64","ismap":false,"isoneof":true,"oneofdecl":"_created_at","defaultValue":""},{"name":"expires_at","description":"The expiration time of the Session.","label":"optional","type":"int64","longType":"int64","fullType":"int64","ismap":false,"isoneof":true,"oneofdecl":"_expires_at","defaultValue":""}]}} />
+
+
+### `SessionDeviceOTP`
+<ProtoMessage key={1} message={{"name":"SessionDeviceOTP","longName":"SessionDeviceOTP","fullName":"outshift.identity.service.v1alpha1.SessionDeviceOTP","description":"","hasExtensions":false,"hasFields":true,"hasOneofs":true,"extensions":[],"fields":[{"name":"id","description":"A unique identifier for the OTP.","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_id","defaultValue":""},{"name":"value","description":"The value of the OTP.","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_value","defaultValue":""},{"name":"session_id","description":"The Session that the OTP is generated for.","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_session_id","defaultValue":""},{"name":"device_id","description":"The Device that the OTP is generated for.","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_device_id","defaultValue":""},{"name":"created_at","description":"The creation time of the OTP.","label":"optional","type":"int64","longType":"int64","fullType":"int64","ismap":false,"isoneof":true,"oneofdecl":"_created_at","defaultValue":""},{"name":"updated_at","description":"The update time of the OTP.","label":"optional","type":"int64","longType":"int64","fullType":"int64","ismap":false,"isoneof":true,"oneofdecl":"_updated_at","defaultValue":""},{"name":"expires_at","description":"The expiration time of the OTP.","label":"optional","type":"int64","longType":"int64","fullType":"int64","ismap":false,"isoneof":true,"oneofdecl":"_expires_at","defaultValue":""},{"name":"approved","description":"A field that tells whether the OTP is approved or denied.","label":"optional","type":"bool","longType":"bool","fullType":"bool","ismap":false,"isoneof":true,"oneofdecl":"_approved","defaultValue":""},{"name":"used","description":"A field that tells whether the TOP is used or not.","label":"optional","type":"bool","longType":"bool","fullType":"bool","ismap":false,"isoneof":true,"oneofdecl":"_used","defaultValue":""}]}} />
+
+---
+
+
+  

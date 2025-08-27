@@ -1,4 +1,4 @@
-// Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+// Copyright 2025 Cisco Systems, Inc. and its affiliates
 // SPDX-License-Identifier: Apache-2.0
 
 package app
@@ -6,8 +6,9 @@ package app
 import (
 	"context"
 
-	"github.com/agntcy/identity-platform/internal/core/app/types"
-	"github.com/agntcy/identity-platform/internal/pkg/pagination"
+	"github.com/outshift/identity-service/internal/core/app/types"
+	"github.com/outshift/identity-service/internal/pkg/pagination"
+	"github.com/outshift/identity-service/internal/pkg/sorting"
 )
 
 type Repository interface {
@@ -20,11 +21,16 @@ type Repository interface {
 		ctx context.Context,
 		id string,
 	) (*types.App, error)
+	GetAppByResolverMetadataID(
+		ctx context.Context,
+		resolverMetadataID string,
+	) (*types.App, error)
 	GetAllApps(
 		ctx context.Context,
 		paginationFilter pagination.PaginationFilter,
 		query *string,
 		appTypes []types.AppType,
+		sortBy sorting.Sorting,
 	) (*pagination.Pageable[types.App], error)
 	CountAllApps(ctx context.Context) (int64, error)
 	GetAppsByID(ctx context.Context, ids []string) ([]*types.App, error)

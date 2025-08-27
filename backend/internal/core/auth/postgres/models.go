@@ -1,15 +1,15 @@
-// Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+// Copyright 2025 Cisco Systems, Inc. and its affiliates
 // SPDX-License-Identifier: Apache-2.0
 
 package postgres
 
 import (
-	apptypes "github.com/agntcy/identity-platform/internal/core/app/types"
-	types "github.com/agntcy/identity-platform/internal/core/auth/types"
-	devicetypes "github.com/agntcy/identity-platform/internal/core/device/types"
-	"github.com/agntcy/identity-platform/internal/pkg/secrets"
-	"github.com/agntcy/identity-platform/internal/pkg/strutil"
 	"github.com/google/uuid"
+	apptypes "github.com/outshift/identity-service/internal/core/app/types"
+	types "github.com/outshift/identity-service/internal/core/auth/types/int"
+	devicetypes "github.com/outshift/identity-service/internal/core/device/types"
+	"github.com/outshift/identity-service/internal/pkg/secrets"
+	"github.com/outshift/identity-service/internal/pkg/strutil"
 )
 
 type Session struct {

@@ -1,5 +1,5 @@
 /**
- * Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+ * Copyright 2025 Cisco Systems, Inc. and its affiliates
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -11,9 +11,9 @@ import type { ScalarOptions } from '@scalar/docusaurus'
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 const config: Config = {
-  title: 'Agent Identity',
+  title: 'Agent Identity Service',
   tagline: 'Create and manage identities for your MCP Servers, A2A Agents and OASF, with support for Task Based Access Control (TBAC).',
-  favicon: 'img/favicon.png',
+  favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
   url: 'https://identity.agntcy.org',
@@ -23,8 +23,8 @@ const config: Config = {
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'AGNTCY', // Usually your GitHub org/user name.
-  projectName: 'Agent Identity', // Usually your repo name.
+  organizationName: 'Outshift', // Usually your GitHub org/user name.
+  projectName: 'Agent Identity Service', // Usually your repo name.
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
@@ -71,10 +71,10 @@ const config: Config = {
       '@scalar/docusaurus',
       {
         label: 'OpenAPI',
-        route: '/openapi/platform/v1alpha1',
+        route: '/openapi/service/v1alpha1',
         showNavLink: true,
         configuration: {
-          url: '/api/openapi/platform/v1alpha1/openapi.yaml',
+          url: '/api/openapi/service/v1alpha1/openapi.yaml',
           hideDarkModeToggle: true,
           layout: 'modern',
           customCss: './src/css/custom.css'
@@ -102,7 +102,7 @@ const config: Config = {
       },
     },
     navbar: {
-      title: 'Agent Identity',
+      title: 'Agent Identity Service',
       logo: {
         alt: 'Identity Engine',
         src: 'img/logo.svg',
@@ -116,7 +116,7 @@ const config: Config = {
           label: 'Docs',
         },
         {
-          to: 'protodocs/agntcy/identity/platform/v1alpha1/app.proto',
+          to: 'protodocs/outshift/identity/service/v1alpha1/app.proto',
           activeBasePath: 'protodocs',
           label: 'Protodocs',
           position: 'left',
@@ -152,20 +152,62 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} AGNTCY. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Outshift. Built with Docusaurus.`,
     },
     prism: {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
     }
   } satisfies Preset.ThemeConfig,
+  
   markdown: {
     mermaid: true,
   },
+  
   themes: [
     "@docusaurus/theme-mermaid",
     "docusaurus-json-schema-plugin"
   ],
+
+  scripts: [
+  {
+    src: 'data:text/javascript;charset=utf-8,' + encodeURIComponent(`
+      (function() {
+        const mazeConfig = {
+          'identity-docs.staging.outshift.ai': 'bb2165a9-97e9-4feb-9fee-27bf371146ad',
+          'identity-docs.outshift.com': ''
+        };
+        
+        const hostname = window.location.hostname;
+        const mazeId = mazeConfig[hostname];
+        
+        if (mazeId) {
+          (function (m, a, z, e) {
+            window.mazeId = e;
+            var s, t;
+            try {
+              t = m.sessionStorage.getItem('maze-us');
+            } catch (err) {}
+
+            if (!t) {
+              t = new Date().getTime();
+              try {
+                m.sessionStorage.setItem('maze-us', t);
+              } catch (err) {}
+            }
+
+            s = a.createElement('script');
+            s.src = z + '?apiKey=' + e;
+            s.async = true;
+            a.getElementsByTagName('head')[0].appendChild(s);
+            m.mazeUniversalSnippetApiKey = e;
+          })(window, document, 'https://snippet.maze.co/maze-universal-loader.js', mazeId);
+        }
+      })();
+    `),
+    async: false,
+  }
+],
 };
 
 export default config;

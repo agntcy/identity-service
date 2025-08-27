@@ -11,16 +11,16 @@ import (
 	"slices"
 	"time"
 
-	apptypes "github.com/agntcy/identity-platform/internal/core/app/types"
-	policycore "github.com/agntcy/identity-platform/internal/core/policy"
-	"github.com/agntcy/identity-platform/internal/core/policy/types"
-	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
-	"github.com/agntcy/identity-platform/internal/pkg/convertutil"
-	"github.com/agntcy/identity-platform/internal/pkg/errutil"
-	"github.com/agntcy/identity-platform/internal/pkg/gormutil"
-	"github.com/agntcy/identity-platform/internal/pkg/pagination"
-	"github.com/agntcy/identity-platform/internal/pkg/pgutil"
-	"github.com/agntcy/identity-platform/pkg/db"
+	apptypes "github.com/outshift/identity-service/internal/core/app/types"
+	policycore "github.com/outshift/identity-service/internal/core/policy"
+	"github.com/outshift/identity-service/internal/core/policy/types"
+	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
+	"github.com/outshift/identity-service/internal/pkg/convertutil"
+	"github.com/outshift/identity-service/internal/pkg/errutil"
+	"github.com/outshift/identity-service/internal/pkg/gormutil"
+	"github.com/outshift/identity-service/internal/pkg/pagination"
+	"github.com/outshift/identity-service/internal/pkg/pgutil"
+	"github.com/outshift/identity-service/pkg/db"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
@@ -165,7 +165,8 @@ func (r *repository) DeletePolicies(ctx context.Context, policies ...*types.Poli
 			model := newPolicyModel(policy, tenantID)
 
 			err := r.dbContext.Client().
-				Exec("DELETE FROM rule_tasks WHERE rule_id IN (SELECT id from rules where policy_id = ?)", model.ID).Error
+				Exec("DELETE FROM rule_tasks WHERE rule_id IN (SELECT id from rules where policy_id = ?)", model.ID).
+				Error
 			if err != nil {
 				return err
 			}
@@ -283,7 +284,10 @@ func (r *repository) GetPolicyByID(ctx context.Context, id string) (*types.Polic
 	return policy.ToCoreType(), nil
 }
 
-func (r *repository) GetPoliciesByAppID(ctx context.Context, appID string) ([]*types.Policy, error) {
+func (r *repository) GetPoliciesByAppID(
+	ctx context.Context,
+	appID string,
+) ([]*types.Policy, error) {
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
 		return nil, identitycontext.ErrTenantNotFound
@@ -433,7 +437,6 @@ func (r *repository) GetAllPolicies(
 	}
 
 	dbQuery := r.dbContext.Client().
-		Joins("LEFT JOIN rules ON rules.policy_id = policies.id").
 		Where("policies.tenant_id = ?", tenantID)
 
 	if query != nil && *query != "" {
@@ -476,19 +479,30 @@ func (r *repository) GetAllPolicies(
 		RuleUpdatedAt     sql.NullTime     `gorm:"column:r__updated_at"`
 	}
 
-	err := dbQuery.Scopes(gormutil.Paginate(paginationFilter)).
-		Table("policies").
-		Select(`
-			policies.*,
-			rules.id as r__id,
-			rules.name as r__name,
-			rules.description as r__description,
-			rules.policy_id as r__policy_id,
-			rules.action as r__action,
-			rules.needs_approval as r__needs_approval,
-			rules.created_at as r__created_at,
-			rules.updated_at as r__updated_at
-		`).
+	err := r.dbContext.Client().
+		Table(`(?) AS main`,
+			dbQuery.
+				Table("policies").
+				Select(`
+					policies.*,
+					rules.id as r__id,
+					rules.name as r__name,
+					rules.description as r__description,
+					rules.policy_id as r__policy_id,
+					rules.action as r__action,
+					rules.needs_approval as r__needs_approval,
+					rules.created_at as r__created_at,
+					rules.updated_at as r__updated_at
+				`).
+				Joins("LEFT JOIN rules ON rules.policy_id = policies.id"),
+		).
+		Select(`*`).
+		Where("main.id IN (?)",
+			dbQuery.
+				Table("policies").
+				Select(`id`).
+				Scopes(gormutil.Paginate(paginationFilter)),
+		).
 		Find(&rows).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -599,4 +613,24 @@ func (r *repository) GetAllRules(
 		Page:  paginationFilter.GetPage(),
 		Size:  int32(len(rules)),
 	}, nil
+}
+
+func (r *repository) CountAllPolicies(ctx context.Context) (int64, error) {
+	tenantID, ok := identitycontext.GetTenantID(ctx)
+	if !ok {
+		return 0, identitycontext.ErrTenantNotFound
+	}
+
+	var totalPolicies int64
+
+	err := r.dbContext.Client().
+		Model(&Policy{}).
+		Where("tenant_id = ?", tenantID).
+		Count(&totalPolicies).
+		Error
+	if err != nil {
+		return 0, errutil.Err(err, "there was an error counting the policies")
+	}
+
+	return totalPolicies, nil
 }

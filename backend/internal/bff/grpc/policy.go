@@ -7,14 +7,14 @@ import (
 	"context"
 	"errors"
 
-	identity_platform_sdk_go "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1"
-	"github.com/agntcy/identity-platform/internal/bff"
-	"github.com/agntcy/identity-platform/internal/bff/grpc/converters"
-	policytypes "github.com/agntcy/identity-platform/internal/core/policy/types"
-	"github.com/agntcy/identity-platform/internal/pkg/convertutil"
-	"github.com/agntcy/identity-platform/internal/pkg/grpcutil"
-	"github.com/agntcy/identity-platform/internal/pkg/pagination"
-	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
+	identity_service_sdk_go "github.com/outshift/identity-service/api/server/outshift/identity/service/v1alpha1"
+	"github.com/outshift/identity-service/internal/bff"
+	"github.com/outshift/identity-service/internal/bff/grpc/converters"
+	policytypes "github.com/outshift/identity-service/internal/core/policy/types"
+	"github.com/outshift/identity-service/internal/pkg/convertutil"
+	"github.com/outshift/identity-service/internal/pkg/grpcutil"
+	"github.com/outshift/identity-service/internal/pkg/pagination"
+	"github.com/outshift/identity-service/internal/pkg/ptrutil"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -22,7 +22,7 @@ type PolicyService struct {
 	policyService bff.PolicyService
 }
 
-func NewPolicyService(policyService bff.PolicyService) identity_platform_sdk_go.PolicyServiceServer {
+func NewPolicyService(policyService bff.PolicyService) identity_service_sdk_go.PolicyServiceServer {
 	return &PolicyService{
 		policyService: policyService,
 	}
@@ -30,8 +30,8 @@ func NewPolicyService(policyService bff.PolicyService) identity_platform_sdk_go.
 
 func (s *PolicyService) CreatePolicy(
 	ctx context.Context,
-	in *identity_platform_sdk_go.CreatePolicyRequest,
-) (*identity_platform_sdk_go.Policy, error) {
+	in *identity_service_sdk_go.CreatePolicyRequest,
+) (*identity_service_sdk_go.Policy, error) {
 	if in == nil {
 		return nil, grpcutil.BadRequestError(errors.New("request is empty"))
 	}
@@ -51,8 +51,8 @@ func (s *PolicyService) CreatePolicy(
 
 func (s *PolicyService) CreateRule(
 	ctx context.Context,
-	in *identity_platform_sdk_go.CreateRuleRequest,
-) (*identity_platform_sdk_go.Rule, error) {
+	in *identity_service_sdk_go.CreateRuleRequest,
+) (*identity_service_sdk_go.Rule, error) {
 	if in == nil {
 		return nil, grpcutil.BadRequestError(errors.New("request is empty"))
 	}
@@ -75,7 +75,7 @@ func (s *PolicyService) CreateRule(
 
 func (s *PolicyService) DeletePolicy(
 	ctx context.Context,
-	in *identity_platform_sdk_go.DeletePolicyRequest,
+	in *identity_service_sdk_go.DeletePolicyRequest,
 ) (*emptypb.Empty, error) {
 	err := s.policyService.DeletePolicy(ctx, in.PolicyId)
 	if err != nil {
@@ -87,7 +87,7 @@ func (s *PolicyService) DeletePolicy(
 
 func (s *PolicyService) DeleteRule(
 	ctx context.Context,
-	in *identity_platform_sdk_go.DeleteRuleRequest,
+	in *identity_service_sdk_go.DeleteRuleRequest,
 ) (*emptypb.Empty, error) {
 	err := s.policyService.DeleteRule(ctx, in.RuleId, in.PolicyId)
 	if err != nil {
@@ -99,8 +99,8 @@ func (s *PolicyService) DeleteRule(
 
 func (s *PolicyService) GetPolicy(
 	ctx context.Context,
-	in *identity_platform_sdk_go.GetPolicyRequest,
-) (*identity_platform_sdk_go.Policy, error) {
+	in *identity_service_sdk_go.GetPolicyRequest,
+) (*identity_service_sdk_go.Policy, error) {
 	policy, err := s.policyService.GetPolicy(ctx, in.PolicyId)
 	if err != nil {
 		return nil, grpcutil.NotFoundError(err)
@@ -111,8 +111,8 @@ func (s *PolicyService) GetPolicy(
 
 func (s *PolicyService) GetRule(
 	ctx context.Context,
-	in *identity_platform_sdk_go.GetRuleRequest,
-) (*identity_platform_sdk_go.Rule, error) {
+	in *identity_service_sdk_go.GetRuleRequest,
+) (*identity_service_sdk_go.Rule, error) {
 	rule, err := s.policyService.GetRule(ctx, in.RuleId, in.PolicyId)
 	if err != nil {
 		return nil, grpcutil.NotFoundError(err)
@@ -123,8 +123,8 @@ func (s *PolicyService) GetRule(
 
 func (s *PolicyService) ListPolicies(
 	ctx context.Context,
-	in *identity_platform_sdk_go.ListPoliciesRequest,
-) (*identity_platform_sdk_go.ListPoliciesResponse, error) {
+	in *identity_service_sdk_go.ListPoliciesRequest,
+) (*identity_service_sdk_go.ListPoliciesResponse, error) {
 	paginationFilter := pagination.PaginationFilter{
 		Page:        in.Page,
 		Size:        in.Size,
@@ -142,7 +142,7 @@ func (s *PolicyService) ListPolicies(
 		return nil, grpcutil.BadRequestError(err)
 	}
 
-	return &identity_platform_sdk_go.ListPoliciesResponse{
+	return &identity_service_sdk_go.ListPoliciesResponse{
 		Policies:   convertutil.ConvertSlice(policies.Items, converters.FromPolicy),
 		Pagination: pagination.ConvertToPagedResponse(paginationFilter, policies),
 	}, nil
@@ -150,8 +150,8 @@ func (s *PolicyService) ListPolicies(
 
 func (s *PolicyService) ListRules(
 	ctx context.Context,
-	in *identity_platform_sdk_go.ListRulesRequest,
-) (*identity_platform_sdk_go.ListRulesResponse, error) {
+	in *identity_service_sdk_go.ListRulesRequest,
+) (*identity_service_sdk_go.ListRulesResponse, error) {
 	paginationFilter := pagination.PaginationFilter{
 		Page:        in.Page,
 		Size:        in.Size,
@@ -163,7 +163,7 @@ func (s *PolicyService) ListRules(
 		return nil, grpcutil.BadRequestError(err)
 	}
 
-	return &identity_platform_sdk_go.ListRulesResponse{
+	return &identity_service_sdk_go.ListRulesResponse{
 		Rules:      convertutil.ConvertSlice(rules.Items, converters.FromRule),
 		Pagination: pagination.ConvertToPagedResponse(paginationFilter, rules),
 	}, nil
@@ -171,8 +171,8 @@ func (s *PolicyService) ListRules(
 
 func (s *PolicyService) UpdatePolicy(
 	ctx context.Context,
-	in *identity_platform_sdk_go.UpdatePolicyRequest,
-) (*identity_platform_sdk_go.Policy, error) {
+	in *identity_service_sdk_go.UpdatePolicyRequest,
+) (*identity_service_sdk_go.Policy, error) {
 	if in == nil {
 		return nil, grpcutil.BadRequestError(errors.New("request is empty"))
 	}
@@ -193,8 +193,8 @@ func (s *PolicyService) UpdatePolicy(
 
 func (s *PolicyService) UpdateRule(
 	ctx context.Context,
-	in *identity_platform_sdk_go.UpdateRuleRequest,
-) (*identity_platform_sdk_go.Rule, error) {
+	in *identity_service_sdk_go.UpdateRuleRequest,
+) (*identity_service_sdk_go.Rule, error) {
 	if in == nil {
 		return nil, grpcutil.BadRequestError(errors.New("request is empty"))
 	}
@@ -214,4 +214,18 @@ func (s *PolicyService) UpdateRule(
 	}
 
 	return converters.FromRule(rule), nil
+}
+
+func (s *PolicyService) GetPoliciesCount(
+	ctx context.Context,
+	req *identity_service_sdk_go.GetPoliciesCountRequest,
+) (*identity_service_sdk_go.GetPoliciesCountResponse, error) {
+	total, err := s.policyService.CountAllPolicies(ctx)
+	if err != nil {
+		return nil, grpcutil.BadRequestError(err)
+	}
+
+	return &identity_service_sdk_go.GetPoliciesCountResponse{
+		Total: total,
+	}, nil
 }

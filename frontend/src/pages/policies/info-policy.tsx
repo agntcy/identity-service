@@ -56,7 +56,6 @@ const InfoPolicy: React.FC = () => {
   return (
     <BasePage
       title="Policy"
-      useBorder
       breadcrumbs={[
         {
           text: 'Policies',
@@ -90,7 +89,7 @@ const InfoPolicy: React.FC = () => {
               onClick={() => {
                 analyticsTrack('CLICK_NAVIGATION_EDIT_POLICY');
                 const path = generatePath(PATHS.policies.edit, {id: id || ''});
-                void navigate(path, {replace: true});
+                void navigate(path);
               }}
             >
               Edit

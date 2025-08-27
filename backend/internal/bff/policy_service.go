@@ -11,15 +11,15 @@ import (
 	"strings"
 	"time"
 
-	appcore "github.com/agntcy/identity-platform/internal/core/app"
-	apptypes "github.com/agntcy/identity-platform/internal/core/app/types"
-	policycore "github.com/agntcy/identity-platform/internal/core/policy"
-	policytypes "github.com/agntcy/identity-platform/internal/core/policy/types"
-	"github.com/agntcy/identity-platform/internal/pkg/errutil"
-	"github.com/agntcy/identity-platform/internal/pkg/pagination"
-	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
-	"github.com/agntcy/identity-platform/internal/pkg/strutil"
 	"github.com/google/uuid"
+	appcore "github.com/outshift/identity-service/internal/core/app"
+	apptypes "github.com/outshift/identity-service/internal/core/app/types"
+	policycore "github.com/outshift/identity-service/internal/core/policy"
+	policytypes "github.com/outshift/identity-service/internal/core/policy/types"
+	"github.com/outshift/identity-service/internal/pkg/errutil"
+	"github.com/outshift/identity-service/internal/pkg/pagination"
+	"github.com/outshift/identity-service/internal/pkg/ptrutil"
+	"github.com/outshift/identity-service/internal/pkg/strutil"
 )
 
 type PolicyService interface {
@@ -65,6 +65,7 @@ type PolicyService interface {
 		needsApproval bool,
 		action policytypes.RuleAction,
 	) (*policytypes.Rule, error)
+	CountAllPolicies(ctx context.Context) (int64, error)
 }
 
 type policyService struct {
@@ -301,6 +302,15 @@ func (s *policyService) UpdateRule(
 	}
 
 	return rule, nil
+}
+
+func (s *policyService) CountAllPolicies(ctx context.Context) (int64, error) {
+	total, err := s.policyRepository.CountAllPolicies(ctx)
+	if err != nil {
+		return 0, errutil.Err(err, "error while counting policies")
+	}
+
+	return total, nil
 }
 
 func (s *policyService) validateTasks(

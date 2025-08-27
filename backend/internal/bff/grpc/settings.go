@@ -1,4 +1,4 @@
-// Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+// Copyright 2025 Cisco Systems, Inc. and its affiliates
 // SPDX-License-Settingsentifier: Apache-2.0
 
 package grpc
@@ -6,10 +6,10 @@ package grpc
 import (
 	"context"
 
-	identity_platform_sdk_go "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1"
-	"github.com/agntcy/identity-platform/internal/bff"
-	"github.com/agntcy/identity-platform/internal/bff/grpc/converters"
-	"github.com/agntcy/identity-platform/internal/pkg/errutil"
+	identity_service_sdk_go "github.com/outshift/identity-service/api/server/outshift/identity/service/v1alpha1"
+	"github.com/outshift/identity-service/internal/bff"
+	"github.com/outshift/identity-service/internal/bff/grpc/converters"
+	"github.com/outshift/identity-service/internal/pkg/errutil"
 )
 
 type settingsService struct {
@@ -18,7 +18,7 @@ type settingsService struct {
 
 func NewSettingsService(
 	settingsSrv bff.SettingsService,
-) identity_platform_sdk_go.SettingsServiceServer {
+) identity_service_sdk_go.SettingsServiceServer {
 	return &settingsService{
 		settingsSrv: settingsSrv,
 	}
@@ -26,14 +26,14 @@ func NewSettingsService(
 
 func (s *settingsService) GetSettings(
 	ctx context.Context,
-	req *identity_platform_sdk_go.GetSettingsRequest,
-) (*identity_platform_sdk_go.Settings, error) {
+	req *identity_service_sdk_go.GetSettingsRequest,
+) (*identity_service_sdk_go.Settings, error) {
 	settings, err := s.settingsSrv.GetSettings(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	return &identity_platform_sdk_go.Settings{
+	return &identity_service_sdk_go.Settings{
 		IssuerSettings: converters.FromIssuerSettings(settings.IssuerSettings),
 		ApiKey:         converters.FromApiKey(settings.ApiKey),
 	}, nil
@@ -41,8 +41,8 @@ func (s *settingsService) GetSettings(
 
 func (s *settingsService) SetApiKey(
 	ctx context.Context,
-	req *identity_platform_sdk_go.SetApiKeyRequest,
-) (*identity_platform_sdk_go.ApiKey, error) {
+	req *identity_service_sdk_go.SetApiKeyRequest,
+) (*identity_service_sdk_go.ApiKey, error) {
 	apiKey, err := s.settingsSrv.SetApiKey(ctx)
 	if err != nil {
 		return nil, err
@@ -53,8 +53,8 @@ func (s *settingsService) SetApiKey(
 
 func (s *settingsService) SetIssuer(
 	ctx context.Context,
-	req *identity_platform_sdk_go.SetIssuerRequest,
-) (*identity_platform_sdk_go.IssuerSettings, error) {
+	req *identity_service_sdk_go.SetIssuerRequest,
+) (*identity_service_sdk_go.IssuerSettings, error) {
 	issuerSettings := converters.ToIssuerSettings(req.GetIssuerSettings())
 	if issuerSettings == nil {
 		return nil, errutil.Err(nil, "issuer settings cannot be nil")

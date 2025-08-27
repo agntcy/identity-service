@@ -1,4 +1,4 @@
-# Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+# Copyright 2025 Cisco Systems, Inc. and its affiliates
 # SPDX-License-Identifier: Apache-2.0
 
 ---
@@ -22,7 +22,7 @@ jobs:
     name: checkout & unit test
     runs-on: ${{ vars.UBUNTU_RUNNER }}
     container:
-      image: ${{ vars.SRE_BUILD_IMAGE }}
+      image: ${{ vars.DEFAULT_CONTAINER_RUNNER }}
       options: --user root
       credentials:
         username: ${{ secrets.GHCR_USERNAME }}
@@ -30,7 +30,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           # The branch, tag or SHA to checkout, otherwise, uses the default branch.
           ref: ${{ github.ref }}
@@ -68,7 +68,7 @@ jobs:
       ghcr-org-token: ${{ secrets.GHCR_TOKEN }}
 
     with:
-      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      runner-group: ${{ vars.DEFAULT_ARC_RUNNERS }}
       ### REQUIRED
       ### Docker image name
       image-name: "${{ github.event.repository.name }}"
@@ -101,7 +101,7 @@ jobs:
       ghcr-org-token: ${{ secrets.GHCR_TOKEN }}
 
     with:
-      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      runner-group: ${{ vars.DEFAULT_ARC_RUNNERS }}
       ### REQUIRED
       ### Docker image name
       image-name: "${{ github.event.repository.name }}-mcp-server-currency-exchange"
@@ -134,7 +134,7 @@ jobs:
       ghcr-org-token: ${{ secrets.GHCR_TOKEN }}
 
     with:
-      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      runner-group: ${{ vars.DEFAULT_ARC_RUNNERS }}
       ### REQUIRED
       ### Docker image name
       image-name: "${{ github.event.repository.name }}-a2a-agent-currency-exchange"
@@ -167,7 +167,7 @@ jobs:
       ghcr-org-token: ${{ secrets.GHCR_TOKEN }}
 
     with:
-      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      runner-group: ${{ vars.DEFAULT_ARC_RUNNERS }}
       ### REQUIRED
       ### Docker image name
       image-name: "${{ github.event.repository.name }}-oasf-agent-financial-assistant"
@@ -189,7 +189,7 @@ jobs:
   call-docker-build-push-ui:
     name: Call Docker Build ui
     needs: [checkout-unit-tests]
-    uses: ./.github/workflows/build-push-docker.yaml
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/build-push-docker.yaml@production
 
     secrets:
       # Only needed if with:ecr-enabled or with:gar-enabled is true below
@@ -198,10 +198,10 @@ jobs:
       ghcr-username: ${{ secrets.GHCR_USERNAME }}
       ghcr-token: ${{ secrets.GHCR_TOKEN }}
       ghcr-org-token: ${{ secrets.GHCR_TOKEN }}
-      artifactory_password: ${{ secrets.ARTIFACTORY_PASSWORD }}
+      artifactory-password: ${{ secrets.ARTIFACTORY_PASSWORD }}
 
     with:
-      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      runner-group: ${{ vars.DEFAULT_ARC_RUNNERS }}
       ### REQUIRED
       ### Docker image name
       image-name: "${{ github.event.repository.name }}-ui"
@@ -232,7 +232,7 @@ jobs:
       ghcr-token: ${{ secrets.GHCR_TOKEN }}
       ghcr-org-token: ${{ secrets.GHCR_TOKEN }}
     with:
-      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      runner-group: ${{ vars.DEFAULT_ARC_RUNNERS }}
       ### REQUIRED
       ### Docker image name
       image-name: "${{ github.event.repository.name }}-docs"
@@ -256,9 +256,9 @@ jobs:
   call-helm-publish-backend:
     name: Helm publish Backend
     needs: [checkout-unit-tests]
-    uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@a663a51a68f4158da24f29d7859dabb891586d5c #main
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@production
     with:
-      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      runner-group: ${{ vars.DEFAULT_ARC_RUNNERS }}
       enable-chartmuseum: true
       enable-private-ecr: false
       enable-public-ecr: false
@@ -275,9 +275,9 @@ jobs:
   call-helm-publish-ui:
     name: Helm publish UI
     needs: [checkout-unit-tests]
-    uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@a663a51a68f4158da24f29d7859dabb891586d5c #main
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@production
     with:
-      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      runner-group: ${{ vars.DEFAULT_ARC_RUNNERS }}
       enable-chartmuseum: true
       enable-private-ecr: false
       enable-public-ecr: false
@@ -294,9 +294,9 @@ jobs:
   call-helm-publish-docs:
     name: Helm publish Docs
     needs: [checkout-unit-tests]
-    uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@a663a51a68f4158da24f29d7859dabb891586d5c #main
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@production
     with:
-      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      runner-group: ${{ vars.DEFAULT_ARC_RUNNERS }}
       enable-chartmuseum: true
       enable-private-ecr: false
       enable-public-ecr: false
@@ -313,9 +313,9 @@ jobs:
   call-helm-publish-mcp-server-currency-exchange:
     name: Helm publish mcp-server-currency-exchange
     needs: [checkout-unit-tests]
-    uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@a663a51a68f4158da24f29d7859dabb891586d5c #main
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@production
     with:
-      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      runner-group: ${{ vars.DEFAULT_ARC_RUNNERS }}
       enable-chartmuseum: true
       enable-private-ecr: false
       enable-public-ecr: false
@@ -332,9 +332,9 @@ jobs:
   call-helm-publish-identity-sample-currency-exchange-a2a:
     name: Helm publish identity-sample-currency-exchange-a2a
     needs: [checkout-unit-tests]
-    uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@a663a51a68f4158da24f29d7859dabb891586d5c #main
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@production
     with:
-      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      runner-group: ${{ vars.DEFAULT_ARC_RUNNERS }}
       enable-chartmuseum: true
       enable-private-ecr: false
       enable-public-ecr: false
@@ -351,9 +351,9 @@ jobs:
   call-helm-publish-identity-sample-financial-assist-oasf:
     name: Helm publish identity-sample-financial-assist-oasf
     needs: [checkout-unit-tests]
-    uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@a663a51a68f4158da24f29d7859dabb891586d5c #main
+    uses: cisco-eti/gh-reusable-workflows/.github/workflows/helm-publish.yaml@production
     with:
-      runner-group: ${{ vars.DEFAULT_EC2_RUNNER_GROUP }}
+      runner-group: ${{ vars.DEFAULT_ARC_RUNNERS }}
       enable-chartmuseum: true
       enable-private-ecr: false
       enable-public-ecr: false

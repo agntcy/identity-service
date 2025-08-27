@@ -1,4 +1,3 @@
-/* eslint-disable indent */
 /**
  * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
  * SPDX-License-Identifier: Apache-2.0
@@ -6,27 +5,20 @@
 
 import {ListDevices} from '@/components/devices/list-devices';
 import {BasePage} from '@/components/layout/base-page';
-import {QRCodeModal} from '@/components/shared/helpers/qr-code-modal';
+import {QRCodeModal} from '@/components/ui/qr-code-modal';
 import {useAnalytics} from '@/hooks';
 import {useAddDevice} from '@/mutations';
 import {PATHS} from '@/router/paths';
-import {useFeatureFlagsStore} from '@/store';
 import {Device} from '@/types/api/device';
 import {Button, toast} from '@outshift/spark-design';
 import {useQueryClient} from '@tanstack/react-query';
 import {PlusIcon} from 'lucide-react';
 import React, {useCallback, useMemo, useState} from 'react';
-import {useShallow} from 'zustand/react/shallow';
+import {useOutletContext} from 'react-router-dom';
 
 const Devices: React.FC = () => {
   const [tempDevice, setTempDevice] = useState<Device | undefined>();
   const [openQrCodeModal, setQrCodeModal] = useState(false);
-
-  const {isTbacEnable} = useFeatureFlagsStore(
-    useShallow((state) => ({
-      isTbacEnable: state.featureFlags.isTbacEnable
-    }))
-  );
 
   const {analyticsTrack} = useAnalytics();
   const queryClient = useQueryClient();
@@ -39,30 +31,7 @@ const Devices: React.FC = () => {
     return undefined;
   }, [tempDevice]);
 
-  const subNav = useMemo(() => {
-    return [
-      {
-        label: 'Identity Provider',
-        href: PATHS.settings.identityProvider.base
-      },
-      {
-        label: 'API Key',
-        href: PATHS.settings.apiKey
-      },
-      ...(isTbacEnable
-        ? [
-            {
-              label: 'Devices',
-              href: PATHS.settings.devices.base
-            }
-          ]
-        : []),
-      {
-        label: 'Organizations & Users',
-        href: PATHS.settings.organizationsAndUsers.base
-      }
-    ];
-  }, [isTbacEnable]);
+  const {subNav} = useOutletContext<{subNav: {label: string; href: string}[]}>();
 
   const addDeviceMutation = useAddDevice({
     callbacks: {

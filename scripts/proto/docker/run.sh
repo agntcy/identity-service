@@ -1,13 +1,12 @@
 #!/bin/sh
-# Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+# Copyright 2025 Cisco Systems, Inc. and its affiliates
 # SPDX-License-Identifier: Apache-2.0
-
 
 set -o errexit
 set -o nounset
 
-PROTO_PACKAGE_NAME="agntcy.identity.platform.v1alpha1"
-PROTO_PLATFORM_FILE_PATH="agntcy/identity/platform/v1alpha1/"
+PROTO_PACKAGE_NAME="outshift.identity.service.v1alpha1"
+PROTO_PLATFORM_FILE_PATH="outshift/identity/service/v1alpha1/"
 
 get_module_name_from_package() {
   dirname "$1" | xargs basename
@@ -66,7 +65,7 @@ done
 
 packages=$(echo "$packages" | sed 's/\s$//' | sed 's/^\s//')
 
-cd "${Identity_ROOT}/local/github.com/agntcy/identity-platform"
+cd "${Identity_ROOT}/local/github.com/outshift/identity-service"
 
 go get github.com/gogo/protobuf/proto
 go mod vendor
@@ -123,11 +122,13 @@ if [ -n "${packages_comma_separated}" ]; then
 
   protos=$(find local/output -iname "*.proto")
 
+  # Add the proto package name to the proto files
   for m in $protos; do
     sed -i 's/syntax = "proto2";/syntax = "proto3";/g' "${m}"
-    sed -i 's|go_package = [^ ]\+|go_package = "github.com/agntcy/identity-platform/api/server/agntcy/identity/platform/v1alpha1;identity_platform_sdk_go";|g' "${m}"
+    sed -i 's|go_package = [^ ]\+|go_package = "github.com/outshift/identity-service/api/server/outshift/identity/service/v1alpha1;identity_service_sdk_go";|g' "${m}"
   done
 
+  # Add the import path to the proto files
   for package in $packages; do
     proto_file=$(get_module_name_from_package "${package}")
     import=$(echo "$package" | sed 's|\.|\\.|g')
@@ -137,7 +138,20 @@ if [ -n "${packages_comma_separated}" ]; then
     done
   done
 
-  cp -r "${Identity_ROOT}/local/output/." "${Identity_ROOT}/code/backend/api/spec/proto/agntcy/identity/platform/v1alpha1"
+  # Replace field behavior with the correct proto syntax
+  for m in $protos; do
+    # Detect field behavior annotation
+    if grep -q "field_behavior" "${m}"; then
+      # Add import for field_behavior
+      sed -i 's|^syntax = "proto3";|syntax = "proto3";\nimport "google/api/field_behavior.proto";|' "${m}"
+
+      # Insert the field_behavior annotation to the field that has this header comment
+      # Remove the header comment
+      awk '/\/\/ \+field_behavior:/ { sub(/\/\/ \+field_behavior:/, "", $0); field_behavior = $0; gsub(" ","", field_behavior);  getline next_line; if (next_line ~ /^\/\//) next_line = ""; print substr(next_line, 1, length(next_line)-1) " [(.google.api.field_behavior) = "field_behavior"];"; next; } { print }' "${m}" > /tmp/temp && mv /tmp/temp "${m}"
+    fi
+  done
+
+  cp -r "${Identity_ROOT}/local/output/." "${Identity_ROOT}/code/backend/api/spec/proto/outshift/identity/service/v1alpha1"
 fi
 
 echo ""
@@ -163,7 +177,7 @@ cd "${Identity_ROOT}/code/backend/api/spec"
 /usr/local/bin/buf generate --include-imports --template buf.gen.python.yaml --output ../../sdk/python
 
 # Openapi
-/usr/local/bin/buf generate --template buf.gen.openapi.yaml --output ../spec/static/api/openapi/platform/v1alpha1 --path proto/${PROTO_PLATFORM_FILE_PATH}
+/usr/local/bin/buf generate --template buf.gen.openapi.yaml --output ../spec/static/api/openapi/service/v1alpha1 --path proto/${PROTO_PLATFORM_FILE_PATH}
 
 # Proto
 /usr/local/bin/buf generate --template buf.gen.doc.yaml --output ../spec/static/api/proto/v1alpha1

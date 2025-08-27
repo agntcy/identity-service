@@ -53,13 +53,13 @@ const AgentServices: React.FC = () => {
           }
         }}
         emptyListStateProps={{
-          title: 'Get started with Agent Identity',
+          title: 'Get started with Agent Identity Service',
           description:
             'Connect your identity provider to create and manage identities for your AI agents and MCP servers, including those supporting A2A-compatible protocols like Google A2A, with support for policies and access controls.',
           actionTitle: 'Connect Identity Provider',
           actionCallback: () => {
             analyticsTrack('CLICK_NAVIGATION_CONNECT_IDENTITY_PROVIDER');
-            void navigate(PATHS.settings.identityProvider.connection, {replace: true});
+            void navigate(PATHS.settings.identityProvider.connection);
           }
         }}
       >

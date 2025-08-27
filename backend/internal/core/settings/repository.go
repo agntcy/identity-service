@@ -1,4 +1,4 @@
-// Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+// Copyright 2025 Cisco Systems, Inc. and its affiliates
 // SPDX-License-Identifier: Apache-2.0
 
 package settings
@@ -6,7 +6,7 @@ package settings
 import (
 	"context"
 
-	"github.com/agntcy/identity-platform/internal/core/settings/types"
+	"github.com/outshift/identity-service/internal/core/settings/types"
 )
 
 type Repository interface {

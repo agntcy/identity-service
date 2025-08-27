@@ -1,4 +1,4 @@
-// Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+// Copyright 2025 Cisco Systems, Inc. and its affiliates
 // SPDX-License-Authentifier: Apache-2.0
 
 package bff
@@ -8,28 +8,39 @@ import (
 	"errors"
 	"time"
 
-	appcore "github.com/agntcy/identity-platform/internal/core/app"
-	apptypes "github.com/agntcy/identity-platform/internal/core/app/types"
-	authcore "github.com/agntcy/identity-platform/internal/core/auth"
-	authtypes "github.com/agntcy/identity-platform/internal/core/auth/types"
-	devicecore "github.com/agntcy/identity-platform/internal/core/device"
-	"github.com/agntcy/identity-platform/internal/core/identity"
-	idpcore "github.com/agntcy/identity-platform/internal/core/idp"
-	policycore "github.com/agntcy/identity-platform/internal/core/policy"
-	settingscore "github.com/agntcy/identity-platform/internal/core/settings"
-	settingstypes "github.com/agntcy/identity-platform/internal/core/settings/types"
-	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
-	"github.com/agntcy/identity-platform/internal/pkg/errutil"
-	"github.com/agntcy/identity-platform/internal/pkg/jwtutil"
-	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
-	"github.com/agntcy/identity-platform/pkg/log"
 	"github.com/agntcy/identity/pkg/oidc"
+	appcore "github.com/outshift/identity-service/internal/core/app"
+	apptypes "github.com/outshift/identity-service/internal/core/app/types"
+	authcore "github.com/outshift/identity-service/internal/core/auth"
+	authtypes "github.com/outshift/identity-service/internal/core/auth/types/int"
+	devicecore "github.com/outshift/identity-service/internal/core/device"
+	"github.com/outshift/identity-service/internal/core/identity"
+	idpcore "github.com/outshift/identity-service/internal/core/idp"
+	policycore "github.com/outshift/identity-service/internal/core/policy"
+	settingscore "github.com/outshift/identity-service/internal/core/settings"
+	settingstypes "github.com/outshift/identity-service/internal/core/settings/types"
+	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
+	"github.com/outshift/identity-service/internal/pkg/errutil"
+	"github.com/outshift/identity-service/internal/pkg/jwtutil"
+	"github.com/outshift/identity-service/internal/pkg/ptrutil"
+	"github.com/outshift/identity-service/internal/pkg/strutil"
+	"github.com/outshift/identity-service/pkg/log"
+)
+
+const (
+	// Default length for authorization codes
+	codeLength = 128
+
+	// Default session duration for authorization codes and consumption
+	sessionDuration = 5 * time.Minute
+
+	waitForDeviceApprovalTime = 500 // milliseconds
 )
 
 type AuthService interface {
 	Authorize(
 		ctx context.Context,
-		appID, toolName, userToken *string,
+		resolverMetadataID, toolName, userToken *string,
 	) (*authtypes.Session, error)
 	Token(
 		ctx context.Context,
@@ -87,7 +98,7 @@ func NewAuthService(
 
 func (s *authService) Authorize(
 	ctx context.Context,
-	appID, toolName, _ *string,
+	resolverMetadataID, toolName, _ *string,
 ) (*authtypes.Session, error) {
 	// Get calling identity from context
 	ownerAppID, ok := identitycontext.GetAppID(ctx)
@@ -98,25 +109,30 @@ func (s *authService) Authorize(
 		)
 	}
 
-	if appID != nil && *appID == ownerAppID {
-		return nil, errutil.Err(
-			nil,
-			"cannot authorize the same app",
-		)
-	}
-
 	_, err := s.appRepository.GetApp(ctx, ownerAppID)
 	if err != nil {
 		return nil, errutil.Err(err, "app not found")
 	}
 
-	// When appID is not provided, it means the session is for all apps
+	// If resolverMetadataID is provided, get appID
+	var appID *string
+
+	// When resolverMetadataID is not provided, it means the session is for all apps
 	// Policy will be evaluated on the external authorization step
-	if appID != nil && *appID != "" {
-		app, err := s.appRepository.GetApp(ctx, *appID)
+	if resolverMetadataID != nil && *resolverMetadataID != "" {
+		app, err := s.appRepository.GetAppByResolverMetadataID(ctx, *resolverMetadataID)
 		if err != nil {
-			return nil, errutil.Err(err, "app not found")
+			return nil, errutil.Err(err, "app not found by resolver metadata ID")
 		}
+
+		if app.ID == ownerAppID {
+			return nil, errutil.Err(
+				nil,
+				"cannot authorize the same app",
+			)
+		}
+
+		appID = &app.ID
 
 		// Evaluate the session based on existing policies
 		_, err = s.policyEvaluator.Evaluate(ctx, app, ownerAppID, ptrutil.DerefStr(toolName))
@@ -127,9 +143,11 @@ func (s *authService) Authorize(
 
 	// Create new session
 	session, err := s.authRepository.Create(ctx, &authtypes.Session{
-		OwnerAppID: ownerAppID,
-		AppID:      appID,
-		ToolName:   toolName,
+		OwnerAppID:        ownerAppID,
+		AppID:             appID,
+		ToolName:          toolName,
+		AuthorizationCode: ptrutil.Ptr(strutil.Random(codeLength)),
+		ExpiresAt:         ptrutil.Ptr(time.Now().Add(sessionDuration).Unix()),
 	})
 	if err != nil {
 		return nil, errutil.Err(
@@ -425,7 +443,15 @@ func (s *authService) sendDeviceOTP(
 		return nil, err
 	}
 
-	err = s.notifService.SendOTPNotification(ctx, device, session, otp, callerApp, calleeApp, toolName)
+	err = s.notifService.SendOTPNotification(
+		ctx,
+		device,
+		session,
+		otp,
+		callerApp,
+		calleeApp,
+		toolName,
+	)
 	if err != nil {
 		return nil, errutil.Err(err, "unable to send notification")
 	}
@@ -434,7 +460,7 @@ func (s *authService) sendDeviceOTP(
 }
 
 func (s *authService) waitForDeviceApproval(ctx context.Context, otpID string) error {
-	tick := 500 * time.Millisecond
+	tick := waitForDeviceApprovalTime * time.Millisecond
 
 	loopErr := s.activeWaitLoop(
 		authtypes.SessionDeviceOTPDuration,

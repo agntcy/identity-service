@@ -1,5 +1,5 @@
 /**
- * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+ * Copyright 2025 Cisco Systems, Inc. and its affiliates
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -195,6 +195,14 @@ export interface V1Alpha1CreatePolicyRequest {
   assignedTo?: string;
 }
 
+export interface V1Alpha1GetPoliciesCountResponse {
+  /**
+   * The total count
+   * @format int64
+   */
+  total?: string;
+}
+
 export interface V1Alpha1ListPoliciesResponse {
   /** A list of Policies. */
   policies?: V1Alpha1Policy[];
@@ -230,7 +238,7 @@ export interface V1Alpha1PagedResponse {
   size?: number;
 }
 
-/** Identity Platform Policy. */
+/** Identity Service Policy. */
 export interface V1Alpha1Policy {
   /** A unique identifier for the Policy. */
   id?: string;
@@ -254,7 +262,7 @@ export interface V1Alpha1Policy {
   updatedAt?: string;
 }
 
-/** Identity Platform Policy Rule */
+/** Identity Service Policy Rule */
 export interface V1Alpha1Rule {
   /** A unique identifier for the Rule. */
   id?: string;
@@ -281,7 +289,7 @@ export interface V1Alpha1Rule {
   updatedAt?: string;
 }
 
-/** Identity Platform Policy Task */
+/** Identity Service Policy Task */
 export interface V1Alpha1Task {
   /** A unique identifier for the Task. */
   id?: string;
@@ -432,7 +440,7 @@ export class HttpClient<SecurityDataType = unknown> {
 }
 
 /**
- * @title agntcy/identity/platform/v1alpha1/policy_service.proto
+ * @title outshift/identity/service/v1alpha1/policy_service.proto
  * @version version not set
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
@@ -488,6 +496,22 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         method: 'POST',
         body: body,
         type: ContentType.Json,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Policy
+     * @name GetPoliciesCount
+     * @summary Get policies total count.
+     * @request GET:/v1alpha1/policies/all/count
+     */
+    getPoliciesCount: (params: RequestParams = {}) =>
+      this.request<V1Alpha1GetPoliciesCountResponse, RpcStatus>({
+        path: `/v1alpha1/policies/all/count`,
+        method: 'GET',
         format: 'json',
         ...params
       }),

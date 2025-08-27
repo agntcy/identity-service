@@ -10,7 +10,7 @@ import {PATHS} from '@/router/paths';
 import {Link, Link as RouterLink} from 'react-router-dom';
 import {useFeatureFlagsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
-import {useGetAgenticServiceTotalCount, useGetPolicies, useGetSettings} from '@/queries';
+import {useGetAgenticServiceTotalCount, useGetPoliciesCount, useGetSettings} from '@/queries';
 import StatsCard, {Stat} from '../ui/stats-card';
 import {ProviderType} from '../shared/identity-provider/provider-type';
 import {useMemo} from 'react';
@@ -19,9 +19,9 @@ import {WelcomeName} from './welcome-name';
 import {useAnalytics} from '@/hooks';
 
 export const StatsDashboard = () => {
-  const {isTbacEnable} = useFeatureFlagsStore(
+  const {isTbacEnabled} = useFeatureFlagsStore(
     useShallow((state) => ({
-      isTbacEnable: state.featureFlags.isTbacEnable
+      isTbacEnabled: state.featureFlags.isTbacEnabled
     }))
   );
 
@@ -29,7 +29,7 @@ export const StatsDashboard = () => {
 
   const {data: dataSettings, isLoading: isLoadingSettings} = useGetSettings();
   const {data: dataAgenticServices, isLoading: isLoadingAgenticServices} = useGetAgenticServiceTotalCount();
-  const {data: dataPolicies, isLoading: isLoadingPolicies} = useGetPolicies({enable: isTbacEnable});
+  const {data: dataPolicies, isLoading: isLoadingPolicies} = useGetPoliciesCount({enabled: isTbacEnabled});
 
   const statsInfo: Stat[] = useMemo(() => {
     const temp = [
@@ -48,9 +48,9 @@ export const StatsDashboard = () => {
         loading: isLoadingAgenticServices
       }
     ];
-    if (isTbacEnable) {
+    if (isTbacEnabled) {
       temp.push({
-        value: <Link to={PATHS.policies.base}>{dataPolicies?.policies?.length || 0}</Link>,
+        value: <Link to={PATHS.policies.base}>{dataPolicies?.total || 0}</Link>,
         title: 'Total Policies',
         loading: isLoadingPolicies
       });
@@ -58,12 +58,12 @@ export const StatsDashboard = () => {
     return temp;
   }, [
     dataAgenticServices?.total,
-    dataPolicies?.policies?.length,
+    dataPolicies?.total,
     dataSettings?.issuerSettings?.idpType,
     isLoadingAgenticServices,
     isLoadingPolicies,
     isLoadingSettings,
-    isTbacEnable
+    isTbacEnabled
   ]);
 
   return (
@@ -74,14 +74,14 @@ export const StatsDashboard = () => {
           <StatsCard
             className={cn(
               'grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 p-4',
-              !isTbacEnable && 'md:grid-cols-2 lg:grid-cols-2'
+              !isTbacEnabled && 'md:grid-cols-2 lg:grid-cols-2'
             )}
             stats={statsInfo}
           />
         </div>
         <div className="card-group px-[24px]">
           <div className="card-flex-group min-w-[384px] bg-[#FBFCFE] rounded-[8px] flex-col flex justify-start items-center px-20 py-12 hidden md:block">
-            <div className="flex flex-col justify-between h-full gap-4">
+            <div className="flex flex-col justify-between min-h-[150px]">
               <div>
                 <Typography variant="h6" textAlign="center">
                   Verify Identity Badges
@@ -107,7 +107,7 @@ export const StatsDashboard = () => {
             </div>
           </div>
           <div className="card-flex-group min-w-[384px] bg-[#FBFCFE] rounded-[8px] flex-col flex justify-start items-center px-20 py-12 hidden md:block">
-            <div className="flex flex-col justify-between h-full gap-4">
+            <div className="flex flex-col justify-between min-h-[150px]">
               <div>
                 <Typography variant="h6" textAlign="center">
                   Add Agentic Services
@@ -132,9 +132,9 @@ export const StatsDashboard = () => {
               </div>
             </div>
           </div>
-          {isTbacEnable && (
+          {isTbacEnabled && (
             <div className="card-flex-group min-w-[384px] bg-[#FBFCFE] rounded-[8px] flex-col flex justify-start items-center px-20 py-12 hidden md:block">
-              <div className="flex flex-col justify-between h-full gap-4">
+              <div className="flex flex-col justify-between min-h-[150px]">
                 <div>
                   <Typography variant="h6" textAlign="center">
                     Add Policies
@@ -143,7 +143,7 @@ export const StatsDashboard = () => {
                     Manage access and permissions for secure agentic interactions
                   </Typography>
                 </div>
-                <div className="flex justify-center items-center mt-8">
+                <div className="flex justify-center items-center">
                   <RouterLink to={PATHS.policies.create} onClick={() => analyticsTrack('CLICK_NAVIGATION_ADD_POLICY')}>
                     <Button
                       variant="outlined"

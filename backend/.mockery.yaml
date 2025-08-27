@@ -1,0 +1,29 @@
+---
+all: false
+dir: '{{.InterfaceDir}}/mocks'
+structname: '{{.InterfaceName}}'
+filename: "{{.InterfaceName | snakecase}}.go"
+pkgname: mocks
+template: testify
+template-data:
+  unroll-variadic: true
+packages:
+  github.com/outshift/identity-service/internal/core/app:
+    interfaces:
+      Repository: {}
+  github.com/outshift/identity-service/internal/core/auth:
+    interfaces:
+      Repository: {}
+  github.com/outshift/identity-service/internal/core/badge:
+    interfaces:
+      Repository: {}
+  github.com/outshift/identity-service/internal/core/device:
+    interfaces:
+      Repository: {}
+  github.com/outshift/identity-service/internal/core/policy:
+    interfaces:
+      Evaluator: {}
+      Repository: {}
+  github.com/outshift/identity-service/internal/core/settings:
+    interfaces:
+      Repository: {}

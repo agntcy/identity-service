@@ -29,6 +29,7 @@ import {cn} from '@/lib/utils';
 import ScrollShadowWrapper from '@/components/ui/scroll-shadow-wrapper';
 import {Separator} from '@/components/ui/separator';
 import {useAnalytics} from '@/hooks';
+import {ROWS_PER_PAGE_OPTION} from '@/constants/pagination';
 
 export const VerificationResults = () => {
   const methods = useStepper();
@@ -143,8 +144,8 @@ export const VerificationResults = () => {
               <ScrollShadowWrapper className="max-h-[60vh] overflow-auto">
                 <CodeBlock
                   containerProps={{maxWidth: '40vw'}}
-                  showLineNumbers
                   wrapLongLines
+                  showLineNumbers
                   text={JSON.stringify(results?.document || {}, null, 2)}
                 />
               </ScrollShadowWrapper>
@@ -183,7 +184,7 @@ export const VerificationResults = () => {
                       }
                     }}
                     rowCount={results?.errors?.length ?? 0}
-                    rowsPerPageOptions={[1, 10, 25, 50, 100]}
+                    rowsPerPageOptions={ROWS_PER_PAGE_OPTION}
                     muiBottomToolbarProps={{
                       style: {
                         boxShadow: 'none'

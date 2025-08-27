@@ -44,7 +44,7 @@ If your Agentic Service can be accessed directly from the public internet, you c
 
 1.  During the "Register Agentic Service" step, you will be prompted to provide the **Deployment URL** for your service.
 2.  Enter the full URL where your service is hosted and accessible.
-3.  The platform will then perform online discovery using this URL.
+3.  The service will then perform online discovery using this URL.
 
 ![Issue the Badge using the UI](/img/issue-badge-online.png)
 
@@ -93,3 +93,15 @@ The Policies Assigned tab provides an overview of the policies that are currentl
 - **Action & Needs Approval:** Shows the allowed actions and whether approval is required or not.
 
 ![Policies Assigned to Agentic Service](/img/agentic-service-mcp-badge-policies-assigned.png)
+
+### Policies Used By
+
+The Policies Used By tab provides an overview of the policies used by the agent service. This section displays essential information including:
+
+- **Policy Name:** The name of the policy, such as "Invoke Policy".
+- **Rules:** The specific rule(s) associated with each policy.
+- **Assigned To:** Indicates the agent or service to which the policy is assigned, such as emailMCPServer.
+- **Updated At & Created At:** Timestamp details indicating when the policy was last updated or created.
+- **Action & Needs Approval:** Shows the allowed actions and whether approval is required or not.
+
+![Policies Assigned to Agentic Service](/img/agentic-service-mcp-badge-policies-usedby.png)

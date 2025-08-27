@@ -1,5 +1,5 @@
 /**
- * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+ * Copyright 2025 Cisco Systems, Inc. and its affiliates
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -173,7 +173,7 @@ export interface RpcStatus {
   details?: GoogleprotobufAny[];
 }
 
-/** Identity Platform App. */
+/** Identity Service App. */
 export interface V1Alpha1App {
   /** A unique identifier for the App. */
   id?: string;
@@ -391,7 +391,7 @@ export class HttpClient<SecurityDataType = unknown> {
 }
 
 /**
- * @title agntcy/identity/platform/v1alpha1/auth_service.proto
+ * @title outshift/identity/service/v1alpha1/auth_service.proto
  * @version version not set
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {

@@ -1,0 +1,75 @@
+---
+title: device_service.proto
+hide_title: true
+---
+
+import { ProtoMessage, ProtoServiceMethod, ProtoEnum } from '@theme/ProtoFile';
+
+# `device_service.proto`
+_**path** outshift/identity/service/v1alpha1/device_service.proto_
+
+_**package** outshift.identity.service.v1alpha1_
+
+
+
+---
+
+## Messages
+
+
+### `AddDeviceRequest`
+<ProtoMessage key={0} message={{"name":"AddDeviceRequest","longName":"AddDeviceRequest","fullName":"outshift.identity.service.v1alpha1.AddDeviceRequest","description":"","hasExtensions":false,"hasFields":true,"hasOneofs":false,"extensions":[],"fields":[{"name":"device","description":"The device information to register.","label":"","type":"Device","longType":"Device","fullType":"outshift.identity.service.v1alpha1.Device","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":"","typeLink":"/protodocs/outshift/identity/service/v1alpha1/device.proto#device"}]}} />
+
+
+### `DeleteDeviceRequest`
+<ProtoMessage key={1} message={{"name":"DeleteDeviceRequest","longName":"DeleteDeviceRequest","fullName":"outshift.identity.service.v1alpha1.DeleteDeviceRequest","description":"","hasExtensions":false,"hasFields":true,"hasOneofs":false,"extensions":[],"fields":[{"name":"device_id","description":"The device id.","label":"","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":""}]}} />
+
+
+### `ListDevicesRequest`
+<ProtoMessage key={2} message={{"name":"ListDevicesRequest","longName":"ListDevicesRequest","fullName":"outshift.identity.service.v1alpha1.ListDevicesRequest","description":"","hasExtensions":false,"hasFields":true,"hasOneofs":true,"extensions":[],"fields":[{"name":"page","description":"The current page of the pagination","label":"optional","type":"int32","longType":"int32","fullType":"int32","ismap":false,"isoneof":true,"oneofdecl":"_page","defaultValue":""},{"name":"size","description":"The page size of the pagination","label":"optional","type":"int32","longType":"int32","fullType":"int32","ismap":false,"isoneof":true,"oneofdecl":"_size","defaultValue":""},{"name":"query","description":"The search query","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_query","defaultValue":""}]}} />
+
+
+### `ListDevicesResponse`
+<ProtoMessage key={3} message={{"name":"ListDevicesResponse","longName":"ListDevicesResponse","fullName":"outshift.identity.service.v1alpha1.ListDevicesResponse","description":"","hasExtensions":false,"hasFields":true,"hasOneofs":true,"extensions":[],"fields":[{"name":"devices","description":"A list of Apps.","label":"repeated","type":"Device","longType":"Device","fullType":"outshift.identity.service.v1alpha1.Device","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":"","typeLink":"/protodocs/outshift/identity/service/v1alpha1/device.proto#device"},{"name":"pagination","description":"Pagination response.","label":"optional","type":"PagedResponse","longType":"outshift.identity.service.shared.v1alpha1.PagedResponse","fullType":"outshift.identity.service.shared.v1alpha1.PagedResponse","ismap":false,"isoneof":true,"oneofdecl":"_pagination","defaultValue":"","typeLink":"/protodocs/outshift/identity/service/shared/v1alpha1/pagination.proto#pagedresponse"}]}} />
+
+
+### `RegisterDeviceRequest`
+<ProtoMessage key={4} message={{"name":"RegisterDeviceRequest","longName":"RegisterDeviceRequest","fullName":"outshift.identity.service.v1alpha1.RegisterDeviceRequest","description":"","hasExtensions":false,"hasFields":true,"hasOneofs":false,"extensions":[],"fields":[{"name":"device_id","description":"The unique identifier for the device to register.","label":"","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":""},{"name":"device","description":"The device information to register.","label":"","type":"Device","longType":"Device","fullType":"outshift.identity.service.v1alpha1.Device","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":"","typeLink":"/protodocs/outshift/identity/service/v1alpha1/device.proto#device"}]}} />
+
+
+### `TestDeviceRequest`
+<ProtoMessage key={5} message={{"name":"TestDeviceRequest","longName":"TestDeviceRequest","fullName":"outshift.identity.service.v1alpha1.TestDeviceRequest","description":"","hasExtensions":false,"hasFields":true,"hasOneofs":false,"extensions":[],"fields":[{"name":"device_id","description":"The device id.","label":"","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":""}]}} />
+
+---
+## Services
+
+
+### `DeviceService`
+
+DeviceService manages device.
+
+
+#### `AddDevice`
+<ProtoServiceMethod key={'AddDevice-0'} method={{"name":"AddDevice","description":"Add new device for approval flow","requestType":"AddDeviceRequest","requestLongType":"AddDeviceRequest","requestFullType":"outshift.identity.service.v1alpha1.AddDeviceRequest","requestStreaming":false,"responseType":"Device","responseLongType":"Device","responseFullType":"outshift.identity.service.v1alpha1.Device","responseStreaming":false,"options":{"google.api.http":{"rules":[{"method":"POST","pattern":"/v1alpha1/device","body":"device"}]}},"requestTypeLink":"/protodocs/outshift/identity/service/v1alpha1/device_service.proto#adddevicerequest","responseTypeLink":"/protodocs/outshift/identity/service/v1alpha1/device.proto#device"}} />
+
+
+#### `RegisterDevice`
+<ProtoServiceMethod key={'RegisterDevice-1'} method={{"name":"RegisterDevice","description":"Add new device for approval flow","requestType":"RegisterDeviceRequest","requestLongType":"RegisterDeviceRequest","requestFullType":"outshift.identity.service.v1alpha1.RegisterDeviceRequest","requestStreaming":false,"responseType":"Empty","responseLongType":".google.protobuf.Empty","responseFullType":"google.protobuf.Empty","responseStreaming":false,"options":{"google.api.http":{"rules":[{"method":"POST","pattern":"/v1alpha1/device/{device_id}","body":"device"}]}},"requestTypeLink":"/protodocs/outshift/identity/service/v1alpha1/device_service.proto#registerdevicerequest"}} />
+
+
+#### `ListDevices`
+<ProtoServiceMethod key={'ListDevices-2'} method={{"name":"ListDevices","description":"List all registered devices","requestType":"ListDevicesRequest","requestLongType":"ListDevicesRequest","requestFullType":"outshift.identity.service.v1alpha1.ListDevicesRequest","requestStreaming":false,"responseType":"ListDevicesResponse","responseLongType":"ListDevicesResponse","responseFullType":"outshift.identity.service.v1alpha1.ListDevicesResponse","responseStreaming":false,"options":{"google.api.http":{"rules":[{"method":"GET","pattern":"/v1alpha1/device"}]}},"requestTypeLink":"/protodocs/outshift/identity/service/v1alpha1/device_service.proto#listdevicesrequest","responseTypeLink":"/protodocs/outshift/identity/service/v1alpha1/device_service.proto#listdevicesresponse"}} />
+
+
+#### `DeleteDevice`
+<ProtoServiceMethod key={'DeleteDevice-3'} method={{"name":"DeleteDevice","description":"Delete a registered Device.","requestType":"DeleteDeviceRequest","requestLongType":"DeleteDeviceRequest","requestFullType":"outshift.identity.service.v1alpha1.DeleteDeviceRequest","requestStreaming":false,"responseType":"Empty","responseLongType":".google.protobuf.Empty","responseFullType":"google.protobuf.Empty","responseStreaming":false,"options":{"google.api.http":{"rules":[{"method":"DELETE","pattern":"/v1alpha1/device/{device_id}"}]}},"requestTypeLink":"/protodocs/outshift/identity/service/v1alpha1/device_service.proto#deletedevicerequest"}} />
+
+
+#### `TestDevice`
+<ProtoServiceMethod key={'TestDevice-4'} method={{"name":"TestDevice","description":"Send a test notification to a registered device to see if it's well configured.","requestType":"TestDeviceRequest","requestLongType":"TestDeviceRequest","requestFullType":"outshift.identity.service.v1alpha1.TestDeviceRequest","requestStreaming":false,"responseType":"Empty","responseLongType":".google.protobuf.Empty","responseFullType":"google.protobuf.Empty","responseStreaming":false,"options":{"google.api.http":{"rules":[{"method":"POST","pattern":"/v1alpha1/device/{device_id}/test"}]}},"requestTypeLink":"/protodocs/outshift/identity/service/v1alpha1/device_service.proto#testdevicerequest"}} />
+
+
+---
+
+
+  

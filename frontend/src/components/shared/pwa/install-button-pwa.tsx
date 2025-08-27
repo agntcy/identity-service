@@ -10,10 +10,10 @@ import {MonitorDownIcon} from 'lucide-react';
 import {useCallback, useEffect, useState} from 'react';
 
 interface BeforeInstallPromptEvent extends Event {
-  readonly platforms: string[];
+  readonly services: string[];
   readonly userChoice: Promise<{
     outcome: 'accepted' | 'dismissed';
-    platform: string;
+    service: string;
   }>;
   prompt(): Promise<void>;
 }
@@ -58,7 +58,7 @@ export const InstallButtonPwa = (props: FabProps) => {
 
   return (
     <div className="absolute bottom-16 right-6">
-      <Tooltip title="Install Agent Identity" placement="left">
+      <Tooltip title="Install Agent Identity Service" placement="left">
         <Fab
           color="primary"
           variant="circular"
@@ -67,7 +67,7 @@ export const InstallButtonPwa = (props: FabProps) => {
           {...props}
           onClick={handleInstall}
         >
-          <MonitorDownIcon className="w-4 h-4" />
+          <MonitorDownIcon className="w-5 h-5" />
         </Fab>
       </Tooltip>
     </div>

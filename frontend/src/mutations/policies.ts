@@ -37,6 +37,7 @@ export const useCreatePolicy = ({callbacks}: PropsSettingsPolicies = {}) => {
         callbacks.onSuccess(resp);
       }
       await queryClient.invalidateQueries({queryKey: ['get-policies']});
+      await queryClient.invalidateQueries({queryKey: ['get-policies-total-count']});
     }
   });
 };
@@ -75,6 +76,7 @@ export const useDeletePolicy = ({callbacks}: PropsSettingsPolicies = {}) => {
         callbacks.onSuccess(resp);
       }
       await queryClient.invalidateQueries({queryKey: ['get-policies']});
+      await queryClient.invalidateQueries({queryKey: ['get-policies-total-count']});
     }
   });
 };

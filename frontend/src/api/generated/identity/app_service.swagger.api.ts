@@ -1,5 +1,5 @@
 /**
- * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+ * Copyright 2025 Cisco Systems, Inc. and its affiliates
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -189,7 +189,7 @@ export interface RpcStatus {
   details?: GoogleprotobufAny[];
 }
 
-/** Identity Platform App. */
+/** Identity Service App. */
 export interface V1Alpha1App {
   /** A unique identifier for the App. */
   id?: string;
@@ -345,7 +345,7 @@ export interface V1Alpha1Proof {
   proofValue?: string;
 }
 
-/** Identity Platform Policy Task */
+/** Identity Service Policy Task */
 export interface V1Alpha1Task {
   /** A unique identifier for the Task. */
   id?: string;
@@ -530,7 +530,7 @@ export class HttpClient<SecurityDataType = unknown> {
 }
 
 /**
- * @title agntcy/identity/platform/v1alpha1/app_service.proto
+ * @title outshift/identity/service/v1alpha1/app_service.proto
  * @version version not set
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
@@ -566,6 +566,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
          *  - APP_TYPE_MCP_SERVER: Agent MCP Server App Type.
          */
         types?: ('APP_TYPE_UNSPECIFIED' | 'APP_TYPE_AGENT_A2A' | 'APP_TYPE_AGENT_OASF' | 'APP_TYPE_MCP_SERVER')[];
+        /** The column ID to sort by */
+        sortColumn?: string;
+        /** Whether to sort in descending order (true) or ascending order (false) */
+        sortDesc?: boolean;
       },
       params: RequestParams = {}
     ) =>
@@ -657,6 +661,22 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         method: 'PATCH',
         body: app,
         type: ContentType.Json,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags App
+     * @name RefreshAppApiKey
+     * @summary Refresh the API Key for an App
+     * @request GET:/v1alpha1/apps/{appId}/api-key/refresh
+     */
+    refreshAppApiKey: (appId: string, params: RequestParams = {}) =>
+      this.request<V1Alpha1App, RpcStatus>({
+        path: `/v1alpha1/apps/${appId}/api-key/refresh`,
+        method: 'GET',
         format: 'json',
         ...params
       }),

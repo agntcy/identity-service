@@ -1,4 +1,4 @@
-// Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+// Copyright 2025 Cisco Systems, Inc. and its affiliates
 // SPDX-License-Settingsentifier: Apache-2.0
 
 package badge
@@ -9,10 +9,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/agntcy/identity-platform/internal/core/badge/types"
 	"github.com/agntcy/identity/pkg/joseutil"
 	"github.com/agntcy/identity/pkg/jwk"
 	"github.com/google/uuid"
+	"github.com/outshift/identity-service/internal/core/badge/types"
 )
 
 func Issue(

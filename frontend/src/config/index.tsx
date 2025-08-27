@@ -17,6 +17,7 @@ declare global {
     iamOidcIssuer?: string;
     segmentId?: string;
     docsUrl?: string;
+    mazeId?: string;
     CookieConsent: typeof CookieConsentVanilla;
   }
 }
@@ -66,5 +67,10 @@ export default {
     ? import.meta.env.VITE_SEGMENT_ID
     : typeof window !== 'undefined'
       ? window.segmentId
+      : undefined,
+  MAZE_ID: isEnvSet(import.meta.env.VITE_MAZE_ID)
+    ? import.meta.env.VITE_MAZE_ID
+    : typeof window !== 'undefined'
+      ? window.mazeId
       : undefined
 };

@@ -1,0 +1,734 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "outshift/identity/service/v1alpha1/app_service.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "App"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1alpha1/apps": {
+      "get": {
+        "summary": "List Apps",
+        "operationId": "ListApps",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1alpha1ListAppsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "description": "The current page of the pagination",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "size",
+            "description": "The page size of the pagination",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "query",
+            "description": "The search query",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "types",
+            "description": "The app type filter\n\n - APP_TYPE_UNSPECIFIED: Unspecified Envelope Type.\n - APP_TYPE_AGENT_A2A: Agent A2A App Type.\n - APP_TYPE_AGENT_OASF: Agent OASF App Type.\n - APP_TYPE_MCP_SERVER: Agent MCP Server App Type.",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "APP_TYPE_UNSPECIFIED",
+                "APP_TYPE_AGENT_A2A",
+                "APP_TYPE_AGENT_OASF",
+                "APP_TYPE_MCP_SERVER"
+              ]
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "sortColumn",
+            "description": "The column ID to sort by",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "sortDesc",
+            "description": "Whether to sort in descending order (true) or ascending order (false)",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      },
+      "post": {
+        "summary": "Create App",
+        "operationId": "CreateApp",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1alpha1App"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "app",
+            "description": "The App to create.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1alpha1App"
+            }
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/v1alpha1/apps/all/count": {
+      "get": {
+        "summary": "Get apps count per type",
+        "operationId": "GetAppsCount",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1alpha1GetAppsCountResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/v1alpha1/apps/{appId}": {
+      "get": {
+        "summary": "Get App by Id",
+        "operationId": "GetApp",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1alpha1App"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "appId",
+            "description": "App Id to get.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      },
+      "delete": {
+        "summary": "Delete App",
+        "operationId": "DeleteApp",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "appId",
+            "description": "App Id to delete.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      },
+      "patch": {
+        "summary": "Update App",
+        "operationId": "UpdateApp",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1alpha1App"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "appId",
+            "description": "App Id to update.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "app",
+            "description": "App parameters to update.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1alpha1App"
+            }
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/v1alpha1/apps/{appId}/api-key/refresh": {
+      "get": {
+        "summary": "Refresh the API Key for an App",
+        "operationId": "RefreshAppApiKey",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1alpha1App"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "appId",
+            "description": "App Id to refresh the API Key for.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/v1alpha1/apps/{appId}/badge": {
+      "get": {
+        "summary": "Get the current badge issued for the App",
+        "operationId": "GetAppBadge",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1alpha1Badge"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "appId",
+            "description": "App Id to get the badge for.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/v1alpha1/tasks": {
+      "get": {
+        "summary": "Get the list of tasks of all apps",
+        "operationId": "GetTasks",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1alpha1GetTasksResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "excludeAppIds",
+            "description": "A filter to exclude fetching tasks for the specified app ids",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "GetTasksResponseTaskList": {
+      "type": "object",
+      "properties": {
+        "tasks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1alpha1Task"
+          }
+        }
+      }
+    },
+    "googleprotobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string",
+          "description": "A URL/resource name that uniquely identifies the type of the serialized\nprotocol buffer message. This string must contain at least\none \"/\" character. The last segment of the URL's path must represent\nthe fully qualified name of the type (as in\n`path/google.protobuf.Duration`). The name should be in a canonical form\n(e.g., leading \".\" is not accepted).\n\nIn practice, teams usually precompile into the binary all types that they\nexpect it to use in the context of Any. However, for URLs which use the\nscheme `http`, `https`, or no scheme, one can optionally set up a type\nserver that maps type URLs to message definitions as follows:\n\n* If no scheme is provided, `https` is assumed.\n* An HTTP GET on the URL must yield a [google.protobuf.Type][]\n  value in binary format, or produce an error.\n* Applications are allowed to cache lookup results based on the\n  URL, or have them precompiled into a binary to avoid any\n  lookup. Therefore, binary compatibility needs to be preserved\n  on changes to types. (Use versioned type names to manage\n  breaking changes.)\n\nNote: this functionality is not currently available in the official\nprotobuf release, and it is not used for type URLs beginning with\ntype.googleapis.com. As of May 2023, there are no widely used type server\nimplementations and no plans to implement one.\n\nSchemes other than `http`, `https` (or the empty scheme) might be\nused with implementation specific semantics."
+        }
+      },
+      "additionalProperties": {},
+      "description": "`Any` contains an arbitrary serialized protocol buffer message along with a\nURL that describes the type of the serialized message.\n\nProtobuf library provides support to pack/unpack Any values in the form\nof utility functions or additional generated methods of the Any type.\n\nExample 1: Pack and unpack a message in C++.\n\n    Foo foo = ...;\n    Any any;\n    any.PackFrom(foo);\n    ...\n    if (any.UnpackTo(\u0026foo)) {\n      ...\n    }\n\nExample 2: Pack and unpack a message in Java.\n\n    Foo foo = ...;\n    Any any = Any.pack(foo);\n    ...\n    if (any.is(Foo.class)) {\n      foo = any.unpack(Foo.class);\n    }\n    // or ...\n    if (any.isSameTypeAs(Foo.getDefaultInstance())) {\n      foo = any.unpack(Foo.getDefaultInstance());\n    }\n\n Example 3: Pack and unpack a message in Python.\n\n    foo = Foo(...)\n    any = Any()\n    any.Pack(foo)\n    ...\n    if any.Is(Foo.DESCRIPTOR):\n      any.Unpack(foo)\n      ...\n\n Example 4: Pack and unpack a message in Go\n\n     foo := \u0026pb.Foo{...}\n     any, err := anypb.New(foo)\n     if err != nil {\n       ...\n     }\n     ...\n     foo := \u0026pb.Foo{}\n     if err := any.UnmarshalTo(foo); err != nil {\n       ...\n     }\n\nThe pack methods provided by protobuf library will by default use\n'type.googleapis.com/full.type.name' as the type URL and the unpack\nmethods only use the fully qualified type name after the last '/'\nin the type URL, for example \"foo.bar.com/x/y.z\" will yield type\nname \"y.z\".\n\nJSON\n====\nThe JSON representation of an `Any` value uses the regular\nrepresentation of the deserialized, embedded message, with an\nadditional field `@type` which contains the type URL. Example:\n\n    package google.profile;\n    message Person {\n      string first_name = 1;\n      string last_name = 2;\n    }\n\n    {\n      \"@type\": \"type.googleapis.com/google.profile.Person\",\n      \"firstName\": \u003cstring\u003e,\n      \"lastName\": \u003cstring\u003e\n    }\n\nIf the embedded message type is well-known and has a custom JSON\nrepresentation, that representation will be embedded adding a field\n`value` which holds the custom JSON in addition to the `@type`\nfield. Example (for message [google.protobuf.Duration][]):\n\n    {\n      \"@type\": \"type.googleapis.com/google.protobuf.Duration\",\n      \"value\": \"1.212s\"\n    }"
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/googleprotobufAny"
+          }
+        }
+      }
+    },
+    "v1alpha1App": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "A unique identifier for the App."
+        },
+        "name": {
+          "type": "string",
+          "description": "A human-readable name for the App."
+        },
+        "description": {
+          "type": "string",
+          "description": "A human-readable description for the App."
+        },
+        "type": {
+          "$ref": "#/definitions/v1alpha1AppType",
+          "description": "The type of the App."
+        },
+        "resolverMetadataId": {
+          "type": "string",
+          "title": "The DID value"
+        },
+        "apiKey": {
+          "type": "string",
+          "description": "The API Key Secret for the App."
+        },
+        "status": {
+          "$ref": "#/definitions/v1alpha1AppStatus",
+          "title": "The status of the App"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "title": "CreatedAt records the timestamp of when the App was initially created"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "title": "UpdatedAt records the timestamp of the last update to the App"
+        }
+      },
+      "description": "Identity Service App."
+    },
+    "v1alpha1AppStatus": {
+      "type": "string",
+      "enum": [
+        "APP_STATUS_UNSPECIFIED",
+        "APP_STATUS_ACTIVE",
+        "APP_STATUS_PENDING",
+        "APP_STATUS_REVOKED"
+      ],
+      "default": "APP_STATUS_UNSPECIFIED",
+      "title": "- APP_STATUS_UNSPECIFIED: Unspecified status\n - APP_STATUS_ACTIVE: The App has at least one active badge\n - APP_STATUS_PENDING: The App has no badges\n - APP_STATUS_REVOKED: The App has all the badges revoked"
+    },
+    "v1alpha1AppType": {
+      "type": "string",
+      "enum": [
+        "APP_TYPE_UNSPECIFIED",
+        "APP_TYPE_AGENT_A2A",
+        "APP_TYPE_AGENT_OASF",
+        "APP_TYPE_MCP_SERVER"
+      ],
+      "default": "APP_TYPE_UNSPECIFIED",
+      "description": "- APP_TYPE_UNSPECIFIED: Unspecified Envelope Type.\n - APP_TYPE_AGENT_A2A: Agent A2A App Type.\n - APP_TYPE_AGENT_OASF: Agent OASF App Type.\n - APP_TYPE_MCP_SERVER: Agent MCP Server App Type.",
+      "title": "App Type"
+    },
+    "v1alpha1AppTypeCountEntry": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "$ref": "#/definitions/v1alpha1AppType",
+          "title": "The type of the App"
+        },
+        "value": {
+          "type": "string",
+          "format": "int64",
+          "title": "The count of apps of the given type"
+        }
+      }
+    },
+    "v1alpha1Badge": {
+      "type": "object",
+      "properties": {
+        "verifiableCredential": {
+          "$ref": "#/definitions/v1alpha1VerifiableCredential"
+        },
+        "appId": {
+          "type": "string"
+        }
+      }
+    },
+    "v1alpha1BadgeClaims": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "[here]: https://www.w3.org/TR/vc-data-model/#credential-subject",
+          "title": "The ID as defined [here]"
+        },
+        "badge": {
+          "type": "string",
+          "title": "The content of the badge"
+        }
+      },
+      "description": "[here]: https://spec.identity.agntcy.org/docs/vc/intro/",
+      "title": "BadgeClaims represents the content of a Badge VC defined [here]"
+    },
+    "v1alpha1CredentialSchema": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "title": "Type specifies the type of the file"
+        },
+        "id": {
+          "type": "string",
+          "title": "The URL identifying the schema file"
+        }
+      },
+      "description": "[here]: https://www.w3.org/TR/vc-data-model-2.0/#data-schemas",
+      "title": "CredentialSchema represents the credentialSchema property of a Verifiable Credential.\nmore information can be found [here]"
+    },
+    "v1alpha1CredentialStatus": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "The URL identifying the schema file"
+        },
+        "type": {
+          "type": "string",
+          "title": "Type specifies the type of the file"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "title": "The creation date and time of the status"
+        },
+        "purpose": {
+          "$ref": "#/definitions/v1alpha1CredentialStatusPurpose",
+          "title": "The value of the purpose for the status entry"
+        }
+      },
+      "description": "[here]: https://www.w3.org/TR/vc-data-model-2.0/#status",
+      "title": "CredentialStatus represents the credentialStatus property of a Verifiable Credential.\nmore information can be found [here]"
+    },
+    "v1alpha1CredentialStatusPurpose": {
+      "type": "string",
+      "enum": [
+        "CREDENTIAL_STATUS_PURPOSE_UNSPECIFIED",
+        "CREDENTIAL_STATUS_PURPOSE_REVOCATION"
+      ],
+      "default": "CREDENTIAL_STATUS_PURPOSE_UNSPECIFIED",
+      "description": "- CREDENTIAL_STATUS_PURPOSE_UNSPECIFIED: Unspecified status purpose\n - CREDENTIAL_STATUS_PURPOSE_REVOCATION: Used to cancel the validity of a verifiable credential.\nThis status is not reversible.",
+      "title": "The purpose of the status entry"
+    },
+    "v1alpha1GetAppsCountResponse": {
+      "type": "object",
+      "properties": {
+        "counts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1alpha1AppTypeCountEntry"
+          },
+          "title": "The apps count per app type"
+        },
+        "total": {
+          "type": "string",
+          "format": "int64",
+          "title": "The total count"
+        }
+      }
+    },
+    "v1alpha1GetTasksResponse": {
+      "type": "object",
+      "properties": {
+        "result": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/GetTasksResponseTaskList"
+          },
+          "title": "The list of tasks per Agentic Service type"
+        }
+      }
+    },
+    "v1alpha1ListAppsResponse": {
+      "type": "object",
+      "properties": {
+        "apps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1alpha1App"
+          },
+          "description": "A list of Apps."
+        },
+        "pagination": {
+          "$ref": "#/definitions/v1alpha1PagedResponse",
+          "description": "Pagination response."
+        }
+      }
+    },
+    "v1alpha1PagedResponse": {
+      "type": "object",
+      "properties": {
+        "nextPage": {
+          "type": "integer",
+          "format": "int32",
+          "title": "Next page"
+        },
+        "hasNextPage": {
+          "type": "boolean",
+          "title": "Has next page"
+        },
+        "total": {
+          "type": "string",
+          "format": "int64",
+          "title": "The total size of items"
+        },
+        "size": {
+          "type": "integer",
+          "format": "int32",
+          "title": "The size of the current page"
+        }
+      },
+      "title": "Pagination response"
+    },
+    "v1alpha1Proof": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "title": "The type of the proof"
+        },
+        "proofPurpose": {
+          "type": "string",
+          "title": "The proof purpose"
+        },
+        "proofValue": {
+          "type": "string",
+          "title": "The proof value"
+        }
+      },
+      "description": "A data integrity proof provides information about the proof mechanism,\nparameters required to verify that proof, and the proof value itself."
+    },
+    "v1alpha1Task": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "A unique identifier for the Task."
+        },
+        "name": {
+          "type": "string",
+          "description": "A human-readable name for the Task."
+        },
+        "description": {
+          "type": "string",
+          "description": "A human-readable description for the Task."
+        },
+        "appId": {
+          "type": "string",
+          "description": "An application ID for the Task."
+        },
+        "toolName": {
+          "type": "string",
+          "description": "A tool name for the Task."
+        }
+      },
+      "title": "Identity Service Policy Task"
+    },
+    "v1alpha1VerifiableCredential": {
+      "type": "object",
+      "properties": {
+        "context": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "https://www.w3.org/TR/vc-data-model/#contexts"
+        },
+        "type": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "https://www.w3.org/TR/vc-data-model/#dfn-type"
+        },
+        "issuer": {
+          "type": "string",
+          "title": "https://www.w3.org/TR/vc-data-model/#issuer"
+        },
+        "credentialSubject": {
+          "$ref": "#/definitions/v1alpha1BadgeClaims",
+          "title": "https://www.w3.org/TR/vc-data-model/#credential-subject"
+        },
+        "id": {
+          "type": "string",
+          "title": "https://www.w3.org/TR/vc-data-model/#identifiers"
+        },
+        "issuanceDate": {
+          "type": "string",
+          "title": "https://www.w3.org/TR/vc-data-model/#issuance-date"
+        },
+        "expirationDate": {
+          "type": "string",
+          "title": "https://www.w3.org/TR/vc-data-model/#expiration"
+        },
+        "credentialSchema": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1alpha1CredentialSchema"
+          },
+          "title": "https://www.w3.org/TR/vc-data-model-2.0/#data-schemas"
+        },
+        "credentialStatus": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1alpha1CredentialStatus"
+          },
+          "title": "https://www.w3.org/TR/vc-data-model-2.0/#status"
+        },
+        "proof": {
+          "$ref": "#/definitions/v1alpha1Proof",
+          "title": "https://w3id.org/security#proof"
+        }
+      },
+      "description": "[here]: https://www.w3.org/TR/vc-data-model/",
+      "title": "DataModel represents the W3C Verifiable Credential Data Model defined [here]"
+    }
+  }
+}

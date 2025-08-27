@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 /**
  * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
  * SPDX-License-Identifier: Apache-2.0
@@ -10,54 +11,66 @@ import {useGetAgenticServices, useGetAgenticServiceTotalCount} from '@/queries';
 import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
 import {AgenticServiceColumns} from './agentic-services-columns';
 import {Card} from '@/components/ui/card';
-import {generatePath, useNavigate} from 'react-router-dom';
+import {generatePath, useNavigate, useSearchParams} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
-import {FilterSections} from '@/components/shared/helpers/filters-sections';
+import {FilterSections} from '@/components/ui/filters-sections';
 import {App, AppType} from '@/types/api/app';
 import {CheckIcon, IdCardIcon, PencilIcon, PlusIcon, Trash2Icon} from 'lucide-react';
 import {ConfirmModal} from '@/components/ui/confirm-modal';
 import {useDeleteAgenticService} from '@/mutations';
-import {cn} from '@/lib/utils';
 import {useFeatureFlagsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
 import {useAnalytics} from '@/hooks';
 import {BadgeModalForm} from '@/components/shared/agentic-services/badge-modal-form';
+import {DEFAULT_ROWS_PER_PAGE, ROWS_PER_PAGE_OPTION} from '@/constants/pagination';
+import {isEqual} from 'lodash';
 
 export const ListAgenticServices = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [pagination, setPagination] = useState<MRT_PaginationState>({
-    pageIndex: 0,
-    pageSize: 15
+    pageIndex: Number(searchParams.get('page')) || 0,
+    pageSize: Number(searchParams.get('size')) || DEFAULT_ROWS_PER_PAGE
   });
   const [sorting, setSorting] = useState<MRT_SortingState>([
-    {
-      id: 'createdAt',
-      desc: true
-    }
+    searchParams.get('sortColumn') && searchParams.get('sortDesc')
+      ? {
+          id: searchParams.get('sortColumn')!,
+          desc: searchParams.get('sortDesc') === 'true'
+        }
+      : {
+          id: 'createdAt',
+          desc: true
+        }
   ]);
-  const [query, setQuery] = useState<string | undefined>(undefined);
+  const [query, setQuery] = useState<string | undefined>(searchParams.get('query') || undefined);
   const [tempApp, setTempApp] = useState<App | undefined>(undefined);
   const [showBadgeForm, setShowBadgeForm] = useState<boolean>(false);
   const [showActionsModal, setShowActionsModal] = useState<boolean>(false);
-  const [appTypeFilters, setAppTypeFilters] = useState<AppType[]>([
-    AppType.APP_TYPE_AGENT_A2A,
-    AppType.APP_TYPE_AGENT_OASF,
-    AppType.APP_TYPE_MCP_SERVER
-  ]);
+  const [appTypeFilters, setAppTypeFilters] = useState<AppType[]>(
+    searchParams.get('types')
+      ? searchParams
+          .get('types')!
+          .split(',')
+          .map((type) => type as AppType)
+      : [AppType.APP_TYPE_AGENT_A2A, AppType.APP_TYPE_AGENT_OASF, AppType.APP_TYPE_MCP_SERVER]
+  );
 
-  const {data, isLoading, error, refetch} = useGetAgenticServices({
+  const {data, isFetching, isRefetching, error, refetch} = useGetAgenticServices({
     page: pagination.pageIndex + 1,
     size: pagination.pageSize,
     query: query,
-    types: appTypeFilters
+    types: appTypeFilters,
+    sortColumn: sorting[0]?.id,
+    sortDesc: sorting[0]?.desc
   });
 
   const {data: dataCount} = useGetAgenticServiceTotalCount();
 
   const {analyticsTrack} = useAnalytics();
 
-  const {isTbacEnable} = useFeatureFlagsStore(
+  const {isTbacEnabled} = useFeatureFlagsStore(
     useShallow((state) => ({
-      isTbacEnable: state.featureFlags.isTbacEnable
+      isTbacEnabled: state.featureFlags.isTbacEnabled
     }))
   );
 
@@ -69,33 +82,100 @@ export const ListAgenticServices = () => {
         value: AppType.APP_TYPE_AGENT_A2A,
         valueFormatter: () => 'A2A Agent',
         isSelectable: true,
-        isSelected: true
+        isSelected: appTypeFilters.includes(AppType.APP_TYPE_AGENT_A2A)
       },
       {
         value: AppType.APP_TYPE_AGENT_OASF,
         valueFormatter: () => 'OASF',
         isSelectable: true,
-        isSelected: true
+        isSelected: appTypeFilters.includes(AppType.APP_TYPE_AGENT_OASF)
       },
       {
         value: AppType.APP_TYPE_MCP_SERVER,
         valueFormatter: () => 'MCP Server',
         isSelectable: true,
-        isSelected: true
+        isSelected: appTypeFilters.includes(AppType.APP_TYPE_MCP_SERVER)
       }
     ];
-  }, []);
+  }, [appTypeFilters]);
+
+  const handleSortingChange = useCallback(
+    (updaterOrValue: MRT_SortingState | ((old: MRT_SortingState) => MRT_SortingState)) => {
+      setSorting(updaterOrValue);
+      const newSearchParams = new URLSearchParams(searchParams);
+      if (typeof updaterOrValue === 'function') {
+        const newSorting = updaterOrValue(sorting);
+        if (newSorting.length > 0) {
+          newSearchParams.set('sortColumn', newSorting[0].id);
+          newSearchParams.set('sortDesc', String(newSorting[0].desc));
+        } else {
+          newSearchParams.delete('sortColumn');
+          newSearchParams.delete('sortDesc');
+        }
+      } else {
+        if (updaterOrValue.length > 0) {
+          newSearchParams.set('sortColumn', updaterOrValue[0].id);
+          newSearchParams.set('sortDesc', String(updaterOrValue[0].desc));
+        } else {
+          newSearchParams.delete('sortColumn');
+          newSearchParams.delete('sortDesc');
+        }
+      }
+      setSearchParams(newSearchParams);
+    },
+    [searchParams, setSearchParams, sorting]
+  );
 
   const handleQueryChange = useCallback(
     (value: string) => {
-      setQuery(value);
+      if (value) {
+        setQuery(value);
+        const newSearchParams = new URLSearchParams(searchParams);
+        newSearchParams.set('query', value);
+        setSearchParams(newSearchParams);
+      } else {
+        setQuery(undefined);
+        const newSearchParams = new URLSearchParams(searchParams);
+        newSearchParams.delete('query');
+        setSearchParams(newSearchParams);
+      }
     },
-    [setQuery]
+    [searchParams, setSearchParams]
   );
 
-  const handleTypeFilterChange = useCallback((selectedValues: SelectNodeType<AppType>[]) => {
-    setAppTypeFilters(selectedValues.map((node) => node.value as AppType));
-  }, []);
+  const handlePaginationChange = useCallback(
+    (updaterOrValue: MRT_PaginationState | ((old: MRT_PaginationState) => MRT_PaginationState)) => {
+      setPagination(updaterOrValue);
+      const newSearchParams = new URLSearchParams(searchParams);
+      if (typeof updaterOrValue === 'function') {
+        const newPagination = updaterOrValue(pagination);
+        newSearchParams.set('page', String(newPagination.pageIndex + 1));
+        newSearchParams.set('size', String(newPagination.pageSize));
+      } else {
+        newSearchParams.set('page', String(updaterOrValue.pageIndex + 1));
+        newSearchParams.set('size', String(updaterOrValue.pageSize));
+      }
+      setSearchParams(newSearchParams);
+    },
+    [pagination, searchParams, setSearchParams]
+  );
+
+  const handleTypeFilterChange = useCallback(
+    (selectedValues: SelectNodeType<AppType>[]) => {
+      const selectedTypes = selectedValues.map((node) => node.value as AppType);
+      if (!isEqual(selectedTypes, appTypeFilters)) {
+        setAppTypeFilters(selectedTypes);
+        const newSearchParams = new URLSearchParams(searchParams);
+        if (selectedTypes.length > 0) {
+          newSearchParams.set('types', selectedTypes.join(','));
+        } else {
+          newSearchParams.delete('types');
+        }
+        setSearchParams(newSearchParams);
+      }
+    },
+    [appTypeFilters, searchParams, setSearchParams]
+  );
 
   const deleteMutation = useDeleteAgenticService({
     callbacks: {
@@ -140,11 +220,11 @@ export const ListAgenticServices = () => {
         }}
         useLoading={false}
       >
-        <Card className={cn(!isLoading && 'p-0')} variant="secondary">
+        <Card className="p-0" variant="secondary">
           <Table
             columns={AgenticServiceColumns()}
             data={data?.apps || []}
-            isLoading={isLoading || deleteMutation.isPending}
+            isLoading={isFetching || deleteMutation.isPending}
             muiTableBodyRowProps={({row}) => ({
               sx: {
                 cursor: 'pointer',
@@ -156,8 +236,8 @@ export const ListAgenticServices = () => {
                 analyticsTrack('CLICK_NAVIGATION_AGENTIC_SERVICE_INFO', {
                   type: row.original.type
                 });
-                const path = generatePath(PATHS.agenticServices.info, {id: row.original?.id});
-                void navigate(path, {replace: true});
+                const path = generatePath(PATHS.agenticServices.info.base, {id: row.original?.id});
+                void navigate(path);
               }
             })}
             renderTopToolbar={() => (
@@ -176,7 +256,11 @@ export const ListAgenticServices = () => {
                     onSelectValues: handleTypeFilterChange
                   }
                 ]}
-                isLoading={isLoading}
+                isLoading={isFetching}
+                isRefetching={isRefetching}
+                onClickRefresh={() => {
+                  void refetch();
+                }}
               />
             )}
             enableColumnResizing
@@ -191,11 +275,12 @@ export const ListAgenticServices = () => {
             }}
             manualPagination={true}
             manualFiltering={true}
-            onPaginationChange={setPagination}
+            manualSorting={true}
+            onPaginationChange={handlePaginationChange}
             rowCount={Number(data?.pagination?.total) || 0}
-            rowsPerPageOptions={[1, 15, 25, 50, 100]}
+            rowsPerPageOptions={ROWS_PER_PAGE_OPTION}
             state={{pagination, sorting}}
-            onSortingChange={setSorting}
+            onSortingChange={handleSortingChange}
             renderRowActionMenuItems={({row}) => {
               return [
                 <MenuItem
@@ -205,7 +290,7 @@ export const ListAgenticServices = () => {
                       type: row.original.type
                     });
                     const path = generatePath(PATHS.verifyIdentity.info, {id: row.original.id});
-                    void navigate(path, {replace: true});
+                    void navigate(path);
                   }}
                   sx={{display: 'flex', alignItems: 'center', gap: '8px'}}
                 >
@@ -237,7 +322,7 @@ export const ListAgenticServices = () => {
                       type: row.original.type
                     });
                     const path = generatePath(PATHS.agenticServices.edit, {id: row.original.id});
-                    void navigate(path, {replace: true});
+                    void navigate(path);
                   }}
                   sx={{display: 'flex', alignItems: 'center', gap: '8px'}}
                 >
@@ -282,7 +367,7 @@ export const ListAgenticServices = () => {
                   actionTitle="Add Agentic Service"
                   actionCallback={() => {
                     analyticsTrack('CLICK_NAVIGATION_ADD_AGENTIC_SERVICE');
-                    void navigate(PATHS.agenticServices.add, {replace: true});
+                    void navigate(PATHS.agenticServices.add);
                   }}
                   actionButtonProps={{
                     sx: {fontWeight: '600 !important'},
@@ -301,7 +386,7 @@ export const ListAgenticServices = () => {
         description={
           <>
             Are you sure you want to delete this agentic service <b>{tempApp?.name}</b>? This action cannot be undone.
-            {isTbacEnable && (
+            {isTbacEnabled && (
               <>
                 <br />
                 <br />
@@ -312,12 +397,10 @@ export const ListAgenticServices = () => {
                 Confirm policies{' '}
                 <Link
                   href={(() => {
-                    const basePath = generatePath(PATHS.agenticServices.info, {
+                    const basePath = generatePath(PATHS.agenticServices.info.policiesAssignedTo, {
                       id: tempApp?.id || ''
                     });
-                    const searchParams = new URLSearchParams();
-                    searchParams.set('view', 'policies-assigned');
-                    return `${basePath}?${searchParams.toString()}`;
+                    return basePath;
                   })()}
                 >
                   here

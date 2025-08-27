@@ -6,11 +6,13 @@
 import {clientsClaim} from 'workbox-core';
 import {INotification, NotificationType} from '@/types/sw/notification';
 import {generateRandomId} from '@/utils/utils';
-import {cleanupOutdatedCaches, createHandlerBoundToURL, precacheAndRoute} from 'workbox-precaching';
-import {NavigationRoute, registerRoute} from 'workbox-routing';
+import {registerRoute} from 'workbox-routing';
 import config from '@/config';
 import {ApproveTokenRequest} from '@/types/api/auth';
 import {notificationUtils} from '@/utils/notification-store';
+import {ExpirationPlugin} from 'workbox-expiration';
+import {CacheableResponsePlugin} from 'workbox-cacheable-response';
+import {CacheFirst, NetworkFirst, NetworkOnly, StaleWhileRevalidate} from 'workbox-strategies';
 
 const ICON_PATH = '/pwa-192x192.png';
 const BADGE_PATH = '/pwa-64x64.png';
@@ -178,7 +180,7 @@ self.addEventListener('push', async (event) => {
         }
 
         await sendNotification({...notificationData, id, timestamp: Date.now()});
-        await self.registration.showNotification('Agent Identity | AGNTCY', options);
+        await self.registration.showNotification('Outshift Agent Identity Service Powered by AGNTCY', options);
       }
     }
   } catch (error) {
@@ -206,7 +208,7 @@ self.addEventListener('notificationclick', (event) => {
             approve: action === 'allow'
           })
             .then(async () => {
-              await self.registration.showNotification('Agent Identity | AGNTCY', {
+              await self.registration.showNotification('Agent Identity Service | AGNTCY', {
                 body: `Your request has been ${action === 'allow' ? 'approved' : 'denied'}.`
               });
             })
@@ -254,20 +256,49 @@ self.addEventListener('notificationclick', (event) => {
   }
 });
 
-// self.__WB_MANIFEST is default injection point
-precacheAndRoute(self.__WB_MANIFEST);
-
-// clean old assets
-cleanupOutdatedCaches();
-
-/** @type {RegExp[] | undefined} */
-let allowlist: undefined | RegExp[];
-if (import.meta.env.DEV) {
-  allowlist = [/^\/$/];
-}
-
-// to allow work offline
-registerRoute(new NavigationRoute(createHandlerBoundToURL('index.html'), {allowlist}));
+// Disable Workbox dev logs in production
+self.__WB_DISABLE_DEV_LOGS = true;
 
 void self.skipWaiting();
 clientsClaim();
+
+// Skip Maze analytics script - let it handle its own requests
+registerRoute(({url}) => url.hostname === 'snippet.maze.co', new NetworkOnly());
+
+// Skip caching for v1alpha1 API endpoints - always go to network
+registerRoute(({url}) => url.pathname.includes('v1alpha1'), new NetworkOnly());
+
+// Avoid caching, force always go to the server (but exclude v1alpha1)
+registerRoute(
+  ({url}) => !url.pathname.includes('v1alpha1'),
+  new NetworkFirst({
+    cacheName: 'agent-identity-service-v1',
+    plugins: [new CacheableResponsePlugin({statuses: [-1]})]
+  })
+);
+
+// Cache CSS, JS, and Web Worker requests with a Stale While Revalidate strategy
+registerRoute(
+  ({request}) =>
+    request.destination === 'style' ||
+    request.destination === 'manifest' ||
+    request.destination === 'script' ||
+    request.destination === 'worker',
+  new StaleWhileRevalidate({
+    cacheName: 'assets',
+    plugins: [new CacheableResponsePlugin({statuses: [200]})]
+  })
+);
+
+// Cache images with a Cache First strategy
+registerRoute(
+  ({request}) => request.destination === 'image',
+  new CacheFirst({
+    cacheName: 'images',
+    plugins: [
+      new CacheableResponsePlugin({statuses: [200]}),
+      // 50 entries max, 30 days max
+      new ExpirationPlugin({maxEntries: 50, maxAgeSeconds: 60 * 60 * 24 * 30})
+    ]
+  })
+);

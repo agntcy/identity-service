@@ -40,9 +40,9 @@ export const SideNav: React.FC<{
   const {authInfo} = useAuth();
   const {analyticsTrack} = useAnalytics();
 
-  const {isTbacEnable} = useFeatureFlagsStore(
+  const {isTbacEnabled} = useFeatureFlagsStore(
     useShallow((store) => ({
-      isTbacEnable: store.featureFlags.isTbacEnable
+      isTbacEnabled: store.featureFlags.isTbacEnabled
     }))
   );
 
@@ -76,9 +76,9 @@ export const SideNav: React.FC<{
         href: PATHS.policies.base,
         label: 'Policies',
         icon: <PoliciesLogo className="w-4 h-4" />,
-        disabled: !isTbacEnable,
+        disabled: !isTbacEnabled,
         onClick: () => {
-          if (isTbacEnable) {
+          if (isTbacEnabled) {
             analyticsTrack('CLICK_NAVIGATION_POLICIES');
           }
         }
@@ -93,7 +93,7 @@ export const SideNav: React.FC<{
       }
     ];
     return temp.filter((link) => !link.disabled);
-  }, [analyticsTrack, isTbacEnable]);
+  }, [analyticsTrack, isTbacEnabled]);
 
   const location = useLocation();
   const currentPathName = location.pathname;
@@ -152,7 +152,7 @@ export const SideNav: React.FC<{
             })}
           </div>
         </div>
-        <div className={cn('absolute bottom-[250px] left-[24px]')}>
+        <div className={cn('absolute bottom-[200px] left-[24px]')}>
           <IconButton
             onClick={() => onChangeCollapsed?.(!isCollapsed)}
             sx={{

@@ -6,9 +6,9 @@ package policy
 import (
 	"context"
 
-	apptypes "github.com/agntcy/identity-platform/internal/core/app/types"
-	"github.com/agntcy/identity-platform/internal/core/policy/types"
-	"github.com/agntcy/identity-platform/internal/pkg/pagination"
+	apptypes "github.com/outshift/identity-service/internal/core/app/types"
+	"github.com/outshift/identity-service/internal/core/policy/types"
+	"github.com/outshift/identity-service/internal/pkg/pagination"
 )
 
 type Repository interface {
@@ -45,4 +45,5 @@ type Repository interface {
 		paginationFilter pagination.PaginationFilter,
 		query *string,
 	) (*pagination.Pageable[types.Rule], error)
+	CountAllPolicies(ctx context.Context) (int64, error)
 }

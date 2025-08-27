@@ -8,10 +8,12 @@ import * as AuthApi from '../generated/identity/auth_service.swagger.api';
 import {AuthInfo} from '@/types/okta';
 import config from '@/config';
 import {httpErrorsAuth, USER_NOT_AUTH} from '@/constants/http-errors';
+import {AnalyticsBrowser} from '@segment/analytics-next';
 
 class AuthAPIClass extends AuthApi.Api<any> {
   protected authInfo: AuthInfo | null | undefined;
   protected retry = false;
+  protected analytics: AnalyticsBrowser | undefined;
   protected tokenExpiredHttpHandler?: () => Promise<AuthInfo | undefined>;
   protected logout?: (params: {
     revokeAccessToken?: boolean;
@@ -32,6 +34,16 @@ class AuthAPIClass extends AuthApi.Api<any> {
   protected reqResInterceptor = (config: InternalAxiosRequestConfig<AxiosHeaders>) => {
     if (this.authInfo?.accessToken?.accessToken) {
       config.headers['Authorization'] = `Bearer ${this.authInfo.accessToken.accessToken}`;
+    }
+    try {
+      if (this.analytics) {
+        void this.analytics.track('API_REQUEST', {
+          method: config.method,
+          url: config.url
+        });
+      }
+    } catch (error) {
+      console.error('Analytics tracking error:', error);
     }
     return config;
   };
@@ -90,6 +102,10 @@ class AuthAPIClass extends AuthApi.Api<any> {
     this.tokenExpiredHttpHandler = handlers.tokenExpiredHttpHandler;
     this.logout = handlers.logout;
   }
+
+  public setAnalytics = (analytics?: AnalyticsBrowser) => {
+    this.analytics = analytics;
+  };
 }
 
 export const AuthAPI = new AuthAPIClass({baseURL: config.API_HOST});

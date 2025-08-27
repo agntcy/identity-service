@@ -76,6 +76,11 @@ export const AddPolicyForm = () => {
             id: resp.data.id
           });
           void navigate(path, {replace: true});
+          analyticsTrack('SAVE_POLICY', {
+            policyId: resp.data.id,
+            policyName: resp.data.name,
+            assignedTo: resp.data.assignedTo
+          });
         }
       },
       onError: () => {

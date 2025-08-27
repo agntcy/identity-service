@@ -1,6 +1,6 @@
 /* eslint-disable indent */
 /**
- * Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+ * Copyright 2025 Cisco Systems, Inc. and its affiliates
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -67,9 +67,9 @@ export const GlobalSearch = () => {
 
   const navigate = useNavigate();
 
-  const {isTbacEnable} = useFeatureFlagsStore(
+  const {isTbacEnabled} = useFeatureFlagsStore(
     useShallow((state) => ({
-      isTbacEnable: state.featureFlags.isTbacEnable
+      isTbacEnabled: state.featureFlags.isTbacEnabled
     }))
   );
 
@@ -86,7 +86,7 @@ export const GlobalSearch = () => {
       query: query,
       size: SIZE
     },
-    enable: !!query && isTbacEnable
+    enabled: !!query && isTbacEnabled
   });
 
   const dataSources = useMemo(() => {
@@ -96,7 +96,7 @@ export const GlobalSearch = () => {
         items: dataAgenticServices?.apps?.sort((a, b) => (a.name ?? '').localeCompare(b.name ?? '')) || [],
         renderer: (item: GlobalSearchOptionType) => <ApplicationListItem app={item} />
       },
-      ...(isTbacEnable
+      ...(isTbacEnabled
         ? [
             {
               id: 'policies',
@@ -106,14 +106,14 @@ export const GlobalSearch = () => {
           ]
         : [])
     ];
-  }, [dataAgenticServices?.apps, dataPolicies?.policies, isTbacEnable]);
+  }, [dataAgenticServices?.apps, dataPolicies?.policies, isTbacEnabled]);
 
   const dataLabels = useMemo(() => {
     return {
       'agentic-services': 'Agentic Services',
-      ...(isTbacEnable ? {policies: 'Policies'} : {})
+      ...(isTbacEnabled ? {policies: 'Policies'} : {})
     };
-  }, [isTbacEnable]);
+  }, [isTbacEnabled]);
 
   const options = useMemo(() => {
     return dataSources.reduce((acc, ds) => {
@@ -135,7 +135,7 @@ export const GlobalSearch = () => {
     const typedOption = option as SearchFieldWithAutocompleteOption<GlobalSearchOptionType>;
     switch (typedOption.category) {
       case 'agentic-services': {
-        const path = generatePath(PATHS.agenticServices.info, {
+        const path = generatePath(PATHS.agenticServices.info.base, {
           id: typedOption.entity.id
         });
         void navigate(path);
@@ -160,7 +160,7 @@ export const GlobalSearch = () => {
       onChange={handleChange}
       onSearch={handleChangeQuery}
       serverFiltering={true}
-      loading={loadingAgenticServices || (isTbacEnable && loadingPolicies)}
+      loading={loadingAgenticServices || (isTbacEnabled && loadingPolicies)}
       options={options as any}
       labels={dataLabels}
     />

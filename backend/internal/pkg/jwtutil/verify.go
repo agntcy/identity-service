@@ -4,9 +4,9 @@
 package jwtutil
 
 import (
-	"github.com/agntcy/identity-platform/internal/pkg/errutil"
-	"github.com/agntcy/identity-platform/pkg/log"
 	"github.com/lestrrat-go/jwx/v3/jwt"
+	"github.com/outshift/identity-service/internal/pkg/errutil"
+	"github.com/outshift/identity-service/pkg/log"
 )
 
 func Verify(

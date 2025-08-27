@@ -1,4 +1,4 @@
-// Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+// Copyright 2025 Cisco Systems, Inc. and its affiliates
 // SPDX-License-Issuerentifier: Apache-2.0
 
 package issuer
@@ -7,11 +7,11 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/agntcy/identity-platform/internal/core/identity"
-	idpcore "github.com/agntcy/identity-platform/internal/core/idp"
-	settingstypes "github.com/agntcy/identity-platform/internal/core/settings/types"
-	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
-	"github.com/agntcy/identity-platform/internal/pkg/errutil"
+	"github.com/outshift/identity-service/internal/core/identity"
+	idpcore "github.com/outshift/identity-service/internal/core/idp"
+	settingstypes "github.com/outshift/identity-service/internal/core/settings/types"
+	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
+	"github.com/outshift/identity-service/internal/pkg/errutil"
 )
 
 type Service interface {

@@ -40,10 +40,10 @@ const path = require('path');
     }
 
     // Globals
-    const IDENTITY_V1ALPHA1_PROTO_PATH = "proto/agntcy/identity/platform/v1alpha1";
-    const SHARED_V1ALPHA1_PROTO_PATH = "proto/agntcy/identity/platform/shared/v1alpha1";
-    const IDENTITY_V1ALPHA1_GENERATED_PATH = "agntcy/identity/platform/v1alpha1";
-    const SHARED_V1ALPHA1_GENERATED_PATH = "agntcy/identity/platform/shared/v1alpha1";
+    const IDENTITY_V1ALPHA1_PROTO_PATH = "proto/outshift/identity/service/v1alpha1";
+    const SHARED_V1ALPHA1_PROTO_PATH = "proto/outshift/identity/service/shared/v1alpha1";
+    const IDENTITY_V1ALPHA1_GENERATED_PATH = "outshift/identity/service/v1alpha1";
+    const SHARED_V1ALPHA1_GENERATED_PATH = "outshift/identity/service/shared/v1alpha1";
 
     async function doRenameAndConvert(inputDir, outputDir) {
       shell.mkdir('-p', outputDir);
@@ -83,7 +83,7 @@ const path = require('path');
 
     // Generate the code
     shell.echo(chalk.grey('Generating the code...'));
-    shell.rm('-rf', '../agntcy');
+    shell.rm('-rf', '../outshift');
     shell.rm('-rf', '../src/api/generated');
     shell.cd('../../backend/api/spec');
     doGenerateAll();

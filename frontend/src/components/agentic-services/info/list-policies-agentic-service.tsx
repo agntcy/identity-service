@@ -8,19 +8,20 @@ import {Box, EmptyState, Table} from '@outshift/spark-design';
 import {useGetPolicies} from '@/queries';
 import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
 import {Card} from '@/components/ui/card';
-import {cn} from '@/lib/utils';
-import {generatePath, useNavigate} from 'react-router-dom';
+import {generatePath, useNavigate, useSearchParams} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
-import {FilterSections} from '@/components/shared/helpers/filters-sections';
+import {FilterSections} from '@/components/ui/filters-sections';
 import {PlusIcon} from 'lucide-react';
 import {ListRules} from '@/components/shared/list-rules/list-rules';
 import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-renderer';
 import {PoliciesColumns} from './policies-columns';
+import {DEFAULT_ROWS_PER_PAGE, ROWS_PER_PAGE_OPTION} from '@/constants/pagination';
 
-export const ListPoliciesAgenticService = ({appId, mode = 'assinged'}: {appId?: string; mode: 'assinged' | 'used-by'}) => {
+export const ListPoliciesAgenticService = ({appId, mode = 'assigned'}: {appId?: string; mode: 'assigned' | 'used-by'}) => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [pagination, setPagination] = useState<MRT_PaginationState>({
-    pageIndex: 0,
-    pageSize: 15
+    pageIndex: Number(searchParams.get('page')) || 0,
+    pageSize: Number(searchParams.get('size')) || DEFAULT_ROWS_PER_PAGE
   });
   const [sorting, setSorting] = useState<MRT_SortingState>([
     {
@@ -28,14 +29,14 @@ export const ListPoliciesAgenticService = ({appId, mode = 'assinged'}: {appId?: 
       desc: true
     }
   ]);
-  const [query, setQuery] = useState<string | undefined>(undefined);
+  const [query, setQuery] = useState<string | undefined>(searchParams.get('query') || undefined);
 
-  const {data, isLoading, error, refetch} = useGetPolicies({
+  const {data, isFetching, isRefetching, error, refetch} = useGetPolicies({
     query: {
       page: pagination.pageIndex + 1,
       size: pagination.pageSize,
       query: query,
-      appIds: appId && mode === 'assinged' ? [appId] : undefined,
+      appIds: appId && mode === 'assigned' ? [appId] : undefined,
       rulesForAppIds: appId && mode === 'used-by' ? [appId] : undefined
     }
   });
@@ -53,10 +54,36 @@ export const ListPoliciesAgenticService = ({appId, mode = 'assinged'}: {appId?: 
 
   const handleQueryChange = useCallback(
     (value: string) => {
-      setQuery(value);
-      setPagination((prev) => ({...prev, pageIndex: 0}));
+      if (value) {
+        setQuery(value);
+        const newSearchParams = new URLSearchParams(searchParams);
+        newSearchParams.set('query', value);
+        setSearchParams(newSearchParams);
+      } else {
+        setQuery(undefined);
+        const newSearchParams = new URLSearchParams(searchParams);
+        newSearchParams.delete('query');
+        setSearchParams(newSearchParams);
+      }
     },
-    [setQuery, setPagination]
+    [searchParams, setSearchParams]
+  );
+
+  const handlePaginationChange = useCallback(
+    (updaterOrValue: MRT_PaginationState | ((old: MRT_PaginationState) => MRT_PaginationState)) => {
+      setPagination(updaterOrValue);
+      const newSearchParams = new URLSearchParams(searchParams);
+      if (typeof updaterOrValue === 'function') {
+        const newPagination = updaterOrValue(pagination);
+        newSearchParams.set('page', String(newPagination.pageIndex + 1));
+        newSearchParams.set('size', String(newPagination.pageSize));
+      } else {
+        newSearchParams.set('page', String(updaterOrValue.pageIndex + 1));
+        newSearchParams.set('size', String(updaterOrValue.pageSize));
+      }
+      setSearchParams(newSearchParams);
+    },
+    [pagination, searchParams, setSearchParams]
   );
 
   return (
@@ -74,11 +101,11 @@ export const ListPoliciesAgenticService = ({appId, mode = 'assinged'}: {appId?: 
         }}
         useLoading={false}
       >
-        <Card className={cn(!isLoading && 'p-0')} variant="secondary">
+        <Card className="p-0" variant="secondary">
           <Table
             columns={PoliciesColumns()}
             data={dataPolicies}
-            isLoading={isLoading}
+            isLoading={isFetching}
             muiTableBodyRowProps={({row, isDetailPanel}) => ({
               sx: {
                 cursor: 'pointer',
@@ -91,7 +118,7 @@ export const ListPoliciesAgenticService = ({appId, mode = 'assinged'}: {appId?: 
                   return;
                 }
                 const path = generatePath(PATHS.policies.info, {id: row.original?.id});
-                void navigate(path, {replace: true});
+                void navigate(path);
               }
             })}
             renderTopToolbar={() => (
@@ -102,7 +129,11 @@ export const ListPoliciesAgenticService = ({appId, mode = 'assinged'}: {appId?: 
                   value: query,
                   onChangeCallback: handleQueryChange
                 }}
-                isLoading={isLoading}
+                isLoading={isFetching}
+                isRefetching={isRefetching}
+                onClickRefresh={() => {
+                  void refetch();
+                }}
               />
             )}
             enableColumnResizing
@@ -119,9 +150,9 @@ export const ListPoliciesAgenticService = ({appId, mode = 'assinged'}: {appId?: 
             }}
             manualPagination={true}
             manualFiltering={true}
-            onPaginationChange={setPagination}
+            onPaginationChange={handlePaginationChange}
             rowCount={Number(data?.pagination?.total) || 0}
-            rowsPerPageOptions={[1, 15, 25, 50, 100]}
+            rowsPerPageOptions={ROWS_PER_PAGE_OPTION}
             state={{pagination, sorting}}
             onSortingChange={setSorting}
             muiBottomToolbarProps={{
@@ -141,7 +172,7 @@ export const ListPoliciesAgenticService = ({appId, mode = 'assinged'}: {appId?: 
                   containerProps={{paddingBottom: '40px'}}
                   actionTitle="Add Policy"
                   actionCallback={() => {
-                    void navigate(PATHS.policies.create, {replace: true});
+                    void navigate(PATHS.policies.create);
                   }}
                   actionButtonProps={{
                     sx: {fontWeight: '600 !important'},

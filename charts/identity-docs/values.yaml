@@ -8,7 +8,7 @@ image:
   pullPolicy: IfNotPresent
   tag: ""
 
-namespace: identity-platform-dev
+namespace: identity-service-dev
 
 imagePullSecrets:
   - name: ecr-credentials

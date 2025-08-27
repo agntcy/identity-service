@@ -8,11 +8,11 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/agntcy/identity-platform/internal/core/badge/types"
-	identitycore "github.com/agntcy/identity-platform/internal/core/identity"
-	idpcore "github.com/agntcy/identity-platform/internal/core/idp"
 	"github.com/agntcy/identity/pkg/jwk"
 	"github.com/google/uuid"
+	"github.com/outshift/identity-service/internal/core/badge/types"
+	identitycore "github.com/outshift/identity-service/internal/core/identity"
+	idpcore "github.com/outshift/identity-service/internal/core/idp"
 )
 
 type Revoker interface {

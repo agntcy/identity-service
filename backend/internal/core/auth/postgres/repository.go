@@ -1,4 +1,4 @@
-// Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+// Copyright 2025 Cisco Systems, Inc. and its affiliates
 // SPDX-License-Settingsentifier: Apache-2.0
 
 package postgres
@@ -8,24 +8,14 @@ import (
 	"errors"
 	"time"
 
-	sessioncore "github.com/agntcy/identity-platform/internal/core/auth"
-	"github.com/agntcy/identity-platform/internal/core/auth/types"
-	identitycontext "github.com/agntcy/identity-platform/internal/pkg/context"
-	"github.com/agntcy/identity-platform/internal/pkg/errutil"
-	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
-	"github.com/agntcy/identity-platform/internal/pkg/secrets"
-	"github.com/agntcy/identity-platform/internal/pkg/strutil"
-	"github.com/agntcy/identity-platform/pkg/db"
 	"github.com/google/uuid"
+	sessioncore "github.com/outshift/identity-service/internal/core/auth"
+	types "github.com/outshift/identity-service/internal/core/auth/types/int"
+	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
+	"github.com/outshift/identity-service/internal/pkg/errutil"
+	"github.com/outshift/identity-service/internal/pkg/secrets"
+	"github.com/outshift/identity-service/pkg/db"
 	"gorm.io/gorm"
-)
-
-const (
-	// Default length for authorization codes
-	codeLength = 128
-
-	// Default session duration for authorization codes and consumption
-	sessionDuration = 5 * time.Minute
 )
 
 type postgresRepository struct {
@@ -43,12 +33,6 @@ func (r *postgresRepository) Create(
 	session *types.Session,
 ) (*types.Session, error) {
 	model := newSessionModel(session)
-
-	// Generate a new auth code
-	model.AuthorizationCode = ptrutil.Ptr(strutil.Random(codeLength))
-
-	// Add expiration time
-	model.ExpiresAt = ptrutil.Ptr(time.Now().Add(sessionDuration).Unix())
 
 	result := r.dbContext.Client().Create(model)
 	if result.Error != nil {
@@ -132,7 +116,10 @@ func (r *postgresRepository) Update(ctx context.Context, session *types.Session)
 	return nil
 }
 
-func (r *postgresRepository) CreateDeviceOTP(ctx context.Context, otp *types.SessionDeviceOTP) error {
+func (r *postgresRepository) CreateDeviceOTP(
+	ctx context.Context,
+	otp *types.SessionDeviceOTP,
+) error {
 	model := newSessionDeviceOTPModel(otp)
 
 	result := r.dbContext.Client().Create(model)

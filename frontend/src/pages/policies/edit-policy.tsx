@@ -18,7 +18,6 @@ const EditPolicy: React.FC = () => {
   return (
     <BasePage
       title="Edit Policy"
-      useBorder
       breadcrumbs={[
         {
           text: 'Policies',

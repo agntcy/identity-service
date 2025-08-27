@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {SharedProvider, SharedProviderProps} from '@/components/shared/helpers/shared-provider';
+import {SharedProvider, SharedProviderProps} from '@/components/ui/shared-provider';
 import {Card, CardContent} from '@/components/ui/card';
 import {Form, FormControl, FormField, FormItem, FormLabel} from '@/components/ui/form';
 import {Input} from '@/components/ui/input';
@@ -70,7 +70,7 @@ export const EditAgenticServiceForm = ({app}: {app?: App}) => {
           description: 'Agentic service edited successfully.',
           type: 'success'
         });
-        const path = generatePath(PATHS.agenticServices.info, {id: app?.id ?? ''});
+        const path = generatePath(PATHS.agenticServices.info.base, {id: app?.id ?? ''});
         void navigate(path, {replace: true});
       },
       onError: () => {

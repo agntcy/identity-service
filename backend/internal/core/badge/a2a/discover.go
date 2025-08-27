@@ -1,4 +1,4 @@
-// Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+// Copyright 2025 Cisco Systems, Inc. and its affiliates
 // SPDX-License-Identifier: Apache-2.0
 
 package a2a
@@ -10,8 +10,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/agntcy/identity-platform/internal/pkg/httputil"
-	"github.com/agntcy/identity-platform/pkg/log"
+	"github.com/outshift/identity-service/internal/pkg/httputil"
+	"github.com/outshift/identity-service/pkg/log"
 )
 
 const wellKnownUrlSuffix = "/.well-known/agent.json"

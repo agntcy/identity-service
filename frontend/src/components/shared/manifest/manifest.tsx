@@ -11,9 +11,10 @@ export const Manifest = () => {
 
   const manifestHref = useMemo(() => {
     const manifest = {
-      name: 'Agent Identity | AGNTCY',
-      short_name: 'Agent Identity',
-      description: 'AGNTCY Identity management system with push notifications and offline capabilities',
+      name: 'Outshift Agent Identity Service Powered by AGNTCY',
+      short_name: 'Agent Identity Service',
+      description:
+        'Outshift Agent Identity Service is powered by AGNTCY, providing secure and efficient identity management for agents.',
       theme_color: '#eff3fc',
       display: 'standalone',
       display_override: ['tabbed'],

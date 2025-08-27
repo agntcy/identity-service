@@ -7,7 +7,7 @@ version = "0.0.1"
 description = "Sample LangGraph Financial Assistant"
 requires-python = ">=3.12"
 dependencies = [
-    "a2a-sdk",
+    "a2a-sdk==0.2.16",
     "httpx",
     "uvicorn",
     "click>=8.1.8",

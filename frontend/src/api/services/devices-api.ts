@@ -9,10 +9,12 @@ import {AuthInfo} from '@/types/okta';
 import config from '@/config';
 import {httpErrorsAuth, USER_NOT_AUTH} from '@/constants/http-errors';
 import {Device} from '@/types/api/device';
+import {AnalyticsBrowser} from '@segment/analytics-next';
 
 class DevicesAPIClass extends DevicesApi.Api<Device> {
   protected authInfo: AuthInfo | null | undefined;
   protected retry = false;
+  protected analytics: AnalyticsBrowser | undefined;
   protected tokenExpiredHttpHandler?: () => Promise<AuthInfo | undefined>;
   protected logout?: (params: {
     revokeAccessToken?: boolean;
@@ -24,6 +26,7 @@ class DevicesAPIClass extends DevicesApi.Api<Device> {
   public registerDevice = this.v1Alpha1.registerDevice;
   public listDevices = this.v1Alpha1.listDevices;
   public deleteDevice = this.v1Alpha1.deleteDevice;
+  public testDevice = this.v1Alpha1.testDevice;
 
   protected handleLogout = () => {
     this.logout?.({
@@ -36,6 +39,16 @@ class DevicesAPIClass extends DevicesApi.Api<Device> {
   protected reqResInterceptor = (config: InternalAxiosRequestConfig<AxiosHeaders>) => {
     if (this.authInfo?.accessToken?.accessToken) {
       config.headers['Authorization'] = `Bearer ${this.authInfo.accessToken.accessToken}`;
+    }
+    try {
+      if (this.analytics) {
+        void this.analytics.track('API_REQUEST', {
+          method: config.method,
+          url: config.url
+        });
+      }
+    } catch (error) {
+      console.error('Analytics tracking error:', error);
     }
     return config;
   };
@@ -94,6 +107,10 @@ class DevicesAPIClass extends DevicesApi.Api<Device> {
     this.tokenExpiredHttpHandler = handlers.tokenExpiredHttpHandler;
     this.logout = handlers.logout;
   }
+
+  public setAnalytics = (analytics?: AnalyticsBrowser) => {
+    this.analytics = analytics;
+  };
 }
 
 export const DevicesAPI = new DevicesAPIClass({baseURL: config.API_HOST});

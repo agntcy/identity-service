@@ -71,3 +71,20 @@ export const useDeleteDevice = ({callbacks = {}}: PropsSettingsDevices) => {
     }
   });
 };
+
+export const useTestDevice = ({callbacks = {}}: PropsSettingsDevices) => {
+  return useMutation({
+    mutationKey: ['test-device'],
+    mutationFn: (id: string) => DevicesAPI.testDevice(id),
+    onError: () => {
+      if (callbacks?.onError) {
+        callbacks.onError();
+      }
+    },
+    onSuccess: (resp) => {
+      if (callbacks?.onSuccess) {
+        callbacks.onSuccess(resp);
+      }
+    }
+  });
+};

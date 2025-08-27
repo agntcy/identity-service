@@ -1,4 +1,4 @@
-// Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+// Copyright 2025 Cisco Systems, Inc. and its affiliates
 // SPDX-License-Appentifier: Apache-2.0
 
 package bff
@@ -10,21 +10,22 @@ import (
 	"slices"
 	"time"
 
-	appcore "github.com/agntcy/identity-platform/internal/core/app"
-	apptypes "github.com/agntcy/identity-platform/internal/core/app/types"
-	badgecore "github.com/agntcy/identity-platform/internal/core/badge"
-	identitycore "github.com/agntcy/identity-platform/internal/core/identity"
-	idpcore "github.com/agntcy/identity-platform/internal/core/idp"
-	policycore "github.com/agntcy/identity-platform/internal/core/policy"
-	policytypes "github.com/agntcy/identity-platform/internal/core/policy/types"
-	settingscore "github.com/agntcy/identity-platform/internal/core/settings"
-	"github.com/agntcy/identity-platform/internal/pkg/errutil"
-	outshiftiam "github.com/agntcy/identity-platform/internal/pkg/iam"
-	"github.com/agntcy/identity-platform/internal/pkg/pagination"
-	"github.com/agntcy/identity-platform/internal/pkg/ptrutil"
-	"github.com/agntcy/identity-platform/internal/pkg/strutil"
-	"github.com/agntcy/identity-platform/pkg/log"
 	"github.com/google/uuid"
+	appcore "github.com/outshift/identity-service/internal/core/app"
+	apptypes "github.com/outshift/identity-service/internal/core/app/types"
+	badgecore "github.com/outshift/identity-service/internal/core/badge"
+	identitycore "github.com/outshift/identity-service/internal/core/identity"
+	idpcore "github.com/outshift/identity-service/internal/core/idp"
+	policycore "github.com/outshift/identity-service/internal/core/policy"
+	policytypes "github.com/outshift/identity-service/internal/core/policy/types"
+	settingscore "github.com/outshift/identity-service/internal/core/settings"
+	"github.com/outshift/identity-service/internal/pkg/errutil"
+	outshiftiam "github.com/outshift/identity-service/internal/pkg/iam"
+	"github.com/outshift/identity-service/internal/pkg/pagination"
+	"github.com/outshift/identity-service/internal/pkg/ptrutil"
+	"github.com/outshift/identity-service/internal/pkg/sorting"
+	"github.com/outshift/identity-service/internal/pkg/strutil"
+	"github.com/outshift/identity-service/pkg/log"
 )
 
 type AppService interface {
@@ -36,9 +37,11 @@ type AppService interface {
 		paginationFilter pagination.PaginationFilter,
 		query *string,
 		appTypes []apptypes.AppType,
+		sortBy sorting.Sorting,
 	) (*pagination.Pageable[apptypes.App], error)
 	CountAllApps(ctx context.Context) (int64, error)
 	DeleteApp(ctx context.Context, appID string) error
+	RefreshAppApiKey(ctx context.Context, appID string) (*apptypes.App, error)
 	GetTasksPerAppType(
 		ctx context.Context,
 		excludeAppIDs []string,
@@ -175,9 +178,11 @@ func (s *appService) UpdateApp(
 		return nil, err
 	}
 
-	_, err = s.taskService.UpdateOrCreateForAgent(ctx, app.ID, ptrutil.DerefStr(app.Name))
-	if err != nil {
-		return nil, fmt.Errorf("error trying to update tasks: %w", err)
+	if storedApp.Type != apptypes.APP_TYPE_MCP_SERVER {
+		_, err = s.taskService.UpdateOrCreateForAgent(ctx, app.ID, ptrutil.DerefStr(app.Name))
+		if err != nil {
+			return nil, fmt.Errorf("error trying to update tasks: %w", err)
+		}
 	}
 
 	apiKey, err := s.iamClient.GetAppApiKey(ctx, app.ID)
@@ -228,21 +233,13 @@ func (s *appService) ListApps(
 	paginationFilter pagination.PaginationFilter,
 	query *string,
 	appTypes []apptypes.AppType,
+	sortBy sorting.Sorting,
 ) (*pagination.Pageable[apptypes.App], error) {
 	appTypes = slices.DeleteFunc(appTypes, func(typ apptypes.AppType) bool {
 		return typ == apptypes.APP_TYPE_UNSPECIFIED
 	})
-	// if len(appTypes) == 0 {
-	// 	// Return empty results when no app type is specified
-	// 	return &pagination.Pageable[apptypes.App]{
-	// 		Items: []*apptypes.App{},
-	// 		Total: 0,
-	// 		Page:  0,
-	// 		Size:  0,
-	// 	}, nil
-	// }
 
-	page, err := s.appRepository.GetAllApps(ctx, paginationFilter, query, appTypes)
+	page, err := s.appRepository.GetAllApps(ctx, paginationFilter, query, appTypes, sortBy)
 	if err != nil {
 		return nil, err
 	}
@@ -321,6 +318,34 @@ func (s *appService) DeleteApp(ctx context.Context, appID string) error {
 	}
 
 	return nil
+}
+
+func (s *appService) RefreshAppApiKey(
+	ctx context.Context,
+	appID string,
+) (*apptypes.App, error) {
+	if appID == "" {
+		return nil, errutil.Err(nil, "app ID cannot be empty")
+	}
+
+	app, err := s.appRepository.GetApp(ctx, appID)
+	if err != nil {
+		return nil, errutil.Err(err, "unable to fetch app")
+	}
+
+	apiKey, err := s.iamClient.RefreshAppApiKey(ctx, app.ID)
+	if err != nil {
+		return nil, errutil.Err(err, "failed to refresh API key")
+	}
+
+	app.ApiKey = apiKey.Secret
+
+	err = s.appRepository.UpdateApp(ctx, app)
+	if err != nil {
+		return nil, errutil.Err(err, "unable to update app with new API key")
+	}
+
+	return app, nil
 }
 
 func (s *appService) GetTasksPerAppType(
