@@ -1,0 +1,66 @@
+# Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
+---
+name: sonarqube scan
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+  packages: write
+jobs:
+  ################################## SonarQube  Scan ##############################
+  #################################################################################
+  sonar-go-tests-and-scan:
+    name: Go tests + SonarQube scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository (full history)
+        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Set up Go
+        uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5
+        with:
+          go-version-file: backend/go.mod
+          cache: true
+
+      - name: Run Go tests with coverage
+        working-directory: backend
+        run: |
+          go test ./... -covermode=atomic -coverprofile=coverage.out
+
+      - name: Normalize Go coverage paths (module -> repo paths)
+        run: |
+          sed -i 's#github.com/agntcy/identity-platform/#backend/#g' backend/coverage.out
+
+      - name: Import Vault Secret
+        uses: hashicorp/vault-action@4c06c5ccf5c0761b6029f56cfb1dcf5565918a3b # v3.4.0
+        with:
+          url: ${{ vars.KEEPER_URL }}
+          method: approle
+          roleId: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
+          secretId: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
+          namespace: ${{ vars.VAULT_NAMESPACE }}
+          secrets: |
+            ${{ vars.VAULT_SECRET_PATH }}  SONAR_CLOUD_URL   | SONAR_URL ;
+            ${{ vars.VAULT_SECRET_PATH }}  SONAR_CLOUD_TOKEN | SONAR_TOKEN
+
+      - name: SonarQube scan
+        uses: sonarsource/sonarqube-scan-action@53c3e3207fe4b8d52e2f1ac9d6eb1d2506f626c0 # v2
+        env:
+          SONAR_TOKEN: ${{ env.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ env.SONAR_URL }}
+        with:
+          args: >-
+            -Dproject.settings=.github/linters/sonar-project.properties
+            -Dsonar.qualitygate.wait=true
