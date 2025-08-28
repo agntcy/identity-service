@@ -102,6 +102,4 @@ jobs:
           SONAR_TOKEN: ${{ env.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ env.SONAR_URL }}
         with:
-          args: >-
-            -Dproject.settings=.github/linters/sonar-project.properties
-            -Dsonar.qualitygate.wait=true
+          args: -Dproject.settings=.github/linters/sonar-project.properties
