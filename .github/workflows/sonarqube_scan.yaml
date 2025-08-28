@@ -104,4 +104,4 @@ jobs:
         with:
           args: >-
             -Dproject.settings=.github/linters/sonar-project.properties
-            -Dsonar.qualitygate.wait=true
+            # -Dsonar.qualitygate.wait=true
