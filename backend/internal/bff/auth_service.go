@@ -206,35 +206,7 @@ func (s *authService) Token(
 		return nil, errutil.Err(err, "failed to fetch issuer settings")
 	}
 
-	var accessToken string
-
-	if issuer.IdpType != settingstypes.IDP_TYPE_SELF && clientCredentials.ClientSecret != "" {
-		// Issue a token from an IdP
-		accessToken, err = s.oidcAuthenticator.Token(
-			ctx,
-			clientCredentials.Issuer,
-			clientCredentials.ClientID,
-			clientCredentials.ClientSecret,
-		)
-	} else if issuer.IdpType == settingstypes.IDP_TYPE_SELF {
-		privKey, keyErr := s.keyStore.RetrievePrivKey(ctx, issuer.KeyID)
-		if keyErr != nil {
-			return nil, errutil.Err(
-				keyErr,
-				"error retrieving private key from vault for proof generation",
-			)
-		}
-
-		// Issue a self-signed JWT proof
-		accessToken, err = oidc.SelfIssueJWT(
-			clientCredentials.Issuer,
-			clientCredentials.ClientID,
-			privKey,
-		)
-	} else {
-		err = errors.New("issuer is not self-issued and the client secret is not set")
-	}
-
+	accessToken, err := s.issueAccessToken(ctx, issuer, clientCredentials)
 	if err != nil {
 		return nil, errutil.Err(
 			err,
@@ -268,6 +240,39 @@ func (s *authService) Token(
 	}
 
 	return session, nil
+}
+
+func (s *authService) issueAccessToken(
+	ctx context.Context,
+	issuer *settingstypes.IssuerSettings,
+	clientCredentials *idpcore.ClientCredentials,
+) (string, error) {
+	if issuer.IdpType != settingstypes.IDP_TYPE_SELF && clientCredentials.ClientSecret != "" {
+		// Issue a token from an IdP
+		return s.oidcAuthenticator.Token(
+			ctx,
+			clientCredentials.Issuer,
+			clientCredentials.ClientID,
+			clientCredentials.ClientSecret,
+		)
+	} else if issuer.IdpType == settingstypes.IDP_TYPE_SELF {
+		privKey, keyErr := s.keyStore.RetrievePrivKey(ctx, issuer.KeyID)
+		if keyErr != nil {
+			return "", errutil.Err(
+				keyErr,
+				"error retrieving private key from vault for proof generation",
+			)
+		}
+
+		// Issue a self-signed JWT proof
+		return oidc.SelfIssueJWT(
+			clientCredentials.Issuer,
+			clientCredentials.ClientID,
+			privKey,
+		)
+	}
+
+	return "", errors.New("issuer is not self-issued and the client secret is not set")
 }
 
 func (s *authService) ExtAuthZ(
