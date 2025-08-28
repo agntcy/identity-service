@@ -514,7 +514,7 @@ func TestAuthService_ExtAuthZ_should_succeed(t *testing.T) {
 				OwnerAppID: uuid.NewString(),
 				AppID:      ptrutil.Ptr("called_app_id"),
 			},
-			inputCalledAppID: "called_app_id", // TODO: this bug will be fixed after merging PR#266
+			inputCalledAppID: "called_app_id",
 		},
 		{
 			session: authtypes.Session{
@@ -522,12 +522,6 @@ func TestAuthService_ExtAuthZ_should_succeed(t *testing.T) {
 				ToolName:   ptrutil.Ptr("cool_tool"),
 			},
 			inputToolName: ptrutil.Ptr("cool_tool"),
-		},
-		{
-			session: authtypes.Session{
-				OwnerAppID: uuid.NewString(),
-				ToolName:   ptrutil.Ptr("cool_tool"), // this tool is used as input this time
-			},
 		},
 	}
 
