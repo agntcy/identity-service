@@ -15,10 +15,13 @@ import (
 	"github.com/agntcy/identity/pkg/oidc"
 	"github.com/google/uuid"
 	"github.com/outshift/identity-service/internal/bff"
+	bffmocks "github.com/outshift/identity-service/internal/bff/mocks"
 	appmocks "github.com/outshift/identity-service/internal/core/app/mocks"
 	apptypes "github.com/outshift/identity-service/internal/core/app/types"
 	authmocks "github.com/outshift/identity-service/internal/core/auth/mocks"
 	authtypes "github.com/outshift/identity-service/internal/core/auth/types/int"
+	devicemocks "github.com/outshift/identity-service/internal/core/device/mocks"
+	devicetypes "github.com/outshift/identity-service/internal/core/device/types"
 	identitymocks "github.com/outshift/identity-service/internal/core/identity/mocks"
 	idpcore "github.com/outshift/identity-service/internal/core/idp"
 	idpmocks "github.com/outshift/identity-service/internal/core/idp/mocks"
@@ -740,6 +743,196 @@ func TestAuthService_ExtAuthZ_should_return_err_if_update_fails(t *testing.T) {
 	assert.ErrorContains(t, err, "failed update")
 }
 
+func TestAuthService_ExtAuthZ_should_send_device_otp_and_continue_after_approving(t *testing.T) {
+	t.Parallel()
+
+	accessToken := generateValidJWT(t)
+	callerApp := &apptypes.App{ID: uuid.NewString()}
+	calledApp := &apptypes.App{ID: uuid.NewString()}
+	ctx := identitycontext.InsertAppID(context.Background(), calledApp.ID)
+	session := &authtypes.Session{
+		OwnerAppID: callerApp.ID,
+		UserID:     ptrutil.Ptr(uuid.NewString()),
+	}
+	deviceOTP := &authtypes.SessionDeviceOTP{
+		Used:      false,
+		Approved:  ptrutil.Ptr(true),
+		ExpiresAt: time.Now().Add(time.Minute).Unix(),
+	}
+	authRepo := authmocks.NewRepository(t)
+	authRepo.EXPECT().
+		GetByAccessToken(ctx, accessToken).
+		Return(session, nil)
+	authRepo.EXPECT().Update(ctx, session).Return(nil)
+	authRepo.EXPECT().CreateDeviceOTP(ctx, mock.Anything).Return(nil)
+	authRepo.EXPECT().
+		GetDeviceOTP(ctx, mock.Anything).
+		Return(deviceOTP, nil)
+	authRepo.EXPECT().GetDeviceOTP(ctx, mock.Anything).Return(deviceOTP, nil)
+	authRepo.EXPECT().UpdateDeviceOTP(ctx, deviceOTP).Return(nil)
+	appRepo := appmocks.NewRepository(t)
+	appRepo.EXPECT().GetApp(ctx, calledApp.ID).Return(calledApp, nil)
+	appRepo.EXPECT().
+		GetApp(ctx, session.OwnerAppID).
+		Return(callerApp, nil)
+	policyEva := policymocks.NewEvaluator(t)
+	policyEva.EXPECT().
+		Evaluate(ctx, calledApp, session.OwnerAppID, "").
+		Return(&policytypes.Rule{NeedsApproval: true}, nil)
+	device1 := &devicetypes.Device{}
+	device2 := &devicetypes.Device{}
+	deviceRepo := devicemocks.NewRepository(t)
+	deviceRepo.EXPECT().GetDevices(ctx, session.UserID).Return([]*devicetypes.Device{device1, device2}, nil)
+	notifServ := bffmocks.NewNotificationService(t)
+	notifServ.EXPECT().
+		SendOTPNotification(ctx, device2, session, mock.Anything, callerApp, calledApp, mock.Anything).
+		Return(nil)
+	sut := bff.NewAuthService(authRepo, nil, nil, appRepo, policyEva, deviceRepo, notifServ, nil, nil)
+
+	err := sut.ExtAuthZ(ctx, accessToken, "")
+
+	assert.NoError(t, err)
+	assert.True(t, deviceOTP.Used)
+}
+
+func TestAuthService_ExtAuthZ_should_return_err_when_no_device_registered_during_human_approval(t *testing.T) {
+	t.Parallel()
+
+	accessToken := generateValidJWT(t)
+	callerApp := &apptypes.App{ID: uuid.NewString()}
+	calledApp := &apptypes.App{ID: uuid.NewString()}
+	ctx := identitycontext.InsertAppID(context.Background(), calledApp.ID)
+	session := &authtypes.Session{
+		OwnerAppID: callerApp.ID,
+		UserID:     ptrutil.Ptr(uuid.NewString()),
+	}
+	authRepo := authmocks.NewRepository(t)
+	authRepo.EXPECT().
+		GetByAccessToken(ctx, accessToken).
+		Return(session, nil)
+	appRepo := appmocks.NewRepository(t)
+	appRepo.EXPECT().GetApp(ctx, calledApp.ID).Return(calledApp, nil)
+	appRepo.EXPECT().
+		GetApp(ctx, session.OwnerAppID).
+		Return(callerApp, nil)
+	policyEva := policymocks.NewEvaluator(t)
+	policyEva.EXPECT().
+		Evaluate(ctx, calledApp, session.OwnerAppID, "").
+		Return(&policytypes.Rule{NeedsApproval: true}, nil)
+	deviceRepo := devicemocks.NewRepository(t)
+	deviceRepo.EXPECT().GetDevices(ctx, session.UserID).Return(nil, nil)
+	sut := bff.NewAuthService(authRepo, nil, nil, appRepo, policyEva, deviceRepo, nil, nil, nil)
+
+	err := sut.ExtAuthZ(ctx, accessToken, "")
+
+	assert.Error(t, err)
+	assert.ErrorContains(t, err, "no devices registered")
+}
+
+func TestAuthService_ExtAuthZ_should_return_err_when_send_notification_fails(t *testing.T) {
+	t.Parallel()
+
+	accessToken := generateValidJWT(t)
+	callerApp := &apptypes.App{ID: uuid.NewString()}
+	calledApp := &apptypes.App{ID: uuid.NewString()}
+	ctx := identitycontext.InsertAppID(context.Background(), calledApp.ID)
+	session := &authtypes.Session{
+		OwnerAppID: callerApp.ID,
+		UserID:     ptrutil.Ptr(uuid.NewString()),
+	}
+	authRepo := authmocks.NewRepository(t)
+	authRepo.EXPECT().
+		GetByAccessToken(ctx, accessToken).
+		Return(session, nil)
+	authRepo.EXPECT().CreateDeviceOTP(ctx, mock.Anything).Return(nil)
+	appRepo := appmocks.NewRepository(t)
+	appRepo.EXPECT().GetApp(ctx, calledApp.ID).Return(calledApp, nil)
+	appRepo.EXPECT().
+		GetApp(ctx, session.OwnerAppID).
+		Return(callerApp, nil)
+	policyEva := policymocks.NewEvaluator(t)
+	policyEva.EXPECT().
+		Evaluate(ctx, calledApp, session.OwnerAppID, "").
+		Return(&policytypes.Rule{NeedsApproval: true}, nil)
+	deviceRepo := devicemocks.NewRepository(t)
+	deviceRepo.EXPECT().
+		GetDevices(ctx, session.UserID).
+		Return([]*devicetypes.Device{{}}, nil)
+	notifServ := bffmocks.NewNotificationService(t)
+	notifServ.EXPECT().
+		SendOTPNotification(ctx, mock.Anything, session, mock.Anything, callerApp, calledApp, mock.Anything).
+		Return(errors.New("failed"))
+	sut := bff.NewAuthService(authRepo, nil, nil, appRepo, policyEva, deviceRepo, notifServ, nil, nil)
+
+	err := sut.ExtAuthZ(ctx, accessToken, "")
+
+	assert.Error(t, err)
+	assert.ErrorContains(t, err, "unable to send notification")
+}
+
+func TestAuthService_ExtAuthZ_should_return_err_when_device_otp_is_invalid(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]*authtypes.SessionDeviceOTP{
+		"Device OTP is already used": {
+			Used: true,
+		},
+		"Device OTP is already expired": {
+			ExpiresAt: time.Now().Add(-time.Second).Unix(),
+		},
+		"Device OTP is not approved": {
+			Approved:  ptrutil.Ptr(false),
+			ExpiresAt: time.Now().Add(time.Minute).Unix(),
+		},
+	}
+
+	for tn, otp := range testCases {
+		t.Run(tn, func(t *testing.T) {
+			t.Parallel()
+
+			accessToken := generateValidJWT(t)
+			callerApp := &apptypes.App{ID: uuid.NewString()}
+			calledApp := &apptypes.App{ID: uuid.NewString()}
+			ctx := identitycontext.InsertAppID(context.Background(), calledApp.ID)
+			session := &authtypes.Session{
+				OwnerAppID: callerApp.ID,
+				UserID:     ptrutil.Ptr(uuid.NewString()),
+			}
+			authRepo := authmocks.NewRepository(t)
+			authRepo.EXPECT().
+				GetByAccessToken(ctx, accessToken).
+				Return(session, nil)
+			authRepo.EXPECT().CreateDeviceOTP(ctx, mock.Anything).Return(nil)
+			authRepo.EXPECT().
+				GetDeviceOTP(ctx, mock.Anything).
+				Return(otp, nil)
+			authRepo.EXPECT().GetDeviceOTP(ctx, mock.Anything).Return(otp, nil)
+			authRepo.EXPECT().UpdateDeviceOTP(ctx, otp).Return(nil)
+			appRepo := appmocks.NewRepository(t)
+			appRepo.EXPECT().GetApp(ctx, calledApp.ID).Return(calledApp, nil)
+			appRepo.EXPECT().
+				GetApp(ctx, session.OwnerAppID).
+				Return(callerApp, nil)
+			policyEva := policymocks.NewEvaluator(t)
+			policyEva.EXPECT().
+				Evaluate(ctx, calledApp, session.OwnerAppID, "").
+				Return(&policytypes.Rule{NeedsApproval: true}, nil)
+			deviceRepo := devicemocks.NewRepository(t)
+			deviceRepo.EXPECT().GetDevices(ctx, session.UserID).Return([]*devicetypes.Device{{}}, nil)
+			notifServ := bffmocks.NewNotificationService(t)
+			notifServ.EXPECT().
+				SendOTPNotification(ctx, mock.Anything, session, mock.Anything, callerApp, calledApp, mock.Anything).
+				Return(nil)
+			sut := bff.NewAuthService(authRepo, nil, nil, appRepo, policyEva, deviceRepo, notifServ, nil, nil)
+
+			err := sut.ExtAuthZ(ctx, accessToken, "")
+
+			assert.Error(t, err)
+			assert.ErrorContains(t, err, "the user did not approve the invocation")
+		})
+	}
+}
+
 func generateValidJWT(t *testing.T) string {
 	t.Helper()
 
@@ -747,4 +940,86 @@ func generateValidJWT(t *testing.T) string {
 	accessToken, _ := oidc.SelfIssueJWT(uuid.NewString(), uuid.NewString(), priv)
 
 	return accessToken
+}
+
+// ApproveToken
+
+func TestAuthService_ApproveToken_should_succeed(t *testing.T) {
+	t.Parallel()
+
+	ctx := context.Background()
+	otp := &authtypes.SessionDeviceOTP{
+		DeviceID:  uuid.NewString(),
+		SessionID: uuid.NewString(),
+		Value:     uuid.NewString(),
+		ExpiresAt: time.Now().Add(time.Minute).Unix(),
+		Used:      false,
+	}
+	authRepo := authmocks.NewRepository(t)
+	authRepo.EXPECT().
+		GetDeviceOTPByValue(ctx, otp.DeviceID, otp.SessionID, otp.Value).
+		Return(otp, nil)
+	authRepo.EXPECT().UpdateDeviceOTP(ctx, otp).Return(nil)
+	sut := bff.NewAuthService(authRepo, nil, nil, nil, nil, nil, nil, nil, nil)
+
+	err := sut.ApproveToken(ctx, otp.DeviceID, otp.SessionID, otp.Value, true)
+
+	assert.NoError(t, err)
+}
+
+func TestAuthService_ApproveToken_should_fail(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]*struct {
+		otp    *authtypes.SessionDeviceOTP
+		errMsg string
+	}{
+		"OTP already expired": {
+			otp: &authtypes.SessionDeviceOTP{
+				DeviceID:  uuid.NewString(),
+				SessionID: uuid.NewString(),
+				Value:     uuid.NewString(),
+				ExpiresAt: time.Now().Add(-time.Minute).Unix(),
+			},
+			errMsg: "the OTP is already expired",
+		},
+		"OTP already used": {
+			otp: &authtypes.SessionDeviceOTP{
+				DeviceID:  uuid.NewString(),
+				SessionID: uuid.NewString(),
+				Value:     uuid.NewString(),
+				ExpiresAt: time.Now().Add(time.Minute).Unix(),
+				Used:      true,
+			},
+			errMsg: "the OTP is already used",
+		},
+		"OTP already approved": {
+			otp: &authtypes.SessionDeviceOTP{
+				DeviceID:  uuid.NewString(),
+				SessionID: uuid.NewString(),
+				Value:     uuid.NewString(),
+				ExpiresAt: time.Now().Add(time.Minute).Unix(),
+				Approved:  ptrutil.Ptr(true),
+			},
+			errMsg: "the OTP is already used",
+		},
+	}
+
+	for tn, tc := range testCases {
+		t.Run(tn, func(t *testing.T) {
+			t.Parallel()
+
+			ctx := context.Background()
+			authRepo := authmocks.NewRepository(t)
+			authRepo.EXPECT().
+				GetDeviceOTPByValue(ctx, tc.otp.DeviceID, tc.otp.SessionID, tc.otp.Value).
+				Return(tc.otp, nil)
+			sut := bff.NewAuthService(authRepo, nil, nil, nil, nil, nil, nil, nil, nil)
+
+			err := sut.ApproveToken(ctx, tc.otp.DeviceID, tc.otp.SessionID, tc.otp.Value, true)
+
+			assert.Error(t, err)
+			assert.ErrorContains(t, err, tc.errMsg)
+		})
+	}
 }
