@@ -47,6 +47,35 @@ jobs:
           echo "Detected Go module: ${MODULE_PATH}"
           sed -i "s#${MODULE_PATH}/#backend/#g" coverage.out
 
+      - name: Set up Node (for frontend tests)
+        uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4
+        with:
+          node-version: 22
+          cache: 'yarn'
+          cache-dependency-path: frontend/yarn.lock
+
+      - name: Install frontend dependencies
+        working-directory: frontend
+        env:
+          # Use GitHub Actions secret for private registry auth; locally use frontend/.env
+          ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
+        run: |
+          corepack enable
+          # Ensure .env exists because Yarn injects env from .env via .yarnrc.yml
+          if [ ! -f .env ]; then
+            if [ -f .env.sample ]; then
+              cp .env.sample .env
+            else
+              touch .env
+            fi
+          fi
+          yarn install --frozen-lockfile || yarn install
+
+      - name: Run frontend tests with coverage (Vitest)
+        working-directory: frontend
+        run: |
+          yarn test:coverage
+
       - name: Import Vault Secret
         uses: hashicorp/vault-action@4c06c5ccf5c0761b6029f56cfb1dcf5565918a3b # v3.4.0
         with:
