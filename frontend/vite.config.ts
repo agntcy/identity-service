@@ -9,6 +9,7 @@ import react from '@vitejs/plugin-react';
 import {defineConfig, loadEnv} from 'vite';
 import svgr from 'vite-plugin-svgr';
 import {VitePWA} from 'vite-plugin-pwa';
+import {includes} from 'lodash';
 
 /** @type {import('vite').UserConfig} */
 export default defineConfig(({mode}) => {
@@ -42,7 +43,8 @@ export default defineConfig(({mode}) => {
       ],
       coverage: {
         provider: 'v8',
-        reporter: ['text', 'json', 'html'],
+        reporter: ['text', 'json', 'html', 'lcov'],
+        reportsDirectory: './coverage',
         thresholds: {
           global: {
             branches: 80,
@@ -50,7 +52,9 @@ export default defineConfig(({mode}) => {
             lines: 80,
             statements: 80
           }
-        }
+        },
+        exclude: ['node_modules/', 'dev-dist/', 'dist', 'vite-env.d.ts'],
+        include: ['src/']
       }
     },
     plugins: [
