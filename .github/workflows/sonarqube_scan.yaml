@@ -47,6 +47,19 @@ jobs:
           echo "Detected Go module: ${MODULE_PATH}"
           sed -i "s#${MODULE_PATH}/#backend/#g" coverage.out
 
+      - name: Prepare frontend env for Yarn
+        working-directory: frontend
+        run: |
+          # Ensure .env exists because Yarn injects env from .env via .yarnrc.yml
+          if [ ! -f .env ]; then
+            if [ -f .env.sample ]; then
+              cp .env.sample .env
+            else
+              touch .env
+            fi
+          fi
+          grep -q '^ARTIFACTORY_PASSWORD=' .env || echo 'ARTIFACTORY_PASSWORD=${{ secrets.ARTIFACTORY_PASSWORD }}' >> .env
+
       - name: Set up Node (for frontend tests)
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4
         with:
@@ -56,19 +69,8 @@ jobs:
 
       - name: Install frontend dependencies
         working-directory: frontend
-        env:
-          # Use GitHub Actions secret for private registry auth; locally use frontend/.env
-          ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
         run: |
           corepack enable
-          # Ensure .env exists because Yarn injects env from .env via .yarnrc.yml
-          if [ ! -f .env ]; then
-            if [ -f .env.sample ]; then
-              cp .env.sample .env
-            else
-              touch .env
-            fi
-          fi
           yarn install --frozen-lockfile || yarn install
 
       - name: Run frontend tests with coverage (Vitest)
