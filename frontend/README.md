@@ -16,6 +16,16 @@ This repository contains all components of the Agent Identity Service UI - a Rea
 - **Authentication**: Okta Auth JS
 - **Package Manager**: Yarn 4.9.2
 
+### Testing Stack
+
+- **Test Runner**: Vitest
+- **Testing Library**: React Testing Library
+- **DOM Testing**: @testing-library/dom
+- **User Interactions**: @testing-library/user-event
+- **Assertions**: @testing-library/jest-dom
+- **Environment**: jsdom
+- **Coverage**: Vitest Coverage (v8)
+
 ## 📋 Prerequisites
 
 - Node.js >= 20
@@ -104,6 +114,12 @@ yarn start            # Alias for yarn dev
 yarn build            # Build for production
 yarn preview          # Preview production build
 
+# Testing
+yarn test             # Run tests
+yarn test:coverage    # Run tests with coverage report
+yarn test:watch       # Run tests in watch mode
+yarn test:ui          # Run tests with UI interface
+
 # Code Quality
 yarn lint:check       # Check linting and formatting
 yarn lint             # Fix linting and formatting issues
@@ -153,12 +169,66 @@ The built files will be in the `dist/` directory.
 
 ## 🧪 Testing
 
+This project uses **Vitest** as the testing framework with comprehensive testing utilities.
+
+### Running Tests
+
+```bash
+# Run all tests once
+yarn test
+
+# Run tests in watch mode (re-runs on file changes)
+yarn test:watch
+
+# Run tests with coverage report
+yarn test:coverage
+
+# Run tests with interactive UI
+yarn test:ui
+```
+
+### Test Structure
+
+Tests should be placed alongside components or in dedicated test directories:
+
+```
+src/
+├── components/
+│   ├── Button/
+│   │   ├── Button.tsx
+│   │   └── Button.test.tsx
+│   └── ...
+└── __tests__/          # Global test utilities
+```
+
+### Writing Tests
+
+Example test structure:
+
+```typescript
+import { render, screen } from '@testing-library/react'
+import { describe, it, expect } from 'vitest'
+import { Button } from './Button'
+
+describe('Button', () => {
+  it('renders correctly', () => {
+    render(<Button>Click me</Button>)
+    expect(screen.getByRole('button')).toBeInTheDocument()
+  })
+})
+```
+
+### Code Quality Checks
+
 ```bash
 # Run linting checks
 yarn lint:check
 
 # Fix linting issues
 yarn lint
+
+# Format code
+yarn format
 ```
 
 ## 📱 PWA Support
