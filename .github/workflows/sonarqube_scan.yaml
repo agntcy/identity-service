@@ -58,7 +58,11 @@ jobs:
               touch .env
             fi
           fi
-          grep -q '^ARTIFACTORY_PASSWORD=' .env || echo 'ARTIFACTORY_PASSWORD=${{ secrets.ARTIFACTORY_PASSWORD }}' >> .env
+          if grep -q '^ARTIFACTORY_PASSWORD=' .env; then
+            sed -i "s#^ARTIFACTORY_PASSWORD=.*#ARTIFACTORY_PASSWORD=${{ secrets.ARTIFACTORY_PASSWORD }}#" .env
+          else
+            echo 'ARTIFACTORY_PASSWORD=${{ secrets.ARTIFACTORY_PASSWORD }}' >> .env
+          fi
 
       - name: Set up Node (for frontend tests)
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4
@@ -69,6 +73,8 @@ jobs:
 
       - name: Install frontend dependencies
         working-directory: frontend
+        env:
+          ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
         run: |
           corepack enable
           yarn install --frozen-lockfile || yarn install
