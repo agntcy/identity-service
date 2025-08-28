@@ -941,3 +941,85 @@ func generateValidJWT(t *testing.T) string {
 
 	return accessToken
 }
+
+// ApproveToken
+
+func TestAuthService_ApproveToken_should_succeed(t *testing.T) {
+	t.Parallel()
+
+	ctx := context.Background()
+	otp := &authtypes.SessionDeviceOTP{
+		DeviceID:  uuid.NewString(),
+		SessionID: uuid.NewString(),
+		Value:     uuid.NewString(),
+		ExpiresAt: time.Now().Add(time.Minute).Unix(),
+		Used:      false,
+	}
+	authRepo := authmocks.NewRepository(t)
+	authRepo.EXPECT().
+		GetDeviceOTPByValue(ctx, otp.DeviceID, otp.SessionID, otp.Value).
+		Return(otp, nil)
+	authRepo.EXPECT().UpdateDeviceOTP(ctx, otp).Return(nil)
+	sut := bff.NewAuthService(authRepo, nil, nil, nil, nil, nil, nil, nil, nil)
+
+	err := sut.ApproveToken(ctx, otp.DeviceID, otp.SessionID, otp.Value, true)
+
+	assert.NoError(t, err)
+}
+
+func TestAuthService_ApproveToken_should_fail(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]*struct {
+		otp    *authtypes.SessionDeviceOTP
+		errMsg string
+	}{
+		"OTP already expired": {
+			otp: &authtypes.SessionDeviceOTP{
+				DeviceID:  uuid.NewString(),
+				SessionID: uuid.NewString(),
+				Value:     uuid.NewString(),
+				ExpiresAt: time.Now().Add(-time.Minute).Unix(),
+			},
+			errMsg: "the OTP is already expired",
+		},
+		"OTP already used": {
+			otp: &authtypes.SessionDeviceOTP{
+				DeviceID:  uuid.NewString(),
+				SessionID: uuid.NewString(),
+				Value:     uuid.NewString(),
+				ExpiresAt: time.Now().Add(time.Minute).Unix(),
+				Used:      true,
+			},
+			errMsg: "the OTP is already used",
+		},
+		"OTP already approved": {
+			otp: &authtypes.SessionDeviceOTP{
+				DeviceID:  uuid.NewString(),
+				SessionID: uuid.NewString(),
+				Value:     uuid.NewString(),
+				ExpiresAt: time.Now().Add(time.Minute).Unix(),
+				Approved:  ptrutil.Ptr(true),
+			},
+			errMsg: "the OTP is already used",
+		},
+	}
+
+	for tn, tc := range testCases {
+		t.Run(tn, func(t *testing.T) {
+			t.Parallel()
+
+			ctx := context.Background()
+			authRepo := authmocks.NewRepository(t)
+			authRepo.EXPECT().
+				GetDeviceOTPByValue(ctx, tc.otp.DeviceID, tc.otp.SessionID, tc.otp.Value).
+				Return(tc.otp, nil)
+			sut := bff.NewAuthService(authRepo, nil, nil, nil, nil, nil, nil, nil, nil)
+
+			err := sut.ApproveToken(ctx, tc.otp.DeviceID, tc.otp.SessionID, tc.otp.Value, true)
+
+			assert.Error(t, err)
+			assert.ErrorContains(t, err, tc.errMsg)
+		})
+	}
+}
