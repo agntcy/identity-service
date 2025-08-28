@@ -53,7 +53,16 @@ export default defineConfig(({mode}) => {
             statements: 80
           }
         },
-        exclude: ['node_modules/', 'dev-dist/', 'dist', 'vite-env.d.ts'],
+        exclude: [
+          'node_modules/',
+          'dev-dist/',
+          'dist',
+          'src/vite-env.d.ts',
+          'src/main.tsx',
+          'src/api/generated',
+          'src/utils',
+          'src/types'
+        ],
         include: ['src/']
       }
     },

@@ -14,15 +14,14 @@ import (
 	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
 	"github.com/outshift/identity-service/internal/pkg/errutil"
 	"github.com/outshift/identity-service/internal/pkg/secrets"
-	"github.com/outshift/identity-service/pkg/db"
 	"gorm.io/gorm"
 )
 
 type postgresRepository struct {
-	dbContext db.Context
+	dbContext *gorm.DB
 }
 
-func NewRepository(dbContext db.Context) sessioncore.Repository {
+func NewRepository(dbContext *gorm.DB) sessioncore.Repository {
 	return &postgresRepository{
 		dbContext: dbContext,
 	}
@@ -34,7 +33,7 @@ func (r *postgresRepository) Create(
 ) (*types.Session, error) {
 	model := newSessionModel(session)
 
-	result := r.dbContext.Client().Create(model)
+	result := r.dbContext.Create(model)
 	if result.Error != nil {
 		return nil, errutil.Err(
 			result.Error, "there was an error creating the session",
@@ -59,7 +58,7 @@ func (r *postgresRepository) GetByAuthorizationCode(
 		)
 	}
 
-	result := r.dbContext.Client().
+	result := r.dbContext.
 		Where("owner_app_id = ?", appID).
 		Where("authorization_code = ?", code).
 		Where("access_token IS NULL").
@@ -89,7 +88,7 @@ func (r *postgresRepository) GetByAccessToken(
 		)
 	}
 
-	result := r.dbContext.Client().
+	result := r.dbContext.
 		Where("(app_id = ? OR app_id IS NULL)", appID).
 		Where("access_token = ?", secrets.Encrypt(accessToken)).
 		First(model)
@@ -106,7 +105,7 @@ func (r *postgresRepository) Update(ctx context.Context, session *types.Session)
 	model := newSessionModel(session)
 	model.ID = uuid.MustParse(session.ID)
 
-	result := r.dbContext.Client().Save(model)
+	result := r.dbContext.Save(model)
 	if result.Error != nil {
 		return errutil.Err(
 			result.Error, "there was an error updating the session",
@@ -122,7 +121,7 @@ func (r *postgresRepository) CreateDeviceOTP(
 ) error {
 	model := newSessionDeviceOTPModel(otp)
 
-	result := r.dbContext.Client().Create(model)
+	result := r.dbContext.Create(model)
 	if result.Error != nil {
 		return errutil.Err(
 			result.Error, "there was an error creating the device OTP",
@@ -138,7 +137,7 @@ func (r *postgresRepository) GetDeviceOTP(
 ) (*types.SessionDeviceOTP, error) {
 	var otp SessionDeviceOTP
 
-	result := r.dbContext.Client().First(&otp, uuid.MustParse(id))
+	result := r.dbContext.First(&otp, uuid.MustParse(id))
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 			return nil, errutil.Err(result.Error, "OTP not found")
@@ -156,7 +155,7 @@ func (r *postgresRepository) UpdateDeviceOTP(
 ) error {
 	model := newSessionDeviceOTPModel(otp)
 
-	err := r.dbContext.Client().Save(model).Error
+	err := r.dbContext.Save(model).Error
 	if err != nil {
 		return errutil.Err(err, "there was an error updating the device OTP")
 	}
@@ -172,7 +171,7 @@ func (r *postgresRepository) GetDeviceOTPByValue(
 ) (*types.SessionDeviceOTP, error) {
 	var otp SessionDeviceOTP
 
-	result := r.dbContext.Client().
+	result := r.dbContext.
 		Where(
 			"value = ? AND device_id = ? AND session_id = ?",
 			value,

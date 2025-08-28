@@ -12,15 +12,14 @@ import (
 	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
 	"github.com/outshift/identity-service/internal/pkg/convertutil"
 	"github.com/outshift/identity-service/internal/pkg/errutil"
-	"github.com/outshift/identity-service/pkg/db"
 	"gorm.io/gorm"
 )
 
 type postgresRepository struct {
-	dbContext db.Context
+	dbContext *gorm.DB
 }
 
-func NewRepository(dbContext db.Context) badgecore.Repository {
+func NewRepository(dbContext *gorm.DB) badgecore.Repository {
 	return &postgresRepository{
 		dbContext: dbContext,
 	}
@@ -34,7 +33,7 @@ func (r *postgresRepository) Create(ctx context.Context, badge *types.Badge) err
 
 	model := newBadgeModel(badge, tenantID)
 
-	result := r.dbContext.Client().Create(model)
+	result := r.dbContext.Create(model)
 	if result.Error != nil {
 		return errutil.Err(
 			result.Error, "there was an error creating the badge",
@@ -52,7 +51,7 @@ func (r *postgresRepository) Update(ctx context.Context, badge *types.Badge) err
 
 	model := newBadgeModel(badge, tenantID)
 
-	result := r.dbContext.Client().Save(model)
+	result := r.dbContext.Save(model)
 	if result.Error != nil {
 		return errutil.Err(
 			result.Error, "there was an error updating the badge",
@@ -73,7 +72,7 @@ func (r *postgresRepository) GetLatestByAppID(
 
 	var badge Badge
 
-	result := r.dbContext.Client().
+	result := r.dbContext.
 		Where("app_id = ? AND tenant_id = ?", appID, tenantID).
 		Order("created_at desc").
 		First(&badge)
@@ -96,7 +95,7 @@ func (r *postgresRepository) GetAllActiveBadges(ctx context.Context, appID strin
 
 	var badges []*Badge
 
-	err := r.dbContext.Client().
+	err := r.dbContext.
 		Table("badges").
 		Joins("LEFT JOIN credential_statuses ON badges.id = credential_statuses.verifiable_credential_id").
 		Where(

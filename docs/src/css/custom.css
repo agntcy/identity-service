@@ -174,26 +174,15 @@ code {
 }
 
 html[data-theme="light"] body, html[data-theme="light"] .scalar-card.dark-mode {
-  /* --scalar-color-1: #121212;
-  --scalar-color-2: rgba(0, 0, 0, 0.6);
-  --scalar-color-3: rgba(0, 0, 0, 0.4); */
-  /* --scalar-color-accent: #0a85d1; */
   --scalar-background-1: #E8EEFB !important;
   --scalar-background-2: #EFF3FC !important;
   --scalar-background-3: #C8D5F554 !important;
-  /* --scalar-background-accent: #5369d20f;
-  --scalar-border-color: rgba(0, 0, 0, 0.08); */
 }
 
 html[data-theme="dark"] body, .scalar-card.dark-mode {
-  /* --scalar-color-1: rgba(255, 255, 255, 0.81);
-  --scalar-color-2: rgba(255, 255, 255, 0.443);
-  --scalar-color-3: rgba(255, 255, 255, 0.282);
-  --scalar-color-accent: #8ab4f8; */
   --scalar-background-1: #00142B !important;
   --scalar-background-2: #041930 !important;
   --scalar-background-3: #0D274D !important;
-  /* --scalar-background-accent: red !important; */
 }
 
 .panzoom-wrapper {

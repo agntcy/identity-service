@@ -17,16 +17,15 @@ import (
 	"github.com/outshift/identity-service/internal/pkg/gormutil"
 	"github.com/outshift/identity-service/internal/pkg/pagination"
 	"github.com/outshift/identity-service/internal/pkg/sorting"
-	"github.com/outshift/identity-service/pkg/db"
 	"gorm.io/gorm"
 )
 
 type repository struct {
-	dbContext db.Context
+	dbContext *gorm.DB
 }
 
 // NewRepository creates a new instance of the Repository
-func NewRepository(dbContext db.Context) appcore.Repository {
+func NewRepository(dbContext *gorm.DB) appcore.Repository {
 	return &repository{
 		dbContext,
 	}
@@ -46,7 +45,7 @@ func (r *repository) CreateApp(
 	model := newAppModel(app, tenantID)
 
 	// Create the app
-	inserted := r.dbContext.Client().Create(model)
+	inserted := r.dbContext.Create(model)
 	if inserted.Error != nil {
 		return nil, errutil.Err(
 			inserted.Error, "there was an error creating the app",
@@ -64,7 +63,7 @@ func (r *repository) UpdateApp(ctx context.Context, app *types.App) error {
 
 	model := newAppModel(app, tenantID)
 
-	err := r.dbContext.Client().
+	err := r.dbContext.
 		Where("tenant_id = ?", tenantID).
 		Save(model).Error
 	if err != nil {
@@ -86,7 +85,7 @@ func (r *repository) GetApp(
 		return nil, identitycontext.ErrTenantNotFound
 	}
 
-	result := r.dbContext.Client().First(&app, map[string]any{
+	result := r.dbContext.First(&app, map[string]any{
 		"id":        id,
 		"tenant_id": tenantID,
 	})
@@ -116,7 +115,7 @@ func (r *repository) GetAppByResolverMetadataID(
 		return nil, identitycontext.ErrTenantNotFound
 	}
 
-	result := r.dbContext.Client().First(&app, map[string]any{
+	result := r.dbContext.First(&app, map[string]any{
 		"resolver_metadata_id": resolverMetadataID,
 		"tenant_id":            tenantID,
 	})
@@ -148,7 +147,7 @@ func (r *repository) GetAllApps(
 		)
 	}
 
-	dbQuery := r.dbContext.Client().Where("tenant_id = ?", tenantID)
+	dbQuery := r.dbContext.Where("tenant_id = ?", tenantID)
 
 	if query != nil && *query != "" {
 		dbQuery = dbQuery.Where(
@@ -227,7 +226,7 @@ func (r *repository) CountAllApps(ctx context.Context) (int64, error) {
 
 	var totalApps int64
 
-	err := r.dbContext.Client().
+	err := r.dbContext.
 		Model(&App{}).
 		Where("tenant_id = ?", tenantID).
 		Count(&totalApps).
@@ -247,7 +246,7 @@ func (r *repository) GetAppsByID(ctx context.Context, ids []string) ([]*types.Ap
 		return nil, identitycontext.ErrTenantNotFound
 	}
 
-	result := r.dbContext.Client().
+	result := r.dbContext.
 		Where("id IN ? AND tenant_id = ?", ids, tenantID).
 		Find(&apps)
 	if result.Error != nil {
@@ -271,7 +270,7 @@ func (r *repository) DeleteApp(ctx context.Context, app *types.App) error {
 
 	// This will make a soft delete since the entity has a DeletedAt field
 	// https://gorm.io/docs/delete.html#Soft-Delete
-	err := r.dbContext.Client().
+	err := r.dbContext.
 		Where("tenant_id = ?", tenantID).
 		Delete(newAppModel(app, tenantID)).Error
 	if err != nil {
@@ -295,7 +294,7 @@ func (r *repository) GetAppStatuses(
 		Status types.AppStatus
 	}
 
-	err := r.dbContext.Client().
+	err := r.dbContext.
 		Raw(`
 			SELECT
 				a.id,
