@@ -3,7 +3,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import {render} from '@testing-library/react';
 import {describe, it, vi, beforeEach, expect} from 'vitest';
 import '@testing-library/jest-dom';
@@ -72,8 +71,8 @@ vi.mock('./components/router/error-page-boundary', () => ({
 }));
 
 vi.mock('@outshift/spark-design', () => ({
-  Toaster: ({children, ...props}: any) => (
-    <div data-testid="toaster" {...props}>
+  Toaster: ({children, expand, ...props}: any) => (
+    <div data-testid="toaster" data-expand={expand} {...props}>
       {children}
     </div>
   )
