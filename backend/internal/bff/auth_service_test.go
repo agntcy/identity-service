@@ -12,6 +12,7 @@ import (
 
 	"github.com/agntcy/identity/pkg/joseutil"
 	"github.com/agntcy/identity/pkg/jwk"
+	"github.com/agntcy/identity/pkg/oidc"
 	"github.com/google/uuid"
 	"github.com/outshift/identity-service/internal/bff"
 	appmocks "github.com/outshift/identity-service/internal/core/app/mocks"
@@ -488,4 +489,262 @@ func TestAuthService_Token_should_return_err_if_update_fails(t *testing.T) {
 
 	assert.Error(t, err)
 	assert.ErrorContains(t, err, "failed to update the session")
+}
+
+// ExtAuthZ
+
+func TestAuthService_ExtAuthZ_should_succeed(t *testing.T) {
+	t.Parallel()
+
+	testCases := []*struct {
+		session          authtypes.Session
+		inputToolName    *string
+		inputCalledAppID string
+	}{
+		{
+			session: authtypes.Session{
+				OwnerAppID: uuid.NewString(),
+			},
+		},
+		{
+			session: authtypes.Session{
+				OwnerAppID: uuid.NewString(),
+				AppID:      ptrutil.Ptr("called_app_id"),
+			},
+			inputCalledAppID: "called_app_id", // TODO: this bug will be fixed after merging PR#266
+		},
+		{
+			session: authtypes.Session{
+				OwnerAppID: uuid.NewString(),
+				ToolName:   ptrutil.Ptr("cool_tool"),
+			},
+			inputToolName: ptrutil.Ptr("cool_tool"),
+		},
+		{
+			session: authtypes.Session{
+				OwnerAppID: uuid.NewString(),
+				ToolName:   ptrutil.Ptr("cool_tool"), // this tool is used as input this time
+			},
+		},
+	}
+
+	for i, tc := range testCases {
+		t.Run(fmt.Sprintf("case %d", i), func(t *testing.T) {
+			t.Parallel()
+
+			accessToken := generateValidJWT(t)
+			calledApp := &apptypes.App{ID: tc.inputCalledAppID}
+			ctx := identitycontext.InsertAppID(context.Background(), calledApp.ID)
+			authRepo := authmocks.NewRepository(t)
+			authRepo.EXPECT().
+				GetByAccessToken(ctx, accessToken).
+				Return(&tc.session, nil)
+			authRepo.EXPECT().Update(ctx, &tc.session).Return(nil)
+			appRepo := appmocks.NewRepository(t)
+			appRepo.EXPECT().GetApp(ctx, calledApp.ID).Return(calledApp, nil)
+			appRepo.EXPECT().
+				GetApp(ctx, tc.session.OwnerAppID).
+				Return(&apptypes.App{ID: tc.session.OwnerAppID}, nil)
+			policyEva := policymocks.NewEvaluator(t)
+			policyEva.EXPECT().
+				Evaluate(ctx, calledApp, tc.session.OwnerAppID, ptrutil.DerefStr(tc.session.ToolName)).
+				Return(&policytypes.Rule{NeedsApproval: false}, nil)
+			sut := bff.NewAuthService(authRepo, nil, nil, appRepo, policyEva, nil, nil, nil, nil)
+
+			err := sut.ExtAuthZ(ctx, accessToken, ptrutil.DerefStr(tc.inputToolName))
+
+			assert.NoError(t, err)
+		})
+	}
+}
+
+func TestAuthService_ExtAuthZ_should_return_err_for_empty_access_token(t *testing.T) {
+	t.Parallel()
+
+	emptyAccessToken := ""
+	sut := bff.NewAuthService(nil, nil, nil, nil, nil, nil, nil, nil, nil)
+
+	err := sut.ExtAuthZ(context.Background(), emptyAccessToken, "")
+
+	assert.Error(t, err)
+	assert.ErrorContains(t, err, "access token cannot be empty")
+}
+
+func TestAuthService_ExtAuthZ_should_return_err_when_session_not_found(t *testing.T) {
+	t.Parallel()
+
+	invalidAccessToken := "INVALID"
+	authRepo := authmocks.NewRepository(t)
+	authRepo.EXPECT().
+		GetByAccessToken(mock.Anything, invalidAccessToken).
+		Return(nil, errors.New("not found"))
+	sut := bff.NewAuthService(authRepo, nil, nil, nil, nil, nil, nil, nil, nil)
+
+	err := sut.ExtAuthZ(context.Background(), invalidAccessToken, "")
+
+	assert.Error(t, err)
+	assert.ErrorContains(t, err, "invalid session")
+}
+
+func TestAuthService_ExtAuthZ_should_return_err_when_session_is_expired(t *testing.T) {
+	t.Parallel()
+
+	accessToken := generateValidJWT(t)
+	authRepo := authmocks.NewRepository(t)
+	authRepo.EXPECT().
+		GetByAccessToken(mock.Anything, accessToken).
+		Return(&authtypes.Session{
+			ExpiresAt: ptrutil.Ptr(time.Now().Add(-1 * time.Second).Unix()),
+		}, nil)
+	sut := bff.NewAuthService(authRepo, nil, nil, nil, nil, nil, nil, nil, nil)
+
+	err := sut.ExtAuthZ(context.Background(), accessToken, "")
+
+	assert.Error(t, err)
+	assert.ErrorContains(t, err, "the session has expired")
+}
+
+func TestAuthService_ExtAuthZ_should_return_err_when_called_app_not_found(t *testing.T) {
+	t.Parallel()
+
+	accessToken := generateValidJWT(t)
+	invalidCalledApp := &apptypes.App{ID: "INVALID_APP"}
+	ctx := identitycontext.InsertAppID(context.Background(), invalidCalledApp.ID)
+	authRepo := authmocks.NewRepository(t)
+	authRepo.EXPECT().
+		GetByAccessToken(ctx, accessToken).
+		Return(&authtypes.Session{}, nil)
+	appRepo := appmocks.NewRepository(t)
+	appRepo.EXPECT().GetApp(ctx, invalidCalledApp.ID).Return(nil, errors.New("not found"))
+	sut := bff.NewAuthService(authRepo, nil, nil, appRepo, nil, nil, nil, nil, nil)
+
+	err := sut.ExtAuthZ(ctx, accessToken, "")
+
+	assert.Error(t, err)
+	assert.ErrorContains(t, err, "app not found")
+}
+
+func TestAuthService_ExtAuthZ_should_return_err_when_called_app_is_not_same_as_in_session(t *testing.T) {
+	t.Parallel()
+
+	accessToken := generateValidJWT(t)
+	invalidCalledApp := &apptypes.App{ID: "INVALID_APP"}
+	ctx := identitycontext.InsertAppID(context.Background(), invalidCalledApp.ID)
+	authRepo := authmocks.NewRepository(t)
+	authRepo.EXPECT().
+		GetByAccessToken(ctx, accessToken).
+		Return(&authtypes.Session{AppID: ptrutil.Ptr("VALID_APP")}, nil)
+	appRepo := appmocks.NewRepository(t)
+	appRepo.EXPECT().GetApp(ctx, invalidCalledApp.ID).Return(invalidCalledApp, nil)
+	sut := bff.NewAuthService(authRepo, nil, nil, appRepo, nil, nil, nil, nil, nil)
+
+	err := sut.ExtAuthZ(ctx, accessToken, "")
+
+	assert.Error(t, err)
+	assert.ErrorContains(t, err, "access token is not valid for the specified app")
+}
+
+func TestAuthService_ExtAuthZ_should_return_err_when_tool_name_is_not_same_as_in_session(t *testing.T) {
+	t.Parallel()
+
+	accessToken := generateValidJWT(t)
+	calledApp := &apptypes.App{ID: uuid.NewString()}
+	ctx := identitycontext.InsertAppID(context.Background(), calledApp.ID)
+	invalidToolName := "INVALID_TOOL"
+	authRepo := authmocks.NewRepository(t)
+	authRepo.EXPECT().
+		GetByAccessToken(ctx, accessToken).
+		Return(&authtypes.Session{ToolName: ptrutil.Ptr("VALID_TOOL")}, nil)
+	appRepo := appmocks.NewRepository(t)
+	appRepo.EXPECT().GetApp(ctx, calledApp.ID).Return(calledApp, nil)
+	sut := bff.NewAuthService(authRepo, nil, nil, appRepo, nil, nil, nil, nil, nil)
+
+	err := sut.ExtAuthZ(ctx, accessToken, invalidToolName)
+
+	assert.Error(t, err)
+	assert.ErrorContains(t, err, "access token is not valid for the specified tool")
+}
+
+func TestAuthService_ExtAuthZ_should_return_err_when_caller_app_not_found(t *testing.T) {
+	t.Parallel()
+
+	accessToken := generateValidJWT(t)
+	session := &authtypes.Session{OwnerAppID: "INVALID_CALLED_APP"}
+	calledApp := &apptypes.App{ID: uuid.NewString()}
+	ctx := identitycontext.InsertAppID(context.Background(), calledApp.ID)
+	authRepo := authmocks.NewRepository(t)
+	authRepo.EXPECT().
+		GetByAccessToken(ctx, accessToken).
+		Return(session, nil)
+	appRepo := appmocks.NewRepository(t)
+	appRepo.EXPECT().GetApp(ctx, calledApp.ID).Return(calledApp, nil)
+	appRepo.EXPECT().GetApp(ctx, session.OwnerAppID).Return(nil, errors.New("not found"))
+	sut := bff.NewAuthService(authRepo, nil, nil, appRepo, nil, nil, nil, nil, nil)
+
+	err := sut.ExtAuthZ(ctx, accessToken, "")
+
+	assert.Error(t, err)
+	assert.ErrorContains(t, err, "the caller app not found")
+}
+
+func TestAuthService_ExtAuthZ_should_return_err_when_access_token_invalid(t *testing.T) {
+	t.Parallel()
+
+	accessToken := "INVALID_ACCESS_TOKEN"
+	calledApp := &apptypes.App{ID: uuid.NewString()}
+	ctx := identitycontext.InsertAppID(context.Background(), calledApp.ID)
+	session := &authtypes.Session{OwnerAppID: uuid.NewString()}
+	authRepo := authmocks.NewRepository(t)
+	authRepo.EXPECT().
+		GetByAccessToken(ctx, accessToken).
+		Return(session, nil)
+	appRepo := appmocks.NewRepository(t)
+	appRepo.EXPECT().GetApp(ctx, calledApp.ID).Return(calledApp, nil)
+	appRepo.EXPECT().
+		GetApp(ctx, session.OwnerAppID).
+		Return(&apptypes.App{ID: session.OwnerAppID}, nil)
+	sut := bff.NewAuthService(authRepo, nil, nil, appRepo, nil, nil, nil, nil, nil)
+
+	err := sut.ExtAuthZ(ctx, accessToken, "")
+
+	assert.Error(t, err)
+	assert.ErrorContains(t, err, "failed to parse JWT")
+}
+
+func TestAuthService_ExtAuthZ_should_return_err_if_update_fails(t *testing.T) {
+	t.Parallel()
+
+	accessToken := generateValidJWT(t)
+	calledApp := &apptypes.App{ID: uuid.NewString()}
+	ctx := identitycontext.InsertAppID(context.Background(), calledApp.ID)
+	session := &authtypes.Session{OwnerAppID: uuid.NewString()}
+	authRepo := authmocks.NewRepository(t)
+	authRepo.EXPECT().
+		GetByAccessToken(ctx, accessToken).
+		Return(session, nil)
+	authRepo.EXPECT().Update(ctx, session).Return(errors.New("failed update"))
+	appRepo := appmocks.NewRepository(t)
+	appRepo.EXPECT().GetApp(ctx, calledApp.ID).Return(calledApp, nil)
+	appRepo.EXPECT().
+		GetApp(ctx, session.OwnerAppID).
+		Return(&apptypes.App{ID: session.OwnerAppID}, nil)
+	policyEva := policymocks.NewEvaluator(t)
+	policyEva.EXPECT().
+		Evaluate(ctx, calledApp, session.OwnerAppID, "").
+		Return(&policytypes.Rule{NeedsApproval: false}, nil)
+	sut := bff.NewAuthService(authRepo, nil, nil, appRepo, policyEva, nil, nil, nil, nil)
+
+	err := sut.ExtAuthZ(ctx, accessToken, "")
+
+	assert.Error(t, err)
+	assert.ErrorContains(t, err, "failed update")
+}
+
+func generateValidJWT(t *testing.T) string {
+	t.Helper()
+
+	priv, _ := joseutil.GenerateJWK("RS256", "sig", "keyId")
+	accessToken, _ := oidc.SelfIssueJWT(uuid.NewString(), uuid.NewString(), priv)
+
+	return accessToken
 }
