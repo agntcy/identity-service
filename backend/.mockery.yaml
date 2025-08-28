@@ -33,3 +33,6 @@ packages:
   github.com/outshift/identity-service/internal/core/identity:
     interfaces:
       KeyStore: {}
+  github.com/outshift/identity-service/internal/bff:
+    interfaces:
+      NotificationService: {}
