@@ -48,7 +48,7 @@ type Configuration struct {
 	WebApprovalPrivKey                                      string        `split_words:"true"                                              required:"true"`
 	UniqueIssuerPerTenant                                   bool          `split_words:"true" default:"true"`
 	ServerGrpcKeepAliveEnvorcementPolicyMinTime             int           `split_words:"true" default:"300"`
-	ServerGrpcKeepAliveEnvorcementPolicyPermitWithoutStream bool          `split_words:"true" default:"false"`
+	ServerGrpcKeepAliveEnforcementPolicyPermitWithoutStream bool          `split_words:"true" default:"false"`
 	ServerGrpcKeepAliveServerParametersMaxConnectionIdle    int           `split_words:"true" default:"100"`
 	ServerGrpcKeepAliveServerParametersTime                 int           `split_words:"true" default:"7200"`
 	ServerGrpcKeepAliveServerParametersTimeout              int           `split_words:"true" default:"20"`
@@ -60,4 +60,12 @@ type Configuration struct {
 	HttpServerReadTimeout                                   int           `split_words:"true" default:"100"`
 	HttpServerReadHeaderTimeout                             int           `split_words:"true" default:"100"`
 	DefaultCallTimeout                                      time.Duration `split_words:"true" default:"10000ms"`
+}
+
+func (c *Configuration) IsProd() bool {
+	return c.GoEnv == "production"
+}
+
+func (c *Configuration) IsDev() bool {
+	return c.GoEnv == "development"
 }

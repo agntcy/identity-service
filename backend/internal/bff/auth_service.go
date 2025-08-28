@@ -323,7 +323,7 @@ func (s *authService) ExtAuthZ(
 
 	// If the session toolName is provided (in the authorize call)
 	// we cannot specify another toolName in the ext-authz request
-	if session.ToolName != nil && toolName != "" && *session.ToolName != toolName {
+	if !session.ValidateTool(toolName) {
 		return errutil.Err(
 			nil,
 			"access token is not valid for the specified tool",
@@ -342,10 +342,6 @@ func (s *authService) ExtAuthZ(
 	err = jwtutil.Verify(accessToken)
 	if err != nil {
 		return err
-	}
-
-	if toolName == "" {
-		toolName = ptrutil.DerefStr(session.ToolName)
 	}
 
 	// Evaluate the session based on existing policies

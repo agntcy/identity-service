@@ -11,17 +11,16 @@ import (
 	"github.com/outshift/identity-service/internal/core/settings/types"
 	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
 	"github.com/outshift/identity-service/internal/pkg/errutil"
-	"github.com/outshift/identity-service/pkg/db"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
 type repository struct {
-	dbContext db.Context
+	dbContext *gorm.DB
 }
 
 // NewRepository creates a new instance of the Repository
-func NewRepository(dbContext db.Context) settingscore.Repository {
+func NewRepository(dbContext *gorm.DB) settingscore.Repository {
 	return &repository{
 		dbContext,
 	}
@@ -55,7 +54,7 @@ func (r *repository) UpdateIssuerSettings(
 		existingSettings.OryIdpSettings = model.OryIdpSettings
 	}
 
-	updated := r.dbContext.Client().
+	updated := r.dbContext.
 		Where("tenant_id = ?", existingSettings.TenantID).
 		Updates(existingSettings)
 	if updated.Error != nil {
@@ -91,7 +90,7 @@ func (r *repository) getOrCreateIssuerSettings(
 		return nil, identitycontext.ErrTenantNotFound
 	}
 
-	result := r.dbContext.Client().
+	result := r.dbContext.
 		Preload(clause.Associations).
 		First(&issuerSettings, map[string]any{
 			"tenant_id": tenantID,
@@ -102,7 +101,7 @@ func (r *repository) getOrCreateIssuerSettings(
 			model := newIssuerSettingsModel(&types.IssuerSettings{})
 			model.TenantID = tenantID
 
-			inserted := r.dbContext.Client().Create(model)
+			inserted := r.dbContext.Create(model)
 			if inserted.Error != nil {
 				return nil, errutil.Err(
 					inserted.Error, "there was an error creating the settings",

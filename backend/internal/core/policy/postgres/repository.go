@@ -20,16 +20,15 @@ import (
 	"github.com/outshift/identity-service/internal/pkg/gormutil"
 	"github.com/outshift/identity-service/internal/pkg/pagination"
 	"github.com/outshift/identity-service/internal/pkg/pgutil"
-	"github.com/outshift/identity-service/pkg/db"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
 type repository struct {
-	dbContext db.Context
+	dbContext *gorm.DB
 }
 
-func NewRepository(dbContext db.Context) policycore.Repository {
+func NewRepository(dbContext *gorm.DB) policycore.Repository {
 	return &repository{
 		dbContext: dbContext,
 	}
@@ -43,7 +42,7 @@ func (r *repository) Create(ctx context.Context, policy *types.Policy) error {
 
 	model := newPolicyModel(policy, tenantID)
 
-	result := r.dbContext.Client().Create(model)
+	result := r.dbContext.Create(model)
 	if result.Error != nil {
 		return errutil.Err(
 			result.Error, "there was an error creating the policy",
@@ -61,7 +60,7 @@ func (r *repository) CreateRule(ctx context.Context, rule *types.Rule) error {
 
 	model := NewRuleModel(rule, tenantID)
 
-	result := r.dbContext.Client().Create(model)
+	result := r.dbContext.Create(model)
 	if result.Error != nil {
 		return errutil.Err(
 			result.Error, "there was an error creating the rule",
@@ -77,7 +76,7 @@ func (r *repository) CreateTasks(ctx context.Context, tasks ...*types.Task) erro
 		return identitycontext.ErrTenantNotFound
 	}
 
-	err := r.dbContext.Client().Transaction(func(tx *gorm.DB) error {
+	err := r.dbContext.Transaction(func(tx *gorm.DB) error {
 		for _, task := range tasks {
 			model := newTaskModel(task, tenantID)
 
@@ -106,7 +105,7 @@ func (r *repository) UpdatePolicy(ctx context.Context, policy *types.Policy) err
 
 	model := newPolicyModel(policy, tenantID)
 
-	return r.dbContext.Client().Save(model).Error
+	return r.dbContext.Save(model).Error
 }
 
 func (r *repository) UpdateRule(ctx context.Context, rule *types.Rule) error {
@@ -115,7 +114,7 @@ func (r *repository) UpdateRule(ctx context.Context, rule *types.Rule) error {
 		return identitycontext.ErrTenantNotFound
 	}
 
-	return r.dbContext.Client().Transaction(func(tx *gorm.DB) error {
+	return r.dbContext.Transaction(func(tx *gorm.DB) error {
 		// We need to pass a new instance of the model for each call
 		// since .Model() modifies the passed model and removes all the tasks.
 		err := tx.Model(NewRuleModel(rule, tenantID)).Association("Tasks").Clear()
@@ -133,7 +132,7 @@ func (r *repository) UpdateTasks(ctx context.Context, tasks ...*types.Task) erro
 		return identitycontext.ErrTenantNotFound
 	}
 
-	err := r.dbContext.Client().Transaction(func(tx *gorm.DB) error {
+	err := r.dbContext.Transaction(func(tx *gorm.DB) error {
 		for _, task := range tasks {
 			model := newTaskModel(task, tenantID)
 
@@ -160,18 +159,18 @@ func (r *repository) DeletePolicies(ctx context.Context, policies ...*types.Poli
 		return identitycontext.ErrTenantNotFound
 	}
 
-	err := r.dbContext.Client().Transaction(func(tx *gorm.DB) error {
+	err := r.dbContext.Transaction(func(tx *gorm.DB) error {
 		for _, policy := range policies {
 			model := newPolicyModel(policy, tenantID)
 
-			err := r.dbContext.Client().
+			err := r.dbContext.
 				Exec("DELETE FROM rule_tasks WHERE rule_id IN (SELECT id from rules where policy_id = ?)", model.ID).
 				Error
 			if err != nil {
 				return err
 			}
 
-			err = r.dbContext.Client().Select(clause.Associations).Delete(model).Error
+			err = r.dbContext.Select(clause.Associations).Delete(model).Error
 			if err != nil {
 				return err
 			}
@@ -203,11 +202,11 @@ func (r *repository) DeleteRules(ctx context.Context, rules ...*types.Rule) erro
 		return identitycontext.ErrTenantNotFound
 	}
 
-	err := r.dbContext.Client().Transaction(func(tx *gorm.DB) error {
+	err := r.dbContext.Transaction(func(tx *gorm.DB) error {
 		for _, rule := range rules {
 			model := NewRuleModel(rule, tenantID)
 
-			err := r.dbContext.Client().Select(clause.Associations).Delete(model).Error
+			err := r.dbContext.Select(clause.Associations).Delete(model).Error
 			if err != nil {
 				return err
 			}
@@ -230,11 +229,11 @@ func (r *repository) DeleteTasks(ctx context.Context, tasks ...*types.Task) erro
 		return identitycontext.ErrTenantNotFound
 	}
 
-	err := r.dbContext.Client().Transaction(func(tx *gorm.DB) error {
+	err := r.dbContext.Transaction(func(tx *gorm.DB) error {
 		for _, task := range tasks {
 			model := newTaskModel(task, tenantID)
 
-			err := r.dbContext.Client().Select(clause.Associations).Delete(model).Error
+			err := r.dbContext.Select(clause.Associations).Delete(model).Error
 			if err != nil {
 				return err
 			}
@@ -268,7 +267,7 @@ func (r *repository) GetPolicyByID(ctx context.Context, id string) (*types.Polic
 
 	var policy Policy
 
-	err := r.dbContext.Client().
+	err := r.dbContext.
 		Preload("Rules").
 		Preload("Rules.Tasks").
 		Where("policies.id = ? AND policies.tenant_id = ?", id, tenantID).
@@ -295,7 +294,7 @@ func (r *repository) GetPoliciesByAppID(
 
 	policies := make([]*Policy, 0)
 
-	err := r.dbContext.Client().
+	err := r.dbContext.
 		Preload("Rules").
 		Preload("Rules.Tasks").
 		Where("policies.assigned_to = ? AND policies.tenant_id = ?", appID, tenantID).
@@ -324,7 +323,7 @@ func (r *repository) GetRuleByID(
 
 	var rule Rule
 
-	err := r.dbContext.Client().
+	err := r.dbContext.
 		Preload("Tasks").
 		Where(
 			"rules.id = ? AND rules.policy_id = ? AND rules.tenant_id = ?",
@@ -352,7 +351,7 @@ func (r *repository) GetTasksByAppID(ctx context.Context, appID string) ([]*type
 		return nil, identitycontext.ErrTenantNotFound
 	}
 
-	result := r.dbContext.Client().
+	result := r.dbContext.
 		Where("app_id = ? AND tenant_id = ?", appID, tenantID).
 		Find(&tasks)
 	if result.Error != nil {
@@ -379,7 +378,7 @@ func (r *repository) GetTasksPerAppType(
 		return nil, identitycontext.ErrTenantNotFound
 	}
 
-	dbQuery := r.dbContext.Client().Where("tasks.tenant_id = ?", tenantID)
+	dbQuery := r.dbContext.Where("tasks.tenant_id = ?", tenantID)
 
 	if len(excludeAppIDs) > 0 {
 		dbQuery = dbQuery.Where("tasks.app_id NOT IN (?)", excludeAppIDs)
@@ -410,7 +409,7 @@ func (r *repository) GetTasksByID(ctx context.Context, ids []string) ([]*types.T
 		return nil, identitycontext.ErrTenantNotFound
 	}
 
-	result := r.dbContext.Client().Where("tenant_id = ?", tenantID).Find(&tasks, ids)
+	result := r.dbContext.Where("tenant_id = ?", tenantID).Find(&tasks, ids)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 			return nil, errutil.Err(result.Error, "tasks not found")
@@ -436,7 +435,7 @@ func (r *repository) GetAllPolicies(
 		return nil, identitycontext.ErrTenantNotFound
 	}
 
-	dbQuery := r.dbContext.Client().
+	dbQuery := r.dbContext.
 		Where("policies.tenant_id = ?", tenantID)
 
 	if query != nil && *query != "" {
@@ -453,7 +452,7 @@ func (r *repository) GetAllPolicies(
 	if len(rulesForAppIDs) > 0 {
 		dbQuery = dbQuery.Where(
 			"0 < (?)",
-			r.dbContext.Client().Table("tasks").
+			r.dbContext.Table("tasks").
 				Select("COUNT(tasks.id)").
 				Joins("LEFT JOIN rule_tasks ON rule_tasks.task_id = tasks.id").
 				Where("rule_tasks.rule_id = rules.id AND tasks.app_id IN (?)", rulesForAppIDs),
@@ -479,7 +478,7 @@ func (r *repository) GetAllPolicies(
 		RuleUpdatedAt     sql.NullTime     `gorm:"column:r__updated_at"`
 	}
 
-	err := r.dbContext.Client().
+	err := r.dbContext.
 		Table(`(?) AS main`,
 			dbQuery.
 				Table("policies").
@@ -574,7 +573,7 @@ func (r *repository) GetAllRules(
 		return nil, identitycontext.ErrTenantNotFound
 	}
 
-	dbQuery := r.dbContext.Client().Where("tenant_id = ? AND policy_id = ?", tenantID, policyID)
+	dbQuery := r.dbContext.Where("tenant_id = ? AND policy_id = ?", tenantID, policyID)
 
 	if query != nil && *query != "" {
 		dbQuery = dbQuery.Where(
@@ -623,7 +622,7 @@ func (r *repository) CountAllPolicies(ctx context.Context) (int64, error) {
 
 	var totalPolicies int64
 
-	err := r.dbContext.Client().
+	err := r.dbContext.
 		Model(&Policy{}).
 		Where("tenant_id = ?", tenantID).
 		Count(&totalPolicies).

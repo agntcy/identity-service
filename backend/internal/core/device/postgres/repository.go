@@ -17,16 +17,15 @@ import (
 	"github.com/outshift/identity-service/internal/pkg/gormutil"
 	"github.com/outshift/identity-service/internal/pkg/pagination"
 	"github.com/outshift/identity-service/internal/pkg/ptrutil"
-	"github.com/outshift/identity-service/pkg/db"
 	"gorm.io/gorm"
 )
 
 type repository struct {
-	dbContext db.Context
+	dbContext *gorm.DB
 }
 
 // NewRepository creates a new instance of the Repository
-func NewRepository(dbContext db.Context) devicecore.Repository {
+func NewRepository(dbContext *gorm.DB) devicecore.Repository {
 	return &repository{
 		dbContext,
 	}
@@ -51,7 +50,7 @@ func (r *repository) AddDevice(
 
 	model.TenantID = tenantID
 
-	inserted := r.dbContext.Client().Create(model)
+	inserted := r.dbContext.Create(model)
 	if inserted.Error != nil {
 		return nil, errutil.Err(
 			inserted.Error, "there was an error adding the device",
@@ -73,7 +72,7 @@ func (r *repository) GetDevice(
 
 	var device Device
 
-	result := r.dbContext.Client().
+	result := r.dbContext.
 		Where("id = ?", deviceID).
 		First(&device)
 
@@ -108,7 +107,7 @@ func (r *repository) GetDevices(
 
 	// If userID is nil, we fetch all devices for the tenant
 	if userID == nil {
-		result = r.dbContext.Client().
+		result = r.dbContext.
 			Where(
 				"tenant_id = ? AND subscription_token IS NOT NULL AND subscription_token <> ''",
 				tenantID,
@@ -116,7 +115,7 @@ func (r *repository) GetDevices(
 			Order("created_at ASC").
 			Find(&devices)
 	} else {
-		result = r.dbContext.Client().
+		result = r.dbContext.
 			Where(
 				"tenant_id = ? AND user_id = ? AND subscription_token IS NOT NULL AND subscription_token <> ''",
 				tenantID,
@@ -149,7 +148,7 @@ func (r *repository) UpdateDevice(
 
 	var existingDevice Device
 
-	result := r.dbContext.Client().
+	result := r.dbContext.
 		Where("id = ?", device.ID).
 		First(&existingDevice)
 	if result.Error != nil {
@@ -163,7 +162,7 @@ func (r *repository) UpdateDevice(
 	existingDevice.UserID = ptrutil.Ptr(device.UserID)
 	existingDevice.Name = device.Name
 
-	result = r.dbContext.Client().Save(existingDevice)
+	result = r.dbContext.Save(existingDevice)
 	if result.Error != nil {
 		return nil, errutil.Err(
 			result.Error, "there was an error updating the device",
@@ -185,7 +184,7 @@ func (r *repository) ListRegisteredDevices(
 		)
 	}
 
-	dbQuery := r.dbContext.Client().Where(
+	dbQuery := r.dbContext.Where(
 		"tenant_id = ? AND subscription_token IS NOT NULL AND subscription_token <> ''",
 		tenantID,
 	)
@@ -240,11 +239,11 @@ func (r *repository) DeleteDevice(ctx context.Context, device *types.Device) err
 
 	model := newDeviceModel(device)
 
-	err := r.dbContext.Client().Transaction(func(tx *gorm.DB) error {
+	err := r.dbContext.Transaction(func(tx *gorm.DB) error {
 		err := tx.Where("device_id = ?", device.ID).
 			Delete(&authpg.SessionDeviceOTP{}).Error
 		if err != nil {
-			return nil
+			return err
 		}
 
 		err = tx.Where("tenant_id = ?", tenantID).
