@@ -41,6 +41,12 @@ type Session struct {
 	ExpiresAt *int64 `json:"expires_at,omitempty" protobuf:"bytes,9,opt,name=expires_at"`
 }
 
+// If the session has a toolName associated with then this methods
+// validates the input name with the one in the session.
+func (s *Session) ValidateTool(name string) bool {
+	return s.ToolName == nil || *s.ToolName == "" || *s.ToolName == name
+}
+
 func (s *Session) HasExpired() bool {
 	return s.ExpiresAt != nil && *s.ExpiresAt <= time.Now().Unix()
 }
