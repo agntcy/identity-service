@@ -33,7 +33,7 @@ const ConnectionIdentityProvider = React.lazy(
 const Dashboard = React.lazy(() => import('@/pages/dashboard/dashboard'));
 
 // Settings Base
-const SettingsBase = React.lazy(() => import('@/pages/settings/settings-base'));
+const SettingsBase = React.lazy(() => import('@/pages/settings/base/settings-base'));
 
 // Settings API Key
 const ApiKey = React.lazy(() => import('@/pages/settings/api-key/api-key'));
