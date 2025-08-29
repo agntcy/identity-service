@@ -43,9 +43,9 @@ const Devices = React.lazy(() => import('@/pages/settings/devices/devices'));
 const OnBoardDevice = React.lazy(() => import('@/pages/onboard-device/onboard-device'));
 
 // Settings Organizations
-const Organizations = React.lazy(() => import('@/pages/settings/organizations/organizations'));
-const EditOrganization = React.lazy(() => import('@/pages/settings/organizations/edit-organization'));
-const InfoOrganization = React.lazy(() => import('@/pages/settings/organizations/info-organization'));
+const Organizations = React.lazy(() => import('@/pages/settings/organizations/base/organizations'));
+const EditOrganization = React.lazy(() => import('@/pages/settings/organizations/edit/edit-organization'));
+const InfoOrganization = React.lazy(() => import('@/pages/settings/organizations/info/info-organization'));
 
 // Agentic Services
 const AgenticServices = React.lazy(() => import('@/pages/agentic-services/agentic-services'));
