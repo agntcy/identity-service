@@ -17,6 +17,7 @@ packages:
   github.com/outshift/identity-service/internal/core/badge:
     interfaces:
       Repository: {}
+      Revoker: {}
   github.com/outshift/identity-service/internal/core/device:
     interfaces:
       Repository: {}
@@ -33,6 +34,10 @@ packages:
   github.com/outshift/identity-service/internal/core/identity:
     interfaces:
       KeyStore: {}
+      Service: {}
   github.com/outshift/identity-service/internal/bff:
     interfaces:
       NotificationService: {}
+  github.com/outshift/identity-service/internal/pkg/iam:
+    interfaces:
+      Client: {}
