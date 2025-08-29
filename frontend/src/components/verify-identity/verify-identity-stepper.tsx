@@ -47,7 +47,11 @@ const FormStepperComponent = ({badge}: {badge?: Badge}) => {
   const verifyIdentityMutation = useVerifyBadge({
     callbacks: {
       onSuccess: (resp) => {
-        analyticsTrack('BADGE_VERIFIED');
+        if (resp.data.status) {
+          analyticsTrack('BADGE_VERIFIED', {
+            badgeId: resp.data.document?.id
+          });
+        }
         methods.setMetadata('verficationResults', {
           results: resp.data
         });
