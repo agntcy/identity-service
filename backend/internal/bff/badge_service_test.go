@@ -32,8 +32,21 @@ import (
 
 // IssueBadge
 
-func TestBadgeService_IssueBadge_should_succeed(t *testing.T) {
-	t.Parallel()
+type issueBadgeSuccessFixture struct {
+	ctx          context.Context //nolint:containedctx // to simplify the test cases
+	app          *apptypes.App
+	settingsRepo *settingsmocks.Repository
+	appRepo      *appmocks.Repository
+	keyStore     *identitymocks.KeyStore
+	credStore    *idpmocks.CredentialStore
+	identityServ *identitymocks.Service
+	tasksServ    *policymocks.TaskService
+	badgeRevoker *badgemocks.Revoker
+	badgeRepo    *badgemocks.Repository
+}
+
+func initTestServiceIssueBadgeSuccessFixture(t *testing.T) *issueBadgeSuccessFixture {
+	t.Helper()
 
 	ctx := context.Background()
 	issSettings := &settingstypes.IssuerSettings{
@@ -82,30 +95,48 @@ func TestBadgeService_IssueBadge_should_succeed(t *testing.T) {
 	badgeRepo := badgemocks.NewRepository(t)
 	badgeRepo.EXPECT().Create(ctx, mock.Anything).Return(nil)
 
+	return &issueBadgeSuccessFixture{
+		ctx:          ctx,
+		app:          app,
+		settingsRepo: settingsRepo,
+		appRepo:      appRepo,
+		keyStore:     keyStore,
+		credStore:    credStore,
+		identityServ: identityServ,
+		tasksServ:    tasksServ,
+		badgeRevoker: badgeRevoker,
+		badgeRepo:    badgeRepo,
+	}
+}
+
+//nolint:funlen // a handful of tests cases
+func TestBadgeService_IssueBadge_should_succeed(t *testing.T) {
+	t.Parallel()
+
 	testCases := map[string]*struct {
 		options    bff.IssueOption
 		appType    apptypes.AppType
-		sutFactory func(t *testing.T, ctx context.Context) bff.BadgeService
+		sutFactory func(t *testing.T, fixture *issueBadgeSuccessFixture) bff.BadgeService
 		claims     string
 	}{
 		"issue A2A badge from a base64 schema": {
 			options: bff.WithA2A(nil, ptrutil.Ptr("YTJhX2FnZW50")), // base64 value is a2a_agent
 			appType: apptypes.APP_TYPE_AGENT_A2A,
 			claims:  "a2a_agent",
-			sutFactory: func(t *testing.T, _ context.Context) bff.BadgeService {
+			sutFactory: func(t *testing.T, fixture *issueBadgeSuccessFixture) bff.BadgeService {
 				t.Helper()
 
 				return bff.NewBadgeService(
-					settingsRepo,
-					appRepo,
-					badgeRepo,
+					fixture.settingsRepo,
+					fixture.appRepo,
+					fixture.badgeRepo,
 					nil,
 					nil,
-					keyStore,
-					identityServ,
-					credStore,
-					tasksServ,
-					badgeRevoker,
+					fixture.keyStore,
+					fixture.identityServ,
+					fixture.credStore,
+					fixture.tasksServ,
+					fixture.badgeRevoker,
 				)
 			},
 		},
@@ -113,23 +144,23 @@ func TestBadgeService_IssueBadge_should_succeed(t *testing.T) {
 			options: bff.WithA2A(ptrutil.Ptr("agent_card_wellknown_url"), nil),
 			appType: apptypes.APP_TYPE_AGENT_A2A,
 			claims:  "a2a_agent",
-			sutFactory: func(t *testing.T, ctx context.Context) bff.BadgeService {
+			sutFactory: func(t *testing.T, fixture *issueBadgeSuccessFixture) bff.BadgeService {
 				t.Helper()
 
 				a2aClient := badgea2amocks.NewDiscoveryClient(t)
-				a2aClient.EXPECT().Discover(ctx, mock.Anything).Return("a2a_agent", nil)
+				a2aClient.EXPECT().Discover(fixture.ctx, mock.Anything).Return("a2a_agent", nil)
 
 				return bff.NewBadgeService(
-					settingsRepo,
-					appRepo,
-					badgeRepo,
+					fixture.settingsRepo,
+					fixture.appRepo,
+					fixture.badgeRepo,
 					a2aClient,
 					nil,
-					keyStore,
-					identityServ,
-					credStore,
-					tasksServ,
-					badgeRevoker,
+					fixture.keyStore,
+					fixture.identityServ,
+					fixture.credStore,
+					fixture.tasksServ,
+					fixture.badgeRevoker,
 				)
 			},
 		},
@@ -137,20 +168,20 @@ func TestBadgeService_IssueBadge_should_succeed(t *testing.T) {
 			options: bff.WithOASF("b2FzZl9hZ2VudA=="), // base64 value is oasf_agent
 			appType: apptypes.APP_TYPE_AGENT_OASF,
 			claims:  "oasf_agent",
-			sutFactory: func(t *testing.T, _ context.Context) bff.BadgeService {
+			sutFactory: func(t *testing.T, fixture *issueBadgeSuccessFixture) bff.BadgeService {
 				t.Helper()
 
 				return bff.NewBadgeService(
-					settingsRepo,
-					appRepo,
-					badgeRepo,
+					fixture.settingsRepo,
+					fixture.appRepo,
+					fixture.badgeRepo,
 					nil,
 					nil,
-					keyStore,
-					identityServ,
-					credStore,
-					tasksServ,
-					badgeRevoker,
+					fixture.keyStore,
+					fixture.identityServ,
+					fixture.credStore,
+					fixture.tasksServ,
+					fixture.badgeRevoker,
 				)
 			},
 		},
@@ -158,27 +189,29 @@ func TestBadgeService_IssueBadge_should_succeed(t *testing.T) {
 			options: bff.WithMCP(ptrutil.Ptr("mcp_server"), ptrutil.Ptr("mcp_url"), nil),
 			appType: apptypes.APP_TYPE_MCP_SERVER,
 			claims:  `{"name":"mcp_server","url":""}`,
-			sutFactory: func(t *testing.T, ctx context.Context) bff.BadgeService {
+			sutFactory: func(t *testing.T, fixture *issueBadgeSuccessFixture) bff.BadgeService {
 				t.Helper()
 
 				mcpClient := badgemcpmocks.NewDiscoveryClient(t)
 				mcpClient.EXPECT().
-					AutoDiscover(ctx, mock.Anything, mock.Anything).
+					AutoDiscover(fixture.ctx, mock.Anything, mock.Anything).
 					Return(&mcp.McpServer{Name: "mcp_server"}, nil)
 
-				tasksServ.EXPECT().CreateForMCP(ctx, app.ID, mock.Anything).Return(nil, nil)
+				fixture.tasksServ.EXPECT().
+					CreateForMCP(fixture.ctx, fixture.app.ID, mock.Anything).
+					Return(nil, nil)
 
 				return bff.NewBadgeService(
-					settingsRepo,
-					appRepo,
-					badgeRepo,
+					fixture.settingsRepo,
+					fixture.appRepo,
+					fixture.badgeRepo,
 					nil,
 					mcpClient,
-					keyStore,
-					identityServ,
-					credStore,
-					tasksServ,
-					badgeRevoker,
+					fixture.keyStore,
+					fixture.identityServ,
+					fixture.credStore,
+					fixture.tasksServ,
+					fixture.badgeRevoker,
 				)
 			},
 		},
@@ -186,34 +219,36 @@ func TestBadgeService_IssueBadge_should_succeed(t *testing.T) {
 			options: bff.WithMCP(nil, nil, ptrutil.Ptr("eyJuYW1lIjoibWNwX3NlcnZlciIsInVybCI6IiJ9")), // base64 of the claims
 			appType: apptypes.APP_TYPE_MCP_SERVER,
 			claims:  `{"name":"mcp_server","url":""}`,
-			sutFactory: func(t *testing.T, ctx context.Context) bff.BadgeService {
+			sutFactory: func(t *testing.T, fixture *issueBadgeSuccessFixture) bff.BadgeService {
 				t.Helper()
 
-				tasksServ.EXPECT().CreateForMCP(ctx, app.ID, mock.Anything).Return(nil, nil)
+				fixture.tasksServ.EXPECT().CreateForMCP(fixture.ctx, fixture.app.ID, mock.Anything).Return(nil, nil)
 
 				return bff.NewBadgeService(
-					settingsRepo,
-					appRepo,
-					badgeRepo,
+					fixture.settingsRepo,
+					fixture.appRepo,
+					fixture.badgeRepo,
 					nil,
 					nil,
-					keyStore,
-					identityServ,
-					credStore,
-					tasksServ,
-					badgeRevoker,
+					fixture.keyStore,
+					fixture.identityServ,
+					fixture.credStore,
+					fixture.tasksServ,
+					fixture.badgeRevoker,
 				)
 			},
 		},
 	}
 
-	//nolint: paralleltest // running the tests in parallel will cause memory issues
+	fixture := initTestServiceIssueBadgeSuccessFixture(t)
+
+	//nolint:paralleltest // running the tests in parallel will cause memory issues
 	for tn, tc := range testCases {
 		t.Run(tn, func(t *testing.T) {
-			app.Type = tc.appType
-			sut := tc.sutFactory(t, ctx)
+			fixture.app.Type = tc.appType
+			sut := tc.sutFactory(t, fixture)
 
-			badge, err := sut.IssueBadge(ctx, app.ID, tc.options)
+			badge, err := sut.IssueBadge(fixture.ctx, fixture.app.ID, tc.options)
 
 			assert.NoError(t, err)
 			assert.Equal(t, &badgetypes.BadgeClaims{Badge: tc.claims}, badge.CredentialSubject)
