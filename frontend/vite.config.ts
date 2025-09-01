@@ -61,7 +61,9 @@ export default defineConfig(({mode}) => {
           'src/main.tsx',
           'src/api/generated',
           'src/utils',
-          'src/types'
+          'src/types',
+          'src/router/router.tsx',
+          'src/components/ui'
         ],
         include: ['src/']
       }

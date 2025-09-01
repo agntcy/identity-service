@@ -39,6 +39,7 @@ export default defineConfig([globalIgnores([
     ".yarn/**/*",
     "dev-dist/**/*",
     "public/**/*",
+    "coverage/**/*"
 ]), {
     extends: fixupConfigRules(compat.extends(
         "eslint:recommended",

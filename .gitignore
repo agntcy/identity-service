@@ -27,3 +27,4 @@ vault-data/
 sdk/python
 
 .env.*
+.DS_Store

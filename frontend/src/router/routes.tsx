@@ -24,9 +24,9 @@ const SettingsProvider = React.lazy(() => import('@/providers/settings-provider/
 const Welcome = React.lazy(() => import('@/pages/welcome/welcome'));
 
 // Settings Identity Provider
-const IdentityProvider = React.lazy(() => import('@/pages/settings/identity-provider/identity-provider'));
+const InfoIdentityProvider = React.lazy(() => import('@/pages/settings/identity-provider/info/info-identity-provider'));
 const ConnectionIdentityProvider = React.lazy(
-  () => import('@/pages/settings/identity-provider/connection-identity-provider')
+  () => import('@/pages/settings/identity-provider/connection-identity-provider/connection-identity-provider')
 );
 
 // Dashboard
@@ -43,9 +43,9 @@ const Devices = React.lazy(() => import('@/pages/settings/devices/devices'));
 const OnBoardDevice = React.lazy(() => import('@/pages/onboard-device/onboard-device'));
 
 // Settings Organizations
-const Organizations = React.lazy(() => import('@/pages/settings/organizations/organizations'));
-const EditOrganization = React.lazy(() => import('@/pages/settings/organizations/edit-organization'));
-const InfoOrganization = React.lazy(() => import('@/pages/settings/organizations/info-organization'));
+const Organizations = React.lazy(() => import('@/pages/settings/organizations/base/organizations'));
+const EditOrganization = React.lazy(() => import('@/pages/settings/organizations/edit/edit-organization'));
+const InfoOrganization = React.lazy(() => import('@/pages/settings/organizations/info/info-organization'));
 
 // Agentic Services
 const AgenticServices = React.lazy(() => import('@/pages/agentic-services/agentic-services'));
@@ -326,7 +326,7 @@ export const useRoutes = () => {
                 index: true,
                 element: (
                   <NodeRoute pageTitle="identity provider">
-                    <IdentityProvider />
+                    <InfoIdentityProvider />
                   </NodeRoute>
                 )
               },

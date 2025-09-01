@@ -9,7 +9,7 @@ import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import VerifyIdentity from './verify-identity';
 import {renderWithClient} from '@/utils/tests';
-import { Badge } from '@/types/api/badge';
+import {Badge} from '@/types/api/badge';
 
 // Mock react-router-dom
 vi.mock('react-router-dom', async () => {
@@ -45,7 +45,16 @@ vi.mock('@/components/verify-identity/verify-identity-stepper', () => ({
 }));
 
 vi.mock('@/components/ui/conditional-query-renderer', () => ({
-  ConditionalQueryRenderer: ({children, itemName, data, error, isLoading, bypass, errorListStateProps, useRelativeLoader}: any) => {
+  ConditionalQueryRenderer: ({
+    children,
+    itemName,
+    data,
+    error,
+    isLoading,
+    bypass,
+    errorListStateProps,
+    useRelativeLoader
+  }: any) => {
     if (bypass) {
       return <div data-testid="bypassed">Bypassed</div>;
     }
