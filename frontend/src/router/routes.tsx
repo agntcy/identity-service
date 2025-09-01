@@ -24,9 +24,9 @@ const SettingsProvider = React.lazy(() => import('@/providers/settings-provider/
 const Welcome = React.lazy(() => import('@/pages/welcome/welcome'));
 
 // Settings Identity Provider
-const IdentityProvider = React.lazy(() => import('@/pages/settings/identity-provider/identity-provider'));
+const InfoIdentityProvider = React.lazy(() => import('@/pages/settings/identity-provider/info/info-identity-provider'));
 const ConnectionIdentityProvider = React.lazy(
-  () => import('@/pages/settings/identity-provider/connection-identity-provider')
+  () => import('@/pages/settings/identity-provider/connection-identity-provider/connection-identity-provider')
 );
 
 // Dashboard
@@ -326,7 +326,7 @@ export const useRoutes = () => {
                 index: true,
                 element: (
                   <NodeRoute pageTitle="identity provider">
-                    <IdentityProvider />
+                    <InfoIdentityProvider />
                   </NodeRoute>
                 )
               },

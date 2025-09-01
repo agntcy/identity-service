@@ -14,7 +14,7 @@ import {useNavigate, useOutletContext} from 'react-router-dom';
 
 import {useShallow} from 'zustand/react/shallow';
 
-const IdentityProvider: React.FC = () => {
+const InfoIdentityProvider: React.FC = () => {
   const {data, error, isLoading, isFetching, refetch} = useGetSettings();
 
   const navigate = useNavigate();
@@ -71,4 +71,4 @@ const IdentityProvider: React.FC = () => {
   );
 };
 
-export default IdentityProvider;
+export default InfoIdentityProvider;
