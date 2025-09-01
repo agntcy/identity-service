@@ -5,8 +5,8 @@
 
 import {describe, it, vi, beforeEach, expect} from 'vitest';
 import {renderHook} from '@testing-library/react';
-import {useRoutes, generateRoutes} from './routes';
-import {PATHS} from './paths';
+import {useRoutes, generateRoutes} from '../routes';
+import {PATHS} from '../paths';
 import React from 'react';
 
 // Mock stores
