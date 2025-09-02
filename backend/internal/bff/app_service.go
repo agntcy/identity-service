@@ -41,7 +41,7 @@ type AppService interface {
 	) (*pagination.Pageable[apptypes.App], error)
 	CountAllApps(ctx context.Context) (int64, error)
 	DeleteApp(ctx context.Context, appID string) error
-	RefreshAppApiKey(ctx context.Context, appID string) (*apptypes.App, error)
+	RefreshAppAPIKey(ctx context.Context, appID string) (*apptypes.App, error)
 	GetTasksPerAppType(
 		ctx context.Context,
 		excludeAppIDs []string,
@@ -141,7 +141,7 @@ func (s *appService) CreateApp(
 		return nil, errutil.Err(err, "unable to store client credentials")
 	}
 
-	apiKey, err := s.iamClient.CreateAppApiKey(ctx, app.ID)
+	apiKey, err := s.iamClient.CreateAppAPIKey(ctx, app.ID)
 	if err != nil {
 		return nil, errutil.Err(err, "failed to generate an api key")
 	}
@@ -151,7 +151,7 @@ func (s *appService) CreateApp(
 		return nil, err
 	}
 
-	app.ApiKey = apiKey.Secret
+	app.ApiKey = ptrutil.DerefStr(apiKey.Secret)
 
 	return createdApp, nil
 }
@@ -185,12 +185,12 @@ func (s *appService) UpdateApp(
 		}
 	}
 
-	apiKey, err := s.iamClient.GetAppApiKey(ctx, app.ID)
+	apiKey, err := s.iamClient.GetAppAPIKey(ctx, app.ID)
 	if err != nil {
 		log.Warn(err)
 	}
 
-	storedApp.ApiKey = apiKey.Secret
+	storedApp.ApiKey = ptrutil.DerefStr(apiKey.Secret)
 
 	err = s.populateStatues(ctx, storedApp)
 	if err != nil {
@@ -213,12 +213,12 @@ func (s *appService) GetApp(
 		return nil, err
 	}
 
-	apiKey, err := s.iamClient.GetAppApiKey(ctx, app.ID)
+	apiKey, err := s.iamClient.GetAppAPIKey(ctx, app.ID)
 	if err != nil {
 		log.Warn(err)
 	}
 
-	app.ApiKey = apiKey.Secret
+	app.ApiKey = ptrutil.DerefStr(apiKey.Secret)
 
 	err = s.populateStatues(ctx, app)
 	if err != nil {
@@ -320,7 +320,7 @@ func (s *appService) DeleteApp(ctx context.Context, appID string) error {
 	return nil
 }
 
-func (s *appService) RefreshAppApiKey(
+func (s *appService) RefreshAppAPIKey(
 	ctx context.Context,
 	appID string,
 ) (*apptypes.App, error) {
@@ -333,12 +333,12 @@ func (s *appService) RefreshAppApiKey(
 		return nil, errutil.Err(err, "unable to fetch app")
 	}
 
-	apiKey, err := s.iamClient.RefreshAppApiKey(ctx, app.ID)
+	apiKey, err := s.iamClient.RefreshAppAPIKey(ctx, app.ID)
 	if err != nil {
 		return nil, errutil.Err(err, "failed to refresh API key")
 	}
 
-	app.ApiKey = apiKey.Secret
+	app.ApiKey = ptrutil.DerefStr(apiKey.Secret)
 
 	err = s.appRepository.UpdateApp(ctx, app)
 	if err != nil {
