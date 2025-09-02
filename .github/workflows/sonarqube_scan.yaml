@@ -97,7 +97,7 @@ jobs:
             ${{ vars.VAULT_SECRET_PATH }}  SONAR_CLOUD_TOKEN | SONAR_TOKEN
 
       - name: SonarQube scan
-        uses: sonarsource/sonarqube-scan-action@8c71dc039c2dd71d3821e89a2b58ecc7fee6ced9 # v5
+        uses: sonarsource/sonarqube-scan-action@1a6d90ebcb0e6a6b1d87e37ba693fe453195ae25 # v5
         env:
           SONAR_TOKEN: ${{ env.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ env.SONAR_URL }}
