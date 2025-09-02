@@ -20,6 +20,7 @@ import (
 	"github.com/outshift/identity-service/internal/pkg/pagination"
 	"github.com/outshift/identity-service/internal/pkg/ptrutil"
 	"github.com/outshift/identity-service/internal/pkg/strutil"
+	"github.com/outshift/identity-service/pkg/log"
 )
 
 type PolicyService interface {
@@ -336,6 +337,7 @@ func (s *policyService) validateTasks(
 func (s *policyService) validateAppIDs(ctx context.Context, ids ...string) error {
 	apps, err := s.appRepository.GetAppsByID(ctx, ids)
 	if err != nil {
+		log.Error(err)
 		return fmt.Errorf("unable to validate the applications: %w", err)
 	}
 
