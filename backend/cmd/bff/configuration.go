@@ -37,7 +37,6 @@ type Configuration struct {
 	IdentityPort                                            string        `split_words:"true" default:"4003"`
 	IamIssuer                                               string        `split_words:"true"`
 	IamUserCid                                              string        `split_words:"true"`
-	IamApiKeyCid                                            string        `split_words:"true"`
 	IamMultiTenant                                          bool          `split_words:"true" default:"false"`
 	WebApprovalEmail                                        string        `split_words:"true"                                 required:"true"`
 	WebApprovalPubKey                                       string        `split_words:"true"                                 required:"true"`
