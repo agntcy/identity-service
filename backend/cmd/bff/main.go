@@ -31,7 +31,7 @@ import (
 	policypg "github.com/outshift/identity-service/internal/core/policy/postgres"
 	settingspg "github.com/outshift/identity-service/internal/core/settings/postgres"
 	"github.com/outshift/identity-service/internal/pkg/grpcutil"
-	outshiftiam "github.com/outshift/identity-service/internal/pkg/iam"
+	"github.com/outshift/identity-service/internal/pkg/iam"
 	"github.com/outshift/identity-service/internal/pkg/interceptors"
 	"github.com/outshift/identity-service/internal/pkg/secrets"
 	"github.com/outshift/identity-service/internal/pkg/vault"
@@ -139,21 +139,20 @@ func main() {
 	crypter := secrets.NewSymmetricCrypter([]byte(config.SecretsCryptoKey))
 
 	// IAM
-	iamClient := outshiftiam.NewClient(
-		http.DefaultClient,
-		config.IamApiUrl,
-		config.IamAdminAPIKey,
-		config.IamMultiTenant,
-		config.IamSingleTenantID,
-		&config.IamIssuer,
-		&config.IamUserCid,
-		&config.IamApiKeyCid,
-	)
+	var iamClient iam.Client
+
+	if config.IamMultiTenant {
+		iamClient = iam.NewMultitenantClient()
+	} else {
+		iamClient = iam.NewStandaloneClient(
+			&config.IamIssuer,
+			&config.IamUserCid,
+		)
+	}
 
 	// Tenant interceptor
 	authInterceptor := interceptors.NewAuthInterceptor(
 		iamClient,
-		config.IamProductID,
 	)
 
 	// Create a GRPC server
