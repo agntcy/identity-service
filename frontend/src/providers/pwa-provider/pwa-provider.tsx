@@ -18,14 +18,12 @@ interface PwaContextProps {
 
 const PwaContext = createContext<PwaContextProps | undefined>(undefined);
 
-const PERIOD = 3600; // 1 hour in seconds
-
-export const PwaProvider: React.FC<React.PropsWithChildren> = ({children}) => {
+export const PwaProvider: React.FC<React.PropsWithChildren<{PERIOD?: number}>> = ({children, PERIOD = 3600}) => {
   const [swUrl, setSwUrl] = useState<string | undefined>(undefined);
   const [swR, setSwR] = useState<ServiceWorkerRegistration | undefined>(undefined);
 
   const registerPeriodicSync = (period: number, swUrl: string, r: ServiceWorkerRegistration) => {
-    console.log(`🔄 Registering periodic sync every ${period} seconds...`);
+    console.log(`🔄 Registering periodic sync every ${period} milliseconds...`);
 
     if (period <= 0) {
       return; // Skip periodic sync if period is not set
@@ -36,16 +34,21 @@ export const PwaProvider: React.FC<React.PropsWithChildren> = ({children}) => {
         return; // Skip sync if offline
       }
 
-      const resp = await fetch(swUrl, {
-        cache: 'no-store',
-        headers: {
+      try {
+        const resp = await fetch(swUrl, {
           cache: 'no-store',
-          'cache-control': 'no-cache'
-        }
-      });
+          headers: {
+            cache: 'no-store',
+            'cache-control': 'no-cache'
+          }
+        });
 
-      if (resp?.status === 200) {
-        await r.update();
+        if (resp?.status === 200) {
+          await r.update();
+        }
+      } catch (error) {
+        console.error('Periodic sync fetch error:', error);
+        // Silently handle the error - don't let it bubble up
       }
     }, period);
   };

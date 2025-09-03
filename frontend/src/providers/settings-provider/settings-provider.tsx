@@ -16,7 +16,7 @@ const SettingsProvider = ({children}: {children: React.ReactNode}) => {
   const {data: dataSession, isError: isErrorSession, isLoading: isLoadingSession} = useGetSession();
 
   const isAdmin = useMemo(() => {
-    return dataSession?.groups[0].role === 'ADMIN' || false;
+    return dataSession?.groups?.[0]?.role === 'ADMIN' || false;
   }, [dataSession?.groups]);
 
   const isEmptyIdp = useMemo(() => {

@@ -13,9 +13,10 @@ import {useFeatureFlagsStore} from '@/store';
 
 const TIME_OUT = 10; //seconds
 
-const ENABLE_FEATURE_FLAGS = false;
-
-export const FeatureFlagsProvider = ({children}: React.PropsWithChildren) => {
+export const FeatureFlagsProvider: React.FC<React.PropsWithChildren<{ENABLE_FEATURE_FLAGS?: boolean}>> = ({
+  children,
+  ENABLE_FEATURE_FLAGS = false
+}) => {
   const [controller, setController] = useState<boolean>(true);
 
   const {setFeatureFlags, clean} = useFeatureFlagsStore(
@@ -56,7 +57,7 @@ export const FeatureFlagsProvider = ({children}: React.PropsWithChildren) => {
     } else {
       setController(false);
     }
-  }, [authInfo, clean, data, isError, setFeatureFlags]);
+  }, [ENABLE_FEATURE_FLAGS, authInfo, clean, data, isError, setFeatureFlags]);
 
   useEffect(() => {
     if (!ENABLE_FEATURE_FLAGS) {
@@ -68,7 +69,7 @@ export const FeatureFlagsProvider = ({children}: React.PropsWithChildren) => {
     return () => {
       clearTimeout(timer);
     };
-  }, []);
+  }, [ENABLE_FEATURE_FLAGS]);
 
   if (!ENABLE_FEATURE_FLAGS) {
     return children;

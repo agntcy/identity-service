@@ -62,8 +62,8 @@ export default defineConfig(({mode}) => {
           'src/api/generated',
           'src/utils',
           'src/types',
-          'src/router/router.tsx',
-          'src/components/ui'
+          'src/components/ui',
+          'src/providers/auth-provider'
         ],
         include: ['src/']
       }
