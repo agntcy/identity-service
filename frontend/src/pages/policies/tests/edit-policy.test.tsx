@@ -3,7 +3,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import {screen, fireEvent} from '@testing-library/react';
 import {vi, describe, it, expect, beforeEach} from 'vitest';
 import EditPolicy from '../edit-policy';
