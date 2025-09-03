@@ -6,7 +6,6 @@ package jwtutil
 import (
 	"github.com/lestrrat-go/jwx/v3/jwt"
 	"github.com/outshift/identity-service/internal/pkg/errutil"
-	"github.com/outshift/identity-service/pkg/log"
 )
 
 func Verify(
@@ -30,43 +29,6 @@ func Verify(
 			"failed to parse JWT",
 		)
 	}
-
-	return nil
-}
-
-func GetClaim(
-	jwtString *string,
-	claimName string,
-	claimValue interface{},
-) error {
-	if jwtString == nil || *jwtString == "" {
-		return errutil.Err(
-			nil,
-			"JWT string cannot be nil or empty",
-		)
-	}
-
-	token, err := jwt.Parse(
-		[]byte(*jwtString),
-		jwt.WithVerify(false),
-		jwt.WithValidate(true),
-	)
-	if err != nil {
-		return errutil.Err(
-			err,
-			"failed to parse JWT",
-		)
-	}
-
-	err = token.Get(claimName, claimValue)
-	if err != nil {
-		return errutil.Err(
-			err,
-			"claim not found in JWT",
-		)
-	}
-
-	log.Debug("JWT claim: ", claimName, " found with value: ", claimValue)
 
 	return nil
 }

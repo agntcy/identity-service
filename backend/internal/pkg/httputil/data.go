@@ -102,14 +102,14 @@ func getJSON(
 	log.Debug("Server response status code is ", resp.StatusCode)
 
 	if resp.StatusCode != http.StatusOK {
-		return err
+		return fmt.Errorf("status code = %d", resp.StatusCode)
 	}
 
 	jsonErr := json.Unmarshal(body, &result)
 
 	if jsonErr != nil {
 		log.Debug("Got error ", jsonErr)
-		return err
+		return fmt.Errorf("invalid JSON body: %w", jsonErr)
 	}
 
 	return resp.Body.Close()
