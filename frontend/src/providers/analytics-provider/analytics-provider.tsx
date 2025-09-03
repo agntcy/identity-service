@@ -32,40 +32,38 @@ export const AnalyticsProvider = ({children}: React.PropsWithChildren) => {
   }, [isConsentGiven, segmentId]);
 
   useEffect(() => {
-    if (analytics && isConsentGiven) {
-      if (authInfo?.isAuthenticated) {
-        void analytics.identify(authInfo.user?.username, {
-          userId: authInfo.user?.username,
-          name: authInfo.user?.name,
-          email: authInfo.user?.username,
-          orgId: authInfo.user?.tenant?.id,
-          orgName: authInfo.user?.tenant?.name
-        });
-        void analytics.track('USER_LOGGED_IN', {
-          userId: authInfo.user?.username,
-          name: authInfo.user?.name,
-          email: authInfo.user?.username,
-          orgId: authInfo.user?.tenant?.id,
-          orgName: authInfo.user?.tenant?.name
-        });
-      }
+    if (analytics && isConsentGiven && authInfo?.isAuthenticated && authInfo.user) {
+      void analytics.identify(authInfo.user.username, {
+        userId: authInfo.user.username,
+        name: authInfo.user.name,
+        email: authInfo.user.username,
+        orgId: authInfo.user.tenant?.id,
+        orgName: authInfo.user.tenant?.name
+      });
+      void analytics.track('USER_LOGGED_IN', {
+        userId: authInfo.user.username,
+        name: authInfo.user.name,
+        email: authInfo.user.username,
+        orgId: authInfo.user.tenant?.id,
+        orgName: authInfo.user.tenant?.name
+      });
     }
   }, [analytics, isConsentGiven, authInfo]);
 
   useEffect(() => {
     const listener = () => {
       const preferences = CookieConsentVanilla.getUserPreferences();
-      const flag = preferences.acceptedCategories.includes('analytics');
+      const flag = preferences.acceptedCategories?.includes('analytics') ?? false;
       setIsConsentGiven(flag);
     };
     window.addEventListener('cc:onChange', listener);
     window.addEventListener('cc:onConsent', listener);
     const preferences = CookieConsentVanilla.getUserPreferences();
-    const flag = preferences.acceptedCategories.includes('analytics');
+    const flag = preferences.acceptedCategories?.includes('analytics') ?? false;
     setIsConsentGiven(flag);
     return () => {
       window.removeEventListener('cc:onChange', listener);
-      window.addEventListener('cc:onConsent', listener);
+      window.removeEventListener('cc:onConsent', listener);
     };
   }, []);
 

@@ -10,9 +10,7 @@ import {PropsWithChildren, useCallback, useEffect, useMemo, useState} from 'reac
 import {useNotificationUtils} from '../notification-utils-provider/notification-utils-provider';
 import {notificationUtils} from '@/utils/notification-store';
 
-const TIMER = 1000; // 1 seconds
-
-export const NotificationsProvider: React.FC<PropsWithChildren> = ({children}) => {
+export const NotificationsProvider: React.FC<PropsWithChildren<{TIMER?: number}>> = ({children, TIMER = 1000}) => {
   const [notifications, setNotifications] = useState<INotification[]>([]);
 
   const {isMobile} = useWindowSize();
@@ -126,7 +124,7 @@ export const NotificationsProvider: React.FC<PropsWithChildren> = ({children}) =
         clearInterval(cleanupInterval);
       }
     };
-  }, [cleanupExpiredNotifications, enabled, isMobile, notifications]);
+  }, [TIMER, cleanupExpiredNotifications, enabled, isMobile, notifications]);
 
   useEffect(() => {
     const listenerPushNotification = (event: MessageEvent) => {

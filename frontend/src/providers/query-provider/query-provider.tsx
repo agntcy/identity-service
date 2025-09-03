@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+/* c8 ignore start */
+
 import React from 'react';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import {ReactQueryDevtools} from '@tanstack/react-query-devtools';
@@ -23,3 +25,5 @@ export const QueryProvider = ({children}: React.PropsWithChildren) => {
     </QueryClientProvider>
   );
 };
+
+/* c8 ignore stop */
