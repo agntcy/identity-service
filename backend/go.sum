@@ -47,8 +47,8 @@ github.com/cenkalti/backoff/v4 v4.3.0/go.mod h1:Y3VNntkOUPxTVeUxJ/G5vcM//AlwfmyY
 github.com/cespare/xxhash/v2 v2.1.2/go.mod h1:VGX0DQ3Q6kWi7AoAeZDth3/j3BFtOZR5XLFGgcrjCOs=
 github.com/cespare/xxhash/v2 v2.3.0 h1:UL815xU9SqsFlibzuggzjXhog7bL6oX9BbNZnL2UFvs=
 github.com/cespare/xxhash/v2 v2.3.0/go.mod h1:VGX0DQ3Q6kWi7AoAeZDth3/j3BFtOZR5XLFGgcrjCOs=
-github.com/cisco-eti/iam-sdk-golang v0.0.0-20250904085247-bee4520d5d6d h1:duD9jeAWD+fEG9vsLm4jNZinBaW0dPBACZIp8jg5klw=
-github.com/cisco-eti/iam-sdk-golang v0.0.0-20250904085247-bee4520d5d6d/go.mod h1:B0GaEYvmblr+sVeSl0+Zr9nATC5pnm7iXZj/UDwaJuo=
+github.com/cisco-eti/iam-sdk-golang v0.0.0-20250904090120-9fef6353df52 h1:UGmDe3M9HbnJhZZrvTUTB3AMuQAoFWKDORtrnHnUEGw=
+github.com/cisco-eti/iam-sdk-golang v0.0.0-20250904090120-9fef6353df52/go.mod h1:8OQvqjK4pgW1rm1EtIEWXFmqwYJ2y4ALwqfPNYklLnA=
 github.com/coocood/freecache v1.2.4 h1:UdR6Yz/X1HW4fZOuH0Z94KwG851GWOSknua5VUbb/5M=
 github.com/coocood/freecache v1.2.4/go.mod h1:RBUWa/Cy+OHdfTGFEhEuE1pMCMX51Ncizj7rthiQ3vk=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
