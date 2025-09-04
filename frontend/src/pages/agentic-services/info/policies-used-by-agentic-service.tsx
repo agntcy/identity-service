@@ -8,7 +8,13 @@ import {App} from '@/types/api/app';
 import {useOutletContext} from 'react-router-dom';
 
 const PoliciesUsedByAgenticService: React.FC = () => {
-  const {app} = useOutletContext<{app?: App}>();
+  const context = useOutletContext<{app?: App}>();
+
+  if (!context) {
+    return null;
+  }
+
+  const {app} = context;
 
   if (!app) {
     return null;
