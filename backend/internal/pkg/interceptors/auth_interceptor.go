@@ -66,6 +66,8 @@ func (ti *AuthInterceptor) Unary(
 		return handler(ctx, req)
 	}
 
+	log.Debug("Auth Interceptor: ", info.FullMethod)
+
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
 		return nil, errors.New("failed to extract metadata from context")
@@ -97,6 +99,7 @@ func (ti *AuthInterceptor) Unary(
 			if strings.Contains(info.FullMethod, allowed) {
 				// Authenticate an app against IAM Api Keys v1
 				aCtx, err := ti.iamClient.AuthAPIKey(ctx, apiKeyHeader[0], true)
+				log.Debug("App auth context: ", aCtx)
 				if err != nil {
 					return nil, grpcutil.UnauthorizedError(err)
 				}
@@ -111,6 +114,8 @@ func (ti *AuthInterceptor) Unary(
 			return nil, grpcutil.UnauthorizedError(err)
 		}
 	}
+
+	log.Debug("Auth context: ", aCtx)
 
 	return handler(aCtx, req)
 }
