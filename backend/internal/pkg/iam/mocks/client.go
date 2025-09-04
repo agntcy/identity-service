@@ -7,7 +7,7 @@ package mocks
 import (
 	"context"
 
-	"github.com/outshift/identity-service/internal/pkg/iam"
+	"github.com/outshift/identity-service/internal/core/settings/types"
 	mock "github.com/stretchr/testify/mock"
 )
 
@@ -187,22 +187,22 @@ func (_c *Client_AuthJwt_Call) RunAndReturn(run func(ctx context.Context, header
 }
 
 // CreateAppApiKey provides a mock function for the type Client
-func (_mock *Client) CreateAppApiKey(ctx context.Context, appID string) (outshiftiam.ApiKey, error) {
+func (_mock *Client) CreateAppApiKey(ctx context.Context, appID string) (types.ApiKey, error) {
 	ret := _mock.Called(ctx, appID)
 
 	if len(ret) == 0 {
 		panic("no return value specified for CreateAppApiKey")
 	}
 
-	var r0 outshiftiam.ApiKey
+	var r0 types.ApiKey
 	var r1 error
-	if returnFunc, ok := ret.Get(0).(func(context.Context, string) (outshiftiam.ApiKey, error)); ok {
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) (types.ApiKey, error)); ok {
 		return returnFunc(ctx, appID)
 	}
-	if returnFunc, ok := ret.Get(0).(func(context.Context, string) outshiftiam.ApiKey); ok {
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) types.ApiKey); ok {
 		r0 = returnFunc(ctx, appID)
 	} else {
-		r0 = ret.Get(0).(outshiftiam.ApiKey)
+		r0 = ret.Get(0).(types.ApiKey)
 	}
 	if returnFunc, ok := ret.Get(1).(func(context.Context, string) error); ok {
 		r1 = returnFunc(ctx, appID)
@@ -242,33 +242,33 @@ func (_c *Client_CreateAppApiKey_Call) Run(run func(ctx context.Context, appID s
 	return _c
 }
 
-func (_c *Client_CreateAppApiKey_Call) Return(apiKey outshiftiam.ApiKey, err error) *Client_CreateAppApiKey_Call {
+func (_c *Client_CreateAppApiKey_Call) Return(apiKey types.ApiKey, err error) *Client_CreateAppApiKey_Call {
 	_c.Call.Return(apiKey, err)
 	return _c
 }
 
-func (_c *Client_CreateAppApiKey_Call) RunAndReturn(run func(ctx context.Context, appID string) (outshiftiam.ApiKey, error)) *Client_CreateAppApiKey_Call {
+func (_c *Client_CreateAppApiKey_Call) RunAndReturn(run func(ctx context.Context, appID string) (types.ApiKey, error)) *Client_CreateAppApiKey_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
 // CreateTenantApiKey provides a mock function for the type Client
-func (_mock *Client) CreateTenantApiKey(ctx context.Context) (outshiftiam.ApiKey, error) {
+func (_mock *Client) CreateTenantApiKey(ctx context.Context) (types.ApiKey, error) {
 	ret := _mock.Called(ctx)
 
 	if len(ret) == 0 {
 		panic("no return value specified for CreateTenantApiKey")
 	}
 
-	var r0 outshiftiam.ApiKey
+	var r0 types.ApiKey
 	var r1 error
-	if returnFunc, ok := ret.Get(0).(func(context.Context) (outshiftiam.ApiKey, error)); ok {
+	if returnFunc, ok := ret.Get(0).(func(context.Context) (types.ApiKey, error)); ok {
 		return returnFunc(ctx)
 	}
-	if returnFunc, ok := ret.Get(0).(func(context.Context) outshiftiam.ApiKey); ok {
+	if returnFunc, ok := ret.Get(0).(func(context.Context) types.ApiKey); ok {
 		r0 = returnFunc(ctx)
 	} else {
-		r0 = ret.Get(0).(outshiftiam.ApiKey)
+		r0 = ret.Get(0).(types.ApiKey)
 	}
 	if returnFunc, ok := ret.Get(1).(func(context.Context) error); ok {
 		r1 = returnFunc(ctx)
@@ -302,33 +302,33 @@ func (_c *Client_CreateTenantApiKey_Call) Run(run func(ctx context.Context)) *Cl
 	return _c
 }
 
-func (_c *Client_CreateTenantApiKey_Call) Return(apiKey outshiftiam.ApiKey, err error) *Client_CreateTenantApiKey_Call {
+func (_c *Client_CreateTenantApiKey_Call) Return(apiKey types.ApiKey, err error) *Client_CreateTenantApiKey_Call {
 	_c.Call.Return(apiKey, err)
 	return _c
 }
 
-func (_c *Client_CreateTenantApiKey_Call) RunAndReturn(run func(ctx context.Context) (outshiftiam.ApiKey, error)) *Client_CreateTenantApiKey_Call {
+func (_c *Client_CreateTenantApiKey_Call) RunAndReturn(run func(ctx context.Context) (types.ApiKey, error)) *Client_CreateTenantApiKey_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
 // GetAppApiKey provides a mock function for the type Client
-func (_mock *Client) GetAppApiKey(ctx context.Context, appID string) (outshiftiam.ApiKey, error) {
+func (_mock *Client) GetAppApiKey(ctx context.Context, appID string) (types.ApiKey, error) {
 	ret := _mock.Called(ctx, appID)
 
 	if len(ret) == 0 {
 		panic("no return value specified for GetAppApiKey")
 	}
 
-	var r0 outshiftiam.ApiKey
+	var r0 types.ApiKey
 	var r1 error
-	if returnFunc, ok := ret.Get(0).(func(context.Context, string) (outshiftiam.ApiKey, error)); ok {
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) (types.ApiKey, error)); ok {
 		return returnFunc(ctx, appID)
 	}
-	if returnFunc, ok := ret.Get(0).(func(context.Context, string) outshiftiam.ApiKey); ok {
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) types.ApiKey); ok {
 		r0 = returnFunc(ctx, appID)
 	} else {
-		r0 = ret.Get(0).(outshiftiam.ApiKey)
+		r0 = ret.Get(0).(types.ApiKey)
 	}
 	if returnFunc, ok := ret.Get(1).(func(context.Context, string) error); ok {
 		r1 = returnFunc(ctx, appID)
@@ -368,33 +368,33 @@ func (_c *Client_GetAppApiKey_Call) Run(run func(ctx context.Context, appID stri
 	return _c
 }
 
-func (_c *Client_GetAppApiKey_Call) Return(apiKey outshiftiam.ApiKey, err error) *Client_GetAppApiKey_Call {
+func (_c *Client_GetAppApiKey_Call) Return(apiKey types.ApiKey, err error) *Client_GetAppApiKey_Call {
 	_c.Call.Return(apiKey, err)
 	return _c
 }
 
-func (_c *Client_GetAppApiKey_Call) RunAndReturn(run func(ctx context.Context, appID string) (outshiftiam.ApiKey, error)) *Client_GetAppApiKey_Call {
+func (_c *Client_GetAppApiKey_Call) RunAndReturn(run func(ctx context.Context, appID string) (types.ApiKey, error)) *Client_GetAppApiKey_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
 // GetTenantApiKey provides a mock function for the type Client
-func (_mock *Client) GetTenantApiKey(ctx context.Context) (outshiftiam.ApiKey, error) {
+func (_mock *Client) GetTenantApiKey(ctx context.Context) (types.ApiKey, error) {
 	ret := _mock.Called(ctx)
 
 	if len(ret) == 0 {
 		panic("no return value specified for GetTenantApiKey")
 	}
 
-	var r0 outshiftiam.ApiKey
+	var r0 types.ApiKey
 	var r1 error
-	if returnFunc, ok := ret.Get(0).(func(context.Context) (outshiftiam.ApiKey, error)); ok {
+	if returnFunc, ok := ret.Get(0).(func(context.Context) (types.ApiKey, error)); ok {
 		return returnFunc(ctx)
 	}
-	if returnFunc, ok := ret.Get(0).(func(context.Context) outshiftiam.ApiKey); ok {
+	if returnFunc, ok := ret.Get(0).(func(context.Context) types.ApiKey); ok {
 		r0 = returnFunc(ctx)
 	} else {
-		r0 = ret.Get(0).(outshiftiam.ApiKey)
+		r0 = ret.Get(0).(types.ApiKey)
 	}
 	if returnFunc, ok := ret.Get(1).(func(context.Context) error); ok {
 		r1 = returnFunc(ctx)
@@ -428,33 +428,33 @@ func (_c *Client_GetTenantApiKey_Call) Run(run func(ctx context.Context)) *Clien
 	return _c
 }
 
-func (_c *Client_GetTenantApiKey_Call) Return(apiKey outshiftiam.ApiKey, err error) *Client_GetTenantApiKey_Call {
+func (_c *Client_GetTenantApiKey_Call) Return(apiKey types.ApiKey, err error) *Client_GetTenantApiKey_Call {
 	_c.Call.Return(apiKey, err)
 	return _c
 }
 
-func (_c *Client_GetTenantApiKey_Call) RunAndReturn(run func(ctx context.Context) (outshiftiam.ApiKey, error)) *Client_GetTenantApiKey_Call {
+func (_c *Client_GetTenantApiKey_Call) RunAndReturn(run func(ctx context.Context) (types.ApiKey, error)) *Client_GetTenantApiKey_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
 // RefreshAppApiKey provides a mock function for the type Client
-func (_mock *Client) RefreshAppApiKey(ctx context.Context, appID string) (outshiftiam.ApiKey, error) {
+func (_mock *Client) RefreshAppApiKey(ctx context.Context, appID string) (types.ApiKey, error) {
 	ret := _mock.Called(ctx, appID)
 
 	if len(ret) == 0 {
 		panic("no return value specified for RefreshAppApiKey")
 	}
 
-	var r0 outshiftiam.ApiKey
+	var r0 types.ApiKey
 	var r1 error
-	if returnFunc, ok := ret.Get(0).(func(context.Context, string) (outshiftiam.ApiKey, error)); ok {
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) (types.ApiKey, error)); ok {
 		return returnFunc(ctx, appID)
 	}
-	if returnFunc, ok := ret.Get(0).(func(context.Context, string) outshiftiam.ApiKey); ok {
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) types.ApiKey); ok {
 		r0 = returnFunc(ctx, appID)
 	} else {
-		r0 = ret.Get(0).(outshiftiam.ApiKey)
+		r0 = ret.Get(0).(types.ApiKey)
 	}
 	if returnFunc, ok := ret.Get(1).(func(context.Context, string) error); ok {
 		r1 = returnFunc(ctx, appID)
@@ -494,12 +494,12 @@ func (_c *Client_RefreshAppApiKey_Call) Run(run func(ctx context.Context, appID 
 	return _c
 }
 
-func (_c *Client_RefreshAppApiKey_Call) Return(apiKey outshiftiam.ApiKey, err error) *Client_RefreshAppApiKey_Call {
+func (_c *Client_RefreshAppApiKey_Call) Return(apiKey types.ApiKey, err error) *Client_RefreshAppApiKey_Call {
 	_c.Call.Return(apiKey, err)
 	return _c
 }
 
-func (_c *Client_RefreshAppApiKey_Call) RunAndReturn(run func(ctx context.Context, appID string) (outshiftiam.ApiKey, error)) *Client_RefreshAppApiKey_Call {
+func (_c *Client_RefreshAppApiKey_Call) RunAndReturn(run func(ctx context.Context, appID string) (types.ApiKey, error)) *Client_RefreshAppApiKey_Call {
 	_c.Call.Return(run)
 	return _c
 }
