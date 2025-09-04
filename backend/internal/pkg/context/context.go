@@ -6,6 +6,8 @@ package identitycontext
 import (
 	"context"
 	"errors"
+
+	"github.com/agntcy/identity/pkg/log"
 )
 
 var ErrTenantNotFound = errors.New("context doesn't contain a tenant id")
@@ -20,26 +22,11 @@ func InsertTenantID(ctx context.Context, tenantID string) context.Context {
 	return ctx
 }
 
-// Used to extract a tenant id that must exist within the context, otherwise panic
-func MustHaveTenantID(ctx context.Context) string {
-	id, keyExists := ctx.Value(TenantID).(string)
-
-	// make sure key exists and tenantID value is actually set to something
-	if keyExists && id != "" {
-		return id
-	}
-
-	// The context doesn't contain a tenant ID, this is required for isolation and is classified as a programming error.
-	// Fundamenatal root causes:
-	// The originating http request doesn't contain the tenant ID field
-	// or the field has been removed from the context at some stage through the processing pipeline.
-
-	panic(ErrTenantNotFound)
-}
-
 // TenantID fetches the tenant ID from a context (if any).
 func GetTenantID(ctx context.Context) (string, bool) {
 	tenantID, ok := ctx.Value(TenantID).(string)
+	log.Debug("Fetched tenant ID from context:", ctx)
+	log.Debug(ctx.Value("tenant-id"))
 
 	return tenantID, ok
 }
@@ -82,15 +69,6 @@ func InsertOrganizationID(ctx context.Context, organizationID string) context.Co
 	return ctx
 }
 
-// InsertAuthType inserts authType into the context.
-func InsertAuthType(ctx context.Context, authType string) context.Context {
-	if authType != "" {
-		return withAuthType(ctx, authType)
-	}
-
-	return ctx
-}
-
 // Inserts the app ID into the context.
 func InsertAppID(ctx context.Context, appID string) context.Context {
 	if appID != "" {
@@ -113,11 +91,6 @@ func withUserID(ctx context.Context, id string) context.Context {
 // WithOrganizationID injects an organization ID to a context.
 func withOrganizationID(ctx context.Context, id string) context.Context {
 	return context.WithValue(ctx, OrganizationID, id)
-}
-
-// WithTypeAuth injects a type auth to a context.
-func withAuthType(ctx context.Context, id string) context.Context {
-	return context.WithValue(ctx, AuthType, id)
 }
 
 // Injects an app ID to a context.
