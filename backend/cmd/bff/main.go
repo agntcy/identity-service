@@ -33,6 +33,7 @@ import (
 	"github.com/outshift/identity-service/internal/pkg/grpcutil"
 	outshiftiam "github.com/outshift/identity-service/internal/pkg/iam"
 	"github.com/outshift/identity-service/internal/pkg/interceptors"
+	"github.com/outshift/identity-service/internal/pkg/secrets"
 	"github.com/outshift/identity-service/internal/pkg/vault"
 	"github.com/outshift/identity-service/pkg/cmd"
 	"github.com/outshift/identity-service/pkg/db"
@@ -135,6 +136,8 @@ func main() {
 		}
 	}()
 
+	crypter := secrets.NewSymmetricCrypter([]byte(config.SecretsCryptoKey))
+
 	// IAM
 	iamClient := outshiftiam.NewClient(
 		http.DefaultClient,
@@ -175,10 +178,10 @@ func main() {
 
 	// Create repositories
 	appRepository := apppg.NewRepository(dbContext.Client())
-	settingsRepository := settingspg.NewRepository(dbContext.Client())
+	settingsRepository := settingspg.NewRepository(dbContext.Client(), crypter)
 	badgeRepository := badgepg.NewRepository(dbContext.Client())
 	deviceRepository := devicepg.NewRepository(dbContext.Client())
-	authRepository := authpg.NewRepository(dbContext.Client())
+	authRepository := authpg.NewRepository(dbContext.Client(), crypter)
 	policyRepository := policypg.NewRepository(dbContext.Client())
 
 	// Get the token depending on the environment

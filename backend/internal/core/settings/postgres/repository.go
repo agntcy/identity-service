@@ -11,18 +11,21 @@ import (
 	"github.com/outshift/identity-service/internal/core/settings/types"
 	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
 	"github.com/outshift/identity-service/internal/pkg/errutil"
+	"github.com/outshift/identity-service/internal/pkg/secrets"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
 type repository struct {
 	dbContext *gorm.DB
+	crypter   secrets.Crypter
 }
 
 // NewRepository creates a new instance of the Repository
-func NewRepository(dbContext *gorm.DB) settingscore.Repository {
+func NewRepository(dbContext *gorm.DB, crypter secrets.Crypter) settingscore.Repository {
 	return &repository{
 		dbContext,
+		crypter,
 	}
 }
 
@@ -39,7 +42,7 @@ func (r *repository) UpdateIssuerSettings(
 	}
 
 	// Update the existing settings with the new values
-	model := newIssuerSettingsModel(issuerSettings)
+	model := newIssuerSettingsModel(issuerSettings, r.crypter)
 	existingSettings.IdpType = model.IdpType
 	existingSettings.IssuerID = model.IssuerID
 	existingSettings.KeyID = model.KeyID
@@ -63,7 +66,7 @@ func (r *repository) UpdateIssuerSettings(
 		)
 	}
 
-	return model.ToCoreType(), nil
+	return model.ToCoreType(r.crypter), nil
 }
 
 func (r *repository) GetIssuerSettings(
@@ -76,7 +79,7 @@ func (r *repository) GetIssuerSettings(
 		)
 	}
 
-	return issuerSettings.ToCoreType(), nil
+	return issuerSettings.ToCoreType(r.crypter), nil
 }
 
 func (r *repository) getOrCreateIssuerSettings(
@@ -98,7 +101,7 @@ func (r *repository) getOrCreateIssuerSettings(
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 			// Create a new IssuerSettings if not found
-			model := newIssuerSettingsModel(&types.IssuerSettings{})
+			model := newIssuerSettingsModel(&types.IssuerSettings{}, r.crypter)
 			model.TenantID = tenantID
 
 			inserted := r.dbContext.Create(model)
