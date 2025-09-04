@@ -1,5 +1,5 @@
-//go:build !outshift
-// +build !outshift
+//go:build !outshiftLM
+// +build !outshiftLM
 
 // Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
 // SPDX-License-Identifier: Apache-2.0
@@ -13,58 +13,73 @@ import (
 	"github.com/outshift/identity-service/internal/core/iam/types"
 )
 
-type MultitenantClient struct {
-}
+// ErrMultitenantNotImplemented is returned by all MultitenantClient methods in non-Outshift builds.
+var ErrMultitenantNotImplemented = errors.New(
+	"multitenant mode is not implemented",
+)
 
+// MultitenantClient is a stub for multitenant IAM operations in non-Outshift builds.
+type MultitenantClient struct{}
+
+// NewMultitenantClient returns a new stub MultitenantClient.
 func NewMultitenantClient() *MultitenantClient {
 	return &MultitenantClient{}
 }
 
+// GetTenantAPIKey returns an error indicating multitenant mode is not implemented.
 func (c *MultitenantClient) GetTenantAPIKey(
-	ctx context.Context) (apiKey *types.APIKey, err error) {
-	return nil, errors.New("multitenant mode is not implemented")
+	ctx context.Context,
+) (*types.APIKey, error) {
+	return nil, ErrMultitenantNotImplemented
 }
 
+// CreateTenantAPIKey returns an error indicating multitenant mode is not implemented.
 func (c *MultitenantClient) CreateTenantAPIKey(
 	ctx context.Context,
-) (apiKey *types.APIKey, err error) {
-	return nil, errors.New("multitenant mode is not implemented")
+) (*types.APIKey, error) {
+	return nil, ErrMultitenantNotImplemented
 }
 
-func (c *MultitenantClient) RevokeTenantAPIKey(
-	ctx context.Context) (err error) {
-	return errors.New("multitenant mode is not implemented")
-}
-func (c *MultitenantClient) GetAppAPIKey(ctx context.Context,
-	appID string) (apiKey *types.APIKey, err error) {
-	return nil, errors.New("multitenant mode is not implemented")
+// RevokeTenantAPIKey returns an error indicating multitenant mode is not implemented.
+func (c *MultitenantClient) RevokeTenantAPIKey(ctx context.Context) error {
+	return ErrMultitenantNotImplemented
 }
 
-func (c *MultitenantClient) CreateAppAPIKey(ctx context.Context,
-	appID string) (apiKey *types.APIKey, err error) {
-	return nil, errors.New("multitenant mode is not implemented")
-}
-
-func (c *MultitenantClient) RefreshAppAPIKey(ctx context.Context,
-	appID string) (apiKey *types.APIKey, err error) {
-	return nil, errors.New("multitenant mode is not implemented")
-}
-
-func (c *MultitenantClient) RevokeAppAPIKey(ctx context.Context,
-	appID string) (err error) {
-	return errors.New("multitenant mode is not implemented")
-}
-
-func (c *MultitenantClient) AuthJwt(
+// GetAppAPIKey returns an error indicating multitenant mode is not implemented.
+func (c *MultitenantClient) GetAppAPIKey(
 	ctx context.Context,
-	header string) (newCtx context.Context, err error) {
-	return nil, errors.New("multitenant mode is not implemented")
+) (*types.APIKey, error) {
+	return nil, ErrMultitenantNotImplemented
 }
 
+// CreateAppAPIKey returns an error indicating multitenant mode is not implemented.
+func (c *MultitenantClient) CreateAppAPIKey(
+	ctx context.Context,
+) (*types.APIKey, error) {
+	return nil, ErrMultitenantNotImplemented
+}
+
+// RefreshAppAPIKey returns an error indicating multitenant mode is not implemented.
+func (c *MultitenantClient) RefreshAppAPIKey(
+	ctx context.Context,
+) (*types.APIKey, error) {
+	return nil, ErrMultitenantNotImplemented
+}
+
+// RevokeAppAPIKey returns an error indicating multitenant mode is not implemented.
+func (c *MultitenantClient) RevokeAppAPIKey(ctx context.Context) error {
+	return ErrMultitenantNotImplemented
+}
+
+// AuthJwt returns an error indicating multitenant mode is not implemented.
+func (c *MultitenantClient) AuthJwt(ctx context.Context, jwt string) error {
+	return ErrMultitenantNotImplemented
+}
+
+// AuthAPIKey returns an error indicating multitenant mode is not implemented.
 func (c *MultitenantClient) AuthAPIKey(
 	ctx context.Context,
 	apiKey string,
-	forApp bool,
-) (newCtx context.Context, err error) {
-	return nil, errors.New("multitenant mode is not implemented")
+) error {
+	return ErrMultitenantNotImplemented
 }

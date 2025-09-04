@@ -40,7 +40,8 @@ type MultitenantClient struct {
 func NewMultitenantClient() *MultitenantClient {
 	config, err := cmd.GetConfiguration[Configuration]()
 	if err != nil {
-		log.WithFields(logrus.Fields{log.ErrorField: err}).Fatal("failed to load IAM configuration")
+		log.WithFields(logrus.Fields{log.ErrorField: err}).
+			Fatal("failed to load IAM configuration")
 	}
 
 	outshiftiamClient := outshiftiam.NewClient(

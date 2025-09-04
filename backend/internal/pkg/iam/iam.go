@@ -20,10 +20,13 @@ type Client interface {
 		forApp bool,
 	) (newCtx context.Context, err error)
 	GetTenantAPIKey(ctx context.Context) (apiKey *types.APIKey, err error)
-	GetAppAPIKey(ctx context.Context, appID string) (apiKey *types.APIKey, err error)
-	RefreshAppAPIKey(ctx context.Context, appID string) (apiKey *types.APIKey, err error)
+	GetAppAPIKey(ctx context.Context,
+		appID string) (apiKey *types.APIKey, err error)
+	RefreshAppAPIKey(ctx context.Context,
+		appID string) (apiKey *types.APIKey, err error)
 	CreateTenantAPIKey(ctx context.Context) (apiKey *types.APIKey, err error)
-	CreateAppAPIKey(ctx context.Context, appID string) (apiKey *types.APIKey, err error)
+	CreateAppAPIKey(ctx context.Context,
+		appID string) (apiKey *types.APIKey, err error)
 	RevokeTenantAPIKey(ctx context.Context) (err error)
 	RevokeAppAPIKey(ctx context.Context, appID string) (err error)
 }
