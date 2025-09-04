@@ -52,10 +52,9 @@ func TestData_GetWithRawBody_should_return_err_when_status_is_not_200(t *testing
 func TestData_Get_should_return_resp_obj_with_correct_status_code(t *testing.T) {
 	t.Parallel()
 
+	//nolint:paralleltest // we don't run the tests in parallel to avoid having multipe servers binding the same port
 	for tc := 200; tc <= 599; tc++ {
 		t.Run(fmt.Sprintf("should return status code %d", tc), func(t *testing.T) {
-			t.Parallel()
-
 			ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				w.WriteHeader(tc)
 			}))
