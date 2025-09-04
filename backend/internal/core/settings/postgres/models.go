@@ -51,7 +51,7 @@ type Device struct {
 	SubscriptionToken string    `gorm:"not null;type:varchar(256);"`
 }
 
-func (i *OktaIdpSettings) ToCoreType() *types.OktaIdpSettings {
+func (i *OktaIdpSettings) ToCoreType(crypter secrets.Crypter) *types.OktaIdpSettings {
 	if i == nil {
 		return nil
 	}
@@ -59,11 +59,11 @@ func (i *OktaIdpSettings) ToCoreType() *types.OktaIdpSettings {
 	return &types.OktaIdpSettings{
 		OrgUrl:     i.OrgUrl,
 		ClientID:   i.ClientID,
-		PrivateKey: ptrutil.DerefStr(secrets.ToString(i.PrivateKey)),
+		PrivateKey: ptrutil.DerefStr(secrets.EncryptedStringToRaw(i.PrivateKey, crypter)),
 	}
 }
 
-func (i *DuoIdpSettings) ToCoreType() *types.DuoIdpSettings {
+func (i *DuoIdpSettings) ToCoreType(crypter secrets.Crypter) *types.DuoIdpSettings {
 	if i == nil {
 		return nil
 	}
@@ -71,22 +71,22 @@ func (i *DuoIdpSettings) ToCoreType() *types.DuoIdpSettings {
 	return &types.DuoIdpSettings{
 		Hostname:       i.Hostname,
 		IntegrationKey: i.IntegrationKey,
-		SecretKey:      ptrutil.DerefStr(secrets.ToString(i.SecretKey)),
+		SecretKey:      ptrutil.DerefStr(secrets.EncryptedStringToRaw(i.SecretKey, crypter)),
 	}
 }
 
-func (i *OryIdpSettings) ToCoreType() *types.OryIdpSettings {
+func (i *OryIdpSettings) ToCoreType(crypter secrets.Crypter) *types.OryIdpSettings {
 	if i == nil {
 		return nil
 	}
 
 	return &types.OryIdpSettings{
 		ProjectSlug: i.ProjectSlug,
-		ApiKey:      ptrutil.DerefStr(secrets.ToString(i.ApiKey)),
+		ApiKey:      ptrutil.DerefStr(secrets.EncryptedStringToRaw(i.ApiKey, crypter)),
 	}
 }
 
-func (i *IssuerSettings) ToCoreType() *types.IssuerSettings {
+func (i *IssuerSettings) ToCoreType(crypter secrets.Crypter) *types.IssuerSettings {
 	if i == nil {
 		return nil
 	}
@@ -95,13 +95,13 @@ func (i *IssuerSettings) ToCoreType() *types.IssuerSettings {
 		IssuerID:        ptrutil.DerefStr(i.IssuerID),
 		KeyID:           ptrutil.DerefStr(i.KeyID),
 		IdpType:         i.IdpType,
-		DuoIdpSettings:  i.DuoIdpSettings.ToCoreType(),
-		OktaIdpSettings: i.OktaIdpSettings.ToCoreType(),
-		OryIdpSettings:  i.OryIdpSettings.ToCoreType(),
+		DuoIdpSettings:  i.DuoIdpSettings.ToCoreType(crypter),
+		OktaIdpSettings: i.OktaIdpSettings.ToCoreType(crypter),
+		OryIdpSettings:  i.OryIdpSettings.ToCoreType(crypter),
 	}
 }
 
-func newOktaIdpSettingsModel(src *types.OktaIdpSettings) *OktaIdpSettings {
+func newOktaIdpSettingsModel(src *types.OktaIdpSettings, crypter secrets.Crypter) *OktaIdpSettings {
 	if src == nil {
 		return nil
 	}
@@ -109,11 +109,11 @@ func newOktaIdpSettingsModel(src *types.OktaIdpSettings) *OktaIdpSettings {
 	return &OktaIdpSettings{
 		OrgUrl:     src.OrgUrl,
 		ClientID:   src.ClientID,
-		PrivateKey: secrets.FromString(ptrutil.Ptr(src.PrivateKey)),
+		PrivateKey: secrets.NewEncryptedString(&src.PrivateKey, crypter),
 	}
 }
 
-func newDuoIdpSettingsModel(src *types.DuoIdpSettings) *DuoIdpSettings {
+func newDuoIdpSettingsModel(src *types.DuoIdpSettings, crypter secrets.Crypter) *DuoIdpSettings {
 	if src == nil {
 		return nil
 	}
@@ -121,28 +121,28 @@ func newDuoIdpSettingsModel(src *types.DuoIdpSettings) *DuoIdpSettings {
 	return &DuoIdpSettings{
 		Hostname:       src.Hostname,
 		IntegrationKey: src.IntegrationKey,
-		SecretKey:      secrets.FromString(ptrutil.Ptr(src.SecretKey)),
+		SecretKey:      secrets.NewEncryptedString(&src.SecretKey, crypter),
 	}
 }
 
-func newOryIdpSettingsModel(src *types.OryIdpSettings) *OryIdpSettings {
+func newOryIdpSettingsModel(src *types.OryIdpSettings, crypter secrets.Crypter) *OryIdpSettings {
 	if src == nil {
 		return nil
 	}
 
 	return &OryIdpSettings{
 		ProjectSlug: src.ProjectSlug,
-		ApiKey:      secrets.FromString(ptrutil.Ptr(src.ApiKey)),
+		ApiKey:      secrets.NewEncryptedString(&src.ApiKey, crypter),
 	}
 }
 
-func newIssuerSettingsModel(src *types.IssuerSettings) *IssuerSettings {
+func newIssuerSettingsModel(src *types.IssuerSettings, crypter secrets.Crypter) *IssuerSettings {
 	return &IssuerSettings{
 		IssuerID:        ptrutil.Ptr(src.IssuerID),
 		KeyID:           ptrutil.Ptr(src.KeyID),
 		IdpType:         src.IdpType,
-		DuoIdpSettings:  newDuoIdpSettingsModel(src.DuoIdpSettings),
-		OktaIdpSettings: newOktaIdpSettingsModel(src.OktaIdpSettings),
-		OryIdpSettings:  newOryIdpSettingsModel(src.OryIdpSettings),
+		DuoIdpSettings:  newDuoIdpSettingsModel(src.DuoIdpSettings, crypter),
+		OktaIdpSettings: newOktaIdpSettingsModel(src.OktaIdpSettings, crypter),
+		OryIdpSettings:  newOryIdpSettingsModel(src.OryIdpSettings, crypter),
 	}
 }
