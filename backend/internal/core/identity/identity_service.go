@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"net"
 	"strings"
+	"time"
 
 	idsdk "github.com/agntcy/identity/api/client/client/id_service"
 	issuersdk "github.com/agntcy/identity/api/client/client/issuer_service"
@@ -469,23 +470,55 @@ func convertVerifiableCredential(
 
 	schemas := make([]*badgetypes.CredentialSchema, 0)
 	for _, schema := range src.CredentialSchema {
-		schemas = append(schemas, convertutil.Convert[badgetypes.CredentialSchema](schema))
+		schemas = append(schemas, &badgetypes.CredentialSchema{
+			ID:   schema.ID,
+			Type: schema.Type,
+		})
 	}
 
 	statuses := make([]*badgetypes.CredentialStatus, 0)
 	for _, status := range src.CredentialStatus {
-		statuses = append(statuses, convertutil.Convert[badgetypes.CredentialStatus](status))
+		var purpose badgetypes.CredentialStatusPurpose
+		_ = purpose.UnmarshalText([]byte(ptrutil.Derefrence(status.Purpose, "")))
+
+		var createdAt time.Time
+		if strTime, ok := status.CreatedAt.(string); status.CreatedAt != nil && ok {
+			createdAt, _ = time.Parse("2006-01-02T15:04:05.000000Z", strTime)
+		}
+
+		statuses = append(statuses, &badgetypes.CredentialStatus{
+			ID:        status.ID,
+			Type:      status.Type,
+			CreatedAt: createdAt,
+			Purpose:   purpose,
+		})
 	}
 
 	return &badgetypes.VerifiableCredential{
 		Context:           src.Context,
 		Type:              src.Type,
 		Issuer:            src.Issuer,
-		CredentialSubject: convertutil.Convert[badgetypes.BadgeClaims](src.Content),
+		CredentialSubject: convertBadgeClaims(src),
 		ID:                src.ID,
 		IssuanceDate:      src.IssuanceDate,
 		ExpirationDate:    src.ExpirationDate,
 		CredentialSchema:  schemas,
 		Status:            statuses,
 	}
+}
+
+func convertBadgeClaims(src *identitymodels.V1alpha1VerifiableCredential) *badgetypes.BadgeClaims {
+	if src != nil && src.Content != nil {
+		if content, ok := src.Content.(map[string]any); ok {
+			id, _ := content["id"].(string)
+			badge, _ := content["badge"].(string)
+
+			return &badgetypes.BadgeClaims{
+				ID:    id,
+				Badge: badge,
+			}
+		}
+	}
+
+	return nil
 }
