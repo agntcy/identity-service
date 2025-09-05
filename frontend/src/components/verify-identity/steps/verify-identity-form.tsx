@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
  * SPDX-License-Identifier: Apache-2.0
@@ -15,7 +14,7 @@ import {Textarea} from '@/components/ui/textarea';
 import {jwtDecode} from 'jwt-decode';
 
 export const VerifyIdentityForm = ({isLoading = false}: {isLoading?: boolean}) => {
-  const {control, watch, reset, setValue, setError} = useFormContext<VerifyIdentityFormValues>();
+  const {control, watch, setValue, setError} = useFormContext<VerifyIdentityFormValues>();
 
   const badge = watch('badge');
   const badgeContent = watch('badgeContent');
@@ -43,6 +42,7 @@ export const VerifyIdentityForm = ({isLoading = false}: {isLoading?: boolean}) =
             });
           }
         }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         setError('badgeContent', {
           type: 'manual',
@@ -77,6 +77,7 @@ export const VerifyIdentityForm = ({isLoading = false}: {isLoading?: boolean}) =
             type: 'error'
           });
         }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         const proofValue = badge;
         setValue('proofValue', proofValue);

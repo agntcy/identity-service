@@ -66,7 +66,9 @@ export default defineConfig(({mode}) => {
           'src/providers/auth-provider',
           'src/cookies',
           'src/constants',
-          'src/config'
+          'src/config',
+          'src/hooks',
+          'src/lib'
         ],
         include: ['src/']
       }
