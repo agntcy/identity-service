@@ -85,6 +85,8 @@ func (f *FindBlockByFuncName) Visit(node ast.Node) ast.Visitor {
 	return f
 }
 
+// Returns the function name from its pointer. It only returns
+// the name without the pkg path and the filename.
 func getFuncName(t *testing.T, fn any) string {
 	t.Helper()
 
@@ -95,6 +97,19 @@ func getFuncName(t *testing.T, fn any) string {
 	return fnNameParts[len(fnNameParts)-1]
 }
 
+// Returns the output fields being populated by the converter.
+// For example if we have a converter that looks like this:
+//
+//	  func FromApp(src *apptypes.App) *identity_service_sdk_go.App {
+//	    ...some code...
+//		   return &identity_service_sdk_go.App{
+//			   Id:                 ptrutil.Ptr(src.ID),
+//			   Name:               src.Name,
+//			   Description:        src.Description,
+//		   }
+//	  }
+//
+// Then this function will return the following slice: []string{"Id", "Name", "Description"}
 func parseOutputTypeFields(block *ast.BlockStmt) []string {
 	fields := make([]string, 0)
 
@@ -122,6 +137,9 @@ func parseOutputTypeFields(block *ast.BlockStmt) []string {
 	return fields
 }
 
+// This function takes as input a pointer to a converter function, it uses
+// ast and reflection to parse its source code to return the argument type (src),
+// the return type (dst) and the fields of the return type being populated.
 func parseConverter(t *testing.T, converter any) *ConverterData {
 	t.Helper()
 
@@ -179,6 +197,8 @@ func isInteger(t *testing.T, typ reflect.Type) bool {
 	}
 }
 
+// Tells whether to ignore a field or not based on its type.
+// Any field that is not primitive is going to be ignored.
 func ignoreType(t *testing.T, typ reflect.Type) bool {
 	t.Helper()
 
@@ -255,7 +275,14 @@ func TestConverters_should_instantiate_valid_obj_from_src(t *testing.T) {
 func TestConverters_should_return_nil(t *testing.T) {
 	t.Parallel()
 
-	for _, converter := range testData {
+	testCases := []any{
+		converters.FromDuoIdpSettings,
+		converters.FromOktaIdpSettings,
+		converters.FromOryIdpSettings,
+	}
+	testCases = append(testCases, testData...)
+
+	for _, converter := range testCases {
 		t.Run(fmt.Sprintf("testing converter %s", getFuncName(t, converter)), func(t *testing.T) {
 			t.Parallel()
 
