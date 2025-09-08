@@ -493,7 +493,7 @@ func convertVerifiableCredential(
 
 		var createdAt time.Time
 		if strTime, ok := status.CreatedAt.(string); status.CreatedAt != nil && ok {
-			createdAt, _ = time.Parse("2006-01-02T15:04:05.000000Z", strTime)
+			createdAt, _ = time.Parse("2006-01-02T15:04:05.999999999Z", strTime)
 		}
 
 		statuses = append(statuses, &badgetypes.CredentialStatus{
