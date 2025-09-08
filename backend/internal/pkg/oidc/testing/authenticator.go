@@ -10,6 +10,10 @@ import (
 	"github.com/agntcy/identity/pkg/oidc"
 )
 
+const (
+	ValidAccessToken string = "valid-access-token"
+)
+
 type ValidAuthenticator struct{}
 
 func NewValidAuthenticator() oidc.Authenticator {
@@ -22,7 +26,7 @@ func (ValidAuthenticator) Token(
 	clientID string,
 	clientSecret string,
 ) (string, error) {
-	return "valid-access-token", nil
+	return ValidAccessToken, nil
 }
 
 type ErroneousAuthenticator struct{}
