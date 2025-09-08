@@ -4,13 +4,16 @@
 package identity_test
 
 import (
+	"encoding/json"
 	"fmt"
+	"io"
 	"net"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
 
+	identitymodels "github.com/agntcy/identity/api/client/models"
 	"github.com/agntcy/identity/pkg/joseutil"
 	"github.com/agntcy/identity/pkg/jwk"
 	"github.com/google/uuid"
@@ -22,19 +25,32 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func createTestServerWithResponse(
+//nolint:nonamedreturns // we do want named returns for simplicity
+func createTestServerWithReqAssert[T any](
 	t *testing.T,
-	resp string,
-) (ts *httptest.Server, host string, port string) {
+	response string,
+	assertReqBody func(payload *T),
+) (ts *httptest.Server, host, port string) {
 	t.Helper()
 
 	ts = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if assertReqBody != nil {
+			body, _ := io.ReadAll(r.Body)
+
+			var payload T
+			err := json.Unmarshal(body, &payload)
+			assert.NoError(t, err)
+
+			assertReqBody(&payload)
+			r.Body.Close()
+		}
+
 		w.Header().Add("Content-Type", "application/json")
-		w.Write([]byte(resp))
+		_, _ = w.Write([]byte(response))
 	}))
 	host, port, _ = net.SplitHostPort(strings.ReplaceAll(ts.URL, "http://", ""))
 
-	return
+	return ts, host, port
 }
 
 func createKeyStore(t *testing.T) (*identitymocks.KeyStore, *jwk.Jwk) {
@@ -51,16 +67,35 @@ func createKeyStore(t *testing.T) (*identitymocks.KeyStore, *jwk.Jwk) {
 func TestRegisterIssuer(t *testing.T) {
 	t.Parallel()
 
+	orgID := uuid.NewString()
 	clientCred := &idp.ClientCredentials{Issuer: "something"}
 	keyStore, priv := createKeyStore(t)
 	keyStore.EXPECT().GenerateAndSaveKey(t.Context()).Return(priv, nil)
 
-	ts, host, port := createTestServerWithResponse(t, "")
+	ts, host, port := createTestServerWithReqAssert(
+		t,
+		"",
+		func(payload *identitymodels.V1alpha1RegisterIssuerRequest) {
+			assert.Equal(t, &identitymodels.V1alpha1Issuer{
+				Organization: orgID,
+				CommonName:   clientCred.Issuer,
+				PublicKey: &identitymodels.V1alpha1Jwk{
+					Alg: priv.ALG,
+					Kty: priv.KTY,
+					Use: priv.USE,
+					Kid: priv.KID,
+					Pub: priv.PUB,
+					E:   priv.E,
+					N:   priv.N,
+				},
+			}, payload.Issuer)
+		},
+	)
 	defer ts.Close()
 
 	sut := identity.NewService(host, port, keyStore, nil, false)
 
-	issuer, err := sut.RegisterIssuer(t.Context(), clientCred, uuid.NewString())
+	issuer, err := sut.RegisterIssuer(t.Context(), clientCred, orgID)
 
 	assert.NoError(t, err)
 	assert.Equal(t, &identity.Issuer{CommonName: clientCred.Issuer, KeyID: priv.KID}, issuer)
@@ -73,12 +108,28 @@ func TestGenerateID(t *testing.T) {
 	clientCred := &idp.ClientCredentials{Issuer: "something"}
 	keyStore, priv := createKeyStore(t)
 
-	ts, host, port := createTestServerWithResponse(t, fmt.Sprintf(`{"resolverMetadata": {"id": "%s"}}`, expectedID))
+	ts, host, port := createTestServerWithReqAssert(
+		t,
+		fmt.Sprintf(`{"resolverMetadata": {"id": %q}}`, expectedID),
+		func(payload *identitymodels.V1alpha1GenerateRequest) {
+			assert.Equal(
+				t,
+				&identitymodels.V1alpha1Issuer{
+					CommonName: clientCred.Issuer,
+				},
+				payload.Issuer,
+			)
+		},
+	)
 	defer ts.Close()
 
 	sut := identity.NewService(host, port, keyStore, nil, false)
 
-	actualID, err := sut.GenerateID(t.Context(), clientCred, &identity.Issuer{KeyID: priv.KID})
+	actualID, err := sut.GenerateID(
+		t.Context(),
+		clientCred,
+		&identity.Issuer{KeyID: priv.KID, CommonName: clientCred.Issuer},
+	)
 
 	assert.NoError(t, err)
 	assert.Equal(t, expectedID, actualID)
@@ -98,7 +149,18 @@ func TestPublishVerifiableCredential(t *testing.T) {
 	)
 	assert.NoError(t, err)
 
-	ts, host, port := createTestServerWithResponse(t, "{}")
+	ts, host, port := createTestServerWithReqAssert(
+		t,
+		"{}",
+		func(payload *identitymodels.V1alpha1PublishRequest) {
+			assert.Equal(t, &identitymodels.V1alpha1EnvelopedCredential{
+				EnvelopeType: identitymodels.NewV1alpha1CredentialEnvelopeType(
+					identitymodels.V1alpha1CredentialEnvelopeTypeCREDENTIALENVELOPETYPEJOSE,
+				),
+				Value: vc.Proof.ProofValue,
+			}, payload.Vc)
+		},
+	)
 	defer ts.Close()
 
 	sut := identity.NewService(host, port, keyStore, nil, false)
@@ -107,6 +169,46 @@ func TestPublishVerifiableCredential(t *testing.T) {
 		t.Context(),
 		clientCred,
 		&vc.VerifiableCredential,
+		&identity.Issuer{KeyID: priv.KID},
+	)
+
+	assert.NoError(t, err)
+}
+
+func TestRevokeVerifiableCredential(t *testing.T) {
+	t.Parallel()
+
+	clientCred := &idp.ClientCredentials{Issuer: "something"}
+	keyStore, priv := createKeyStore(t)
+	badg, err := badge.Issue(
+		uuid.NewString(),
+		clientCred.Issuer,
+		badgetypes.BADGE_TYPE_AGENT_BADGE,
+		&badgetypes.BadgeClaims{},
+		priv,
+	)
+	assert.NoError(t, err)
+
+	ts, host, port := createTestServerWithReqAssert(
+		t,
+		"{}",
+		func(payload *identitymodels.V1alpha1RevokeRequest) {
+			assert.Equal(t, &identitymodels.V1alpha1EnvelopedCredential{
+				EnvelopeType: identitymodels.NewV1alpha1CredentialEnvelopeType(
+					identitymodels.V1alpha1CredentialEnvelopeTypeCREDENTIALENVELOPETYPEJOSE,
+				),
+				Value: badg.Proof.ProofValue,
+			}, payload.Vc)
+		},
+	)
+	defer ts.Close()
+
+	sut := identity.NewService(host, port, keyStore, nil, false)
+
+	err = sut.RevokeVerifiableCredential(
+		t.Context(),
+		clientCred,
+		&badg.VerifiableCredential,
 		&identity.Issuer{KeyID: priv.KID},
 	)
 
