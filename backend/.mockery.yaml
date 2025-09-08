@@ -44,7 +44,13 @@ packages:
       Service: {}
   github.com/outshift/identity-service/internal/bff:
     interfaces:
+      AppService: {}
+      AuthService: {}
+      BadgeService: {}
+      DeviceService: {}
       NotificationService: {}
+      PolicyService: {}
+      SettingsService: {}
   github.com/outshift/identity-service/internal/pkg/iam:
     interfaces:
       Client: {}
