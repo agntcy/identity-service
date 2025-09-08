@@ -16,9 +16,12 @@ interface ErrorPageProps extends Omit<FallbackProps, 'resetErrorBoundary'> {
 export const ErrorPage = ({error, resetErrorBoundary}: ErrorPageProps) => {
   const errorRouter = useRouteError();
   let errorMessage: string;
+  let actualError: any = error;
 
+  // Prioritize route error if it's a route error response
   if (isRouteErrorResponse(errorRouter)) {
-    errorMessage = error.error?.message || error.statusText;
+    errorMessage = errorRouter.data || errorRouter.statusText;
+    actualError = errorRouter;
   } else if (error instanceof Error) {
     errorMessage = error.message;
   } else if (typeof error === 'string') {
@@ -27,6 +30,9 @@ export const ErrorPage = ({error, resetErrorBoundary}: ErrorPageProps) => {
     console.error(error);
     errorMessage = 'Unknown error';
   }
+
+  // Get error name safely - only for Error instances
+  const errorName = actualError instanceof Error && actualError.name && actualError.name.trim() ? actualError.name : null;
 
   return (
     <Card className="mt-[24px] mx-[32px] p-[24px]" variant="secondary">
@@ -37,15 +43,15 @@ export const ErrorPage = ({error, resetErrorBoundary}: ErrorPageProps) => {
           (
             <div className="flex flex-col gap-2 text-center text-xs text-muted-foreground mt-2">
               <p>
-                <b>Date of error:</b> {new Date().toLocaleString()}
+                <b>Date of error:</b> {new Date().toLocaleString('en-US')}
               </p>
-              {errorMessage && error.name ? (
+              {errorMessage && errorName ? (
                 <p>
-                  <b>{error.name}</b>: {errorMessage}
+                  <b>{errorName}</b>: {errorMessage}
                 </p>
-              ) : (
+              ) : errorMessage ? (
                 <p>{errorMessage}</p>
-              )}
+              ) : null}
               <p>Please try refreshing the page, or contact support if the problem persists.</p>
             </div>
           ) as any

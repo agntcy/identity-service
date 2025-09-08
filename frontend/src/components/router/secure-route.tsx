@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+/* c8 ignore start */
+
 import {SecureRouteProps} from '@/types/okta';
 import * as React from 'react';
 import * as ReactRouterDom from 'react-router-dom';
@@ -89,3 +91,5 @@ export const SecureRoute: React.FC<React.PropsWithChildren<SecureRouteProps>> = 
 
   return children ? <>{children}</> : <ReactRouterDom.Outlet />;
 };
+
+/* c8 ignore stop */

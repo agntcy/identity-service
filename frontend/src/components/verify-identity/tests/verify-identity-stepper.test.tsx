@@ -707,7 +707,7 @@ describe('VerifyIdentityStepper', () => {
 
         expect(mockToast).toHaveBeenCalledWith({
           title: 'Error verifying badge',
-          description: 'There was an error verifying badge. Please try again.',
+          description: 'There was an error verifying the badge. Please try again.',
           type: 'error'
         });
       } catch (error) {
