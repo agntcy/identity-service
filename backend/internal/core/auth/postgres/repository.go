@@ -19,11 +19,13 @@ import (
 
 type postgresRepository struct {
 	dbContext *gorm.DB
+	crypter   secrets.Crypter
 }
 
-func NewRepository(dbContext *gorm.DB) sessioncore.Repository {
+func NewRepository(dbContext *gorm.DB, crypter secrets.Crypter) sessioncore.Repository {
 	return &postgresRepository{
 		dbContext: dbContext,
+		crypter:   crypter,
 	}
 }
 
@@ -31,7 +33,7 @@ func (r *postgresRepository) Create(
 	ctx context.Context,
 	session *types.Session,
 ) (*types.Session, error) {
-	model := newSessionModel(session)
+	model := newSessionModel(session, r.crypter)
 
 	result := r.dbContext.Create(model)
 	if result.Error != nil {
@@ -40,7 +42,7 @@ func (r *postgresRepository) Create(
 		)
 	}
 
-	return model.ToCoreType(), nil
+	return model.ToCoreType(r.crypter), nil
 }
 
 func (r *postgresRepository) GetByAuthorizationCode(
@@ -70,7 +72,7 @@ func (r *postgresRepository) GetByAuthorizationCode(
 		)
 	}
 
-	return model.ToCoreType(), nil
+	return model.ToCoreType(r.crypter), nil
 }
 
 func (r *postgresRepository) GetByAccessToken(
@@ -90,7 +92,7 @@ func (r *postgresRepository) GetByAccessToken(
 
 	result := r.dbContext.
 		Where("(app_id = ? OR app_id IS NULL)", appID).
-		Where("access_token = ?", secrets.Encrypt(accessToken)).
+		Where("access_token = ?", r.crypter.Encrypt(accessToken)).
 		First(model)
 	if result.Error != nil {
 		return nil, errutil.Err(
@@ -98,11 +100,11 @@ func (r *postgresRepository) GetByAccessToken(
 		)
 	}
 
-	return model.ToCoreType(), nil
+	return model.ToCoreType(r.crypter), nil
 }
 
 func (r *postgresRepository) Update(ctx context.Context, session *types.Session) error {
-	model := newSessionModel(session)
+	model := newSessionModel(session, r.crypter)
 	model.ID = uuid.MustParse(session.ID)
 
 	result := r.dbContext.Save(model)

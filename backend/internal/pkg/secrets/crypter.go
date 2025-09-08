@@ -8,16 +8,28 @@ import (
 	"crypto/cipher"
 	"encoding/base64"
 
-	"github.com/outshift/identity-service/pkg/cmd"
 	"github.com/outshift/identity-service/pkg/log"
 )
 
+type Crypter interface {
+	Encrypt(secret string) string
+	Decrypt(secretHex string) string
+}
+
+type symmetricCrypter struct {
+	key []byte
+}
+
+func NewSymmetricCrypter(key []byte) Crypter {
+	return &symmetricCrypter{key: key}
+}
+
 // Encrypts a secret
-func Encrypt(secret string) string {
+func (c *symmetricCrypter) Encrypt(secret string) string {
 	plainText := []byte(secret)
 
 	// Create a new AES cipher using the key
-	block, err := aes.NewCipher(getKey())
+	block, err := aes.NewCipher(c.key)
 	if err != nil {
 		log.Error("Got error creating new cypher: ", err)
 		return ""
@@ -40,9 +52,9 @@ func Encrypt(secret string) string {
 }
 
 // Decrypts a secret
-func Decrypt(secretHex string) string {
+func (c *symmetricCrypter) Decrypt(secretHex string) string {
 	// Create a new AES cipher with the key and encrypted message
-	block, err := aes.NewCipher(getKey())
+	block, err := aes.NewCipher(c.key)
 	if err != nil {
 		log.Error("Got error creating new cypher: ", err)
 		return ""
@@ -75,10 +87,4 @@ func Decrypt(secretHex string) string {
 	}
 
 	return string(plaintext)
-}
-
-func getKey() []byte {
-	config, _ := cmd.GetConfiguration[Configuration]()
-
-	return []byte(config.SecretsCryptoKey)
 }

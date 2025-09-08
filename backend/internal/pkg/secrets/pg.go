@@ -3,85 +3,26 @@
 
 package secrets
 
-import (
-	"context"
-	"fmt"
-	"reflect"
-
-	"github.com/outshift/identity-service/internal/pkg/errutil"
-	"github.com/outshift/identity-service/internal/pkg/ptrutil"
-	"github.com/outshift/identity-service/pkg/log"
-	"gorm.io/gorm/schema"
-)
+import "github.com/outshift/identity-service/internal/pkg/ptrutil"
 
 type EncryptedString string
 
-func FromString(s *string) *EncryptedString {
-	if s == nil {
+func NewEncryptedString(raw *string, crypter Crypter) *EncryptedString {
+	if raw == nil {
 		return nil
 	}
 
-	return ptrutil.Ptr(EncryptedString(*s))
+	return ptrutil.Ptr(EncryptedString(crypter.Encrypt(*raw)))
 }
 
-func ToString(es *EncryptedString) *string {
+func (es *EncryptedString) ToString(crypter Crypter) string {
+	return crypter.Decrypt(string(*es))
+}
+
+func EncryptedStringToRaw(es *EncryptedString, crypter Crypter) *string {
 	if es == nil {
 		return nil
 	}
 
-	s := string(*es)
-	if s == "" {
-		return nil
-	}
-
-	return ptrutil.Ptr(s)
-}
-
-// ctx: contains request-scoped values
-// field: the field using the serializer, contains GORM settings, struct tags
-// dst: current model value, `user` in the below example
-// dbValue: current field's value in database
-func (es *EncryptedString) Scan(
-	ctx context.Context,
-	field *schema.Field,
-	dst reflect.Value,
-	dbValue interface{},
-) error {
-	log.Debug("Using EncryptedString Scan method")
-
-	if dbValue == nil {
-		return nil
-	}
-
-	switch value := dbValue.(type) {
-	case []byte:
-		*es = EncryptedString(Decrypt(string(value)))
-	case string:
-		*es = EncryptedString(Decrypt(value))
-	default:
-		return errutil.Err(
-			fmt.Errorf("unsupported data type %T: %v", dbValue, dbValue),
-			"failed to scan encrypted string",
-		)
-	}
-
-	return nil
-}
-
-// ctx: contains request-scoped values
-// field: the field using the serializer, contains GORM settings, struct tags
-// dst: current model value, `user` in the below example
-// fieldValue: current field's value of the dst
-func (es *EncryptedString) Value(
-	ctx context.Context,
-	field *schema.Field,
-	dst reflect.Value,
-	fieldValue interface{},
-) (interface{}, error) {
-	if es == nil {
-		//nolint:nilnil  // If the EncryptedString is nil, return nil to avoid storing an empty string
-		return nil, nil
-	}
-
-	return Encrypt(string(*es)), nil
+	return ptrutil.Ptr(es.ToString(crypter))
 }

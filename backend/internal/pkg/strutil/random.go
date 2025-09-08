@@ -11,6 +11,10 @@ import (
 const extraLength = 2 // for hex encoding
 
 func Random(length int) string {
+	if length < 0 {
+		return ""
+	}
+
 	b := make([]byte, length+extraLength)
 	_, _ = rand.Read(b) // Default reader uses OS APIs that never return an error
 

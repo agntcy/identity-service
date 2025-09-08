@@ -26,7 +26,7 @@ type Session struct {
 	AuthorizationCode *string                  `gorm:"type:varchar(256);index:ac_idx,unique;"`
 }
 
-func (i *Session) ToCoreType() *types.Session {
+func (i *Session) ToCoreType(crypter secrets.Crypter) *types.Session {
 	return &types.Session{
 		ID:                i.ID.String(),
 		OwnerAppID:        i.OwnerAppID.String(),
@@ -34,19 +34,19 @@ func (i *Session) ToCoreType() *types.Session {
 		ToolName:          i.ToolName,
 		UserID:            i.UserID,
 		AuthorizationCode: i.AuthorizationCode,
-		AccessToken:       secrets.ToString(i.AccessToken),
+		AccessToken:       secrets.EncryptedStringToRaw(i.AccessToken, crypter),
 		CreatedAt:         i.CreatedAt,
 		ExpiresAt:         i.ExpiresAt,
 	}
 }
 
-func newSessionModel(src *types.Session) *Session {
+func newSessionModel(src *types.Session, crypter secrets.Crypter) *Session {
 	return &Session{
 		OwnerAppID:        uuid.MustParse(src.OwnerAppID),
 		AppID:             strutil.SafeUuid(src.AppID),
 		ToolName:          src.ToolName,
 		UserID:            src.UserID,
-		AccessToken:       secrets.FromString(src.AccessToken),
+		AccessToken:       secrets.NewEncryptedString(src.AccessToken, crypter),
 		AuthorizationCode: src.AuthorizationCode,
 		ExpiresAt:         src.ExpiresAt,
 		CreatedAt:         src.CreatedAt,
