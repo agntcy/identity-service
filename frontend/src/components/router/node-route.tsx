@@ -21,7 +21,7 @@ export const NodeRoute = ({children, disableErrorBoundary, pageTitle}: NodeRoute
   const {analyticsPage} = useAnalytics();
 
   useEffect(() => {
-    if (pageTitle) {
+    if (pageTitle && analyticsPage) {
       analyticsPage('VISIT_PAGE', {
         pageTitle: pageTitle
       });

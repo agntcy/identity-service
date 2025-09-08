@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import {describe, it, vi, expect, beforeEach, afterEach} from 'vitest';
 import {render, screen} from '@testing-library/react';
@@ -53,7 +54,7 @@ describe('NodeRoute', () => {
     mockLoading = vi.mocked(Loading);
     mockUseAnalytics = vi.mocked(useAnalytics);
     mockAnalyticsPage = vi.fn();
-    
+
     // Get the mocked ErrorPage component
     const {ErrorPage} = await import('../error-page');
     mockErrorPageComponent = vi.mocked(ErrorPage);
@@ -163,13 +164,32 @@ describe('NodeRoute', () => {
         {}
       );
 
-      // Test that fallbackRender calls ErrorPage with props
+      // Test that the fallback render function structure is correct
+      // Since we can't easily test the internal implementation,
+      // we'll test that ErrorBoundary receives the correct fallbackRender prop
+      // @ts-expect-error error
+      const fallbackRenderCall = mockErrorBoundary.mock.calls[0][0];
+      expect(fallbackRenderCall.fallbackRender).toBeInstanceOf(Function);
+    });
+
+    it('ErrorBoundary fallbackRender creates ErrorPage when called', () => {
+      render(
+        <NodeRoute>
+          <TestChild />
+        </NodeRoute>
+      );
+
+      // Get the fallbackRender function
       // @ts-expect-error error
       const fallbackRender = mockErrorBoundary.mock.calls[0][0].fallbackRender;
       const mockProps = {error: new Error('Test error'), resetErrorBoundary: vi.fn()};
 
-      fallbackRender(mockProps);
-      expect(mockErrorPageComponent).toHaveBeenCalledWith(mockProps, {});
+      // Render the fallback
+      render(<>{fallbackRender(mockProps)}</>);
+
+      // Check that ErrorPage component is rendered with the error
+      expect(screen.getByTestId('error-page')).toBeInTheDocument();
+      expect(screen.getByTestId('error-page')).toHaveAttribute('data-error', 'Test error');
     });
   });
 
@@ -475,6 +495,8 @@ describe('NodeRoute', () => {
         analyticsTrack: vi.fn()
       });
 
+      // This test should verify that the component handles undefined analyticsPage gracefully
+      // The component should render but not call analytics
       render(
         <NodeRoute pageTitle="Test">
           <TestChild />
@@ -483,6 +505,7 @@ describe('NodeRoute', () => {
 
       // Component should render without throwing
       expect(screen.getByTestId('test-child')).toBeInTheDocument();
+      // No analytics call should be made since analyticsPage is undefined
     });
 
     it('handles useAnalytics throwing an error', () => {
