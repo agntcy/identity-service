@@ -1,6 +1,7 @@
 // Copyright 2025 Cisco Systems, Inc. and its affiliates
 // SPDX-License-Settingsentifier: Apache-2.0
 
+//nolint:testpackage // this file is testing a private function
 package idp
 
 import (

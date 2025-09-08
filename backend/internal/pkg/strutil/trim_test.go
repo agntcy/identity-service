@@ -43,10 +43,22 @@ func TestTrimSlice(t *testing.T) {
 		slice    []string
 		expected []string
 	}{
-		"should return empty slice":                       {slice: []string{""}, expected: []string{}},
-		"should return slice with only the last element":  {slice: []string{"", "last"}, expected: []string{"last"}},
-		"should return slice with only the first element": {slice: []string{"first", ""}, expected: []string{"first"}},
-		"should remove the empty string in the middle":    {slice: []string{"first", "", "last"}, expected: []string{"first", "last"}},
+		"should return empty slice": {
+			slice:    []string{""},
+			expected: []string{},
+		},
+		"should return slice with only the last element": {
+			slice:    []string{"", "last"},
+			expected: []string{"last"},
+		},
+		"should return slice with only the first element": {
+			slice:    []string{"first", ""},
+			expected: []string{"first"},
+		},
+		"should remove the empty string in the middle": {
+			slice:    []string{"first", "", "last"},
+			expected: []string{"first", "last"},
+		},
 	}
 
 	for tn, tc := range testCases {
