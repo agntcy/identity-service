@@ -34,6 +34,8 @@ const (
 	issuerExistsError = "issuer already exists"
 )
 
+var ErrVCIsNull = errors.New("VerifiableCredential cannot be null")
+
 type Issuer struct {
 	CommonName string
 	KeyID      string
@@ -211,6 +213,10 @@ func (s *service) PublishVerifiableCredential(
 	vc *badgetypes.VerifiableCredential,
 	issuer *Issuer,
 ) error {
+	if vc == nil {
+		return ErrVCIsNull
+	}
+
 	proof, err := s.generateProof(ctx, clientCredentials, issuer.KeyID)
 	if err != nil {
 		return fmt.Errorf(
@@ -371,6 +377,10 @@ func (s *service) RevokeVerifiableCredential(
 	vc *badgetypes.VerifiableCredential,
 	issuer *Issuer,
 ) error {
+	if vc == nil {
+		return ErrVCIsNull
+	}
+
 	proof, err := s.generateProof(ctx, clientCredentials, issuer.KeyID)
 	if err != nil {
 		return fmt.Errorf(
@@ -483,7 +493,7 @@ func convertVerifiableCredential(
 
 		var createdAt time.Time
 		if strTime, ok := status.CreatedAt.(string); status.CreatedAt != nil && ok {
-			createdAt, _ = time.Parse("2006-01-02T15:04:05.000000Z", strTime)
+			createdAt, _ = time.Parse("2006-01-02T15:04:05.999999999Z", strTime)
 		}
 
 		statuses = append(statuses, &badgetypes.CredentialStatus{
