@@ -125,6 +125,7 @@ func main() {
 		&policypg.Policy{},
 		&policypg.Task{},
 		&policypg.Rule{},
+		&iampg.APIKey{},
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -155,8 +156,9 @@ func main() {
 		iamClient = iam.NewMultitenantClient()
 	} else {
 		iamClient = iam.NewStandaloneClient(
-			&config.IamIssuer,
-			&config.IamUserCid,
+			config.IamIssuer,
+			config.IamUserCid,
+			config.IamOrganization,
 			iamRepository,
 		)
 	}
