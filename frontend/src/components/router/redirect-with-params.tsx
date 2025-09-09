@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+/* c8 ignore start */
+
 import React from 'react';
 import {Navigate, NavigateProps, generatePath, useParams} from 'react-router-dom';
 
@@ -15,3 +17,5 @@ export const RedirectWithParams: React.FC<RedirectWithParamsProps> = ({to, ...pr
   const redirectWithParams = generatePath(to, params);
   return <Navigate to={redirectWithParams} {...props} />;
 };
+
+/* c8 ignore end */

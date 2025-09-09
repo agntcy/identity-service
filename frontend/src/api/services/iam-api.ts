@@ -17,7 +17,7 @@ import {
 } from '@/types/api/iam';
 import {AnalyticsBrowser} from '@segment/analytics-next';
 
-class IamAPIClass {
+export class IamAPIClass {
   protected authInfo: AuthInfo | null | undefined;
   public instance: AxiosInstance;
   protected retry = false;

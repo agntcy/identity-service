@@ -11,7 +11,7 @@ import {httpErrorsAuth, USER_NOT_AUTH} from '@/constants/http-errors';
 import {Device} from '@/types/api/device';
 import {AnalyticsBrowser} from '@segment/analytics-next';
 
-class DevicesAPIClass extends DevicesApi.Api<Device> {
+export class DevicesAPIClass extends DevicesApi.Api<Device> {
   protected authInfo: AuthInfo | null | undefined;
   protected retry = false;
   protected analytics: AnalyticsBrowser | undefined;

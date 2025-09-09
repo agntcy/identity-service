@@ -11,7 +11,7 @@ import {Settings} from '@/types/api/settings';
 import {httpErrorsAuth, USER_NOT_AUTH} from '@/constants/http-errors';
 import {AnalyticsBrowser} from '@segment/analytics-next';
 
-class SettingsAPIClass extends SettingsApi.Api<Settings> {
+export class SettingsAPIClass extends SettingsApi.Api<Settings> {
   protected authInfo: AuthInfo | null | undefined;
   protected retry = false;
   protected analytics: AnalyticsBrowser | undefined;

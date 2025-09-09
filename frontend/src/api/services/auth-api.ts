@@ -10,7 +10,7 @@ import config from '@/config';
 import {httpErrorsAuth, USER_NOT_AUTH} from '@/constants/http-errors';
 import {AnalyticsBrowser} from '@segment/analytics-next';
 
-class AuthAPIClass extends AuthApi.Api<any> {
+export class AuthAPIClass extends AuthApi.Api<any> {
   protected authInfo: AuthInfo | null | undefined;
   protected retry = false;
   protected analytics: AnalyticsBrowser | undefined;

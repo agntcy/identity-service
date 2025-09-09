@@ -24,6 +24,8 @@ export const ErrorPageBoundary = ({error, resetErrorBoundary}: ErrorPageBoundary
     errorMessage = 'Unknown error';
   }
 
+  const errorName = error instanceof Error && error.name ? error.name : null;
+
   return (
     <Card className="mt-[24px] mx-[32px] p-[24px]" variant="secondary">
       <EmptyState
@@ -33,15 +35,15 @@ export const ErrorPageBoundary = ({error, resetErrorBoundary}: ErrorPageBoundary
           (
             <div className="flex flex-col gap-2 text-center text-xs text-muted-foreground mt-2">
               <p>
-                <b>Date of error:</b> {new Date().toLocaleString()}
+                <b>Date of error:</b> {new Date().toLocaleString('en-US')}
               </p>
-              {errorMessage && error.name ? (
+              {errorMessage && errorName ? (
                 <p>
-                  <b>{error.name}</b>: {errorMessage}
+                  <b>{errorName}</b>: {errorMessage}
                 </p>
-              ) : (
+              ) : errorMessage ? (
                 <p>{errorMessage}</p>
-              )}
+              ) : null}
               <p>Please try refreshing the page, or contact support if the problem persists.</p>
             </div>
           ) as any

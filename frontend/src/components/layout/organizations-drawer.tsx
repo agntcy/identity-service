@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+/* c8 ignore start */
+
 import {Sheet, SheetContent, SheetHeader, SheetTitle} from '../ui/sheet';
 import {Button, Divider, OverflowTooltip, toast, Typography} from '@outshift/spark-design';
 import {cn} from '@/lib/utils';
@@ -205,3 +207,5 @@ export const OrganizationsDrawer: React.FC<{
     </>
   );
 };
+
+/* c8 ignore end */

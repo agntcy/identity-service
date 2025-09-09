@@ -11,7 +11,7 @@ import {httpErrorsAuth, USER_NOT_AUTH} from '@/constants/http-errors';
 import {App} from '@/types/api/app';
 import {AnalyticsBrowser} from '@segment/analytics-next';
 
-class AgenticServicesAPIClass extends AgenticServiceApi.Api<App> {
+export class AgenticServicesAPIClass extends AgenticServiceApi.Api<App> {
   protected authInfo: AuthInfo | null | undefined;
   protected retry = false;
   protected analytics: AnalyticsBrowser | undefined;
