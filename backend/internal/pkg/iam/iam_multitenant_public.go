@@ -48,6 +48,7 @@ func (c *MultitenantClient) RevokeTenantAPIKey(ctx context.Context) error {
 // GetAppAPIKey returns an error indicating multitenant mode is not implemented.
 func (c *MultitenantClient) GetAppAPIKey(
 	ctx context.Context,
+	appID string,
 ) (*types.APIKey, error) {
 	return nil, ErrMultitenantNotImplemented
 }
@@ -55,6 +56,7 @@ func (c *MultitenantClient) GetAppAPIKey(
 // CreateAppAPIKey returns an error indicating multitenant mode is not implemented.
 func (c *MultitenantClient) CreateAppAPIKey(
 	ctx context.Context,
+	appID string,
 ) (*types.APIKey, error) {
 	return nil, ErrMultitenantNotImplemented
 }
@@ -62,24 +64,28 @@ func (c *MultitenantClient) CreateAppAPIKey(
 // RefreshAppAPIKey returns an error indicating multitenant mode is not implemented.
 func (c *MultitenantClient) RefreshAppAPIKey(
 	ctx context.Context,
+	appID string,
 ) (*types.APIKey, error) {
 	return nil, ErrMultitenantNotImplemented
 }
 
 // RevokeAppAPIKey returns an error indicating multitenant mode is not implemented.
-func (c *MultitenantClient) RevokeAppAPIKey(ctx context.Context) error {
+func (c *MultitenantClient) RevokeAppAPIKey(ctx context.Context, appID string) error {
 	return ErrMultitenantNotImplemented
 }
 
 // AuthJwt returns an error indicating multitenant mode is not implemented.
-func (c *MultitenantClient) AuthJwt(ctx context.Context, jwt string) error {
-	return ErrMultitenantNotImplemented
+func (c *MultitenantClient) AuthJwt(
+	ctx context.Context,
+	header string) (newCtx context.Context, err error) {
+	return newCtx, ErrMultitenantNotImplemented
 }
 
 // AuthAPIKey returns an error indicating multitenant mode is not implemented.
 func (c *MultitenantClient) AuthAPIKey(
 	ctx context.Context,
 	apiKey string,
+	forApp bool,
 ) (newCtx context.Context, err error) {
 	return newCtx, ErrMultitenantNotImplemented
 }
