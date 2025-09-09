@@ -13,6 +13,7 @@ import (
 	"github.com/eko/gocache/lib/v4/cache"
 	"github.com/eko/gocache/lib/v4/store"
 	freecache_store "github.com/eko/gocache/store/freecache/v4"
+	"github.com/google/uuid"
 	jwtverifier "github.com/okta/okta-jwt-verifier-golang"
 	iamcore "github.com/outshift/identity-service/internal/core/iam"
 	"github.com/outshift/identity-service/internal/core/iam/types"
@@ -29,9 +30,9 @@ const (
 	standaloneApiKeyV1ExpirationTime = 30 // 30 seconds
 	standaloneDefaultApiKeyCacheSize = 1024 * 1024 * 10
 
-	standaloneApiKeyName   = "default"
-	standaloneApiKeyLength = 32
-	standaloneTokenLength  = 2
+	standaloneApiKeyName            = "default"
+	standaloneApiKeyLength          = 32
+	standaloneTokenComponentsLength = 2
 
 	standaloneTenantID = "default"
 )
@@ -40,10 +41,11 @@ type StandaloneClient struct {
 	iamRepository   iamcore.Repository
 	userJwtVerifier *jwtverifier.JwtVerifier
 	apiKeyV1Cache   *cache.Cache[[]byte]
+	organization    string
 }
 
 func NewStandaloneClient(
-	issuer, userCid *string,
+	issuer, userCid, organization string,
 	iamRepository iamcore.Repository,
 ) *StandaloneClient {
 	// Init verifier for UI
@@ -51,10 +53,10 @@ func NewStandaloneClient(
 
 	// Add cid from UI
 	toValidateForUser["aud"] = standaloneDefaultAud
-	toValidateForUser["cid"] = *userCid
+	toValidateForUser["cid"] = userCid
 
 	userJwtVerifierSetup := jwtverifier.JwtVerifier{
-		Issuer:           *issuer,
+		Issuer:           issuer,
 		ClaimsToValidate: toValidateForUser,
 	}
 
@@ -71,6 +73,7 @@ func NewStandaloneClient(
 		iamRepository,
 		userJwtVerifier,
 		apiKeyV1Cache,
+		organization,
 	}
 }
 
@@ -83,6 +86,7 @@ func (c *StandaloneClient) CreateTenantAPIKey(
 	ctx context.Context,
 ) (*types.APIKey, error) {
 	return c.iamRepository.AddAPIKey(ctx, &types.APIKey{
+		ID:     uuid.NewString(),
 		Name:   standaloneApiKeyName,
 		Secret: ptrutil.Ptr(strutil.Random(standaloneApiKeyLength)),
 	})
@@ -113,6 +117,7 @@ func (c *StandaloneClient) GetAppAPIKey(ctx context.Context,
 func (c *StandaloneClient) CreateAppAPIKey(ctx context.Context,
 	appID string) (*types.APIKey, error) {
 	return c.iamRepository.AddAPIKey(ctx, &types.APIKey{
+		ID:     uuid.NewString(),
 		Name:   fmt.Sprintf("%s-%s", standaloneApiKeyName, appID),
 		AppID:  ptrutil.Ptr(appID),
 		Secret: ptrutil.Ptr(strutil.Random(standaloneApiKeyLength)),
@@ -157,7 +162,7 @@ func (c *StandaloneClient) AuthJwt(
 	}
 
 	splitToken := strings.Split(header, "Bearer ")
-	if len(splitToken) < standaloneApiKeyLength {
+	if len(splitToken) < standaloneTokenComponentsLength {
 		return ctx, errutil.Err(
 			nil,
 			"invalid Authorization header format",
@@ -181,6 +186,11 @@ func (c *StandaloneClient) AuthJwt(
 		ctx = identitycontext.InsertUserID(ctx, *username)
 	}
 
+	// Add organization
+	if c.organization != "" {
+		ctx = identitycontext.InsertOrganizationID(ctx, c.organization)
+	}
+
 	return ctx, nil
 }
 
@@ -189,6 +199,9 @@ func (c *StandaloneClient) AuthAPIKey(
 	apiKey string,
 	forApp bool,
 ) (context.Context, error) {
+	// Insert tenant ID into context
+	ctx = identitycontext.InsertTenantID(ctx, standaloneTenantID)
+
 	aKey, err := c.iamRepository.GetAPIKeyBySecret(ctx, apiKey)
 	if err != nil {
 		return ctx, errutil.Err(
@@ -214,9 +227,6 @@ func (c *StandaloneClient) AuthAPIKey(
 		// Insert app ID into context
 		ctx = identitycontext.InsertAppID(ctx, *aKey.AppID)
 	}
-
-	// Insert tenant ID into context
-	ctx = identitycontext.InsertTenantID(ctx, standaloneTenantID)
 
 	return ctx, nil
 }
