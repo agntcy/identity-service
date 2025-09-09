@@ -24,6 +24,7 @@ import (
 	badgemcp "github.com/outshift/identity-service/internal/core/badge/mcp"
 	badgepg "github.com/outshift/identity-service/internal/core/badge/postgres"
 	devicepg "github.com/outshift/identity-service/internal/core/device/postgres"
+	iampg "github.com/outshift/identity-service/internal/core/iam/postgres"
 	identitycore "github.com/outshift/identity-service/internal/core/identity"
 	idpcore "github.com/outshift/identity-service/internal/core/idp"
 	"github.com/outshift/identity-service/internal/core/issuer"
@@ -138,6 +139,15 @@ func main() {
 
 	crypter := secrets.NewSymmetricCrypter([]byte(config.SecretsCryptoKey))
 
+	// Create repositories
+	appRepository := apppg.NewRepository(dbContext.Client())
+	settingsRepository := settingspg.NewRepository(dbContext.Client(), crypter)
+	badgeRepository := badgepg.NewRepository(dbContext.Client())
+	deviceRepository := devicepg.NewRepository(dbContext.Client())
+	authRepository := authpg.NewRepository(dbContext.Client(), crypter)
+	policyRepository := policypg.NewRepository(dbContext.Client())
+	iamRepository := iampg.NewRepository(dbContext.Client(), crypter)
+
 	// IAM
 	var iamClient iam.Client
 
@@ -147,6 +157,7 @@ func main() {
 		iamClient = iam.NewStandaloneClient(
 			&config.IamIssuer,
 			&config.IamUserCid,
+			iamRepository,
 		)
 	}
 
@@ -174,14 +185,6 @@ func main() {
 	defer func() {
 		_ = grpcsrv.Shutdown(ctx)
 	}()
-
-	// Create repositories
-	appRepository := apppg.NewRepository(dbContext.Client())
-	settingsRepository := settingspg.NewRepository(dbContext.Client(), crypter)
-	badgeRepository := badgepg.NewRepository(dbContext.Client())
-	deviceRepository := devicepg.NewRepository(dbContext.Client())
-	authRepository := authpg.NewRepository(dbContext.Client(), crypter)
-	policyRepository := policypg.NewRepository(dbContext.Client())
 
 	// Get the token depending on the environment
 	token := ""
