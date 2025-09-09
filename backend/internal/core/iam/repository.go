@@ -14,9 +14,16 @@ type Repository interface {
 		ctx context.Context,
 		APIKey *types.APIKey,
 	) (*types.APIKey, error)
-	GetAPIKey(
+	GetAPIKeyByTenant(
 		ctx context.Context,
-		APIKeyID string,
+	) (*types.APIKey, error)
+	GetAPIKeyByApp(
+		ctx context.Context,
+		appID string,
+	) (*types.APIKey, error)
+	GetAPIKeyBySecret(
+		ctx context.Context,
+		appSecret string,
 	) (*types.APIKey, error)
 	DeleteAPIKey(ctx context.Context, APIKey *types.APIKey) error
 }
