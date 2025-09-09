@@ -11,7 +11,7 @@ import {httpErrorsAuth, USER_NOT_AUTH} from '@/constants/http-errors';
 import {Badge} from '@/types/api/badge';
 import {AnalyticsBrowser} from '@segment/analytics-next';
 
-class BadgeAPIClass extends BadgeApi.Api<Badge> {
+export class BadgeAPIClass extends BadgeApi.Api<Badge> {
   protected authInfo: AuthInfo | null | undefined;
   protected retry = false;
   protected analytics: AnalyticsBrowser | undefined;
