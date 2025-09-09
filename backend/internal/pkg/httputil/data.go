@@ -106,7 +106,6 @@ func getJSON(
 	}
 
 	jsonErr := json.Unmarshal(body, &result)
-
 	if jsonErr != nil {
 		log.Debug("Got error ", jsonErr)
 		return fmt.Errorf("invalid JSON body: %w", jsonErr)

@@ -51,8 +51,10 @@ func (s *service) SetIssuer(
 		return fmt.Errorf("organization id not found in context")
 	}
 
-	var clientCredentials *idpcore.ClientCredentials
-	var idp idpcore.Idp
+	var (
+		clientCredentials *idpcore.ClientCredentials
+		idp               idpcore.Idp
+	)
 
 	idp, err := s.idpFactory.Create(ctx, issuerSettings)
 	if err != nil {

@@ -55,7 +55,7 @@ var maxMsgSize = math.MaxInt64
 
 // ------------------------ GLOBAL -------------------- //
 
-//nolint:funlen // Ignore linting for main function
+//nolint:funlen,cyclop,maintidx // ignore linting for main function
 func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 
@@ -131,13 +131,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// Disconnect the database client when done
-	defer func() {
-		if err = dbContext.Disconnect(); err != nil {
-			log.Fatal(err)
-		}
-	}()
-
 	crypter := secrets.NewSymmetricCrypter([]byte(config.SecretsCryptoKey))
 
 	// Create repositories
@@ -184,10 +177,6 @@ func main() {
 		log.Error(err)
 	}
 
-	defer func() {
-		_ = grpcsrv.Shutdown(ctx)
-	}()
-
 	// Get the token depending on the environment
 	token := ""
 	if !config.IsProd() {
@@ -195,8 +184,10 @@ func main() {
 		token = os.Getenv("VAULT_DEV_ROOT_TOKEN")
 	}
 
-	var credentialStore idpcore.CredentialStore
-	var keyStore identitycore.KeyStore
+	var (
+		credentialStore idpcore.CredentialStore
+		keyStore        identitycore.KeyStore
+	)
 
 	switch config.KeyStoreType {
 	case KeyStoreTypeVault:
@@ -239,6 +230,17 @@ func main() {
 	default:
 		log.Fatal("invalid KeyStoreType value ", config.KeyStoreType)
 	}
+
+	defer func() {
+		_ = grpcsrv.Shutdown(ctx)
+	}()
+
+	// Disconnect the database client when done
+	defer func() {
+		if err = dbContext.Disconnect(); err != nil {
+			log.Fatal(err)
+		}
+	}()
 
 	idpFactory := idpcore.NewFactory()
 
@@ -333,7 +335,7 @@ func main() {
 	log.Info("Serving gRPC on:", config.ServerGrpcHost)
 
 	go func() {
-		if err := grpcsrv.Run(); err != nil {
+		if err := grpcsrv.Run(ctx); err != nil {
 			log.Fatal(err)
 		}
 	}()

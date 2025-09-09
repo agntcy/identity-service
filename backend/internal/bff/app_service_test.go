@@ -49,6 +49,7 @@ func TestAppService_CreateApp_should_succeed(t *testing.T) {
 	apiKey := &iamtypes.APIKey{}
 	settingsRepo := settingsmocks.NewRepository(t)
 	settingsRepo.EXPECT().GetIssuerSettings(ctx).Return(issuer, nil)
+
 	idpFactory := idp.NewFactory()
 	identityServ := identitymocks.NewService(t)
 	identityServ.EXPECT().
@@ -57,10 +58,13 @@ func TestAppService_CreateApp_should_succeed(t *testing.T) {
 			KeyID:      issuer.KeyID,
 		}).
 		Return(resolverMetadataID, nil)
+
 	credStore := idpmocks.NewCredentialStore(t)
 	credStore.EXPECT().Put(ctx, mock.Anything, mock.Anything).Return(nil)
+
 	iamClient := iammocks.NewClient(t)
 	iamClient.EXPECT().CreateAppAPIKey(ctx, mock.Anything).Return(apiKey, nil)
+
 	appRepo := appmocks.NewRepository(t)
 	appRepo.EXPECT().CreateApp(ctx, app).Return(app, nil)
 	sut := bff.NewAppService(
@@ -146,6 +150,7 @@ func TestAppService_CreateApp_should_return_err_when_idp_type_is_invalid(t *test
 	}
 	settingsRepo := settingsmocks.NewRepository(t)
 	settingsRepo.EXPECT().GetIssuerSettings(ctx).Return(issuer, nil)
+
 	idpFactory := idp.NewFactory()
 	sut := bff.NewAppService(nil, settingsRepo, nil, idpFactory, nil, nil, nil, nil, nil, nil)
 
@@ -167,6 +172,7 @@ func TestAppService_CreateApp_should_return_err_when_client_cred_pair_creation_f
 	}
 	settingsRepo := settingsmocks.NewRepository(t)
 	settingsRepo.EXPECT().GetIssuerSettings(invalidCtxWithoutUserID).Return(issuer, nil)
+
 	idpFactory := idp.NewFactory()
 	sut := bff.NewAppService(nil, settingsRepo, nil, idpFactory, nil, nil, nil, nil, nil, nil)
 
@@ -188,6 +194,7 @@ func TestAppService_CreateApp_should_return_err_when_id_generation_fails(t *test
 	}
 	settingsRepo := settingsmocks.NewRepository(t)
 	settingsRepo.EXPECT().GetIssuerSettings(ctx).Return(issuer, nil)
+
 	idpFactory := idp.NewFactory()
 	identityServ := identitymocks.NewService(t)
 	identityServ.EXPECT().
@@ -227,6 +234,7 @@ func TestAppService_CreateApp_should_return_err_when_client_cred_cannot_be_store
 	resolverMetadataID := uuid.NewString()
 	settingsRepo := settingsmocks.NewRepository(t)
 	settingsRepo.EXPECT().GetIssuerSettings(ctx).Return(issuer, nil)
+
 	idpFactory := idp.NewFactory()
 	identityServ := identitymocks.NewService(t)
 	identityServ.EXPECT().
@@ -235,6 +243,7 @@ func TestAppService_CreateApp_should_return_err_when_client_cred_cannot_be_store
 			KeyID:      issuer.KeyID,
 		}).
 		Return(resolverMetadataID, nil)
+
 	credStore := idpmocks.NewCredentialStore(t)
 	credStore.EXPECT().Put(ctx, mock.Anything, mock.Anything).Return(errors.New("failed"))
 	sut := bff.NewAppService(
@@ -271,6 +280,7 @@ func TestAppService_CreateApp_should_return_err_when_create_apikey_fails(t *test
 	resolverMetadataID := uuid.NewString()
 	settingsRepo := settingsmocks.NewRepository(t)
 	settingsRepo.EXPECT().GetIssuerSettings(ctx).Return(issuer, nil)
+
 	idpFactory := idp.NewFactory()
 	identityServ := identitymocks.NewService(t)
 	identityServ.EXPECT().
@@ -279,8 +289,10 @@ func TestAppService_CreateApp_should_return_err_when_create_apikey_fails(t *test
 			KeyID:      issuer.KeyID,
 		}).
 		Return(resolverMetadataID, nil)
+
 	credStore := idpmocks.NewCredentialStore(t)
 	credStore.EXPECT().Put(ctx, mock.Anything, mock.Anything).Return(nil)
+
 	iamClient := iammocks.NewClient(t)
 	iamClient.EXPECT().
 		CreateAppAPIKey(ctx, mock.Anything).

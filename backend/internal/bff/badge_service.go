@@ -217,6 +217,7 @@ func (s *badgeService) createBadgeClaims(
 	claims := badgetypes.BadgeClaims{
 		ID: app.ResolverMetadataID,
 	}
+
 	var badgeType badgetypes.BadgeType
 
 	switch app.Type {

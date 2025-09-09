@@ -83,8 +83,10 @@ func (ti *AuthInterceptor) Unary(
 		return nil, grpcutil.UnauthorizedError(errors.New("failed to extract authorization"))
 	}
 
-	var err error
-	var aCtx context.Context
+	var (
+		err  error
+		aCtx context.Context
+	)
 
 	if okAuth {
 		aCtx, err = ti.iamClient.AuthJwt(ctx, authHeader[0])
@@ -100,6 +102,7 @@ func (ti *AuthInterceptor) Unary(
 				// Authenticate an app against IAM Api Keys v1
 				aCtx, err := ti.iamClient.AuthAPIKey(ctx, apiKeyHeader[0], true)
 				log.Debug("App auth context: ", aCtx)
+
 				if err != nil {
 					return nil, grpcutil.UnauthorizedError(err)
 				}

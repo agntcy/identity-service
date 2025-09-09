@@ -234,8 +234,10 @@ func (c *StandaloneClient) AuthAPIKey(
 func (c *StandaloneClient) validateAccessToken(
 	accessToken string,
 ) (*string, error) {
-	var token *jwtverifier.Jwt
-	var verifyErr error
+	var (
+		token     *jwtverifier.Jwt
+		verifyErr error
+	)
 
 	token, verifyErr = c.userJwtVerifier.VerifyAccessToken(accessToken)
 	if verifyErr != nil {

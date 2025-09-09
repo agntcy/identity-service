@@ -79,21 +79,33 @@ func InsertAppID(ctx context.Context, appID string) context.Context {
 }
 
 // WithTenantID injects a tenant ID to a context.
+//
+//nolint:staticcheck // using types instead of string will break private IAM context
 func withTenantID(ctx context.Context, id string) context.Context {
-	return context.WithValue(ctx, TenantID, id)
+	return context.WithValue(
+		ctx,
+		TenantID,
+		id,
+	)
 }
 
 // WithUserID injects a user ID to a context.
+//
+//nolint:staticcheck // using types instead of string will break private IAM context
 func withUserID(ctx context.Context, id string) context.Context {
 	return context.WithValue(ctx, UserID, id)
 }
 
 // WithOrganizationID injects an organization ID to a context.
+//
+//nolint:staticcheck // using types instead of string will break private IAM context
 func withOrganizationID(ctx context.Context, id string) context.Context {
 	return context.WithValue(ctx, OrganizationID, id)
 }
 
 // Injects an app ID to a context.
+//
+//nolint:staticcheck // using types instead of string will break private IAM context
 func withAppID(ctx context.Context, id string) context.Context {
 	return context.WithValue(ctx, AppID, id)
 }

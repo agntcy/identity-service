@@ -150,7 +150,7 @@ func (s *notificationService) sendWebPushNotification(
 	}
 
 	// Decode subscription
-	var subscription map[string]interface{}
+	var subscription map[string]any
 
 	err := json.Unmarshal([]byte(*subscriptionToken), &subscription)
 	if err != nil {
@@ -165,14 +165,38 @@ func (s *notificationService) sendWebPushNotification(
 		return errutil.Err(err, "failed to marshal notification payload")
 	}
 
+	endpoint, ok := subscription["endpoint"].(string)
+	if !ok {
+		return errutil.Err(
+			nil,
+			"subscription endpoint not found",
+		)
+	}
+
+	p256dh, ok := subscription["p256dh"].(string)
+	if !ok {
+		return errutil.Err(
+			nil,
+			"subscription keys not found",
+		)
+	}
+
+	auth, ok := subscription["auth"].(string)
+	if !ok {
+		return errutil.Err(
+			nil,
+			"subscription auth key not found",
+		)
+	}
+
 	// Send Notification
 	resp, err := webpush.SendNotification(
 		payload,
 		&webpush.Subscription{
-			Endpoint: subscription["endpoint"].(string),
+			Endpoint: endpoint,
 			Keys: webpush.Keys{
-				P256dh: subscription["p256dh"].(string),
-				Auth:   subscription["auth"].(string),
+				P256dh: p256dh,
+				Auth:   auth,
 			},
 		},
 		&webpush.Options{
@@ -186,7 +210,6 @@ func (s *notificationService) sendWebPushNotification(
 		return err
 	}
 
-	// Check response
 	_ = resp.Body.Close()
 
 	return nil

@@ -287,10 +287,13 @@ func (s *service) generateProof(
 		Type: proofTypeJWT,
 	}
 
-	var proofValue string
-	var err error
+	var (
+		proofValue string
+		err        error
+	)
 
 	// If client credentials are provided, use them to generate the proof
+
 	if clientCredentials.ClientSecret != "" {
 		proofValue, err = s.oidcAuthenticator.Token(
 			ctx,
@@ -487,8 +490,10 @@ func convertVerifiableCredential(
 	}
 
 	statuses := make([]*badgetypes.CredentialStatus, 0)
+
 	for _, status := range src.CredentialStatus {
 		var purpose badgetypes.CredentialStatusPurpose
+
 		_ = purpose.UnmarshalText([]byte(ptrutil.Derefrence(status.Purpose, "")))
 
 		var createdAt time.Time

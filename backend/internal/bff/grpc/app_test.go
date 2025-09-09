@@ -26,8 +26,10 @@ import (
 func TestAppService_CreateApp_should_succeed(t *testing.T) {
 	t.Parallel()
 
-	var app apptypes.App
-	var req identity_service_sdk_go.CreateAppRequest
+	var (
+		app apptypes.App
+		req identity_service_sdk_go.CreateAppRequest
+	)
 
 	_ = gofakeit.Struct(&app)
 	_ = gofakeit.Struct(&req)
