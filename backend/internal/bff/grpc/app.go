@@ -151,7 +151,7 @@ func (s *appService) RefreshAppApiKey(
 	ctx context.Context,
 	req *identity_service_sdk_go.RefreshAppApiKeyRequest,
 ) (*identity_service_sdk_go.App, error) {
-	if req.GetAppId() == "" {
+	if req == nil || req.GetAppId() == "" {
 		return nil, grpcutil.BadRequestError(errors.New("app ID cannot be empty"))
 	}
 

@@ -13,6 +13,7 @@ import (
 	"github.com/outshift/identity-service/internal/bff/grpc"
 	bffmocks "github.com/outshift/identity-service/internal/bff/mocks"
 	apptypes "github.com/outshift/identity-service/internal/core/app/types"
+	badgetypes "github.com/outshift/identity-service/internal/core/badge/types"
 	"github.com/outshift/identity-service/internal/pkg/pagination"
 	"github.com/outshift/identity-service/internal/pkg/ptrutil"
 	"github.com/outshift/identity-service/internal/pkg/sorting"
@@ -291,6 +292,120 @@ func TestAppService_UpdateApp_should_return_badrequest_when_req_is_invalid(t *te
 			assertGrpcError(t, err, codes.InvalidArgument, "app cannot be nil")
 		})
 	}
+}
+
+func TestAppService_DeleteApp_should_succeed(t *testing.T) {
+	t.Parallel()
+
+	appID := uuid.NewString()
+
+	appSrv := bffmocks.NewAppService(t)
+	appSrv.EXPECT().DeleteApp(t.Context(), appID).Return(nil)
+
+	sut := grpc.NewAppService(appSrv, nil)
+
+	_, err := sut.DeleteApp(t.Context(), &identity_service_sdk_go.DeleteAppRequest{AppId: appID})
+
+	assert.NoError(t, err)
+}
+
+func TestAppService_DeleteApp_should_return_badrequest_when_core_service_fails(t *testing.T) {
+	t.Parallel()
+
+	appSrv := bffmocks.NewAppService(t)
+	appSrv.EXPECT().DeleteApp(t.Context(), mock.Anything).Return(errors.New("failed"))
+
+	sut := grpc.NewAppService(appSrv, nil)
+
+	_, err := sut.DeleteApp(t.Context(), &identity_service_sdk_go.DeleteAppRequest{AppId: uuid.NewString()})
+
+	assert.Error(t, err)
+	assertGrpcError(t, err, codes.InvalidArgument, "failed")
+}
+
+func TestAppService_RefreshAppApiKey_should_succeed(t *testing.T) {
+	t.Parallel()
+
+	appID := uuid.NewString()
+
+	appSrv := bffmocks.NewAppService(t)
+	appSrv.EXPECT().RefreshAppApiKey(t.Context(), appID).Return(&apptypes.App{}, nil)
+
+	sut := grpc.NewAppService(appSrv, nil)
+
+	ret, err := sut.RefreshAppApiKey(t.Context(), &identity_service_sdk_go.RefreshAppApiKeyRequest{AppId: appID})
+
+	assert.NoError(t, err)
+	assert.NotNil(t, ret)
+}
+
+func TestAppService_RefreshAppApiKey_should_return_badrequest_when_request_is_invalid(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]*identity_service_sdk_go.RefreshAppApiKeyRequest{
+		"req is nil":   nil,
+		"req is empty": {},
+	}
+
+	for tn, tc := range testCases {
+		t.Run(tn, func(t *testing.T) {
+			t.Parallel()
+
+			sut := grpc.NewAppService(nil, nil)
+
+			_, err := sut.RefreshAppApiKey(t.Context(), tc)
+
+			assert.Error(t, err)
+			assertGrpcError(t, err, codes.InvalidArgument, "app ID cannot be empty")
+		})
+	}
+}
+
+func TestAppService_RefreshAppApiKey_should_return_badrequest_when_core_service_fails(t *testing.T) {
+	t.Parallel()
+
+	appSrv := bffmocks.NewAppService(t)
+	appSrv.EXPECT().RefreshAppApiKey(t.Context(), mock.Anything).Return(nil, errors.New("failed"))
+
+	sut := grpc.NewAppService(appSrv, nil)
+
+	_, err := sut.RefreshAppApiKey(t.Context(), &identity_service_sdk_go.RefreshAppApiKeyRequest{AppId: uuid.NewString()})
+
+	assert.Error(t, err)
+	assertGrpcError(t, err, codes.InvalidArgument, "failed")
+}
+
+func TestAppService_GetBadge_should_succeed(t *testing.T) {
+	t.Parallel()
+
+	appID := uuid.NewString()
+
+	badgeSrv := bffmocks.NewBadgeService(t)
+	badgeSrv.EXPECT().GetBadge(t.Context(), appID).Return(&badgetypes.Badge{}, nil)
+
+	sut := grpc.NewAppService(nil, badgeSrv)
+
+	ret, err := sut.GetBadge(t.Context(), &identity_service_sdk_go.GetBadgeRequest{AppId: appID})
+
+	assert.NoError(t, err)
+	assert.NotNil(t, ret)
+}
+
+func TestAppService_GetBadge_should_return_notfound_when_core_service_fails(t *testing.T) {
+	t.Parallel()
+
+	// this is the last code I'm writing before removing 4 wisdom teeth in about 2 hours...
+	// and it happened to be a unit test...
+
+	badgeSrv := bffmocks.NewBadgeService(t)
+	badgeSrv.EXPECT().GetBadge(t.Context(), mock.Anything).Return(nil, errors.New("failed"))
+
+	sut := grpc.NewAppService(nil, badgeSrv)
+
+	_, err := sut.GetBadge(t.Context(), &identity_service_sdk_go.GetBadgeRequest{AppId: uuid.NewString()})
+
+	assert.Error(t, err)
+	assertGrpcError(t, err, codes.NotFound, "failed")
 }
 
 func assertGrpcError(t *testing.T, err error, code codes.Code, msg string) {
