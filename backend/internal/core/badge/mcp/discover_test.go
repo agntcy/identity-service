@@ -72,6 +72,7 @@ func TestDiscover(t *testing.T) {
 				t.Parallel()
 
 				defer tc.testServer.Close()
+
 				sut := mcpcore.NewDiscoveryClient()
 
 				ret, err := sut.Discover(context.Background(), "mcp_server", tc.testServer.URL+tc.path, tc.clientType)

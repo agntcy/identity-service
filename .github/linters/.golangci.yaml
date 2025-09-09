@@ -74,10 +74,12 @@ linters:
     - usestdlibvars
     - wastedassign
     - whitespace
-    - wsl
+    - wsl_v5
   settings:
     cyclop:
-      max-complexity: 16
+      max-complexity: 20
+    gocognit:
+      min-complexity: 50
     goconst:
       min-len: 2
       min-occurrences: 3
@@ -98,6 +100,8 @@ linters:
     gosec:
       excludes:
         - G115
+    interfacebloat:
+      max: 20
     nestif:
       min-complexity: 10
     nolintlint:
@@ -111,7 +115,8 @@ linters:
       force-err-cuddling: true
       force-short-decl-cuddling: false
     funlen:
-      lines: 100
+      statements: 100
+      lines: 200
   exclusions:
     generated: lax
     presets:

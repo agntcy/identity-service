@@ -45,6 +45,7 @@ func createTestServerWithReqAssert[T any](
 			body, _ := io.ReadAll(r.Body)
 
 			var payload T
+
 			err := json.Unmarshal(body, &payload)
 			assert.NoError(t, err)
 
@@ -70,6 +71,7 @@ func createTestServerThatFails(
 	ts = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
+
 		err, _ := json.Marshal(map[string]any{
 			"message": errInfo.Message,
 			"details": []*identitymodels.V1alpha1ErrorInfo{errInfo},
@@ -556,9 +558,12 @@ func TestVerifyVerifiableCredential(t *testing.T) {
 		"id":    uuid.NewString(),
 		"badge": uuid.NewString(),
 	}
+
 	var expectedResult identitymodels.V1alpha1VerificationResult
+
 	err := gofakeit.Struct(&expectedResult)
 	assert.NoError(t, err)
+
 	expectedResult.Document.Content = expectedClaims
 
 	for _, st := range expectedResult.Document.CredentialStatus {

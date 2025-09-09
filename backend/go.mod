@@ -1,6 +1,6 @@
 module github.com/outshift/identity-service
 
-go 1.24.1
+go 1.24.5
 
 require (
 	github.com/eko/gocache/lib/v4 v4.2.0

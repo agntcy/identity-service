@@ -14,6 +14,7 @@ import (
 	appmocks "github.com/outshift/identity-service/internal/core/app/mocks"
 	apptypes "github.com/outshift/identity-service/internal/core/app/types"
 	badgemocks "github.com/outshift/identity-service/internal/core/badge/mocks"
+	iamtypes "github.com/outshift/identity-service/internal/core/iam/types"
 	identitycore "github.com/outshift/identity-service/internal/core/identity"
 	identitymocks "github.com/outshift/identity-service/internal/core/identity/mocks"
 	"github.com/outshift/identity-service/internal/core/idp"
@@ -22,8 +23,7 @@ import (
 	settingsmocks "github.com/outshift/identity-service/internal/core/settings/mocks"
 	settingstypes "github.com/outshift/identity-service/internal/core/settings/types"
 	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
-	outshiftiam "github.com/outshift/identity-service/internal/pkg/iam"
-	outshiftiammocks "github.com/outshift/identity-service/internal/pkg/iam/mocks"
+	iammocks "github.com/outshift/identity-service/internal/pkg/iam/mocks"
 	"github.com/outshift/identity-service/internal/pkg/pagination"
 	"github.com/outshift/identity-service/internal/pkg/ptrutil"
 	"github.com/outshift/identity-service/internal/pkg/sorting"
@@ -46,9 +46,10 @@ func TestAppService_CreateApp_should_succeed(t *testing.T) {
 		IdpType:  settingstypes.IDP_TYPE_SELF,
 	}
 	resolverMetadataID := uuid.NewString()
-	apiKey := outshiftiam.NewApiKey()
+	apiKey := &iamtypes.APIKey{}
 	settingsRepo := settingsmocks.NewRepository(t)
 	settingsRepo.EXPECT().GetIssuerSettings(ctx).Return(issuer, nil)
+
 	idpFactory := idp.NewFactory()
 	identityServ := identitymocks.NewService(t)
 	identityServ.EXPECT().
@@ -57,10 +58,13 @@ func TestAppService_CreateApp_should_succeed(t *testing.T) {
 			KeyID:      issuer.KeyID,
 		}).
 		Return(resolverMetadataID, nil)
+
 	credStore := idpmocks.NewCredentialStore(t)
 	credStore.EXPECT().Put(ctx, mock.Anything, mock.Anything).Return(nil)
-	iamClient := outshiftiammocks.NewClient(t)
-	iamClient.EXPECT().CreateAppApiKey(ctx, mock.Anything).Return(apiKey, nil)
+
+	iamClient := iammocks.NewClient(t)
+	iamClient.EXPECT().CreateAppAPIKey(ctx, mock.Anything).Return(apiKey, nil)
+
 	appRepo := appmocks.NewRepository(t)
 	appRepo.EXPECT().CreateApp(ctx, app).Return(app, nil)
 	sut := bff.NewAppService(
@@ -80,7 +84,7 @@ func TestAppService_CreateApp_should_succeed(t *testing.T) {
 
 	assert.NoError(t, err)
 	assert.NotNil(t, createdApp)
-	assert.Equal(t, apiKey.Secret, createdApp.ApiKey)
+	assert.Equal(t, ptrutil.DerefStr(apiKey.Secret), createdApp.ApiKey)
 }
 
 func TestAppService_CreateApp_should_return_err_when_app_is_invalid(t *testing.T) {
@@ -146,6 +150,7 @@ func TestAppService_CreateApp_should_return_err_when_idp_type_is_invalid(t *test
 	}
 	settingsRepo := settingsmocks.NewRepository(t)
 	settingsRepo.EXPECT().GetIssuerSettings(ctx).Return(issuer, nil)
+
 	idpFactory := idp.NewFactory()
 	sut := bff.NewAppService(nil, settingsRepo, nil, idpFactory, nil, nil, nil, nil, nil, nil)
 
@@ -167,6 +172,7 @@ func TestAppService_CreateApp_should_return_err_when_client_cred_pair_creation_f
 	}
 	settingsRepo := settingsmocks.NewRepository(t)
 	settingsRepo.EXPECT().GetIssuerSettings(invalidCtxWithoutUserID).Return(issuer, nil)
+
 	idpFactory := idp.NewFactory()
 	sut := bff.NewAppService(nil, settingsRepo, nil, idpFactory, nil, nil, nil, nil, nil, nil)
 
@@ -188,6 +194,7 @@ func TestAppService_CreateApp_should_return_err_when_id_generation_fails(t *test
 	}
 	settingsRepo := settingsmocks.NewRepository(t)
 	settingsRepo.EXPECT().GetIssuerSettings(ctx).Return(issuer, nil)
+
 	idpFactory := idp.NewFactory()
 	identityServ := identitymocks.NewService(t)
 	identityServ.EXPECT().
@@ -227,6 +234,7 @@ func TestAppService_CreateApp_should_return_err_when_client_cred_cannot_be_store
 	resolverMetadataID := uuid.NewString()
 	settingsRepo := settingsmocks.NewRepository(t)
 	settingsRepo.EXPECT().GetIssuerSettings(ctx).Return(issuer, nil)
+
 	idpFactory := idp.NewFactory()
 	identityServ := identitymocks.NewService(t)
 	identityServ.EXPECT().
@@ -235,6 +243,7 @@ func TestAppService_CreateApp_should_return_err_when_client_cred_cannot_be_store
 			KeyID:      issuer.KeyID,
 		}).
 		Return(resolverMetadataID, nil)
+
 	credStore := idpmocks.NewCredentialStore(t)
 	credStore.EXPECT().Put(ctx, mock.Anything, mock.Anything).Return(errors.New("failed"))
 	sut := bff.NewAppService(
@@ -271,6 +280,7 @@ func TestAppService_CreateApp_should_return_err_when_create_apikey_fails(t *test
 	resolverMetadataID := uuid.NewString()
 	settingsRepo := settingsmocks.NewRepository(t)
 	settingsRepo.EXPECT().GetIssuerSettings(ctx).Return(issuer, nil)
+
 	idpFactory := idp.NewFactory()
 	identityServ := identitymocks.NewService(t)
 	identityServ.EXPECT().
@@ -279,12 +289,14 @@ func TestAppService_CreateApp_should_return_err_when_create_apikey_fails(t *test
 			KeyID:      issuer.KeyID,
 		}).
 		Return(resolverMetadataID, nil)
+
 	credStore := idpmocks.NewCredentialStore(t)
 	credStore.EXPECT().Put(ctx, mock.Anything, mock.Anything).Return(nil)
-	iamClient := outshiftiammocks.NewClient(t)
+
+	iamClient := iammocks.NewClient(t)
 	iamClient.EXPECT().
-		CreateAppApiKey(ctx, mock.Anything).
-		Return(outshiftiam.NewApiKey(), errors.New("failed"))
+		CreateAppAPIKey(ctx, mock.Anything).
+		Return(&iamtypes.APIKey{}, errors.New("failed"))
 	sut := bff.NewAppService(
 		nil,
 		settingsRepo,
@@ -390,10 +402,10 @@ func TestAppService_GetApp_should_not_return_err_when_api_key_not_found(t *testi
 	appRepo := appmocks.NewRepository(t)
 	appRepo.EXPECT().GetApp(ctx, expectedApp.ID).Return(expectedApp, nil)
 	mockValidGetAppStatus(t, appRepo)
-	iamClient := outshiftiammocks.NewClient(t)
+	iamClient := iammocks.NewClient(t)
 	iamClient.EXPECT().
-		GetAppApiKey(mock.Anything, mock.Anything).
-		Return(outshiftiam.NewApiKey(), errors.New("error"))
+		GetAppAPIKey(mock.Anything, mock.Anything).
+		Return(&iamtypes.APIKey{}, errors.New("error"))
 	sut := bff.NewAppService(appRepo, nil, nil, nil, nil, iamClient, nil, nil, nil, nil)
 
 	app, err := sut.GetApp(ctx, expectedApp.ID)
@@ -415,11 +427,19 @@ func TestAppService_ListApps_should_return_a_list_of_apps(t *testing.T) {
 		Size:  2,
 	}
 	appRepo := appmocks.NewRepository(t)
-	appRepo.EXPECT().GetAllApps(ctx, mock.Anything, mock.Anything, mock.Anything, mock.Anything).Return(apps, nil)
+	appRepo.EXPECT().
+		GetAllApps(ctx, mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+		Return(apps, nil)
 	mockValidGetAppStatus(t, appRepo)
 	sut := bff.NewAppService(appRepo, nil, nil, nil, nil, nil, nil, nil, nil, nil)
 
-	returnedApps, err := sut.ListApps(ctx, pagination.PaginationFilter{}, nil, nil, sorting.Sorting{})
+	returnedApps, err := sut.ListApps(
+		ctx,
+		pagination.PaginationFilter{},
+		nil,
+		nil,
+		sorting.Sorting{},
+	)
 
 	assert.NoError(t, err)
 	assert.Equal(t, apps, returnedApps)
@@ -511,34 +531,47 @@ func TestAppService_DeleteApp_should_delete_app_without_client_cred_pair(t *test
 	policyRepo.EXPECT().DeletePoliciesByAppID(ctx, app.ID).Return(nil)
 	policyRepo.EXPECT().DeleteTasksByAppID(ctx, app.ID).Return(nil)
 
-	sut := bff.NewAppService(appRepo, settingsRepo, nil, idpFactory, credStore, nil, nil, nil, policyRepo, nil)
+	sut := bff.NewAppService(
+		appRepo,
+		settingsRepo,
+		nil,
+		idpFactory,
+		credStore,
+		nil,
+		nil,
+		nil,
+		policyRepo,
+		nil,
+	)
 
 	err := sut.DeleteApp(ctx, app.ID)
 
 	assert.NoError(t, err)
 }
 
-// RefreshAppApiKey
+// RefreshAppAPIKey
 
-func TestAppService_RefreshAppApiKey_should_call_update_with_refreshed_api_key(t *testing.T) {
+func TestAppService_RefreshAppAPIKey_should_call_update_with_refreshed_api_key(t *testing.T) {
 	t.Parallel()
 
 	ctx := context.Background()
 	app := &apptypes.App{ID: uuid.NewString(), ApiKey: "OLD_KEY"}
-	refreshedApiKey := outshiftiam.ApiKey{Secret: "NEW_KEY"}
+	refreshedAPIKey := &iamtypes.APIKey{Secret: ptrutil.Ptr("NEW_KEY")}
 	appRepo := appmocks.NewRepository(t)
 	appRepo.EXPECT().GetApp(ctx, app.ID).Return(app, nil)
-	appRepo.EXPECT().UpdateApp(ctx, &apptypes.App{ID: app.ID, ApiKey: refreshedApiKey.Secret}).Return(nil)
+	appRepo.EXPECT().
+		UpdateApp(ctx, &apptypes.App{ID: app.ID, ApiKey: ptrutil.DerefStr(refreshedAPIKey.Secret)}).
+		Return(nil)
 
-	iamClient := outshiftiammocks.NewClient(t)
-	iamClient.EXPECT().RefreshAppApiKey(ctx, app.ID).Return(refreshedApiKey, nil)
+	iamClient := iammocks.NewClient(t)
+	iamClient.EXPECT().RefreshAppAPIKey(ctx, app.ID).Return(refreshedAPIKey, nil)
 
 	sut := bff.NewAppService(appRepo, nil, nil, nil, nil, iamClient, nil, nil, nil, nil)
 
-	returnedApp, err := sut.RefreshAppApiKey(ctx, app.ID)
+	returnedApp, err := sut.RefreshAppAPIKey(ctx, app.ID)
 
 	assert.NoError(t, err)
-	assert.Equal(t, refreshedApiKey.Secret, returnedApp.ApiKey)
+	assert.Equal(t, *refreshedAPIKey.Secret, returnedApp.ApiKey)
 }
 
 func mockValidGetAppStatus(t *testing.T, repo *appmocks.Repository) {
@@ -549,13 +582,13 @@ func mockValidGetAppStatus(t *testing.T, repo *appmocks.Repository) {
 		Return(map[string]apptypes.AppStatus{}, nil)
 }
 
-func createValidIamClientWithGettersOnly(t *testing.T) *outshiftiammocks.Client {
+func createValidIamClientWithGettersOnly(t *testing.T) *iammocks.Client {
 	t.Helper()
 
-	iamClient := outshiftiammocks.NewClient(t)
+	iamClient := iammocks.NewClient(t)
 	iamClient.EXPECT().
-		GetAppApiKey(mock.Anything, mock.Anything).
-		Return(outshiftiam.NewApiKey(), nil)
+		GetAppAPIKey(mock.Anything, mock.Anything).
+		Return(&iamtypes.APIKey{}, nil)
 
 	return iamClient
 }

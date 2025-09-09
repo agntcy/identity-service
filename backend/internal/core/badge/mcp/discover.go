@@ -45,8 +45,10 @@ func (d *discoveryClient) AutoDiscover(
 	ctx context.Context,
 	name, url string,
 ) (*McpServer, error) {
-	var mcpServer *McpServer
-	var err error
+	var (
+		mcpServer *McpServer
+		err       error
+	)
 
 	log.Debug("Auto-discovering MCP server at URL: ", url)
 	log.Debug("Using name for MCP server: ", name)
@@ -71,8 +73,10 @@ func (d *discoveryClient) Discover(
 
 	log.Debug("Using MCP URL for discovery: ", url)
 
-	var mcpClient *client.Client
-	var err error
+	var (
+		mcpClient *client.Client
+		err       error
+	)
 
 	switch clientType {
 	case McpClientTypeStreamableHTTP:

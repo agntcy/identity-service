@@ -22,11 +22,11 @@ type Configuration struct {
 	GoEnv                                                   string        `split_words:"true" default:"production"`
 	LogLevel                                                string        `split_words:"true" default:"InfoLevel"`
 	SecretsCryptoKey                                        string        `split_words:"true" default:"secretkey"`
-	DbHost                                                  string        `split_words:"true"                                              required:"true"`
-	DbPort                                                  string        `split_words:"true"                                              required:"true"`
+	DbHost                                                  string        `split_words:"true"                                 required:"true"`
+	DbPort                                                  string        `split_words:"true"                                 required:"true"`
 	DbName                                                  string        `split_words:"true" default:"identity"`
-	DbUsername                                              string        `split_words:"true"                                              required:"true"`
-	DbPassword                                              string        `split_words:"true"                                              required:"true"`
+	DbUsername                                              string        `split_words:"true"                                 required:"true"`
+	DbPassword                                              string        `split_words:"true"                                 required:"true"`
 	DbUseSsl                                                bool          `split_words:"true" default:"false"`
 	KeyStoreType                                            KeyStoreType  `split_words:"true" default:"vault"`
 	VaultHost                                               string        `split_words:"true" default:"0.0.0.0"`
@@ -35,17 +35,13 @@ type Configuration struct {
 	AwsRegion                                               string        `split_words:"true"`
 	IdentityHost                                            string        `split_words:"true" default:"0.0.0.0"`
 	IdentityPort                                            string        `split_words:"true" default:"4003"`
-	IamProductID                                            string        `split_words:"true"                                              required:"true"`
-	IamApiUrl                                               string        `split_words:"true"                                              required:"true"`
-	IamAdminAPIKey                                          string        `split_words:"true"`
 	IamIssuer                                               string        `split_words:"true"`
 	IamUserCid                                              string        `split_words:"true"`
-	IamApiKeyCid                                            string        `split_words:"true"`
-	IamSingleTenantID                                       string        `split_words:"true" default:"000000-0000-0000-0000-000000000000"`
-	IamMultiTenant                                          bool          `split_words:"true" default:"true"`
-	WebApprovalEmail                                        string        `split_words:"true"                                              required:"true"`
-	WebApprovalPubKey                                       string        `split_words:"true"                                              required:"true"`
-	WebApprovalPrivKey                                      string        `split_words:"true"                                              required:"true"`
+	IamOrganization                                         string        `split_words:"true"`
+	IamMultiTenant                                          bool          `split_words:"true" default:"false"`
+	WebApprovalEmail                                        string        `split_words:"true"                                 required:"true"`
+	WebApprovalPubKey                                       string        `split_words:"true"                                 required:"true"`
+	WebApprovalPrivKey                                      string        `split_words:"true"                                 required:"true"`
 	UniqueIssuerPerTenant                                   bool          `split_words:"true" default:"true"`
 	ServerGrpcKeepAliveEnvorcementPolicyMinTime             int           `split_words:"true" default:"300"`
 	ServerGrpcKeepAliveEnforcementPolicyPermitWithoutStream bool          `split_words:"true" default:"false"`

@@ -24,6 +24,7 @@ import (
 	badgemcp "github.com/outshift/identity-service/internal/core/badge/mcp"
 	badgepg "github.com/outshift/identity-service/internal/core/badge/postgres"
 	devicepg "github.com/outshift/identity-service/internal/core/device/postgres"
+	iampg "github.com/outshift/identity-service/internal/core/iam/postgres"
 	identitycore "github.com/outshift/identity-service/internal/core/identity"
 	idpcore "github.com/outshift/identity-service/internal/core/idp"
 	"github.com/outshift/identity-service/internal/core/issuer"
@@ -31,7 +32,7 @@ import (
 	policypg "github.com/outshift/identity-service/internal/core/policy/postgres"
 	settingspg "github.com/outshift/identity-service/internal/core/settings/postgres"
 	"github.com/outshift/identity-service/internal/pkg/grpcutil"
-	outshiftiam "github.com/outshift/identity-service/internal/pkg/iam"
+	"github.com/outshift/identity-service/internal/pkg/iam"
 	"github.com/outshift/identity-service/internal/pkg/interceptors"
 	"github.com/outshift/identity-service/internal/pkg/secrets"
 	"github.com/outshift/identity-service/internal/pkg/vault"
@@ -54,7 +55,7 @@ var maxMsgSize = math.MaxInt64
 
 // ------------------------ GLOBAL -------------------- //
 
-//nolint:funlen // Ignore linting for main function
+//nolint:funlen,cyclop,maintidx // ignore linting for main function
 func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 
@@ -124,36 +125,40 @@ func main() {
 		&policypg.Policy{},
 		&policypg.Task{},
 		&policypg.Rule{},
+		&iampg.APIKey{},
 	)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// Disconnect the database client when done
-	defer func() {
-		if err = dbContext.Disconnect(); err != nil {
-			log.Fatal(err)
-		}
-	}()
-
 	crypter := secrets.NewSymmetricCrypter([]byte(config.SecretsCryptoKey))
 
+	// Create repositories
+	appRepository := apppg.NewRepository(dbContext.Client())
+	settingsRepository := settingspg.NewRepository(dbContext.Client(), crypter)
+	badgeRepository := badgepg.NewRepository(dbContext.Client())
+	deviceRepository := devicepg.NewRepository(dbContext.Client())
+	authRepository := authpg.NewRepository(dbContext.Client(), crypter)
+	policyRepository := policypg.NewRepository(dbContext.Client())
+	iamRepository := iampg.NewRepository(dbContext.Client(), crypter)
+
 	// IAM
-	iamClient := outshiftiam.NewClient(
-		http.DefaultClient,
-		config.IamApiUrl,
-		config.IamAdminAPIKey,
-		config.IamMultiTenant,
-		config.IamSingleTenantID,
-		&config.IamIssuer,
-		&config.IamUserCid,
-		&config.IamApiKeyCid,
-	)
+	var iamClient iam.Client
+
+	if config.IamMultiTenant {
+		iamClient = iam.NewMultitenantClient()
+	} else {
+		iamClient = iam.NewStandaloneClient(
+			config.IamIssuer,
+			config.IamUserCid,
+			config.IamOrganization,
+			iamRepository,
+		)
+	}
 
 	// Tenant interceptor
 	authInterceptor := interceptors.NewAuthInterceptor(
 		iamClient,
-		config.IamProductID,
 	)
 
 	// Create a GRPC server
@@ -172,18 +177,6 @@ func main() {
 		log.Error(err)
 	}
 
-	defer func() {
-		_ = grpcsrv.Shutdown(ctx)
-	}()
-
-	// Create repositories
-	appRepository := apppg.NewRepository(dbContext.Client())
-	settingsRepository := settingspg.NewRepository(dbContext.Client(), crypter)
-	badgeRepository := badgepg.NewRepository(dbContext.Client())
-	deviceRepository := devicepg.NewRepository(dbContext.Client())
-	authRepository := authpg.NewRepository(dbContext.Client(), crypter)
-	policyRepository := policypg.NewRepository(dbContext.Client())
-
 	// Get the token depending on the environment
 	token := ""
 	if !config.IsProd() {
@@ -191,8 +184,10 @@ func main() {
 		token = os.Getenv("VAULT_DEV_ROOT_TOKEN")
 	}
 
-	var credentialStore idpcore.CredentialStore
-	var keyStore identitycore.KeyStore
+	var (
+		credentialStore idpcore.CredentialStore
+		keyStore        identitycore.KeyStore
+	)
 
 	switch config.KeyStoreType {
 	case KeyStoreTypeVault:
@@ -235,6 +230,17 @@ func main() {
 	default:
 		log.Fatal("invalid KeyStoreType value ", config.KeyStoreType)
 	}
+
+	defer func() {
+		_ = grpcsrv.Shutdown(ctx)
+	}()
+
+	// Disconnect the database client when done
+	defer func() {
+		if err = dbContext.Disconnect(); err != nil {
+			log.Fatal(err)
+		}
+	}()
 
 	idpFactory := idpcore.NewFactory()
 
@@ -329,7 +335,7 @@ func main() {
 	log.Info("Serving gRPC on:", config.ServerGrpcHost)
 
 	go func() {
-		if err := grpcsrv.Run(); err != nil {
+		if err := grpcsrv.Run(ctx); err != nil {
 			log.Fatal(err)
 		}
 	}()

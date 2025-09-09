@@ -18,7 +18,7 @@ reset_generated_pb_go() {
 reset_generated_pb_go
 
 cd docker &&
-  docker compose -f buf-compose.yaml build --no-cache &&
+  docker compose -f buf-compose.yaml build &&
   docker compose -f buf-compose.yaml run --rm -w /identity/code/backend/api/spec buf-go run.sh
 docker rmi docker-buf-go
 

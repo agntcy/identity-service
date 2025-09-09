@@ -67,9 +67,6 @@ packages=$(echo "$packages" | sed 's/\s$//' | sed 's/^\s//')
 
 cd "${Identity_ROOT}/local/github.com/outshift/identity-service"
 
-go get github.com/gogo/protobuf/proto
-go mod vendor
-
 packages_comma_separated=$(echo "$packages" | tr ' ' ',')
 
 if [ -n "${packages_comma_separated}" ]; then

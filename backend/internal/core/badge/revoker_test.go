@@ -165,6 +165,7 @@ func TestRevoker_RevokeAll_should_return_err_when_cannot_sign_revoked_badge(t *t
 
 	ctx := context.Background()
 	appID := uuid.NewString()
+
 	var invalidPrivKey *jwk.Jwk
 
 	badgeRepo := badgemocks.NewRepository(t)

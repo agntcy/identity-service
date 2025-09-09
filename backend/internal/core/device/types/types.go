@@ -68,5 +68,5 @@ type ApprovalRequestInfo struct {
 type Notification struct {
 	Body                string               `json:"body,omitempty"                  protobuf:"bytes,1,opt,name=body"`
 	Type                NotificationType     `json:"type,omitempty"                  protobuf:"bytes,2,opt,name=type"`
-	ApprovalRequestInfo *ApprovalRequestInfo `json:"approval_request_info,omitempty" protobuf:"bytes,3,opt,name=approval_request_info"`
+	ApprovalRequestInfo *ApprovalRequestInfo `json:"approval_request_info,omitempty" protobuf:"bytes,3,opt,name=approval_request_info"` //nolint:lll // long def
 }

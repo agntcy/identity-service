@@ -3,14 +3,9 @@
 
 package identitycontext
 
-type key string
-
-func (k key) String() string {
-	return string(k)
-}
-
-var TenantID = key("tenant-id")
-var UserID = key("user-id")
-var OrganizationID = key("organization-id")
-var AuthType = key("auth-type")
-var AppID = key("app-id")
+// Keep this as string
+// The context value matching is based on value + type
+const TenantID string = "tenant-id"
+const UserID string = "user-id"
+const OrganizationID string = "organization-id"
+const AppID string = "app-id"

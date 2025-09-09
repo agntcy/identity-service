@@ -87,7 +87,10 @@ func (r *postgresRepository) GetLatestByAppID(
 	return badge.ToCoreType(), nil
 }
 
-func (r *postgresRepository) GetAllActiveBadges(ctx context.Context, appID string) ([]*types.Badge, error) {
+func (r *postgresRepository) GetAllActiveBadges(
+	ctx context.Context,
+	appID string,
+) ([]*types.Badge, error) {
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
 		return nil, identitycontext.ErrTenantNotFound
@@ -99,7 +102,7 @@ func (r *postgresRepository) GetAllActiveBadges(ctx context.Context, appID strin
 		Table("badges").
 		Joins("LEFT JOIN credential_statuses ON badges.id = credential_statuses.verifiable_credential_id").
 		Where(
-			"badges.app_id = ? AND badges.tenant_id = ? AND (credential_statuses.purpose NOT IN (?) OR credential_statuses IS NULL)",
+			"badges.app_id = ? AND badges.tenant_id = ? AND (credential_statuses.purpose NOT IN (?) OR credential_statuses IS NULL)", //nolint:lll // long sql line
 			appID,
 			tenantID,
 			types.CREDENTIAL_STATUS_PURPOSE_REVOCATION,

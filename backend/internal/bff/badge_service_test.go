@@ -109,7 +109,6 @@ func initTestServiceIssueBadgeSuccessFixture(t *testing.T) *issueBadgeSuccessFix
 	}
 }
 
-//nolint:funlen // a handful of tests cases
 func TestBadgeService_IssueBadge_should_succeed(t *testing.T) {
 	t.Parallel()
 

@@ -14,7 +14,7 @@ import (
 )
 
 type Badge struct {
-	VerifiableCredential `json:"verifiable_credential"`
+	VerifiableCredential `       json:"verifiable_credential"`
 	AppID                string `json:"app_id,omitempty"`
 }
 
@@ -168,8 +168,7 @@ const (
 	BADGE_TYPE_MCP_BADGE
 )
 
-// PS: The following code should be in core/identity
-
+//nolint:errname // ignore the error name rule
 type ErrorInfo struct {
 	Reason  string
 	Message string
