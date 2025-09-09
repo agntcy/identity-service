@@ -8,6 +8,12 @@ import {render, screen, fireEvent} from '@testing-library/react';
 import {MemoryRouter} from 'react-router-dom';
 import NotFound from '../404';
 
+// Suppress uncaught exception warnings in tests
+vi.stubGlobal('process', {
+  ...process,
+  on: vi.fn()
+});
+
 // Mock react-router-dom
 const mockNavigate = vi.fn();
 vi.mock('react-router-dom', async () => {
