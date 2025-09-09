@@ -6,6 +6,7 @@ package bff
 import (
 	"context"
 
+	iamtypes "github.com/outshift/identity-service/internal/core/iam/types"
 	issuercore "github.com/outshift/identity-service/internal/core/issuer"
 	settingscore "github.com/outshift/identity-service/internal/core/settings"
 	settingstypes "github.com/outshift/identity-service/internal/core/settings/types"
@@ -51,6 +52,9 @@ func (s *settingsService) GetSettings(
 
 	// Get the API key from the IAM client.
 	apiKey, _ := s.iamClient.GetTenantAPIKey(ctx)
+	if apiKey == nil {
+		apiKey = &iamtypes.APIKey{}
+	}
 
 	return &settingstypes.Settings{
 		IssuerSettings: issuerSettings,
