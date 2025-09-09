@@ -3,7 +3,6 @@ FROM golang:1.24.5-alpine AS builder
 # Build the package
 WORKDIR /build
 COPY ./backend .
-RUN go mod download
 RUN cd ./cmd/bff && go build -o ../../identity-bff
 
 RUN apk update \
