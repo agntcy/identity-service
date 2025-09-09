@@ -80,6 +80,6 @@ func (c *MultitenantClient) AuthJwt(ctx context.Context, jwt string) error {
 func (c *MultitenantClient) AuthAPIKey(
 	ctx context.Context,
 	apiKey string,
-) error {
-	return ErrMultitenantNotImplemented
+) (newCtx context.Context, err error) {
+	return newCtx, ErrMultitenantNotImplemented
 }
