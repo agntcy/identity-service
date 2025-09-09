@@ -24,6 +24,7 @@ import (
 	badgemcp "github.com/outshift/identity-service/internal/core/badge/mcp"
 	badgepg "github.com/outshift/identity-service/internal/core/badge/postgres"
 	devicepg "github.com/outshift/identity-service/internal/core/device/postgres"
+	iampg "github.com/outshift/identity-service/internal/core/iam/postgres"
 	identitycore "github.com/outshift/identity-service/internal/core/identity"
 	idpcore "github.com/outshift/identity-service/internal/core/idp"
 	"github.com/outshift/identity-service/internal/core/issuer"
@@ -31,7 +32,7 @@ import (
 	policypg "github.com/outshift/identity-service/internal/core/policy/postgres"
 	settingspg "github.com/outshift/identity-service/internal/core/settings/postgres"
 	"github.com/outshift/identity-service/internal/pkg/grpcutil"
-	outshiftiam "github.com/outshift/identity-service/internal/pkg/iam"
+	"github.com/outshift/identity-service/internal/pkg/iam"
 	"github.com/outshift/identity-service/internal/pkg/interceptors"
 	"github.com/outshift/identity-service/internal/pkg/secrets"
 	"github.com/outshift/identity-service/internal/pkg/vault"
@@ -138,22 +139,31 @@ func main() {
 
 	crypter := secrets.NewSymmetricCrypter([]byte(config.SecretsCryptoKey))
 
+	// Create repositories
+	appRepository := apppg.NewRepository(dbContext.Client())
+	settingsRepository := settingspg.NewRepository(dbContext.Client(), crypter)
+	badgeRepository := badgepg.NewRepository(dbContext.Client())
+	deviceRepository := devicepg.NewRepository(dbContext.Client())
+	authRepository := authpg.NewRepository(dbContext.Client(), crypter)
+	policyRepository := policypg.NewRepository(dbContext.Client())
+	iamRepository := iampg.NewRepository(dbContext.Client(), crypter)
+
 	// IAM
-	iamClient := outshiftiam.NewClient(
-		http.DefaultClient,
-		config.IamApiUrl,
-		config.IamAdminAPIKey,
-		config.IamMultiTenant,
-		config.IamSingleTenantID,
-		&config.IamIssuer,
-		&config.IamUserCid,
-		&config.IamApiKeyCid,
-	)
+	var iamClient iam.Client
+
+	if config.IamMultiTenant {
+		iamClient = iam.NewMultitenantClient()
+	} else {
+		iamClient = iam.NewStandaloneClient(
+			&config.IamIssuer,
+			&config.IamUserCid,
+			iamRepository,
+		)
+	}
 
 	// Tenant interceptor
 	authInterceptor := interceptors.NewAuthInterceptor(
 		iamClient,
-		config.IamProductID,
 	)
 
 	// Create a GRPC server
@@ -175,14 +185,6 @@ func main() {
 	defer func() {
 		_ = grpcsrv.Shutdown(ctx)
 	}()
-
-	// Create repositories
-	appRepository := apppg.NewRepository(dbContext.Client())
-	settingsRepository := settingspg.NewRepository(dbContext.Client(), crypter)
-	badgeRepository := badgepg.NewRepository(dbContext.Client())
-	deviceRepository := devicepg.NewRepository(dbContext.Client())
-	authRepository := authpg.NewRepository(dbContext.Client(), crypter)
-	policyRepository := policypg.NewRepository(dbContext.Client())
 
 	// Get the token depending on the environment
 	token := ""

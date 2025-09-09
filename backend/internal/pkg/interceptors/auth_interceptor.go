@@ -6,11 +6,12 @@ package interceptors
 import (
 	"context"
 	"errors"
+	"slices"
 	"strings"
 
 	identity_service_sdk_go "github.com/outshift/identity-service/api/server/outshift/identity/service/v1alpha1"
 	"github.com/outshift/identity-service/internal/pkg/grpcutil"
-	outshiftiam "github.com/outshift/identity-service/internal/pkg/iam"
+	"github.com/outshift/identity-service/internal/pkg/iam"
 	"github.com/outshift/identity-service/pkg/log"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
@@ -20,7 +21,7 @@ import (
 
 const (
 	AuthorizationHeaderKey string = "authorization"
-	ApiKeyHeaderKey        string = "x-id-api-key" //nolint:gosec // This is a false positive
+	APIKeyHeaderKey        string = "x-id-api-key" //nolint:gosec // This is a false positive
 )
 
 var allowedServicesWithoutAuth = []string{
@@ -39,17 +40,14 @@ var allowedServicesWithAppAuth = []string{
 }
 
 type AuthInterceptor struct {
-	iam          outshiftiam.Client
-	iamProductID string
+	iamClient iam.Client
 }
 
 func NewAuthInterceptor(
-	iam outshiftiam.Client,
-	iamProductID string,
+	iamClient iam.Client,
 ) *AuthInterceptor {
 	return &AuthInterceptor{
-		iam:          iam,
-		iamProductID: iamProductID,
+		iamClient: iamClient,
 	}
 }
 
@@ -58,17 +56,17 @@ func NewAuthInterceptor(
 // The unary interceptor is used for the REST and gRPC calls
 func (ti *AuthInterceptor) Unary(
 	ctx context.Context,
-	req interface{},
+	req any,
 	info *grpc.UnaryServerInfo,
 	handler grpc.UnaryHandler,
-) (interface{}, error) {
+) (any, error) {
 	// Check non-auth services
 	// Healthz, etc.
-	for _, service := range allowedServicesWithoutAuth {
-		if info.FullMethod == service {
-			return handler(ctx, req)
-		}
+	if slices.Contains(allowedServicesWithoutAuth, info.FullMethod) {
+		return handler(ctx, req)
 	}
+
+	log.Debug("Auth Interceptor: ", info.FullMethod)
 
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
@@ -76,12 +74,12 @@ func (ti *AuthInterceptor) Unary(
 	}
 
 	// This header will come for IAM Api Keys v1
-	apiKeyHeader, okApiKeyV1 := md[ApiKeyHeaderKey]
+	apiKeyHeader, okAPIKeyV1 := md[APIKeyHeaderKey]
 
 	// This header will come for both IAM Api Keys v2 and User JWT
 	authHeader, okAuth := md[AuthorizationHeaderKey]
 
-	if !okAuth && !okApiKeyV1 {
+	if !okAuth && !okAPIKeyV1 {
 		return nil, grpcutil.UnauthorizedError(errors.New("failed to extract authorization"))
 	}
 
@@ -89,7 +87,7 @@ func (ti *AuthInterceptor) Unary(
 	var aCtx context.Context
 
 	if okAuth {
-		aCtx, err = ti.iam.AuthJwt(ctx, authHeader[0])
+		aCtx, err = ti.iamClient.AuthJwt(ctx, authHeader[0])
 		if err != nil {
 			return nil, grpcutil.UnauthorizedError(err)
 		}
@@ -100,7 +98,8 @@ func (ti *AuthInterceptor) Unary(
 
 			if strings.Contains(info.FullMethod, allowed) {
 				// Authenticate an app against IAM Api Keys v1
-				aCtx, err := ti.iam.AuthApiKey(ctx, ti.iamProductID, apiKeyHeader[0], true)
+				aCtx, err := ti.iamClient.AuthAPIKey(ctx, apiKeyHeader[0], true)
+				log.Debug("App auth context: ", aCtx)
 				if err != nil {
 					return nil, grpcutil.UnauthorizedError(err)
 				}
@@ -110,11 +109,13 @@ func (ti *AuthInterceptor) Unary(
 		}
 
 		// Authenticate a tenant against IAM Api Keys v1
-		aCtx, err = ti.iam.AuthApiKey(ctx, ti.iamProductID, apiKeyHeader[0], false)
+		aCtx, err = ti.iamClient.AuthAPIKey(ctx, apiKeyHeader[0], false)
 		if err != nil {
 			return nil, grpcutil.UnauthorizedError(err)
 		}
 	}
+
+	log.Debug("Auth context: ", aCtx)
 
 	return handler(aCtx, req)
 }

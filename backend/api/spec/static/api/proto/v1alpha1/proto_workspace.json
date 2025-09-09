@@ -3001,6 +3001,104 @@
       ]
     },
     {
+      "name": "outshift/identity/service/v1alpha1/iam.proto",
+      "description": "",
+      "package": "outshift.identity.service.v1alpha1",
+      "hasEnums": false,
+      "hasExtensions": false,
+      "hasMessages": true,
+      "hasServices": false,
+      "enums": [],
+      "extensions": [],
+      "messages": [
+        {
+          "name": "APIKey",
+          "longName": "APIKey",
+          "fullName": "outshift.identity.service.v1alpha1.APIKey",
+          "description": "APIKey",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "id",
+              "description": "A unique identifier for the APIKey.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_id",
+              "defaultValue": ""
+            },
+            {
+              "name": "name",
+              "description": "The ID of the user associated with the APIKey.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_name",
+              "defaultValue": ""
+            },
+            {
+              "name": "secret",
+              "description": "The secret key used for authentication.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_secret",
+              "defaultValue": ""
+            },
+            {
+              "name": "tenant_id",
+              "description": "The ID of the tenant associated with the APIKey.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_tenant_id",
+              "defaultValue": ""
+            },
+            {
+              "name": "app_id",
+              "description": "The ID of the application associated with the APIKey, if applicable.",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_app_id",
+              "defaultValue": ""
+            },
+            {
+              "name": "created_at",
+              "description": "The creation time of the APIKey.",
+              "label": "optional",
+              "type": "Timestamp",
+              "longType": "google.protobuf.Timestamp",
+              "fullType": "google.protobuf.Timestamp",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_created_at",
+              "defaultValue": ""
+            }
+          ]
+        }
+      ],
+      "services": []
+    },
+    {
       "name": "outshift/identity/service/v1alpha1/policy_service.proto",
       "description": "",
       "package": "outshift.identity.service.v1alpha1",

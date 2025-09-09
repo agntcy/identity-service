@@ -6,11 +6,13 @@ package bff
 import (
 	"context"
 
+	iamtypes "github.com/outshift/identity-service/internal/core/iam/types"
 	issuercore "github.com/outshift/identity-service/internal/core/issuer"
 	settingscore "github.com/outshift/identity-service/internal/core/settings"
 	settingstypes "github.com/outshift/identity-service/internal/core/settings/types"
 	"github.com/outshift/identity-service/internal/pkg/errutil"
 	outshiftiam "github.com/outshift/identity-service/internal/pkg/iam"
+	"github.com/outshift/identity-service/internal/pkg/ptrutil"
 )
 
 type SettingsService interface {
@@ -49,12 +51,15 @@ func (s *settingsService) GetSettings(
 	}
 
 	// Get the API key from the IAM client.
-	apiKey, _ := s.iamClient.GetTenantApiKey(ctx)
+	apiKey, _ := s.iamClient.GetTenantAPIKey(ctx)
+	if apiKey == nil {
+		apiKey = &iamtypes.APIKey{}
+	}
 
 	return &settingstypes.Settings{
 		IssuerSettings: issuerSettings,
 		ApiKey: &settingstypes.ApiKey{
-			ApiKey: apiKey.Secret,
+			ApiKey: ptrutil.DerefStr(apiKey.Secret),
 		},
 	}, nil
 }
@@ -63,22 +68,22 @@ func (s *settingsService) SetApiKey(
 	ctx context.Context,
 ) (*settingstypes.ApiKey, error) {
 	// Get existing key and revoke it if necessary.
-	_, err := s.iamClient.GetTenantApiKey(ctx)
+	_, err := s.iamClient.GetTenantAPIKey(ctx)
 	if err == nil {
-		if err := s.iamClient.RevokeTenantApiKey(ctx); err != nil {
+		if err := s.iamClient.RevokeTenantAPIKey(ctx); err != nil {
 			return nil, errutil.Err(err, "failed to revoke existing Api key")
 		}
 	}
 
 	// Generate a new Api key.
-	newApiKey, err := s.iamClient.CreateTenantApiKey(ctx)
+	newApiKey, err := s.iamClient.CreateTenantAPIKey(ctx)
 	if err != nil {
 		return nil, errutil.Err(err, "failed to create new Api key")
 	}
 
 	// Return the new Api key.
 	return &settingstypes.ApiKey{
-		ApiKey: newApiKey.Secret,
+		ApiKey: ptrutil.DerefStr(newApiKey.Secret),
 	}, nil
 }
 

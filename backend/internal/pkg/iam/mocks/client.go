@@ -7,7 +7,7 @@ package mocks
 import (
 	"context"
 
-	"github.com/outshift/identity-service/internal/pkg/iam"
+	"github.com/outshift/identity-service/internal/core/iam/types"
 	mock "github.com/stretchr/testify/mock"
 )
 
@@ -38,49 +38,48 @@ func (_m *Client) EXPECT() *Client_Expecter {
 	return &Client_Expecter{mock: &_m.Mock}
 }
 
-// AuthApiKey provides a mock function for the type Client
-func (_mock *Client) AuthApiKey(ctx context.Context, productID string, apiKey string, forApp bool) (context.Context, error) {
-	ret := _mock.Called(ctx, productID, apiKey, forApp)
+// AuthAPIKey provides a mock function for the type Client
+func (_mock *Client) AuthAPIKey(ctx context.Context, apiKey string, forApp bool) (context.Context, error) {
+	ret := _mock.Called(ctx, apiKey, forApp)
 
 	if len(ret) == 0 {
-		panic("no return value specified for AuthApiKey")
+		panic("no return value specified for AuthAPIKey")
 	}
 
 	var r0 context.Context
 	var r1 error
-	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string, bool) (context.Context, error)); ok {
-		return returnFunc(ctx, productID, apiKey, forApp)
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string, bool) (context.Context, error)); ok {
+		return returnFunc(ctx, apiKey, forApp)
 	}
-	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string, bool) context.Context); ok {
-		r0 = returnFunc(ctx, productID, apiKey, forApp)
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string, bool) context.Context); ok {
+		r0 = returnFunc(ctx, apiKey, forApp)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(context.Context)
 		}
 	}
-	if returnFunc, ok := ret.Get(1).(func(context.Context, string, string, bool) error); ok {
-		r1 = returnFunc(ctx, productID, apiKey, forApp)
+	if returnFunc, ok := ret.Get(1).(func(context.Context, string, bool) error); ok {
+		r1 = returnFunc(ctx, apiKey, forApp)
 	} else {
 		r1 = ret.Error(1)
 	}
 	return r0, r1
 }
 
-// Client_AuthApiKey_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'AuthApiKey'
-type Client_AuthApiKey_Call struct {
+// Client_AuthAPIKey_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'AuthAPIKey'
+type Client_AuthAPIKey_Call struct {
 	*mock.Call
 }
 
-// AuthApiKey is a helper method to define mock.On call
+// AuthAPIKey is a helper method to define mock.On call
 //   - ctx context.Context
-//   - productID string
 //   - apiKey string
 //   - forApp bool
-func (_e *Client_Expecter) AuthApiKey(ctx interface{}, productID interface{}, apiKey interface{}, forApp interface{}) *Client_AuthApiKey_Call {
-	return &Client_AuthApiKey_Call{Call: _e.mock.On("AuthApiKey", ctx, productID, apiKey, forApp)}
+func (_e *Client_Expecter) AuthAPIKey(ctx interface{}, apiKey interface{}, forApp interface{}) *Client_AuthAPIKey_Call {
+	return &Client_AuthAPIKey_Call{Call: _e.mock.On("AuthAPIKey", ctx, apiKey, forApp)}
 }
 
-func (_c *Client_AuthApiKey_Call) Run(run func(ctx context.Context, productID string, apiKey string, forApp bool)) *Client_AuthApiKey_Call {
+func (_c *Client_AuthAPIKey_Call) Run(run func(ctx context.Context, apiKey string, forApp bool)) *Client_AuthAPIKey_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		var arg0 context.Context
 		if args[0] != nil {
@@ -90,30 +89,25 @@ func (_c *Client_AuthApiKey_Call) Run(run func(ctx context.Context, productID st
 		if args[1] != nil {
 			arg1 = args[1].(string)
 		}
-		var arg2 string
+		var arg2 bool
 		if args[2] != nil {
-			arg2 = args[2].(string)
-		}
-		var arg3 bool
-		if args[3] != nil {
-			arg3 = args[3].(bool)
+			arg2 = args[2].(bool)
 		}
 		run(
 			arg0,
 			arg1,
 			arg2,
-			arg3,
 		)
 	})
 	return _c
 }
 
-func (_c *Client_AuthApiKey_Call) Return(newCtx context.Context, err error) *Client_AuthApiKey_Call {
+func (_c *Client_AuthAPIKey_Call) Return(newCtx context.Context, err error) *Client_AuthAPIKey_Call {
 	_c.Call.Return(newCtx, err)
 	return _c
 }
 
-func (_c *Client_AuthApiKey_Call) RunAndReturn(run func(ctx context.Context, productID string, apiKey string, forApp bool) (context.Context, error)) *Client_AuthApiKey_Call {
+func (_c *Client_AuthAPIKey_Call) RunAndReturn(run func(ctx context.Context, apiKey string, forApp bool) (context.Context, error)) *Client_AuthAPIKey_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -186,23 +180,25 @@ func (_c *Client_AuthJwt_Call) RunAndReturn(run func(ctx context.Context, header
 	return _c
 }
 
-// CreateAppApiKey provides a mock function for the type Client
-func (_mock *Client) CreateAppApiKey(ctx context.Context, appID string) (outshiftiam.ApiKey, error) {
+// CreateAppAPIKey provides a mock function for the type Client
+func (_mock *Client) CreateAppAPIKey(ctx context.Context, appID string) (*types.APIKey, error) {
 	ret := _mock.Called(ctx, appID)
 
 	if len(ret) == 0 {
-		panic("no return value specified for CreateAppApiKey")
+		panic("no return value specified for CreateAppAPIKey")
 	}
 
-	var r0 outshiftiam.ApiKey
+	var r0 *types.APIKey
 	var r1 error
-	if returnFunc, ok := ret.Get(0).(func(context.Context, string) (outshiftiam.ApiKey, error)); ok {
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) (*types.APIKey, error)); ok {
 		return returnFunc(ctx, appID)
 	}
-	if returnFunc, ok := ret.Get(0).(func(context.Context, string) outshiftiam.ApiKey); ok {
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) *types.APIKey); ok {
 		r0 = returnFunc(ctx, appID)
 	} else {
-		r0 = ret.Get(0).(outshiftiam.ApiKey)
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*types.APIKey)
+		}
 	}
 	if returnFunc, ok := ret.Get(1).(func(context.Context, string) error); ok {
 		r1 = returnFunc(ctx, appID)
@@ -212,19 +208,19 @@ func (_mock *Client) CreateAppApiKey(ctx context.Context, appID string) (outshif
 	return r0, r1
 }
 
-// Client_CreateAppApiKey_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'CreateAppApiKey'
-type Client_CreateAppApiKey_Call struct {
+// Client_CreateAppAPIKey_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'CreateAppAPIKey'
+type Client_CreateAppAPIKey_Call struct {
 	*mock.Call
 }
 
-// CreateAppApiKey is a helper method to define mock.On call
+// CreateAppAPIKey is a helper method to define mock.On call
 //   - ctx context.Context
 //   - appID string
-func (_e *Client_Expecter) CreateAppApiKey(ctx interface{}, appID interface{}) *Client_CreateAppApiKey_Call {
-	return &Client_CreateAppApiKey_Call{Call: _e.mock.On("CreateAppApiKey", ctx, appID)}
+func (_e *Client_Expecter) CreateAppAPIKey(ctx interface{}, appID interface{}) *Client_CreateAppAPIKey_Call {
+	return &Client_CreateAppAPIKey_Call{Call: _e.mock.On("CreateAppAPIKey", ctx, appID)}
 }
 
-func (_c *Client_CreateAppApiKey_Call) Run(run func(ctx context.Context, appID string)) *Client_CreateAppApiKey_Call {
+func (_c *Client_CreateAppAPIKey_Call) Run(run func(ctx context.Context, appID string)) *Client_CreateAppAPIKey_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		var arg0 context.Context
 		if args[0] != nil {
@@ -242,33 +238,35 @@ func (_c *Client_CreateAppApiKey_Call) Run(run func(ctx context.Context, appID s
 	return _c
 }
 
-func (_c *Client_CreateAppApiKey_Call) Return(apiKey outshiftiam.ApiKey, err error) *Client_CreateAppApiKey_Call {
+func (_c *Client_CreateAppAPIKey_Call) Return(apiKey *types.APIKey, err error) *Client_CreateAppAPIKey_Call {
 	_c.Call.Return(apiKey, err)
 	return _c
 }
 
-func (_c *Client_CreateAppApiKey_Call) RunAndReturn(run func(ctx context.Context, appID string) (outshiftiam.ApiKey, error)) *Client_CreateAppApiKey_Call {
+func (_c *Client_CreateAppAPIKey_Call) RunAndReturn(run func(ctx context.Context, appID string) (*types.APIKey, error)) *Client_CreateAppAPIKey_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
-// CreateTenantApiKey provides a mock function for the type Client
-func (_mock *Client) CreateTenantApiKey(ctx context.Context) (outshiftiam.ApiKey, error) {
+// CreateTenantAPIKey provides a mock function for the type Client
+func (_mock *Client) CreateTenantAPIKey(ctx context.Context) (*types.APIKey, error) {
 	ret := _mock.Called(ctx)
 
 	if len(ret) == 0 {
-		panic("no return value specified for CreateTenantApiKey")
+		panic("no return value specified for CreateTenantAPIKey")
 	}
 
-	var r0 outshiftiam.ApiKey
+	var r0 *types.APIKey
 	var r1 error
-	if returnFunc, ok := ret.Get(0).(func(context.Context) (outshiftiam.ApiKey, error)); ok {
+	if returnFunc, ok := ret.Get(0).(func(context.Context) (*types.APIKey, error)); ok {
 		return returnFunc(ctx)
 	}
-	if returnFunc, ok := ret.Get(0).(func(context.Context) outshiftiam.ApiKey); ok {
+	if returnFunc, ok := ret.Get(0).(func(context.Context) *types.APIKey); ok {
 		r0 = returnFunc(ctx)
 	} else {
-		r0 = ret.Get(0).(outshiftiam.ApiKey)
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*types.APIKey)
+		}
 	}
 	if returnFunc, ok := ret.Get(1).(func(context.Context) error); ok {
 		r1 = returnFunc(ctx)
@@ -278,18 +276,18 @@ func (_mock *Client) CreateTenantApiKey(ctx context.Context) (outshiftiam.ApiKey
 	return r0, r1
 }
 
-// Client_CreateTenantApiKey_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'CreateTenantApiKey'
-type Client_CreateTenantApiKey_Call struct {
+// Client_CreateTenantAPIKey_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'CreateTenantAPIKey'
+type Client_CreateTenantAPIKey_Call struct {
 	*mock.Call
 }
 
-// CreateTenantApiKey is a helper method to define mock.On call
+// CreateTenantAPIKey is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *Client_Expecter) CreateTenantApiKey(ctx interface{}) *Client_CreateTenantApiKey_Call {
-	return &Client_CreateTenantApiKey_Call{Call: _e.mock.On("CreateTenantApiKey", ctx)}
+func (_e *Client_Expecter) CreateTenantAPIKey(ctx interface{}) *Client_CreateTenantAPIKey_Call {
+	return &Client_CreateTenantAPIKey_Call{Call: _e.mock.On("CreateTenantAPIKey", ctx)}
 }
 
-func (_c *Client_CreateTenantApiKey_Call) Run(run func(ctx context.Context)) *Client_CreateTenantApiKey_Call {
+func (_c *Client_CreateTenantAPIKey_Call) Run(run func(ctx context.Context)) *Client_CreateTenantAPIKey_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		var arg0 context.Context
 		if args[0] != nil {
@@ -302,33 +300,35 @@ func (_c *Client_CreateTenantApiKey_Call) Run(run func(ctx context.Context)) *Cl
 	return _c
 }
 
-func (_c *Client_CreateTenantApiKey_Call) Return(apiKey outshiftiam.ApiKey, err error) *Client_CreateTenantApiKey_Call {
+func (_c *Client_CreateTenantAPIKey_Call) Return(apiKey *types.APIKey, err error) *Client_CreateTenantAPIKey_Call {
 	_c.Call.Return(apiKey, err)
 	return _c
 }
 
-func (_c *Client_CreateTenantApiKey_Call) RunAndReturn(run func(ctx context.Context) (outshiftiam.ApiKey, error)) *Client_CreateTenantApiKey_Call {
+func (_c *Client_CreateTenantAPIKey_Call) RunAndReturn(run func(ctx context.Context) (*types.APIKey, error)) *Client_CreateTenantAPIKey_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
-// GetAppApiKey provides a mock function for the type Client
-func (_mock *Client) GetAppApiKey(ctx context.Context, appID string) (outshiftiam.ApiKey, error) {
+// GetAppAPIKey provides a mock function for the type Client
+func (_mock *Client) GetAppAPIKey(ctx context.Context, appID string) (*types.APIKey, error) {
 	ret := _mock.Called(ctx, appID)
 
 	if len(ret) == 0 {
-		panic("no return value specified for GetAppApiKey")
+		panic("no return value specified for GetAppAPIKey")
 	}
 
-	var r0 outshiftiam.ApiKey
+	var r0 *types.APIKey
 	var r1 error
-	if returnFunc, ok := ret.Get(0).(func(context.Context, string) (outshiftiam.ApiKey, error)); ok {
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) (*types.APIKey, error)); ok {
 		return returnFunc(ctx, appID)
 	}
-	if returnFunc, ok := ret.Get(0).(func(context.Context, string) outshiftiam.ApiKey); ok {
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) *types.APIKey); ok {
 		r0 = returnFunc(ctx, appID)
 	} else {
-		r0 = ret.Get(0).(outshiftiam.ApiKey)
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*types.APIKey)
+		}
 	}
 	if returnFunc, ok := ret.Get(1).(func(context.Context, string) error); ok {
 		r1 = returnFunc(ctx, appID)
@@ -338,19 +338,19 @@ func (_mock *Client) GetAppApiKey(ctx context.Context, appID string) (outshiftia
 	return r0, r1
 }
 
-// Client_GetAppApiKey_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetAppApiKey'
-type Client_GetAppApiKey_Call struct {
+// Client_GetAppAPIKey_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetAppAPIKey'
+type Client_GetAppAPIKey_Call struct {
 	*mock.Call
 }
 
-// GetAppApiKey is a helper method to define mock.On call
+// GetAppAPIKey is a helper method to define mock.On call
 //   - ctx context.Context
 //   - appID string
-func (_e *Client_Expecter) GetAppApiKey(ctx interface{}, appID interface{}) *Client_GetAppApiKey_Call {
-	return &Client_GetAppApiKey_Call{Call: _e.mock.On("GetAppApiKey", ctx, appID)}
+func (_e *Client_Expecter) GetAppAPIKey(ctx interface{}, appID interface{}) *Client_GetAppAPIKey_Call {
+	return &Client_GetAppAPIKey_Call{Call: _e.mock.On("GetAppAPIKey", ctx, appID)}
 }
 
-func (_c *Client_GetAppApiKey_Call) Run(run func(ctx context.Context, appID string)) *Client_GetAppApiKey_Call {
+func (_c *Client_GetAppAPIKey_Call) Run(run func(ctx context.Context, appID string)) *Client_GetAppAPIKey_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		var arg0 context.Context
 		if args[0] != nil {
@@ -368,33 +368,35 @@ func (_c *Client_GetAppApiKey_Call) Run(run func(ctx context.Context, appID stri
 	return _c
 }
 
-func (_c *Client_GetAppApiKey_Call) Return(apiKey outshiftiam.ApiKey, err error) *Client_GetAppApiKey_Call {
+func (_c *Client_GetAppAPIKey_Call) Return(apiKey *types.APIKey, err error) *Client_GetAppAPIKey_Call {
 	_c.Call.Return(apiKey, err)
 	return _c
 }
 
-func (_c *Client_GetAppApiKey_Call) RunAndReturn(run func(ctx context.Context, appID string) (outshiftiam.ApiKey, error)) *Client_GetAppApiKey_Call {
+func (_c *Client_GetAppAPIKey_Call) RunAndReturn(run func(ctx context.Context, appID string) (*types.APIKey, error)) *Client_GetAppAPIKey_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
-// GetTenantApiKey provides a mock function for the type Client
-func (_mock *Client) GetTenantApiKey(ctx context.Context) (outshiftiam.ApiKey, error) {
+// GetTenantAPIKey provides a mock function for the type Client
+func (_mock *Client) GetTenantAPIKey(ctx context.Context) (*types.APIKey, error) {
 	ret := _mock.Called(ctx)
 
 	if len(ret) == 0 {
-		panic("no return value specified for GetTenantApiKey")
+		panic("no return value specified for GetTenantAPIKey")
 	}
 
-	var r0 outshiftiam.ApiKey
+	var r0 *types.APIKey
 	var r1 error
-	if returnFunc, ok := ret.Get(0).(func(context.Context) (outshiftiam.ApiKey, error)); ok {
+	if returnFunc, ok := ret.Get(0).(func(context.Context) (*types.APIKey, error)); ok {
 		return returnFunc(ctx)
 	}
-	if returnFunc, ok := ret.Get(0).(func(context.Context) outshiftiam.ApiKey); ok {
+	if returnFunc, ok := ret.Get(0).(func(context.Context) *types.APIKey); ok {
 		r0 = returnFunc(ctx)
 	} else {
-		r0 = ret.Get(0).(outshiftiam.ApiKey)
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*types.APIKey)
+		}
 	}
 	if returnFunc, ok := ret.Get(1).(func(context.Context) error); ok {
 		r1 = returnFunc(ctx)
@@ -404,18 +406,18 @@ func (_mock *Client) GetTenantApiKey(ctx context.Context) (outshiftiam.ApiKey, e
 	return r0, r1
 }
 
-// Client_GetTenantApiKey_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetTenantApiKey'
-type Client_GetTenantApiKey_Call struct {
+// Client_GetTenantAPIKey_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetTenantAPIKey'
+type Client_GetTenantAPIKey_Call struct {
 	*mock.Call
 }
 
-// GetTenantApiKey is a helper method to define mock.On call
+// GetTenantAPIKey is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *Client_Expecter) GetTenantApiKey(ctx interface{}) *Client_GetTenantApiKey_Call {
-	return &Client_GetTenantApiKey_Call{Call: _e.mock.On("GetTenantApiKey", ctx)}
+func (_e *Client_Expecter) GetTenantAPIKey(ctx interface{}) *Client_GetTenantAPIKey_Call {
+	return &Client_GetTenantAPIKey_Call{Call: _e.mock.On("GetTenantAPIKey", ctx)}
 }
 
-func (_c *Client_GetTenantApiKey_Call) Run(run func(ctx context.Context)) *Client_GetTenantApiKey_Call {
+func (_c *Client_GetTenantAPIKey_Call) Run(run func(ctx context.Context)) *Client_GetTenantAPIKey_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		var arg0 context.Context
 		if args[0] != nil {
@@ -428,33 +430,35 @@ func (_c *Client_GetTenantApiKey_Call) Run(run func(ctx context.Context)) *Clien
 	return _c
 }
 
-func (_c *Client_GetTenantApiKey_Call) Return(apiKey outshiftiam.ApiKey, err error) *Client_GetTenantApiKey_Call {
+func (_c *Client_GetTenantAPIKey_Call) Return(apiKey *types.APIKey, err error) *Client_GetTenantAPIKey_Call {
 	_c.Call.Return(apiKey, err)
 	return _c
 }
 
-func (_c *Client_GetTenantApiKey_Call) RunAndReturn(run func(ctx context.Context) (outshiftiam.ApiKey, error)) *Client_GetTenantApiKey_Call {
+func (_c *Client_GetTenantAPIKey_Call) RunAndReturn(run func(ctx context.Context) (*types.APIKey, error)) *Client_GetTenantAPIKey_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
-// RefreshAppApiKey provides a mock function for the type Client
-func (_mock *Client) RefreshAppApiKey(ctx context.Context, appID string) (outshiftiam.ApiKey, error) {
+// RefreshAppAPIKey provides a mock function for the type Client
+func (_mock *Client) RefreshAppAPIKey(ctx context.Context, appID string) (*types.APIKey, error) {
 	ret := _mock.Called(ctx, appID)
 
 	if len(ret) == 0 {
-		panic("no return value specified for RefreshAppApiKey")
+		panic("no return value specified for RefreshAppAPIKey")
 	}
 
-	var r0 outshiftiam.ApiKey
+	var r0 *types.APIKey
 	var r1 error
-	if returnFunc, ok := ret.Get(0).(func(context.Context, string) (outshiftiam.ApiKey, error)); ok {
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) (*types.APIKey, error)); ok {
 		return returnFunc(ctx, appID)
 	}
-	if returnFunc, ok := ret.Get(0).(func(context.Context, string) outshiftiam.ApiKey); ok {
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) *types.APIKey); ok {
 		r0 = returnFunc(ctx, appID)
 	} else {
-		r0 = ret.Get(0).(outshiftiam.ApiKey)
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*types.APIKey)
+		}
 	}
 	if returnFunc, ok := ret.Get(1).(func(context.Context, string) error); ok {
 		r1 = returnFunc(ctx, appID)
@@ -464,19 +468,19 @@ func (_mock *Client) RefreshAppApiKey(ctx context.Context, appID string) (outshi
 	return r0, r1
 }
 
-// Client_RefreshAppApiKey_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'RefreshAppApiKey'
-type Client_RefreshAppApiKey_Call struct {
+// Client_RefreshAppAPIKey_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'RefreshAppAPIKey'
+type Client_RefreshAppAPIKey_Call struct {
 	*mock.Call
 }
 
-// RefreshAppApiKey is a helper method to define mock.On call
+// RefreshAppAPIKey is a helper method to define mock.On call
 //   - ctx context.Context
 //   - appID string
-func (_e *Client_Expecter) RefreshAppApiKey(ctx interface{}, appID interface{}) *Client_RefreshAppApiKey_Call {
-	return &Client_RefreshAppApiKey_Call{Call: _e.mock.On("RefreshAppApiKey", ctx, appID)}
+func (_e *Client_Expecter) RefreshAppAPIKey(ctx interface{}, appID interface{}) *Client_RefreshAppAPIKey_Call {
+	return &Client_RefreshAppAPIKey_Call{Call: _e.mock.On("RefreshAppAPIKey", ctx, appID)}
 }
 
-func (_c *Client_RefreshAppApiKey_Call) Run(run func(ctx context.Context, appID string)) *Client_RefreshAppApiKey_Call {
+func (_c *Client_RefreshAppAPIKey_Call) Run(run func(ctx context.Context, appID string)) *Client_RefreshAppAPIKey_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		var arg0 context.Context
 		if args[0] != nil {
@@ -494,22 +498,22 @@ func (_c *Client_RefreshAppApiKey_Call) Run(run func(ctx context.Context, appID 
 	return _c
 }
 
-func (_c *Client_RefreshAppApiKey_Call) Return(apiKey outshiftiam.ApiKey, err error) *Client_RefreshAppApiKey_Call {
+func (_c *Client_RefreshAppAPIKey_Call) Return(apiKey *types.APIKey, err error) *Client_RefreshAppAPIKey_Call {
 	_c.Call.Return(apiKey, err)
 	return _c
 }
 
-func (_c *Client_RefreshAppApiKey_Call) RunAndReturn(run func(ctx context.Context, appID string) (outshiftiam.ApiKey, error)) *Client_RefreshAppApiKey_Call {
+func (_c *Client_RefreshAppAPIKey_Call) RunAndReturn(run func(ctx context.Context, appID string) (*types.APIKey, error)) *Client_RefreshAppAPIKey_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
-// RevokeAppApiKey provides a mock function for the type Client
-func (_mock *Client) RevokeAppApiKey(ctx context.Context, appID string) error {
+// RevokeAppAPIKey provides a mock function for the type Client
+func (_mock *Client) RevokeAppAPIKey(ctx context.Context, appID string) error {
 	ret := _mock.Called(ctx, appID)
 
 	if len(ret) == 0 {
-		panic("no return value specified for RevokeAppApiKey")
+		panic("no return value specified for RevokeAppAPIKey")
 	}
 
 	var r0 error
@@ -521,19 +525,19 @@ func (_mock *Client) RevokeAppApiKey(ctx context.Context, appID string) error {
 	return r0
 }
 
-// Client_RevokeAppApiKey_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'RevokeAppApiKey'
-type Client_RevokeAppApiKey_Call struct {
+// Client_RevokeAppAPIKey_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'RevokeAppAPIKey'
+type Client_RevokeAppAPIKey_Call struct {
 	*mock.Call
 }
 
-// RevokeAppApiKey is a helper method to define mock.On call
+// RevokeAppAPIKey is a helper method to define mock.On call
 //   - ctx context.Context
 //   - appID string
-func (_e *Client_Expecter) RevokeAppApiKey(ctx interface{}, appID interface{}) *Client_RevokeAppApiKey_Call {
-	return &Client_RevokeAppApiKey_Call{Call: _e.mock.On("RevokeAppApiKey", ctx, appID)}
+func (_e *Client_Expecter) RevokeAppAPIKey(ctx interface{}, appID interface{}) *Client_RevokeAppAPIKey_Call {
+	return &Client_RevokeAppAPIKey_Call{Call: _e.mock.On("RevokeAppAPIKey", ctx, appID)}
 }
 
-func (_c *Client_RevokeAppApiKey_Call) Run(run func(ctx context.Context, appID string)) *Client_RevokeAppApiKey_Call {
+func (_c *Client_RevokeAppAPIKey_Call) Run(run func(ctx context.Context, appID string)) *Client_RevokeAppAPIKey_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		var arg0 context.Context
 		if args[0] != nil {
@@ -551,22 +555,22 @@ func (_c *Client_RevokeAppApiKey_Call) Run(run func(ctx context.Context, appID s
 	return _c
 }
 
-func (_c *Client_RevokeAppApiKey_Call) Return(err error) *Client_RevokeAppApiKey_Call {
+func (_c *Client_RevokeAppAPIKey_Call) Return(err error) *Client_RevokeAppAPIKey_Call {
 	_c.Call.Return(err)
 	return _c
 }
 
-func (_c *Client_RevokeAppApiKey_Call) RunAndReturn(run func(ctx context.Context, appID string) error) *Client_RevokeAppApiKey_Call {
+func (_c *Client_RevokeAppAPIKey_Call) RunAndReturn(run func(ctx context.Context, appID string) error) *Client_RevokeAppAPIKey_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
-// RevokeTenantApiKey provides a mock function for the type Client
-func (_mock *Client) RevokeTenantApiKey(ctx context.Context) error {
+// RevokeTenantAPIKey provides a mock function for the type Client
+func (_mock *Client) RevokeTenantAPIKey(ctx context.Context) error {
 	ret := _mock.Called(ctx)
 
 	if len(ret) == 0 {
-		panic("no return value specified for RevokeTenantApiKey")
+		panic("no return value specified for RevokeTenantAPIKey")
 	}
 
 	var r0 error
@@ -578,18 +582,18 @@ func (_mock *Client) RevokeTenantApiKey(ctx context.Context) error {
 	return r0
 }
 
-// Client_RevokeTenantApiKey_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'RevokeTenantApiKey'
-type Client_RevokeTenantApiKey_Call struct {
+// Client_RevokeTenantAPIKey_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'RevokeTenantAPIKey'
+type Client_RevokeTenantAPIKey_Call struct {
 	*mock.Call
 }
 
-// RevokeTenantApiKey is a helper method to define mock.On call
+// RevokeTenantAPIKey is a helper method to define mock.On call
 //   - ctx context.Context
-func (_e *Client_Expecter) RevokeTenantApiKey(ctx interface{}) *Client_RevokeTenantApiKey_Call {
-	return &Client_RevokeTenantApiKey_Call{Call: _e.mock.On("RevokeTenantApiKey", ctx)}
+func (_e *Client_Expecter) RevokeTenantAPIKey(ctx interface{}) *Client_RevokeTenantAPIKey_Call {
+	return &Client_RevokeTenantAPIKey_Call{Call: _e.mock.On("RevokeTenantAPIKey", ctx)}
 }
 
-func (_c *Client_RevokeTenantApiKey_Call) Run(run func(ctx context.Context)) *Client_RevokeTenantApiKey_Call {
+func (_c *Client_RevokeTenantAPIKey_Call) Run(run func(ctx context.Context)) *Client_RevokeTenantAPIKey_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		var arg0 context.Context
 		if args[0] != nil {
@@ -602,12 +606,12 @@ func (_c *Client_RevokeTenantApiKey_Call) Run(run func(ctx context.Context)) *Cl
 	return _c
 }
 
-func (_c *Client_RevokeTenantApiKey_Call) Return(err error) *Client_RevokeTenantApiKey_Call {
+func (_c *Client_RevokeTenantAPIKey_Call) Return(err error) *Client_RevokeTenantAPIKey_Call {
 	_c.Call.Return(err)
 	return _c
 }
 
-func (_c *Client_RevokeTenantApiKey_Call) RunAndReturn(run func(ctx context.Context) error) *Client_RevokeTenantApiKey_Call {
+func (_c *Client_RevokeTenantAPIKey_Call) RunAndReturn(run func(ctx context.Context) error) *Client_RevokeTenantAPIKey_Call {
 	_c.Call.Return(run)
 	return _c
 }
