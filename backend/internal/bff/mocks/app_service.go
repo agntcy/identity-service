@@ -448,12 +448,12 @@ func (_c *AppService_ListApps_Call) RunAndReturn(run func(ctx context.Context, p
 	return _c
 }
 
-// RefreshAppApiKey provides a mock function for the type AppService
-func (_mock *AppService) RefreshAppApiKey(ctx context.Context, appID string) (*types.App, error) {
+// RefreshAppAPIKey provides a mock function for the type AppService
+func (_mock *AppService) RefreshAppAPIKey(ctx context.Context, appID string) (*types.App, error) {
 	ret := _mock.Called(ctx, appID)
 
 	if len(ret) == 0 {
-		panic("no return value specified for RefreshAppApiKey")
+		panic("no return value specified for RefreshAppAPIKey")
 	}
 
 	var r0 *types.App
@@ -476,19 +476,19 @@ func (_mock *AppService) RefreshAppApiKey(ctx context.Context, appID string) (*t
 	return r0, r1
 }
 
-// AppService_RefreshAppApiKey_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'RefreshAppApiKey'
-type AppService_RefreshAppApiKey_Call struct {
+// AppService_RefreshAppAPIKey_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'RefreshAppAPIKey'
+type AppService_RefreshAppAPIKey_Call struct {
 	*mock.Call
 }
 
-// RefreshAppApiKey is a helper method to define mock.On call
+// RefreshAppAPIKey is a helper method to define mock.On call
 //   - ctx context.Context
 //   - appID string
-func (_e *AppService_Expecter) RefreshAppApiKey(ctx interface{}, appID interface{}) *AppService_RefreshAppApiKey_Call {
-	return &AppService_RefreshAppApiKey_Call{Call: _e.mock.On("RefreshAppApiKey", ctx, appID)}
+func (_e *AppService_Expecter) RefreshAppAPIKey(ctx interface{}, appID interface{}) *AppService_RefreshAppAPIKey_Call {
+	return &AppService_RefreshAppAPIKey_Call{Call: _e.mock.On("RefreshAppAPIKey", ctx, appID)}
 }
 
-func (_c *AppService_RefreshAppApiKey_Call) Run(run func(ctx context.Context, appID string)) *AppService_RefreshAppApiKey_Call {
+func (_c *AppService_RefreshAppAPIKey_Call) Run(run func(ctx context.Context, appID string)) *AppService_RefreshAppAPIKey_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		var arg0 context.Context
 		if args[0] != nil {
@@ -506,12 +506,12 @@ func (_c *AppService_RefreshAppApiKey_Call) Run(run func(ctx context.Context, ap
 	return _c
 }
 
-func (_c *AppService_RefreshAppApiKey_Call) Return(app *types.App, err error) *AppService_RefreshAppApiKey_Call {
+func (_c *AppService_RefreshAppAPIKey_Call) Return(app *types.App, err error) *AppService_RefreshAppAPIKey_Call {
 	_c.Call.Return(app, err)
 	return _c
 }
 
-func (_c *AppService_RefreshAppApiKey_Call) RunAndReturn(run func(ctx context.Context, appID string) (*types.App, error)) *AppService_RefreshAppApiKey_Call {
+func (_c *AppService_RefreshAppAPIKey_Call) RunAndReturn(run func(ctx context.Context, appID string) (*types.App, error)) *AppService_RefreshAppAPIKey_Call {
 	_c.Call.Return(run)
 	return _c
 }
