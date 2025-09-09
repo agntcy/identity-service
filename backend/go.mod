@@ -1,6 +1,6 @@
 module github.com/outshift/identity-service
 
-go 1.24.1
+go 1.24.5
 
 require (
 	github.com/eko/gocache/lib/v4 v4.2.0
@@ -63,6 +63,7 @@ require (
 	github.com/buger/jsonparser v1.1.1 // indirect
 	github.com/cenkalti/backoff/v4 v4.3.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
+	github.com/cisco-eti/iam-sdk-golang v0.0.0-20250904090120-9fef6353df52 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.4.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.10 // indirect
