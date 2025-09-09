@@ -10,7 +10,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/outshift/identity-service/internal/core/iam/types"
 	"github.com/outshift/identity-service/internal/pkg/pgutil"
-	"github.com/outshift/identity-service/internal/pkg/ptrutil"
 	"github.com/outshift/identity-service/internal/pkg/secrets"
 	"github.com/outshift/identity-service/internal/pkg/strutil"
 	"gorm.io/gorm"
@@ -37,7 +36,7 @@ func (d *APIKey) ToCoreType(crypter secrets.Crypter) *types.APIKey {
 		Name:      d.Name,
 		Secret:    secrets.EncryptedStringToRaw(d.Secret, crypter),
 		TenantID:  d.TenantID,
-		AppID:     ptrutil.Ptr(d.AppID.String()),
+		AppID:     strutil.SafeUuidString(d.AppID),
 		CreatedAt: d.CreatedAt,
 		UpdatedAt: pgutil.SqlNullTimeToTime(d.UpdatedAt),
 		DeletedAt: pgutil.SqlNullTimeToTime(sql.NullTime{
