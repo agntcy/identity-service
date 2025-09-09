@@ -27,7 +27,7 @@ type APIKey struct {
 	DeletedAt gorm.DeletedAt `gorm:"index"`
 }
 
-func (d *APIKey) ToCoreType() *types.APIKey {
+func (d *APIKey) ToCoreType(crypter secrets.Crypter) *types.APIKey {
 	if d == nil {
 		return nil
 	}
@@ -35,7 +35,7 @@ func (d *APIKey) ToCoreType() *types.APIKey {
 	return &types.APIKey{
 		ID:        d.ID.String(),
 		Name:      d.Name,
-		Secret:    secrets.ToString(d.Secret),
+		Secret:    secrets.EncryptedStringToRaw(d.Secret, crypter),
 		TenantID:  d.TenantID,
 		AppID:     ptrutil.Ptr(d.AppID.String()),
 		CreatedAt: d.CreatedAt,
@@ -47,7 +47,7 @@ func (d *APIKey) ToCoreType() *types.APIKey {
 	}
 }
 
-func newAPIKeyModel(src *types.APIKey) *APIKey {
+func newAPIKeyModel(src *types.APIKey, crypter secrets.Crypter) *APIKey {
 	if src == nil {
 		return nil
 	}
@@ -55,7 +55,7 @@ func newAPIKeyModel(src *types.APIKey) *APIKey {
 	return &APIKey{
 		ID:        uuid.MustParse(src.ID),
 		Name:      src.Name,
-		Secret:    secrets.FromString(src.Secret),
+		Secret:    secrets.NewEncryptedString(src.Secret, crypter),
 		TenantID:  src.TenantID,
 		AppID:     strutil.SafeUuid(src.AppID),
 		CreatedAt: src.CreatedAt,
