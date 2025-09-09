@@ -80,7 +80,7 @@ func TestAppService_CreateApp_should_succeed(t *testing.T) {
 
 	assert.NoError(t, err)
 	assert.NotNil(t, createdApp)
-	assert.Equal(t, apiKey.Secret, createdApp.ApiKey)
+	assert.Equal(t, ptrutil.DerefStr(apiKey.Secret), createdApp.ApiKey)
 }
 
 func TestAppService_CreateApp_should_return_err_when_app_is_invalid(t *testing.T) {
@@ -559,7 +559,7 @@ func TestAppService_RefreshAppAPIKey_should_call_update_with_refreshed_api_key(t
 	returnedApp, err := sut.RefreshAppAPIKey(ctx, app.ID)
 
 	assert.NoError(t, err)
-	assert.Equal(t, refreshedAPIKey.Secret, returnedApp.ApiKey)
+	assert.Equal(t, *refreshedAPIKey.Secret, returnedApp.ApiKey)
 }
 
 func mockValidGetAppStatus(t *testing.T, repo *appmocks.Repository) {
