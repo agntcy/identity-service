@@ -128,10 +128,12 @@ func TestAppService_ListApps_should_parse_parameters(t *testing.T) {
 	sut := grpc.NewAppService(appSrv, nil)
 
 	_, err := sut.ListApps(t.Context(), &identity_service_sdk_go.ListAppsRequest{
-		Page:       pf.Page,
-		Size:       pf.Size,
-		Query:      &query,
-		Types:      []identity_service_sdk_go.AppType{identity_service_sdk_go.AppType_APP_TYPE_AGENT_A2A},
+		Page:  pf.Page,
+		Size:  pf.Size,
+		Query: &query,
+		Types: []identity_service_sdk_go.AppType{
+			identity_service_sdk_go.AppType_APP_TYPE_AGENT_A2A,
+		},
 		SortColumn: sortBy.SortColumn,
 		SortDesc:   sortBy.SortDesc,
 	})
@@ -317,7 +319,10 @@ func TestAppService_DeleteApp_should_return_badrequest_when_core_service_fails(t
 
 	sut := grpc.NewAppService(appSrv, nil)
 
-	_, err := sut.DeleteApp(t.Context(), &identity_service_sdk_go.DeleteAppRequest{AppId: uuid.NewString()})
+	_, err := sut.DeleteApp(
+		t.Context(),
+		&identity_service_sdk_go.DeleteAppRequest{AppId: uuid.NewString()},
+	)
 
 	assert.Error(t, err)
 	assertGrpcError(t, err, codes.InvalidArgument, "failed")
@@ -329,17 +334,22 @@ func TestAppService_RefreshAppApiKey_should_succeed(t *testing.T) {
 	appID := uuid.NewString()
 
 	appSrv := bffmocks.NewAppService(t)
-	appSrv.EXPECT().RefreshAppApiKey(t.Context(), appID).Return(&apptypes.App{}, nil)
+	appSrv.EXPECT().RefreshAppAPIKey(t.Context(), appID).Return(&apptypes.App{}, nil)
 
 	sut := grpc.NewAppService(appSrv, nil)
 
-	ret, err := sut.RefreshAppApiKey(t.Context(), &identity_service_sdk_go.RefreshAppApiKeyRequest{AppId: appID})
+	ret, err := sut.RefreshAppApiKey(
+		t.Context(),
+		&identity_service_sdk_go.RefreshAppApiKeyRequest{AppId: appID},
+	)
 
 	assert.NoError(t, err)
 	assert.NotNil(t, ret)
 }
 
-func TestAppService_RefreshAppApiKey_should_return_badrequest_when_request_is_invalid(t *testing.T) {
+func TestAppService_RefreshAppApiKey_should_return_badrequest_when_request_is_invalid(
+	t *testing.T,
+) {
 	t.Parallel()
 
 	testCases := map[string]*identity_service_sdk_go.RefreshAppApiKeyRequest{
@@ -361,15 +371,20 @@ func TestAppService_RefreshAppApiKey_should_return_badrequest_when_request_is_in
 	}
 }
 
-func TestAppService_RefreshAppApiKey_should_return_badrequest_when_core_service_fails(t *testing.T) {
+func TestAppService_RefreshAppApiKey_should_return_badrequest_when_core_service_fails(
+	t *testing.T,
+) {
 	t.Parallel()
 
 	appSrv := bffmocks.NewAppService(t)
-	appSrv.EXPECT().RefreshAppApiKey(t.Context(), mock.Anything).Return(nil, errors.New("failed"))
+	appSrv.EXPECT().RefreshAppAPIKey(t.Context(), mock.Anything).Return(nil, errors.New("failed"))
 
 	sut := grpc.NewAppService(appSrv, nil)
 
-	_, err := sut.RefreshAppApiKey(t.Context(), &identity_service_sdk_go.RefreshAppApiKeyRequest{AppId: uuid.NewString()})
+	_, err := sut.RefreshAppApiKey(
+		t.Context(),
+		&identity_service_sdk_go.RefreshAppApiKeyRequest{AppId: uuid.NewString()},
+	)
 
 	assert.Error(t, err)
 	assertGrpcError(t, err, codes.InvalidArgument, "failed")
@@ -402,7 +417,10 @@ func TestAppService_GetBadge_should_return_notfound_when_core_service_fails(t *t
 
 	sut := grpc.NewAppService(nil, badgeSrv)
 
-	_, err := sut.GetBadge(t.Context(), &identity_service_sdk_go.GetBadgeRequest{AppId: uuid.NewString()})
+	_, err := sut.GetBadge(
+		t.Context(),
+		&identity_service_sdk_go.GetBadgeRequest{AppId: uuid.NewString()},
+	)
 
 	assert.Error(t, err)
 	assertGrpcError(t, err, codes.NotFound, "failed")

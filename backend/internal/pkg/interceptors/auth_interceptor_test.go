@@ -47,7 +47,7 @@ func TestAuthInterceptor_Unary_should_allow_services_without_auth(t *testing.T) 
 			ctx := context.Background()
 			handler := mockHandler{}
 			handler.On("Handle", ctx, mock.Anything).Return(nil, nil)
-			sut := interceptors.NewAuthInterceptor(nil, "")
+			sut := interceptors.NewAuthInterceptor(nil)
 
 			_, err := sut.Unary(ctx, nil, &grpc.UnaryServerInfo{
 				FullMethod: tc,
@@ -73,7 +73,7 @@ func TestAuthInterceptor_Unary_should_validate_jwt(t *testing.T) {
 	iamClient := outshiftiammocks.NewClient(t)
 	iamClient.EXPECT().AuthJwt(ctx, jwt).Return(ctx, nil)
 
-	sut := interceptors.NewAuthInterceptor(iamClient, "")
+	sut := interceptors.NewAuthInterceptor(iamClient)
 
 	_, err := sut.Unary(ctx, nil, &grpc.UnaryServerInfo{
 		FullMethod: uuid.NewString(),
@@ -117,23 +117,28 @@ func TestAuthInterceptor_Unary_should_validate_api_key(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(
-			fmt.Sprintf("validate API Key for %s, allowed for apps = %t", tc.fullMethod, tc.allowedForApps),
+			fmt.Sprintf(
+				"validate API Key for %s, allowed for apps = %t",
+				tc.fullMethod,
+				tc.allowedForApps,
+			),
 			func(t *testing.T) {
 				t.Parallel()
 
-				apiKey := uuid.NewString()
-				productID := uuid.NewString()
+				APIKey := uuid.NewString()
 				ctx := metadata.NewIncomingContext(context.Background(), metadata.MD{
-					interceptors.ApiKeyHeaderKey: []string{apiKey},
+					interceptors.APIKeyHeaderKey: []string{APIKey},
 				})
 
 				handler := mockHandler{}
 				handler.On("Handle", ctx, mock.Anything).Return(nil, nil)
 
 				iamClient := outshiftiammocks.NewClient(t)
-				iamClient.EXPECT().AuthApiKey(ctx, productID, apiKey, tc.allowedForApps).Return(ctx, nil)
+				iamClient.EXPECT().
+					AuthAPIKey(ctx, APIKey, tc.allowedForApps).
+					Return(ctx, nil)
 
-				sut := interceptors.NewAuthInterceptor(iamClient, productID)
+				sut := interceptors.NewAuthInterceptor(iamClient)
 
 				_, err := sut.Unary(ctx, nil, &grpc.UnaryServerInfo{
 					FullMethod: tc.fullMethod,
@@ -171,11 +176,11 @@ func TestAuthInterceptor_Unary_should_return_unauthorized(t *testing.T) {
 				t.Helper()
 
 				client.EXPECT().
-					AuthApiKey(mock.Anything, mock.Anything, mock.Anything, false).
+					AuthAPIKey(mock.Anything, mock.Anything, false).
 					Return(context.Background(), errors.New("invalid"))
 			},
 			md: metadata.MD{
-				interceptors.ApiKeyHeaderKey: []string{uuid.NewString()},
+				interceptors.APIKeyHeaderKey: []string{uuid.NewString()},
 			},
 			fullMethod: uuid.NewString(),
 		},
@@ -184,11 +189,11 @@ func TestAuthInterceptor_Unary_should_return_unauthorized(t *testing.T) {
 				t.Helper()
 
 				client.EXPECT().
-					AuthApiKey(mock.Anything, mock.Anything, mock.Anything, true).
+					AuthAPIKey(mock.Anything, mock.Anything, true).
 					Return(context.Background(), errors.New("invalid"))
 			},
 			md: metadata.MD{
-				interceptors.ApiKeyHeaderKey: []string{uuid.NewString()},
+				interceptors.APIKeyHeaderKey: []string{uuid.NewString()},
 			},
 			fullMethod: identity_service_sdk_go.AuthService_Authorize_FullMethodName,
 		},
@@ -210,7 +215,7 @@ func TestAuthInterceptor_Unary_should_return_unauthorized(t *testing.T) {
 			iamClient := outshiftiammocks.NewClient(t)
 			tc.configureIamClient(t, iamClient)
 
-			sut := interceptors.NewAuthInterceptor(iamClient, "")
+			sut := interceptors.NewAuthInterceptor(iamClient)
 
 			_, err := sut.Unary(ctx, nil, &grpc.UnaryServerInfo{
 				FullMethod: tc.fullMethod,
@@ -230,7 +235,7 @@ func TestAuthInterceptor_Unary_should_return_err_when_ctx_does_not_have_metadata
 
 	invalidCtx := context.Background()
 
-	sut := interceptors.NewAuthInterceptor(nil, "")
+	sut := interceptors.NewAuthInterceptor(nil)
 
 	_, err := sut.Unary(invalidCtx, nil, &grpc.UnaryServerInfo{}, nil)
 

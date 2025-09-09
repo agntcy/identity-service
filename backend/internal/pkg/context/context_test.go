@@ -35,13 +35,6 @@ func TestIdentityContext_Insert(t *testing.T) {
 			insert: identitycontext.InsertOrganizationID,
 			get:    identitycontext.GetOrganizationID,
 		},
-		"should insert auth type": {
-			insert: identitycontext.InsertAuthType,
-			get: func(ctx context.Context) (string, bool) {
-				v, ok := ctx.Value(identitycontext.AuthType).(string)
-				return v, ok
-			},
-		},
 	}
 
 	for tn, tc := range testCases {
@@ -65,17 +58,7 @@ func TestIdentityContext_MustHaveTenantID_should_return_id(t *testing.T) {
 	tenantID := uuid.NewString()
 	ctx := identitycontext.InsertTenantID(context.Background(), tenantID)
 
-	actual := identitycontext.MustHaveTenantID(ctx)
+	actual, _ := identitycontext.GetTenantID(ctx)
 
 	assert.Equal(t, tenantID, actual)
-}
-
-func TestIdentityContext_MustHaveTenantID_should_panic(t *testing.T) {
-	t.Parallel()
-
-	ctx := context.Background()
-
-	assert.Panics(t, func() {
-		identitycontext.MustHaveTenantID(ctx)
-	})
 }
