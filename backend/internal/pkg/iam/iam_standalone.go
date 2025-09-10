@@ -5,6 +5,7 @@ package iam
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strings"
 	"time"
@@ -14,7 +15,6 @@ import (
 	"github.com/eko/gocache/lib/v4/store"
 	freecache_store "github.com/eko/gocache/store/freecache/v4"
 	"github.com/google/uuid"
-	jwtverifier "github.com/okta/okta-jwt-verifier-golang"
 	iamcore "github.com/outshift/identity-service/internal/core/iam"
 	"github.com/outshift/identity-service/internal/core/iam/types"
 	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
@@ -32,36 +32,24 @@ const (
 
 	standaloneApiKeyName            = "default"
 	standaloneApiKeyLength          = 32
-	standaloneTokenComponentsLength = 2
+	standaloneTokenComponentsLength = 1
+	standaloneBearerPrefix          = "Bearer "
 
 	standaloneTenantID = "default"
 )
 
 type StandaloneClient struct {
 	iamRepository   iamcore.Repository
-	userJwtVerifier *jwtverifier.JwtVerifier
+	userJwtVerifier JwtVerifier
 	apiKeyV1Cache   *cache.Cache[[]byte]
 	organization    string
 }
 
 func NewStandaloneClient(
-	issuer, userCid, organization string,
+	organization string,
 	iamRepository iamcore.Repository,
+	jwtVerifier JwtVerifier,
 ) *StandaloneClient {
-	// Init verifier for UI
-	toValidateForUser := map[string]string{}
-
-	// Add cid from UI
-	toValidateForUser["aud"] = standaloneDefaultAud
-	toValidateForUser["cid"] = userCid
-
-	userJwtVerifierSetup := jwtverifier.JwtVerifier{
-		Issuer:           issuer,
-		ClaimsToValidate: toValidateForUser,
-	}
-
-	userJwtVerifier := userJwtVerifierSetup.New()
-
 	// Add cache for V1
 	freecacheStore := freecache_store.NewFreecache(
 		freecache.NewCache(standaloneDefaultApiKeyCacheSize),
@@ -71,14 +59,15 @@ func NewStandaloneClient(
 
 	return &StandaloneClient{
 		iamRepository,
-		userJwtVerifier,
+		jwtVerifier,
 		apiKeyV1Cache,
 		organization,
 	}
 }
 
 func (c *StandaloneClient) GetTenantAPIKey(
-	ctx context.Context) (*types.APIKey, error) {
+	ctx context.Context,
+) (*types.APIKey, error) {
 	return c.iamRepository.GetAPIKeyByTenant(ctx)
 }
 
@@ -93,7 +82,8 @@ func (c *StandaloneClient) CreateTenantAPIKey(
 }
 
 func (c *StandaloneClient) RevokeTenantAPIKey(
-	ctx context.Context) error {
+	ctx context.Context,
+) error {
 	apiKey, err := c.iamRepository.GetAPIKeyByTenant(ctx)
 	if err != nil {
 		return err
@@ -109,13 +99,17 @@ func (c *StandaloneClient) RevokeTenantAPIKey(
 	return nil
 }
 
-func (c *StandaloneClient) GetAppAPIKey(ctx context.Context,
-	appID string) (*types.APIKey, error) {
+func (c *StandaloneClient) GetAppAPIKey(
+	ctx context.Context,
+	appID string,
+) (*types.APIKey, error) {
 	return c.iamRepository.GetAPIKeyByApp(ctx, appID)
 }
 
-func (c *StandaloneClient) CreateAppAPIKey(ctx context.Context,
-	appID string) (*types.APIKey, error) {
+func (c *StandaloneClient) CreateAppAPIKey(
+	ctx context.Context,
+	appID string,
+) (*types.APIKey, error) {
 	return c.iamRepository.AddAPIKey(ctx, &types.APIKey{
 		ID:     uuid.NewString(),
 		Name:   fmt.Sprintf("%s-%s", standaloneApiKeyName, appID),
@@ -124,8 +118,10 @@ func (c *StandaloneClient) CreateAppAPIKey(ctx context.Context,
 	})
 }
 
-func (c *StandaloneClient) RefreshAppAPIKey(ctx context.Context,
-	appID string) (*types.APIKey, error) {
+func (c *StandaloneClient) RefreshAppAPIKey(
+	ctx context.Context,
+	appID string,
+) (*types.APIKey, error) {
 	err := c.RevokeAppAPIKey(ctx, appID)
 	if err != nil {
 		return nil, err
@@ -134,8 +130,10 @@ func (c *StandaloneClient) RefreshAppAPIKey(ctx context.Context,
 	return c.CreateAppAPIKey(ctx, appID)
 }
 
-func (c *StandaloneClient) RevokeAppAPIKey(ctx context.Context,
-	appID string) error {
+func (c *StandaloneClient) RevokeAppAPIKey(
+	ctx context.Context,
+	appID string,
+) error {
 	apiKey, err := c.iamRepository.GetAPIKeyByApp(ctx, appID)
 	if err != nil {
 		return err
@@ -153,7 +151,8 @@ func (c *StandaloneClient) RevokeAppAPIKey(ctx context.Context,
 
 func (c *StandaloneClient) AuthJwt(
 	ctx context.Context,
-	header string) (context.Context, error) {
+	header string,
+) (context.Context, error) {
 	if header == "" {
 		return ctx, errutil.Err(
 			nil,
@@ -161,15 +160,13 @@ func (c *StandaloneClient) AuthJwt(
 		)
 	}
 
-	splitToken := strings.Split(header, "Bearer ")
-	if len(splitToken) < standaloneTokenComponentsLength {
+	accessToken, err := c.getTokenFromBearer(header)
+	if err != nil {
 		return ctx, errutil.Err(
 			nil,
 			"invalid Authorization header format",
 		)
 	}
-
-	accessToken := splitToken[1]
 
 	username, validateErr := c.validateAccessToken(accessToken)
 	if validateErr != nil {
@@ -192,6 +189,16 @@ func (c *StandaloneClient) AuthJwt(
 	}
 
 	return ctx, nil
+}
+
+func (c *StandaloneClient) getTokenFromBearer(header string) (string, error) {
+	splitToken := strutil.TrimSlice(strings.Split(header, standaloneBearerPrefix))
+	if !strings.HasPrefix(header, standaloneBearerPrefix) ||
+		len(splitToken) < standaloneTokenComponentsLength {
+		return "", errors.New("invalid Authorization header format")
+	}
+
+	return splitToken[0], nil
 }
 
 func (c *StandaloneClient) AuthAPIKey(
@@ -234,20 +241,15 @@ func (c *StandaloneClient) AuthAPIKey(
 func (c *StandaloneClient) validateAccessToken(
 	accessToken string,
 ) (*string, error) {
-	var (
-		token     *jwtverifier.Jwt
-		verifyErr error
-	)
-
-	token, verifyErr = c.userJwtVerifier.VerifyAccessToken(accessToken)
-	if verifyErr != nil {
+	claims, err := c.userJwtVerifier.VerifyAccessToken(accessToken)
+	if err != nil {
 		return nil, errutil.Err(
-			verifyErr, "there was an error verifying the access token",
+			err, "there was an error verifying the access token",
 		)
 	}
 
 	var username *string
-	if usernameRaw, ok := token.Claims[standaloneUsernameClaimKey].(string); ok {
+	if usernameRaw, ok := claims[standaloneUsernameClaimKey].(string); ok {
 		username = &usernameRaw
 	}
 

@@ -148,11 +148,14 @@ func main() {
 	if config.IamMultiTenant {
 		iamClient = iam.NewMultitenantClient()
 	} else {
-		iamClient = iam.NewStandaloneClient(
+		jwtVerifier := iam.NewOktaJwtVerifier(
 			config.IamIssuer,
 			config.IamUserCid,
+		)
+		iamClient = iam.NewStandaloneClient(
 			config.IamOrganization,
 			iamRepository,
+			jwtVerifier,
 		)
 	}
 

@@ -51,6 +51,10 @@ packages:
       NotificationService: {}
       PolicyService: {}
       SettingsService: {}
+  github.com/outshift/identity-service/internal/core/iam:
+    interfaces:
+      Repository: {}
   github.com/outshift/identity-service/internal/pkg/iam:
     interfaces:
       Client: {}
+      JwtVerifier: {}
