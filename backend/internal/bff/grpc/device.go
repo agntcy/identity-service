@@ -13,7 +13,6 @@ import (
 	"github.com/outshift/identity-service/internal/pkg/errutil"
 	"github.com/outshift/identity-service/internal/pkg/grpcutil"
 	"github.com/outshift/identity-service/internal/pkg/pagination"
-	"github.com/outshift/identity-service/pkg/log"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -47,8 +46,6 @@ func (s *deviceService) RegisterDevice(
 	ctx context.Context,
 	req *identity_service_sdk_go.RegisterDeviceRequest,
 ) (*emptypb.Empty, error) {
-	log.Debug(*req.GetDevice().SubscriptionToken)
-
 	err := s.deviceSrv.RegisterDevice(ctx, req.GetDeviceId(), converters.ToDevice(req.GetDevice()))
 	if err != nil {
 		return nil, grpcutil.NotFoundError(errutil.Err(
