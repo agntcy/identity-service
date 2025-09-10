@@ -1,0 +1,40 @@
+# Copyright 2025 Cisco Systems, Inc. and its affiliates
+# SPDX-License-Identifier: Apache-2.0
+
+---
+# Same as '--format'
+# Default is 'table'
+format: table
+
+# Same as '--report' (available with 'trivy k8s')
+# Default is all
+report: all
+
+# Same as '--template'
+# Default is empty
+template:
+
+# Same as '--dependency-tree'
+# Default is false
+dependency-tree: false
+
+# Same as '--list-all-pkgs'
+# Default is false
+list-all-pkgs: false
+
+# Same as '--ignore-policy'
+# Default is empty
+ignore-policy:
+
+# Same as '--exit-code'
+# Default is 0
+exit-code: 0
+
+# Same as '--output'
+# Default is empty (stdout)
+output:
+
+# Same as '--severity'
+# Default is all severities
+severity:
+  - CRITICAL
