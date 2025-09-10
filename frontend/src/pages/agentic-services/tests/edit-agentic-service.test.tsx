@@ -1,14 +1,14 @@
+/**
+ * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import {screen, fireEvent} from '@testing-library/react';
 import {vi, describe, it, expect, beforeEach} from 'vitest';
 import EditAgenticService from '../edit-agentic-service';
 import {useGetAgenticService} from '@/queries';
 import {PATHS} from '@/router/paths';
 import {renderWithClient} from '@/utils/tests';
-
-/**
- * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
- * SPDX-License-Identifier: Apache-2.0
- */
 
 // Mock react-router-dom
 vi.mock('react-router-dom', async () => {
