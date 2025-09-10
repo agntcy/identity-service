@@ -17,7 +17,7 @@ import {PwaProvider} from './providers/pwa-provider/pwa-provider';
 import {NotificationsProvider} from './providers/notifications-provider/notifications-provider';
 import {useEffect} from 'react';
 import * as CookieConsentVanilla from 'vanilla-cookieconsent';
-import {config} from './cookies/config';
+import {config as cookieConfig} from './cookies/config';
 import {InstallButtonPwa} from './components/shared/pwa/install-button-pwa';
 import {useWindowSize} from './hooks';
 import {Manifest} from './components/shared/manifest/manifest';
@@ -30,7 +30,7 @@ const App = () => {
 
   useEffect(() => {
     if (window) {
-      void CookieConsentVanilla.run(config);
+      void CookieConsentVanilla.run(cookieConfig);
     } else {
       console.warn('CookieConsent is not available in this environment.');
     }

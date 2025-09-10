@@ -9,6 +9,12 @@ import {describe, it, vi, expect, beforeEach} from 'vitest';
 import '@testing-library/jest-dom';
 import SettingsBase from './settings-base';
 
+vi.mock('@/config', () => ({
+  default: {
+    IAM_MULTI_TENANT: true
+  }
+}));
+
 // Mock dependencies
 vi.mock('@/router/paths', () => ({
   PATHS: {
