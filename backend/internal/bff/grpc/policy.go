@@ -5,7 +5,6 @@ package grpc
 
 import (
 	"context"
-	"errors"
 
 	identity_service_sdk_go "github.com/outshift/identity-service/api/server/outshift/identity/service/v1alpha1"
 	"github.com/outshift/identity-service/internal/bff"
@@ -14,7 +13,6 @@ import (
 	"github.com/outshift/identity-service/internal/pkg/convertutil"
 	"github.com/outshift/identity-service/internal/pkg/grpcutil"
 	"github.com/outshift/identity-service/internal/pkg/pagination"
-	"github.com/outshift/identity-service/internal/pkg/ptrutil"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -32,14 +30,10 @@ func (s *PolicyService) CreatePolicy(
 	ctx context.Context,
 	in *identity_service_sdk_go.CreatePolicyRequest,
 ) (*identity_service_sdk_go.Policy, error) {
-	if in == nil {
-		return nil, grpcutil.BadRequestError(errors.New("request is empty"))
-	}
-
 	result, err := s.policyService.CreatePolicy(
 		ctx,
 		in.Name,
-		ptrutil.DerefStr(in.Description),
+		in.GetDescription(),
 		in.AssignedTo,
 	)
 	if err != nil {
@@ -53,15 +47,11 @@ func (s *PolicyService) CreateRule(
 	ctx context.Context,
 	in *identity_service_sdk_go.CreateRuleRequest,
 ) (*identity_service_sdk_go.Rule, error) {
-	if in == nil {
-		return nil, grpcutil.BadRequestError(errors.New("request is empty"))
-	}
-
 	result, err := s.policyService.CreateRule(
 		ctx,
 		in.PolicyId,
 		in.Name,
-		ptrutil.DerefStr(in.Description),
+		in.GetDescription(),
 		in.Tasks,
 		in.GetNeedsApproval(),
 		policytypes.RuleAction(in.GetAction()),
@@ -173,15 +163,11 @@ func (s *PolicyService) UpdatePolicy(
 	ctx context.Context,
 	in *identity_service_sdk_go.UpdatePolicyRequest,
 ) (*identity_service_sdk_go.Policy, error) {
-	if in == nil {
-		return nil, grpcutil.BadRequestError(errors.New("request is empty"))
-	}
-
 	policy, err := s.policyService.UpdatePolicy(
 		ctx,
 		in.PolicyId,
 		in.Name,
-		ptrutil.DerefStr(in.Description),
+		in.GetDescription(),
 		in.AssignedTo,
 	)
 	if err != nil {
@@ -195,16 +181,12 @@ func (s *PolicyService) UpdateRule(
 	ctx context.Context,
 	in *identity_service_sdk_go.UpdateRuleRequest,
 ) (*identity_service_sdk_go.Rule, error) {
-	if in == nil {
-		return nil, grpcutil.BadRequestError(errors.New("request is empty"))
-	}
-
 	rule, err := s.policyService.UpdateRule(
 		ctx,
 		in.PolicyId,
 		in.RuleId,
 		in.Name,
-		*in.Description,
+		in.GetDescription(),
 		in.Tasks,
 		in.GetNeedsApproval(),
 		policytypes.RuleAction(in.GetAction()),
