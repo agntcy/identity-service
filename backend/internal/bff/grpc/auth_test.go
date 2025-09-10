@@ -1,0 +1,221 @@
+// Copyright 2025 Cisco Systems, Inc. and its affiliates
+// SPDX-License-Appentifier: Apache-2.0
+
+package grpc_test
+
+import (
+	"context"
+	"errors"
+	"testing"
+
+	"github.com/google/uuid"
+	identity_service_sdk_go "github.com/outshift/identity-service/api/server/outshift/identity/service/v1alpha1"
+	"github.com/outshift/identity-service/internal/bff/grpc"
+	grpctesting "github.com/outshift/identity-service/internal/bff/grpc/testing"
+	bffmocks "github.com/outshift/identity-service/internal/bff/mocks"
+	apptypes "github.com/outshift/identity-service/internal/core/app/types"
+	authtypes "github.com/outshift/identity-service/internal/core/auth/types/int"
+	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
+	"google.golang.org/grpc/codes"
+)
+
+func TestAuthService_AppInfo_should_succeed(t *testing.T) {
+	t.Parallel()
+
+	appID := uuid.NewString()
+	ctx := identitycontext.InsertAppID(context.Background(), appID)
+
+	appSrv := bffmocks.NewAppService(t)
+	appSrv.EXPECT().GetApp(ctx, appID).Return(&apptypes.App{}, nil)
+
+	sut := grpc.NewAuthService(nil, appSrv)
+
+	ret, err := sut.AppInfo(ctx, nil)
+
+	assert.NoError(t, err)
+	assert.NotNil(t, ret)
+}
+
+func TestAuthService_AppInfo_should_return_notfound_when_context_does_not_have_app_id(t *testing.T) {
+	t.Parallel()
+
+	ctxWithoutAppID := context.Background()
+
+	sut := grpc.NewAuthService(nil, nil)
+
+	_, err := sut.AppInfo(ctxWithoutAppID, nil)
+
+	grpctesting.AssertGrpcError(t, err, codes.NotFound, "app ID not found in context")
+}
+
+func TestAuthService_AppInfo_should_return_badrequest_when_core_service_fails(t *testing.T) {
+	t.Parallel()
+
+	appID := uuid.NewString()
+	ctx := identitycontext.InsertAppID(context.Background(), appID)
+
+	appSrv := bffmocks.NewAppService(t)
+	appSrv.EXPECT().GetApp(ctx, appID).Return(nil, errors.New("failed"))
+
+	sut := grpc.NewAuthService(nil, appSrv)
+
+	_, err := sut.AppInfo(ctx, nil)
+
+	grpctesting.AssertGrpcError(t, err, codes.InvalidArgument, "failed to get app info")
+}
+
+func TestAuthService_Authorize_should_succeed(t *testing.T) {
+	t.Parallel()
+
+	resolverMetaDataID := uuid.NewString()
+	toolName := uuid.NewString()
+	userToken := uuid.NewString()
+	authCode := uuid.NewString()
+
+	authSrv := bffmocks.NewAuthService(t)
+	authSrv.EXPECT().
+		Authorize(t.Context(), &resolverMetaDataID, &toolName, &userToken).
+		Return(&authtypes.Session{AuthorizationCode: &authCode}, nil)
+
+	sut := grpc.NewAuthService(authSrv, nil)
+
+	ret, err := sut.Authorize(t.Context(), &identity_service_sdk_go.AuthorizeRequest{
+		ResolverMetadataId: &resolverMetaDataID,
+		ToolName:           &toolName,
+		UserToken:          &userToken,
+	})
+
+	assert.NoError(t, err)
+	assert.Equal(t, authCode, ret.AuthorizationCode)
+}
+
+func TestAuthService_Authorize_should_return_badrequest_when_core_service_fails(t *testing.T) {
+	t.Parallel()
+
+	authSrv := bffmocks.NewAuthService(t)
+	authSrv.EXPECT().
+		Authorize(t.Context(), mock.Anything, mock.Anything, mock.Anything).
+		Return(nil, errors.New("failed"))
+
+	sut := grpc.NewAuthService(authSrv, nil)
+
+	_, err := sut.Authorize(t.Context(), &identity_service_sdk_go.AuthorizeRequest{})
+
+	grpctesting.AssertGrpcError(t, err, codes.Unauthenticated, "failed to authorize")
+}
+
+func TestAuthService_Token_should_succeed(t *testing.T) {
+	t.Parallel()
+
+	authCode := uuid.NewString()
+	accessToken := uuid.NewString()
+
+	authSrv := bffmocks.NewAuthService(t)
+	authSrv.EXPECT().Token(t.Context(), authCode).Return(&authtypes.Session{AccessToken: &accessToken}, nil)
+
+	sut := grpc.NewAuthService(authSrv, nil)
+
+	ret, err := sut.Token(t.Context(), &identity_service_sdk_go.TokenRequest{AuthorizationCode: authCode})
+
+	assert.NoError(t, err)
+	assert.Equal(t, accessToken, ret.AccessToken)
+}
+
+func TestAuthService_Token_should_return_badrequest_when_auth_code_is_empty(t *testing.T) {
+	t.Parallel()
+
+	emptyAuthCode := ""
+
+	sut := grpc.NewAuthService(nil, nil)
+
+	_, err := sut.Token(t.Context(), &identity_service_sdk_go.TokenRequest{AuthorizationCode: emptyAuthCode})
+
+	grpctesting.AssertGrpcError(t, err, codes.InvalidArgument, "authorization code cannot be empty")
+}
+
+func TestAuthService_Token_should_return_unauthorized_when_core_service_fails(t *testing.T) {
+	t.Parallel()
+
+	authSrv := bffmocks.NewAuthService(t)
+	authSrv.EXPECT().Token(t.Context(), mock.Anything).Return(nil, errors.New("failed"))
+
+	sut := grpc.NewAuthService(authSrv, nil)
+
+	_, err := sut.Token(t.Context(), &identity_service_sdk_go.TokenRequest{AuthorizationCode: uuid.NewString()})
+
+	grpctesting.AssertGrpcError(t, err, codes.Unauthenticated, "failed to issue token: failed")
+}
+
+func TestAuthService_ExtAuthz_should_succeed(t *testing.T) {
+	t.Parallel()
+
+	accessToken := uuid.NewString()
+	toolName := uuid.NewString()
+
+	authSrv := bffmocks.NewAuthService(t)
+	authSrv.EXPECT().ExtAuthZ(t.Context(), accessToken, toolName).Return(nil)
+
+	sut := grpc.NewAuthService(authSrv, nil)
+
+	_, err := sut.ExtAuthz(t.Context(), &identity_service_sdk_go.ExtAuthzRequest{
+		AccessToken: accessToken,
+		ToolName:    &toolName,
+	})
+
+	assert.NoError(t, err)
+}
+
+func TestAuthService_ExtAuthz_should_return_unauthorized_when_core_service_fails(t *testing.T) {
+	t.Parallel()
+
+	authSrv := bffmocks.NewAuthService(t)
+	authSrv.EXPECT().ExtAuthZ(t.Context(), mock.Anything, mock.Anything).Return(errors.New("failed"))
+
+	sut := grpc.NewAuthService(authSrv, nil)
+
+	_, err := sut.ExtAuthz(t.Context(), &identity_service_sdk_go.ExtAuthzRequest{
+		AccessToken: uuid.NewString(),
+	})
+
+	grpctesting.AssertGrpcError(t, err, codes.Unauthenticated, "failed to authorize")
+}
+
+func TestAuthService_ApproveToken_should_succeed(t *testing.T) {
+	t.Parallel()
+
+	deviceID := uuid.NewString()
+	sessionID := uuid.NewString()
+	otp := uuid.NewString()
+	approve := true
+
+	authSrv := bffmocks.NewAuthService(t)
+	authSrv.EXPECT().ApproveToken(t.Context(), deviceID, sessionID, otp, approve).Return(nil)
+
+	sut := grpc.NewAuthService(authSrv, nil)
+
+	_, err := sut.ApproveToken(t.Context(), &identity_service_sdk_go.ApproveTokenRequest{
+		DeviceId:  deviceID,
+		SessionId: sessionID,
+		Otp:       otp,
+		Approve:   approve,
+	})
+
+	assert.NoError(t, err)
+}
+
+func TestAuthService_ApproveToken_should_return_internal_error_when_core_service_fails(t *testing.T) {
+	t.Parallel()
+
+	authSrv := bffmocks.NewAuthService(t)
+	authSrv.EXPECT().
+		ApproveToken(t.Context(), mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+		Return(errors.New("failed"))
+
+	sut := grpc.NewAuthService(authSrv, nil)
+
+	_, err := sut.ApproveToken(t.Context(), &identity_service_sdk_go.ApproveTokenRequest{})
+
+	grpctesting.AssertGrpcError(t, err, codes.Internal, "failed to approve token")
+}
