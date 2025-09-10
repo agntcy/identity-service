@@ -77,6 +77,6 @@ export default {
   IAM_MULTI_TENANT: isEnvSet(import.meta.env.VITE_IAM_MULTI_TENANT)
     ? import.meta.env.VITE_IAM_MULTI_TENANT === 'true'
     : typeof window !== 'undefined'
-      ? window.iamMultiTenant
-      : undefined
+      ? (window.iamMultiTenant ?? true)
+      : true
 };
