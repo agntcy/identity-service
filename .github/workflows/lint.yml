@@ -35,6 +35,7 @@ jobs:
           YAML_CONFIG_FILE: ".yamllint.yml"
           GO_CONFIG_FILE: ".golangci.yaml"
           PROTOBUF_CONFIG_FILE: ".protolintrc.yml"
+          TRIVY_CONFIG_FILE: ".trivy.yml"
           FILTER_REGEX_EXCLUDE: "(.*/charts/.*)"
           VALIDATE_ALL_CODEBASE: false
           VALIDATE_MARKDOWN_PRETTIER: false
