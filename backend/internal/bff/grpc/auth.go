@@ -5,6 +5,7 @@ package grpc
 
 import (
 	"context"
+	"errors"
 
 	identity_service_sdk_go "github.com/outshift/identity-service/api/server/outshift/identity/service/v1alpha1"
 	"github.com/outshift/identity-service/internal/bff"
@@ -35,29 +36,16 @@ func (s *authService) AppInfo(
 	ctx context.Context,
 	req *emptypb.Empty,
 ) (*identity_service_sdk_go.AppInfoResponse, error) {
-	if ctx == nil {
-		return nil, errutil.Err(
-			nil,
-			"request context is empty",
-		)
-	}
-
 	// Get app ID from context
 	appID, ok := identitycontext.GetAppID(ctx)
 	if !ok || appID == "" {
-		return nil, errutil.Err(
-			nil,
-			"app ID not found in context",
-		)
+		return nil, grpcutil.NotFoundError(errors.New("app ID not found in context"))
 	}
 
 	// Get app info from the app service
 	app, err := s.appSrv.GetApp(ctx, appID)
 	if err != nil {
-		return nil, errutil.Err(
-			err,
-			"failed to get app info",
-		)
+		return nil, grpcutil.BadRequestError(errors.New("failed to get app info"))
 	}
 
 	return &identity_service_sdk_go.AppInfoResponse{
@@ -76,10 +64,7 @@ func (s *authService) Authorize(
 		req.UserToken,
 	)
 	if err != nil {
-		return nil, errutil.Err(
-			err,
-			"failed to authorize",
-		)
+		return nil, grpcutil.UnauthorizedError(errors.New("failed to authorize"))
 	}
 
 	return &identity_service_sdk_go.AuthorizeResponse{
