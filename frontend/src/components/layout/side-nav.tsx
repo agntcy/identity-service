@@ -20,6 +20,7 @@ import VerifyIdentityLogo from '@/assets/sidebar/verify-identity.svg?react';
 import {useFeatureFlagsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
 import '@/styles/side-nav.css';
+import config from '@/config';
 
 interface SideNavLinkItem {
   href: string;
@@ -109,36 +110,38 @@ export const SideNav: React.FC<{
         className="flex relative flex-col justify-between gap-1 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2 bg-[#EFF3FC] h-full side-bar pl-4"
       >
         <div>
-          <div className={cn('pr-4', isCollapsed && 'pr-4', isOrgOpen && 'pr-0')}>
-            <SideNavLink
-              label={
-                <OverflowTooltip
-                  value={authInfo?.user?.tenant?.name}
-                  someLongText={authInfo?.user?.tenant?.name}
-                  styleText={{
-                    color: theme.palette.vars.brandTextSecondary,
-                    fontSize: '14px',
-                    fontWeight: '500'
-                  }}
-                />
-              }
-              isLink={false}
-              icon={<OrganizationLogo className="w-5 h-5" />}
-              className={cn(
-                'border-1 border-[#D5DFF7] border-solid h-[56px] rounded-[8px] flex items-center gap-4 mt-8',
-                isOrgOpen && 'bg-[#E8F1FF] custom-border-org'
-              )}
-              classNameIcon={cn(
-                '[&>svg]:min-w-7 [&>svg]:min-h-7 [&>svg]:max-w-7 [&>svg]:max-h-7',
-                isOrgOpen && isCollapsed && 'pr-4'
-              )}
-              isCollapsed={isCollapsed}
-              actionIcon={isOrgOpen || isCollapsed ? null : <ChevronRightIcon className="ml-auto w-4 h-4" />}
-              onClick={() => {
-                setIsOrgOpen(!isOrgOpen);
-              }}
-            />
-          </div>
+          {config.IAM_MULTI_TENANT && (
+            <div className={cn('pr-4', isCollapsed && 'pr-4', isOrgOpen && 'pr-0')}>
+              <SideNavLink
+                label={
+                  <OverflowTooltip
+                    value={authInfo?.user?.tenant?.name}
+                    someLongText={authInfo?.user?.tenant?.name}
+                    styleText={{
+                      color: theme.palette.vars.brandTextSecondary,
+                      fontSize: '14px',
+                      fontWeight: '500'
+                    }}
+                  />
+                }
+                isLink={false}
+                icon={<OrganizationLogo className="w-5 h-5" />}
+                className={cn(
+                  'border-1 border-[#D5DFF7] border-solid h-[56px] rounded-[8px] flex items-center gap-4 mt-8',
+                  isOrgOpen && 'bg-[#E8F1FF] custom-border-org'
+                )}
+                classNameIcon={cn(
+                  '[&>svg]:min-w-7 [&>svg]:min-h-7 [&>svg]:max-w-7 [&>svg]:max-h-7',
+                  isOrgOpen && isCollapsed && 'pr-4'
+                )}
+                isCollapsed={isCollapsed}
+                actionIcon={isOrgOpen || isCollapsed ? null : <ChevronRightIcon className="ml-auto w-4 h-4" />}
+                onClick={() => {
+                  setIsOrgOpen(!isOrgOpen);
+                }}
+              />
+            </div>
+          )}
           <div className={cn('flex flex-col gap-1 mt-8 pr-4', isCollapsed && 'pr-4')}>
             {sideNavLinks.map((link) => {
               return (
@@ -166,7 +169,9 @@ export const SideNav: React.FC<{
           </IconButton>
         </div>
       </nav>
-      <OrganizationsDrawer isOpen={isOrgOpen} onChange={(value) => setIsOrgOpen(value)} isCollapsed={isCollapsed} />
+      {config.IAM_MULTI_TENANT && (
+        <OrganizationsDrawer isOpen={isOrgOpen} onChange={(value) => setIsOrgOpen(value)} isCollapsed={isCollapsed} />
+      )}
     </>
   );
 };

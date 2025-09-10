@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import config from '@/config';
 import {PATHS} from '@/router/paths';
 import {useFeatureFlagsStore} from '@/store';
 import {useMemo} from 'react';
@@ -35,10 +36,14 @@ const SettingsBase: React.FC = () => {
             }
           ]
         : []),
-      {
-        label: 'Organizations & Users',
-        href: PATHS.settings.organizationsAndUsers.base
-      }
+      ...(config.IAM_MULTI_TENANT
+        ? [
+            {
+              label: 'Organizations & Users',
+              href: PATHS.settings.organizationsAndUsers.base
+            }
+          ]
+        : [])
     ];
   }, [isTbacEnabled]);
 

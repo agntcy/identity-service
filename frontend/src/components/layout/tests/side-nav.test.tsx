@@ -25,6 +25,12 @@ let mockAuthInfo = {
 let mockLocation = {pathname: '/dashboard'};
 let mockIsTbacEnabled = true;
 
+vi.mock('@/config', () => ({
+  default: {
+    IAM_MULTI_TENANT: true
+  }
+}));
+
 vi.mock('@/hooks', () => ({
   useAnalytics: () => ({
     analyticsTrack: mockAnalyticsTrack

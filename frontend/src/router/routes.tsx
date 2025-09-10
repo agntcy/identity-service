@@ -15,6 +15,7 @@ import {Loading} from '@/components/ui/loading';
 import {useFeatureFlagsStore, useSettingsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
 import {useWindowSize} from '@/hooks';
+import config from '@/config';
 
 // Components
 const Layout = React.lazy(() => import('@/components/layout/layout'));
@@ -374,6 +375,7 @@ export const useRoutes = () => {
           },
           {
             path: PATHS.settings.organizationsAndUsers.base,
+            disabled: !config.IAM_MULTI_TENANT,
             children: [
               {
                 index: true,
