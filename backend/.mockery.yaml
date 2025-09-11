@@ -64,3 +64,6 @@ packages:
   github.com/outshift/identity-service/internal/pkg/vault:
     interfaces:
       VaultClient: {}
+  github.com/outshift/identity-service/internal/pkg/webpush:
+    interfaces:
+      WebPushSender: {}

@@ -5,8 +5,6 @@
 package mocks
 
 import (
-	"context"
-
 	types1 "github.com/outshift/identity-service/internal/core/app/types"
 	types0 "github.com/outshift/identity-service/internal/core/auth/types/int"
 	"github.com/outshift/identity-service/internal/core/device/types"
@@ -41,16 +39,16 @@ func (_m *NotificationService) EXPECT() *NotificationService_Expecter {
 }
 
 // SendDeviceRegisteredNotification provides a mock function for the type NotificationService
-func (_mock *NotificationService) SendDeviceRegisteredNotification(ctx context.Context, device *types.Device) error {
-	ret := _mock.Called(ctx, device)
+func (_mock *NotificationService) SendDeviceRegisteredNotification(device *types.Device) error {
+	ret := _mock.Called(device)
 
 	if len(ret) == 0 {
 		panic("no return value specified for SendDeviceRegisteredNotification")
 	}
 
 	var r0 error
-	if returnFunc, ok := ret.Get(0).(func(context.Context, *types.Device) error); ok {
-		r0 = returnFunc(ctx, device)
+	if returnFunc, ok := ret.Get(0).(func(*types.Device) error); ok {
+		r0 = returnFunc(device)
 	} else {
 		r0 = ret.Error(0)
 	}
@@ -63,25 +61,19 @@ type NotificationService_SendDeviceRegisteredNotification_Call struct {
 }
 
 // SendDeviceRegisteredNotification is a helper method to define mock.On call
-//   - ctx context.Context
 //   - device *types.Device
-func (_e *NotificationService_Expecter) SendDeviceRegisteredNotification(ctx interface{}, device interface{}) *NotificationService_SendDeviceRegisteredNotification_Call {
-	return &NotificationService_SendDeviceRegisteredNotification_Call{Call: _e.mock.On("SendDeviceRegisteredNotification", ctx, device)}
+func (_e *NotificationService_Expecter) SendDeviceRegisteredNotification(device interface{}) *NotificationService_SendDeviceRegisteredNotification_Call {
+	return &NotificationService_SendDeviceRegisteredNotification_Call{Call: _e.mock.On("SendDeviceRegisteredNotification", device)}
 }
 
-func (_c *NotificationService_SendDeviceRegisteredNotification_Call) Run(run func(ctx context.Context, device *types.Device)) *NotificationService_SendDeviceRegisteredNotification_Call {
+func (_c *NotificationService_SendDeviceRegisteredNotification_Call) Run(run func(device *types.Device)) *NotificationService_SendDeviceRegisteredNotification_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		var arg0 context.Context
+		var arg0 *types.Device
 		if args[0] != nil {
-			arg0 = args[0].(context.Context)
-		}
-		var arg1 *types.Device
-		if args[1] != nil {
-			arg1 = args[1].(*types.Device)
+			arg0 = args[0].(*types.Device)
 		}
 		run(
 			arg0,
-			arg1,
 		)
 	})
 	return _c
@@ -92,22 +84,22 @@ func (_c *NotificationService_SendDeviceRegisteredNotification_Call) Return(err 
 	return _c
 }
 
-func (_c *NotificationService_SendDeviceRegisteredNotification_Call) RunAndReturn(run func(ctx context.Context, device *types.Device) error) *NotificationService_SendDeviceRegisteredNotification_Call {
+func (_c *NotificationService_SendDeviceRegisteredNotification_Call) RunAndReturn(run func(device *types.Device) error) *NotificationService_SendDeviceRegisteredNotification_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
 // SendInfoNotification provides a mock function for the type NotificationService
-func (_mock *NotificationService) SendInfoNotification(ctx context.Context, device *types.Device, message string) error {
-	ret := _mock.Called(ctx, device, message)
+func (_mock *NotificationService) SendInfoNotification(device *types.Device, message string) error {
+	ret := _mock.Called(device, message)
 
 	if len(ret) == 0 {
 		panic("no return value specified for SendInfoNotification")
 	}
 
 	var r0 error
-	if returnFunc, ok := ret.Get(0).(func(context.Context, *types.Device, string) error); ok {
-		r0 = returnFunc(ctx, device, message)
+	if returnFunc, ok := ret.Get(0).(func(*types.Device, string) error); ok {
+		r0 = returnFunc(device, message)
 	} else {
 		r0 = ret.Error(0)
 	}
@@ -120,31 +112,25 @@ type NotificationService_SendInfoNotification_Call struct {
 }
 
 // SendInfoNotification is a helper method to define mock.On call
-//   - ctx context.Context
 //   - device *types.Device
 //   - message string
-func (_e *NotificationService_Expecter) SendInfoNotification(ctx interface{}, device interface{}, message interface{}) *NotificationService_SendInfoNotification_Call {
-	return &NotificationService_SendInfoNotification_Call{Call: _e.mock.On("SendInfoNotification", ctx, device, message)}
+func (_e *NotificationService_Expecter) SendInfoNotification(device interface{}, message interface{}) *NotificationService_SendInfoNotification_Call {
+	return &NotificationService_SendInfoNotification_Call{Call: _e.mock.On("SendInfoNotification", device, message)}
 }
 
-func (_c *NotificationService_SendInfoNotification_Call) Run(run func(ctx context.Context, device *types.Device, message string)) *NotificationService_SendInfoNotification_Call {
+func (_c *NotificationService_SendInfoNotification_Call) Run(run func(device *types.Device, message string)) *NotificationService_SendInfoNotification_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		var arg0 context.Context
+		var arg0 *types.Device
 		if args[0] != nil {
-			arg0 = args[0].(context.Context)
+			arg0 = args[0].(*types.Device)
 		}
-		var arg1 *types.Device
+		var arg1 string
 		if args[1] != nil {
-			arg1 = args[1].(*types.Device)
-		}
-		var arg2 string
-		if args[2] != nil {
-			arg2 = args[2].(string)
+			arg1 = args[1].(string)
 		}
 		run(
 			arg0,
 			arg1,
-			arg2,
 		)
 	})
 	return _c
@@ -155,22 +141,22 @@ func (_c *NotificationService_SendInfoNotification_Call) Return(err error) *Noti
 	return _c
 }
 
-func (_c *NotificationService_SendInfoNotification_Call) RunAndReturn(run func(ctx context.Context, device *types.Device, message string) error) *NotificationService_SendInfoNotification_Call {
+func (_c *NotificationService_SendInfoNotification_Call) RunAndReturn(run func(device *types.Device, message string) error) *NotificationService_SendInfoNotification_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
 // SendOTPNotification provides a mock function for the type NotificationService
-func (_mock *NotificationService) SendOTPNotification(ctx context.Context, device *types.Device, session *types0.Session, otp *types0.SessionDeviceOTP, callerApp *types1.App, calleeApp *types1.App, toolName *string) error {
-	ret := _mock.Called(ctx, device, session, otp, callerApp, calleeApp, toolName)
+func (_mock *NotificationService) SendOTPNotification(device *types.Device, session *types0.Session, otp *types0.SessionDeviceOTP, callerApp *types1.App, calleeApp *types1.App, toolName *string) error {
+	ret := _mock.Called(device, session, otp, callerApp, calleeApp, toolName)
 
 	if len(ret) == 0 {
 		panic("no return value specified for SendOTPNotification")
 	}
 
 	var r0 error
-	if returnFunc, ok := ret.Get(0).(func(context.Context, *types.Device, *types0.Session, *types0.SessionDeviceOTP, *types1.App, *types1.App, *string) error); ok {
-		r0 = returnFunc(ctx, device, session, otp, callerApp, calleeApp, toolName)
+	if returnFunc, ok := ret.Get(0).(func(*types.Device, *types0.Session, *types0.SessionDeviceOTP, *types1.App, *types1.App, *string) error); ok {
+		r0 = returnFunc(device, session, otp, callerApp, calleeApp, toolName)
 	} else {
 		r0 = ret.Error(0)
 	}
@@ -183,46 +169,41 @@ type NotificationService_SendOTPNotification_Call struct {
 }
 
 // SendOTPNotification is a helper method to define mock.On call
-//   - ctx context.Context
 //   - device *types.Device
 //   - session *types0.Session
 //   - otp *types0.SessionDeviceOTP
 //   - callerApp *types1.App
 //   - calleeApp *types1.App
 //   - toolName *string
-func (_e *NotificationService_Expecter) SendOTPNotification(ctx interface{}, device interface{}, session interface{}, otp interface{}, callerApp interface{}, calleeApp interface{}, toolName interface{}) *NotificationService_SendOTPNotification_Call {
-	return &NotificationService_SendOTPNotification_Call{Call: _e.mock.On("SendOTPNotification", ctx, device, session, otp, callerApp, calleeApp, toolName)}
+func (_e *NotificationService_Expecter) SendOTPNotification(device interface{}, session interface{}, otp interface{}, callerApp interface{}, calleeApp interface{}, toolName interface{}) *NotificationService_SendOTPNotification_Call {
+	return &NotificationService_SendOTPNotification_Call{Call: _e.mock.On("SendOTPNotification", device, session, otp, callerApp, calleeApp, toolName)}
 }
 
-func (_c *NotificationService_SendOTPNotification_Call) Run(run func(ctx context.Context, device *types.Device, session *types0.Session, otp *types0.SessionDeviceOTP, callerApp *types1.App, calleeApp *types1.App, toolName *string)) *NotificationService_SendOTPNotification_Call {
+func (_c *NotificationService_SendOTPNotification_Call) Run(run func(device *types.Device, session *types0.Session, otp *types0.SessionDeviceOTP, callerApp *types1.App, calleeApp *types1.App, toolName *string)) *NotificationService_SendOTPNotification_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		var arg0 context.Context
+		var arg0 *types.Device
 		if args[0] != nil {
-			arg0 = args[0].(context.Context)
+			arg0 = args[0].(*types.Device)
 		}
-		var arg1 *types.Device
+		var arg1 *types0.Session
 		if args[1] != nil {
-			arg1 = args[1].(*types.Device)
+			arg1 = args[1].(*types0.Session)
 		}
-		var arg2 *types0.Session
+		var arg2 *types0.SessionDeviceOTP
 		if args[2] != nil {
-			arg2 = args[2].(*types0.Session)
+			arg2 = args[2].(*types0.SessionDeviceOTP)
 		}
-		var arg3 *types0.SessionDeviceOTP
+		var arg3 *types1.App
 		if args[3] != nil {
-			arg3 = args[3].(*types0.SessionDeviceOTP)
+			arg3 = args[3].(*types1.App)
 		}
 		var arg4 *types1.App
 		if args[4] != nil {
 			arg4 = args[4].(*types1.App)
 		}
-		var arg5 *types1.App
+		var arg5 *string
 		if args[5] != nil {
-			arg5 = args[5].(*types1.App)
-		}
-		var arg6 *string
-		if args[6] != nil {
-			arg6 = args[6].(*string)
+			arg5 = args[5].(*string)
 		}
 		run(
 			arg0,
@@ -231,7 +212,6 @@ func (_c *NotificationService_SendOTPNotification_Call) Run(run func(ctx context
 			arg3,
 			arg4,
 			arg5,
-			arg6,
 		)
 	})
 	return _c
@@ -242,7 +222,7 @@ func (_c *NotificationService_SendOTPNotification_Call) Return(err error) *Notif
 	return _c
 }
 
-func (_c *NotificationService_SendOTPNotification_Call) RunAndReturn(run func(ctx context.Context, device *types.Device, session *types0.Session, otp *types0.SessionDeviceOTP, callerApp *types1.App, calleeApp *types1.App, toolName *string) error) *NotificationService_SendOTPNotification_Call {
+func (_c *NotificationService_SendOTPNotification_Call) RunAndReturn(run func(device *types.Device, session *types0.Session, otp *types0.SessionDeviceOTP, callerApp *types1.App, calleeApp *types1.App, toolName *string) error) *NotificationService_SendOTPNotification_Call {
 	_c.Call.Return(run)
 	return _c
 }

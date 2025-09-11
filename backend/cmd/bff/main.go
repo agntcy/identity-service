@@ -36,6 +36,7 @@ import (
 	"github.com/outshift/identity-service/internal/pkg/interceptors"
 	"github.com/outshift/identity-service/internal/pkg/secrets"
 	"github.com/outshift/identity-service/internal/pkg/vault"
+	"github.com/outshift/identity-service/internal/pkg/webpush"
 	"github.com/outshift/identity-service/pkg/cmd"
 	"github.com/outshift/identity-service/pkg/db"
 	"github.com/outshift/identity-service/pkg/grpcserver"
@@ -302,6 +303,7 @@ func main() {
 		badgeRevoker,
 	)
 	notificationSrv := bff.NewNotificationService(
+		webpush.NewWebPushSender(),
 		config.WebApprovalEmail,
 		config.WebApprovalPubKey,
 		config.WebApprovalPrivKey,

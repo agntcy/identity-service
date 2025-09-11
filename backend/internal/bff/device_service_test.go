@@ -68,7 +68,7 @@ func TestDeviceService_RegisterDevice_should_succeed(t *testing.T) {
 	deviceRepo.EXPECT().UpdateDevice(ctx, expectedDevice).Return(expectedDevice, nil)
 
 	notifServ := bffmocks.NewNotificationService(t)
-	notifServ.EXPECT().SendDeviceRegisteredNotification(ctx, expectedDevice).Return(nil)
+	notifServ.EXPECT().SendDeviceRegisteredNotification(expectedDevice).Return(nil)
 
 	sut := bff.NewDeviceService(deviceRepo, notifServ)
 
