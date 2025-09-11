@@ -65,6 +65,10 @@ func (s *VaultCredentialStore) Put(
 		return identitycontext.ErrTenantNotFound
 	}
 
+	if cred == nil {
+		return fmt.Errorf("cannot store null credentials")
+	}
+
 	raw, err := json.Marshal(cred)
 	if err != nil {
 		return fmt.Errorf("unable to marshal credentials: %w", err)
