@@ -42,6 +42,9 @@ packages:
     interfaces:
       KeyStore: {}
       Service: {}
+  github.com/outshift/identity-service/internal/core/issuer:
+    interfaces:
+      Service: {}
   github.com/outshift/identity-service/internal/bff:
     interfaces:
       AppService: {}
