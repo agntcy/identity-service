@@ -813,7 +813,7 @@ func TestAuthService_ExtAuthZ_should_send_device_otp_and_continue_after_approvin
 
 	notifServ := bffmocks.NewNotificationService(t)
 	notifServ.EXPECT().
-		SendOTPNotification(ctx, device2, session, mock.Anything, callerApp, calledApp, mock.Anything).
+		SendOTPNotification(device2, session, mock.Anything, callerApp, calledApp, mock.Anything).
 		Return(nil)
 	sut := bff.NewAuthService(authRepo, nil, nil, appRepo, policyEva, deviceRepo, notifServ, nil, nil)
 
@@ -895,7 +895,7 @@ func TestAuthService_ExtAuthZ_should_return_err_when_send_notification_fails(t *
 
 	notifServ := bffmocks.NewNotificationService(t)
 	notifServ.EXPECT().
-		SendOTPNotification(ctx, mock.Anything, session, mock.Anything, callerApp, calledApp, mock.Anything).
+		SendOTPNotification(mock.Anything, session, mock.Anything, callerApp, calledApp, mock.Anything).
 		Return(errors.New("failed"))
 	sut := bff.NewAuthService(authRepo, nil, nil, appRepo, policyEva, deviceRepo, notifServ, nil, nil)
 
@@ -960,7 +960,7 @@ func TestAuthService_ExtAuthZ_should_return_err_when_device_otp_is_invalid(t *te
 
 			notifServ := bffmocks.NewNotificationService(t)
 			notifServ.EXPECT().
-				SendOTPNotification(ctx, mock.Anything, session, mock.Anything, callerApp, calledApp, mock.Anything).
+				SendOTPNotification(mock.Anything, session, mock.Anything, callerApp, calledApp, mock.Anything).
 				Return(nil)
 			sut := bff.NewAuthService(authRepo, nil, nil, appRepo, policyEva, deviceRepo, notifServ, nil, nil)
 

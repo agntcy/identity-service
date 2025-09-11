@@ -96,7 +96,7 @@ func (s *deviceService) RegisterDevice(
 	existingDevice.Name = device.Name
 
 	// Try to send a notification about the device registration.
-	if err := s.notificationService.SendDeviceRegisteredNotification(ctx, existingDevice); err != nil {
+	if err := s.notificationService.SendDeviceRegisteredNotification(existingDevice); err != nil {
 		return errutil.Err(
 			err,
 			"failed to send notification for device registration",
@@ -141,7 +141,7 @@ func (s *deviceService) TestDevice(ctx context.Context, deviceID string) error {
 		return errutil.Err(err, "failed to get device")
 	}
 
-	err = s.notificationService.SendInfoNotification(ctx, device, "This is a test notification!")
+	err = s.notificationService.SendInfoNotification(device, "This is a test notification!")
 	if err != nil {
 		return err
 	}

@@ -445,7 +445,6 @@ func (s *authService) sendDeviceOTP(
 	}
 
 	err = s.notifService.SendOTPNotification(
-		ctx,
 		device,
 		session,
 		otp,

@@ -4,17 +4,15 @@
 package bff
 
 import (
-	"context"
-	"encoding/json"
+	"errors"
 	"fmt"
 	"time"
 
-	webpush "github.com/SherClockHolmes/webpush-go"
 	apptypes "github.com/outshift/identity-service/internal/core/app/types"
 	authtypes "github.com/outshift/identity-service/internal/core/auth/types/int"
 	devicetypes "github.com/outshift/identity-service/internal/core/device/types"
-	"github.com/outshift/identity-service/internal/pkg/errutil"
 	"github.com/outshift/identity-service/internal/pkg/ptrutil"
+	"github.com/outshift/identity-service/internal/pkg/webpush"
 )
 
 const (
@@ -26,11 +24,9 @@ const (
 
 type NotificationService interface {
 	SendDeviceRegisteredNotification(
-		ctx context.Context,
 		device *devicetypes.Device,
 	) error
 	SendOTPNotification(
-		ctx context.Context,
 		device *devicetypes.Device,
 		session *authtypes.Session,
 		otp *authtypes.SessionDeviceOTP,
@@ -39,22 +35,24 @@ type NotificationService interface {
 		toolName *string,
 	) error
 	SendInfoNotification(
-		ctx context.Context,
 		device *devicetypes.Device,
 		message string,
 	) error
 }
 
 type notificationService struct {
+	webpushSender   webpush.WebPushSender
 	subscriber      string
 	vapidPublicKey  string
 	vapidPrivateKey string
 }
 
 func NewNotificationService(
+	webpushSender webpush.WebPushSender,
 	subscriber, vapidPublicKey, vapidPrivateKey string,
 ) NotificationService {
 	return &notificationService{
+		webpushSender:   webpushSender,
 		subscriber:      subscriber,
 		vapidPublicKey:  vapidPublicKey,
 		vapidPrivateKey: vapidPrivateKey,
@@ -62,11 +60,13 @@ func NewNotificationService(
 }
 
 func (s *notificationService) SendDeviceRegisteredNotification(
-	ctx context.Context,
 	device *devicetypes.Device,
 ) error {
+	if device == nil {
+		return errors.New("device cannot be null")
+	}
+
 	return s.sendWebPushNotification(
-		ctx,
 		&device.SubscriptionToken,
 		&devicetypes.Notification{
 			Body: deviceRegisteredMessage,
@@ -76,7 +76,6 @@ func (s *notificationService) SendDeviceRegisteredNotification(
 }
 
 func (s *notificationService) SendOTPNotification(
-	ctx context.Context,
 	device *devicetypes.Device,
 	session *authtypes.Session,
 	otp *authtypes.SessionDeviceOTP,
@@ -104,7 +103,6 @@ func (s *notificationService) SendOTPNotification(
 	}
 
 	return s.sendWebPushNotification(
-		ctx,
 		&device.SubscriptionToken,
 		&devicetypes.Notification{
 			Body: body,
@@ -123,12 +121,14 @@ func (s *notificationService) SendOTPNotification(
 }
 
 func (s *notificationService) SendInfoNotification(
-	ctx context.Context,
 	device *devicetypes.Device,
 	message string,
 ) error {
+	if device == nil {
+		return errors.New("device cannot be null")
+	}
+
 	return s.sendWebPushNotification(
-		ctx,
 		&device.SubscriptionToken,
 		&devicetypes.Notification{
 			Body: message,
@@ -138,67 +138,12 @@ func (s *notificationService) SendInfoNotification(
 }
 
 func (s *notificationService) sendWebPushNotification(
-	_ context.Context,
 	subscriptionToken *string,
 	notification *devicetypes.Notification,
 ) error {
-	if subscriptionToken == nil || *subscriptionToken == "" {
-		return errutil.Err(
-			nil,
-			"subscription token cannot be nil",
-		)
-	}
-
-	// Decode subscription
-	var subscription map[string]any
-
-	err := json.Unmarshal([]byte(*subscriptionToken), &subscription)
-	if err != nil {
-		return errutil.Err(
-			err,
-			"failed to unmarshal subscription token",
-		)
-	}
-
-	payload, err := json.Marshal(notification)
-	if err != nil {
-		return errutil.Err(err, "failed to marshal notification payload")
-	}
-
-	endpoint, ok := subscription["endpoint"].(string)
-	if !ok {
-		return errutil.Err(
-			nil,
-			"subscription endpoint not found",
-		)
-	}
-
-	p256dh, ok := subscription["p256dh"].(string)
-	if !ok {
-		return errutil.Err(
-			nil,
-			"subscription keys not found",
-		)
-	}
-
-	auth, ok := subscription["auth"].(string)
-	if !ok {
-		return errutil.Err(
-			nil,
-			"subscription auth key not found",
-		)
-	}
-
-	// Send Notification
-	resp, err := webpush.SendNotification(
-		payload,
-		&webpush.Subscription{
-			Endpoint: endpoint,
-			Keys: webpush.Keys{
-				P256dh: p256dh,
-				Auth:   auth,
-			},
-		},
+	return s.webpushSender.SendWebPushNotification(
+		ptrutil.DerefStr(subscriptionToken),
+		notification,
 		&webpush.Options{
 			Subscriber:      s.subscriber,
 			VAPIDPublicKey:  s.vapidPublicKey,
@@ -206,11 +151,4 @@ func (s *notificationService) sendWebPushNotification(
 			TTL:             ttl,
 		},
 	)
-	if err != nil {
-		return err
-	}
-
-	_ = resp.Body.Close()
-
-	return nil
 }
