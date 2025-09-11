@@ -5,11 +5,12 @@ package grpc
 
 import (
 	"context"
+	"errors"
 
 	identity_service_sdk_go "github.com/outshift/identity-service/api/server/outshift/identity/service/v1alpha1"
 	"github.com/outshift/identity-service/internal/bff"
 	"github.com/outshift/identity-service/internal/bff/grpc/converters"
-	"github.com/outshift/identity-service/internal/pkg/errutil"
+	"github.com/outshift/identity-service/internal/pkg/grpcutil"
 )
 
 type settingsService struct {
@@ -30,7 +31,7 @@ func (s *settingsService) GetSettings(
 ) (*identity_service_sdk_go.Settings, error) {
 	settings, err := s.settingsSrv.GetSettings(ctx)
 	if err != nil {
-		return nil, err
+		return nil, grpcutil.BadRequestError(err)
 	}
 
 	return &identity_service_sdk_go.Settings{
@@ -45,7 +46,7 @@ func (s *settingsService) SetApiKey(
 ) (*identity_service_sdk_go.ApiKey, error) {
 	apiKey, err := s.settingsSrv.SetApiKey(ctx)
 	if err != nil {
-		return nil, err
+		return nil, grpcutil.BadRequestError(err)
 	}
 
 	return converters.FromApiKey(apiKey), nil
@@ -57,12 +58,12 @@ func (s *settingsService) SetIssuer(
 ) (*identity_service_sdk_go.IssuerSettings, error) {
 	issuerSettings := converters.ToIssuerSettings(req.GetIssuerSettings())
 	if issuerSettings == nil {
-		return nil, errutil.Err(nil, "issuer settings cannot be nil")
+		return nil, grpcutil.BadRequestError(errors.New("issuer settings cannot be nil"))
 	}
 
 	updatedIssuerSettings, err := s.settingsSrv.SetIssuerSettings(ctx, issuerSettings)
 	if err != nil {
-		return nil, err
+		return nil, grpcutil.BadRequestError(err)
 	}
 
 	return converters.FromIssuerSettings(updatedIssuerSettings), nil
