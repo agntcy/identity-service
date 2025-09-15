@@ -11,7 +11,7 @@ import (
 	settingscore "github.com/outshift/identity-service/internal/core/settings"
 	settingstypes "github.com/outshift/identity-service/internal/core/settings/types"
 	"github.com/outshift/identity-service/internal/pkg/errutil"
-	outshiftiam "github.com/outshift/identity-service/internal/pkg/iam"
+	"github.com/outshift/identity-service/internal/pkg/iam"
 	"github.com/outshift/identity-service/internal/pkg/ptrutil"
 )
 
@@ -26,13 +26,13 @@ type SettingsService interface {
 
 type settingsService struct {
 	issuerSrv          issuercore.Service
-	iamClient          outshiftiam.Client
+	iamClient          iam.Client
 	settingsRepository settingscore.Repository
 }
 
 func NewSettingsService(
 	issuerSrv issuercore.Service,
-	iamClient outshiftiam.Client,
+	iamClient iam.Client,
 	settingsRepository settingscore.Repository,
 ) SettingsService {
 	return &settingsService{

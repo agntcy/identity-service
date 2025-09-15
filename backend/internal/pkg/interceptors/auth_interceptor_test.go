@@ -11,7 +11,7 @@ import (
 
 	"github.com/google/uuid"
 	identity_service_sdk_go "github.com/outshift/identity-service/api/server/outshift/identity/service/v1alpha1"
-	outshiftiammocks "github.com/outshift/identity-service/internal/pkg/iam/mocks"
+	iammocks "github.com/outshift/identity-service/internal/pkg/iam/mocks"
 	"github.com/outshift/identity-service/internal/pkg/interceptors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -70,7 +70,7 @@ func TestAuthInterceptor_Unary_should_validate_jwt(t *testing.T) {
 	handler := mockHandler{}
 	handler.On("Handle", ctx, mock.Anything).Return(nil, nil)
 
-	iamClient := outshiftiammocks.NewClient(t)
+	iamClient := iammocks.NewClient(t)
 	iamClient.EXPECT().AuthJwt(ctx, jwt).Return(ctx, nil)
 
 	sut := interceptors.NewAuthInterceptor(iamClient)
@@ -133,7 +133,7 @@ func TestAuthInterceptor_Unary_should_validate_api_key(t *testing.T) {
 				handler := mockHandler{}
 				handler.On("Handle", ctx, mock.Anything).Return(nil, nil)
 
-				iamClient := outshiftiammocks.NewClient(t)
+				iamClient := iammocks.NewClient(t)
 				iamClient.EXPECT().
 					AuthAPIKey(ctx, APIKey, tc.allowedForApps).
 					Return(ctx, nil)
@@ -154,12 +154,12 @@ func TestAuthInterceptor_Unary_should_return_unauthorized(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]*struct {
-		configureIamClient func(t *testing.T, client *outshiftiammocks.Client)
+		configureIamClient func(t *testing.T, client *iammocks.Client)
 		md                 metadata.MD
 		fullMethod         string
 	}{
 		"request with JWT": {
-			configureIamClient: func(t *testing.T, client *outshiftiammocks.Client) {
+			configureIamClient: func(t *testing.T, client *iammocks.Client) {
 				t.Helper()
 
 				client.EXPECT().
@@ -172,7 +172,7 @@ func TestAuthInterceptor_Unary_should_return_unauthorized(t *testing.T) {
 			fullMethod: uuid.NewString(),
 		},
 		"request with user API Key": {
-			configureIamClient: func(t *testing.T, client *outshiftiammocks.Client) {
+			configureIamClient: func(t *testing.T, client *iammocks.Client) {
 				t.Helper()
 
 				client.EXPECT().
@@ -185,7 +185,7 @@ func TestAuthInterceptor_Unary_should_return_unauthorized(t *testing.T) {
 			fullMethod: uuid.NewString(),
 		},
 		"request with app API Key": {
-			configureIamClient: func(t *testing.T, client *outshiftiammocks.Client) {
+			configureIamClient: func(t *testing.T, client *iammocks.Client) {
 				t.Helper()
 
 				client.EXPECT().
@@ -198,7 +198,7 @@ func TestAuthInterceptor_Unary_should_return_unauthorized(t *testing.T) {
 			fullMethod: identity_service_sdk_go.AuthService_Authorize_FullMethodName,
 		},
 		"request without auth headers": {
-			configureIamClient: func(t *testing.T, client *outshiftiammocks.Client) {
+			configureIamClient: func(t *testing.T, client *iammocks.Client) {
 				t.Helper()
 			},
 			md:         metadata.MD{},
@@ -212,7 +212,7 @@ func TestAuthInterceptor_Unary_should_return_unauthorized(t *testing.T) {
 
 			ctx := metadata.NewIncomingContext(context.Background(), tc.md)
 
-			iamClient := outshiftiammocks.NewClient(t)
+			iamClient := iammocks.NewClient(t)
 			tc.configureIamClient(t, iamClient)
 
 			sut := interceptors.NewAuthInterceptor(iamClient)

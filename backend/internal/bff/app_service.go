@@ -20,7 +20,7 @@ import (
 	policytypes "github.com/outshift/identity-service/internal/core/policy/types"
 	settingscore "github.com/outshift/identity-service/internal/core/settings"
 	"github.com/outshift/identity-service/internal/pkg/errutil"
-	outshiftiam "github.com/outshift/identity-service/internal/pkg/iam"
+	"github.com/outshift/identity-service/internal/pkg/iam"
 	"github.com/outshift/identity-service/internal/pkg/pagination"
 	"github.com/outshift/identity-service/internal/pkg/ptrutil"
 	"github.com/outshift/identity-service/internal/pkg/sorting"
@@ -54,7 +54,7 @@ type appService struct {
 	identityService    identitycore.Service
 	idpFactory         idpcore.IdpFactory
 	credentialStore    idpcore.CredentialStore
-	iamClient          outshiftiam.Client
+	iamClient          iam.Client
 	badgeRevoker       badgecore.Revoker
 	keyStore           identitycore.KeyStore
 	policyRepository   policycore.Repository
@@ -67,7 +67,7 @@ func NewAppService(
 	identityService identitycore.Service,
 	idpFactory idpcore.IdpFactory,
 	credentialStore idpcore.CredentialStore,
-	iamClient outshiftiam.Client,
+	iamClient iam.Client,
 	badgeRevoker badgecore.Revoker,
 	keyStore identitycore.KeyStore,
 	policyRepository policycore.Repository,
