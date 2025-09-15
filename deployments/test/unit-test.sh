@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 DOCKER_FILE=./deployments/docker/frontend/Dockerfile.test
-TEST_COMMAND='npx vitest . --browser.headless=true'
+TEST_COMMAND='yarn run test:coverage'
 
 echo RUNNING FRONTEND TESTS
 docker run "$(docker build --no-cache -f ${DOCKER_FILE} -q .)" $TEST_COMMAND

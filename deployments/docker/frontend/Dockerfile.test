@@ -26,4 +26,3 @@ RUN touch .env && echo "ARTIFACTORY_PASSWORD=${ARTIFACTORY_PASSWORD}" >> .env
 
 # Install libs
 RUN yarn install
-RUN yarn build
