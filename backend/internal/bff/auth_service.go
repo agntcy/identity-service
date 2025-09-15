@@ -301,20 +301,20 @@ func (s *authService) ExtAuthZ(
 
 	log.Debug("Got session by access token: ", session.ID)
 
-	appID, _ := identitycontext.GetAppID(ctx)
+	calleeAppID, _ := identitycontext.GetAppID(ctx)
 
-	log.Debug("Session appID: ", appID)
+	log.Debug("Session appID: ", calleeAppID)
 
-	app, err := s.appRepository.GetApp(ctx, appID)
+	calleeApp, err := s.appRepository.GetApp(ctx, calleeAppID)
 	if err != nil {
 		return errutil.Err(err, "app not found")
 	}
 
-	log.Debug("Got app info: ", app.ID)
+	log.Debug("Got app info: ", calleeApp.ID)
 
 	// If the session appID is provided (in the authorize call)
 	// it needs to match the current context appID
-	if session.AppID != nil && appID != "" && *session.AppID != appID {
+	if !session.ValidateApp(calleeAppID) {
 		return errutil.Err(
 			nil,
 			"access token is not valid for the specified app",
@@ -346,7 +346,7 @@ func (s *authService) ExtAuthZ(
 
 	// Evaluate the session based on existing policies
 	// Evaluate based on provided appID and toolName and the session appID, toolName
-	rule, err := s.policyEvaluator.Evaluate(ctx, app, session.OwnerAppID, toolName)
+	rule, err := s.policyEvaluator.Evaluate(ctx, calleeApp, session.OwnerAppID, toolName)
 	if err != nil {
 		log.Error("Policy evaluation failed: ", err)
 
@@ -354,12 +354,7 @@ func (s *authService) ExtAuthZ(
 	}
 
 	if rule.NeedsApproval {
-		otp, err := s.sendDeviceOTP(ctx, session, callerApp, app, &toolName)
-		if err != nil {
-			return err
-		}
-
-		err = s.waitForDeviceApproval(ctx, otp.ID)
+		err := s.sendDeviceOTPAndWaitForApproval(ctx, session, callerApp, calleeApp, &toolName)
 		if err != nil {
 			return err
 		}
@@ -382,6 +377,21 @@ func (s *authService) ExtAuthZ(
 	}
 
 	return nil
+}
+
+func (s *authService) sendDeviceOTPAndWaitForApproval(
+	ctx context.Context,
+	session *authtypes.Session,
+	callerApp *apptypes.App,
+	calleeApp *apptypes.App,
+	toolName *string,
+) error {
+	otp, err := s.sendDeviceOTP(ctx, session, callerApp, calleeApp, toolName)
+	if err != nil {
+		return err
+	}
+
+	return s.waitForDeviceApproval(ctx, otp.ID)
 }
 
 func (s *authService) ApproveToken(

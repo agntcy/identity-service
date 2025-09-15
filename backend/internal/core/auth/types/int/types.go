@@ -47,6 +47,12 @@ func (s *Session) ValidateTool(name string) bool {
 	return s.ToolName == nil || *s.ToolName == "" || *s.ToolName == name
 }
 
+// If the session has an appID associated with then this methods
+// validtes the input app ID with the one in the session.
+func (s *Session) ValidateApp(id string) bool {
+	return s.AppID == nil || *s.AppID == id
+}
+
 func (s *Session) HasExpired() bool {
 	return s.ExpiresAt != nil && *s.ExpiresAt <= time.Now().Unix()
 }
