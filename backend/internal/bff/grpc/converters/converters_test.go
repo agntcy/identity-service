@@ -110,6 +110,8 @@ func getFuncName(t *testing.T, fn any) string {
 //	  }
 //
 // Then this function will return the following slice: []string{"Id", "Name", "Description"}
+//
+//nolint:gocognit // I don't think the conditions are that hard to understand
 func parseOutputTypeFields(block *ast.BlockStmt) []string {
 	fields := make([]string, 0)
 
@@ -237,6 +239,7 @@ func fieldByName(t *testing.T, obj reflect.Value, name string) (reflect.Value, b
 	return field, field != zeroValue
 }
 
+//nolint:gocognit // The conditions are not that hard to understand
 func TestConverters_should_instantiate_valid_obj_from_src(t *testing.T) {
 	t.Parallel()
 
