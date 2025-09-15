@@ -1,0 +1,29 @@
+# Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
+FROM node:20-alpine3.21 AS build
+
+# set ARTIFACTORY_PASSWORD as an ENV var
+ARG ARTIFACTORY_PASSWORD
+
+ENV ARTIFACTORY_PASSWORD=${ARTIFACTORY_PASSWORD}
+
+# Install packages
+RUN apk add --update \
+  libpng-dev \
+  build-base \
+  nodejs \
+  npm \
+  yarn
+
+# Set workdir
+WORKDIR /home/web
+
+# Copy src
+COPY ./frontend .
+
+RUN touch .env && echo "ARTIFACTORY_PASSWORD=${ARTIFACTORY_PASSWORD}" >> .env
+
+# Install libs
+RUN yarn install
+RUN yarn build
