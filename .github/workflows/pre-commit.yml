@@ -14,8 +14,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5.0.0
-      - uses: actions/setup-python@v5
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-python@v6
+      - uses: actions/setup-go@v6
       - run: go install golang.org/x/lint/golint@latest
       - run: echo "PATH=$PATH:/home/runner/go/bin" >> "$GITHUB_ENV"
       - uses: pre-commit/action@v3.0.1
