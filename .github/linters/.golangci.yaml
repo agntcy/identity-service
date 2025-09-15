@@ -78,8 +78,6 @@ linters:
   settings:
     cyclop:
       max-complexity: 20
-    gocognit:
-      min-complexity: 50
     goconst:
       min-len: 2
       min-occurrences: 3

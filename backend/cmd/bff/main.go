@@ -5,6 +5,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"math"
 	"net/http"
 	"os"
@@ -56,7 +57,6 @@ var maxMsgSize = math.MaxInt64
 
 // ------------------------ GLOBAL -------------------- //
 
-//nolint:funlen,cyclop,maintidx // ignore linting for main function
 func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 
@@ -71,42 +71,18 @@ func main() {
 
 	log.Info("Starting in env:", config.GoEnv)
 
-	// Create a gRPC server object
-	//nolint:lll // Ignore linting for long lines
-	var kaep = keepalive.EnforcementPolicy{
-		MinTime: time.Duration(
-			config.ServerGrpcKeepAliveEnvorcementPolicyMinTime,
-		) * time.Second, // If a client pings more than once every X seconds, terminate the connection
-		PermitWithoutStream: config.ServerGrpcKeepAliveEnforcementPolicyPermitWithoutStream, // Allow pings even when there are no active streams
-	}
-
-	var kasp = keepalive.ServerParameters{
-		MaxConnectionIdle: time.Duration(
-			config.ServerGrpcKeepAliveServerParametersMaxConnectionIdle,
-		) * time.Second, // If a client is idle for X seconds, send a GOAWAY
-		Time: time.Duration(
-			config.ServerGrpcKeepAliveServerParametersTime,
-		) * time.Second, // Ping the client if it is idle for X seconds to ensure the connection is still active
-		Timeout: time.Duration(
-			config.ServerGrpcKeepAliveServerParametersTimeout,
-		) * time.Second, // Wait X second for the ping ack before assuming the connection is dead
-	}
-
-	// Create a database context
-	dbContext := db.NewContext(
-		config.DbHost,
-		config.DbPort,
-		config.DbName,
-		config.DbUsername,
-		config.DbPassword,
-		config.DbUseSsl,
-	)
-
-	// Connect to the database
-	err = dbContext.Connect()
+	// Initialize the database connection
+	dbContext, err := initializeDbContext(config)
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// Disconnect the database client when done
+	defer func() {
+		if err = dbContext.Disconnect(); err != nil {
+			log.Fatal(err)
+		}
+	}()
 
 	// Migrate the database models.
 	// The plural name of the structs will be
@@ -129,22 +105,97 @@ func main() {
 		&iampg.APIKey{},
 	)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(err) //nolint:gocritic // It's not a big deal if we exit without closing the DB connection
 	}
 
 	crypter := secrets.NewSymmetricCrypter([]byte(config.SecretsCryptoKey))
 
-	// Create repositories
-	appRepository := apppg.NewRepository(dbContext.Client())
-	settingsRepository := settingspg.NewRepository(dbContext.Client(), crypter)
-	badgeRepository := badgepg.NewRepository(dbContext.Client())
-	deviceRepository := devicepg.NewRepository(dbContext.Client())
-	authRepository := authpg.NewRepository(dbContext.Client(), crypter)
-	policyRepository := policypg.NewRepository(dbContext.Client())
-	iamRepository := iampg.NewRepository(dbContext.Client(), crypter)
-
 	// IAM
+	iamClient := initializeIAMClient(config, dbContext, crypter)
+
+	// Tenant interceptor
+	authInterceptor := interceptors.NewAuthInterceptor(
+		iamClient,
+	)
+
+	// Initialize the gRPC Server
+	grpcsrv, err := initializeGrpcServer(config, authInterceptor.Unary)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer func() {
+		_ = grpcsrv.Shutdown(ctx)
+	}()
+
+	// Initialize the application services
+	register := initializeServices(ctx, config, dbContext, crypter, iamClient)
+	register.RegisterGrpcHandlers(grpcsrv.Server)
+
+	// Serve gRPC server
+	log.Info("Serving gRPC on:", config.ServerGrpcHost)
+
+	go func() {
+		if err := grpcsrv.Run(ctx); err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	// Initialize the HTTP server
+	gwServer, err := initializeHttpServer(ctx, config, register)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer func() {
+		_ = gwServer.Shutdown(ctx)
+	}()
+
+	go func() {
+		log.Info("Serving gRPC-Gateway on:", config.ServerHttpHost)
+
+		if err := gwServer.ListenAndServe(); err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	interrupChannel := make(chan os.Signal, 1)
+	signal.Notify(interrupChannel, os.Interrupt)
+	<-interrupChannel
+
+	log.Info("Exiting the node")
+
+	cancel()
+}
+
+func initializeDbContext(config *Configuration) (db.Context, error) {
+	// Create a database context
+	dbContext := db.NewContext(
+		config.DbHost,
+		config.DbPort,
+		config.DbName,
+		config.DbUsername,
+		config.DbPassword,
+		config.DbUseSsl,
+	)
+
+	// Connect to the database
+	err := dbContext.Connect()
+	if err != nil {
+		return nil, err
+	}
+
+	return dbContext, nil
+}
+
+func initializeIAMClient(
+	config *Configuration,
+	dbContext db.Context,
+	crypter secrets.Crypter,
+) iam.Client {
 	var iamClient iam.Client
+
+	iamRepository := iampg.NewRepository(dbContext.Client(), crypter)
 
 	if config.IamMultiTenant {
 		iamClient = iam.NewMultitenantClient()
@@ -160,26 +211,60 @@ func main() {
 		)
 	}
 
-	// Tenant interceptor
-	authInterceptor := interceptors.NewAuthInterceptor(
-		iamClient,
-	)
+	return iamClient
+}
+
+func initializeGrpcServer(
+	config *Configuration,
+	unaryInterceptors ...grpc.UnaryServerInterceptor,
+) (*grpcserver.Server, error) {
+	// Create a gRPC server object
+	//nolint:lll // Ignore linting for long lines
+	var kaep = keepalive.EnforcementPolicy{
+		MinTime: time.Duration(
+			config.ServerGrpcKeepAliveEnvorcementPolicyMinTime,
+		) * time.Second, // If a client pings more than once every X seconds, terminate the connection
+		PermitWithoutStream: config.ServerGrpcKeepAliveEnforcementPolicyPermitWithoutStream, // Allow pings even when there are no active streams
+	}
+
+	var kasp = keepalive.ServerParameters{
+		MaxConnectionIdle: time.Duration(
+			config.ServerGrpcKeepAliveServerParametersMaxConnectionIdle,
+		) * time.Second, // If a client is idle for X seconds, send a GOAWAY
+		Time: time.Duration(
+			config.ServerGrpcKeepAliveServerParametersTime,
+		) * time.Second, // Ping the client if it is idle for X seconds to ensure the connection is still active
+		Timeout: time.Duration(
+			config.ServerGrpcKeepAliveServerParametersTimeout,
+		) * time.Second, // Wait X second for the ping ack before assuming the connection is dead
+	}
 
 	// Create a GRPC server
-	grpcsrv, err := grpcserver.New(
+	return grpcserver.New(
 		config.ServerGrpcHost,
-		grpc.ChainUnaryInterceptor(
-			authInterceptor.Unary, // Add the auth interceptor
-		),
+		grpc.ChainUnaryInterceptor(unaryInterceptors...),
 		grpc.StatsHandler(otelgrpc.NewServerHandler()),
 		grpc.MaxRecvMsgSize(maxMsgSize),
 		grpc.MaxSendMsgSize(maxMsgSize),
 		grpc.KeepaliveEnforcementPolicy(kaep),
 		grpc.KeepaliveParams(kasp),
 	)
-	if err != nil {
-		log.Error(err)
-	}
+}
+
+func initializeServices(
+	ctx context.Context,
+	config *Configuration,
+	dbContext db.Context,
+	crypter secrets.Crypter,
+	iamClient iam.Client,
+) *identity_service_api.GrpcServiceRegister {
+	// Create repositories
+	appRepository := apppg.NewRepository(dbContext.Client())
+	settingsRepository := settingspg.NewRepository(dbContext.Client(), crypter)
+	badgeRepository := badgepg.NewRepository(dbContext.Client())
+	deviceRepository := devicepg.NewRepository(dbContext.Client())
+	authRepository := authpg.NewRepository(dbContext.Client(), crypter)
+	policyRepository := policypg.NewRepository(dbContext.Client())
 
 	// Get the token depending on the environment
 	token := ""
@@ -234,17 +319,6 @@ func main() {
 	default:
 		log.Fatal("invalid KeyStoreType value ", config.KeyStoreType)
 	}
-
-	defer func() {
-		_ = grpcsrv.Shutdown(ctx)
-	}()
-
-	// Disconnect the database client when done
-	defer func() {
-		if err = dbContext.Disconnect(); err != nil {
-			log.Fatal(err)
-		}
-	}()
 
 	idpFactory := idpcore.NewFactory()
 
@@ -334,17 +408,14 @@ func main() {
 		DeviceServiceServer:   bffgrpc.NewDeviceService(deviceSrv),
 	}
 
-	register.RegisterGrpcHandlers(grpcsrv.Server)
+	return &register
+}
 
-	// Serve gRPC server
-	log.Info("Serving gRPC on:", config.ServerGrpcHost)
-
-	go func() {
-		if err := grpcsrv.Run(ctx); err != nil {
-			log.Fatal(err)
-		}
-	}()
-
+func initializeHttpServer(
+	ctx context.Context,
+	config *Configuration,
+	register *identity_service_api.GrpcServiceRegister,
+) (*http.Server, error) {
 	// Create a client connection to the gRPC server we just started
 	// This is where the gRPC-Gateway proxies the requests
 
@@ -370,7 +441,7 @@ func main() {
 		),
 	)
 	if err != nil {
-		log.Error("Failed to dial server:", err)
+		return nil, fmt.Errorf("failed to dial server: %w", err)
 	}
 
 	gwOpts := []runtime.ServeMuxOption{
@@ -381,7 +452,7 @@ func main() {
 
 	err = register.RegisterHttpHandlers(ctx, gwmux, conn)
 	if err != nil {
-		log.Error(err)
+		return nil, fmt.Errorf("failed to register HTTP handlers: %w", err)
 	}
 
 	// Setup cors for dev
@@ -418,23 +489,5 @@ func main() {
 		ReadHeaderTimeout: time.Duration(config.HttpServerReadHeaderTimeout) * time.Second,
 	}
 
-	defer func() {
-		_ = gwServer.Shutdown(ctx)
-	}()
-
-	go func() {
-		log.Info("Serving gRPC-Gateway on:", config.ServerHttpHost)
-
-		if err := gwServer.ListenAndServe(); err != nil {
-			log.Fatal(err)
-		}
-	}()
-
-	interrupChannel := make(chan os.Signal, 1)
-	signal.Notify(interrupChannel, os.Interrupt)
-	<-interrupChannel
-
-	log.Info("Exiting the node")
-
-	cancel()
+	return gwServer, nil
 }
