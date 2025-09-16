@@ -21,17 +21,6 @@ func FromBadge(src *badgetypes.Badge) *identity_service_sdk_go.Badge {
 	}
 }
 
-func ToBadge(src *identity_service_sdk_go.Badge) *badgetypes.Badge {
-	if src == nil {
-		return nil
-	}
-
-	return &badgetypes.Badge{
-		VerifiableCredential: *ToVerifiableCredential(src.VerifiableCredential),
-		AppID:                ptrutil.DerefStr(src.AppId),
-	}
-}
-
 func FromCredentialSchema(
 	src *badgetypes.CredentialSchema,
 ) *identity_service_sdk_go.CredentialSchema {
@@ -42,19 +31,6 @@ func FromCredentialSchema(
 	return &identity_service_sdk_go.CredentialSchema{
 		Type: ptrutil.Ptr(src.Type),
 		Id:   ptrutil.Ptr(src.ID),
-	}
-}
-
-func ToCredentialSchema(
-	src *identity_service_sdk_go.CredentialSchema,
-) *badgetypes.CredentialSchema {
-	if src == nil {
-		return nil
-	}
-
-	return &badgetypes.CredentialSchema{
-		Type: ptrutil.DerefStr(src.Type),
-		ID:   ptrutil.DerefStr(src.Id),
 	}
 }
 
@@ -85,18 +61,6 @@ func FromProof(src *badgetypes.Proof) *identity_service_sdk_go.Proof {
 	}
 }
 
-func ToProof(src *identity_service_sdk_go.Proof) *badgetypes.Proof {
-	if src == nil {
-		return nil
-	}
-
-	return &badgetypes.Proof{
-		Type:         ptrutil.DerefStr(src.Type),
-		ProofPurpose: ptrutil.DerefStr(src.ProofPurpose),
-		ProofValue:   ptrutil.DerefStr(src.ProofValue),
-	}
-}
-
 func FromVerifiableCredential(
 	src *badgetypes.VerifiableCredential,
 ) *identity_service_sdk_go.VerifiableCredential {
@@ -124,29 +88,6 @@ func FromVerifiableCredential(
 	}
 }
 
-func ToVerifiableCredential(
-	src *identity_service_sdk_go.VerifiableCredential,
-) *badgetypes.VerifiableCredential {
-	if src == nil {
-		return nil
-	}
-
-	return &badgetypes.VerifiableCredential{
-		Context:           src.Context,
-		Type:              src.Type,
-		Issuer:            ptrutil.DerefStr(src.Issuer),
-		CredentialSubject: ToBadgeClaims(src.CredentialSubject),
-		ID:                ptrutil.DerefStr(src.Id),
-		IssuanceDate:      ptrutil.DerefStr(src.IssuanceDate),
-		ExpirationDate:    ptrutil.DerefStr(src.ExpirationDate),
-		CredentialSchema: convertutil.ConvertSlice(
-			src.CredentialSchema,
-			ToCredentialSchema,
-		),
-		Proof: ToProof(src.Proof),
-	}
-}
-
 func FromBadgeClaims(src *badgetypes.BadgeClaims) *identity_service_sdk_go.BadgeClaims {
 	if src == nil {
 		return nil
@@ -155,17 +96,6 @@ func FromBadgeClaims(src *badgetypes.BadgeClaims) *identity_service_sdk_go.Badge
 	return &identity_service_sdk_go.BadgeClaims{
 		Id:    ptrutil.Ptr(src.ID),
 		Badge: ptrutil.Ptr(src.Badge),
-	}
-}
-
-func ToBadgeClaims(src *identity_service_sdk_go.BadgeClaims) *badgetypes.BadgeClaims {
-	if src == nil {
-		return nil
-	}
-
-	return &badgetypes.BadgeClaims{
-		ID:    ptrutil.DerefStr(src.Id),
-		Badge: ptrutil.DerefStr(src.Badge),
 	}
 }
 

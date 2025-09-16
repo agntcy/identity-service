@@ -16,10 +16,6 @@ func UnauthorizedError(err error) error {
 	return status.Errorf(codes.Unauthenticated, "%v", err)
 }
 
-func UnimplementedError(err error) error {
-	return status.Errorf(codes.Unimplemented, "%v", err)
-}
-
 func BadRequestError(err error) error {
 	return status.Errorf(codes.InvalidArgument, "%v", err)
 }

@@ -31,9 +31,9 @@ func (f *idpFactory) Create(
 	case types.IDP_TYPE_DUO:
 		idp = NewDuoIdp(issuerSettings.DuoIdpSettings)
 	case types.IDP_TYPE_OKTA:
-		idp = &OktaIdp{issuerSettings.OktaIdpSettings, nil}
+		idp = NewOktaIdp(issuerSettings.OktaIdpSettings)
 	case types.IDP_TYPE_ORY:
-		idp = &OryIdp{issuerSettings.OryIdpSettings, nil}
+		idp = NewOryIdp(issuerSettings.OryIdpSettings)
 	case types.IDP_TYPE_SELF:
 		idp = NewSelfIdp()
 	default:

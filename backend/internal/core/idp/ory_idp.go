@@ -17,7 +17,6 @@ import (
 )
 
 const (
-	oryTimeout                = 10 // seconds
 	oryClientName             = "ory-client"
 	oryClientCredentials      = "client_credentials"
 	oryToken                  = "token"
@@ -26,7 +25,6 @@ const (
 
 type OryIdp struct {
 	settings *types.OryIdpSettings
-	api      *orysdk.OAuth2Client
 }
 
 func NewOryIdp(settings *types.OryIdpSettings) Idp {
