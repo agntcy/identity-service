@@ -2,8 +2,8 @@
 # SPDX-License-Identifier: Apache-2.0
 
 apiVersion: v2
-name: pyramid-backend
-description: A Helm chart for pyramid backend
+name: identity-service-backend
+description: A Helm chart for identity-service backend
 type: application
 version: 0.1.7
 appVersion: "0.0.1"
