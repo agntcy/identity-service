@@ -107,8 +107,6 @@ func (d *discoveryClient) Discover(
 		)
 	}
 
-	log.Debug("Discovered ", len(toolsList.Tools), " tools from MCP server")
-
 	// Give it a timeout to discover resources
 	rCtx, rCancel := context.WithTimeout(ctx, mcpResourcesDiscoveryTimeout)
 	defer rCancel()
@@ -134,7 +132,7 @@ func (d *discoveryClient) Discover(
 		availableTools = append(availableTools, tool)
 	}
 
-	log.Debug("Discovered ", len(availableTools), " tools from MCP server")
+	log.Debug(fmt.Sprintf("Discovered %d tools from MCP server", len(availableTools)))
 
 	// Get the first batch of resources
 	availableResources := make([]*McpResource, 0)
@@ -146,7 +144,7 @@ func (d *discoveryClient) Discover(
 		}
 	}
 
-	log.Debug("Discovered ", len(availableResources), " resources from MCP server")
+	log.Debug(fmt.Sprintf("Discovered %d resources from MCP server", len(availableResources)))
 
 	safeUrl, err := d.extractSafeURL(url)
 	if err != nil {

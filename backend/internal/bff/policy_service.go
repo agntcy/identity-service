@@ -89,7 +89,7 @@ func (s *policyService) CreatePolicy(
 	name, description, assignedTo string,
 ) (*policytypes.Policy, error) {
 	if name == "" {
-		return nil, errors.New("name cannot be empty")
+		return nil, errors.New("policy name cannot be empty")
 	}
 
 	err := s.validateAppIDs(ctx, assignedTo)
@@ -121,7 +121,7 @@ func (s *policyService) CreateRule(
 	action policytypes.RuleAction,
 ) (*policytypes.Rule, error) {
 	if name == "" {
-		return nil, errors.New("name cannot be empty")
+		return nil, errors.New("rule name cannot be empty")
 	}
 
 	if action == policytypes.RULE_ACTION_UNSPECIFIED {
@@ -236,7 +236,7 @@ func (s *policyService) UpdatePolicy(
 	assignedTo string,
 ) (*policytypes.Policy, error) {
 	if name == "" {
-		return nil, errors.New("name cannot be empty")
+		return nil, errors.New("policy name cannot be empty")
 	}
 
 	policy, err := s.policyRepository.GetPolicyByID(ctx, id)
@@ -273,7 +273,7 @@ func (s *policyService) UpdateRule(
 	action policytypes.RuleAction,
 ) (*policytypes.Rule, error) {
 	if name == "" {
-		return nil, errors.New("name cannot be empty")
+		return nil, errors.New("rule name cannot be empty")
 	}
 
 	if action == policytypes.RULE_ACTION_UNSPECIFIED {
