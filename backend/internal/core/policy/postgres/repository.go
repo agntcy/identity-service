@@ -16,7 +16,6 @@ import (
 	"github.com/outshift/identity-service/internal/core/policy/types"
 	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
 	"github.com/outshift/identity-service/internal/pkg/convertutil"
-	"github.com/outshift/identity-service/internal/pkg/errutil"
 	"github.com/outshift/identity-service/internal/pkg/gormutil"
 	"github.com/outshift/identity-service/internal/pkg/pagination"
 	"github.com/outshift/identity-service/internal/pkg/pgutil"
@@ -44,9 +43,7 @@ func (r *repository) Create(ctx context.Context, policy *types.Policy) error {
 
 	result := r.dbContext.Create(model)
 	if result.Error != nil {
-		return errutil.Err(
-			result.Error, "there was an error creating the policy",
-		)
+		return fmt.Errorf("there was an error creating the policy: %w", result.Error)
 	}
 
 	return nil
@@ -62,9 +59,7 @@ func (r *repository) CreateRule(ctx context.Context, rule *types.Rule) error {
 
 	result := r.dbContext.Create(model)
 	if result.Error != nil {
-		return errutil.Err(
-			result.Error, "there was an error creating the rule",
-		)
+		return fmt.Errorf("there was an error creating the rule: %w", result.Error)
 	}
 
 	return nil
@@ -89,9 +84,7 @@ func (r *repository) CreateTasks(ctx context.Context, tasks ...*types.Task) erro
 		return nil
 	})
 	if err != nil {
-		return errutil.Err(
-			err, "there was an error creating the tasks",
-		)
+		return fmt.Errorf("there was an error creating the tasks: %w", err)
 	}
 
 	return nil
@@ -145,9 +138,7 @@ func (r *repository) UpdateTasks(ctx context.Context, tasks ...*types.Task) erro
 		return nil
 	})
 	if err != nil {
-		return errutil.Err(
-			err, "there was an error updating the tasks",
-		)
+		return fmt.Errorf("there was an error updating the tasks: %w", err)
 	}
 
 	return nil
@@ -179,9 +170,7 @@ func (r *repository) DeletePolicies(ctx context.Context, policies ...*types.Poli
 		return nil
 	})
 	if err != nil {
-		return errutil.Err(
-			err, "there was an error deleting the policies",
-		)
+		return fmt.Errorf("there was an error deleting the policies: %w", err)
 	}
 
 	return nil
@@ -215,9 +204,7 @@ func (r *repository) DeleteRules(ctx context.Context, rules ...*types.Rule) erro
 		return nil
 	})
 	if err != nil {
-		return errutil.Err(
-			err, "there was an error deleting the rules",
-		)
+		return fmt.Errorf("there was an error deleting the rules: %w", err)
 	}
 
 	return nil
@@ -242,9 +229,7 @@ func (r *repository) DeleteTasks(ctx context.Context, tasks ...*types.Task) erro
 		return nil
 	})
 	if err != nil {
-		return errutil.Err(
-			err, "there was an error deleting the tasks",
-		)
+		return fmt.Errorf("there was an error deleting the tasks: %w", err)
 	}
 
 	return nil
@@ -270,7 +255,7 @@ func (r *repository) GetPolicyByID(ctx context.Context, id string) (*types.Polic
 		First(&policy).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errutil.Err(err, "policy not found")
+			return nil, policycore.ErrPolicyNotFound
 		}
 
 		return nil, fmt.Errorf("unable to fetch policy: %w", err)
@@ -293,7 +278,7 @@ func (r *repository) GetPoliciesByAppID(
 		Find(&policies).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errutil.Err(err, "no policy was found")
+			return nil, policycore.ErrPolicyNotFound
 		}
 
 		return nil, fmt.Errorf("unable to fetch policies: %w", err)
@@ -321,7 +306,7 @@ func (r *repository) GetRuleByID(
 		First(&rule).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errutil.Err(err, "rule not found")
+			return nil, policycore.ErrRuleNotFound
 		}
 
 		return nil, fmt.Errorf("unable to fetch rule: %w", err)
@@ -339,10 +324,10 @@ func (r *repository) GetTasksByAppID(ctx context.Context, appID string) ([]*type
 		Find(&tasks)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			return nil, errutil.Err(result.Error, "tasks not found")
+			return nil, policycore.ErrTaskNotFound
 		}
 
-		return nil, errutil.Err(result.Error, "there was an error fetching the tasks")
+		return nil, fmt.Errorf("unable to fetch tasks by app ID: %w", result.Error)
 	}
 
 	return convertutil.ConvertSlice(tasks, func(task *Task) *types.Task {
@@ -365,10 +350,10 @@ func (r *repository) GetTasksPerAppType(
 	result := dbQuery.Joins("App").Find(&tasks)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			return nil, errutil.Err(result.Error, "tasks not found")
+			return nil, policycore.ErrTaskNotFound
 		}
 
-		return nil, errutil.Err(result.Error, "there was an error fetching the tasks")
+		return nil, fmt.Errorf("unable to fetch tasks per app type: %w", result.Error)
 	}
 
 	tasksPerAppType := make(map[apptypes.AppType][]*types.Task)
@@ -387,10 +372,10 @@ func (r *repository) GetTasksByID(ctx context.Context, ids []string) ([]*types.T
 		Find(&tasks, ids)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			return nil, errutil.Err(result.Error, "tasks not found")
+			return nil, policycore.ErrTaskNotFound
 		}
 
-		return nil, errutil.Err(result.Error, "there was an error fetching the tasks")
+		return nil, fmt.Errorf("unable to fetch tasks: %w", result.Error)
 	}
 
 	return convertutil.ConvertSlice(tasks, func(task *Task) *types.Task {
@@ -480,17 +465,17 @@ func (r *repository) GetAllPolicies(
 		Find(&rows).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errutil.Err(err, "no policies found")
+			return nil, policycore.ErrPolicyNotFound
 		}
 
-		return nil, errutil.Err(err, "there was an error fetching the policies")
+		return nil, fmt.Errorf("unable to fetch policies: %w", err)
 	}
 
 	var totalPolicies int64
 
 	err = dbQuery.Model(&Policy{}).Distinct("policies.id").Count(&totalPolicies).Error
 	if err != nil {
-		return nil, errutil.Err(err, "there was an error fetching the policies")
+		return nil, fmt.Errorf("unable to count policies: %w", err)
 	}
 
 	policies := make([]*types.Policy, 0)
@@ -563,17 +548,17 @@ func (r *repository) GetAllRules(
 		Find(&rules).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errutil.Err(err, "no rules found")
+			return nil, policycore.ErrRuleNotFound
 		}
 
-		return nil, errutil.Err(err, "there was an error fetching the rules")
+		return nil, fmt.Errorf("unable to fetch rules: %w", err)
 	}
 
 	var totalRules int64
 
 	err = dbQuery.Model(&Rule{}).Count(&totalRules).Error
 	if err != nil {
-		return nil, errutil.Err(err, "there was an error fetching the rules")
+		return nil, fmt.Errorf("unable to count rules: %w", err)
 	}
 
 	return &pagination.Pageable[types.Rule]{
@@ -595,7 +580,7 @@ func (r *repository) CountAllPolicies(ctx context.Context) (int64, error) {
 		Count(&totalPolicies).
 		Error
 	if err != nil {
-		return 0, errutil.Err(err, "there was an error counting the policies")
+		return 0, fmt.Errorf("there was an error counting the policies: %w", err)
 	}
 
 	return totalPolicies, nil

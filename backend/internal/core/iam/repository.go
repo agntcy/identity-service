@@ -5,6 +5,7 @@ package iam
 
 import (
 	"context"
+	"errors"
 
 	"github.com/outshift/identity-service/internal/core/iam/types"
 )
@@ -27,3 +28,7 @@ type Repository interface {
 	) (*types.APIKey, error)
 	DeleteAPIKey(ctx context.Context, APIKey *types.APIKey) error
 }
+
+var (
+	ErrApiKeyNotFound = errors.New("API Key not found")
+)

@@ -5,6 +5,7 @@ package auth
 
 import (
 	"context"
+	"errors"
 
 	types "github.com/outshift/identity-service/internal/core/auth/types/int"
 )
@@ -22,3 +23,7 @@ type Repository interface {
 		deviceID, sessionID, value string,
 	) (*types.SessionDeviceOTP, error)
 }
+
+var (
+	ErrDeviceOTPNotFound = errors.New("device OTP not found")
+)

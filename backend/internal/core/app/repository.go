@@ -5,6 +5,7 @@ package app
 
 import (
 	"context"
+	"errors"
 
 	"github.com/outshift/identity-service/internal/core/app/types"
 	"github.com/outshift/identity-service/internal/pkg/pagination"
@@ -40,3 +41,7 @@ type Repository interface {
 		appIDs ...string,
 	) (map[string]types.AppStatus, error)
 }
+
+var (
+	ErrAppNotFound = errors.New("app not found")
+)

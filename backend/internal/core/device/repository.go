@@ -5,6 +5,7 @@ package device
 
 import (
 	"context"
+	"errors"
 
 	"github.com/outshift/identity-service/internal/core/device/types"
 	"github.com/outshift/identity-service/internal/pkg/pagination"
@@ -34,3 +35,7 @@ type Repository interface {
 	) (*pagination.Pageable[types.Device], error)
 	DeleteDevice(ctx context.Context, device *types.Device) error
 }
+
+var (
+	ErrDeviceNotFound = errors.New("device not found")
+)
