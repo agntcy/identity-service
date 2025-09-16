@@ -262,7 +262,7 @@ jobs:
       enable-chartmuseum: true
       enable-private-ecr: false
       enable-public-ecr: false
-      chart-path: charts/pyramid-backend
+      chart-path: charts/identity-service-backend
       # override-chart-version: ${{ needs.calculate-tags.outputs.chart_version }}
       #ecr-public-registry-alias: ${{ vars.ECR_PUBLIC_REGISTRY_ALIAS}}
     secrets:
@@ -281,7 +281,7 @@ jobs:
       enable-chartmuseum: true
       enable-private-ecr: false
       enable-public-ecr: false
-      chart-path: charts/pyramid-ui
+      chart-path: charts/identity-service-ui
       # override-chart-version: ${{ needs.calculate-tags.outputs.chart_version }}
       #ecr-public-registry-alias: ${{ vars.ECR_PUBLIC_REGISTRY_ALIAS}}
     secrets:
@@ -376,8 +376,8 @@ jobs:
     needs: [call-docker-build-push-ui, call-helm-publish-ui]
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/trigger-deploy.yaml@production
     with:
-      deployment-repo: "cisco-eti/pyramid-deployment"
-      client-payload: '{"app-repository": "${{ github.repository }}", "values-file-path": "applications/identity-pyramid-ui", "property-path": "image.tag", "deployment-stage": "dev", "default-deployment": true, "value": ""}'
+      deployment-repo: "cisco-eti/identity-service-deployment"
+      client-payload: '{"app-repository": "${{ github.repository }}", "values-file-path": "applications/identity-identity-service-ui", "property-path": "image.tag", "deployment-stage": "dev", "default-deployment": true, "value": ""}'
     secrets:
       ghcr-username: ${{ secrets.GHCR_USERNAME }}
       ghcr-token: ${{ secrets.GHCR_TOKEN }}
@@ -392,8 +392,8 @@ jobs:
     needs: [call-docker-build-push-backend, call-helm-publish-backend]
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/trigger-deploy.yaml@production
     with:
-      deployment-repo: "cisco-eti/pyramid-deployment"
-      client-payload: '{"app-repository": "${{ github.repository }}", "values-file-path": "applications/identity-pyramid-backend", "property-path": "image.tag", "deployment-stage": "dev", "default-deployment": true, "value": ""}'
+      deployment-repo: "cisco-eti/identity-service-deployment"
+      client-payload: '{"app-repository": "${{ github.repository }}", "values-file-path": "applications/identity-identity-service-backend", "property-path": "image.tag", "deployment-stage": "dev", "default-deployment": true, "value": ""}'
     secrets:
       ghcr-username: ${{ secrets.GHCR_USERNAME }}
       ghcr-token: ${{ secrets.GHCR_TOKEN }}
@@ -408,7 +408,7 @@ jobs:
     needs: [call-docker-build-push-docs, call-helm-publish-docs]
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/trigger-deploy.yaml@production
     with:
-      deployment-repo: "cisco-eti/pyramid-deployment"
+      deployment-repo: "cisco-eti/identity-service-deployment"
       client-payload: '{"app-repository": "${{ github.repository }}", "values-file-path": "applications/identity-docs", "property-path": "image.tag", "deployment-stage": "dev", "default-deployment": true, "value": ""}'
     secrets:
       ghcr-username: ${{ secrets.GHCR_USERNAME }}
@@ -424,7 +424,7 @@ jobs:
     needs: [call-docker-build-push-mcp-server-currency-exchange, call-helm-publish-mcp-server-currency-exchange]
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/trigger-deploy.yaml@production
     with:
-      deployment-repo: "cisco-eti/pyramid-deployment"
+      deployment-repo: "cisco-eti/identity-service-deployment"
       client-payload: '{"app-repository": "${{ github.repository }}", "values-file-path": "applications/identity-sample-currency-exchange-mcp", "property-path": "image.tag", "deployment-stage": "dev", "default-deployment": true, "value": ""}'
     secrets:
       ghcr-username: ${{ secrets.GHCR_USERNAME }}
@@ -440,7 +440,7 @@ jobs:
     needs: [call-docker-build-push-a2a-agent-currency-exchange, call-helm-publish-identity-sample-currency-exchange-a2a]
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/trigger-deploy.yaml@production
     with:
-      deployment-repo: "cisco-eti/pyramid-deployment"
+      deployment-repo: "cisco-eti/identity-service-deployment"
       client-payload: '{"app-repository": "${{ github.repository }}", "values-file-path": "applications/identity-sample-currency-exchange-a2a", "property-path": "image.tag", "deployment-stage": "dev", "default-deployment": true, "value": ""}'
     secrets:
       ghcr-username: ${{ secrets.GHCR_USERNAME }}
@@ -456,7 +456,7 @@ jobs:
     needs: [call-docker-build-push-oasf-agent-financial-assistant, call-helm-publish-identity-sample-financial-assist-oasf]
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/trigger-deploy.yaml@production
     with:
-      deployment-repo: "cisco-eti/pyramid-deployment"
+      deployment-repo: "cisco-eti/identity-service-deployment"
       client-payload: '{"app-repository": "${{ github.repository }}", "values-file-path": "applications/identity-sample-financial-assist-oasf", "property-path": "image.tag", "deployment-stage": "dev", "default-deployment": true, "value": ""}'
     secrets:
       ghcr-username: ${{ secrets.GHCR_USERNAME }}

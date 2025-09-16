@@ -61,7 +61,7 @@ func NewVaultKeyStore(
 func NewAwsSmKeyStore(awsCfg *aws.Config, kmsKeyID *string) (KeyStore, error) {
 	config := keystore.AwsSmStorageConfig{
 		AwsCfg:      awsCfg,
-		MountPath:   "pyramid",
+		MountPath:   "identity-service",
 		KeyBasePath: "keys",
 		KmsKeyID:    kmsKeyID,
 	}

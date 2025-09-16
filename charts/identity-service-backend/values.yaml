@@ -1,0 +1,119 @@
+# Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
+replicaCount: 1
+
+image:
+  repository: ""
+  pullPolicy: IfNotPresent
+  tag: ""
+
+namespace: ""
+imagePullSecrets: []
+
+service:
+  type: ClusterIP
+  http:
+    port: 4000
+    targetPort: 4000
+  grpc:
+    port: 4001
+    targetPort: 4001
+
+ingress:
+  enabled: true
+  className: nginx-internal
+  annotations:
+    grpc:
+      kubernetes.io/ingress.class: nginx-internal
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
+      cert-manager.io/cluster-issuer: letsencrypt
+    http:
+      kubernetes.io/ingress.class: nginx-internal
+      nginx.ingress.kubernetes.io/rewrite-target: /
+      cert-manager.io/cluster-issuer: letsencrypt
+
+  domainPrefixHttp: api.identity-service
+  domainPrefixGrpc: api.grpc.identity-service
+  apiDomainName: ""
+
+externalSecrets:
+  secretStoreName: ""
+  secretStoreKind: ClusterSecretStore
+  data:
+    - secretKey: IAM_ADMIN_API_KEY
+      remoteRef:
+        key: ""
+        property: IAM_ADMIN_API_KEY
+    - secretKey: VAULT_DEV_ROOT_TOKEN
+      remoteRef:
+        key: ""
+        property: VAULT_DEV_ROOT_TOKEN
+
+configmap:
+  SERVER_HTTP_HOST: ":4003"
+  SERVER_GRPC_HOST: ":4002"
+  GO_ENV: "development"
+  LOG_LEVEL: "DebugLevel"
+  API_URL: ""
+  DB_HOST: "identity-service-postgresql"
+  DB_PORT: "5432"
+  DB_USERNAME: "identity-service"
+  DB_NAME: "identity-service"
+
+  VAULT_HOST: "0.0.0.0"
+  VAULT_PORT: "8200"
+  VAULT_USE_SSL: "false"
+
+  IDENTITY_HOST: "0.0.0.0"
+  IDENTITY_PORT: "4000"
+
+  IAM_PRODUCT_ID: ""
+  IAM_API_URL: ""
+  IAM_ISSUER: ""
+  IAM_USER_CID: ""
+  IAM_API_KEY_CID: ""
+
+serviceAccount:
+  create: true
+  name: ""
+
+postgresql:
+  fullnameOverride: "identity-service-postgresql"
+  enabled: true
+  auth:
+    enablePostgresUser: true
+    username: identity-service
+    database: identity-service
+  persistence:
+    enabled: true
+    size: 10Gi
+
+vault:
+  fullnameOverride: "identity-vault"
+  server:
+    enabled: true
+    image:
+      repository: hashicorp/vault
+      tag: latest
+    extraArgs: "-config=/vault/config/config.hcl"
+    ports:
+      http: 8200
+    volumes:
+      - name: vault-logs
+        emptyDir: {}
+      - name: vault-certs
+        emptyDir: {}
+      - name: vault-file
+        emptyDir: {}
+    volumeMounts:
+      - name: vault-logs
+        mountPath: /vault/logs
+      - name: vault-certs
+        mountPath: /certs
+      - name: vault-file
+        mountPath: /vault/file
+    capabilities:
+      add:
+        - IPC_LOCK

@@ -215,7 +215,7 @@ jobs:
     needs: [call-docker-build-push-mcp-server-currency-exchange, call-helm-publish-mcp-server-currency-exchange]
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/trigger-deploy.yaml@production
     with:
-      deployment-repo: "cisco-eti/pyramid-deployment"
+      deployment-repo: "cisco-eti/identity-service-deployment"
       client-payload: '{"app-repository": "${{ github.repository }}", "values-file-path": "applications/identity-sample-currency-exchange-mcp", "property-path": "image.tag", "deployment-stage": "staging", "default-deployment": true, "value": "${{ github.ref_name }}"}'
     secrets:
       ghcr-username: ${{ secrets.GHCR_USERNAME }}
@@ -231,7 +231,7 @@ jobs:
     needs: [call-docker-build-push-a2a-agent-currency-exchange, call-helm-publish-identity-sample-currency-exchange-a2a]
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/trigger-deploy.yaml@production
     with:
-      deployment-repo: "cisco-eti/pyramid-deployment"
+      deployment-repo: "cisco-eti/identity-service-deployment"
       client-payload: '{"app-repository": "${{ github.repository }}", "values-file-path": "applications/identity-sample-currency-exchange-a2a", "property-path": "image.tag", "deployment-stage": "staging", "default-deployment": true, "value": "${{ github.ref_name }}"}'
     secrets:
       ghcr-username: ${{ secrets.GHCR_USERNAME }}
@@ -247,7 +247,7 @@ jobs:
     needs: [call-docker-build-push-oasf-agent-financial-assistant, call-helm-publish-identity-sample-financial-assist-oasf]
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/trigger-deploy.yaml@production
     with:
-      deployment-repo: "cisco-eti/pyramid-deployment"
+      deployment-repo: "cisco-eti/identity-service-deployment"
       client-payload: '{"app-repository": "${{ github.repository }}", "values-file-path": "applications/identity-sample-financial-assist-oasf", "property-path": "image.tag", "deployment-stage": "staging", "default-deployment": true, "value": "${{ github.ref_name }}"}'
     secrets:
       ghcr-username: ${{ secrets.GHCR_USERNAME }}

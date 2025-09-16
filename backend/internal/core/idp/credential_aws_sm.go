@@ -31,7 +31,10 @@ func NewAwsSmCredentialStore(cfg *aws.Config, kmsKeyID *string) (CredentialStore
 	}, nil
 }
 
-func (s *AwsSmCredentialStore) Get(ctx context.Context, subject string) (*ClientCredentials, error) {
+func (s *AwsSmCredentialStore) Get(
+	ctx context.Context,
+	subject string,
+) (*ClientCredentials, error) {
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
 		return nil, identitycontext.ErrTenantNotFound
@@ -58,7 +61,11 @@ func (s *AwsSmCredentialStore) Get(ctx context.Context, subject string) (*Client
 	return &cred, nil
 }
 
-func (s *AwsSmCredentialStore) Put(ctx context.Context, cred *ClientCredentials, subject string) error {
+func (s *AwsSmCredentialStore) Put(
+	ctx context.Context,
+	cred *ClientCredentials,
+	subject string,
+) error {
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
 		return identitycontext.ErrTenantNotFound
@@ -98,5 +105,5 @@ func (s *AwsSmCredentialStore) Delete(ctx context.Context, subject string) error
 }
 
 func (*AwsSmCredentialStore) getSecretPath(tenantID, subject string) string {
-	return fmt.Sprintf("pyramid/%s/%s/%s", mountPath, tenantID, subject)
+	return fmt.Sprintf("identity-service/%s/%s/%s", mountPath, tenantID, subject)
 }

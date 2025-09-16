@@ -75,7 +75,7 @@ nvm use
 ```bash
 # Clone the repository
 git clone <repository-url>
-cd pyramid-saas/frontend
+cd identity-service/frontend
 
 # Install dependencies
 yarn install

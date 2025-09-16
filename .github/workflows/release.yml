@@ -235,7 +235,7 @@ jobs:
       enable-chartmuseum: true
       enable-private-ecr: false
       enable-public-ecr: false
-      chart-path: charts/pyramid-backend
+      chart-path: charts/identity-service-backend
       # override-chart-version: ${{ needs.calculate-tags.outputs.chart_version }}
       #ecr-public-registry-alias: ${{ vars.ECR_PUBLIC_REGISTRY_ALIAS}}
     secrets:
@@ -254,7 +254,7 @@ jobs:
       enable-chartmuseum: true
       enable-private-ecr: false
       enable-public-ecr: false
-      chart-path: charts/pyramid-ui
+      chart-path: charts/identity-service-ui
       # override-chart-version: ${{ needs.calculate-tags.outputs.chart_version }}
       #ecr-public-registry-alias: ${{ vars.ECR_PUBLIC_REGISTRY_ALIAS}}
     secrets:
@@ -292,7 +292,7 @@ jobs:
     needs: [call-docker-build-push-ui, call-helm-publish-ui]
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/trigger-deploy.yaml@production
     with:
-      deployment-repo: "cisco-eti/pyramid-deployment"
+      deployment-repo: "cisco-eti/identity-service-deployment"
       client-payload: '{"app-repository": "${{ github.repository }}", "values-file-path": "applications/identity-ui", "property-path": "image.tag", "deployment-stage": "staging", "default-deployment": true, "value": "${{ github.ref_name }}"}'
     secrets:
       ghcr-username: ${{ secrets.GHCR_USERNAME }}
@@ -308,7 +308,7 @@ jobs:
     needs: [call-docker-build-push-backend, call-helm-publish-backend]
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/trigger-deploy.yaml@production
     with:
-      deployment-repo: "cisco-eti/pyramid-deployment"
+      deployment-repo: "cisco-eti/identity-service-deployment"
       client-payload: '{"app-repository": "${{ github.repository }}", "values-file-path": "applications/identity-backend", "property-path": "image.tag", "deployment-stage": "staging", "default-deployment": true, "value": "${{ github.ref_name }}"}'
     secrets:
       ghcr-username: ${{ secrets.GHCR_USERNAME }}
@@ -324,7 +324,7 @@ jobs:
     needs: [call-docker-build-push-docs, call-helm-publish-docs]
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/trigger-deploy.yaml@production
     with:
-      deployment-repo: "cisco-eti/pyramid-deployment"
+      deployment-repo: "cisco-eti/identity-service-deployment"
       client-payload: '{"app-repository": "${{ github.repository }}", "values-file-path": "applications/identity-docs", "property-path": "image.tag", "deployment-stage": "staging", "default-deployment": true, "value": "${{ github.ref_name }}"}'
     secrets:
       ghcr-username: ${{ secrets.GHCR_USERNAME }}
