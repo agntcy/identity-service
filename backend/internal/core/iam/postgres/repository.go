@@ -12,6 +12,7 @@ import (
 	"github.com/outshift/identity-service/internal/core/iam/types"
 	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
 	"github.com/outshift/identity-service/internal/pkg/errutil"
+	"github.com/outshift/identity-service/internal/pkg/gormutil"
 	"github.com/outshift/identity-service/internal/pkg/ptrutil"
 	"github.com/outshift/identity-service/internal/pkg/secrets"
 	"gorm.io/gorm"
@@ -70,15 +71,9 @@ func (r *repository) GetAPIKeyByTenant(
 ) (*types.APIKey, error) {
 	var apiKey APIKey
 
-	// Get the tenant ID from the context
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return nil, identitycontext.ErrTenantNotFound
-	}
-
 	// The tenant API key is the one without an associated app
 	result := r.dbContext.
-		Where("tenant_id = ?", tenantID).
+		Scopes(gormutil.BelongsToTenant(ctx)).
 		Where("app_id IS NULL").
 		First(&apiKey)
 
@@ -110,14 +105,8 @@ func (r *repository) GetAPIKeyByApp(
 
 	var apiKey APIKey
 
-	// Get the tenant ID from the context
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return nil, identitycontext.ErrTenantNotFound
-	}
-
 	result := r.dbContext.
-		Where("tenant_id = ?", tenantID).
+		Scopes(gormutil.BelongsToTenant(ctx)).
 		Where("app_id = ?", appID).
 		First(&apiKey)
 
@@ -149,14 +138,8 @@ func (r *repository) GetAPIKeyBySecret(
 
 	var apiKey APIKey
 
-	// Get the tenant ID from the context
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return nil, identitycontext.ErrTenantNotFound
-	}
-
 	result := r.dbContext.
-		Where("tenant_id = ?", tenantID).
+		Scopes(gormutil.BelongsToTenant(ctx)).
 		Where("secret = ?", secrets.NewEncryptedString(ptrutil.Ptr(secret), r.crypter)).
 		First(&apiKey)
 
@@ -176,15 +159,10 @@ func (r *repository) GetAPIKeyBySecret(
 }
 
 func (r *repository) DeleteAPIKey(ctx context.Context, apiKey *types.APIKey) error {
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return identitycontext.ErrTenantNotFound
-	}
-
 	// This will make a soft delete since the entity has a DeletedAt field
 	// https://gorm.io/docs/delete.html#Soft-Delete
 	err := r.dbContext.
-		Where("tenant_id = ?", tenantID).
+		Scopes(gormutil.BelongsToTenant(ctx)).
 		Delete(newAPIKeyModel(apiKey, r.crypter)).Error
 	if err != nil {
 		return errutil.Err(err, fmt.Sprintf("cannot delete APIKey %s", apiKey.ID))

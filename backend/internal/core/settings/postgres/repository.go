@@ -11,6 +11,7 @@ import (
 	"github.com/outshift/identity-service/internal/core/settings/types"
 	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
 	"github.com/outshift/identity-service/internal/pkg/errutil"
+	"github.com/outshift/identity-service/internal/pkg/gormutil"
 	"github.com/outshift/identity-service/internal/pkg/secrets"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -58,7 +59,7 @@ func (r *repository) UpdateIssuerSettings(
 	}
 
 	updated := r.dbContext.
-		Where("tenant_id = ?", existingSettings.TenantID).
+		Scopes(gormutil.BelongsToTenant(ctx)).
 		Updates(existingSettings)
 	if updated.Error != nil {
 		return nil, errutil.Err(
@@ -95,9 +96,8 @@ func (r *repository) getOrCreateIssuerSettings(
 
 	result := r.dbContext.
 		Preload(clause.Associations).
-		First(&issuerSettings, map[string]any{
-			"tenant_id": tenantID,
-		})
+		Scopes(gormutil.BelongsToTenant(ctx)).
+		First(&issuerSettings)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 			// Create a new IssuerSettings if not found

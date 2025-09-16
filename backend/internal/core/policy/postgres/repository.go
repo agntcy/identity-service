@@ -260,17 +260,13 @@ func (r *repository) DeleteTasksByAppID(ctx context.Context, appID string) error
 }
 
 func (r *repository) GetPolicyByID(ctx context.Context, id string) (*types.Policy, error) {
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return nil, identitycontext.ErrTenantNotFound
-	}
-
 	var policy Policy
 
 	err := r.dbContext.
 		Preload("Rules").
 		Preload("Rules.Tasks").
-		Where("policies.id = ? AND policies.tenant_id = ?", id, tenantID).
+		Scopes(gormutil.BelongsToTenantForTable(ctx, "policies")).
+		Where("policies.id = ?", id).
 		First(&policy).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -287,17 +283,13 @@ func (r *repository) GetPoliciesByAppID(
 	ctx context.Context,
 	appID string,
 ) ([]*types.Policy, error) {
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return nil, identitycontext.ErrTenantNotFound
-	}
-
 	policies := make([]*Policy, 0)
 
 	err := r.dbContext.
 		Preload("Rules").
 		Preload("Rules.Tasks").
-		Where("policies.assigned_to = ? AND policies.tenant_id = ?", appID, tenantID).
+		Scopes(gormutil.BelongsToTenantForTable(ctx, "policies")).
+		Where("policies.assigned_to = ?", appID).
 		Find(&policies).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -316,20 +308,15 @@ func (r *repository) GetRuleByID(
 	ctx context.Context,
 	ruleID, policyID string,
 ) (*types.Rule, error) {
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return nil, identitycontext.ErrTenantNotFound
-	}
-
 	var rule Rule
 
 	err := r.dbContext.
 		Preload("Tasks").
+		Scopes(gormutil.BelongsToTenantForTable(ctx, "rules")).
 		Where(
-			"rules.id = ? AND rules.policy_id = ? AND rules.tenant_id = ?",
+			"rules.id = ? AND rules.policy_id = ?",
 			ruleID,
 			policyID,
-			tenantID,
 		).
 		First(&rule).Error
 	if err != nil {
@@ -346,13 +333,9 @@ func (r *repository) GetRuleByID(
 func (r *repository) GetTasksByAppID(ctx context.Context, appID string) ([]*types.Task, error) {
 	var tasks []*Task
 
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return nil, identitycontext.ErrTenantNotFound
-	}
-
 	result := r.dbContext.
-		Where("app_id = ? AND tenant_id = ?", appID, tenantID).
+		Scopes(gormutil.BelongsToTenant(ctx)).
+		Where("app_id = ?", appID).
 		Find(&tasks)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
@@ -373,12 +356,7 @@ func (r *repository) GetTasksPerAppType(
 ) (map[apptypes.AppType][]*types.Task, error) {
 	var tasks []*Task
 
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return nil, identitycontext.ErrTenantNotFound
-	}
-
-	dbQuery := r.dbContext.Where("tasks.tenant_id = ?", tenantID)
+	dbQuery := r.dbContext.Scopes(gormutil.BelongsToTenantForTable(ctx, "tasks"))
 
 	if len(excludeAppIDs) > 0 {
 		dbQuery = dbQuery.Where("tasks.app_id NOT IN (?)", excludeAppIDs)
@@ -404,12 +382,9 @@ func (r *repository) GetTasksPerAppType(
 func (r *repository) GetTasksByID(ctx context.Context, ids []string) ([]*types.Task, error) {
 	var tasks []*Task
 
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return nil, identitycontext.ErrTenantNotFound
-	}
-
-	result := r.dbContext.Where("tenant_id = ?", tenantID).Find(&tasks, ids)
+	result := r.dbContext.
+		Scopes(gormutil.BelongsToTenant(ctx)).
+		Find(&tasks, ids)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 			return nil, errutil.Err(result.Error, "tasks not found")
@@ -568,12 +543,9 @@ func (r *repository) GetAllRules(
 	paginationFilter pagination.PaginationFilter,
 	query *string,
 ) (*pagination.Pageable[types.Rule], error) {
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return nil, identitycontext.ErrTenantNotFound
-	}
-
-	dbQuery := r.dbContext.Where("tenant_id = ? AND policy_id = ?", tenantID, policyID)
+	dbQuery := r.dbContext.
+		Scopes(gormutil.BelongsToTenant(ctx)).
+		Where(" policy_id = ?", policyID)
 
 	if query != nil && *query != "" {
 		dbQuery = dbQuery.Where(
@@ -615,16 +587,11 @@ func (r *repository) GetAllRules(
 }
 
 func (r *repository) CountAllPolicies(ctx context.Context) (int64, error) {
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return 0, identitycontext.ErrTenantNotFound
-	}
-
 	var totalPolicies int64
 
 	err := r.dbContext.
 		Model(&Policy{}).
-		Where("tenant_id = ?", tenantID).
+		Scopes(gormutil.BelongsToTenant(ctx)).
 		Count(&totalPolicies).
 		Error
 	if err != nil {

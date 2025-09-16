@@ -97,28 +97,20 @@ func (r *repository) GetDevices(
 ) ([]*types.Device, error) {
 	var devices []*Device
 
-	// Get the tenant ID from the context
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return nil, identitycontext.ErrTenantNotFound
-	}
-
 	var result *gorm.DB
 
 	// If userID is nil, we fetch all devices for the tenant
 	if userID == nil {
 		result = r.dbContext.
-			Where(
-				"tenant_id = ? AND subscription_token IS NOT NULL AND subscription_token <> ''",
-				tenantID,
-			).
+			Scopes(gormutil.BelongsToTenant(ctx)).
+			Where("subscription_token IS NOT NULL AND subscription_token <> ''").
 			Order("created_at ASC").
 			Find(&devices)
 	} else {
 		result = r.dbContext.
+			Scopes(gormutil.BelongsToTenant(ctx)).
 			Where(
-				"tenant_id = ? AND user_id = ? AND subscription_token IS NOT NULL AND subscription_token <> ''",
-				tenantID,
+				"user_id = ? AND subscription_token IS NOT NULL AND subscription_token <> ''",
 				userID,
 			).
 			Order("created_at ASC").
@@ -177,17 +169,9 @@ func (r *repository) ListRegisteredDevices(
 	paginationFilter pagination.PaginationFilter,
 	query *string,
 ) (*pagination.Pageable[types.Device], error) {
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return nil, errutil.Err(
-			nil, "failed to get tenant ID from context",
-		)
-	}
-
-	dbQuery := r.dbContext.Where(
-		"tenant_id = ? AND subscription_token IS NOT NULL AND subscription_token <> ''",
-		tenantID,
-	)
+	dbQuery := r.dbContext.
+		Scopes(gormutil.BelongsToTenant(ctx)).
+		Where("subscription_token IS NOT NULL AND subscription_token <> ''")
 
 	if query != nil && *query != "" {
 		dbQuery = dbQuery.Where(
@@ -232,11 +216,6 @@ func (r *repository) ListRegisteredDevices(
 }
 
 func (r *repository) DeleteDevice(ctx context.Context, device *types.Device) error {
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return identitycontext.ErrTenantNotFound
-	}
-
 	model := newDeviceModel(device)
 
 	err := r.dbContext.Transaction(func(tx *gorm.DB) error {
@@ -246,7 +225,7 @@ func (r *repository) DeleteDevice(ctx context.Context, device *types.Device) err
 			return err
 		}
 
-		err = tx.Where("tenant_id = ?", tenantID).
+		err = tx.Scopes(gormutil.BelongsToTenant(ctx)).
 			Delete(model).Error
 		if err != nil {
 			return err
