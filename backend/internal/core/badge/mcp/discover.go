@@ -13,7 +13,6 @@ import (
 
 	"github.com/mark3labs/mcp-go/client"
 	"github.com/mark3labs/mcp-go/mcp"
-	"github.com/outshift/identity-service/internal/pkg/errutil"
 	"github.com/outshift/identity-service/pkg/log"
 )
 
@@ -77,10 +76,7 @@ func (d *discoveryClient) Discover(
 	// Create an MCP client
 	mcpClient, err := d.createClient(url, clientType)
 	if err != nil {
-		return nil, errutil.Err(
-			err,
-			"failed to create mcp client",
-		)
+		return nil, fmt.Errorf("failed to create mcp client: %w", err)
 	}
 
 	// Initialize the client
@@ -101,10 +97,7 @@ func (d *discoveryClient) Discover(
 	// First the tools
 	toolsList, err := mcpClient.ListTools(tCtx, mcp.ListToolsRequest{})
 	if err != nil {
-		return nil, errutil.Err(
-			err,
-			"failed to discover mcp tools",
-		)
+		return nil, fmt.Errorf("failed to discover mcp tools: %w", err)
 	}
 
 	// Give it a timeout to discover resources
@@ -185,20 +178,14 @@ func (d *discoveryClient) initializeClient(ctx context.Context, mcpClient *clien
 		// Start the SSE client
 		err := mcpClient.Start(ctx)
 		if err != nil {
-			return errutil.Err(
-				err,
-				"failed to start mcp client",
-			)
+			return fmt.Errorf("failed to start mcp client: %w", err)
 		}
 	}
 
 	// Initialize the client
 	_, err := mcpClient.Initialize(ctx, mcp.InitializeRequest{})
 	if err != nil {
-		return errutil.Err(
-			err,
-			"failed to initialize mcp client",
-		)
+		return fmt.Errorf("failed to initialize mcp client: %w", err)
 	}
 
 	return nil
@@ -217,10 +204,7 @@ func (d *discoveryClient) parseTool(tool *mcp.Tool) (*McpTool, error) {
 
 	err = json.Unmarshal(jsonParams, &parameters)
 	if err != nil {
-		return nil, errutil.Err(
-			err,
-			"failed to parse MCP tools",
-		)
+		return nil, fmt.Errorf("failed to parse MCP tools: %w", err)
 	}
 
 	return &McpTool{
@@ -241,18 +225,12 @@ func (d *discoveryClient) parseResource(resource *mcp.Resource) *McpResource {
 func (d *discoveryClient) extractSafeURL(url string) (string, error) {
 	urlObj, err := urllib.Parse(url)
 	if err != nil {
-		return "", errutil.Err(
-			err,
-			"failed to parse MCP URL",
-		)
+		return "", fmt.Errorf("failed to parse MCP URL: %w", err)
 	}
 
 	safeUrl, err := urllib.JoinPath(urlObj.Scheme, urlObj.Host)
 	if err != nil {
-		return "", errutil.Err(
-			err,
-			"failed to join MCP URL",
-		)
+		return "", fmt.Errorf("failed to join MCP URL: %w", err)
 	}
 
 	return safeUrl, nil

@@ -5,7 +5,6 @@ package grpc
 
 import (
 	"context"
-	"errors"
 
 	identity_service_sdk_go "github.com/outshift/identity-service/api/server/outshift/identity/service/v1alpha1"
 	"github.com/outshift/identity-service/internal/bff"
@@ -29,7 +28,9 @@ func (s *BadgeService) IssueBadge(
 	in *identity_service_sdk_go.IssueBadgeRequest,
 ) (*identity_service_sdk_go.Badge, error) {
 	if in == nil {
-		return nil, grpcutil.BadRequestError(errors.New("request is empty"))
+		return nil, grpcutil.BadRequestError(
+			errutil.ValidationFailed("badge.invalidRequest", "Invalid request."),
+		)
 	}
 
 	options := make([]bff.IssueOption, 0)
@@ -48,7 +49,7 @@ func (s *BadgeService) IssueBadge(
 
 	badge, err := s.badgeService.IssueBadge(ctx, in.AppId, options...)
 	if err != nil {
-		return nil, grpcutil.BadRequestError(err)
+		return nil, grpcutil.Error(err)
 	}
 
 	return converters.FromBadge(badge), nil
@@ -58,19 +59,12 @@ func (s *BadgeService) VerifyBadge(
 	ctx context.Context,
 	in *identity_service_sdk_go.VerifyBadgeRequest,
 ) (*identity_service_sdk_go.VerificationResult, error) {
-	if in.Badge == "" {
-		return nil, grpcutil.BadRequestError(errors.New("badge or verifiable credential is empty"))
-	}
-
 	result, err := s.badgeService.VerifyBadge(
 		ctx,
 		&in.Badge,
 	)
 	if err != nil {
-		return nil, grpcutil.InternalError(errutil.Err(
-			err,
-			"badge verification failed",
-		))
+		return nil, grpcutil.Error(err)
 	}
 
 	return converters.FromVerificationResult(result), nil

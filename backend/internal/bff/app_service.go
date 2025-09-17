@@ -19,6 +19,7 @@ import (
 	policycore "github.com/outshift/identity-service/internal/core/policy"
 	policytypes "github.com/outshift/identity-service/internal/core/policy/types"
 	settingscore "github.com/outshift/identity-service/internal/core/settings"
+	settingstypes "github.com/outshift/identity-service/internal/core/settings/types"
 	"github.com/outshift/identity-service/internal/pkg/errutil"
 	"github.com/outshift/identity-service/internal/pkg/iam"
 	"github.com/outshift/identity-service/internal/pkg/pagination"
@@ -92,32 +93,35 @@ func (s *appService) CreateApp(
 	app *apptypes.App,
 ) (*apptypes.App, error) {
 	if app == nil {
-		return nil, errutil.Err(nil, "app cannot be nil")
+		return nil, errutil.InvalidRequest("app.invalidApp", "Application payload is invalid.")
 	}
 
 	if app.Type == apptypes.APP_TYPE_UNSPECIFIED {
-		return nil, errutil.Err(nil, "app type is required")
+		return nil, errutil.ValidationFailed("app.invalidAppType", "Application type is invalid.")
 	}
 
 	issSettings, err := s.settingsRepository.GetIssuerSettings(ctx)
 	if err != nil {
-		return nil, errutil.Err(err, "unable to fetch settings")
+		return nil, fmt.Errorf("repository failed to fetch settings: %w", err)
 	}
 
 	idp, err := s.idpFactory.Create(ctx, issSettings)
 	if err != nil {
-		return nil, errutil.Err(err, "failed to create IDP instance")
+		return nil, fmt.Errorf("failed to create IdP instance: %w", err)
 	}
 
 	clientCredentials, err := idp.CreateClientCredentialsPair(ctx)
 	if err != nil {
-		return nil, errutil.Err(err, "failed to create client credentials pair")
+		return nil, fmt.Errorf("failed to create client credentials pair: %w", err)
 	}
 
 	defer func() {
 		// Clean up client credentials if they were created.
 		if err != nil && clientCredentials != nil {
-			_ = idp.DeleteClientCredentialsPair(ctx, clientCredentials)
+			err = idp.DeleteClientCredentialsPair(ctx, clientCredentials)
+			if err != nil {
+				log.Error(err)
+			}
 		}
 	}()
 
@@ -138,17 +142,17 @@ func (s *appService) CreateApp(
 
 	err = s.credentialStore.Put(ctx, clientCredentials, app.ID)
 	if err != nil {
-		return nil, errutil.Err(err, "unable to store client credentials")
+		return nil, fmt.Errorf("unable to store client credentials: %w", err)
 	}
 
 	apiKey, err := s.iamClient.CreateAppAPIKey(ctx, app.ID)
 	if err != nil {
-		return nil, errutil.Err(err, "failed to generate an api key")
+		return nil, fmt.Errorf("failed to generate an api key: %w", err)
 	}
 
 	createdApp, err := s.appRepository.CreateApp(ctx, app)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("repository failed to create the app: %w", err)
 	}
 
 	app.ApiKey = ptrutil.DerefStr(apiKey.Secret)
@@ -161,12 +165,12 @@ func (s *appService) UpdateApp(
 	app *apptypes.App,
 ) (*apptypes.App, error) {
 	if app == nil {
-		return nil, errutil.Err(nil, "app cannot be nil")
+		return nil, errutil.InvalidRequest("app.invalidApp", "Application payload is invalid.")
 	}
 
-	storedApp, err := s.appRepository.GetApp(ctx, app.ID)
+	storedApp, err := s.getApp(ctx, app.ID)
 	if err != nil {
-		return nil, errutil.Err(err, err.Error())
+		return nil, err
 	}
 
 	storedApp.Name = app.Name
@@ -175,7 +179,7 @@ func (s *appService) UpdateApp(
 
 	err = s.appRepository.UpdateApp(ctx, storedApp)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("repository failed to update the app %s: %w", app.ID, err)
 	}
 
 	if storedApp.Type != apptypes.APP_TYPE_MCP_SERVER {
@@ -205,10 +209,10 @@ func (s *appService) GetApp(
 	id string,
 ) (*apptypes.App, error) {
 	if id == "" {
-		return nil, errutil.Err(nil, "app ID cannot be empty")
+		return nil, errutil.ValidationFailed("app.idInvalid", "Invalid application ID")
 	}
 
-	app, err := s.appRepository.GetApp(ctx, id)
+	app, err := s.getApp(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -241,7 +245,7 @@ func (s *appService) ListApps(
 
 	page, err := s.appRepository.GetAllApps(ctx, paginationFilter, query, appTypes, sortBy)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("repository failed to fetch all apps: %w", err)
 	}
 
 	err = s.populateStatues(ctx, page.Items...)
@@ -253,68 +257,91 @@ func (s *appService) ListApps(
 }
 
 func (s *appService) CountAllApps(ctx context.Context) (int64, error) {
-	return s.appRepository.CountAllApps(ctx)
+	count, err := s.appRepository.CountAllApps(ctx)
+	if err != nil {
+		return int64(0), fmt.Errorf("repository failed to count all apps: %w", err)
+	}
+
+	return count, nil
 }
 
 func (s *appService) DeleteApp(ctx context.Context, appID string) error {
-	app, err := s.appRepository.GetApp(ctx, appID)
+	if appID == "" {
+		return errutil.ValidationFailed("app.idInvalid", "Invalid application ID")
+	}
+
+	app, err := s.getApp(ctx, appID)
 	if err != nil {
-		return errutil.Err(err, err.Error())
+		return err
 	}
 
 	issSettings, err := s.settingsRepository.GetIssuerSettings(ctx)
 	if err != nil {
-		return errutil.Err(err, "unable to fetch settings")
+		return fmt.Errorf("repository failed to fetch settings: %w", err)
 	}
 
 	idp, err := s.idpFactory.Create(ctx, issSettings)
 	if err != nil {
-		return errutil.Err(err, "failed to create IDP instance")
+		return fmt.Errorf("failed to create IdP instance: %w", err)
 	}
 
 	clientCredentials, err := s.credentialStore.Get(ctx, app.ID)
 	if err == nil {
-		privKey, err := s.keyStore.RetrievePrivKey(ctx, issSettings.KeyID)
-		if err != nil {
-			return fmt.Errorf("unable to retrieve private key: %w", err)
-		}
-
-		issuer := identitycore.Issuer{
-			CommonName: issSettings.IssuerID,
-			KeyID:      issSettings.KeyID,
-		}
-
-		err = s.badgeRevoker.RevokeAll(ctx, app.ID, clientCredentials, &issuer, privKey)
+		err := s.revokeAppBadges(ctx, app.ID, issSettings, clientCredentials)
 		if err != nil {
 			return err
 		}
 
 		err = idp.DeleteClientCredentialsPair(ctx, clientCredentials)
 		if err != nil {
-			return fmt.Errorf("unable to delete client credentials: %w", err)
+			return fmt.Errorf("idp client failed to delete client credentials for app %s: %w", app.ID, err)
 		}
 	} else if !errors.Is(err, idpcore.ErrCredentialNotFound) {
-		return fmt.Errorf("unable to fetch client credentials: %w", err)
+		return fmt.Errorf("unable to fetch client credentials for app %s: %w", app.ID, err)
 	}
 
 	err = s.credentialStore.Delete(ctx, app.ID)
 	if err != nil {
-		return err
+		return fmt.Errorf("credential store failed to delete credentials for app %s: %w", app.ID, err)
 	}
 
 	err = s.policyRepository.DeletePoliciesByAppID(ctx, app.ID)
 	if err != nil {
-		return err
+		return fmt.Errorf("repository failed to delete policies for app %s: %w", app.ID, err)
 	}
 
 	err = s.policyRepository.DeleteTasksByAppID(ctx, app.ID)
 	if err != nil {
-		return err
+		return fmt.Errorf("repository failed to delete tasks for app %s: %w", app.ID, err)
 	}
 
 	err = s.appRepository.DeleteApp(ctx, app)
 	if err != nil {
-		return fmt.Errorf("unable to delete the app: %w", err)
+		return fmt.Errorf("repository failed to delete app %s: %w", app.ID, err)
+	}
+
+	return nil
+}
+
+func (s *appService) revokeAppBadges(
+	ctx context.Context,
+	appID string,
+	issSettings *settingstypes.IssuerSettings,
+	clientCredentials *idpcore.ClientCredentials,
+) error {
+	privKey, err := s.keyStore.RetrievePrivKey(ctx, issSettings.KeyID)
+	if err != nil {
+		return fmt.Errorf("unable to retrieve private key with ID %s: %w", issSettings.KeyID, err)
+	}
+
+	issuer := identitycore.Issuer{
+		CommonName: issSettings.IssuerID,
+		KeyID:      issSettings.KeyID,
+	}
+
+	err = s.badgeRevoker.RevokeAll(ctx, appID, clientCredentials, &issuer, privKey)
+	if err != nil {
+		return fmt.Errorf("unable to revoke badges for app %s: %w", appID, err)
 	}
 
 	return nil
@@ -325,24 +352,24 @@ func (s *appService) RefreshAppAPIKey(
 	appID string,
 ) (*apptypes.App, error) {
 	if appID == "" {
-		return nil, errutil.Err(nil, "app ID cannot be empty")
+		return nil, errutil.ValidationFailed("app.idInvalid", "Invalid application ID.")
 	}
 
-	app, err := s.appRepository.GetApp(ctx, appID)
+	app, err := s.getApp(ctx, appID)
 	if err != nil {
-		return nil, errutil.Err(err, "unable to fetch app")
+		return nil, err
 	}
 
 	apiKey, err := s.iamClient.RefreshAppAPIKey(ctx, app.ID)
 	if err != nil {
-		return nil, errutil.Err(err, "failed to refresh API key")
+		return nil, fmt.Errorf("iam client failed to refresh API key for app %s: %w", app.ID, err)
 	}
 
 	app.ApiKey = ptrutil.DerefStr(apiKey.Secret)
 
 	err = s.appRepository.UpdateApp(ctx, app)
 	if err != nil {
-		return nil, errutil.Err(err, "unable to update app with new API key")
+		return nil, fmt.Errorf("repository failed to update app %s with new API key: %w", app.ID, err)
 	}
 
 	return app, nil
@@ -354,10 +381,23 @@ func (s *appService) GetTasksPerAppType(
 ) (map[apptypes.AppType][]*policytypes.Task, error) {
 	tasks, err := s.policyRepository.GetTasksPerAppType(ctx, strutil.TrimSlice(excludeAppIDs)...)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("repository failed to fetch tasks per app type: %w", err)
 	}
 
 	return tasks, nil
+}
+
+func (s *appService) getApp(ctx context.Context, id string) (*apptypes.App, error) {
+	app, err := s.appRepository.GetApp(ctx, id)
+	if err != nil {
+		if errors.Is(err, appcore.ErrAppNotFound) {
+			return nil, errutil.NotFound("app.notFound", "Application not found")
+		}
+
+		return nil, fmt.Errorf("there was an error fetching the app %s: %w", id, err)
+	}
+
+	return app, nil
 }
 
 func (s *appService) populateStatues(ctx context.Context, apps ...*apptypes.App) error {
@@ -368,7 +408,7 @@ func (s *appService) populateStatues(ctx context.Context, apps ...*apptypes.App)
 
 	statuses, err := s.appRepository.GetAppStatuses(ctx, appIDs...)
 	if err != nil {
-		return fmt.Errorf("unable to fetch statuses for apps: %w", err)
+		return fmt.Errorf("repository failed to fetch statuses for apps %s: %w", appIDs, err)
 	}
 
 	for _, app := range apps {

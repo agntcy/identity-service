@@ -20,7 +20,6 @@ import (
 	"github.com/outshift/identity-service/internal/pkg/pagination"
 	"github.com/outshift/identity-service/internal/pkg/ptrutil"
 	"github.com/outshift/identity-service/internal/pkg/strutil"
-	"github.com/outshift/identity-service/pkg/log"
 )
 
 type PolicyService interface {
@@ -69,6 +68,13 @@ type PolicyService interface {
 	CountAllPolicies(ctx context.Context) (int64, error)
 }
 
+var (
+	ErrPolicyNotFound  = errutil.NotFound("policy.notFound", "Policy not found.")
+	ErrRuleNotFound    = errutil.NotFound("rule.notFound", "Rule not found.")
+	ErrInvalidPolicyID = errutil.ValidationFailed("policy.idInvalid", "Invalid policy ID.")
+	ErrInvalidRuleID   = errutil.ValidationFailed("rule.idInvalid", "Invalid rule ID.")
+)
+
 type policyService struct {
 	appRepository    appcore.Repository
 	policyRepository policycore.Repository
@@ -89,12 +95,12 @@ func (s *policyService) CreatePolicy(
 	name, description, assignedTo string,
 ) (*policytypes.Policy, error) {
 	if name == "" {
-		return nil, errors.New("policy name cannot be empty")
+		return nil, errutil.ValidationFailed("policy.invalidName", "Policy name cannot be empty.")
 	}
 
 	err := s.validateAppIDs(ctx, assignedTo)
 	if err != nil {
-		return nil, fmt.Errorf("policy is linked to an invalid app %s", assignedTo)
+		return nil, err
 	}
 
 	policy := &policytypes.Policy{
@@ -107,7 +113,7 @@ func (s *policyService) CreatePolicy(
 
 	err = s.policyRepository.Create(ctx, policy)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("repository in CreatePolicy failed to create policy: %w", err)
 	}
 
 	return policy, nil
@@ -120,17 +126,25 @@ func (s *policyService) CreateRule(
 	needsApproval bool,
 	action policytypes.RuleAction,
 ) (*policytypes.Rule, error) {
+	if policyID == "" {
+		return nil, ErrInvalidPolicyID
+	}
+
 	if name == "" {
-		return nil, errors.New("rule name cannot be empty")
+		return nil, errutil.ValidationFailed("rule.invalidName", "Rule name cannot be empty.")
 	}
 
 	if action == policytypes.RULE_ACTION_UNSPECIFIED {
-		return nil, errors.New("invalid rule action")
+		return nil, errutil.ValidationFailed("rule.invalidAction", "Invalid rule action.")
 	}
 
 	policy, err := s.policyRepository.GetPolicyByID(ctx, policyID)
 	if err != nil {
-		return nil, errutil.Err(err, "unable to find policy")
+		if errors.Is(err, policycore.ErrPolicyNotFound) {
+			return nil, ErrPolicyNotFound
+		}
+
+		return nil, fmt.Errorf("repository in CreateRule failed to find policy %s: %w", policyID, err)
 	}
 
 	tasks, err := s.validateTasks(ctx, taskIDs)
@@ -151,44 +165,72 @@ func (s *policyService) CreateRule(
 
 	err = s.policyRepository.CreateRule(ctx, rule)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("repository in CreateRule failed to create rule for policy %s: %w", policyID, err)
 	}
 
 	return rule, nil
 }
 
 func (s *policyService) DeletePolicy(ctx context.Context, id string) error {
+	if id == "" {
+		return ErrInvalidPolicyID
+	}
+
 	policy, err := s.policyRepository.GetPolicyByID(ctx, id)
 	if err != nil {
-		return errutil.Err(err, "unable to validate policy")
+		if errors.Is(err, policycore.ErrPolicyNotFound) {
+			return ErrPolicyNotFound
+		}
+
+		return fmt.Errorf("repository in DeletePolicy failed to find policy %s: %w", id, err)
 	}
 
 	err = s.policyRepository.DeletePolicies(ctx, policy)
 	if err != nil {
-		return errutil.Err(err, "unable to delete policy")
+		return fmt.Errorf("repository in DeletePolicy failed to delete policy: %w", err)
 	}
 
 	return nil
 }
 
 func (s *policyService) DeleteRule(ctx context.Context, ruleID, policyID string) error {
+	if policyID == "" {
+		return ErrInvalidPolicyID
+	}
+
+	if ruleID == "" {
+		return ErrInvalidRuleID
+	}
+
 	rule, err := s.policyRepository.GetRuleByID(ctx, ruleID, policyID)
 	if err != nil {
-		return errutil.Err(err, "unable to find rule")
+		if errors.Is(err, policycore.ErrRuleNotFound) {
+			return ErrRuleNotFound
+		}
+
+		return fmt.Errorf("repository in DeleteRule failed to find rule %s: %w", ruleID, err)
 	}
 
 	err = s.policyRepository.DeleteRules(ctx, rule)
 	if err != nil {
-		return errutil.Err(err, "unable to delete rule")
+		return fmt.Errorf("repository in DeleteRule failed to delete rule %s: %w", ruleID, err)
 	}
 
 	return nil
 }
 
 func (s *policyService) GetPolicy(ctx context.Context, id string) (*policytypes.Policy, error) {
+	if id == "" {
+		return nil, ErrInvalidPolicyID
+	}
+
 	policy, err := s.policyRepository.GetPolicyByID(ctx, id)
 	if err != nil {
-		return nil, errutil.Err(err, "unable to get policy")
+		if errors.Is(err, policycore.ErrPolicyNotFound) {
+			return nil, ErrPolicyNotFound
+		}
+
+		return nil, fmt.Errorf("repository in GetPolicy failed to get policy %s: %w", id, err)
 	}
 
 	return policy, nil
@@ -198,9 +240,21 @@ func (s *policyService) GetRule(
 	ctx context.Context,
 	ruleID, policyID string,
 ) (*policytypes.Rule, error) {
+	if policyID == "" {
+		return nil, ErrInvalidPolicyID
+	}
+
+	if ruleID == "" {
+		return nil, ErrInvalidRuleID
+	}
+
 	rule, err := s.policyRepository.GetRuleByID(ctx, ruleID, policyID)
 	if err != nil {
-		return nil, errutil.Err(err, "unable to get rule")
+		if errors.Is(err, policycore.ErrRuleNotFound) {
+			return nil, ErrRuleNotFound
+		}
+
+		return nil, fmt.Errorf("repository in GetRule failed to find rule %s: %w", ruleID, err)
 	}
 
 	return rule, nil
@@ -216,7 +270,12 @@ func (s *policyService) ListPolicies(
 	appIDs = strutil.TrimSlice(appIDs)
 	rulesForAppIDs = strutil.TrimSlice(rulesForAppIDs)
 
-	return s.policyRepository.GetAllPolicies(ctx, paginationFilter, query, appIDs, rulesForAppIDs)
+	policies, err := s.policyRepository.GetAllPolicies(ctx, paginationFilter, query, appIDs, rulesForAppIDs)
+	if err != nil {
+		return nil, fmt.Errorf("repository in ListPolicies failed to get policies: %w", err)
+	}
+
+	return policies, nil
 }
 
 func (s *policyService) ListRules(
@@ -225,7 +284,16 @@ func (s *policyService) ListRules(
 	paginationFilter pagination.PaginationFilter,
 	query *string,
 ) (*pagination.Pageable[policytypes.Rule], error) {
-	return s.policyRepository.GetAllRules(ctx, policyID, paginationFilter, query)
+	if policyID == "" {
+		return nil, ErrInvalidPolicyID
+	}
+
+	rules, err := s.policyRepository.GetAllRules(ctx, policyID, paginationFilter, query)
+	if err != nil {
+		return nil, fmt.Errorf("repository in ListRules failed to get rules for policy %s: %w", policyID, err)
+	}
+
+	return rules, nil
 }
 
 func (s *policyService) UpdatePolicy(
@@ -235,18 +303,26 @@ func (s *policyService) UpdatePolicy(
 	description string,
 	assignedTo string,
 ) (*policytypes.Policy, error) {
+	if id == "" {
+		return nil, ErrInvalidPolicyID
+	}
+
 	if name == "" {
-		return nil, errors.New("policy name cannot be empty")
+		return nil, errutil.ValidationFailed("policy.invalidName", "Policy name cannot be empty.")
 	}
 
 	policy, err := s.policyRepository.GetPolicyByID(ctx, id)
 	if err != nil {
-		return nil, errutil.Err(err, "unable to find policy")
+		if errors.Is(err, policycore.ErrPolicyNotFound) {
+			return nil, ErrPolicyNotFound
+		}
+
+		return nil, fmt.Errorf("repository in UpdatePolicy failed to find policy %s: %w", id, err)
 	}
 
 	err = s.validateAppIDs(ctx, assignedTo)
 	if err != nil {
-		return nil, fmt.Errorf("policy is linked to an invalid app %s", assignedTo)
+		return nil, err
 	}
 
 	policy.Name = name
@@ -256,7 +332,7 @@ func (s *policyService) UpdatePolicy(
 
 	err = s.policyRepository.UpdatePolicy(ctx, policy)
 	if err != nil {
-		return nil, fmt.Errorf("unable to update the policy: %w", err)
+		return nil, fmt.Errorf("repository in UpdatePolicy failed to update the policy %s: %w", id, err)
 	}
 
 	return policy, nil
@@ -272,17 +348,29 @@ func (s *policyService) UpdateRule(
 	needsApproval bool,
 	action policytypes.RuleAction,
 ) (*policytypes.Rule, error) {
+	if policyID == "" {
+		return nil, ErrInvalidPolicyID
+	}
+
+	if ruleID == "" {
+		return nil, ErrInvalidRuleID
+	}
+
 	if name == "" {
-		return nil, errors.New("rule name cannot be empty")
+		return nil, errutil.ValidationFailed("rule.invalidName", "Rule name cannot be empty.")
 	}
 
 	if action == policytypes.RULE_ACTION_UNSPECIFIED {
-		return nil, errors.New("invalid rule action")
+		return nil, errutil.ValidationFailed("rule.invalidAction", "Invalid rule action.")
 	}
 
 	rule, err := s.policyRepository.GetRuleByID(ctx, ruleID, policyID)
 	if err != nil {
-		return nil, errutil.Err(err, "unable to find rule")
+		if errors.Is(err, policycore.ErrRuleNotFound) {
+			return nil, ErrRuleNotFound
+		}
+
+		return nil, fmt.Errorf("repository in UpdateRule failed to find rule %s: %w", ruleID, err)
 	}
 
 	tasks, err := s.validateTasks(ctx, taskIDs)
@@ -299,7 +387,7 @@ func (s *policyService) UpdateRule(
 
 	err = s.policyRepository.UpdateRule(ctx, rule)
 	if err != nil {
-		return nil, fmt.Errorf("unable to update the rule: %w", err)
+		return nil, fmt.Errorf("repository in UpdateRule failed to update the rule %s: %w", ruleID, err)
 	}
 
 	return rule, nil
@@ -308,7 +396,7 @@ func (s *policyService) UpdateRule(
 func (s *policyService) CountAllPolicies(ctx context.Context) (int64, error) {
 	total, err := s.policyRepository.CountAllPolicies(ctx)
 	if err != nil {
-		return 0, errutil.Err(err, "error while counting policies")
+		return 0, fmt.Errorf("repository in CountAllPolicies failed to count policies: %w", err)
 	}
 
 	return total, nil
@@ -320,14 +408,14 @@ func (s *policyService) validateTasks(
 ) ([]*policytypes.Task, error) {
 	tasks, err := s.policyRepository.GetTasksByID(ctx, ids)
 	if err != nil {
-		return nil, fmt.Errorf("unable to valiate tasks")
+		return nil, fmt.Errorf("repository in validateTasks failed to fetch tasks %s: %w", ids, err)
 	}
 
 	for _, id := range ids {
 		if !slices.ContainsFunc(tasks, func(task *policytypes.Task) bool {
 			return strings.EqualFold(id, task.ID)
 		}) {
-			return nil, fmt.Errorf("invalid task %s", id)
+			return nil, errutil.InvalidRequest("task.notFound", "Task with ID %s not found.", id)
 		}
 	}
 
@@ -337,15 +425,14 @@ func (s *policyService) validateTasks(
 func (s *policyService) validateAppIDs(ctx context.Context, ids ...string) error {
 	apps, err := s.appRepository.GetAppsByID(ctx, ids)
 	if err != nil {
-		log.Error(err)
-		return fmt.Errorf("unable to validate the applications: %w", err)
+		return fmt.Errorf("repository in validateAppIDs failed to fetch apps %s: %w", ids, err)
 	}
 
 	for _, id := range ids {
 		if !slices.ContainsFunc(apps, func(app *apptypes.App) bool {
 			return strings.EqualFold(id, app.ID)
 		}) {
-			return fmt.Errorf("app with id %s does not exist", id)
+			return errutil.InvalidRequest("policy.appNotFound", "Application with ID %s not found.", id)
 		}
 	}
 

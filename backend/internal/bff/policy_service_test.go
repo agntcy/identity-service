@@ -15,8 +15,10 @@ import (
 	appcore "github.com/outshift/identity-service/internal/core/app"
 	appmocks "github.com/outshift/identity-service/internal/core/app/mocks"
 	apptypes "github.com/outshift/identity-service/internal/core/app/types"
+	policycore "github.com/outshift/identity-service/internal/core/policy"
 	policymocks "github.com/outshift/identity-service/internal/core/policy/mocks"
 	policytypes "github.com/outshift/identity-service/internal/core/policy/types"
+	"github.com/outshift/identity-service/internal/pkg/errutil"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -61,7 +63,7 @@ func TestPolicyService_CreatePolicy_should_return_err_when_name_is_empty(t *test
 	_, err := sut.CreatePolicy(context.Background(), invalidName, "", "")
 
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "policy name cannot be empty")
+	assert.ErrorIs(t, err, errutil.ValidationFailed("policy.invalidName", "Policy name cannot be empty."))
 }
 
 func TestPolicyService_CreatePolicy_should_return_err_when_app_validation_fails(t *testing.T) {
@@ -71,6 +73,7 @@ func TestPolicyService_CreatePolicy_should_return_err_when_app_validation_fails(
 
 	testCases := map[string]*struct {
 		buildAppRepo func(t *testing.T, ctx context.Context) appcore.Repository
+		errMsg       string
 	}{
 		"GetAppsByID returns an error": {
 			buildAppRepo: func(t *testing.T, ctx context.Context) appcore.Repository {
@@ -80,6 +83,7 @@ func TestPolicyService_CreatePolicy_should_return_err_when_app_validation_fails(
 				appRepo.EXPECT().GetAppsByID(ctx, mock.Anything).Return(nil, errors.New("error"))
 				return appRepo
 			},
+			errMsg: "failed to fetch apps",
 		},
 		"App with AssignedID does not exist": {
 			buildAppRepo: func(t *testing.T, ctx context.Context) appcore.Repository {
@@ -89,6 +93,7 @@ func TestPolicyService_CreatePolicy_should_return_err_when_app_validation_fails(
 				appRepo.EXPECT().GetAppsByID(ctx, mock.Anything).Return([]*apptypes.App{}, nil)
 				return appRepo
 			},
+			errMsg: "not found",
 		},
 	}
 
@@ -104,7 +109,7 @@ func TestPolicyService_CreatePolicy_should_return_err_when_app_validation_fails(
 			_, err := sut.CreatePolicy(ctx, name, "", invalidAssignedTo)
 
 			assert.Error(t, err)
-			assert.ErrorContains(t, err, fmt.Sprintf("policy is linked to an invalid app %s", invalidAssignedTo))
+			assert.ErrorContains(t, err, tc.errMsg)
 		})
 	}
 }
@@ -157,7 +162,7 @@ func TestPolicyService_CreateRule_should_return_err_when_name_is_empty(t *testin
 
 	_, err := sut.CreateRule(
 		context.Background(),
-		"",
+		uuid.NewString(),
 		invalidName,
 		"",
 		nil,
@@ -166,7 +171,7 @@ func TestPolicyService_CreateRule_should_return_err_when_name_is_empty(t *testin
 	)
 
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "rule name cannot be empty")
+	assert.ErrorIs(t, err, errutil.ValidationFailed("rule.invalidName", "Rule name cannot be empty."))
 }
 
 func TestPolicyService_CreateRule_should_return_err_when_action_is_invalid(t *testing.T) {
@@ -178,7 +183,7 @@ func TestPolicyService_CreateRule_should_return_err_when_action_is_invalid(t *te
 
 	_, err := sut.CreateRule(
 		context.Background(),
-		"",
+		uuid.NewString(),
 		"name",
 		"",
 		nil,
@@ -187,7 +192,7 @@ func TestPolicyService_CreateRule_should_return_err_when_action_is_invalid(t *te
 	)
 
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "invalid rule action")
+	assert.ErrorIs(t, err, errutil.ValidationFailed("rule.invalidAction", "Invalid rule action."))
 }
 
 func TestPolicyService_CreateRule_should_return_err_when_policy_is_invalid(t *testing.T) {
@@ -196,7 +201,7 @@ func TestPolicyService_CreateRule_should_return_err_when_policy_is_invalid(t *te
 	ctx := context.Background()
 	invalidPolicy := "RANDOM_INVALID_POLICY"
 	policyRepo := policymocks.NewRepository(t)
-	policyRepo.EXPECT().GetPolicyByID(ctx, invalidPolicy).Return(nil, errors.New("invalid"))
+	policyRepo.EXPECT().GetPolicyByID(ctx, invalidPolicy).Return(nil, policycore.ErrPolicyNotFound)
 	sut := bff.NewPolicyService(nil, policyRepo)
 
 	_, err := sut.CreateRule(
@@ -210,11 +215,13 @@ func TestPolicyService_CreateRule_should_return_err_when_policy_is_invalid(t *te
 	)
 
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "unable to find policy")
+	assert.ErrorIs(t, err, bff.ErrPolicyNotFound)
 }
 
 func TestPolicyService_CreateRule_should_return_err_when_tasks_are_invalid(t *testing.T) {
 	t.Parallel()
+
+	taskIDs := []string{uuid.NewString(), uuid.NewString()}
 
 	testCases := map[string]*struct {
 		mockGetTasksByID func(t *testing.T, repo *policymocks.Repository, ctx context.Context)
@@ -226,7 +233,7 @@ func TestPolicyService_CreateRule_should_return_err_when_tasks_are_invalid(t *te
 
 				repo.EXPECT().GetTasksByID(ctx, mock.Anything).Return(nil, errors.New("error"))
 			},
-			errMsg: "unable to valiate tasks",
+			errMsg: "failed to fetch tasks",
 		},
 		"Task not found": {
 			mockGetTasksByID: func(t *testing.T, repo *policymocks.Repository, ctx context.Context) {
@@ -234,7 +241,7 @@ func TestPolicyService_CreateRule_should_return_err_when_tasks_are_invalid(t *te
 
 				repo.EXPECT().GetTasksByID(ctx, mock.Anything).Return([]*policytypes.Task{}, nil)
 			},
-			errMsg: "invalid task",
+			errMsg: fmt.Sprintf("Task with ID %s not found.", taskIDs[0]),
 		},
 	}
 
@@ -247,7 +254,6 @@ func TestPolicyService_CreateRule_should_return_err_when_tasks_are_invalid(t *te
 			description := uuid.NewString()
 			action := policytypes.RULE_ACTION_ALLOW
 			policy := &policytypes.Policy{ID: uuid.NewString()}
-			taskIDs := []string{uuid.NewString(), uuid.NewString()}
 			needsApproval := true
 
 			policyRepo := policymocks.NewRepository(t)
@@ -298,14 +304,14 @@ func TestPolicyService_DeletePolicy_should_return_err_when_policy_invalid(t *tes
 	invalidPolicyID := uuid.NewString()
 
 	policyRepo := policymocks.NewRepository(t)
-	policyRepo.EXPECT().GetPolicyByID(ctx, invalidPolicyID).Return(nil, errors.New("invalid"))
+	policyRepo.EXPECT().GetPolicyByID(ctx, invalidPolicyID).Return(nil, policycore.ErrPolicyNotFound)
 
 	sut := bff.NewPolicyService(nil, policyRepo)
 
 	err := sut.DeletePolicy(ctx, invalidPolicyID)
 
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "unable to validate policy")
+	assert.ErrorIs(t, err, bff.ErrPolicyNotFound)
 }
 
 func TestPolicyService_DeletePolicy_should_return_err_when_deletion_fails(t *testing.T) {
@@ -323,7 +329,7 @@ func TestPolicyService_DeletePolicy_should_return_err_when_deletion_fails(t *tes
 	err := sut.DeletePolicy(ctx, policy.ID)
 
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "unable to delete policy")
+	assert.ErrorContains(t, err, "failed to delete policy")
 }
 
 // DeleteRule
@@ -352,14 +358,14 @@ func TestPolicyService_DeleteRule_should_return_err_when_rule_is_invalid(t *test
 	invalidRuleID := uuid.NewString()
 
 	policyRepo := policymocks.NewRepository(t)
-	policyRepo.EXPECT().GetRuleByID(ctx, invalidRuleID, mock.Anything).Return(nil, errors.New("failed"))
+	policyRepo.EXPECT().GetRuleByID(ctx, invalidRuleID, mock.Anything).Return(nil, policycore.ErrRuleNotFound)
 
 	sut := bff.NewPolicyService(nil, policyRepo)
 
-	err := sut.DeleteRule(ctx, invalidRuleID, "")
+	err := sut.DeleteRule(ctx, invalidRuleID, uuid.NewString())
 
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "unable to find rule")
+	assert.ErrorIs(t, err, bff.ErrRuleNotFound)
 }
 
 func TestPolicyService_DeleteRule_should_return_err_when_deletion_fails(t *testing.T) {
@@ -377,7 +383,7 @@ func TestPolicyService_DeleteRule_should_return_err_when_deletion_fails(t *testi
 	err := sut.DeleteRule(ctx, rule.ID, rule.PolicyID)
 
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "unable to delete rule")
+	assert.ErrorContains(t, err, "failed to delete rule")
 }
 
 // UpdatePolicy
@@ -417,10 +423,10 @@ func TestPolicyService_UpdatePolicy_should_return_err_when_name_is_empty(t *test
 	invalidName := ""
 	sut := bff.NewPolicyService(nil, nil)
 
-	_, err := sut.UpdatePolicy(context.Background(), "", invalidName, "", "")
+	_, err := sut.UpdatePolicy(context.Background(), uuid.NewString(), invalidName, "", "")
 
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "policy name cannot be empty")
+	assert.ErrorIs(t, err, errutil.ValidationFailed("policy.invalidName", "Policy name cannot be empty."))
 }
 
 func TestPolicyService_UpdatePolicy_should_return_err_when_policy_is_invalid(t *testing.T) {
@@ -430,14 +436,14 @@ func TestPolicyService_UpdatePolicy_should_return_err_when_policy_is_invalid(t *
 	invalidPolicyID := uuid.NewString()
 
 	policyRepo := policymocks.NewRepository(t)
-	policyRepo.EXPECT().GetPolicyByID(ctx, invalidPolicyID).Return(nil, errors.New("failed"))
+	policyRepo.EXPECT().GetPolicyByID(ctx, invalidPolicyID).Return(nil, policycore.ErrPolicyNotFound)
 
 	sut := bff.NewPolicyService(nil, policyRepo)
 
 	_, err := sut.UpdatePolicy(ctx, invalidPolicyID, "name", "", "")
 
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "unable to find policy")
+	assert.ErrorIs(t, err, bff.ErrPolicyNotFound)
 }
 
 func TestPolicyService_UpdatePolicy_should_return_err_when_update_fails(t *testing.T) {
@@ -461,7 +467,7 @@ func TestPolicyService_UpdatePolicy_should_return_err_when_update_fails(t *testi
 	_, err := sut.UpdatePolicy(ctx, policy.ID, "name", "description", assignedTo)
 
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "unable to update the policy")
+	assert.ErrorContains(t, err, "failed to update the policy")
 }
 
 // UpdateRule
@@ -513,8 +519,8 @@ func TestPolicyService_UpdateRule_should_return_err_when_name_is_empty(t *testin
 
 	_, err := sut.UpdateRule(
 		context.Background(),
-		"",
-		"",
+		uuid.NewString(),
+		uuid.NewString(),
 		invalidName,
 		"",
 		nil,
@@ -523,7 +529,7 @@ func TestPolicyService_UpdateRule_should_return_err_when_name_is_empty(t *testin
 	)
 
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "rule name cannot be empty")
+	assert.ErrorIs(t, err, errutil.ValidationFailed("rule.invalidName", "Rule name cannot be empty."))
 }
 
 func TestPolicyService_UpdateRule_should_return_err_when_action_is_invalid(t *testing.T) {
@@ -535,8 +541,8 @@ func TestPolicyService_UpdateRule_should_return_err_when_action_is_invalid(t *te
 
 	_, err := sut.UpdateRule(
 		context.Background(),
-		"",
-		"",
+		uuid.NewString(),
+		uuid.NewString(),
 		"name",
 		"",
 		nil,
@@ -545,7 +551,7 @@ func TestPolicyService_UpdateRule_should_return_err_when_action_is_invalid(t *te
 	)
 
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "invalid rule action")
+	assert.ErrorIs(t, err, errutil.ValidationFailed("rule.invalidAction", "Invalid rule action."))
 }
 
 func TestPolicyService_UpdateRule_should_return_err_when_rule_is_invalid(t *testing.T) {
@@ -555,13 +561,13 @@ func TestPolicyService_UpdateRule_should_return_err_when_rule_is_invalid(t *test
 	invalidRuleID := uuid.NewString()
 
 	policyRepo := policymocks.NewRepository(t)
-	policyRepo.EXPECT().GetRuleByID(ctx, invalidRuleID, mock.Anything).Return(nil, errors.New("failed"))
+	policyRepo.EXPECT().GetRuleByID(ctx, invalidRuleID, mock.Anything).Return(nil, policycore.ErrRuleNotFound)
 
 	sut := bff.NewPolicyService(nil, policyRepo)
 
 	_, err := sut.UpdateRule(
 		context.Background(),
-		"",
+		uuid.NewString(),
 		invalidRuleID,
 		"name",
 		"",
@@ -571,7 +577,7 @@ func TestPolicyService_UpdateRule_should_return_err_when_rule_is_invalid(t *test
 	)
 
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "unable to find rule")
+	assert.ErrorIs(t, err, bff.ErrRuleNotFound)
 }
 
 func createTasks(t *testing.T, ids []string) []*policytypes.Task {

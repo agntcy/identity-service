@@ -5,7 +5,6 @@ package idp
 
 import (
 	"context"
-	"errors"
 
 	"github.com/google/uuid"
 	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
@@ -21,7 +20,7 @@ func NewSelfIdp() Idp {
 func (s *SelfIdp) CreateClientCredentialsPair(ctx context.Context) (*ClientCredentials, error) {
 	userID, ok := identitycontext.GetUserID(ctx)
 	if !ok {
-		return nil, errors.New("user id not found in context")
+		return nil, identitycontext.ErrUserNotFound
 	}
 
 	return &ClientCredentials{

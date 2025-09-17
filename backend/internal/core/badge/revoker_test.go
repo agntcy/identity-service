@@ -157,7 +157,7 @@ func TestRevoker_RevokeAll_should_return_err_when_cannot_revoke_badge(t *testing
 	err := sut.RevokeAll(ctx, appID, nil, nil, privKey)
 
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "unable to revoke badge")
+	assert.ErrorContains(t, err, "identity service failed to revoke badge")
 }
 
 func TestRevoker_RevokeAll_should_return_err_when_cannot_sign_revoked_badge(t *testing.T) {
@@ -210,5 +210,5 @@ func TestRevoker_RevokeAll_should_return_err_when_cannot_save_badge(t *testing.T
 	err := sut.RevokeAll(ctx, appID, clientCreds, issuer, privKey)
 
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "unable to save revoked badge")
+	assert.ErrorContains(t, err, "repository failed to save revoked badge")
 }

@@ -5,6 +5,7 @@ package idp
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -12,7 +13,6 @@ import (
 
 	oktasdk "github.com/okta/okta-sdk-golang/v5/okta"
 	"github.com/outshift/identity-service/internal/core/settings/types"
-	"github.com/outshift/identity-service/internal/pkg/errutil"
 	"github.com/outshift/identity-service/internal/pkg/ptrutil"
 	"github.com/outshift/identity-service/internal/pkg/strutil"
 	"github.com/outshift/identity-service/pkg/log"
@@ -42,10 +42,7 @@ func NewOktaIdp(settings *types.OktaIdpSettings) Idp {
 
 func (d *OktaIdp) TestSettings(ctx context.Context) error {
 	if d.settings == nil {
-		return errutil.Err(
-			nil,
-			"okta idp settings are not configured",
-		)
+		return errors.New("okta idp settings are not configured")
 	}
 
 	// Attempt to create a new Okta API client configuration
@@ -58,10 +55,7 @@ func (d *OktaIdp) TestSettings(ctx context.Context) error {
 		oktasdk.WithRequestTimeout(oktaTimeout),
 	)
 	if err != nil {
-		return errutil.Err(
-			err,
-			"failed to create Okta API client",
-		)
+		return fmt.Errorf("failed to create Okta API client: %w", err)
 	}
 
 	// Create a new Okta API client with the provided configuration
@@ -72,10 +66,7 @@ func (d *OktaIdp) TestSettings(ctx context.Context) error {
 
 	err = d.oktaParseAPIResponse(err, body)
 	if err != nil {
-		return errutil.Err(
-			err,
-			"failed to connect to Okta IdP",
-		)
+		return fmt.Errorf("failed to connect to Okta IdP: %w", err)
 	}
 
 	return err
@@ -108,16 +99,12 @@ func (d *OktaIdp) CreateClientCredentialsPair(
 
 	err = d.oktaParseAPIResponse(err, body)
 	if err != nil {
-		return nil, errutil.Err(
-			err,
-			"failed to create Okta application",
-		)
+		return nil, fmt.Errorf("failed to create Okta application: %w", err)
 	}
 
 	if application.OpenIdConnectApplication == nil ||
 		application.OpenIdConnectApplication.GetCredentials().OauthClient == nil {
-		return nil, errutil.Err(
-			nil,
+		return nil, errors.New(
 			"failed to create Okta application: OpenIdConnectApplication or credentials are nil",
 		)
 	}
@@ -139,9 +126,10 @@ func (d *OktaIdp) DeleteClientCredentialsPair(
 
 	_, err := d.api.ApplicationAPI.DeleteApplication(ctx, clientCredentials.ClientID).Execute()
 	if err != nil {
-		return errutil.Err(
+		return fmt.Errorf(
+			"failed to delete client credentials pair for issuer %s: %w",
+			clientCredentials.Issuer,
 			err,
-			"failed to delete client credentials pair for issuer %s",
 		)
 	}
 
@@ -180,23 +168,18 @@ func (d *OktaIdp) oktaParseAPIResponse(err error, response *oktasdk.APIResponse)
 	}()
 
 	if response == nil || response.Body == nil || err != nil {
-		return errutil.Err(
-			err, "empty response from Okta API",
-		)
+		return fmt.Errorf("empty response from Okta API: %w", err)
 	}
 
 	data, bodyErr := io.ReadAll(response.Body)
 	if bodyErr != nil {
-		return errutil.Err(
-			nil, "empty response body from Okta API",
-		)
+		return errors.New("empty response body from Okta API")
 	}
 
 	if response.StatusCode != http.StatusOK {
-		return errutil.Err(
-			nil,
-			fmt.Sprintf("okta API call failed: %s, status code: %d",
-				string(data), response.StatusCode),
+		return fmt.Errorf(
+			"okta API call failed: %s, status code: %d",
+			string(data), response.StatusCode,
 		)
 	}
 

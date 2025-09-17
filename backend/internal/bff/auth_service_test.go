@@ -16,8 +16,10 @@ import (
 	"github.com/google/uuid"
 	"github.com/outshift/identity-service/internal/bff"
 	bffmocks "github.com/outshift/identity-service/internal/bff/mocks"
+	appcore "github.com/outshift/identity-service/internal/core/app"
 	appmocks "github.com/outshift/identity-service/internal/core/app/mocks"
 	apptypes "github.com/outshift/identity-service/internal/core/app/types"
+	authcore "github.com/outshift/identity-service/internal/core/auth"
 	authmocks "github.com/outshift/identity-service/internal/core/auth/mocks"
 	authtypes "github.com/outshift/identity-service/internal/core/auth/types/int"
 	devicemocks "github.com/outshift/identity-service/internal/core/device/mocks"
@@ -30,6 +32,7 @@ import (
 	settingsmocks "github.com/outshift/identity-service/internal/core/settings/mocks"
 	settingstypes "github.com/outshift/identity-service/internal/core/settings/types"
 	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
+	"github.com/outshift/identity-service/internal/pkg/errutil"
 	oidctesting "github.com/outshift/identity-service/internal/pkg/oidc/testing"
 	"github.com/outshift/identity-service/internal/pkg/ptrutil"
 	"github.com/stretchr/testify/assert"
@@ -159,7 +162,11 @@ func TestAuthService_Authorize_should_return_err_when_owner_app_not_in_context(t
 			_, err := sut.Authorize(invalidCtx, nil, nil, nil)
 
 			assert.Error(t, err)
-			assert.ErrorContains(t, err, "app ID not found in context")
+			assert.ErrorIs(
+				t,
+				err,
+				errutil.Unauthorized("auth.invalidCallerAppId", "Caller application ID should be present in the request."),
+			)
 		})
 	}
 }
@@ -177,13 +184,17 @@ func TestAuthService_Authorize_should_return_err_when_resolver_metadata_id_inval
 		})
 	appRepo.EXPECT().
 		GetAppByResolverMetadataID(mock.Anything, invalidResolverMD).
-		Return(nil, errors.New("invalid"))
+		Return(nil, appcore.ErrAppNotFound)
 	sut := bff.NewAuthService(nil, nil, nil, appRepo, nil, nil, nil, nil, nil)
 
 	_, err := sut.Authorize(ctx, &invalidResolverMD, nil, nil)
 
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "app not found")
+	assert.ErrorIs(t, err, errutil.InvalidRequest(
+		"auth.calleeAppNotFound",
+		"No application found with the resolver metadata ID %s.",
+		invalidResolverMD,
+	))
 }
 
 func TestAuthService_Authorize_should_return_err_when_called_app_is_same_as_owner_app(
@@ -208,7 +219,10 @@ func TestAuthService_Authorize_should_return_err_when_called_app_is_same_as_owne
 	_, err := sut.Authorize(ctx, &resolverMetadataID, nil, nil)
 
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "cannot authorize the same app")
+	assert.ErrorIs(t, err, errutil.InvalidRequest(
+		"auth.invalidCalleeApp",
+		"The caller app and the callee app should not be the same.",
+	))
 }
 
 func TestAuthService_Authorize_should_return_err_when_owner_app_not_found(t *testing.T) {
@@ -219,13 +233,13 @@ func TestAuthService_Authorize_should_return_err_when_owner_app_not_found(t *tes
 	appRepo := appmocks.NewRepository(t)
 	appRepo.EXPECT().
 		GetApp(mock.Anything, mock.Anything).
-		Return(nil, errors.New("invalid"))
+		Return(nil, appcore.ErrAppNotFound)
 	sut := bff.NewAuthService(nil, nil, nil, appRepo, nil, nil, nil, nil, nil)
 
 	_, err := sut.Authorize(ctx, nil, nil, nil)
 
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "app not found")
+	assert.ErrorIs(t, err, errutil.NotFound("auth.callerAppNotFound", "Caller application not found."))
 }
 
 func TestAuthService_Authorize_should_return_err_when_policy_evaluation_fails(t *testing.T) {
@@ -382,7 +396,7 @@ func TestAuthService_Token_should_return_err_if_auth_code_is_empty(t *testing.T)
 	_, err := sut.Token(context.Background(), emptyAuthCode)
 
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "authorization code")
+	assert.ErrorIs(t, err, errutil.ValidationFailed("auth.emptyAuthCode", "Authorization code cannot be empty."))
 }
 
 func TestAuthService_Token_should_return_err_if_auth_code_not_stored(t *testing.T) {
@@ -390,15 +404,13 @@ func TestAuthService_Token_should_return_err_if_auth_code_not_stored(t *testing.
 
 	invalidAuthCode := "invalid"
 	authRepo := authmocks.NewRepository(t)
-	authRepo.EXPECT().
-		GetByAuthorizationCode(mock.Anything, invalidAuthCode).
-		Return(nil, errors.New("not found"))
+	authRepo.EXPECT().GetByAuthorizationCode(mock.Anything, invalidAuthCode).Return(nil, authcore.ErrSessionNotFound)
 	sut := bff.NewAuthService(authRepo, nil, nil, nil, nil, nil, nil, nil, nil)
 
 	_, err := sut.Token(context.Background(), invalidAuthCode)
 
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "invalid session")
+	assert.ErrorIs(t, err, errutil.Unauthorized("auth.sessionNotFound", "Session not found."))
 }
 
 func TestAuthService_Token_should_return_err_if_session_already_has_access_token(t *testing.T) {
@@ -413,7 +425,7 @@ func TestAuthService_Token_should_return_err_if_session_already_has_access_token
 	_, err := sut.Token(context.Background(), authCode)
 
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "a token has already been issued")
+	assert.ErrorIs(t, err, errutil.InvalidRequest("auth.tokenAlreadyIssued", "A token has already been issued."))
 }
 
 func TestAuthService_Token_should_return_err_if_client_cred_not_found(t *testing.T) {
@@ -543,7 +555,7 @@ func TestAuthService_Token_should_return_err_if_access_token_generation_fails(t 
 			_, err := sut.Token(context.Background(), authCode)
 
 			assert.Error(t, err)
-			assert.ErrorContains(t, err, "failed to issue token")
+			assert.ErrorContains(t, err, "failed to issue access token")
 		})
 	}
 }
@@ -661,7 +673,7 @@ func TestAuthService_ExtAuthZ_should_return_err_for_empty_access_token(t *testin
 	err := sut.ExtAuthZ(context.Background(), emptyAccessToken, "")
 
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "access token cannot be empty")
+	assert.ErrorIs(t, err, errutil.ValidationFailed("auth.emptyAccessToken", "Access token cannot be empty."))
 }
 
 func TestAuthService_ExtAuthZ_should_return_err_when_session_not_found(t *testing.T) {
@@ -671,13 +683,13 @@ func TestAuthService_ExtAuthZ_should_return_err_when_session_not_found(t *testin
 	authRepo := authmocks.NewRepository(t)
 	authRepo.EXPECT().
 		GetByAccessToken(mock.Anything, invalidAccessToken).
-		Return(nil, errors.New("not found"))
+		Return(nil, authcore.ErrSessionNotFound)
 	sut := bff.NewAuthService(authRepo, nil, nil, nil, nil, nil, nil, nil, nil)
 
 	err := sut.ExtAuthZ(context.Background(), invalidAccessToken, "")
 
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "invalid session")
+	assert.ErrorIs(t, err, errutil.Unauthorized("auth.sessionNotFound", "Session not found."))
 }
 
 func TestAuthService_ExtAuthZ_should_return_err_when_session_is_expired(t *testing.T) {
@@ -695,7 +707,7 @@ func TestAuthService_ExtAuthZ_should_return_err_when_session_is_expired(t *testi
 	err := sut.ExtAuthZ(context.Background(), accessToken, "")
 
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "the session has expired")
+	assert.ErrorIs(t, err, errutil.Unauthorized("auth.sessionExpired", "The session has expired."))
 }
 
 func TestAuthService_ExtAuthZ_should_return_err_when_called_app_not_found(t *testing.T) {
@@ -710,13 +722,13 @@ func TestAuthService_ExtAuthZ_should_return_err_when_called_app_not_found(t *tes
 		Return(&authtypes.Session{}, nil)
 
 	appRepo := appmocks.NewRepository(t)
-	appRepo.EXPECT().GetApp(ctx, invalidCalledApp.ID).Return(nil, errors.New("not found"))
+	appRepo.EXPECT().GetApp(ctx, invalidCalledApp.ID).Return(nil, appcore.ErrAppNotFound)
 	sut := bff.NewAuthService(authRepo, nil, nil, appRepo, nil, nil, nil, nil, nil)
 
 	err := sut.ExtAuthZ(ctx, accessToken, "")
 
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "app not found")
+	assert.ErrorIs(t, err, errutil.Unauthorized("auth.calleeAppNotFound", "Callee application not found."))
 }
 
 func TestAuthService_ExtAuthZ_should_return_err_when_called_app_is_not_same_as_in_session(
@@ -739,7 +751,10 @@ func TestAuthService_ExtAuthZ_should_return_err_when_called_app_is_not_same_as_i
 	err := sut.ExtAuthZ(ctx, accessToken, "")
 
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "access token is not valid for the specified app")
+	assert.ErrorIs(t, err, errutil.Unauthorized(
+		"auth.invalidAccessTokenForApp",
+		"The access token is not valid for the specified app.",
+	))
 }
 
 func TestAuthService_ExtAuthZ_should_return_err_when_tool_name_is_not_same_as_in_session(
@@ -763,7 +778,10 @@ func TestAuthService_ExtAuthZ_should_return_err_when_tool_name_is_not_same_as_in
 	err := sut.ExtAuthZ(ctx, accessToken, invalidToolName)
 
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "access token is not valid for the specified tool")
+	assert.ErrorIs(t, err, errutil.Unauthorized(
+		"auth.invalidAccessTokenForTool",
+		"The access token is not valid for the specified tool.",
+	))
 }
 
 func TestAuthService_ExtAuthZ_should_return_err_when_caller_app_not_found(t *testing.T) {
@@ -780,13 +798,13 @@ func TestAuthService_ExtAuthZ_should_return_err_when_caller_app_not_found(t *tes
 
 	appRepo := appmocks.NewRepository(t)
 	appRepo.EXPECT().GetApp(ctx, calledApp.ID).Return(calledApp, nil)
-	appRepo.EXPECT().GetApp(ctx, session.OwnerAppID).Return(nil, errors.New("not found"))
+	appRepo.EXPECT().GetApp(ctx, session.OwnerAppID).Return(nil, appcore.ErrAppNotFound)
 	sut := bff.NewAuthService(authRepo, nil, nil, appRepo, nil, nil, nil, nil, nil)
 
 	err := sut.ExtAuthZ(ctx, accessToken, "")
 
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "the caller app not found")
+	assert.ErrorIs(t, err, errutil.Unauthorized("auth.callerAppNotFound", "Caller application not found."))
 }
 
 func TestAuthService_ExtAuthZ_should_return_err_when_access_token_invalid(t *testing.T) {
@@ -811,7 +829,7 @@ func TestAuthService_ExtAuthZ_should_return_err_when_access_token_invalid(t *tes
 	err := sut.ExtAuthZ(ctx, accessToken, "")
 
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "failed to parse JWT")
+	assert.ErrorIs(t, err, errutil.Unauthorized("auth.invalidAccessToken", "The access token is invalid."))
 }
 
 func TestAuthService_ExtAuthZ_should_return_err_if_update_fails(t *testing.T) {
@@ -949,7 +967,10 @@ func TestAuthService_ExtAuthZ_should_return_err_when_no_device_registered_during
 	err := sut.ExtAuthZ(ctx, accessToken, "")
 
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "no devices registered")
+	assert.ErrorIs(t, err, errutil.InvalidRequest(
+		"auth.noDevicesRegistered",
+		"No user devices registered. Unable to send a notification for user approval.",
+	))
 }
 
 func TestAuthService_ExtAuthZ_should_return_err_when_send_notification_fails(t *testing.T) {
@@ -1081,7 +1102,11 @@ func TestAuthService_ExtAuthZ_should_return_err_when_device_otp_is_invalid(t *te
 			err := sut.ExtAuthZ(ctx, accessToken, "")
 
 			assert.Error(t, err)
-			assert.ErrorContains(t, err, "the user did not approve the invocation")
+			assert.ErrorIs(
+				t,
+				err,
+				errutil.Unauthorized("auth.invocationNotApproved", "The user did not approve the invocation."),
+			)
 		})
 	}
 }
@@ -1124,8 +1149,8 @@ func TestAuthService_ApproveToken_should_fail(t *testing.T) {
 	t.Parallel()
 
 	testCases := map[string]*struct {
-		otp    *authtypes.SessionDeviceOTP
-		errMsg string
+		otp *authtypes.SessionDeviceOTP
+		err error
 	}{
 		"OTP already expired": {
 			otp: &authtypes.SessionDeviceOTP{
@@ -1134,7 +1159,7 @@ func TestAuthService_ApproveToken_should_fail(t *testing.T) {
 				Value:     uuid.NewString(),
 				ExpiresAt: time.Now().Add(-time.Minute).Unix(),
 			},
-			errMsg: "the OTP is already expired",
+			err: errutil.InvalidRequest("auth.otpExpired", "The device OTP is expired."),
 		},
 		"OTP already used": {
 			otp: &authtypes.SessionDeviceOTP{
@@ -1144,7 +1169,7 @@ func TestAuthService_ApproveToken_should_fail(t *testing.T) {
 				ExpiresAt: time.Now().Add(time.Minute).Unix(),
 				Used:      true,
 			},
-			errMsg: "the OTP is already used",
+			err: errutil.InvalidRequest("auth.otpAlreadyUsed", "The device OTP is already used."),
 		},
 		"OTP already approved": {
 			otp: &authtypes.SessionDeviceOTP{
@@ -1154,7 +1179,7 @@ func TestAuthService_ApproveToken_should_fail(t *testing.T) {
 				ExpiresAt: time.Now().Add(time.Minute).Unix(),
 				Approved:  ptrutil.Ptr(true),
 			},
-			errMsg: "the OTP is already used",
+			err: errutil.InvalidRequest("auth.otpAlreadyUsed", "The device OTP is already used."),
 		},
 	}
 
@@ -1172,7 +1197,7 @@ func TestAuthService_ApproveToken_should_fail(t *testing.T) {
 			err := sut.ApproveToken(ctx, tc.otp.DeviceID, tc.otp.SessionID, tc.otp.Value, true)
 
 			assert.Error(t, err)
-			assert.ErrorContains(t, err, tc.errMsg)
+			assert.ErrorIs(t, err, tc.err)
 		})
 	}
 }

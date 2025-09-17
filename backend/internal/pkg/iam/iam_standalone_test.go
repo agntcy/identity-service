@@ -337,7 +337,7 @@ func TestStandAloneClient_AuthJwt_should_fail_if_header_is_invalid(t *testing.T)
 	}{
 		"empty header": {
 			header: "",
-			errMsg: "Authorization header is required",
+			errMsg: "authorization header is required",
 		},
 		"header without token part 1": {
 			header: "Bearer ",

@@ -8,7 +8,6 @@ import (
 	"fmt"
 
 	"github.com/outshift/identity-service/internal/core/settings/types"
-	"github.com/outshift/identity-service/internal/pkg/errutil"
 )
 
 type IdpFactory interface {
@@ -37,15 +36,12 @@ func (f *idpFactory) Create(
 	case types.IDP_TYPE_SELF:
 		idp = NewSelfIdp()
 	default:
-		return nil, errutil.Err(
-			fmt.Errorf("unknown IDP type %s", issuerSettings.IdpType),
-			"unknown IDP type",
-		)
+		return nil, fmt.Errorf("unknown IDP type %s", issuerSettings.IdpType)
 	}
 
 	err := idp.TestSettings(ctx)
 	if err != nil {
-		return nil, errutil.Err(err, "failed to test IDP settings")
+		return nil, fmt.Errorf("failed to test IDP settings: %w", err)
 	}
 
 	return idp, nil

@@ -25,6 +25,7 @@ import (
 	policymocks "github.com/outshift/identity-service/internal/core/policy/mocks"
 	settingsmocks "github.com/outshift/identity-service/internal/core/settings/mocks"
 	settingstypes "github.com/outshift/identity-service/internal/core/settings/types"
+	"github.com/outshift/identity-service/internal/pkg/errutil"
 	"github.com/outshift/identity-service/internal/pkg/ptrutil"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -290,5 +291,9 @@ func TestBadgeService_VerifyBadge_should_return_err_when_badge_is_null(t *testin
 	_, err := sut.VerifyBadge(ctx, nil)
 
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "badge or verifiable credential is empty")
+	assert.ErrorIs(
+		t,
+		err,
+		errutil.ValidationFailed("badge.emptyBadge", "Badge or Verifiable Credential is empty"),
+	)
 }

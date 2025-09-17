@@ -18,6 +18,8 @@ import (
 	"google.golang.org/grpc/codes"
 )
 
+var errBadgeUnexpected = errors.New("failed")
+
 func TestBadgeService_IssueBadge_should_succeed(t *testing.T) {
 	t.Parallel()
 
@@ -60,17 +62,17 @@ func TestBadgeService_IssueBadge_should_succeed(t *testing.T) {
 	}
 }
 
-func TestBadgeService_IssueBadge_should_return_badrequest_when_core_service_fails(t *testing.T) {
+func TestBadgeService_IssueBadge_should_propagate_error_when_core_service_fails(t *testing.T) {
 	t.Parallel()
 
 	badgeSrv := bffmocks.NewBadgeService(t)
-	badgeSrv.EXPECT().IssueBadge(t.Context(), mock.Anything, mock.Anything).Return(nil, errors.New("failed"))
+	badgeSrv.EXPECT().IssueBadge(t.Context(), mock.Anything, mock.Anything).Return(nil, errBadgeUnexpected)
 
 	sut := grpc.NewBadgeService(badgeSrv)
 
 	_, err := sut.IssueBadge(t.Context(), &identity_service_sdk_go.IssueBadgeRequest{})
 
-	grpctesting.AssertGrpcError(t, err, codes.InvalidArgument, "failed")
+	assert.ErrorIs(t, err, errBadgeUnexpected)
 }
 
 func TestBadgeService_IssueBadge_should_return_badrequest_when_req_is_nil(t *testing.T) {
@@ -80,7 +82,7 @@ func TestBadgeService_IssueBadge_should_return_badrequest_when_req_is_nil(t *tes
 
 	_, err := sut.IssueBadge(t.Context(), nil)
 
-	grpctesting.AssertGrpcError(t, err, codes.InvalidArgument, "request is empty")
+	grpctesting.AssertGrpcError(t, err, codes.InvalidArgument, "Invalid request.")
 }
 
 func TestBadgeService_VerifyBadge_should_succeed(t *testing.T) {
@@ -99,29 +101,17 @@ func TestBadgeService_VerifyBadge_should_succeed(t *testing.T) {
 	assert.NotNil(t, ret)
 }
 
-func TestBadgeService_VerifyBadge_should_return_badrequest_when_in_is_empty(t *testing.T) {
-	t.Parallel()
-
-	emptyInputBadge := ""
-
-	sut := grpc.NewBadgeService(nil)
-
-	_, err := sut.VerifyBadge(t.Context(), &identity_service_sdk_go.VerifyBadgeRequest{Badge: emptyInputBadge})
-
-	grpctesting.AssertGrpcError(t, err, codes.InvalidArgument, "badge or verifiable credential is empty")
-}
-
-func TestBadgeService_VerifyBadge_should_return_internal_error_when_core_service_fails(t *testing.T) {
+func TestBadgeService_VerifyBadge_should_propagate_error_when_core_service_fails(t *testing.T) {
 	t.Parallel()
 
 	badgeJose := uuid.NewString()
 
 	badgeSrv := bffmocks.NewBadgeService(t)
-	badgeSrv.EXPECT().VerifyBadge(t.Context(), &badgeJose).Return(nil, errors.New("failed"))
+	badgeSrv.EXPECT().VerifyBadge(t.Context(), &badgeJose).Return(nil, errBadgeUnexpected)
 
 	sut := grpc.NewBadgeService(badgeSrv)
 
 	_, err := sut.VerifyBadge(t.Context(), &identity_service_sdk_go.VerifyBadgeRequest{Badge: badgeJose})
 
-	grpctesting.AssertGrpcError(t, err, codes.Internal, "badge verification failed: failed")
+	assert.ErrorIs(t, err, errBadgeUnexpected)
 }

@@ -5,6 +5,7 @@ package badge
 
 import (
 	"context"
+	"errors"
 
 	"github.com/outshift/identity-service/internal/core/badge/types"
 )
@@ -15,3 +16,5 @@ type Repository interface {
 	GetLatestByAppID(ctx context.Context, appID string) (*types.Badge, error)
 	GetAllActiveBadges(ctx context.Context, appID string) ([]*types.Badge, error)
 }
+
+var ErrBadgeNotFound = errors.New("badge not found")

@@ -26,4 +26,5 @@ type Repository interface {
 
 var (
 	ErrDeviceOTPNotFound = errors.New("device OTP not found")
+	ErrSessionNotFound   = errors.New("session not found")
 )

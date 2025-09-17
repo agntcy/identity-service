@@ -22,7 +22,6 @@ import (
 	badgetypes "github.com/outshift/identity-service/internal/core/badge/types"
 	idpcore "github.com/outshift/identity-service/internal/core/idp"
 	"github.com/outshift/identity-service/internal/pkg/convertutil"
-	"github.com/outshift/identity-service/internal/pkg/errutil"
 	"github.com/outshift/identity-service/internal/pkg/httputil"
 	"github.com/outshift/identity-service/internal/pkg/ptrutil"
 	"github.com/outshift/identity-service/pkg/log"
@@ -30,7 +29,6 @@ import (
 
 const (
 	proofTypeJWT      = "JWT"
-	credentialSubject = "credentialSubject"
 	issuerExistsError = "issuer already exists"
 )
 
@@ -110,10 +108,7 @@ func (s *service) RegisterIssuer(
 	// Generate a new key for the issuer
 	key, err := s.keyStore.GenerateAndSaveKey(ctx)
 	if err != nil || key == nil {
-		return nil, errutil.Err(
-			err,
-			"error generating and saving key for issuer",
-		)
+		return nil, fmt.Errorf("error generating and saving key for issuer: %w", err)
 	}
 
 	// Get common name for the issuer
@@ -137,10 +132,7 @@ func (s *service) RegisterIssuer(
 	// Prepare the proof
 	proof, err := s.generateProof(ctx, clientCredentials, key.KID)
 	if err != nil {
-		return nil, errutil.Err(
-			err,
-			"error generating proof for issuer registration",
-		)
+		return nil, fmt.Errorf("error generating proof for issuer registration: %w", err)
 	}
 
 	log.Debug("Registering issuer with common name: ", commonName)
@@ -157,9 +149,9 @@ func (s *service) RegisterIssuer(
 
 	if err != nil &&
 		(s.uniqueIssuerPerTenant || !strings.Contains(err.Error(), issuerExistsError)) {
-		return nil, errutil.Err(
+		return nil, fmt.Errorf(
+			"error registering issuer with identity service: %w",
 			err,
-			"error registering issuer with identity service",
 		)
 	}
 
@@ -176,10 +168,7 @@ func (s *service) GenerateID(
 ) (string, error) {
 	proof, err := s.generateProof(ctx, clientCredentials, issuer.KeyID)
 	if err != nil {
-		return "", errutil.Err(
-			err,
-			"error generating proof for ID generation",
-		)
+		return "", fmt.Errorf("error generating proof for ID generation: %w", err)
 	}
 
 	resp, err := s.idClient.GenerateID(&idsdk.GenerateIDParams{
@@ -191,17 +180,11 @@ func (s *service) GenerateID(
 		},
 	})
 	if err != nil {
-		return "", errutil.Err(
-			err,
-			"error generating ID with identity service",
-		)
+		return "", fmt.Errorf("error generating ID with identity service: %w", err)
 	}
 
 	if resp == nil || resp.Payload == nil || resp.Payload.ResolverMetadata == nil {
-		return "", errutil.Err(
-			nil,
-			"error generating ID with identity service",
-		)
+		return "", errors.New("error generating ID with identity service")
 	}
 
 	return resp.Payload.ResolverMetadata.ID, nil
@@ -304,9 +287,9 @@ func (s *service) generateProof(
 	} else {
 		privKey, keyErr := s.keyStore.RetrievePrivKey(ctx, keyId)
 		if keyErr != nil {
-			return nil, errutil.Err(
+			return nil, fmt.Errorf(
+				"error retrieving private key from vault for proof generation: %w",
 				keyErr,
-				"error retrieving private key from vault for proof generation",
 			)
 		}
 
@@ -319,9 +302,9 @@ func (s *service) generateProof(
 	}
 
 	if err != nil {
-		return nil, errutil.Err(
+		return nil, fmt.Errorf(
+			"error generating proof for issuer registration: %w",
 			err,
-			"error generating proof for issuer registration",
 		)
 	}
 
@@ -351,10 +334,7 @@ func (s *service) VerifyVerifiableCredential(
 		},
 	})
 	if err != nil {
-		return nil, errutil.Err(
-			err,
-			"error verifying verifiable credential",
-		)
+		return nil, fmt.Errorf("error verifying verifiable credential: %w", err)
 	}
 
 	if resp == nil || resp.Payload == nil {

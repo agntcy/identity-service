@@ -5,9 +5,10 @@ package webpush
 
 import (
 	"encoding/json"
+	"errors"
+	"fmt"
 
 	webpushgo "github.com/SherClockHolmes/webpush-go"
-	"github.com/outshift/identity-service/internal/pkg/errutil"
 )
 
 // Options are config and extra params needed to send a notification
@@ -38,10 +39,7 @@ func (s *webPushSender) SendWebPushNotification(
 	options *Options,
 ) error {
 	if subscriptionToken == "" {
-		return errutil.Err(
-			nil,
-			"subscription token cannot be nil",
-		)
+		return errors.New("subscription token cannot be nil")
 	}
 
 	// Decode subscription
@@ -49,39 +47,27 @@ func (s *webPushSender) SendWebPushNotification(
 
 	err := json.Unmarshal([]byte(subscriptionToken), &subscription)
 	if err != nil {
-		return errutil.Err(
-			err,
-			"failed to unmarshal subscription token",
-		)
+		return fmt.Errorf("failed to unmarshal subscription token: %w", err)
 	}
 
 	payload, err := json.Marshal(notification)
 	if err != nil {
-		return errutil.Err(err, "failed to marshal notification payload")
+		return fmt.Errorf("failed to marshal notification payload: %w", err)
 	}
 
 	endpoint, ok := subscription["endpoint"].(string)
 	if !ok {
-		return errutil.Err(
-			nil,
-			"subscription endpoint not found",
-		)
+		return errors.New("subscription endpoint not found")
 	}
 
 	p256dh, ok := subscription["p256dh"].(string)
 	if !ok {
-		return errutil.Err(
-			nil,
-			"subscription keys not found",
-		)
+		return errors.New("subscription keys not found")
 	}
 
 	auth, ok := subscription["auth"].(string)
 	if !ok {
-		return errutil.Err(
-			nil,
-			"subscription auth key not found",
-		)
+		return errors.New("subscription auth key not found")
 	}
 
 	// Send Notification

@@ -10,7 +10,6 @@ import (
 	"github.com/outshift/identity-service/internal/bff"
 	"github.com/outshift/identity-service/internal/bff/grpc/converters"
 	"github.com/outshift/identity-service/internal/pkg/convertutil"
-	"github.com/outshift/identity-service/internal/pkg/errutil"
 	"github.com/outshift/identity-service/internal/pkg/grpcutil"
 	"github.com/outshift/identity-service/internal/pkg/pagination"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -33,10 +32,7 @@ func (s *deviceService) AddDevice(
 ) (*identity_service_sdk_go.Device, error) {
 	device, err := s.deviceSrv.AddDevice(ctx, converters.ToDevice(req.GetDevice()))
 	if err != nil {
-		return nil, grpcutil.BadRequestError(errutil.Err(
-			err,
-			"failed to add device",
-		))
+		return nil, grpcutil.Error(err)
 	}
 
 	return converters.FromDevice(device), nil
@@ -48,10 +44,7 @@ func (s *deviceService) RegisterDevice(
 ) (*emptypb.Empty, error) {
 	err := s.deviceSrv.RegisterDevice(ctx, req.GetDeviceId(), converters.ToDevice(req.GetDevice()))
 	if err != nil {
-		return nil, grpcutil.NotFoundError(errutil.Err(
-			err,
-			"failed to get device",
-		))
+		return nil, grpcutil.Error(err)
 	}
 
 	return &emptypb.Empty{}, nil
@@ -69,7 +62,7 @@ func (s *deviceService) ListDevices(
 
 	apps, err := s.deviceSrv.ListRegisteredDevices(ctx, paginationFilter, req.Query)
 	if err != nil {
-		return nil, grpcutil.BadRequestError(err)
+		return nil, grpcutil.Error(err)
 	}
 
 	return &identity_service_sdk_go.ListDevicesResponse{
@@ -84,7 +77,7 @@ func (s *deviceService) DeleteDevice(
 ) (*emptypb.Empty, error) {
 	err := s.deviceSrv.DeleteDevice(ctx, req.GetDeviceId())
 	if err != nil {
-		return nil, grpcutil.BadRequestError(err)
+		return nil, grpcutil.Error(err)
 	}
 
 	return &emptypb.Empty{}, nil
@@ -96,7 +89,7 @@ func (s *deviceService) TestDevice(
 ) (*emptypb.Empty, error) {
 	err := s.deviceSrv.TestDevice(ctx, req.GetDeviceId())
 	if err != nil {
-		return nil, grpcutil.BadRequestError(err)
+		return nil, grpcutil.Error(err)
 	}
 
 	return &emptypb.Empty{}, nil

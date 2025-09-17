@@ -12,7 +12,6 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/secretsmanager"
 	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
-	"github.com/outshift/identity-service/internal/pkg/ptrutil"
 )
 
 type AwsSmCredentialStore struct {
@@ -46,11 +45,13 @@ func (s *AwsSmCredentialStore) Get(
 		return nil, identitycontext.ErrTenantNotFound
 	}
 
+	path := s.getSecretPath(tenantID, subject)
+
 	out, err := s.client.GetSecretValue(ctx, &secretsmanager.GetSecretValueInput{
-		SecretId: ptrutil.Ptr(s.getSecretPath(tenantID, subject)),
+		SecretId: &path,
 	})
 	if err != nil {
-		return nil, fmt.Errorf("unable to get client credentials from vault: %w", err)
+		return nil, fmt.Errorf("awssm client failed to get client credentials (%s): %w", path, err)
 	}
 
 	if out == nil || len(out.SecretBinary) == 0 {
@@ -82,13 +83,15 @@ func (s *AwsSmCredentialStore) Put(
 		return fmt.Errorf("unable to marshal credentials: %w", err)
 	}
 
+	path := s.getSecretPath(tenantID, subject)
+
 	_, err = s.client.CreateSecret(ctx, &secretsmanager.CreateSecretInput{
-		Name:         ptrutil.Ptr(s.getSecretPath(tenantID, subject)),
+		Name:         &path,
 		KmsKeyId:     s.kmsKeyID,
 		SecretBinary: raw,
 	})
 	if err != nil {
-		return fmt.Errorf("unable to store client credentials: %w", err)
+		return fmt.Errorf("awssm client failed to store client credentials (%s): %w", path, err)
 	}
 
 	return nil
@@ -100,11 +103,13 @@ func (s *AwsSmCredentialStore) Delete(ctx context.Context, subject string) error
 		return identitycontext.ErrTenantNotFound
 	}
 
+	path := s.getSecretPath(tenantID, subject)
+
 	_, err := s.client.DeleteSecret(ctx, &secretsmanager.DeleteSecretInput{
-		SecretId: ptrutil.Ptr(s.getSecretPath(tenantID, subject)),
+		SecretId: &path,
 	})
 	if err != nil {
-		return fmt.Errorf("unable to delete client credentials: %w", err)
+		return fmt.Errorf("awssm client failed to delete client credentials (%s): %w", path, err)
 	}
 
 	return nil

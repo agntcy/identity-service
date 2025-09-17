@@ -14,6 +14,7 @@ import (
 	devicemocks "github.com/outshift/identity-service/internal/core/device/mocks"
 	devicetypes "github.com/outshift/identity-service/internal/core/device/types"
 	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
+	"github.com/outshift/identity-service/internal/pkg/errutil"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -47,7 +48,7 @@ func TestDeviceService_AddDevice_should_return_err_when_input_is_nil(t *testing.
 	_, err := sut.AddDevice(context.Background(), nil)
 
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "device cannot be nil")
+	assert.ErrorIs(t, err, errutil.ValidationFailed("device.invalidDevice", "Invalid device payload."))
 }
 
 // RegisterDevice
@@ -85,17 +86,17 @@ func TestDeviceService_RegisterDevice_should_return_err_during_input_validation(
 	testCases := map[string]*struct {
 		deviceID string
 		device   *devicetypes.Device
-		errMsg   string
+		err      error
 	}{
 		"empty deviceID test case": {
 			deviceID: "",
 			device:   &devicetypes.Device{},
-			errMsg:   "device ID cannot be empty",
+			err:      errutil.ValidationFailed("device.idInvalid", "Invalid device ID."),
 		},
 		"nil device test case": {
 			deviceID: "something",
 			device:   nil,
-			errMsg:   "device cannot be nil",
+			err:      errutil.ValidationFailed("device.invalidDevice", "Invalid device payload."),
 		},
 	}
 
@@ -108,7 +109,7 @@ func TestDeviceService_RegisterDevice_should_return_err_during_input_validation(
 			err := sut.RegisterDevice(context.Background(), tc.deviceID, tc.device)
 
 			assert.Error(t, err)
-			assert.ErrorContains(t, err, tc.errMsg)
+			assert.ErrorIs(t, err, tc.err)
 		})
 	}
 }

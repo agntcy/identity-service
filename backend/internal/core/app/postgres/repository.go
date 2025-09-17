@@ -180,7 +180,9 @@ func (r *repository) GetAllApps(
 
 	var totalApps int64
 
-	err = dbQuery.Model(&App{}).Count(&totalApps).Error
+	err = dbQuery.Model(&App{}).
+		Scopes(gormutil.BelongsToTenant(ctx)).
+		Count(&totalApps).Error
 	if err != nil {
 		return nil, fmt.Errorf("there was an error counting the apps: %w", err)
 	}

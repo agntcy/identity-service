@@ -5,13 +5,14 @@ package issuer
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/outshift/identity-service/internal/core/identity"
 	idpcore "github.com/outshift/identity-service/internal/core/idp"
 	settingstypes "github.com/outshift/identity-service/internal/core/settings/types"
 	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
-	"github.com/outshift/identity-service/internal/pkg/errutil"
+	"github.com/outshift/identity-service/pkg/log"
 )
 
 type Service interface {
@@ -42,13 +43,13 @@ func (s *service) SetIssuer(
 ) error {
 	// Validate the issuer settings.
 	if issuerSettings == nil {
-		return errutil.Err(nil, "issuer settings cannot be nil")
+		return errors.New("issuer settings cannot be nil")
 	}
 
 	// Get organization details
 	organizationID, ok := identitycontext.GetOrganizationID(ctx)
 	if !ok {
-		return fmt.Errorf("organization id not found in context")
+		return identitycontext.ErrOrganizationNotFound
 	}
 
 	var (
@@ -58,24 +59,28 @@ func (s *service) SetIssuer(
 
 	idp, err := s.idpFactory.Create(ctx, issuerSettings)
 	if err != nil {
-		return errutil.Err(err, "failed to create IDP instance")
+		return fmt.Errorf("idp factory in SetIssuer failed to create an IdP instance: %w", err)
 	}
 
 	clientCredentials, err = idp.CreateClientCredentialsPair(ctx)
 	if err != nil {
-		return errutil.Err(err, "failed to create client credentials pair")
+		return fmt.Errorf("idp in SetIssuer failed to create client credentials pair: %w", err)
 	}
 
 	defer func() {
 		// Clean up client credentials if they were created.
 		if err != nil && clientCredentials != nil {
-			_ = idp.DeleteClientCredentialsPair(ctx, clientCredentials)
+			s.DeleteClientCredentialsPair(ctx, idp, clientCredentials)
 		}
 	}()
 
 	err = s.credentialStore.Put(ctx, clientCredentials, clientCredentials.ClientID)
 	if err != nil {
-		return errutil.Err(err, "unable to store client credentials")
+		return fmt.Errorf(
+			"credential store in SetIssuer failed to store client credentials %s: %w",
+			clientCredentials.ClientID,
+			err,
+		)
 	}
 
 	// Register the issuer with the identity service.
@@ -87,10 +92,10 @@ func (s *service) SetIssuer(
 	if err != nil {
 		// Clean up client credentials if they were created.
 		if clientCredentials != nil {
-			_ = idp.DeleteClientCredentialsPair(ctx, clientCredentials)
+			s.DeleteClientCredentialsPair(ctx, idp, clientCredentials)
 		}
 
-		return errutil.Err(err, "failed to register issuer")
+		return fmt.Errorf("identity service in SetIssuer failed to register issuer: %w", err)
 	}
 
 	// Set the issuer ID and key ID in the issuer settings.
@@ -98,4 +103,15 @@ func (s *service) SetIssuer(
 	issuerSettings.KeyID = issuer.KeyID
 
 	return nil
+}
+
+func (s *service) DeleteClientCredentialsPair(
+	ctx context.Context,
+	idp idpcore.Idp,
+	clientCredentials *idpcore.ClientCredentials,
+) {
+	err := idp.DeleteClientCredentialsPair(ctx, clientCredentials)
+	if err != nil {
+		log.Error(fmt.Errorf("idp in SetIssuer failed to delete client credentials pair: %w", err))
+	}
 }

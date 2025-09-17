@@ -5,13 +5,11 @@ package grpc
 
 import (
 	"context"
-	"errors"
 
 	identity_service_sdk_go "github.com/outshift/identity-service/api/server/outshift/identity/service/v1alpha1"
 	"github.com/outshift/identity-service/internal/bff"
 	"github.com/outshift/identity-service/internal/bff/grpc/converters"
 	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
-	"github.com/outshift/identity-service/internal/pkg/errutil"
 	"github.com/outshift/identity-service/internal/pkg/grpcutil"
 	"github.com/outshift/identity-service/internal/pkg/ptrutil"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -39,13 +37,13 @@ func (s *authService) AppInfo(
 	// Get app ID from context
 	appID, ok := identitycontext.GetAppID(ctx)
 	if !ok || appID == "" {
-		return nil, grpcutil.NotFoundError(errors.New("app ID not found in context"))
+		return nil, identitycontext.ErrAppNotFound
 	}
 
 	// Get app info from the app service
 	app, err := s.appSrv.GetApp(ctx, appID)
 	if err != nil {
-		return nil, grpcutil.BadRequestError(errors.New("failed to get app info"))
+		return nil, grpcutil.Error(err)
 	}
 
 	return &identity_service_sdk_go.AppInfoResponse{
@@ -64,7 +62,7 @@ func (s *authService) Authorize(
 		req.UserToken,
 	)
 	if err != nil {
-		return nil, grpcutil.UnauthorizedError(errors.New("failed to authorize"))
+		return nil, grpcutil.Error(err)
 	}
 
 	return &identity_service_sdk_go.AuthorizeResponse{
@@ -76,27 +74,13 @@ func (s *authService) Token(
 	ctx context.Context,
 	req *identity_service_sdk_go.TokenRequest,
 ) (*identity_service_sdk_go.TokenResponse, error) {
-	if req.AuthorizationCode == "" {
-		return nil, grpcutil.BadRequestError(
-			errutil.Err(
-				nil,
-				"authorization code cannot be empty",
-			),
-		)
-	}
-
 	// Get the session with token
 	session, err := s.authSrv.Token(
 		ctx,
 		req.AuthorizationCode,
 	)
 	if err != nil {
-		return nil, grpcutil.UnauthorizedError(
-			errutil.Err(
-				err,
-				"failed to issue token",
-			),
-		)
+		return nil, grpcutil.Error(err)
 	}
 
 	return &identity_service_sdk_go.TokenResponse{
@@ -114,10 +98,7 @@ func (s *authService) ExtAuthz(
 		req.GetToolName(),
 	)
 	if err != nil {
-		return nil, grpcutil.UnauthorizedError(errutil.Err(
-			nil,
-			"failed to authorize",
-		))
+		return nil, grpcutil.Error(err)
 	}
 
 	return &emptypb.Empty{}, nil
@@ -135,7 +116,7 @@ func (s *authService) ApproveToken(
 		req.GetApprove(),
 	)
 	if err != nil {
-		return nil, grpcutil.InternalError(errutil.Err(nil, "failed to approve token"))
+		return nil, grpcutil.Error(err)
 	}
 
 	return &emptypb.Empty{}, nil

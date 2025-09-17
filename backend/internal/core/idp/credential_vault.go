@@ -31,9 +31,11 @@ func (s *VaultCredentialStore) Get(
 		return nil, identitycontext.ErrTenantNotFound
 	}
 
-	data, err := s.vaultClient.Get(ctx, s.getSecretPath(tenantID, subject))
+	path := s.getSecretPath(tenantID, subject)
+
+	data, err := s.vaultClient.Get(ctx, path)
 	if err != nil {
-		return nil, fmt.Errorf("unable to get client credentials from vault: %w", err)
+		return nil, fmt.Errorf("vault client failed to get client credentials (%s): %w", path, err)
 	}
 
 	if data == nil {
@@ -81,9 +83,11 @@ func (s *VaultCredentialStore) Put(
 		return fmt.Errorf("unable to unmarshal credentials: %w", err)
 	}
 
-	err = s.vaultClient.Put(ctx, s.getSecretPath(tenantID, subject), data)
+	path := s.getSecretPath(tenantID, subject)
+
+	err = s.vaultClient.Put(ctx, path, data)
 	if err != nil {
-		return fmt.Errorf("unable to store client credentials: %w", err)
+		return fmt.Errorf("vault client failed to store client credentials (%s): %w", path, err)
 	}
 
 	return nil
@@ -98,9 +102,11 @@ func (s *VaultCredentialStore) Delete(
 		return identitycontext.ErrTenantNotFound
 	}
 
-	err := s.vaultClient.Delete(ctx, s.getSecretPath(tenantID, subject))
+	path := s.getSecretPath(tenantID, subject)
+
+	err := s.vaultClient.Delete(ctx, path)
 	if err != nil {
-		return fmt.Errorf("unable to delete client credentials: %w", err)
+		return fmt.Errorf("vault client failed to delete client credentials (%s): %w", path, err)
 	}
 
 	return nil

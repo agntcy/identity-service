@@ -72,7 +72,7 @@ func TestVaultCredentialStore_Get(t *testing.T) {
 		_, err := sut.Get(ctx, subject)
 
 		assert.Error(t, err)
-		assert.ErrorContains(t, err, "unable to get client credentials from vault")
+		assert.ErrorContains(t, err, "vault client failed to get client credentials")
 	})
 
 	t.Run("should return an error if secret path not found in valut", func(t *testing.T) {
@@ -143,7 +143,7 @@ func TestVaultCredentialStore_Put(t *testing.T) {
 		err := sut.Put(ctx, &idp.ClientCredentials{}, subject)
 
 		assert.Error(t, err)
-		assert.ErrorContains(t, err, "unable to store client credentials")
+		assert.ErrorContains(t, err, "vault client failed to store client credentials")
 	})
 
 	t.Run("should return an error if cred parameter is nil", func(t *testing.T) {
@@ -202,7 +202,7 @@ func TestVaultCredentialStore_Delete(t *testing.T) {
 		err := sut.Delete(ctx, subject)
 
 		assert.Error(t, err)
-		assert.ErrorContains(t, err, "unable to delete client credentials")
+		assert.ErrorContains(t, err, "vault client failed to delete client credentials")
 	})
 }
 
