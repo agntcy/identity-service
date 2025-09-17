@@ -241,7 +241,7 @@ describe('GlobalSearch', () => {
     // Component currently includes both categories
     expect(labels).toEqual({
       'agentic-services': 'Agentic Services',
-      'policies': 'Policies'
+      policies: 'Policies'
     });
   });
 
