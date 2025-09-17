@@ -11,7 +11,3 @@ export const pwaConfig = {
   themeColor: '#eff3fc',
   backgroundColor: '#eff3fc'
 };
-and efficient identity management for agents.',
-  themeColor: '#eff3fc',
-  backgroundColor: '#eff3fc'
-};

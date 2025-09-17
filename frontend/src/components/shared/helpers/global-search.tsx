@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-/* eslint-disable indent */
+
 import {
   SearchFieldWithAutocomplete,
   SearchFieldWithAutocompleteOption
@@ -15,7 +15,6 @@ import {useCallback, useMemo, useState} from 'react';
 import {useGetAgenticService, useGetAgenticServices, useGetPolicies} from '@/queries';
 import {AgenticServiceType} from '../agentic-services/agentic-service-type';
 import {PATHS} from '@/router/paths';
-import {useShallow} from 'zustand/react/shallow';
 import {GeneralSize, OverflowTooltip, Tag, TagStatus} from '@outshift/spark-design';
 
 type GlobalSearchOptionType = App | Policy;
