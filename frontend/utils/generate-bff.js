@@ -15,30 +15,6 @@ const path = require('path');
 
     shell.echo(chalk.blue('Start generate bff...'));
 
-    // Check if swagger-typescript-api is installed and install it if not
-    shell.echo(chalk.grey('Check if swagger-typescript-api is installed...'));
-    if (!shell.which('swagger-typescript-api')) {
-      shell.echo(chalk.grey('swagger-typescript-api is not installed. Installing swagger-typescript-api...'));
-      if (shell.exec('npm install swagger-typescript-api -g').code !== 0) {
-        shell.echo(chalk.red('Error: swagger-typescript-api installation failed.'));
-        shell.exit(1);
-      }
-    } else {
-      shell.echo(chalk.green('swagger-typescript-api is already installed.'));
-    }
-
-    // Check if buf is installed and install it if not
-    shell.echo(chalk.grey('Check if buf is installed...'));
-    if (!shell.which('buf')) {
-      shell.echo(chalk.grey('buf is not installed. Installing buf...'));
-      if (shell.exec('npm install @bufbuild/buf -g').code !== 0) {
-        shell.echo(chalk.red('Error: buf installation failed.'));
-        shell.exit(1);
-      }
-    } else {
-      shell.echo(chalk.green('buf is already installed.'));
-    }
-
     // Globals
     const IDENTITY_V1ALPHA1_PROTO_PATH = "proto/outshift/identity/service/v1alpha1";
     const SHARED_V1ALPHA1_PROTO_PATH = "proto/outshift/identity/service/shared/v1alpha1";

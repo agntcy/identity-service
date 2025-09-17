@@ -4,9 +4,11 @@
   "private": true,
   "packageManager": "yarn@4.5.0",
   "dependencies": {
+    "@bufbuild/buf": "^1.57.2",
     "chalk": "^5.3.0",
     "globby": "^13.2.2",
-    "shelljs": "^0.8.5"
+    "shelljs": "^0.8.5",
+    "swagger-typescript-api": "^13.2.10"
   },
   "scripts": {
     "generate-bff": "node generate-bff.js"
