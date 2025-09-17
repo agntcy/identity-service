@@ -8,8 +8,8 @@ import {useAnalytics, useAuth} from '@/hooks';
 import {docs} from '@/utils/docs';
 import LandingLogo from '@/assets/welcome/landing.svg?react';
 import * as CookieConsentVanilla from 'vanilla-cookieconsent';
+import {globalConfig} from '@/config/global';
 import '@/styles/welcome.css';
-import {links} from '@/constants/links';
 
 const Welcome = () => {
   const {login, register} = useAuth();
@@ -88,7 +88,7 @@ const Welcome = () => {
                 </div>
                 <div className="flex justify-center gap-4 mx-auto pt-8 md:pt-2">
                   <Link
-                    href={links.termsAndConditions}
+                    href={globalConfig.links.termsAndConditions}
                     openInNewTab
                     fontStyle={{
                       fontWeight: 400,
@@ -101,7 +101,7 @@ const Welcome = () => {
                     <span className="text-[10px] md:text-[12px]">Terms & Conditions</span>
                   </Link>
                   <Link
-                    href={links.privacyPolicy}
+                    href={globalConfig.links.privacyPolicy}
                     openInNewTab
                     fontStyle={{
                       fontWeight: 400,

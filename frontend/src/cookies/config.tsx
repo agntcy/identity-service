@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {links} from '@/constants/links';
+import {globalConfig} from '@/config/global';
 import {type CookieConsentConfig} from 'vanilla-cookieconsent';
 
 export const config: CookieConsentConfig = {
@@ -47,7 +47,7 @@ export const config: CookieConsentConfig = {
           acceptNecessaryBtn: 'Reject all',
           showPreferencesBtn: 'Manage preferences',
           footer: `
-            <a href="${links.privacyPolicy}" target="_blank">Privacy Policy</a>
+            <a href="${globalConfig.links.privacyPolicy}" target="_blank">Privacy Policy</a>
           `
         },
         preferencesModal: {

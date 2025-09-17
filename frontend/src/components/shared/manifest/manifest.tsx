@@ -2,7 +2,8 @@
  * Copyright 2025 Cisco Systems, Inc. and its affiliates
  * SPDX-License-Identifier: Apache-2.0
  */
-import {pwaConfig} from '@/constants/pwa';
+import config from '@/config';
+import {globalConfig} from '@/config/global';
 import {useMemo} from 'react';
 import {Helmet} from 'react-helmet-async';
 
@@ -12,16 +13,18 @@ export const Manifest = () => {
 
   const manifestHref = useMemo(() => {
     const manifest = {
-      name: pwaConfig.name,
-      short_name: pwaConfig.shortName,
-      description: pwaConfig.description,
-      theme_color: pwaConfig.themeColor,
+      name: globalConfig.pwa.name,
+      short_name: globalConfig.pwa.shortName,
+      description: globalConfig.pwa.description,
+      theme_color: globalConfig.pwa.themeColor,
       display: 'standalone',
       display_override: ['tabbed'],
       orientation: 'portrait',
       scope: window.location.origin,
-      start_url: id ? `${window.location.origin}/onboard-device?id=${id}` : `${window.location.origin}/onboard-device`,
-      background_color: pwaConfig.backgroundColor,
+      start_url: id
+        ? `${window.location.origin}${config.APP_BASE_NAME}/onboard-device?id=${id}`
+        : `${window.location.origin}${config.APP_BASE_NAME}/onboard-device`,
+      background_color: globalConfig.pwa.backgroundColor,
       icons: [
         {
           src: `${window.location.origin}/pwa-64x64.png`,
