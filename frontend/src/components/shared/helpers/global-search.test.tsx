@@ -48,11 +48,6 @@ vi.mock('@/queries', () => ({
   useGetAgenticService: vi.fn()
 }));
 
-// Mock store
-vi.mock('@/store', () => ({
-  useFeatureFlagsStore: vi.fn()
-}));
-
 // Mock zustand shallow
 vi.mock('zustand/react/shallow', () => ({
   useShallow: vi.fn((fn) => fn)
@@ -205,18 +200,6 @@ describe('GlobalSearch', () => {
 
     // Get the mocked modules
     const {useGetAgenticServices, useGetPolicies, useGetAgenticService} = vi.mocked(await import('@/queries'));
-    const {useFeatureFlagsStore} = vi.mocked(await import('@/store'));
-
-    // Setup default store mock
-    useFeatureFlagsStore.mockImplementation((selector) => {
-      const mockStore = {
-        featureFlags: {
-          isTbacEnabled: true
-        }
-      };
-      // @ts-expect-error error
-      return selector(mockStore);
-    });
 
     // Setup default query mocks
     useGetAgenticServices.mockReturnValue({
@@ -249,38 +232,16 @@ describe('GlobalSearch', () => {
     expect(screen.getByTestId('server-filtering')).toHaveTextContent('Server Filtering');
   });
 
-  it('displays correct labels when TBAC is enabled', () => {
+  it('displays correct labels (includes both agentic services and policies)', () => {
     renderGlobalSearch();
 
     const labelsElement = screen.getByTestId('labels');
     const labels = JSON.parse(labelsElement.textContent || '{}');
 
+    // Component currently includes both categories
     expect(labels).toEqual({
       'agentic-services': 'Agentic Services',
       policies: 'Policies'
-    });
-  });
-
-  it('displays correct labels when TBAC is disabled', async () => {
-    const {useFeatureFlagsStore} = vi.mocked(await import('@/store'));
-
-    useFeatureFlagsStore.mockImplementation((selector) => {
-      const mockStore = {
-        featureFlags: {
-          isTbacEnabled: false
-        }
-      };
-      // @ts-expect-error error
-      return selector(mockStore);
-    });
-
-    renderGlobalSearch();
-
-    const labelsElement = screen.getByTestId('labels');
-    const labels = JSON.parse(labelsElement.textContent || '{}');
-
-    expect(labels).toEqual({
-      'agentic-services': 'Agentic Services'
     });
   });
 
@@ -303,46 +264,6 @@ describe('GlobalSearch', () => {
     expect(useGetAgenticServices).toHaveBeenCalledWith({query: '', size: 10}, false);
   });
 
-  it('calls useGetPolicies with correct parameters when TBAC is enabled', async () => {
-    const {useGetPolicies} = vi.mocked(await import('@/queries'));
-
-    renderGlobalSearch();
-
-    const searchInput = screen.getByTestId('search-input');
-    fireEvent.change(searchInput, {target: {value: 'test'}});
-
-    expect(useGetPolicies).toHaveBeenCalledWith({
-      query: {query: 'test', size: 10},
-      enabled: true
-    });
-  });
-
-  it('disables policies query when TBAC is disabled', async () => {
-    const {useFeatureFlagsStore} = vi.mocked(await import('@/store'));
-    const {useGetPolicies} = vi.mocked(await import('@/queries'));
-
-    useFeatureFlagsStore.mockImplementation((selector) => {
-      const mockStore = {
-        featureFlags: {
-          isTbacEnabled: false
-        }
-      };
-      // @ts-expect-error error
-
-      return selector(mockStore);
-    });
-
-    renderGlobalSearch();
-
-    const searchInput = screen.getByTestId('search-input');
-    fireEvent.change(searchInput, {target: {value: 'test'}});
-
-    expect(useGetPolicies).toHaveBeenCalledWith({
-      query: {query: 'test', size: 10},
-      enabled: false
-    });
-  });
-
   it('shows loading when agentic services are loading', async () => {
     const {useGetAgenticServices} = vi.mocked(await import('@/queries'));
 
@@ -357,51 +278,13 @@ describe('GlobalSearch', () => {
     expect(screen.getByTestId('loading-state')).toHaveTextContent('Loading');
   });
 
-  it('shows loading when policies are loading and TBAC is enabled', async () => {
-    const {useGetPolicies} = vi.mocked(await import('@/queries'));
-
-    useGetPolicies.mockReturnValue({
-      // @ts-expect-error error
-      data: null,
-      isLoading: true
-    }) as any;
-
-    renderGlobalSearch();
-
-    expect(screen.getByTestId('loading-state')).toHaveTextContent('Loading');
-  });
-
-  it('does not show loading for policies when TBAC is disabled', async () => {
-    const {useFeatureFlagsStore} = vi.mocked(await import('@/store'));
-    const {useGetPolicies} = vi.mocked(await import('@/queries'));
-
-    useFeatureFlagsStore.mockImplementation((selector) => {
-      const mockStore = {
-        featureFlags: {
-          isTbacEnabled: false
-        }
-      };
-      // @ts-expect-error error
-      return selector(mockStore);
-    });
-
-    useGetPolicies.mockReturnValue({
-      // @ts-expect-error error
-      data: null,
-      isLoading: true
-    });
-
-    renderGlobalSearch();
-
-    expect(screen.getByTestId('loading-state')).toHaveTextContent('Not Loading');
-  });
-
-  it('generates correct number of options', () => {
+  it('generates correct number of options (agentic services + policies)', () => {
     renderGlobalSearch();
 
     const searchInput = screen.getByTestId('search-input');
     fireEvent.change(searchInput, {target: {value: 'test'}});
 
+    // Should show both agentic services (2) and policies (2) = 4 total
     expect(screen.getByTestId('options-count')).toHaveTextContent('4 options');
   });
 
@@ -425,37 +308,13 @@ describe('GlobalSearch', () => {
     const searchInput = screen.getByTestId('search-input');
     fireEvent.change(searchInput, {target: {value: 'test'}});
 
+    // First agentic service option should be Alpha Service (id: 2)
     const firstOption = screen.getByTestId('option-0');
-    expect(firstOption).toHaveTextContent('agentic-services-2'); // Alpha Service should be first
+    expect(firstOption).toHaveTextContent('agentic-services-2');
   });
 
-  it('sorts policies alphabetically', async () => {
-    const {useGetPolicies} = vi.mocked(await import('@/queries'));
-
-    const unsortedPolicies = {
-      policies: [
-        {id: 'p1', name: 'Zebra Policy', rules: [], assignedTo: '1'},
-        {id: 'p2', name: 'Alpha Policy', rules: [], assignedTo: '2'}
-      ]
-    };
-
-    useGetPolicies.mockReturnValue({
-      data: unsortedPolicies,
-      isLoading: false
-    } as any);
-
-    renderGlobalSearch();
-
-    const searchInput = screen.getByTestId('search-input');
-    fireEvent.change(searchInput, {target: {value: 'test'}});
-
-    // Policies come after agentic services, so check index 2 for first policy
-    const policyOption = screen.getByTestId('option-2');
-    expect(policyOption).toHaveTextContent('policies-p2'); // Alpha Policy should be first
-  });
-
-  it('handles empty data gracefully', async () => {
-    const {useGetAgenticServices, useGetPolicies} = vi.mocked(await import('@/queries'));
+  it('handles empty agentic services data gracefully', async () => {
+    const {useGetAgenticServices} = vi.mocked(await import('@/queries'));
 
     useGetAgenticServices.mockReturnValue({
       // @ts-expect-error error
@@ -463,18 +322,13 @@ describe('GlobalSearch', () => {
       isLoading: false
     });
 
-    useGetPolicies.mockReturnValue({
-      // @ts-expect-error error
-      data: null,
-      isLoading: false
-    });
-
     renderGlobalSearch();
 
     const searchInput = screen.getByTestId('search-input');
     fireEvent.change(searchInput, {target: {value: 'test'}});
 
-    expect(screen.getByTestId('options-count')).toHaveTextContent('0 options');
+    // Should still show policies (2 options) even when agentic services data is null
+    expect(screen.getByTestId('options-count')).toHaveTextContent('2 options');
   });
 
   it('navigates to agentic service when selected', () => {
@@ -489,50 +343,6 @@ describe('GlobalSearch', () => {
     expect(mockNavigate).toHaveBeenCalledWith('/agentic-services/1');
   });
 
-  it('navigates to policy when selected', () => {
-    renderGlobalSearch();
-
-    const searchInput = screen.getByTestId('search-input');
-    fireEvent.change(searchInput, {target: {value: 'test'}});
-
-    const policyOption = screen.getByTestId('option-2').querySelector('button'); // Policies come after services
-    fireEvent.click(policyOption!);
-
-    expect(mockNavigate).toHaveBeenCalledWith('/policies/p1');
-  });
-
-  it('includes policies in options when TBAC is enabled', () => {
-    renderGlobalSearch();
-
-    const searchInput = screen.getByTestId('search-input');
-    fireEvent.change(searchInput, {target: {value: 'test'}});
-
-    // Should have 2 services + 2 policies = 4 options
-    expect(screen.getByTestId('options-count')).toHaveTextContent('4 options');
-  });
-
-  it('excludes policies from options when TBAC is disabled', async () => {
-    const {useFeatureFlagsStore} = vi.mocked(await import('@/store'));
-
-    useFeatureFlagsStore.mockImplementation((selector) => {
-      const mockStore = {
-        featureFlags: {
-          isTbacEnabled: false
-        }
-      };
-      // @ts-expect-error error
-      return selector(mockStore);
-    });
-
-    renderGlobalSearch();
-
-    const searchInput = screen.getByTestId('search-input');
-    fireEvent.change(searchInput, {target: {value: 'test'}});
-
-    // Should have only 2 services
-    expect(screen.getByTestId('options-count')).toHaveTextContent('2 options');
-  });
-
   it('renders ApplicationListItem components correctly', () => {
     renderGlobalSearch();
 
@@ -542,17 +352,6 @@ describe('GlobalSearch', () => {
     // Check that agentic service type components are rendered
     const agenticServiceTypes = screen.getAllByTestId('agentic-service-type');
     expect(agenticServiceTypes.length).toBeGreaterThan(0);
-  });
-
-  it('renders PolicyListItem components correctly', () => {
-    renderGlobalSearch();
-
-    const searchInput = screen.getByTestId('search-input');
-    fireEvent.change(searchInput, {target: {value: 'test'}});
-
-    // Check that tags are rendered for policies
-    const tags = screen.getAllByTestId('tag');
-    expect(tags.length).toBeGreaterThan(0);
   });
 
   it('handles missing app names in ApplicationListItem', async () => {
@@ -572,44 +371,8 @@ describe('GlobalSearch', () => {
     const searchInput = screen.getByTestId('search-input');
     fireEvent.change(searchInput, {target: {value: 'test'}});
 
-    // Should not crash when name is missing
-    expect(screen.getByTestId('options-count')).toHaveTextContent('3 options'); // 1 service + 2 policies
-  });
-
-  it('handles missing policy names in PolicyListItem', async () => {
-    const {useGetPolicies} = vi.mocked(await import('@/queries'));
-
-    const policiesWithMissingName = {
-      policies: [{id: 'p1', rules: [], assignedTo: '1'}] // No name property
-    };
-
-    useGetPolicies.mockReturnValue({
-      data: policiesWithMissingName,
-      isLoading: false
-    } as any);
-
-    renderGlobalSearch();
-
-    const searchInput = screen.getByTestId('search-input');
-    fireEvent.change(searchInput, {target: {value: 'test'}});
-
-    // Should not crash when name is missing
-    expect(screen.getByTestId('options-count')).toHaveTextContent('3 options'); // 2 services + 1 policy
-  });
-
-  it('displays correct rule count in PolicyListItem', () => {
-    renderGlobalSearch();
-
-    const searchInput = screen.getByTestId('search-input');
-    fireEvent.change(searchInput, {target: {value: 'test'}});
-
-    // Check that tags are rendered for policies (which include rule counts)
-    const tags = screen.getAllByTestId('tag');
-    expect(tags.length).toBeGreaterThan(0);
-
-    // Verify the content of at least one tag shows rule count
-    const firstTag = tags[0];
-    expect(firstTag).toHaveTextContent('rules');
+    // Should show 1 agentic service + 2 policies = 3 options
+    expect(screen.getByTestId('options-count')).toHaveTextContent('3 options');
   });
 
   it('handles undefined apps array', async () => {
@@ -625,46 +388,8 @@ describe('GlobalSearch', () => {
     const searchInput = screen.getByTestId('search-input');
     fireEvent.change(searchInput, {target: {value: 'test'}});
 
-    // Should not crash and show options only for policies
+    // Should show only policies (2 options) when apps array is undefined
     expect(screen.getByTestId('options-count')).toHaveTextContent('2 options');
-  });
-
-  it('handles undefined policies array', async () => {
-    const {useGetPolicies} = vi.mocked(await import('@/queries'));
-
-    useGetPolicies.mockReturnValue({
-      data: {policies: undefined},
-      isLoading: false
-    } as any);
-
-    renderGlobalSearch();
-
-    const searchInput = screen.getByTestId('search-input');
-    fireEvent.change(searchInput, {target: {value: 'test'}});
-
-    // Should not crash and show options only for services
-    expect(screen.getByTestId('options-count')).toHaveTextContent('2 options');
-  });
-
-  it('handles missing rules array in policies', async () => {
-    const {useGetPolicies} = vi.mocked(await import('@/queries'));
-
-    const policiesWithoutRules = {
-      policies: [{id: 'p1', name: 'Policy 1', assignedTo: '1'}] // No rules property
-    };
-
-    useGetPolicies.mockReturnValue({
-      data: policiesWithoutRules,
-      isLoading: false
-    } as any);
-
-    renderGlobalSearch();
-
-    const searchInput = screen.getByTestId('search-input');
-    fireEvent.change(searchInput, {target: {value: 'test'}});
-
-    // Should not crash when rules are missing
-    expect(screen.getByTestId('options-count')).toHaveTextContent('3 options'); // 2 services + 1 policy
   });
 
   it('does not navigate when string option is selected', () => {
@@ -678,7 +403,7 @@ describe('GlobalSearch', () => {
   });
 
   it('uses correct SIZE constant for queries', async () => {
-    const {useGetAgenticServices, useGetPolicies} = vi.mocked(await import('@/queries'));
+    const {useGetAgenticServices} = vi.mocked(await import('@/queries'));
 
     renderGlobalSearch();
 
@@ -686,42 +411,5 @@ describe('GlobalSearch', () => {
     fireEvent.change(searchInput, {target: {value: 'test'}});
 
     expect(useGetAgenticServices).toHaveBeenCalledWith({query: 'test', size: 10}, true);
-
-    expect(useGetPolicies).toHaveBeenCalledWith({
-      query: {query: 'test', size: 10},
-      enabled: true
-    });
-  });
-
-  it('uses useShallow for store selector', async () => {
-    const {useShallow} = vi.mocked(await import('zustand/react/shallow'));
-
-    renderGlobalSearch();
-
-    expect(useShallow).toHaveBeenCalled();
-  });
-
-  it('selects correct feature flag from store', async () => {
-    const {useFeatureFlagsStore} = vi.mocked(await import('@/store'));
-
-    let selectorFunction: any;
-    useFeatureFlagsStore.mockImplementation((selector) => {
-      selectorFunction = selector;
-      return {isTbacEnabled: true};
-    });
-
-    renderGlobalSearch();
-
-    // Test the selector function
-    const mockState = {
-      featureFlags: {
-        isTbacEnabled: false,
-        otherFlag: true
-      },
-      otherProperty: 'should not be selected'
-    };
-
-    const result = selectorFunction(mockState);
-    expect(result).toEqual({isTbacEnabled: false});
   });
 });

@@ -92,16 +92,6 @@ vi.mock('@outshift/spark-design', () => ({
   )
 }));
 
-// Mock Zustand store
-vi.mock('@/store', () => ({
-  useFeatureFlagsStore: (selector: any) =>
-    selector({
-      featureFlags: {
-        isTbacEnabled: mockIsTbacEnabled
-      }
-    })
-}));
-
 vi.mock('zustand/react/shallow', () => ({
   useShallow: (fn: any) => fn
 }));

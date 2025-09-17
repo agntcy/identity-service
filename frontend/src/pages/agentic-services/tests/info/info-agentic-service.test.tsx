@@ -47,11 +47,6 @@ vi.mock('@/mutations', () => ({
   useDeleteAgenticService: vi.fn()
 }));
 
-// Mock store
-vi.mock('@/store', () => ({
-  useFeatureFlagsStore: vi.fn()
-}));
-
 // Mock zustand shallow
 vi.mock('zustand/react/shallow', () => ({
   useShallow: vi.fn((fn) => fn)
@@ -186,7 +181,6 @@ const mockUseDeleteAgenticService = vi.mocked(useDeleteAgenticService);
 const mockUseGetAgenticService = vi.mocked(useGetAgenticService);
 const mockUseParams = vi.mocked(await import('react-router-dom')).useParams;
 const mockUseShallow = vi.mocked(await import('zustand/react/shallow')).useShallow;
-const mockUseFeatureFlagsStore = vi.mocked(await import('@/store')).useFeatureFlagsStore;
 const mockToastImport = vi.mocked(await import('@outshift/spark-design')).toast;
 const mockUseNavigate = vi.mocked(await import('react-router-dom')).useNavigate;
 const mockGeneratePath = vi.mocked(await import('react-router-dom')).generatePath;
@@ -230,10 +224,6 @@ describe('InfoAgenticService', () => {
     });
 
     mockUseShallow.mockImplementation((selectorFn) => selectorFn);
-
-    mockUseFeatureFlagsStore.mockReturnValue({
-      isTbacEnabled: false
-    });
 
     mockUseGetAgenticService.mockReturnValue({
       data: mockApp,
@@ -315,41 +305,6 @@ describe('InfoAgenticService', () => {
     const breadcrumbsData = JSON.parse(breadcrumbs.getAttribute('data-breadcrumbs') || '[]');
 
     expect(breadcrumbsData[1].text).toBe('Agentic Service');
-  });
-
-  it('renders subnav when TBAC is enabled', () => {
-    mockUseFeatureFlagsStore.mockReturnValue({
-      isTbacEnabled: true
-    });
-
-    renderWithClient(<InfoAgenticService />);
-
-    const subNav = screen.getByTestId('sub-nav');
-    const subNavData = JSON.parse(subNav.getAttribute('data-sub-nav') || '[]');
-
-    expect(subNavData).toEqual([
-      {
-        label: 'About',
-        href: '/agentic-services/service-123'
-      },
-      {
-        label: 'Policies Assigned To',
-        href: '/agentic-services/service-123/policies-assigned-to'
-      },
-      {
-        label: 'Policies Used By',
-        href: '/agentic-services/service-123/policies-used-by'
-      }
-    ]);
-  });
-
-  it('does not render subnav when TBAC is disabled', () => {
-    renderWithClient(<InfoAgenticService />);
-
-    const subNav = screen.getByTestId('sub-nav');
-    const subNavData = JSON.parse(subNav.getAttribute('data-sub-nav') || 'null');
-
-    expect(subNavData).toBeNull();
   });
 
   it('renders action buttons when not loading or error', () => {
@@ -673,67 +628,6 @@ describe('InfoAgenticService', () => {
     expect(badgeModal).toHaveAttribute('data-title', 'Re-Issue Badge');
   });
 
-  it('handles policies-assigned-to URL path', () => {
-    window.location.pathname = '/agentic-services/123/policies-assigned-to';
-
-    renderWithClient(<InfoAgenticService />);
-
-    const breadcrumbs = screen.getByTestId('breadcrumbs');
-    const breadcrumbsData = JSON.parse(breadcrumbs.getAttribute('data-breadcrumbs') || '[]');
-
-    expect(breadcrumbsData).toEqual([
-      {
-        text: 'Agentic Services',
-        link: PATHS.agenticServices.base
-      },
-      {
-        text: 'Test Agentic Service',
-        link: '/agentic-services/service-123'
-      },
-      {
-        text: 'Policies Assigned To'
-      }
-    ]);
-  });
-
-  it('handles policies-used-by URL path', () => {
-    window.location.pathname = '/agentic-services/123/policies-used-by';
-
-    renderWithClient(<InfoAgenticService />);
-
-    const breadcrumbs = screen.getByTestId('breadcrumbs');
-    const breadcrumbsData = JSON.parse(breadcrumbs.getAttribute('data-breadcrumbs') || '[]');
-
-    expect(breadcrumbsData).toEqual([
-      {
-        text: 'Agentic Services',
-        link: PATHS.agenticServices.base
-      },
-      {
-        text: 'Test Agentic Service',
-        link: '/agentic-services/service-123'
-      },
-      {
-        text: 'Policies Used By'
-      }
-    ]);
-  });
-
-  it('shows TBAC warning in delete modal when TBAC is enabled', () => {
-    mockUseFeatureFlagsStore.mockReturnValue({
-      isTbacEnabled: true
-    });
-
-    renderWithClient(<InfoAgenticService />);
-
-    // Open modal
-    const deleteButton = screen.getAllByTestId('spark-button').find((button) => button.textContent?.includes('Delete'));
-    fireEvent.click(deleteButton!);
-
-    const modalDescription = screen.getByTestId('modal-description');
-    expect(modalDescription.textContent).toContain('TBAC');
-  });
-
   it('handles missing app data gracefully', () => {
     mockUseGetAgenticService.mockReturnValue({
       data: null,
@@ -749,33 +643,5 @@ describe('InfoAgenticService', () => {
     const context = JSON.parse(outlet.getAttribute('data-context') || '{}');
 
     expect(context).toEqual({app: null});
-  });
-
-  it('uses feature flag store with correct selector', () => {
-    let capturedSelector: any;
-
-    mockUseShallow.mockImplementation((selectorFn) => {
-      capturedSelector = selectorFn;
-      return selectorFn;
-    });
-
-    renderWithClient(<InfoAgenticService />);
-
-    expect(mockUseShallow).toHaveBeenCalledWith(expect.any(Function));
-
-    // Test the selector function
-    const mockState = {
-      featureFlags: {
-        isTbacEnabled: true,
-        otherFlag: false
-      },
-      otherProperty: 'should not be included'
-    };
-
-    const result = capturedSelector(mockState);
-
-    expect(result).toEqual({
-      isTbacEnabled: true
-    });
   });
 });

@@ -192,13 +192,6 @@ vi.mock('@/assets/header/header.svg?react', () => ({
 
 // Mock stores
 vi.mock('@/store', () => ({
-  useFeatureFlagsStore: vi.fn().mockImplementation((selector) =>
-    selector({
-      featureFlags: {
-        isTbacEnabled: true
-      }
-    })
-  ),
   useSettingsStore: vi.fn().mockImplementation((selector) =>
     selector({
       session: {

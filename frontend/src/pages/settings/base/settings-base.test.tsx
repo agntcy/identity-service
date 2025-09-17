@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import {render} from '@testing-library/react';
 import {describe, it, vi, expect, beforeEach} from 'vitest';
@@ -33,10 +34,6 @@ vi.mock('@/router/paths', () => ({
   }
 }));
 
-vi.mock('@/store', () => ({
-  useFeatureFlagsStore: vi.fn()
-}));
-
 vi.mock('react-router-dom', () => ({
   Outlet: vi.fn(({context}) => <div data-testid="outlet" data-context={JSON.stringify(context)} />)
 }));
@@ -45,103 +42,89 @@ vi.mock('zustand/react/shallow', () => ({
   useShallow: (fn: (arg: any) => any) => fn
 }));
 
-const mockUseFeatureFlagsStore = vi.mocked(await import('@/store')).useFeatureFlagsStore;
-
 describe('SettingsBase', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it('renders Outlet with correct subNav when TBAC is enabled', () => {
-    // Mock TBAC enabled
-    mockUseFeatureFlagsStore.mockImplementation((selector) =>
-      selector({
-        featureFlags: {isTbacEnabled: true},
-        setFeatureFlags: vi.fn(),
-        clean: vi.fn()
-      })
-    );
-
+  it('renders Outlet with current subNav items', () => {
     const {getByTestId} = render(<SettingsBase />);
     const outlet = getByTestId('outlet');
     const contextData = JSON.parse(outlet.getAttribute('data-context') || '{}');
 
-    // Validate subNav items
-    expect(contextData.subNav).toHaveLength(4);
-    expect(contextData.subNav[0].label).toBe('Identity Provider');
-    expect(contextData.subNav[0].href).toBe('/settings/identity-provider');
-    expect(contextData.subNav[1].label).toBe('API Key');
-    expect(contextData.subNav[1].href).toBe('/settings/api-key');
-    expect(contextData.subNav[2].label).toBe('Devices');
-    expect(contextData.subNav[2].href).toBe('/settings/devices');
-    mockUseFeatureFlagsStore.mockImplementation((selector) =>
-      selector({
-        featureFlags: {isTbacEnabled: false},
-        setFeatureFlags: vi.fn(),
-        clean: vi.fn()
-      })
-    );
-    expect(contextData.subNav[3].href).toBe('/settings/organizations-and-users');
+    // Check that subNav exists and has items
+    expect(contextData.subNav).toBeDefined();
+    expect(contextData.subNav.length).toBeGreaterThan(0);
+
+    // Validate the expected items are present
+    const labels = contextData.subNav.map((item: {label: string}) => item.label);
+    expect(labels).toContain('Identity Provider');
+    expect(labels).toContain('API Key');
+    expect(labels).toContain('Organizations & Users');
+
+    // Check specific item structure
+    const identityProviderItem = contextData.subNav.find((item: {label: string}) => item.label === 'Identity Provider');
+    expect(identityProviderItem).toEqual({
+      label: 'Identity Provider',
+      href: '/settings/identity-provider'
+    });
+
+    const apiKeyItem = contextData.subNav.find((item: {label: string}) => item.label === 'API Key');
+    expect(apiKeyItem).toEqual({
+      label: 'API Key',
+      href: '/settings/api-key'
+    });
+
+    const orgUsersItem = contextData.subNav.find((item: {label: string}) => item.label === 'Organizations & Users');
+    expect(orgUsersItem).toEqual({
+      label: 'Organizations & Users',
+      href: '/settings/organizations-and-users'
+    });
   });
 
-  it('renders Outlet with correct subNav when TBAC is disabled', () => {
-    // Mock TBAC disabled
-    mockUseFeatureFlagsStore.mockImplementation((selector) =>
-      selector({
-        featureFlags: {isTbacEnabled: false},
-        setFeatureFlags: vi.fn(),
-        clean: vi.fn()
-      })
-    );
-
-    const {getByTestId} = render(<SettingsBase />);
-    const outlet = getByTestId('outlet');
-    const contextData = JSON.parse(outlet.getAttribute('data-context') || '{}');
-
-    // Validate subNav items - should not include Devices
-    expect(contextData.subNav).toHaveLength(3);
-    expect(contextData.subNav[0].label).toBe('Identity Provider');
-    expect(contextData.subNav[0].href).toBe('/settings/identity-provider');
-    expect(contextData.subNav[1].label).toBe('API Key');
-    expect(contextData.subNav[1].href).toBe('/settings/api-key');
-    expect(contextData.subNav[2].label).toBe('Organizations & Users');
-    expect(contextData.subNav[2].href).toBe('/settings/organizations-and-users');
-
-    // Ensure Devices is not present
-    const deviceItem = contextData.subNav.find((item: {label: string}) => item.label === 'Devices');
-    expect(deviceItem).toBeUndefined();
-  });
-
-  it('only re-calculates subNav when isTbacEnabled changes', () => {
-    // Initial render with TBAC enabled
-    mockUseFeatureFlagsStore.mockImplementation((selector) =>
-      selector({
-        featureFlags: {isTbacEnabled: true},
-        setFeatureFlags: vi.fn(),
-        clean: vi.fn()
-      })
-    );
-
+  it('renders consistent subNav on re-render', () => {
     const {rerender, getByTestId} = render(<SettingsBase />);
 
-    // Re-render with the same TBAC value
+    // Get initial subNav
+    const outlet1 = getByTestId('outlet');
+    const contextData1 = JSON.parse(outlet1.getAttribute('data-context') || '{}');
+    const initialLength = contextData1.subNav.length;
+
+    // Re-render multiple times
+    rerender(<SettingsBase />);
     rerender(<SettingsBase />);
 
-    // Re-render with different TBAC value
-    mockUseFeatureFlagsStore.mockImplementation((selector) =>
-      selector({
-        featureFlags: {isTbacEnabled: false},
-        setFeatureFlags: vi.fn(),
-        clean: vi.fn()
-      })
-    );
+    const outlet2 = getByTestId('outlet');
+    const contextData2 = JSON.parse(outlet2.getAttribute('data-context') || '{}');
 
-    rerender(<SettingsBase />);
+    // Should consistently have the same number of items
+    expect(contextData2.subNav).toHaveLength(initialLength);
 
+    // Should consistently have the same items
+    expect(contextData2.subNav).toEqual(contextData1.subNav);
+  });
+
+  it('includes all expected navigation items', () => {
+    const {getByTestId} = render(<SettingsBase />);
     const outlet = getByTestId('outlet');
     const contextData = JSON.parse(outlet.getAttribute('data-context') || '{}');
 
-    // After TBAC is disabled, should have 3 items
-    expect(contextData.subNav).toHaveLength(3);
+    // Get all labels
+    const labels = contextData.subNav.map((item: {label: string}) => item.label);
+
+    // Core settings that should always be present
+    expect(labels).toContain('Identity Provider');
+    expect(labels).toContain('API Key');
+    expect(labels).toContain('Organizations & Users');
+
+    // Check that each item has required properties
+    contextData.subNav.forEach((item: {label: string; href: string}) => {
+      expect(item).toHaveProperty('label');
+      expect(item).toHaveProperty('href');
+      expect(typeof item.label).toBe('string');
+      expect(typeof item.href).toBe('string');
+      expect(item.label.length).toBeGreaterThan(0);
+      expect(item.href.length).toBeGreaterThan(0);
+    });
   });
 });

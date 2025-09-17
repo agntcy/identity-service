@@ -19,6 +19,7 @@ declare global {
     docsUrl?: string;
     mazeId?: string;
     iamMultiTenant?: boolean;
+    appBaseName?: string;
     CookieConsent: typeof CookieConsentVanilla;
   }
 }
@@ -78,5 +79,10 @@ export default {
     ? import.meta.env.VITE_IAM_MULTI_TENANT === 'true'
     : typeof window !== 'undefined'
       ? (window.iamMultiTenant ?? true)
-      : true
+      : true,
+  APP_BASE_NAME: isEnvSet(import.meta.env.VITE_APP_BASE_NAME)
+    ? import.meta.env.VITE_APP_BASE_NAME
+    : typeof window !== 'undefined'
+      ? window.appBaseName
+      : '/'
 };

@@ -11,12 +11,10 @@ import {useAnalytics} from '@/hooks';
 import {useDeleteAgenticService} from '@/mutations';
 import {useGetAgenticService} from '@/queries';
 import {PATHS} from '@/router/paths';
-import {useFeatureFlagsStore} from '@/store';
 import {Button, toast} from '@outshift/spark-design';
 import {PencilIcon, Trash2Icon} from 'lucide-react';
 import {useCallback, useState} from 'react';
 import {generatePath, Outlet, useNavigate, useParams} from 'react-router-dom';
-import {useShallow} from 'zustand/react/shallow';
 
 const InfoAgenticService: React.FC = () => {
   const [showBadgeForm, setShowBadgeForm] = useState<boolean>(false);
@@ -32,12 +30,6 @@ const InfoAgenticService: React.FC = () => {
   const navigate = useNavigate();
 
   const {analyticsTrack} = useAnalytics();
-
-  const {isTbacEnabled} = useFeatureFlagsStore(
-    useShallow((state) => ({
-      isTbacEnabled: state.featureFlags.isTbacEnabled
-    }))
-  );
 
   const deleteMutation = useDeleteAgenticService({
     callbacks: {
@@ -97,24 +89,20 @@ const InfoAgenticService: React.FC = () => {
             ]
           : [])
       ]}
-      subNav={
-        isTbacEnabled
-          ? [
-              {
-                label: 'About',
-                href: generatePath(PATHS.agenticServices.info.base, {id: id || ''})
-              },
-              {
-                label: 'Policies Assigned To',
-                href: generatePath(PATHS.agenticServices.info.policiesAssignedTo, {id: id || ''})
-              },
-              {
-                label: 'Policies Used By',
-                href: generatePath(PATHS.agenticServices.info.policiesUsedBy, {id: id || ''})
-              }
-            ]
-          : undefined
-      }
+      subNav={[
+        {
+          label: 'About',
+          href: generatePath(PATHS.agenticServices.info.base, {id: id || ''})
+        },
+        {
+          label: 'Policies Assigned To',
+          href: generatePath(PATHS.agenticServices.info.policiesAssignedTo, {id: id || ''})
+        },
+        {
+          label: 'Policies Used By',
+          href: generatePath(PATHS.agenticServices.info.policiesUsedBy, {id: id || ''})
+        }
+      ]}
       rightSideItems={
         isError || isLoading ? null : (
           <div className="flex items-center gap-4">
@@ -189,14 +177,12 @@ const InfoAgenticService: React.FC = () => {
           description={
             <>
               Are you sure you want to delete this agentic service <b>{data?.name}</b>? This action cannot be undone.
-              {isTbacEnabled && (
-                <>
-                  <br />
-                  <br />
-                  <strong>Note:</strong> If this agentic service is a TBAC service, it will also remove the associated TBAC
-                  policies.
-                </>
-              )}
+              <>
+                <br />
+                <br />
+                <strong>Note:</strong> If this agentic service is a TBAC service, it will also remove the associated TBAC
+                policies.
+              </>
             </>
           }
           confirmButtonText="Delete"

@@ -11,7 +11,6 @@ import AuthProvider from './providers/auth-provider/auth-provider';
 import {ThemeProvider} from './providers/theme-provider/theme-provider';
 import {ApiProvider} from './providers/api-provider/api-provider';
 import {QueryProvider} from './providers/query-provider/query-provider';
-import {FeatureFlagsProvider} from './providers/feature-flags-provider/feature-flags-provider';
 import {AnalyticsProvider} from './providers/analytics-provider/analytics-provider';
 import {PwaProvider} from './providers/pwa-provider/pwa-provider';
 import {NotificationsProvider} from './providers/notifications-provider/notifications-provider';
@@ -54,15 +53,13 @@ const App = () => {
                     duration={3500}
                     position={isMobile ? 'top-center' : 'top-right'}
                   />
-                  <FeatureFlagsProvider>
-                    <PwaProvider>
-                      <NotificationUtilsProvider>
-                        <NotificationsProvider>
-                          <Router />
-                        </NotificationsProvider>
-                      </NotificationUtilsProvider>
-                    </PwaProvider>
-                  </FeatureFlagsProvider>
+                  <PwaProvider>
+                    <NotificationUtilsProvider>
+                      <NotificationsProvider>
+                        <Router />
+                      </NotificationsProvider>
+                    </NotificationUtilsProvider>
+                  </PwaProvider>
                 </QueryProvider>
               </ApiProvider>
             </AnalyticsProvider>

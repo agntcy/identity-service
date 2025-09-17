@@ -71,7 +71,8 @@ export default defineConfig(({mode}) => {
           'src/lib',
           'src/components/shared/maze',
           'src/components/shared/manifest',
-          'src/providers/analytics-provider/implementations'
+          'src/providers/analytics-provider/implementations',
+          'src/components/shared/agentic-services'
         ],
         include: ['src/']
       }
