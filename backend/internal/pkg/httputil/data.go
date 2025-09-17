@@ -5,9 +5,6 @@ package httputil
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
-	"io"
 	"net/http"
 	"time"
 
@@ -16,41 +13,6 @@ import (
 
 // Timeout : API timeout time
 const Timeout = 5
-
-// GetJSON : Get data
-func GetJSON(ctx context.Context, uri string, result interface{}) error {
-	return getJSON(ctx, uri, nil, result)
-}
-
-func GetWithRawBody(
-	ctx context.Context,
-	uri string,
-	headers map[string]string,
-	result *string,
-) error {
-	resp, err := Get(ctx, uri, headers)
-	if err != nil {
-		log.Debug("Got error", err)
-		return err
-	}
-
-	defer func() {
-		_ = resp.Body.Close()
-	}()
-
-	// Read and parse data
-	body, _ := io.ReadAll(resp.Body)
-
-	log.Debug("Server response status code is ", resp.StatusCode)
-
-	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("status code = %d", resp.StatusCode)
-	}
-
-	*result = string(body)
-
-	return nil
-}
 
 func Get(ctx context.Context,
 	uri string,
@@ -82,34 +44,4 @@ func Get(ctx context.Context,
 	}
 
 	return resp, nil
-}
-
-func getJSON(
-	ctx context.Context,
-	uri string,
-	headers map[string]string,
-	result interface{},
-) error {
-	resp, err := Get(ctx, uri, headers)
-	if err != nil {
-		log.Debug("Got error", err)
-		return err
-	}
-
-	// Read and parse data
-	body, _ := io.ReadAll(resp.Body)
-
-	log.Debug("Server response status code is ", resp.StatusCode)
-
-	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("status code = %d", resp.StatusCode)
-	}
-
-	jsonErr := json.Unmarshal(body, &result)
-	if jsonErr != nil {
-		log.Debug("Got error ", jsonErr)
-		return fmt.Errorf("invalid JSON body: %w", jsonErr)
-	}
-
-	return resp.Body.Close()
 }

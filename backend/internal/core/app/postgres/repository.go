@@ -13,7 +13,6 @@ import (
 	"github.com/outshift/identity-service/internal/core/app/types"
 	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
 	"github.com/outshift/identity-service/internal/pkg/convertutil"
-	"github.com/outshift/identity-service/internal/pkg/errutil"
 	"github.com/outshift/identity-service/internal/pkg/gormutil"
 	"github.com/outshift/identity-service/internal/pkg/pagination"
 	"github.com/outshift/identity-service/internal/pkg/sorting"
@@ -47,9 +46,7 @@ func (r *repository) CreateApp(
 	// Create the app
 	inserted := r.dbContext.Create(model)
 	if inserted.Error != nil {
-		return nil, errutil.Err(
-			inserted.Error, "there was an error creating the app",
-		)
+		return nil, fmt.Errorf("there was an error creating the app: %w", inserted.Error)
 	}
 
 	return app, nil
@@ -64,10 +61,10 @@ func (r *repository) UpdateApp(ctx context.Context, app *types.App) error {
 	model := newAppModel(app, tenantID)
 
 	err := r.dbContext.
-		Where("tenant_id = ?", tenantID).
+		Scopes(gormutil.BelongsToTenant(ctx)).
 		Save(model).Error
 	if err != nil {
-		return errutil.Err(err, "there was an error saving the app")
+		return fmt.Errorf("there was an error saving the app: %w", err)
 	}
 
 	return nil
@@ -79,25 +76,17 @@ func (r *repository) GetApp(
 ) (*types.App, error) {
 	var app App
 
-	// Get the tenant ID from the context
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return nil, identitycontext.ErrTenantNotFound
-	}
-
-	result := r.dbContext.First(&app, map[string]any{
-		"id":        id,
-		"tenant_id": tenantID,
-	})
+	result := r.dbContext.
+		Scopes(gormutil.BelongsToTenant(ctx)).
+		First(&app, map[string]any{
+			"id": id,
+		})
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			return nil, errutil.Err(
-				result.Error, "app not found")
+			return nil, appcore.ErrAppNotFound
 		}
 
-		return nil, errutil.Err(
-			result.Error, "there was an error fetching the app",
-		)
+		return nil, fmt.Errorf("there was an error fetching the app by ID: %w", result.Error)
 	}
 
 	return app.ToCoreType(), nil
@@ -109,24 +98,19 @@ func (r *repository) GetAppByResolverMetadataID(
 ) (*types.App, error) {
 	var app App
 
-	// Get the tenant ID from the context
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return nil, identitycontext.ErrTenantNotFound
-	}
-
-	result := r.dbContext.First(&app, map[string]any{
-		"resolver_metadata_id": resolverMetadataID,
-		"tenant_id":            tenantID,
-	})
+	result := r.dbContext.
+		Scopes(gormutil.BelongsToTenant(ctx)).
+		First(&app, map[string]any{
+			"resolver_metadata_id": resolverMetadataID,
+		})
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			return nil, errutil.Err(
-				result.Error, "app not found")
+			return nil, appcore.ErrAppNotFound
 		}
 
-		return nil, errutil.Err(
-			result.Error, "there was an error fetching the app",
+		return nil, fmt.Errorf(
+			"there was an error fetching the app by resolver metadata ID: %w",
+			result.Error,
 		)
 	}
 
@@ -140,14 +124,7 @@ func (r *repository) GetAllApps(
 	appTypes []types.AppType,
 	sortBy sorting.Sorting,
 ) (*pagination.Pageable[types.App], error) {
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return nil, errutil.Err(
-			nil, "failed to get tenant ID from context",
-		)
-	}
-
-	dbQuery := r.dbContext.Where("tenant_id = ?", tenantID)
+	dbQuery := r.dbContext
 
 	if query != nil && *query != "" {
 		dbQuery = dbQuery.Where(
@@ -173,7 +150,7 @@ func (r *repository) GetAllApps(
 
 		dbColumn, exists := allowedSortFields[*sortBy.SortColumn]
 		if !exists {
-			return nil, errutil.Err(nil, fmt.Sprintf("invalid sort field: %s", *sortBy.SortColumn))
+			return nil, fmt.Errorf("invalid sort field: %s", *sortBy.SortColumn)
 		}
 
 		direction := "ASC"
@@ -190,20 +167,22 @@ func (r *repository) GetAllApps(
 
 	var apps []*App
 
-	err := dbQuery.Scopes(gormutil.Paginate(paginationFilter)).Find(&apps).Error
+	err := dbQuery.
+		Scopes(gormutil.BelongsToTenant(ctx), gormutil.Paginate(paginationFilter)).
+		Find(&apps).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errutil.Err(err, "no apps found")
+			return nil, appcore.ErrAppNotFound
 		}
 
-		return nil, errutil.Err(err, "there was an error fetching the apps")
+		return nil, fmt.Errorf("there was an error fetching the apps: %w", err)
 	}
 
 	var totalApps int64
 
 	err = dbQuery.Model(&App{}).Count(&totalApps).Error
 	if err != nil {
-		return nil, errutil.Err(err, "there was an error fetching the apps")
+		return nil, fmt.Errorf("there was an error counting the apps: %w", err)
 	}
 
 	return &pagination.Pageable[types.App]{
@@ -217,22 +196,15 @@ func (r *repository) GetAllApps(
 }
 
 func (r *repository) CountAllApps(ctx context.Context) (int64, error) {
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return 0, errutil.Err(
-			nil, "failed to get tenant ID from context",
-		)
-	}
-
 	var totalApps int64
 
 	err := r.dbContext.
 		Model(&App{}).
-		Where("tenant_id = ?", tenantID).
+		Scopes(gormutil.BelongsToTenant(ctx)).
 		Count(&totalApps).
 		Error
 	if err != nil {
-		return 0, errutil.Err(err, "there was an error counting the apps")
+		return 0, fmt.Errorf("there was an error counting the apps: %w", err)
 	}
 
 	return totalApps, nil
@@ -241,20 +213,16 @@ func (r *repository) CountAllApps(ctx context.Context) (int64, error) {
 func (r *repository) GetAppsByID(ctx context.Context, ids []string) ([]*types.App, error) {
 	var apps []*App
 
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return nil, identitycontext.ErrTenantNotFound
-	}
-
 	result := r.dbContext.
-		Where("id IN ? AND tenant_id = ?", ids, tenantID).
+		Scopes(gormutil.BelongsToTenant(ctx)).
+		Where("id IN ?", ids).
 		Find(&apps)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			return nil, errutil.Err(result.Error, "apps not found")
+			return nil, appcore.ErrAppNotFound
 		}
 
-		return nil, errutil.Err(result.Error, "there was an error fetching the apps")
+		return nil, fmt.Errorf("there was an error fetching the apps by ID: %w", result.Error)
 	}
 
 	return convertutil.ConvertSlice(apps, func(app *App) *types.App {
@@ -271,10 +239,10 @@ func (r *repository) DeleteApp(ctx context.Context, app *types.App) error {
 	// This will make a soft delete since the entity has a DeletedAt field
 	// https://gorm.io/docs/delete.html#Soft-Delete
 	err := r.dbContext.
-		Where("tenant_id = ?", tenantID).
+		Scopes(gormutil.BelongsToTenant(ctx)).
 		Delete(newAppModel(app, tenantID)).Error
 	if err != nil {
-		return errutil.Err(err, fmt.Sprintf("cannot delete app %s", app.ID))
+		return fmt.Errorf("cannot delete app %s", app.ID)
 	}
 
 	return nil

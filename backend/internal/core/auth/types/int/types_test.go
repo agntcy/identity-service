@@ -7,6 +7,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/google/uuid"
 	types "github.com/outshift/identity-service/internal/core/auth/types/int"
 	"github.com/outshift/identity-service/internal/pkg/ptrutil"
 	"github.com/stretchr/testify/assert"
@@ -47,6 +48,42 @@ func TestSession_ValidateTool(t *testing.T) {
 			t.Parallel()
 
 			actual := tc.session.ValidateTool(tc.name)
+
+			assert.Equal(t, tc.expectedResult, actual)
+		})
+	}
+}
+
+func TestSession_ValidateApp(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]*struct {
+		session        *types.Session
+		appID          string
+		expectedResult bool
+	}{
+		"a session with nil AppID should pass validation": {
+			session:        &types.Session{AppID: nil},
+			appID:          "does_not_matter",
+			expectedResult: true,
+		},
+		"a session with an AppID equals to input ID should pass validation": {
+			session:        &types.Session{AppID: ptrutil.Ptr("app_id")},
+			appID:          "app_id",
+			expectedResult: true,
+		},
+		"a session with an AppID not equals to input ID should not pass validation": {
+			session:        &types.Session{AppID: ptrutil.Ptr("app_id")},
+			appID:          uuid.NewString(),
+			expectedResult: false,
+		},
+	}
+
+	for tn, tc := range testCases {
+		t.Run(tn, func(t *testing.T) {
+			t.Parallel()
+
+			actual := tc.session.ValidateApp(tc.appID)
 
 			assert.Equal(t, tc.expectedResult, actual)
 		})

@@ -133,14 +133,3 @@ func FromApiKey(
 		ApiKey: ptrutil.Ptr(src.ApiKey),
 	}
 }
-
-func FromSettings(src *settingstypes.Settings) *identity_service_sdk_go.Settings {
-	if src == nil {
-		return nil
-	}
-
-	return &identity_service_sdk_go.Settings{
-		IssuerSettings: FromIssuerSettings(src.IssuerSettings),
-		ApiKey:         FromApiKey(src.ApiKey),
-	}
-}

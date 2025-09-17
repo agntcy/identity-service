@@ -6,13 +6,13 @@ package postgres
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
 	sessioncore "github.com/outshift/identity-service/internal/core/auth"
 	types "github.com/outshift/identity-service/internal/core/auth/types/int"
 	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
-	"github.com/outshift/identity-service/internal/pkg/errutil"
 	"github.com/outshift/identity-service/internal/pkg/secrets"
 	"gorm.io/gorm"
 )
@@ -37,9 +37,7 @@ func (r *postgresRepository) Create(
 
 	result := r.dbContext.Create(model)
 	if result.Error != nil {
-		return nil, errutil.Err(
-			result.Error, "there was an error creating the session",
-		)
+		return nil, fmt.Errorf("there was an error creating the session: %w", result.Error)
 	}
 
 	return model.ToCoreType(r.crypter), nil
@@ -54,10 +52,7 @@ func (r *postgresRepository) GetByAuthorizationCode(
 	// Get app id from context
 	appID, ok := identitycontext.GetAppID(ctx)
 	if !ok || appID == "" {
-		return nil, errutil.Err(
-			nil,
-			"app ID not found in context",
-		)
+		return nil, identitycontext.ErrAppNotFound
 	}
 
 	result := r.dbContext.
@@ -67,9 +62,7 @@ func (r *postgresRepository) GetByAuthorizationCode(
 		Where("expires_at > ?", time.Now().Unix()).
 		First(model)
 	if result.Error != nil {
-		return nil, errutil.Err(
-			result.Error, "there was an error retrieving the session by code",
-		)
+		return nil, fmt.Errorf("there was an error retrieving the session by code: %w", result.Error)
 	}
 
 	return model.ToCoreType(r.crypter), nil
@@ -84,10 +77,7 @@ func (r *postgresRepository) GetByAccessToken(
 	// Get app id from context
 	appID, ok := identitycontext.GetAppID(ctx)
 	if !ok || appID == "" {
-		return nil, errutil.Err(
-			nil,
-			"app ID not found in context",
-		)
+		return nil, identitycontext.ErrAppNotFound
 	}
 
 	result := r.dbContext.
@@ -95,9 +85,7 @@ func (r *postgresRepository) GetByAccessToken(
 		Where("access_token = ?", r.crypter.Encrypt(accessToken)).
 		First(model)
 	if result.Error != nil {
-		return nil, errutil.Err(
-			result.Error, "there was an error retrieving the session by token ID",
-		)
+		return nil, fmt.Errorf("there was an error retrieving the session by token ID: %w", result.Error)
 	}
 
 	return model.ToCoreType(r.crypter), nil
@@ -109,9 +97,7 @@ func (r *postgresRepository) Update(ctx context.Context, session *types.Session)
 
 	result := r.dbContext.Save(model)
 	if result.Error != nil {
-		return errutil.Err(
-			result.Error, "there was an error updating the session",
-		)
+		return fmt.Errorf("there was an error updating the session: %w", result.Error)
 	}
 
 	return nil
@@ -125,9 +111,7 @@ func (r *postgresRepository) CreateDeviceOTP(
 
 	result := r.dbContext.Create(model)
 	if result.Error != nil {
-		return errutil.Err(
-			result.Error, "there was an error creating the device OTP",
-		)
+		return fmt.Errorf("there was an error creating the device OTP: %w", result.Error)
 	}
 
 	return nil
@@ -142,10 +126,10 @@ func (r *postgresRepository) GetDeviceOTP(
 	result := r.dbContext.First(&otp, uuid.MustParse(id))
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			return nil, errutil.Err(result.Error, "OTP not found")
+			return nil, sessioncore.ErrDeviceOTPNotFound
 		}
 
-		return nil, errutil.Err(result.Error, "there was an error fetching the OTP")
+		return nil, fmt.Errorf("there was an error fetching the OTP: %w", result.Error)
 	}
 
 	return otp.ToCoreType(), nil
@@ -159,7 +143,7 @@ func (r *postgresRepository) UpdateDeviceOTP(
 
 	err := r.dbContext.Save(model).Error
 	if err != nil {
-		return errutil.Err(err, "there was an error updating the device OTP")
+		return fmt.Errorf("there was an error updating the device OTP: %w", err)
 	}
 
 	return nil
@@ -183,10 +167,10 @@ func (r *postgresRepository) GetDeviceOTPByValue(
 		First(&otp)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			return nil, errutil.Err(result.Error, "OTP not found")
+			return nil, sessioncore.ErrDeviceOTPNotFound
 		}
 
-		return nil, errutil.Err(result.Error, "there was an error fetching the OTP")
+		return nil, fmt.Errorf("there was an error fetching the OTP by value: %w", result.Error)
 	}
 
 	return otp.ToCoreType(), nil

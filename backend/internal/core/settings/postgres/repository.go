@@ -6,11 +6,12 @@ package postgres
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	settingscore "github.com/outshift/identity-service/internal/core/settings"
 	"github.com/outshift/identity-service/internal/core/settings/types"
 	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
-	"github.com/outshift/identity-service/internal/pkg/errutil"
+	"github.com/outshift/identity-service/internal/pkg/gormutil"
 	"github.com/outshift/identity-service/internal/pkg/secrets"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -36,9 +37,7 @@ func (r *repository) UpdateIssuerSettings(
 ) (*types.IssuerSettings, error) {
 	existingSettings, err := r.getOrCreateIssuerSettings(ctx)
 	if err != nil {
-		return nil, errutil.Err(
-			err, "failed to get or create issuer settings",
-		)
+		return nil, fmt.Errorf("failed to get or create issuer settings: %w", err)
 	}
 
 	// Update the existing settings with the new values
@@ -58,12 +57,10 @@ func (r *repository) UpdateIssuerSettings(
 	}
 
 	updated := r.dbContext.
-		Where("tenant_id = ?", existingSettings.TenantID).
+		Scopes(gormutil.BelongsToTenant(ctx)).
 		Updates(existingSettings)
 	if updated.Error != nil {
-		return nil, errutil.Err(
-			updated.Error, "there was an error updating the settings",
-		)
+		return nil, fmt.Errorf("there was an error updating the settings: %w", updated.Error)
 	}
 
 	return model.ToCoreType(r.crypter), nil
@@ -74,9 +71,7 @@ func (r *repository) GetIssuerSettings(
 ) (*types.IssuerSettings, error) {
 	issuerSettings, err := r.getOrCreateIssuerSettings(ctx)
 	if err != nil {
-		return nil, errutil.Err(
-			err, "failed to get or create issuer settings",
-		)
+		return nil, fmt.Errorf("failed to get or create issuer settings: %w", err)
 	}
 
 	return issuerSettings.ToCoreType(r.crypter), nil
@@ -95,9 +90,8 @@ func (r *repository) getOrCreateIssuerSettings(
 
 	result := r.dbContext.
 		Preload(clause.Associations).
-		First(&issuerSettings, map[string]any{
-			"tenant_id": tenantID,
-		})
+		Scopes(gormutil.BelongsToTenant(ctx)).
+		First(&issuerSettings)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 			// Create a new IssuerSettings if not found
@@ -106,8 +100,9 @@ func (r *repository) getOrCreateIssuerSettings(
 
 			inserted := r.dbContext.Create(model)
 			if inserted.Error != nil {
-				return nil, errutil.Err(
-					inserted.Error, "there was an error creating the settings",
+				return nil, fmt.Errorf(
+					"there was an error creating the settings: %w",
+					inserted.Error,
 				)
 			}
 
@@ -115,8 +110,9 @@ func (r *repository) getOrCreateIssuerSettings(
 			return model, nil
 		}
 
-		return nil, errutil.Err(
-			result.Error, "there was an error fetching the settings",
+		return nil, fmt.Errorf(
+			"there was an error fetching the settings: %w",
+			result.Error,
 		)
 	}
 

@@ -11,7 +11,7 @@ import (
 	iamcore "github.com/outshift/identity-service/internal/core/iam"
 	"github.com/outshift/identity-service/internal/core/iam/types"
 	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
-	"github.com/outshift/identity-service/internal/pkg/errutil"
+	"github.com/outshift/identity-service/internal/pkg/gormutil"
 	"github.com/outshift/identity-service/internal/pkg/ptrutil"
 	"github.com/outshift/identity-service/internal/pkg/secrets"
 	"gorm.io/gorm"
@@ -36,9 +36,7 @@ func (r *repository) AddAPIKey(
 ) (*types.APIKey, error) {
 	model := newAPIKeyModel(apiKey, r.crypter)
 	if model == nil {
-		return nil, errutil.Err(
-			errors.New("APIKey cannot be nil"), "APIKey is required",
-		)
+		return nil, fmt.Errorf("API key is required")
 	}
 
 	// Get the tenant ID from the context
@@ -57,9 +55,7 @@ func (r *repository) AddAPIKey(
 			AppID:    model.AppID,
 		}).FirstOrCreate(model)
 	if inserted.Error != nil {
-		return nil, errutil.Err(
-			inserted.Error, "there was an error adding the APIKey",
-		)
+		return nil, fmt.Errorf("there was an error adding the API key: %w", inserted.Error)
 	}
 
 	return model.ToCoreType(r.crypter), nil
@@ -70,28 +66,18 @@ func (r *repository) GetAPIKeyByTenant(
 ) (*types.APIKey, error) {
 	var apiKey APIKey
 
-	// Get the tenant ID from the context
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return nil, identitycontext.ErrTenantNotFound
-	}
-
 	// The tenant API key is the one without an associated app
 	result := r.dbContext.
-		Where("tenant_id = ?", tenantID).
+		Scopes(gormutil.BelongsToTenant(ctx)).
 		Where("app_id IS NULL").
 		First(&apiKey)
 
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			return nil, errutil.Err(
-				result.Error, "APIKey not found",
-			)
+			return nil, iamcore.ErrApiKeyNotFound
 		}
 
-		return nil, errutil.Err(
-			result.Error, "there was an error fetching the APIKey",
-		)
+		return nil, fmt.Errorf("unable to get API key by tenant: %w", result.Error)
 	}
 
 	return apiKey.ToCoreType(r.crypter), nil
@@ -102,35 +88,22 @@ func (r *repository) GetAPIKeyByApp(
 	appID string,
 ) (*types.APIKey, error) {
 	if appID == "" {
-		return nil, errutil.Err(
-			errors.New("appID cannot be empty"),
-			"appID is required",
-		)
+		return nil, errors.New("appID is required")
 	}
 
 	var apiKey APIKey
 
-	// Get the tenant ID from the context
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return nil, identitycontext.ErrTenantNotFound
-	}
-
 	result := r.dbContext.
-		Where("tenant_id = ?", tenantID).
+		Scopes(gormutil.BelongsToTenant(ctx)).
 		Where("app_id = ?", appID).
 		First(&apiKey)
 
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			return nil, errutil.Err(
-				result.Error, "APIKey not found",
-			)
+			return nil, iamcore.ErrApiKeyNotFound
 		}
 
-		return nil, errutil.Err(
-			result.Error, "there was an error fetching the APIKey",
-		)
+		return nil, fmt.Errorf("unable to get API key by app: %w", result.Error)
 	}
 
 	return apiKey.ToCoreType(r.crypter), nil
@@ -141,53 +114,35 @@ func (r *repository) GetAPIKeyBySecret(
 	secret string,
 ) (*types.APIKey, error) {
 	if secret == "" {
-		return nil, errutil.Err(
-			nil,
-			"secret is required",
-		)
+		return nil, errors.New("secret is required")
 	}
 
 	var apiKey APIKey
 
-	// Get the tenant ID from the context
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return nil, identitycontext.ErrTenantNotFound
-	}
-
 	result := r.dbContext.
-		Where("tenant_id = ?", tenantID).
+		Scopes(gormutil.BelongsToTenant(ctx)).
 		Where("secret = ?", secrets.NewEncryptedString(ptrutil.Ptr(secret), r.crypter)).
 		First(&apiKey)
 
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			return nil, errutil.Err(
-				result.Error, "APIKey not found",
-			)
+			return nil, iamcore.ErrApiKeyNotFound
 		}
 
-		return nil, errutil.Err(
-			result.Error, "there was an error fetching the APIKey",
-		)
+		return nil, fmt.Errorf("unable to get API key by secret: %w", result.Error)
 	}
 
 	return apiKey.ToCoreType(r.crypter), nil
 }
 
 func (r *repository) DeleteAPIKey(ctx context.Context, apiKey *types.APIKey) error {
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return identitycontext.ErrTenantNotFound
-	}
-
 	// This will make a soft delete since the entity has a DeletedAt field
 	// https://gorm.io/docs/delete.html#Soft-Delete
 	err := r.dbContext.
-		Where("tenant_id = ?", tenantID).
+		Scopes(gormutil.BelongsToTenant(ctx)).
 		Delete(newAPIKeyModel(apiKey, r.crypter)).Error
 	if err != nil {
-		return errutil.Err(err, fmt.Sprintf("cannot delete APIKey %s", apiKey.ID))
+		return fmt.Errorf("cannot delete API key %s: %w", apiKey.ID, err)
 	}
 
 	return nil

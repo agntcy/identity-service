@@ -16,7 +16,6 @@ import (
 	"github.com/outshift/identity-service/internal/core/policy/types"
 	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
 	"github.com/outshift/identity-service/internal/pkg/convertutil"
-	"github.com/outshift/identity-service/internal/pkg/errutil"
 	"github.com/outshift/identity-service/internal/pkg/gormutil"
 	"github.com/outshift/identity-service/internal/pkg/pagination"
 	"github.com/outshift/identity-service/internal/pkg/pgutil"
@@ -44,9 +43,7 @@ func (r *repository) Create(ctx context.Context, policy *types.Policy) error {
 
 	result := r.dbContext.Create(model)
 	if result.Error != nil {
-		return errutil.Err(
-			result.Error, "there was an error creating the policy",
-		)
+		return fmt.Errorf("there was an error creating the policy: %w", result.Error)
 	}
 
 	return nil
@@ -62,9 +59,7 @@ func (r *repository) CreateRule(ctx context.Context, rule *types.Rule) error {
 
 	result := r.dbContext.Create(model)
 	if result.Error != nil {
-		return errutil.Err(
-			result.Error, "there was an error creating the rule",
-		)
+		return fmt.Errorf("there was an error creating the rule: %w", result.Error)
 	}
 
 	return nil
@@ -89,9 +84,7 @@ func (r *repository) CreateTasks(ctx context.Context, tasks ...*types.Task) erro
 		return nil
 	})
 	if err != nil {
-		return errutil.Err(
-			err, "there was an error creating the tasks",
-		)
+		return fmt.Errorf("there was an error creating the tasks: %w", err)
 	}
 
 	return nil
@@ -145,9 +138,7 @@ func (r *repository) UpdateTasks(ctx context.Context, tasks ...*types.Task) erro
 		return nil
 	})
 	if err != nil {
-		return errutil.Err(
-			err, "there was an error updating the tasks",
-		)
+		return fmt.Errorf("there was an error updating the tasks: %w", err)
 	}
 
 	return nil
@@ -179,9 +170,7 @@ func (r *repository) DeletePolicies(ctx context.Context, policies ...*types.Poli
 		return nil
 	})
 	if err != nil {
-		return errutil.Err(
-			err, "there was an error deleting the policies",
-		)
+		return fmt.Errorf("there was an error deleting the policies: %w", err)
 	}
 
 	return nil
@@ -215,9 +204,7 @@ func (r *repository) DeleteRules(ctx context.Context, rules ...*types.Rule) erro
 		return nil
 	})
 	if err != nil {
-		return errutil.Err(
-			err, "there was an error deleting the rules",
-		)
+		return fmt.Errorf("there was an error deleting the rules: %w", err)
 	}
 
 	return nil
@@ -242,9 +229,7 @@ func (r *repository) DeleteTasks(ctx context.Context, tasks ...*types.Task) erro
 		return nil
 	})
 	if err != nil {
-		return errutil.Err(
-			err, "there was an error deleting the tasks",
-		)
+		return fmt.Errorf("there was an error deleting the tasks: %w", err)
 	}
 
 	return nil
@@ -260,21 +245,17 @@ func (r *repository) DeleteTasksByAppID(ctx context.Context, appID string) error
 }
 
 func (r *repository) GetPolicyByID(ctx context.Context, id string) (*types.Policy, error) {
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return nil, identitycontext.ErrTenantNotFound
-	}
-
 	var policy Policy
 
 	err := r.dbContext.
 		Preload("Rules").
 		Preload("Rules.Tasks").
-		Where("policies.id = ? AND policies.tenant_id = ?", id, tenantID).
+		Scopes(gormutil.BelongsToTenantForTable(ctx, "policies")).
+		Where("policies.id = ?", id).
 		First(&policy).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errutil.Err(err, "policy not found")
+			return nil, policycore.ErrPolicyNotFound
 		}
 
 		return nil, fmt.Errorf("unable to fetch policy: %w", err)
@@ -287,21 +268,17 @@ func (r *repository) GetPoliciesByAppID(
 	ctx context.Context,
 	appID string,
 ) ([]*types.Policy, error) {
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return nil, identitycontext.ErrTenantNotFound
-	}
-
 	policies := make([]*Policy, 0)
 
 	err := r.dbContext.
 		Preload("Rules").
 		Preload("Rules.Tasks").
-		Where("policies.assigned_to = ? AND policies.tenant_id = ?", appID, tenantID).
+		Scopes(gormutil.BelongsToTenantForTable(ctx, "policies")).
+		Where("policies.assigned_to = ?", appID).
 		Find(&policies).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errutil.Err(err, "no policy was found")
+			return nil, policycore.ErrPolicyNotFound
 		}
 
 		return nil, fmt.Errorf("unable to fetch policies: %w", err)
@@ -316,25 +293,20 @@ func (r *repository) GetRuleByID(
 	ctx context.Context,
 	ruleID, policyID string,
 ) (*types.Rule, error) {
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return nil, identitycontext.ErrTenantNotFound
-	}
-
 	var rule Rule
 
 	err := r.dbContext.
 		Preload("Tasks").
+		Scopes(gormutil.BelongsToTenantForTable(ctx, "rules")).
 		Where(
-			"rules.id = ? AND rules.policy_id = ? AND rules.tenant_id = ?",
+			"rules.id = ? AND rules.policy_id = ?",
 			ruleID,
 			policyID,
-			tenantID,
 		).
 		First(&rule).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errutil.Err(err, "rule not found")
+			return nil, policycore.ErrRuleNotFound
 		}
 
 		return nil, fmt.Errorf("unable to fetch rule: %w", err)
@@ -346,20 +318,16 @@ func (r *repository) GetRuleByID(
 func (r *repository) GetTasksByAppID(ctx context.Context, appID string) ([]*types.Task, error) {
 	var tasks []*Task
 
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return nil, identitycontext.ErrTenantNotFound
-	}
-
 	result := r.dbContext.
-		Where("app_id = ? AND tenant_id = ?", appID, tenantID).
+		Scopes(gormutil.BelongsToTenant(ctx)).
+		Where("app_id = ?", appID).
 		Find(&tasks)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			return nil, errutil.Err(result.Error, "tasks not found")
+			return nil, policycore.ErrTaskNotFound
 		}
 
-		return nil, errutil.Err(result.Error, "there was an error fetching the tasks")
+		return nil, fmt.Errorf("unable to fetch tasks by app ID: %w", result.Error)
 	}
 
 	return convertutil.ConvertSlice(tasks, func(task *Task) *types.Task {
@@ -373,12 +341,7 @@ func (r *repository) GetTasksPerAppType(
 ) (map[apptypes.AppType][]*types.Task, error) {
 	var tasks []*Task
 
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return nil, identitycontext.ErrTenantNotFound
-	}
-
-	dbQuery := r.dbContext.Where("tasks.tenant_id = ?", tenantID)
+	dbQuery := r.dbContext.Scopes(gormutil.BelongsToTenantForTable(ctx, "tasks"))
 
 	if len(excludeAppIDs) > 0 {
 		dbQuery = dbQuery.Where("tasks.app_id NOT IN (?)", excludeAppIDs)
@@ -387,10 +350,10 @@ func (r *repository) GetTasksPerAppType(
 	result := dbQuery.Joins("App").Find(&tasks)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			return nil, errutil.Err(result.Error, "tasks not found")
+			return nil, policycore.ErrTaskNotFound
 		}
 
-		return nil, errutil.Err(result.Error, "there was an error fetching the tasks")
+		return nil, fmt.Errorf("unable to fetch tasks per app type: %w", result.Error)
 	}
 
 	tasksPerAppType := make(map[apptypes.AppType][]*types.Task)
@@ -404,18 +367,15 @@ func (r *repository) GetTasksPerAppType(
 func (r *repository) GetTasksByID(ctx context.Context, ids []string) ([]*types.Task, error) {
 	var tasks []*Task
 
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return nil, identitycontext.ErrTenantNotFound
-	}
-
-	result := r.dbContext.Where("tenant_id = ?", tenantID).Find(&tasks, ids)
+	result := r.dbContext.
+		Scopes(gormutil.BelongsToTenant(ctx)).
+		Find(&tasks, ids)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			return nil, errutil.Err(result.Error, "tasks not found")
+			return nil, policycore.ErrTaskNotFound
 		}
 
-		return nil, errutil.Err(result.Error, "there was an error fetching the tasks")
+		return nil, fmt.Errorf("unable to fetch tasks: %w", result.Error)
 	}
 
 	return convertutil.ConvertSlice(tasks, func(task *Task) *types.Task {
@@ -505,17 +465,17 @@ func (r *repository) GetAllPolicies(
 		Find(&rows).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errutil.Err(err, "no policies found")
+			return nil, policycore.ErrPolicyNotFound
 		}
 
-		return nil, errutil.Err(err, "there was an error fetching the policies")
+		return nil, fmt.Errorf("unable to fetch policies: %w", err)
 	}
 
 	var totalPolicies int64
 
 	err = dbQuery.Model(&Policy{}).Distinct("policies.id").Count(&totalPolicies).Error
 	if err != nil {
-		return nil, errutil.Err(err, "there was an error fetching the policies")
+		return nil, fmt.Errorf("unable to count policies: %w", err)
 	}
 
 	policies := make([]*types.Policy, 0)
@@ -568,12 +528,9 @@ func (r *repository) GetAllRules(
 	paginationFilter pagination.PaginationFilter,
 	query *string,
 ) (*pagination.Pageable[types.Rule], error) {
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return nil, identitycontext.ErrTenantNotFound
-	}
-
-	dbQuery := r.dbContext.Where("tenant_id = ? AND policy_id = ?", tenantID, policyID)
+	dbQuery := r.dbContext.
+		Scopes(gormutil.BelongsToTenant(ctx)).
+		Where(" policy_id = ?", policyID)
 
 	if query != nil && *query != "" {
 		dbQuery = dbQuery.Where(
@@ -591,17 +548,17 @@ func (r *repository) GetAllRules(
 		Find(&rules).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errutil.Err(err, "no rules found")
+			return nil, policycore.ErrRuleNotFound
 		}
 
-		return nil, errutil.Err(err, "there was an error fetching the rules")
+		return nil, fmt.Errorf("unable to fetch rules: %w", err)
 	}
 
 	var totalRules int64
 
 	err = dbQuery.Model(&Rule{}).Count(&totalRules).Error
 	if err != nil {
-		return nil, errutil.Err(err, "there was an error fetching the rules")
+		return nil, fmt.Errorf("unable to count rules: %w", err)
 	}
 
 	return &pagination.Pageable[types.Rule]{
@@ -615,20 +572,15 @@ func (r *repository) GetAllRules(
 }
 
 func (r *repository) CountAllPolicies(ctx context.Context) (int64, error) {
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return 0, identitycontext.ErrTenantNotFound
-	}
-
 	var totalPolicies int64
 
 	err := r.dbContext.
 		Model(&Policy{}).
-		Where("tenant_id = ?", tenantID).
+		Scopes(gormutil.BelongsToTenant(ctx)).
 		Count(&totalPolicies).
 		Error
 	if err != nil {
-		return 0, errutil.Err(err, "there was an error counting the policies")
+		return 0, fmt.Errorf("there was an error counting the policies: %w", err)
 	}
 
 	return totalPolicies, nil

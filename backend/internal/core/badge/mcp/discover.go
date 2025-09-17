@@ -6,6 +6,7 @@ package mcp
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	urllib "net/url"
 	"strings"
 	"time"
@@ -73,51 +74,19 @@ func (d *discoveryClient) Discover(
 
 	log.Debug("Using MCP URL for discovery: ", url)
 
-	var (
-		mcpClient *client.Client
-		err       error
-	)
-
-	switch clientType {
-	case McpClientTypeStreamableHTTP:
-		log.Debug("Using streamable HTTP client for MCP discovery")
-
-		url = strings.TrimSuffix(url, mcpSuffix)
-		mcpClient, err = client.NewStreamableHttpClient(
-			url + mcpSuffix,
-		)
-	case McpClientTypeSSE:
-		log.Debug("Using SSE client for MCP discovery")
-
-		url = strings.TrimSuffix(url, sseSuffix)
-		mcpClient, err = client.NewSSEMCPClient(url + sseSuffix)
-	}
-
-	if err != nil || mcpClient == nil {
+	// Create an MCP client
+	mcpClient, err := d.createClient(url, clientType)
+	if err != nil {
 		return nil, errutil.Err(
 			err,
 			"failed to create mcp client",
 		)
 	}
 
-	if clientType == McpClientTypeSSE {
-		// Start the SSE client
-		err = mcpClient.Start(ctx)
-		if err != nil {
-			return nil, errutil.Err(
-				err,
-				"failed to start mcp client",
-			)
-		}
-	}
-
 	// Initialize the client
-	_, err = mcpClient.Initialize(ctx, mcp.InitializeRequest{})
+	err = d.initializeClient(ctx, mcpClient, clientType)
 	if err != nil {
-		return nil, errutil.Err(
-			err,
-			"failed to initialize mcp client",
-		)
+		return nil, err
 	}
 
 	defer func() {
@@ -130,9 +99,7 @@ func (d *discoveryClient) Discover(
 
 	// Discover MCP server
 	// First the tools
-	toolsRequest := mcp.ListToolsRequest{}
-
-	toolsList, err := mcpClient.ListTools(tCtx, toolsRequest)
+	toolsList, err := mcpClient.ListTools(tCtx, mcp.ListToolsRequest{})
 	if err != nil {
 		return nil, errutil.Err(
 			err,
@@ -140,16 +107,12 @@ func (d *discoveryClient) Discover(
 		)
 	}
 
-	log.Debug("Discovered ", len(toolsList.Tools), " tools from MCP server")
-
 	// Give it a timeout to discover resources
 	rCtx, rCancel := context.WithTimeout(ctx, mcpResourcesDiscoveryTimeout)
 	defer rCancel()
 
 	// After that the resources
-	resourcesRequest := mcp.ListResourcesRequest{}
-
-	resourcesList, err := mcpClient.ListResources(rCtx, resourcesRequest)
+	resourcesList, err := mcpClient.ListResources(rCtx, mcp.ListResourcesRequest{})
 	if err != nil {
 		log.Warn("Failed to discover MCP resources, continuing without them: ", err)
 	}
@@ -161,66 +124,31 @@ func (d *discoveryClient) Discover(
 	availableTools := make([]*McpTool, 0)
 
 	for index := range toolsList.Tools {
-		tool := toolsList.Tools[index]
-
-		log.Debug("Processing tool: ", tool.Name)
-
-		// Convert parameters to JSON string
-		jsonParams, err := json.Marshal(tool.InputSchema)
+		tool, err := d.parseTool(&toolsList.Tools[index])
 		if err != nil {
-			jsonParams = []byte{}
+			return nil, err
 		}
 
-		var parameters map[string]any
-
-		err = json.Unmarshal(jsonParams, &parameters)
-		if err != nil {
-			return nil, errutil.Err(
-				err,
-				"failed to parse MCP tools",
-			)
-		}
-
-		availableTools = append(availableTools, &McpTool{
-			Name:        tool.Name,
-			Description: tool.Description,
-			Parameters:  parameters,
-		})
+		availableTools = append(availableTools, tool)
 	}
 
-	log.Debug("Discovered ", len(availableTools), " tools from MCP server")
+	log.Debug(fmt.Sprintf("Discovered %d tools from MCP server", len(availableTools)))
 
 	// Get the first batch of resources
 	availableResources := make([]*McpResource, 0)
 
 	if resourcesList != nil && len(resourcesList.Resources) > 0 {
 		for index := range resourcesList.Resources {
-			resource := resourcesList.Resources[index]
-
-			availableResources = append(availableResources, &McpResource{
-				Name:        resource.Name,
-				Description: resource.Description,
-				URI:         resource.URI,
-			})
+			resource := d.parseResource(&resourcesList.Resources[index])
+			availableResources = append(availableResources, resource)
 		}
 	}
 
-	log.Debug("Discovered ", len(availableResources), " resources from MCP server")
+	log.Debug(fmt.Sprintf("Discovered %d resources from MCP server", len(availableResources)))
 
-	urlObj, err := urllib.Parse(url)
+	safeUrl, err := d.extractSafeURL(url)
 	if err != nil {
-		return nil, errutil.Err(
-			err,
-			"failed to parse MCP URL",
-		)
-	}
-
-	safeUrl, err := urllib.JoinPath(urlObj.Scheme, urlObj.Host)
-	if err != nil {
-		return nil, errutil.Err(
-			err,
-			"failed to join MCP URL",
-		)
+		return nil, err
 	}
 
 	return &McpServer{
@@ -229,4 +157,103 @@ func (d *discoveryClient) Discover(
 		Tools:     availableTools,
 		Resources: availableResources,
 	}, nil
+}
+
+func (d *discoveryClient) createClient(url, clientType string) (*client.Client, error) {
+	switch clientType {
+	case McpClientTypeStreamableHTTP:
+		log.Debug("Using streamable HTTP client for MCP discovery")
+
+		url = strings.TrimSuffix(url, mcpSuffix)
+
+		return client.NewStreamableHttpClient(
+			url + mcpSuffix,
+		)
+	case McpClientTypeSSE:
+		log.Debug("Using SSE client for MCP discovery")
+
+		url = strings.TrimSuffix(url, sseSuffix)
+
+		return client.NewSSEMCPClient(url + sseSuffix)
+	default:
+		return nil, fmt.Errorf("unknown MCP client type %s", clientType)
+	}
+}
+
+func (d *discoveryClient) initializeClient(ctx context.Context, mcpClient *client.Client, clientType string) error {
+	if clientType == McpClientTypeSSE {
+		// Start the SSE client
+		err := mcpClient.Start(ctx)
+		if err != nil {
+			return errutil.Err(
+				err,
+				"failed to start mcp client",
+			)
+		}
+	}
+
+	// Initialize the client
+	_, err := mcpClient.Initialize(ctx, mcp.InitializeRequest{})
+	if err != nil {
+		return errutil.Err(
+			err,
+			"failed to initialize mcp client",
+		)
+	}
+
+	return nil
+}
+
+func (d *discoveryClient) parseTool(tool *mcp.Tool) (*McpTool, error) {
+	log.Debug("Processing tool: ", tool.Name)
+
+	// Convert parameters to JSON string
+	jsonParams, err := json.Marshal(tool.InputSchema)
+	if err != nil {
+		jsonParams = []byte{}
+	}
+
+	var parameters map[string]any
+
+	err = json.Unmarshal(jsonParams, &parameters)
+	if err != nil {
+		return nil, errutil.Err(
+			err,
+			"failed to parse MCP tools",
+		)
+	}
+
+	return &McpTool{
+		Name:        tool.Name,
+		Description: tool.Description,
+		Parameters:  parameters,
+	}, nil
+}
+
+func (d *discoveryClient) parseResource(resource *mcp.Resource) *McpResource {
+	return &McpResource{
+		Name:        resource.Name,
+		Description: resource.Description,
+		URI:         resource.URI,
+	}
+}
+
+func (d *discoveryClient) extractSafeURL(url string) (string, error) {
+	urlObj, err := urllib.Parse(url)
+	if err != nil {
+		return "", errutil.Err(
+			err,
+			"failed to parse MCP URL",
+		)
+	}
+
+	safeUrl, err := urllib.JoinPath(urlObj.Scheme, urlObj.Host)
+	if err != nil {
+		return "", errutil.Err(
+			err,
+			"failed to join MCP URL",
+		)
+	}
+
+	return safeUrl, nil
 }

@@ -61,7 +61,7 @@ func TestPolicyService_CreatePolicy_should_return_err_when_name_is_empty(t *test
 	_, err := sut.CreatePolicy(context.Background(), invalidName, "", "")
 
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "name cannot be empty")
+	assert.ErrorContains(t, err, "policy name cannot be empty")
 }
 
 func TestPolicyService_CreatePolicy_should_return_err_when_app_validation_fails(t *testing.T) {
@@ -166,7 +166,7 @@ func TestPolicyService_CreateRule_should_return_err_when_name_is_empty(t *testin
 	)
 
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "name cannot be empty")
+	assert.ErrorContains(t, err, "rule name cannot be empty")
 }
 
 func TestPolicyService_CreateRule_should_return_err_when_action_is_invalid(t *testing.T) {
@@ -420,7 +420,7 @@ func TestPolicyService_UpdatePolicy_should_return_err_when_name_is_empty(t *test
 	_, err := sut.UpdatePolicy(context.Background(), "", invalidName, "", "")
 
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "name cannot be empty")
+	assert.ErrorContains(t, err, "policy name cannot be empty")
 }
 
 func TestPolicyService_UpdatePolicy_should_return_err_when_policy_is_invalid(t *testing.T) {
@@ -523,7 +523,7 @@ func TestPolicyService_UpdateRule_should_return_err_when_name_is_empty(t *testin
 	)
 
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "name cannot be empty")
+	assert.ErrorContains(t, err, "rule name cannot be empty")
 }
 
 func TestPolicyService_UpdateRule_should_return_err_when_action_is_invalid(t *testing.T) {

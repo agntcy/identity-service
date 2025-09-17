@@ -26,7 +26,7 @@ func InsertTenantID(ctx context.Context, tenantID string) context.Context {
 func GetTenantID(ctx context.Context) (string, bool) {
 	tenantID, ok := ctx.Value(TenantID).(string)
 	log.Debug("Fetched tenant ID from context:", ctx)
-	log.Debug(ctx.Value("tenant-id"))
+	log.Debug("TenantID: ", tenantID)
 
 	return tenantID, ok
 }

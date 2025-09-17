@@ -7,13 +7,13 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"fmt"
 
 	authpg "github.com/outshift/identity-service/internal/core/auth/postgres"
 	devicecore "github.com/outshift/identity-service/internal/core/device"
 	"github.com/outshift/identity-service/internal/core/device/types"
 	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
 	"github.com/outshift/identity-service/internal/pkg/convertutil"
-	"github.com/outshift/identity-service/internal/pkg/errutil"
 	"github.com/outshift/identity-service/internal/pkg/gormutil"
 	"github.com/outshift/identity-service/internal/pkg/pagination"
 	"github.com/outshift/identity-service/internal/pkg/ptrutil"
@@ -37,9 +37,7 @@ func (r *repository) AddDevice(
 ) (*types.Device, error) {
 	model := newDeviceModel(device)
 	if model == nil {
-		return nil, errutil.Err(
-			errors.New("device cannot be nil"), "device is required",
-		)
+		return nil, errors.New("device is required")
 	}
 
 	// Get the tenant ID from the context
@@ -52,9 +50,7 @@ func (r *repository) AddDevice(
 
 	inserted := r.dbContext.Create(model)
 	if inserted.Error != nil {
-		return nil, errutil.Err(
-			inserted.Error, "there was an error adding the device",
-		)
+		return nil, fmt.Errorf("there was an error adding the device: %w", inserted.Error)
 	}
 
 	return model.ToCoreType(), nil
@@ -65,9 +61,7 @@ func (r *repository) GetDevice(
 	deviceID string,
 ) (*types.Device, error) {
 	if deviceID == "" {
-		return nil, errutil.Err(
-			errors.New("device ID cannot be empty"), "device ID is required",
-		)
+		return nil, errors.New("device ID is required")
 	}
 
 	var device Device
@@ -78,14 +72,10 @@ func (r *repository) GetDevice(
 
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			return nil, errutil.Err(
-				result.Error, "device not found",
-			)
+			return nil, devicecore.ErrDeviceNotFound
 		}
 
-		return nil, errutil.Err(
-			result.Error, "there was an error fetching the device",
-		)
+		return nil, fmt.Errorf("there was an error fetching the device: %w", result.Error)
 	}
 
 	return device.ToCoreType(), nil
@@ -97,28 +87,20 @@ func (r *repository) GetDevices(
 ) ([]*types.Device, error) {
 	var devices []*Device
 
-	// Get the tenant ID from the context
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return nil, identitycontext.ErrTenantNotFound
-	}
-
 	var result *gorm.DB
 
 	// If userID is nil, we fetch all devices for the tenant
 	if userID == nil {
 		result = r.dbContext.
-			Where(
-				"tenant_id = ? AND subscription_token IS NOT NULL AND subscription_token <> ''",
-				tenantID,
-			).
+			Scopes(gormutil.BelongsToTenant(ctx)).
+			Where("subscription_token IS NOT NULL AND subscription_token <> ''").
 			Order("created_at ASC").
 			Find(&devices)
 	} else {
 		result = r.dbContext.
+			Scopes(gormutil.BelongsToTenant(ctx)).
 			Where(
-				"tenant_id = ? AND user_id = ? AND subscription_token IS NOT NULL AND subscription_token <> ''",
-				tenantID,
+				"user_id = ? AND subscription_token IS NOT NULL AND subscription_token <> ''",
 				userID,
 			).
 			Order("created_at ASC").
@@ -126,9 +108,7 @@ func (r *repository) GetDevices(
 	}
 
 	if result.Error != nil {
-		return nil, errutil.Err(
-			result.Error, "there was an error fetching the devices",
-		)
+		return nil, fmt.Errorf("there was an error fetching the devices: %w", result.Error)
 	}
 
 	return convertutil.ConvertSlice(devices, func(device *Device) *types.Device {
@@ -141,9 +121,7 @@ func (r *repository) UpdateDevice(
 	device *types.Device,
 ) (*types.Device, error) {
 	if device == nil {
-		return nil, errutil.Err(
-			errors.New("device cannot be nil"), "device is required",
-		)
+		return nil, errors.New("device is required")
 	}
 
 	var existingDevice Device
@@ -152,9 +130,7 @@ func (r *repository) UpdateDevice(
 		Where("id = ?", device.ID).
 		First(&existingDevice)
 	if result.Error != nil {
-		return nil, errutil.Err(
-			result.Error, "device not found",
-		)
+		return nil, devicecore.ErrDeviceNotFound
 	}
 
 	// Update the current device
@@ -164,9 +140,7 @@ func (r *repository) UpdateDevice(
 
 	result = r.dbContext.Save(existingDevice)
 	if result.Error != nil {
-		return nil, errutil.Err(
-			result.Error, "there was an error updating the device",
-		)
+		return nil, fmt.Errorf("there was an error updating the device: %w", result.Error)
 	}
 
 	return existingDevice.ToCoreType(), nil
@@ -177,17 +151,9 @@ func (r *repository) ListRegisteredDevices(
 	paginationFilter pagination.PaginationFilter,
 	query *string,
 ) (*pagination.Pageable[types.Device], error) {
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return nil, errutil.Err(
-			nil, "failed to get tenant ID from context",
-		)
-	}
-
-	dbQuery := r.dbContext.Where(
-		"tenant_id = ? AND subscription_token IS NOT NULL AND subscription_token <> ''",
-		tenantID,
-	)
+	dbQuery := r.dbContext.
+		Scopes(gormutil.BelongsToTenant(ctx)).
+		Where("subscription_token IS NOT NULL AND subscription_token <> ''")
 
 	if query != nil && *query != "" {
 		dbQuery = dbQuery.Where(
@@ -208,17 +174,17 @@ func (r *repository) ListRegisteredDevices(
 		Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errutil.Err(err, "no devices found")
+			return nil, devicecore.ErrDeviceNotFound
 		}
 
-		return nil, errutil.Err(err, "there was an error fetching the devices")
+		return nil, fmt.Errorf("there was an error fetching the devices: %w", err)
 	}
 
 	var totalDevices int64
 
 	err = dbQuery.Model(&Device{}).Count(&totalDevices).Error
 	if err != nil {
-		return nil, errutil.Err(err, "there was an error fetching the devices")
+		return nil, fmt.Errorf("there was an error counting the devices: %w", err)
 	}
 
 	return &pagination.Pageable[types.Device]{
@@ -232,11 +198,6 @@ func (r *repository) ListRegisteredDevices(
 }
 
 func (r *repository) DeleteDevice(ctx context.Context, device *types.Device) error {
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return identitycontext.ErrTenantNotFound
-	}
-
 	model := newDeviceModel(device)
 
 	err := r.dbContext.Transaction(func(tx *gorm.DB) error {
@@ -246,7 +207,7 @@ func (r *repository) DeleteDevice(ctx context.Context, device *types.Device) err
 			return err
 		}
 
-		err = tx.Where("tenant_id = ?", tenantID).
+		err = tx.Scopes(gormutil.BelongsToTenant(ctx)).
 			Delete(model).Error
 		if err != nil {
 			return err
@@ -255,7 +216,7 @@ func (r *repository) DeleteDevice(ctx context.Context, device *types.Device) err
 		return nil
 	})
 	if err != nil {
-		return errutil.Err(err, "failed to delete device")
+		return fmt.Errorf("failed to delete device: %w", err)
 	}
 
 	return nil

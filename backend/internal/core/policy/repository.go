@@ -5,6 +5,7 @@ package policy
 
 import (
 	"context"
+	"errors"
 
 	apptypes "github.com/outshift/identity-service/internal/core/app/types"
 	"github.com/outshift/identity-service/internal/core/policy/types"
@@ -47,3 +48,9 @@ type Repository interface {
 	) (*pagination.Pageable[types.Rule], error)
 	CountAllPolicies(ctx context.Context) (int64, error)
 }
+
+var (
+	ErrPolicyNotFound = errors.New("policy not found")
+	ErrRuleNotFound   = errors.New("rule not found")
+	ErrTaskNotFound   = errors.New("task not found")
+)

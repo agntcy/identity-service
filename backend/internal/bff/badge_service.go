@@ -214,96 +214,21 @@ func (s *badgeService) createBadgeClaims(
 	app *apptypes.App,
 	in *issueInput,
 ) (*badgetypes.BadgeClaims, badgetypes.BadgeType, error) {
-	claims := badgetypes.BadgeClaims{
-		ID: app.ResolverMetadataID,
-	}
+	var claims *badgetypes.BadgeClaims
 
 	var badgeType badgetypes.BadgeType
 
+	var err error
+
 	switch app.Type {
 	case apptypes.APP_TYPE_AGENT_A2A:
-		err := s.validator.Struct(&in.a2a)
-		if err != nil {
-			return nil, badgetypes.BADGE_TYPE_UNSPECIFIED, err
-		}
-
-		var a2aClaims string
-
-		if in.a2a.WellKnownUrl != nil {
-			a2aClaims, err = s.a2aClient.Discover(ctx, *in.a2a.WellKnownUrl)
-			if err != nil {
-				return nil,
-					badgetypes.BADGE_TYPE_UNSPECIFIED,
-					fmt.Errorf("unable to discover A2A agent card: %w", err)
-			}
-		} else {
-			a2aSchema, err := base64.StdEncoding.DecodeString(*in.a2a.SchemaBase64)
-			if err != nil {
-				return nil, badgetypes.BADGE_TYPE_AGENT_BADGE, err
-			}
-
-			a2aClaims = string(a2aSchema)
-		}
-
-		claims.Badge = a2aClaims
+		claims, err = s.createA2ABadgeClaims(ctx, in)
 		badgeType = badgetypes.BADGE_TYPE_AGENT_BADGE
 	case apptypes.APP_TYPE_AGENT_OASF:
-		err := s.validator.Struct(&in.oasf)
-		if err != nil {
-			return nil, badgetypes.BADGE_TYPE_AGENT_BADGE, err
-		}
-
-		oasfSchema, err := base64.StdEncoding.DecodeString(in.oasf.SchemaBase64)
-		if err != nil {
-			return nil, badgetypes.BADGE_TYPE_AGENT_BADGE, err
-		}
-
-		// see how you can validate the OASF schema
-		// https://schema.oasf.agntcy.org/doc/index.html#/Validation/SchemaWeb_SchemaController_validate_object
-
-		claims.Badge = string(oasfSchema)
+		claims, err = s.createOASFBadgeClaims(in)
 		badgeType = badgetypes.BADGE_TYPE_AGENT_BADGE
 	case apptypes.APP_TYPE_MCP_SERVER:
-		err := s.validator.Struct(&in.mcp)
-		if err != nil {
-			return nil, badgetypes.BADGE_TYPE_UNSPECIFIED, err
-		}
-
-		var mcpClaims string
-
-		if in.mcp.Name != nil && in.mcp.Url != nil {
-			mcpServer, err := s.mcpClient.AutoDiscover(ctx, *in.mcp.Name, *in.mcp.Url)
-			if err != nil {
-				return nil,
-					badgetypes.BADGE_TYPE_UNSPECIFIED,
-					fmt.Errorf("unable to discover MCP server: %w", err)
-			}
-
-			if mcpServer == nil {
-				return nil,
-					badgetypes.BADGE_TYPE_UNSPECIFIED,
-					fmt.Errorf("no MCP server found")
-			}
-
-			// Marshal the MCP server to JSON
-			mcpServerData, err := json.Marshal(mcpServer)
-			if err != nil {
-				return nil,
-					badgetypes.BADGE_TYPE_UNSPECIFIED,
-					fmt.Errorf("error marshalling MCP server: %w", err)
-			}
-
-			mcpClaims = string(mcpServerData)
-		} else if in.mcp.SchemaBase64 != nil {
-			mcpSchema, err := base64.StdEncoding.DecodeString(*in.mcp.SchemaBase64)
-			if err != nil {
-				return nil, badgetypes.BADGE_TYPE_UNSPECIFIED, err
-			}
-
-			mcpClaims = string(mcpSchema)
-		}
-
-		claims.Badge = mcpClaims
+		claims, err = s.createMCPBadgeClaims(ctx, in)
 		badgeType = badgetypes.BADGE_TYPE_MCP_BADGE
 	default:
 		return nil,
@@ -311,7 +236,106 @@ func (s *badgeService) createBadgeClaims(
 			errors.New("unsupported app type")
 	}
 
-	return &claims, badgeType, nil
+	if err != nil {
+		return nil, badgetypes.BADGE_TYPE_UNSPECIFIED, err
+	}
+
+	return &badgetypes.BadgeClaims{
+		ID:    app.ResolverMetadataID,
+		Badge: claims.Badge,
+	}, badgeType, nil
+}
+
+func (s *badgeService) createA2ABadgeClaims(
+	ctx context.Context,
+	in *issueInput,
+) (*badgetypes.BadgeClaims, error) {
+	err := s.validator.Struct(&in.a2a)
+	if err != nil {
+		return nil, err
+	}
+
+	var a2aClaims string
+
+	if in.a2a.WellKnownUrl != nil {
+		a2aClaims, err = s.a2aClient.Discover(ctx, *in.a2a.WellKnownUrl)
+		if err != nil {
+			return nil,
+				fmt.Errorf("unable to discover A2A agent card: %w", err)
+		}
+	} else {
+		a2aSchema, err := base64.StdEncoding.DecodeString(*in.a2a.SchemaBase64)
+		if err != nil {
+			return nil, err
+		}
+
+		a2aClaims = string(a2aSchema)
+	}
+
+	return &badgetypes.BadgeClaims{
+		Badge: a2aClaims,
+	}, nil
+}
+
+func (s *badgeService) createOASFBadgeClaims(in *issueInput) (*badgetypes.BadgeClaims, error) {
+	err := s.validator.Struct(&in.oasf)
+	if err != nil {
+		return nil, err
+	}
+
+	oasfSchema, err := base64.StdEncoding.DecodeString(in.oasf.SchemaBase64)
+	if err != nil {
+		return nil, err
+	}
+
+	// see how you can validate the OASF schema
+	// https://schema.oasf.agntcy.org/doc/index.html#/Validation/SchemaWeb_SchemaController_validate_object
+
+	return &badgetypes.BadgeClaims{
+		Badge: string(oasfSchema),
+	}, nil
+}
+
+func (s *badgeService) createMCPBadgeClaims(
+	ctx context.Context,
+	in *issueInput,
+) (*badgetypes.BadgeClaims, error) {
+	err := s.validator.Struct(&in.mcp)
+	if err != nil {
+		return nil, err
+	}
+
+	var mcpClaims string
+
+	if in.mcp.Name != nil && in.mcp.Url != nil {
+		mcpServer, err := s.mcpClient.AutoDiscover(ctx, *in.mcp.Name, *in.mcp.Url)
+		if err != nil {
+			return nil, fmt.Errorf("unable to discover MCP server: %w", err)
+		}
+
+		if mcpServer == nil {
+			return nil, fmt.Errorf("no MCP server found")
+		}
+
+		// Marshal the MCP server to JSON
+		mcpServerData, err := json.Marshal(mcpServer)
+		if err != nil {
+			return nil, fmt.Errorf("error marshalling MCP server: %w", err)
+		}
+
+		mcpClaims = string(mcpServerData)
+	} else if in.mcp.SchemaBase64 != nil {
+		mcpSchema, err := base64.StdEncoding.DecodeString(*in.mcp.SchemaBase64)
+		if err != nil {
+			return nil, err
+		}
+
+		mcpClaims = string(mcpSchema)
+	}
+
+	return &badgetypes.BadgeClaims{
+		Badge: mcpClaims,
+	}, nil
 }
 
 func (s *badgeService) createTasks(
