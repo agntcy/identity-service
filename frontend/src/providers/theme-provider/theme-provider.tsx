@@ -4,7 +4,7 @@
  */
 
 import {useThemeStore} from '@/store';
-import {ThemeProvider as SparkThemeProvider} from '@outshift/spark-design';
+import {ThemeProvider as SparkThemeProvider} from '@cisco-eti/spark-design';
 import {useShallow} from 'zustand/react/shallow';
 
 export const ThemeProvider = ({children}: {children: React.ReactNode}) => {

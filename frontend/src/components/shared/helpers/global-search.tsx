@@ -14,7 +14,7 @@ import {useCallback, useMemo, useState} from 'react';
 import {useGetAgenticService, useGetAgenticServices, useGetPolicies} from '@/queries';
 import {AgenticServiceType} from '../agentic-services/agentic-service-type';
 import {PATHS} from '@/router/paths';
-import {GeneralSize, OverflowTooltip, Tag, TagStatus} from '@outshift/spark-design';
+import {GeneralSize, OverflowTooltip, Tag, TagStatus} from '@cisco-eti/spark-design';
 
 type GlobalSearchOptionType = App | Policy;
 

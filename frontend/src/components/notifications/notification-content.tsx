@@ -4,7 +4,7 @@
  */
 
 import {Drawer, DrawerContent, DrawerFooter, DrawerHeader, DrawerProps} from '@/components/ui/drawer';
-import {Button, GeneralSize, Tag, TagStatus, toast, Typography} from '@outshift/spark-design';
+import {Button, GeneralSize, Tag, TagStatus, toast, Typography} from '@cisco-eti/spark-design';
 import {BanIcon, CheckIcon} from 'lucide-react';
 import {CountDownTimer} from '../ui/count-down-timer';
 import {useCallback, useMemo, useState} from 'react';

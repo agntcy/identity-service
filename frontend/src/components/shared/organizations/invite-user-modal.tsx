@@ -4,7 +4,7 @@
  */
 
 import {Button} from '@mui/material';
-import {Modal, ModalActions, ModalContent, ModalProps, ModalTitle, toast} from '@outshift/spark-design';
+import {Modal, ModalActions, ModalContent, ModalProps, ModalTitle, toast} from '@cisco-eti/spark-design';
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {Form, FormControl, FormField, FormItem, FormLabel} from '@/components/ui/form';

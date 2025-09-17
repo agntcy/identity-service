@@ -38,8 +38,8 @@ vi.mock('@/hooks', () => ({
 }));
 
 // Mock toast
-vi.mock('@outshift/spark-design', async () => {
-  const actual = await vi.importActual('@outshift/spark-design');
+vi.mock('@cisco-eti/spark-design', async () => {
+  const actual = await vi.importActual('@cisco-eti/spark-design');
   return {
     ...actual,
     toast: vi.fn(),
@@ -157,7 +157,7 @@ describe('InfoPolicy', () => {
 
     // Get the mocked modules
     const routerMocks = vi.mocked(await import('react-router-dom'));
-    const designMocks = vi.mocked(await import('@outshift/spark-design'));
+    const designMocks = vi.mocked(await import('@cisco-eti/spark-design'));
 
     // Setup router mocks
     routerMocks.useNavigate.mockReturnValue(mockNavigate);

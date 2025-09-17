@@ -6,7 +6,7 @@
 import DateHover from '@/components/ui/date-hover';
 import {labels} from '@/constants/labels';
 import {Rule} from '@/types/api/policy';
-import {GeneralSize, Tag, Tags, TagStatus} from '@outshift/spark-design';
+import {GeneralSize, Tag, Tags, TagStatus} from '@cisco-eti/spark-design';
 import {MRT_ColumnDef} from 'material-react-table';
 import {useMemo} from 'react';
 import {TagActionTask} from '../policies/tag-action-task';

@@ -8,7 +8,7 @@ import {SVGProps, useEffect} from 'react';
 import {JSX} from 'react/jsx-runtime';
 import {Typography} from '@mui/material';
 import {useState} from 'react';
-import {GeneralSize, Tag, toast} from '@outshift/spark-design';
+import {GeneralSize, Tag, toast} from '@cisco-eti/spark-design';
 import {cn} from '@/lib/utils';
 
 interface FileUploadProps extends InputProps {

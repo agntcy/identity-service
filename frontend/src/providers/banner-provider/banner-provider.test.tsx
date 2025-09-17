@@ -13,7 +13,7 @@ vi.mock('@/hooks', () => ({
 }));
 
 // Mock the Banner component
-vi.mock('@outshift/spark-design', () => ({
+vi.mock('@cisco-eti/spark-design', () => ({
   Banner: ({text, onClose, showCloseButton, ...props}: any) => (
     <div data-testid="banner" data-show-close-button={showCloseButton} {...props}>
       {typeof text === 'string' ? text : text}

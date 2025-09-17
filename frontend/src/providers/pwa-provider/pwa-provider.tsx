@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {toast} from '@outshift/spark-design';
+import {toast} from '@cisco-eti/spark-design';
 import React, {createContext, useCallback, useState} from 'react';
 import {useRegisterSW} from 'virtual:pwa-register/react';
 

@@ -70,7 +70,7 @@ vi.mock('./components/router/error-page-boundary', () => ({
   ErrorPageBoundary: () => <div data-testid="error-page-boundary">Error Page</div>
 }));
 
-vi.mock('@outshift/spark-design', () => ({
+vi.mock('@cisco-eti/spark-design', () => ({
   Toaster: ({children, expand, ...props}: any) => (
     <div data-testid="toaster" data-expand={expand} {...props}>
       {children}

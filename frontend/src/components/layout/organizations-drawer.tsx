@@ -6,7 +6,7 @@
 /* c8 ignore start */
 
 import {Sheet, SheetContent, SheetHeader, SheetTitle} from '../ui/sheet';
-import {Button, Divider, OverflowTooltip, toast, Typography} from '@outshift/spark-design';
+import {Button, Divider, OverflowTooltip, toast, Typography} from '@cisco-eti/spark-design';
 import {cn} from '@/lib/utils';
 import {useGetTenants} from '@/queries';
 import {LoaderRelative} from '../ui/loading';

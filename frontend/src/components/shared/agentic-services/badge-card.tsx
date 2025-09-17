@@ -17,7 +17,7 @@ import {
   toast,
   Typography,
   ViewSwitcher
-} from '@outshift/spark-design';
+} from '@cisco-eti/spark-design';
 import {CheckIcon, DownloadIcon, ExpandIcon} from 'lucide-react';
 import {Badge} from '@/types/api/badge';
 import {useAnalytics} from '@/hooks';

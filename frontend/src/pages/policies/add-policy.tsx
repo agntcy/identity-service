@@ -7,7 +7,7 @@ import {BasePage} from '@/components/layout/base-page';
 import {AddEditPolicyStepper} from '@/components/policies/add-edit/add-edit-stepper';
 import {PATHS} from '@/router/paths';
 import {docs} from '@/utils/docs';
-import {Link} from '@outshift/spark-design';
+import {Link} from '@cisco-eti/spark-design';
 import {ExternalLinkIcon} from 'lucide-react';
 
 const AddPolicy: React.FC = () => {

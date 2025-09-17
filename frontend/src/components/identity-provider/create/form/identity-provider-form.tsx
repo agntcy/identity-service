@@ -10,7 +10,7 @@ import {IdentityProvidersFormValues} from '@/schemas/identity-provider-schema';
 import {SharedProvider, SharedProviderProps} from '@/components/ui/shared-provider';
 import {Input} from '@/components/ui/input';
 import {PasswordInput} from '@/components/ui/password-input';
-import {Link, Typography} from '@outshift/spark-design';
+import {Link, Typography} from '@cisco-eti/spark-design';
 import {ExternalLinkIcon, InfoIcon} from 'lucide-react';
 import DuoLogo from '@/assets/duo.svg?react';
 import OktaLogo from '@/assets/okta.svg?react';

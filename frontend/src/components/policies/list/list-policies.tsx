@@ -5,7 +5,7 @@
 
 import {useCallback, useMemo, useState} from 'react';
 import {ConditionalQueryRenderer} from '../../ui/conditional-query-renderer';
-import {Box, EmptyState, MenuItem, Table, toast, Typography} from '@outshift/spark-design';
+import {Box, EmptyState, MenuItem, Table, toast, Typography} from '@cisco-eti/spark-design';
 import {useGetPolicies} from '@/queries';
 import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
 import {PoliciesColumns} from './policies-columns';

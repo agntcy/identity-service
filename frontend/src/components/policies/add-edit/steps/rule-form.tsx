@@ -8,7 +8,7 @@ import {FormControl, FormField, FormItem, FormLabel} from '@/components/ui/form'
 import {Input} from '@/components/ui/input';
 import {PolicyLogicyFormValues} from '@/schemas/policy-logic-schema';
 import {TaskForm} from './task-form';
-import {Checkbox, Skeleton} from '@outshift/spark-design';
+import {Checkbox, Skeleton} from '@cisco-eti/spark-design';
 import {useGetDevices} from '@/queries';
 import {useMemo} from 'react';
 import {IconButton, Tooltip} from '@mui/material';

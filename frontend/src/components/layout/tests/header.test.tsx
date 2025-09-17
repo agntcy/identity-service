@@ -46,7 +46,7 @@ vi.mock('react-router-dom', () => ({
 }));
 
 // Mock Spark Design components
-vi.mock('@outshift/spark-design', () => ({
+vi.mock('@cisco-eti/spark-design', () => ({
   Avatar: ({children, sx}: any) => <div data-testid="avatar">{children}</div>,
   Button: ({children, onClick, startIcon, endIcon, ...props}: any) => (
     <button onClick={onClick} data-testid="user-button" {...props}>

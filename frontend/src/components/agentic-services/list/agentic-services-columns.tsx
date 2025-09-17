@@ -7,7 +7,7 @@ import {AgenticServiceType} from '@/components/shared/agentic-services/agentic-s
 import {StatusAgenticService} from '@/components/shared/agentic-services/status-agentic-service';
 import DateHover from '@/components/ui/date-hover';
 import {App} from '@/types/api/app';
-import {GeneralSize, Tag} from '@outshift/spark-design';
+import {GeneralSize, Tag} from '@cisco-eti/spark-design';
 import {MRT_ColumnDef} from 'material-react-table';
 
 export const AgenticServiceColumns = (): MRT_ColumnDef<App, any>[] => {

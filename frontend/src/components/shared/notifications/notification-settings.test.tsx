@@ -12,7 +12,7 @@ import {useNotificationUtils} from '@/providers/notification-utils-provider/noti
 import {useLocalStore} from '@/store';
 import {renderWithClient} from '@/utils/tests';
 import React from 'react';
-import {toast} from '@outshift/spark-design';
+import {toast} from '@cisco-eti/spark-design';
 
 // Mock dependencies
 vi.mock('@/providers/notification-utils-provider/notification-utils-provider', () => ({
@@ -27,7 +27,7 @@ vi.mock('zustand/react/shallow', () => ({
   useShallow: vi.fn((selector) => selector)
 }));
 
-vi.mock('@outshift/spark-design', () => ({
+vi.mock('@cisco-eti/spark-design', () => ({
   Modal: vi.fn(({children, maxWidth, fullWidth, ...props}) =>
     React.createElement(
       'div',

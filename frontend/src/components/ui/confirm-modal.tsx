@@ -4,7 +4,7 @@
  */
 
 import React, {ReactNode} from 'react';
-import {Modal, ModalTitle, ModalContent, ModalActions, Button, Typography} from '@outshift/spark-design';
+import {Modal, ModalTitle, ModalContent, ModalActions, Button, Typography} from '@cisco-eti/spark-design';
 import {ButtonProps} from '@mui/material';
 
 interface ConfirmModalProps {

@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {Button, Link, Typography} from '@outshift/spark-design';
+import {Button, Link, Typography} from '@cisco-eti/spark-design';
 import {useAnalytics, useAuth} from '@/hooks';
 import {docs} from '@/utils/docs';
 import LandingLogo from '@/assets/welcome/landing.svg?react';

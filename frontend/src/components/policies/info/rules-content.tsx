@@ -4,7 +4,7 @@
  */
 
 import {Card, CardContent} from '@/components/ui/card';
-import {Accordion, Divider, EmptyState, GeneralSize, Pagination, Table, Tag, Typography} from '@outshift/spark-design';
+import {Accordion, Divider, EmptyState, GeneralSize, Pagination, Table, Tag, Typography} from '@cisco-eti/spark-design';
 import {useCallback, useMemo, useState} from 'react';
 import {Policy, Rule, RuleAction} from '@/types/api/policy';
 import {Separator} from '@/components/ui/separator';

@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {Footer as SparkFooter, Typography} from '@outshift/spark-design';
+import {Footer as SparkFooter, Typography} from '@cisco-eti/spark-design';
 import * as CookieConsentVanilla from 'vanilla-cookieconsent';
 import {useWindowSize} from '@/hooks';
 import {Link} from 'react-router-dom';

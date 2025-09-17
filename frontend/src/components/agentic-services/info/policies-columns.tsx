@@ -7,7 +7,7 @@ import {AgenticServiceType} from '@/components/shared/agentic-services/agentic-s
 import DateHover from '@/components/ui/date-hover';
 import {useGetAgenticService} from '@/queries';
 import {Policy, RuleAction} from '@/types/api/policy';
-import {GeneralSize, Skeleton, Tag, Tags, TagStatus, Typography} from '@outshift/spark-design';
+import {GeneralSize, Skeleton, Tag, Tags, TagStatus, Typography} from '@cisco-eti/spark-design';
 import {BanIcon, CheckIcon} from 'lucide-react';
 import {MRT_ColumnDef} from 'material-react-table';
 import {useMemo} from 'react';

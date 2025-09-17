@@ -41,8 +41,8 @@ vi.mock('@/components/policies/add-edit/add-edit-stepper', () => ({
 }));
 
 // Mock external dependencies
-vi.mock('@outshift/spark-design', async () => {
-  const actual = await vi.importActual('@outshift/spark-design');
+vi.mock('@cisco-eti/spark-design', async () => {
+  const actual = await vi.importActual('@cisco-eti/spark-design');
   return {
     ...actual,
     Link: ({children, href, openInNewTab, ...props}: any) => (

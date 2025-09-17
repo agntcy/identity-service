@@ -5,7 +5,7 @@
 
 import {useWindowSize} from '@/hooks';
 import {Fab, FabProps} from '@mui/material';
-import {Tooltip} from '@outshift/spark-design';
+import {Tooltip} from '@cisco-eti/spark-design';
 import {MonitorDownIcon} from 'lucide-react';
 import {useCallback, useEffect, useState} from 'react';
 

@@ -5,7 +5,7 @@
 
 import {useCallback, useState} from 'react';
 import {ConditionalQueryRenderer} from '../../ui/conditional-query-renderer';
-import {Box, EmptyState, MenuItem, Table, Typography} from '@outshift/spark-design';
+import {Box, EmptyState, MenuItem, Table, Typography} from '@cisco-eti/spark-design';
 import {useGetPolicyRules} from '@/queries';
 import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
 import {Card} from '@/components/ui/card';
