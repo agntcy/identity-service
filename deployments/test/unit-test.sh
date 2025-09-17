@@ -6,7 +6,7 @@ DOCKER_FILE=./deployments/docker/frontend/Dockerfile.test
 TEST_COMMAND='yarn run test:coverage'
 
 echo RUNNING FRONTEND TESTS
-docker run "$(docker build --no-cache -f ${DOCKER_FILE} -q .)" $TEST_COMMAND
+docker run "$(docker build --no-cache --build-arg NPM_TOKEN=${NPM_TOKEN} -f ${DOCKER_FILE} -q .)" $TEST_COMMAND
 
 DOCKER_FILE=./deployments/docker/backend/Dockerfile.test
 TEST_COMMAND='go test -cover -v ./...'
