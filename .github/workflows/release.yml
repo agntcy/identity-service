@@ -9,10 +9,9 @@ on:
       - "v[0-9]+.[0-9]+.[0-9]+"
   workflow_dispatch:
 
-
 permissions:
   id-token: write # This is required for requesting the JWT
-  contents: read  # This is required for actions/checkout
+  contents: read # This is required for actions/checkout
   packages: write # needed to push docker image to gar or ecr
 
 jobs:
@@ -35,17 +34,17 @@ jobs:
           # The branch, tag or SHA to checkout, otherwise, uses the default branch.
           ref: ${{ github.ref }}
           # Relative path under $GITHUB_WORKSPACE to place the repository
-          path: ''
+          path: ""
           # Whether to execute `git clean -ffdx && git reset --hard HEAD` before fetching
           # Default: true
           clean: true
           # Whether to download Git-LFS files
           # Default: false
-          lfs: ''
+          lfs: ""
           # Whether to checkout submodules: `true` to checkout submodules or `recursive` to
           # recursively checkout submodules.
           # Default: false
-          submodules: ''
+          submodules: ""
 
       - name: Unit Tests
         run: |
@@ -133,7 +132,7 @@ jobs:
       ghcr-username: ${{ secrets.GHCR_USERNAME }}
       ghcr-token: ${{ secrets.GHCR_TOKEN }}
       ghcr-org-token: ${{ secrets.GHCR_TOKEN }}
-      artifactory-password: ${{ secrets.ARTIFACTORY_PASSWORD }}
+      npm-token: ${{ secrets.GHCR_TOKEN }}
 
     with:
       runner-group: ${{ vars.DEFAULT_ARC_RUNNERS }}
@@ -194,7 +193,6 @@ jobs:
     name: Call Docker Build docs
     needs: [checkout-unit-tests]
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/build-push-docker.yaml@production
-
 
     secrets:
       # Only needed if with:ecr-enabled or with:gar-enabled is true below
