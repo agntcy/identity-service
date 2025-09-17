@@ -9,12 +9,12 @@ import {AuthInfo} from '@/types/okta';
 import config from '@/config';
 import {httpErrorsAuth, USER_NOT_AUTH} from '@/constants/http-errors';
 import {Badge} from '@/types/api/badge';
-import {AnalyticsBrowser} from '@segment/analytics-next';
+import {AnalyticsService} from '@/types/analytics/analytics';
 
 export class BadgeAPIClass extends BadgeApi.Api<Badge> {
   protected authInfo: AuthInfo | null | undefined;
   protected retry = false;
-  protected analytics: AnalyticsBrowser | undefined;
+  protected analytics: AnalyticsService | undefined;
   protected tokenExpiredHttpHandler?: () => Promise<AuthInfo | undefined>;
   protected logout?: (params: {
     revokeAccessToken?: boolean;
@@ -105,7 +105,7 @@ export class BadgeAPIClass extends BadgeApi.Api<Badge> {
     this.logout = handlers.logout;
   }
 
-  public setAnalytics = (analytics?: AnalyticsBrowser) => {
+  public setAnalytics = (analytics?: AnalyticsService) => {
     this.analytics = analytics;
   };
 }

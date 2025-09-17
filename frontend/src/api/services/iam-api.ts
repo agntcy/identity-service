@@ -15,13 +15,13 @@ import {
   InviteUserPayload,
   TenantReponse
 } from '@/types/api/iam';
-import {AnalyticsBrowser} from '@segment/analytics-next';
+import {AnalyticsService} from '@/types/analytics/analytics';
 
 export class IamAPIClass {
   protected authInfo: AuthInfo | null | undefined;
   public instance: AxiosInstance;
   protected retry = false;
-  protected analytics: AnalyticsBrowser | undefined;
+  protected analytics: AnalyticsService | undefined;
   protected tokenExpiredHttpHandler?: () => Promise<AuthInfo | undefined>;
   protected logout?: (params: {
     revokeAccessToken?: boolean;
@@ -175,7 +175,7 @@ export class IamAPIClass {
     this.logout = handlers.logout;
   }
 
-  public setAnalytics = (analytics?: AnalyticsBrowser) => {
+  public setAnalytics = (analytics?: AnalyticsService) => {
     this.analytics = analytics;
   };
 }

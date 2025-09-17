@@ -148,7 +148,9 @@ describe('InviteUserModal', () => {
     } as any);
     vi.mocked(useAnalytics).mockReturnValue({
       analyticsTrack: mockAnalyticsTrack,
-      analyticsPage: vi.fn()
+      analyticsPage: vi.fn(),
+      analyticsIdentify: vi.fn(),
+      analyticsReset: vi.fn()
     });
     vi.mocked(validateForm).mockReturnValue({success: true} as any);
 

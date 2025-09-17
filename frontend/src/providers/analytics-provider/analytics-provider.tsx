@@ -4,14 +4,16 @@
  */
 
 import {createContext, useContext, useEffect, useMemo, useState} from 'react';
-import {AnalyticsBrowser} from '@segment/analytics-next';
 import React from 'react';
 import config from '@/config';
 import {useAuth} from '@/hooks';
 import * as CookieConsentVanilla from 'vanilla-cookieconsent';
+import {AnalyticsService} from '@/types/analytics/analytics';
+import {SegmentAnalytics} from './implementations/segment-analytics';
+import { NoOpAnalytics } from './implementations/noop-analytics';
 
 type AnalyticsProviderState = {
-  analytics?: AnalyticsBrowser;
+  analytics?: AnalyticsService;
   isConsentGiven: boolean;
 };
 
@@ -25,15 +27,20 @@ export const AnalyticsProvider = ({children}: React.PropsWithChildren) => {
   const {authInfo} = useAuth();
 
   const analytics = useMemo(() => {
-    if (segmentId && isConsentGiven) {
-      return AnalyticsBrowser.load({writeKey: segmentId});
+    if (isConsentGiven) {
+      if (segmentId) {
+        console.log('Initializing Segment Analytics...');
+        return new SegmentAnalytics();
+      } else {
+        return new NoOpAnalytics();
+      }
     }
     return undefined;
   }, [isConsentGiven, segmentId]);
 
   useEffect(() => {
-    if (analytics && isConsentGiven && authInfo?.isAuthenticated && authInfo.user) {
-      void analytics.identify(authInfo.user.username, {
+    if (analytics && isConsentGiven && authInfo?.isAuthenticated && authInfo.user && authInfo.user.username) {
+      analytics.identify(authInfo.user.username, {
         userId: authInfo.user.username,
         name: authInfo.user.name,
         email: authInfo.user.username,

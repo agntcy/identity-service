@@ -8,23 +8,36 @@ import {useAnalyticsContext} from '@/providers/analytics-provider/analytics-prov
 export const useAnalytics = () => {
   const {analytics, isConsentGiven} = useAnalyticsContext();
 
-  const analyticsTrack = (id: string, params?: Record<string, any>) => {
+  const analyticsTrack = (eventName: string, properties?: Record<string, any>) => {
     if (!isConsentGiven) {
       return;
     }
-    void analytics?.track(id, {
-      ...params
+    void analytics?.track(eventName, {
+      ...properties
     });
   };
 
-  const analyticsPage = (id: string, params?: Record<string, any>) => {
+  const analyticsPage = (pageCategory: string, pageName: string, properties?: Record<string, any>) => {
     if (!isConsentGiven) {
       return;
     }
-    void analytics?.page(id, {
-      ...params
+    void analytics?.page(pageCategory, pageName, {
+      ...properties
     });
   };
 
-  return {analyticsTrack, analyticsPage};
+  const analyticsIdentify = (userId: string, traits?: Record<string, any>) => {
+    if (!isConsentGiven) {
+      return;
+    }
+    void analytics?.identify(userId, {
+      ...traits
+    });
+  };
+
+  const analyticsReset = () => {
+    void analytics?.reset();
+  };
+
+  return {analyticsTrack, analyticsPage, analyticsIdentify, analyticsReset};
 };

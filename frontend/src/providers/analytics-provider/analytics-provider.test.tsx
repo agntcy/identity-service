@@ -16,10 +16,12 @@ vi.mock('@segment/analytics-next', () => ({
   }
 }));
 
+const mockConfig = vi.hoisted(() => ({
+  SEGMENT_ID: 'test-segment-id'
+}));
+
 vi.mock('@/config', () => ({
-  default: {
-    SEGMENT_ID: 'test-segment-id'
-  }
+  default: mockConfig
 }));
 
 vi.mock('@/hooks', () => ({
@@ -30,42 +32,69 @@ vi.mock('vanilla-cookieconsent', () => ({
   getUserPreferences: vi.fn()
 }));
 
+// Mock the analytics implementations
+vi.mock('./implementations/segment-analytics', () => ({
+  SegmentAnalytics: vi.fn()
+}));
+
+vi.mock('./implementations/noop-analytics', () => ({
+  NoOpAnalytics: vi.fn()
+}));
+
 // Test component to test the hook
 const TestComponent = () => {
   const {analytics, isConsentGiven} = useAnalyticsContext();
+  
+  // Check if analytics is SegmentAnalytics (real analytics) vs NoOpAnalytics (noop)
+  const isRealAnalytics = analytics && analytics.constructor.name === 'SegmentAnalytics';
+  
   return (
     <div>
       <div data-testid="consent-status">{isConsentGiven ? 'granted' : 'denied'}</div>
-      <div data-testid="analytics-status">{analytics ? 'initialized' : 'not-initialized'}</div>
+      <div data-testid="analytics-status">{isRealAnalytics ? 'initialized' : 'not-initialized'}</div>
     </div>
   );
 };
 
 describe('AnalyticsProvider', () => {
-  let mockAnalyticsBrowserLoad: any;
   let mockUseAuth: any;
   let mockGetUserPreferences: any;
-  let mockAnalytics: any;
+  let mockSegmentAnalytics: any;
+  let mockNoOpAnalytics: any;
+  let mockAnalyticsInstance: any;
+  let mockNoOpInstance: any;
 
   beforeEach(async () => {
+    // Reset config to default
+    mockConfig.SEGMENT_ID = 'test-segment-id';
+
     // Import the mocked modules and get their mock functions
-    const {AnalyticsBrowser} = await import('@segment/analytics-next');
     const {useAuth} = await import('@/hooks');
     const {getUserPreferences} = await import('vanilla-cookieconsent');
+    const {SegmentAnalytics} = await import('./implementations/segment-analytics');
+    const {NoOpAnalytics} = await import('./implementations/noop-analytics');
 
-    mockAnalyticsBrowserLoad = AnalyticsBrowser.load as any;
     mockUseAuth = useAuth as any;
     mockGetUserPreferences = getUserPreferences as any;
+    mockSegmentAnalytics = SegmentAnalytics as any;
+    mockNoOpAnalytics = NoOpAnalytics as any;
 
     vi.clearAllMocks();
 
-    // Create mock analytics object
-    mockAnalytics = {
+    // Create mock analytics instances
+    mockAnalyticsInstance = {
       identify: vi.fn(),
       track: vi.fn()
     };
 
-    mockAnalyticsBrowserLoad.mockReturnValue(mockAnalytics);
+    mockNoOpInstance = {
+      identify: vi.fn(),
+      track: vi.fn()
+    };
+
+    // Mock constructors
+    mockSegmentAnalytics.mockImplementation(() => mockAnalyticsInstance);
+    mockNoOpAnalytics.mockImplementation(() => mockNoOpInstance);
 
     // Default mock implementations
     mockUseAuth.mockReturnValue({
@@ -122,7 +151,8 @@ describe('AnalyticsProvider', () => {
 
     expect(screen.getByTestId('consent-status')).toHaveTextContent('granted');
     expect(screen.getByTestId('analytics-status')).toHaveTextContent('initialized');
-    expect(mockAnalyticsBrowserLoad).toHaveBeenCalledWith({writeKey: 'test-segment-id'});
+    expect(mockSegmentAnalytics).toHaveBeenCalledTimes(1);
+    expect(mockNoOpAnalytics).not.toHaveBeenCalled();
   });
 
   it('does not initialize analytics when consent is not given', () => {
@@ -138,7 +168,8 @@ describe('AnalyticsProvider', () => {
 
     expect(screen.getByTestId('consent-status')).toHaveTextContent('denied');
     expect(screen.getByTestId('analytics-status')).toHaveTextContent('not-initialized');
-    expect(mockAnalyticsBrowserLoad).not.toHaveBeenCalled();
+    expect(mockSegmentAnalytics).not.toHaveBeenCalled();
+    expect(mockNoOpAnalytics).not.toHaveBeenCalled();
   });
 
   it('sets up cookie consent event listeners', () => {
@@ -202,7 +233,7 @@ describe('AnalyticsProvider', () => {
       </AnalyticsProvider>
     );
 
-    expect(mockAnalytics.identify).toHaveBeenCalledWith('test@example.com', {
+    expect(mockAnalyticsInstance.identify).toHaveBeenCalledWith('test@example.com', {
       userId: 'test@example.com',
       name: 'Test User',
       email: 'test@example.com',
@@ -210,7 +241,7 @@ describe('AnalyticsProvider', () => {
       orgName: 'Test Org'
     });
 
-    expect(mockAnalytics.track).toHaveBeenCalledWith('USER_LOGGED_IN', {
+    expect(mockAnalyticsInstance.track).toHaveBeenCalledWith('USER_LOGGED_IN', {
       userId: 'test@example.com',
       name: 'Test User',
       email: 'test@example.com',
@@ -237,10 +268,8 @@ describe('AnalyticsProvider', () => {
       </AnalyticsProvider>
     );
 
-    // The provider should not call analytics methods when user is null
-    // even if isAuthenticated is true (this is the correct behavior after the fix)
-    expect(mockAnalytics.identify).not.toHaveBeenCalled();
-    expect(mockAnalytics.track).not.toHaveBeenCalled();
+    expect(mockAnalyticsInstance.identify).not.toHaveBeenCalled();
+    expect(mockAnalyticsInstance.track).not.toHaveBeenCalled();
   });
 
   it('does not call analytics methods when consent is not given', () => {
@@ -264,8 +293,8 @@ describe('AnalyticsProvider', () => {
       </AnalyticsProvider>
     );
 
-    expect(mockAnalytics.identify).not.toHaveBeenCalled();
-    expect(mockAnalytics.track).not.toHaveBeenCalled();
+    expect(mockAnalyticsInstance.identify).not.toHaveBeenCalled();
+    expect(mockAnalyticsInstance.track).not.toHaveBeenCalled();
   });
 
   it('handles authentication changes after consent is given', () => {
@@ -279,7 +308,7 @@ describe('AnalyticsProvider', () => {
       </AnalyticsProvider>
     );
 
-    expect(mockAnalytics.identify).not.toHaveBeenCalled();
+    expect(mockAnalyticsInstance.identify).not.toHaveBeenCalled();
 
     // User becomes authenticated
     mockUseAuth.mockReturnValue({
@@ -302,8 +331,8 @@ describe('AnalyticsProvider', () => {
       </AnalyticsProvider>
     );
 
-    expect(mockAnalytics.identify).toHaveBeenCalled();
-    expect(mockAnalytics.track).toHaveBeenCalled();
+    expect(mockAnalyticsInstance.identify).toHaveBeenCalled();
+    expect(mockAnalyticsInstance.track).toHaveBeenCalled();
   });
 
   it('cleans up event listeners on unmount', () => {
@@ -331,14 +360,13 @@ describe('AnalyticsProvider', () => {
   });
 
   it('does not initialize analytics when segment ID is missing', () => {
-    // Test the provider behavior when AnalyticsBrowser.load is not called
-    // This simulates what would happen if SEGMENT_ID was undefined
+    // Set SEGMENT_ID to undefined to simulate missing config
+    // @ts-expect-error error
+    mockConfig.SEGMENT_ID = undefined;
+
     mockGetUserPreferences.mockReturnValue({
       acceptedCategories: ['analytics']
     });
-
-    // Mock the analytics browser to return undefined (simulating missing config)
-    mockAnalyticsBrowserLoad.mockReturnValue(undefined);
 
     render(
       <AnalyticsProvider>
@@ -348,6 +376,8 @@ describe('AnalyticsProvider', () => {
 
     expect(screen.getByTestId('consent-status')).toHaveTextContent('granted');
     expect(screen.getByTestId('analytics-status')).toHaveTextContent('not-initialized');
+    expect(mockSegmentAnalytics).not.toHaveBeenCalled();
+    expect(mockNoOpAnalytics).toHaveBeenCalledTimes(1);
   });
 
   it('handles user with missing tenant information', () => {
@@ -372,7 +402,7 @@ describe('AnalyticsProvider', () => {
       </AnalyticsProvider>
     );
 
-    expect(mockAnalytics.identify).toHaveBeenCalledWith('test@example.com', {
+    expect(mockAnalyticsInstance.identify).toHaveBeenCalledWith('test@example.com', {
       userId: 'test@example.com',
       name: 'Test User',
       email: 'test@example.com',
@@ -402,7 +432,7 @@ describe('AnalyticsProvider', () => {
       </AnalyticsProvider>
     );
 
-    expect(mockAnalytics.identify).toHaveBeenCalledWith('test@example.com', {
+    expect(mockAnalyticsInstance.identify).toHaveBeenCalledWith('test@example.com', {
       userId: 'test@example.com',
       name: undefined,
       email: 'test@example.com',
@@ -447,7 +477,7 @@ describe('AnalyticsProvider', () => {
       </AnalyticsProvider>
     );
 
-    expect(mockAnalyticsBrowserLoad).toHaveBeenCalledTimes(1);
+    expect(mockSegmentAnalytics).toHaveBeenCalledTimes(1);
 
     // Trigger consent change but consent remains granted
     act(() => {
@@ -460,8 +490,8 @@ describe('AnalyticsProvider', () => {
       </AnalyticsProvider>
     );
 
-    // Should not call load again since analytics is already initialized
-    expect(mockAnalyticsBrowserLoad).toHaveBeenCalledTimes(1);
+    // Should not create a new instance since analytics is already initialized
+    expect(mockSegmentAnalytics).toHaveBeenCalledTimes(1);
   });
 
   it('initializes analytics when consent changes from denied to granted', () => {
@@ -476,7 +506,7 @@ describe('AnalyticsProvider', () => {
     );
 
     expect(screen.getByTestId('analytics-status')).toHaveTextContent('not-initialized');
-    expect(mockAnalyticsBrowserLoad).not.toHaveBeenCalled();
+    expect(mockSegmentAnalytics).not.toHaveBeenCalled();
 
     // Grant consent
     mockGetUserPreferences.mockReturnValue({
@@ -489,7 +519,7 @@ describe('AnalyticsProvider', () => {
 
     expect(screen.getByTestId('consent-status')).toHaveTextContent('granted');
     expect(screen.getByTestId('analytics-status')).toHaveTextContent('initialized');
-    expect(mockAnalyticsBrowserLoad).toHaveBeenCalledWith({writeKey: 'test-segment-id'});
+    expect(mockSegmentAnalytics).toHaveBeenCalledTimes(1);
   });
 
   it('tracks user login after analytics initialization when user becomes authenticated', () => {
@@ -519,8 +549,8 @@ describe('AnalyticsProvider', () => {
       fireEvent(window, new CustomEvent('cc:onChange'));
     });
 
-    expect(mockAnalytics.identify).not.toHaveBeenCalled();
-    expect(mockAnalytics.track).not.toHaveBeenCalled();
+    expect(mockAnalyticsInstance.identify).not.toHaveBeenCalled();
+    expect(mockAnalyticsInstance.track).not.toHaveBeenCalled();
 
     // Then user becomes authenticated
     mockUseAuth.mockReturnValue({
@@ -539,7 +569,7 @@ describe('AnalyticsProvider', () => {
       </AnalyticsProvider>
     );
 
-    expect(mockAnalytics.identify).toHaveBeenCalledWith('test@example.com', {
+    expect(mockAnalyticsInstance.identify).toHaveBeenCalledWith('test@example.com', {
       userId: 'test@example.com',
       name: 'Test User',
       email: 'test@example.com',
@@ -547,7 +577,7 @@ describe('AnalyticsProvider', () => {
       orgName: undefined
     });
 
-    expect(mockAnalytics.track).toHaveBeenCalledWith('USER_LOGGED_IN', {
+    expect(mockAnalyticsInstance.track).toHaveBeenCalledWith('USER_LOGGED_IN', {
       userId: 'test@example.com',
       name: 'Test User',
       email: 'test@example.com',
@@ -602,7 +632,7 @@ describe('AnalyticsProvider', () => {
     });
 
     // Simulate analytics initialization failure
-    mockAnalyticsBrowserLoad.mockImplementation(() => {
+    mockSegmentAnalytics.mockImplementation(() => {
       throw new Error('Analytics initialization failed');
     });
 
