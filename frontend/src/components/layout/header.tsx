@@ -20,6 +20,7 @@ import {NotificationSettings} from '../shared/notifications/notification-setting
 import {useGetDevices} from '@/queries';
 import {GlobalSearch} from '../shared/helpers/global-search';
 import Logo from '@/assets/header/header.svg?react';
+import {globalConfig} from '@/config/global';
 
 export const Header = () => {
   const {isMobile} = useWindowSize();
@@ -70,7 +71,7 @@ export const Header = () => {
                   id: 'github',
                   icon: <GitLogo />,
                   tooltip: 'View GitHub',
-                  href: 'https://github.com/agntcy/identity',
+                  href: globalConfig.company.gitHub,
                   'aria-label': 'github',
                   target: '_blank',
                   onClick: () => analyticsTrack('CLICK_GITHUB')

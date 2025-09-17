@@ -86,12 +86,67 @@ yarn install
 Create a `.env` file in the root directory:
 
 ```bash
-cp .env.example .env
+cp .env.sample .env
 ```
 
-Configure the following environment variables in your `.env` file.
+Configure the following environment variables in your `.env` file:
 
-### 4. Start Development Server
+#### App Configuration
+
+- `VITE_NODE_ENV` - Environment mode (development, production, etc.)
+- `VITE_API_URL` - Backend API base URL
+- `VITE_APP_CLIENT_PORT` - Port for the frontend application (default: 5500)
+- `VITE_APP_LOG_LEVEL` - Logging level for the application
+- `VITE_DOCS_URL` - URL for application documentation
+- `VITE_APP_BASE_NAME` - Base name/path for the application routing
+
+#### IAM Authentication
+
+- `VITE_IAM_PRODUCT_ID` - Product identifier for IAM integration
+- `VITE_IAM_UI` - IAM UI service URL
+- `VITE_IAM_API` - IAM API service URL
+- `VITE_IAM_OIDC_CLIENT_ID` - OIDC client ID for authentication
+- `VITE_IAM_OIDC_ISSUER` - OIDC issuer URL
+- `VITE_IAM_MULTI_TENANT` - Enable multi-tenant support (true/false)
+
+#### Artifactory
+
+- `ARTIFACTORY_PASSWORD` - Password for Artifactory access (for CI/CD)
+
+#### Analytics
+
+- `VITE_SEGMENT_ID` - Segment analytics tracking ID
+- `VITE_MAZE_ID` - Maze analytics tracking ID
+
+### 4. Global Configuration Setup
+
+Configure the application's global settings by editing `src/config/global.ts`:
+
+```typescript
+export const globalConfig = {
+  pwa: {
+    name: 'Your App Name', // Replace with your application name
+    shortName: 'Short Name', // Replace with a short version of your app name
+    description: 'Your app description here', // Replace with your app description
+    themeColor: '#eff3fc', // Customize theme color
+    backgroundColor: '#eff3fc' // Customize background color
+  },
+  links: {
+    termsAndConditions: 'https://your-terms-url.com', // Update with your terms URL
+    privacyPolicy: 'https://your-privacy-policy-url.com', // Update with your privacy policy URL
+    email: 'support@yourcompany.com' // Update with your support email
+  },
+  company: {
+    name: 'Your Company Name', // Replace with your company name
+    url: 'https://yourcompany.com/', // Replace with your company URL
+    gitHub: 'https://github.com/yourcompany' // Replace with your GitHub URL
+  }
+};
+```
+
+**Important**: Remove any `<place-holder>` text and update all URLs, email addresses, and company information to match your actual application requirements.
+
+### 5. Start Development Server
 
 ```bash
 # Start the development server
@@ -137,6 +192,7 @@ frontend/
 ├── public/           # Static assets
 ├── src/
 │   ├── components/   # Reusable UI components
+│   ├── config/       # Configuration files (global.ts)
 │   ├── pages/        # Page components
 │   ├── hooks/        # Custom React hooks
 │   ├── services/     # API services
@@ -154,6 +210,7 @@ frontend/
 - **Tailwind**: `tailwind.config.js`
 - **ESLint**: `eslint.config.js`
 - **Prettier**: `.prettierrc`
+- **Global Config**: `src/config/global.ts`
 
 ## 🚀 Building for Production
 
@@ -251,6 +308,7 @@ yarn generate-pwa-assets
 2. Run `yarn lint` before committing
 3. Ensure all TypeScript types are properly defined
 4. Test your changes thoroughly
+5. Update `global.ts` configuration when adding new global settings
 
 ## 📞 Support
 

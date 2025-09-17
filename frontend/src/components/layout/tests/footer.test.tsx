@@ -81,10 +81,17 @@ vi.mock('@/assets/footer/footer.svg?react', () => ({
   )
 }));
 
-vi.mock('@/constants/links', () => ({
-  links: {
-    termsAndConditions: 'https://example.com/terms',
-    privacyPolicy: 'https://example.com/privacy'
+vi.mock('@/config/global', () => ({
+  globalConfig: {
+    company: {
+      name: 'Cisco Systems, Inc.',
+      url: 'https://www.cisco.com'
+    },
+    links: {
+      email: 'support@agntcy.com',
+      termsAndConditions: 'https://example.com/terms',
+      privacyPolicy: 'https://example.com/privacy'
+    }
   }
 }));
 
