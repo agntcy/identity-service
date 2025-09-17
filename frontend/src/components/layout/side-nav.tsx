@@ -17,8 +17,6 @@ import SettingsIcon from '@/assets/sidebar/settings.svg?react';
 import AgenticServicesLogo from '@/assets/sidebar/agentic-services.svg?react';
 import PoliciesLogo from '@/assets/sidebar/access-policies.svg?react';
 import VerifyIdentityLogo from '@/assets/sidebar/verify-identity.svg?react';
-import {useFeatureFlagsStore} from '@/store';
-import {useShallow} from 'zustand/react/shallow';
 import '@/styles/side-nav.css';
 import config from '@/config';
 
@@ -40,12 +38,6 @@ export const SideNav: React.FC<{
   const theme = useTheme();
   const {authInfo} = useAuth();
   const {analyticsTrack} = useAnalytics();
-
-  const {isTbacEnabled} = useFeatureFlagsStore(
-    useShallow((store) => ({
-      isTbacEnabled: store.featureFlags.isTbacEnabled
-    }))
-  );
 
   const sideNavLinks: SideNavLinkItem[] = useMemo(() => {
     const temp: SideNavLinkItem[] = [
@@ -77,11 +69,8 @@ export const SideNav: React.FC<{
         href: PATHS.policies.base,
         label: 'Policies',
         icon: <PoliciesLogo className="w-4 h-4" />,
-        disabled: !isTbacEnabled,
         onClick: () => {
-          if (isTbacEnabled) {
-            analyticsTrack('CLICK_NAVIGATION_POLICIES');
-          }
+          analyticsTrack('CLICK_NAVIGATION_POLICIES');
         }
       },
       {
@@ -94,7 +83,7 @@ export const SideNav: React.FC<{
       }
     ];
     return temp.filter((link) => !link.disabled);
-  }, [analyticsTrack, isTbacEnabled]);
+  }, [analyticsTrack]);
 
   const location = useLocation();
   const currentPathName = location.pathname;

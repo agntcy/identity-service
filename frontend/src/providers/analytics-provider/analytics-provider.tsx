@@ -10,7 +10,7 @@ import {useAuth} from '@/hooks';
 import * as CookieConsentVanilla from 'vanilla-cookieconsent';
 import {AnalyticsService} from '@/types/analytics/analytics';
 import {SegmentAnalytics} from './implementations/segment-analytics';
-import { NoOpAnalytics } from './implementations/noop-analytics';
+import {NoOpAnalytics} from './implementations/noop-analytics';
 
 type AnalyticsProviderState = {
   analytics?: AnalyticsService;

@@ -44,10 +44,10 @@ vi.mock('./implementations/noop-analytics', () => ({
 // Test component to test the hook
 const TestComponent = () => {
   const {analytics, isConsentGiven} = useAnalyticsContext();
-  
+
   // Check if analytics is SegmentAnalytics (real analytics) vs NoOpAnalytics (noop)
   const isRealAnalytics = analytics && analytics.constructor.name === 'SegmentAnalytics';
-  
+
   return (
     <div>
       <div data-testid="consent-status">{isConsentGiven ? 'granted' : 'denied'}</div>

@@ -6,18 +6,10 @@
 
 import config from '@/config';
 import {PATHS} from '@/router/paths';
-import {useFeatureFlagsStore} from '@/store';
 import {useMemo} from 'react';
 import {Outlet} from 'react-router-dom';
-import {useShallow} from 'zustand/react/shallow';
 
 const SettingsBase: React.FC = () => {
-  const {isTbacEnabled} = useFeatureFlagsStore(
-    useShallow((state) => ({
-      isTbacEnabled: state.featureFlags.isTbacEnabled
-    }))
-  );
-
   const subNav = useMemo(() => {
     return [
       {
@@ -28,14 +20,11 @@ const SettingsBase: React.FC = () => {
         label: 'API Key',
         href: PATHS.settings.apiKey
       },
-      ...(isTbacEnabled
-        ? [
-            {
-              label: 'Devices',
-              href: PATHS.settings.devices.base
-            }
-          ]
-        : []),
+
+      {
+        label: 'Devices',
+        href: PATHS.settings.devices.base
+      },
       ...(config.IAM_MULTI_TENANT
         ? [
             {
@@ -45,7 +34,7 @@ const SettingsBase: React.FC = () => {
           ]
         : [])
     ];
-  }, [isTbacEnabled]);
+  }, []);
 
   return <Outlet context={{subNav}} />;
 };

@@ -12,7 +12,7 @@ import {Navigate} from 'react-router-dom';
 import React from 'react';
 import {SecureRoute} from '@/components/router/secure-route';
 import {Loading} from '@/components/ui/loading';
-import {useFeatureFlagsStore, useSettingsStore} from '@/store';
+import {useSettingsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
 import {useWindowSize} from '@/hooks';
 import config from '@/config';
@@ -139,12 +139,6 @@ export const useRoutes = () => {
     }))
   );
 
-  const {isTbacEnabled} = useFeatureFlagsStore(
-    useShallow((store) => ({
-      isTbacEnabled: store.featureFlags.isTbacEnabled
-    }))
-  );
-
   const {isMobile} = useWindowSize();
 
   const routes = useMemo<Route[]>(() => {
@@ -219,8 +213,7 @@ export const useRoutes = () => {
                   <NodeRoute pageTitle="agentic service policies assigned to">
                     <PoliciesAssignedToAgenticService />
                   </NodeRoute>
-                ),
-                disabled: !isTbacEnabled
+                )
               },
               {
                 path: PATHS.agenticServices.info.policiesUsedBy,
@@ -228,8 +221,7 @@ export const useRoutes = () => {
                   <NodeRoute pageTitle="agentic service policies used by">
                     <PoliciesUsedByAgenticService />
                   </NodeRoute>
-                ),
-                disabled: !isTbacEnabled
+                )
               }
             ]
           },
@@ -267,7 +259,7 @@ export const useRoutes = () => {
       },
       {
         path: PATHS.policies.base,
-        disabled: !isTbacEnabled || isMobile,
+        disabled: isMobile,
         children: [
           {
             index: true,
@@ -348,7 +340,7 @@ export const useRoutes = () => {
           },
           {
             path: PATHS.settings.devices.base,
-            disabled: !isTbacEnabled || isMobile,
+            disabled: isMobile,
             children: [
               {
                 index: true,
@@ -416,7 +408,7 @@ export const useRoutes = () => {
         ]
       }
     ];
-  }, [isAdmin, isEmptyIdp, isMobile, isTbacEnabled]);
+  }, [isAdmin, isEmptyIdp, isMobile]);
 
   const removeDisabledRoutes = useCallback((routes: Route[]): Route[] => {
     return routes

@@ -8,10 +8,11 @@
 import {useMemo} from 'react';
 import {createBrowserRouter, RouterProvider} from 'react-router-dom';
 import {useRoutes} from './routes';
+import config from '@/config';
 
 export const Router = () => {
   const routes = useRoutes();
-  const router = useMemo(() => createBrowserRouter(routes), [routes]);
+  const router = useMemo(() => createBrowserRouter(routes, {basename: config.APP_BASE_NAME}), [routes]);
   return <RouterProvider router={router} />;
 };
 

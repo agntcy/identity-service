@@ -11,8 +11,7 @@ import React from 'react';
 
 // Mock stores
 vi.mock('@/store', () => ({
-  useSettingsStore: vi.fn(),
-  useFeatureFlagsStore: vi.fn()
+  useSettingsStore: vi.fn()
 }));
 
 // Mock hooks
@@ -108,7 +107,6 @@ vi.mock('@/pages/callback-loading/callback-loading', () => ({
 
 // Get the mocked functions
 const mockUseSettingsStore = vi.mocked(await import('@/store')).useSettingsStore;
-const mockUseFeatureFlagsStore = vi.mocked(await import('@/store')).useFeatureFlagsStore;
 const mockUseWindowSize = vi.mocked(await import('@/hooks')).useWindowSize;
 
 describe('useRoutes', () => {
@@ -125,18 +123,6 @@ describe('useRoutes', () => {
         setIsEmptyIdp: vi.fn()
       };
       return selector ? selector(mockState) : mockState;
-    });
-
-    // Mock useFeatureFlagsStore with proper selector handling
-    mockUseFeatureFlagsStore.mockImplementation((selector) => {
-      const mockStore = {
-        featureFlags: {
-          isTbacEnabled: true
-        },
-        setFeatureFlags: vi.fn(),
-        clean: vi.fn()
-      };
-      return selector ? selector(mockStore) : mockStore;
     });
 
     // Mock useWindowSize
@@ -172,31 +158,6 @@ describe('useRoutes', () => {
         });
       }
     });
-
-    it('calls useFeatureFlagsStore with correct selector for isTbacEnabled', () => {
-      renderHook(() => useRoutes());
-
-      expect(mockUseFeatureFlagsStore).toHaveBeenCalledWith(expect.any(Function));
-
-      // Test the selector function
-      const selectorCall = mockUseFeatureFlagsStore.mock.calls[0][0];
-      if (selectorCall) {
-        const mockStore = {
-          featureFlags: {
-            isTbacEnabled: false,
-            otherFlag: true
-          },
-          setFeatureFlags: vi.fn(),
-          clean: vi.fn(),
-          otherProperty: 'should not be selected'
-        };
-
-        const result = selectorCall(mockStore);
-        expect(result).toEqual({
-          isTbacEnabled: false
-        });
-      }
-    });
   });
 
   describe('basic route generation', () => {
@@ -215,46 +176,6 @@ describe('useRoutes', () => {
 
       const basePathRoute = routes.find((route) => route.path === PATHS.basePath);
       expect(basePathRoute).toBeDefined();
-    });
-  });
-
-  describe('route generation based on feature flags', () => {
-    it('generates routes when TBAC is enabled', () => {
-      mockUseFeatureFlagsStore.mockImplementation((selector) => {
-        const mockStore = {
-          featureFlags: {
-            isTbacEnabled: true
-          },
-          setFeatureFlags: vi.fn(),
-          clean: vi.fn()
-        };
-        return selector ? selector(mockStore) : mockStore;
-      });
-
-      const {result} = renderHook(() => useRoutes());
-      const routes = result.current;
-
-      expect(routes).toBeDefined();
-      expect(routes.length).toBeGreaterThan(0);
-    });
-
-    it('generates routes when TBAC is disabled', () => {
-      mockUseFeatureFlagsStore.mockImplementation((selector) => {
-        const mockStore = {
-          featureFlags: {
-            isTbacEnabled: false
-          },
-          setFeatureFlags: vi.fn(),
-          clean: vi.fn()
-        };
-        return selector ? selector(mockStore) : mockStore;
-      });
-
-      const {result} = renderHook(() => useRoutes());
-      const routes = result.current;
-
-      expect(routes).toBeDefined();
-      expect(routes.length).toBeGreaterThan(0);
     });
   });
 
@@ -471,17 +392,6 @@ describe('useRoutes', () => {
         return selector ? selector(mockState) : mockState;
       });
 
-      mockUseFeatureFlagsStore.mockImplementation((selector) => {
-        const mockStore = {
-          featureFlags: {
-            isTbacEnabled: false
-          },
-          setFeatureFlags: vi.fn(),
-          clean: vi.fn()
-        };
-        return selector ? selector(mockStore) : mockStore;
-      });
-
       mockUseWindowSize.mockReturnValue({
         windowSize: {width: 375, height: 667},
         isMobile: true,
@@ -509,16 +419,16 @@ describe('useRoutes', () => {
     it('updates when dependencies change', () => {
       const {result, rerender} = renderHook(() => useRoutes());
 
-      // Change feature flag
-      mockUseFeatureFlagsStore.mockImplementation((selector) => {
-        const mockStore = {
-          featureFlags: {
-            isTbacEnabled: false
-          },
-          setFeatureFlags: vi.fn(),
-          clean: vi.fn()
+      // Change settings store
+      mockUseSettingsStore.mockImplementation((selector) => {
+        const mockState = {
+          isEmptyIdp: true,
+          isAdmin: false,
+          setIsAdmin: vi.fn(),
+          setSession: vi.fn(),
+          setIsEmptyIdp: vi.fn()
         };
-        return selector ? selector(mockStore) : mockStore;
+        return selector ? selector(mockState) : mockState;
       });
 
       rerender();

@@ -2,6 +2,7 @@
  * Copyright 2025 Cisco Systems, Inc. and its affiliates
  * SPDX-License-Identifier: Apache-2.0
  */
+import {pwaConfig} from '@/constants/pwa';
 import {useMemo} from 'react';
 import {Helmet} from 'react-helmet-async';
 
@@ -11,17 +12,16 @@ export const Manifest = () => {
 
   const manifestHref = useMemo(() => {
     const manifest = {
-      name: 'Outshift Agent Identity Service Powered by AGNTCY',
-      short_name: 'Agent Identity Service',
-      description:
-        'Outshift Agent Identity Service is powered by AGNTCY, providing secure and efficient identity management for agents.',
-      theme_color: '#eff3fc',
+      name: pwaConfig.name,
+      short_name: pwaConfig.shortName,
+      description: pwaConfig.description,
+      theme_color: pwaConfig.themeColor,
       display: 'standalone',
       display_override: ['tabbed'],
       orientation: 'portrait',
       scope: window.location.origin,
       start_url: id ? `${window.location.origin}/onboard-device?id=${id}` : `${window.location.origin}/onboard-device`,
-      background_color: '#eff3fc',
+      background_color: pwaConfig.backgroundColor,
       icons: [
         {
           src: `${window.location.origin}/pwa-64x64.png`,

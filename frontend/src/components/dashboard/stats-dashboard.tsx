@@ -8,8 +8,6 @@ import {CheckIcon, PlusIcon} from 'lucide-react';
 import ScrollShadowWrapper from '@/components/ui/scroll-shadow-wrapper';
 import {PATHS} from '@/router/paths';
 import {Link, Link as RouterLink} from 'react-router-dom';
-import {useFeatureFlagsStore} from '@/store';
-import {useShallow} from 'zustand/react/shallow';
 import {useGetAgenticServiceTotalCount, useGetPoliciesCount, useGetSettings} from '@/queries';
 import StatsCard, {Stat} from '../ui/stats-card';
 import {ProviderType} from '../shared/identity-provider/provider-type';
@@ -19,17 +17,11 @@ import {WelcomeName} from './welcome-name';
 import {useAnalytics} from '@/hooks';
 
 export const StatsDashboard = () => {
-  const {isTbacEnabled} = useFeatureFlagsStore(
-    useShallow((state) => ({
-      isTbacEnabled: state.featureFlags.isTbacEnabled
-    }))
-  );
-
   const {analyticsTrack} = useAnalytics();
 
   const {data: dataSettings, isLoading: isLoadingSettings} = useGetSettings();
   const {data: dataAgenticServices, isLoading: isLoadingAgenticServices} = useGetAgenticServiceTotalCount();
-  const {data: dataPolicies, isLoading: isLoadingPolicies} = useGetPoliciesCount({enabled: isTbacEnabled});
+  const {data: dataPolicies, isLoading: isLoadingPolicies} = useGetPoliciesCount({enabled: true});
 
   const statsInfo: Stat[] = useMemo(() => {
     const temp = [
@@ -46,15 +38,13 @@ export const StatsDashboard = () => {
         value: <Link to={PATHS.agenticServices.base}>{dataAgenticServices?.total || 0}</Link>,
         title: 'Total Agentic Services',
         loading: isLoadingAgenticServices
-      }
-    ];
-    if (isTbacEnabled) {
-      temp.push({
+      },
+      {
         value: <Link to={PATHS.policies.base}>{dataPolicies?.total || 0}</Link>,
         title: 'Total Policies',
         loading: isLoadingPolicies
-      });
-    }
+      }
+    ];
     return temp;
   }, [
     dataAgenticServices?.total,
@@ -62,8 +52,7 @@ export const StatsDashboard = () => {
     dataSettings?.issuerSettings?.idpType,
     isLoadingAgenticServices,
     isLoadingPolicies,
-    isLoadingSettings,
-    isTbacEnabled
+    isLoadingSettings
   ]);
 
   return (
@@ -71,13 +60,7 @@ export const StatsDashboard = () => {
       <div className="flex flex-col h-full gap-[16px] mb-12">
         <WelcomeName />
         <div className="px-[24px]">
-          <StatsCard
-            className={cn(
-              'grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 p-4',
-              !isTbacEnabled && 'md:grid-cols-2 lg:grid-cols-2'
-            )}
-            stats={statsInfo}
-          />
+          <StatsCard className={cn('grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 p-4')} stats={statsInfo} />
         </div>
         <div className="card-group px-[24px]">
           <div className="card-flex-group min-w-[384px] bg-[#FBFCFE] rounded-[8px] flex-col flex justify-start items-center px-20 py-12 hidden md:block">
@@ -132,31 +115,29 @@ export const StatsDashboard = () => {
               </div>
             </div>
           </div>
-          {isTbacEnabled && (
-            <div className="card-flex-group min-w-[384px] bg-[#FBFCFE] rounded-[8px] flex-col flex justify-start items-center px-20 py-12 hidden md:block">
-              <div className="flex flex-col justify-between min-h-[150px]">
-                <div>
-                  <Typography variant="h6" textAlign="center">
-                    Add Policies
-                  </Typography>
-                  <Typography variant="body1" marginTop={1} textAlign="center">
-                    Manage access and permissions for secure agentic interactions
-                  </Typography>
-                </div>
-                <div className="flex justify-center items-center">
-                  <RouterLink to={PATHS.policies.create} onClick={() => analyticsTrack('CLICK_NAVIGATION_ADD_POLICY')}>
-                    <Button
-                      variant="outlined"
-                      sx={{fontWeight: '600 !important'}}
-                      startIcon={<PlusIcon className="w-4 h-4" />}
-                    >
-                      Add Policy
-                    </Button>
-                  </RouterLink>
-                </div>
+          <div className="card-flex-group min-w-[384px] bg-[#FBFCFE] rounded-[8px] flex-col flex justify-start items-center px-20 py-12 hidden md:block">
+            <div className="flex flex-col justify-between min-h-[150px]">
+              <div>
+                <Typography variant="h6" textAlign="center">
+                  Add Policies
+                </Typography>
+                <Typography variant="body1" marginTop={1} textAlign="center">
+                  Manage access and permissions for secure agentic interactions
+                </Typography>
+              </div>
+              <div className="flex justify-center items-center">
+                <RouterLink to={PATHS.policies.create} onClick={() => analyticsTrack('CLICK_NAVIGATION_ADD_POLICY')}>
+                  <Button
+                    variant="outlined"
+                    sx={{fontWeight: '600 !important'}}
+                    startIcon={<PlusIcon className="w-4 h-4" />}
+                  >
+                    Add Policy
+                  </Button>
+                </RouterLink>
               </div>
             </div>
-          )}
+          </div>
         </div>
       </div>
     </ScrollShadowWrapper>

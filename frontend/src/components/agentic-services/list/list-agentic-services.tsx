@@ -18,8 +18,6 @@ import {App, AppType} from '@/types/api/app';
 import {CheckIcon, IdCardIcon, PencilIcon, PlusIcon, Trash2Icon} from 'lucide-react';
 import {ConfirmModal} from '@/components/ui/confirm-modal';
 import {useDeleteAgenticService} from '@/mutations';
-import {useFeatureFlagsStore} from '@/store';
-import {useShallow} from 'zustand/react/shallow';
 import {useAnalytics} from '@/hooks';
 import {BadgeModalForm} from '@/components/shared/agentic-services/badge-modal-form';
 import {DEFAULT_ROWS_PER_PAGE, ROWS_PER_PAGE_OPTION} from '@/constants/pagination';
@@ -67,12 +65,6 @@ export const ListAgenticServices = () => {
   const {data: dataCount} = useGetAgenticServiceTotalCount();
 
   const {analyticsTrack} = useAnalytics();
-
-  const {isTbacEnabled} = useFeatureFlagsStore(
-    useShallow((state) => ({
-      isTbacEnabled: state.featureFlags.isTbacEnabled
-    }))
-  );
 
   const navigate = useNavigate();
 
@@ -386,29 +378,27 @@ export const ListAgenticServices = () => {
         description={
           <>
             Are you sure you want to delete this agentic service <b>{tempApp?.name}</b>? This action cannot be undone.
-            {isTbacEnabled && (
-              <>
-                <br />
-                <br />
-                <strong>Note:</strong> If this agentic service is a TBAC service, it will also remove the associated TBAC
-                policies.
-                <br />
-                <br />
-                Confirm policies{' '}
-                <Link
-                  href={(() => {
-                    const basePath = generatePath(PATHS.agenticServices.info.policiesAssignedTo, {
-                      id: tempApp?.id || ''
-                    });
-                    return basePath;
-                  })()}
-                >
-                  here
-                </Link>
-                .
-                <br />
-              </>
-            )}
+            <>
+              <br />
+              <br />
+              <strong>Note:</strong> If this agentic service is a TBAC service, it will also remove the associated TBAC
+              policies.
+              <br />
+              <br />
+              Confirm policies{' '}
+              <Link
+                href={(() => {
+                  const basePath = generatePath(PATHS.agenticServices.info.policiesAssignedTo, {
+                    id: tempApp?.id || ''
+                  });
+                  return basePath;
+                })()}
+              >
+                here
+              </Link>
+              .
+              <br />
+            </>
           </>
         }
         confirmButtonText="Delete"
