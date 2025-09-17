@@ -4,15 +4,13 @@
 ---
 name: Run all tests
 
-permissions:
-  packages: write
-  contents: write
-  issues: write
-  pull-requests: write
-  id-token: write
-
 on:
   workflow_call:
+
+permissions:
+  id-token: write
+  contents: read
+  packages: write
 
 jobs:
   test:
