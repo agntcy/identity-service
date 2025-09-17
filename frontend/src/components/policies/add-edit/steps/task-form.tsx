@@ -6,7 +6,7 @@
 
 import {useFormContext} from 'react-hook-form';
 import {FormControl, FormField, FormItem, FormLabel} from '@/components/ui/form';
-import {GeneralSize, MenuItem, Select, Skeleton, Tag, Tags, Typography} from '@outshift/spark-design';
+import {GeneralSize, MenuItem, Select, Skeleton, Tag, Tags, Typography} from '@cisco-eti/spark-design';
 import {PolicyLogicyFormValues} from '@/schemas/policy-logic-schema';
 import {RuleAction} from '@/types/api/policy';
 import {labels} from '@/constants/labels';

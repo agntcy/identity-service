@@ -9,7 +9,7 @@ import {describe, it, vi, beforeEach, expect, afterEach} from 'vitest';
 import {render, screen, fireEvent, waitFor} from '@testing-library/react';
 import {useFormContext} from 'react-hook-form';
 import {jwtDecode} from 'jwt-decode';
-import {toast} from '@outshift/spark-design';
+import {toast} from '@cisco-eti/spark-design';
 import {VerifyIdentityForm} from '../../steps/verify-identity-form';
 import React from 'react';
 
@@ -22,7 +22,7 @@ vi.mock('jwt-decode', () => ({
   jwtDecode: vi.fn()
 }));
 
-vi.mock('@outshift/spark-design', () => ({
+vi.mock('@cisco-eti/spark-design', () => ({
   Divider: vi.fn(({children, ...props}: {children?: React.ReactNode; [key: string]: any}) =>
     React.createElement('div', {role: 'separator', ...props}, children)
   ),

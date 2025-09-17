@@ -41,14 +41,14 @@ vi.mock('@/mutations', () => ({
   useDeleteRule: vi.fn()
 }));
 
-vi.mock('@outshift/spark-design', () => ({
+vi.mock('@cisco-eti/spark-design', () => ({
   toast: vi.fn()
 }));
 
 // Import mocked modules
 import {useAnalytics} from '@/hooks';
 import {useDeleteRule} from '@/mutations';
-import {toast} from '@outshift/spark-design';
+import {toast} from '@cisco-eti/spark-design';
 
 describe('DeleteRule', () => {
   const mockOnClose = vi.fn();

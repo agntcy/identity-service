@@ -4,7 +4,7 @@
  */
 
 import {useAuth, useWindowSize} from '@/hooks';
-import {Typography} from '@outshift/spark-design';
+import {Typography} from '@cisco-eti/spark-design';
 
 export const WelcomeName = () => {
   const {authInfo} = useAuth();

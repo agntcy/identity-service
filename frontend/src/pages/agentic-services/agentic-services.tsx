@@ -10,7 +10,7 @@ import {useAnalytics} from '@/hooks';
 import {useGetSettings} from '@/queries';
 import {PATHS} from '@/router/paths';
 import {useSettingsStore} from '@/store';
-import {Button} from '@outshift/spark-design';
+import {Button} from '@cisco-eti/spark-design';
 import {PlusIcon} from 'lucide-react';
 import {Link, useNavigate} from 'react-router-dom';
 import {useShallow} from 'zustand/react/shallow';

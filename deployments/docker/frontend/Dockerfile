@@ -3,10 +3,10 @@
 
 FROM node:22-alpine AS build
 
-# set ARTIFACTORY_PASSWORD as an ENV var
-ARG ARTIFACTORY_PASSWORD
+# set NPM_TOKEN as an ENV var
+ARG NPM_TOKEN
 
-ENV ARTIFACTORY_PASSWORD=${ARTIFACTORY_PASSWORD}
+ENV NPM_TOKEN=${NPM_TOKEN}
 
 # Install packages
 RUN apk add --update \
@@ -22,7 +22,7 @@ WORKDIR /home/web
 # Copy src
 COPY ./frontend .
 
-RUN touch .env && echo "ARTIFACTORY_PASSWORD=${ARTIFACTORY_PASSWORD}" >> .env
+RUN touch .env && echo "NPM_TOKEN=${NPM_TOKEN}" >> .env
 
 # Install libs
 RUN yarn install

@@ -13,7 +13,7 @@ import {PATHS} from '@/router/paths';
 import {AgenticServiceFormValues, AgenticServiceSchema} from '@/schemas/agentic-service-schema';
 import {App, AppType} from '@/types/api/app';
 import {zodResolver} from '@hookform/resolvers/zod';
-import {Button, toast, Typography} from '@outshift/spark-design';
+import {Button, toast, Typography} from '@cisco-eti/spark-design';
 import {useCallback, useEffect} from 'react';
 import {useForm} from 'react-hook-form';
 import {generatePath, Link, useNavigate} from 'react-router-dom';

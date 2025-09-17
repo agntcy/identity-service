@@ -7,7 +7,7 @@ import React, {useCallback, useMemo, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
 import {BellIcon, ChevronDownIcon, ChevronUpIcon, LogOutIcon} from 'lucide-react';
-import {Avatar, Button, Divider, Header as SparkHeader, Menu, MenuItem, Typography} from '@outshift/spark-design';
+import {Avatar, Button, Divider, Header as SparkHeader, Menu, MenuItem, Typography} from '@cisco-eti/spark-design';
 import BookLogo from '@/assets/union.svg?react';
 import GitLogo from '@/assets/git.svg?react';
 import UserIcon from '@/assets/user.svg?react';

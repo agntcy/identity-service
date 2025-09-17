@@ -25,7 +25,7 @@ vi.mock('react-router-dom', async () => {
 });
 
 // Mock Spark Design EmptyState
-vi.mock('@outshift/spark-design', () => ({
+vi.mock('@cisco-eti/spark-design', () => ({
   EmptyState: vi.fn(({variant, title, description, actionTitle, actionCallback, containerProps, ...props}) => (
     <div
       data-testid="empty-state"

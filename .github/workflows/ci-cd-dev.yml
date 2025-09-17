@@ -9,10 +9,9 @@ on:
   #     - "main"
   workflow_dispatch:
 
-
 permissions:
   id-token: write # This is required for requesting the JWT
-  contents: read  # This is required for actions/checkout
+  contents: read # This is required for actions/checkout
   packages: write # needed to push docker image to gar or ecr
 
 jobs:
@@ -35,17 +34,17 @@ jobs:
           # The branch, tag or SHA to checkout, otherwise, uses the default branch.
           ref: ${{ github.ref }}
           # Relative path under $GITHUB_WORKSPACE to place the repository
-          path: ''
+          path: ""
           # Whether to execute `git clean -ffdx && git reset --hard HEAD` before fetching
           # Default: true
           clean: true
           # Whether to download Git-LFS files
           # Default: false
-          lfs: ''
+          lfs: ""
           # Whether to checkout submodules: `true` to checkout submodules or `recursive` to
           # recursively checkout submodules.
           # Default: false
-          submodules: ''
+          submodules: ""
 
       - name: Unit Tests
         run: |
@@ -198,7 +197,7 @@ jobs:
       ghcr-username: ${{ secrets.GHCR_USERNAME }}
       ghcr-token: ${{ secrets.GHCR_TOKEN }}
       ghcr-org-token: ${{ secrets.GHCR_TOKEN }}
-      artifactory-password: ${{ secrets.ARTIFACTORY_PASSWORD }}
+      npm-token: ${{ secrets.GHCR_TOKEN }}
 
     with:
       runner-group: ${{ vars.DEFAULT_ARC_RUNNERS }}
@@ -421,7 +420,11 @@ jobs:
   # MCP Server Currency Exchange Deployment
   call-trigger-cd-mcp-server-currency-exchange:
     name: Trigger CD MCP Server Currency Exchange
-    needs: [call-docker-build-push-mcp-server-currency-exchange, call-helm-publish-mcp-server-currency-exchange]
+    needs:
+      [
+        call-docker-build-push-mcp-server-currency-exchange,
+        call-helm-publish-mcp-server-currency-exchange,
+      ]
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/trigger-deploy.yaml@production
     with:
       deployment-repo: "cisco-eti/identity-service-deployment"
@@ -437,7 +440,11 @@ jobs:
   # A2A Agent Currency Exchange Deployment
   call-trigger-cd-a2a-agent-currency-exchange:
     name: Trigger CD A2A Agent Currency Exchange
-    needs: [call-docker-build-push-a2a-agent-currency-exchange, call-helm-publish-identity-sample-currency-exchange-a2a]
+    needs:
+      [
+        call-docker-build-push-a2a-agent-currency-exchange,
+        call-helm-publish-identity-sample-currency-exchange-a2a,
+      ]
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/trigger-deploy.yaml@production
     with:
       deployment-repo: "cisco-eti/identity-service-deployment"
@@ -453,7 +460,11 @@ jobs:
   # OASF Agent Financial Assistant Deployment
   call-trigger-cd-oasf-agent-financial-assistant:
     name: Trigger CD oasf Agent financial assistant
-    needs: [call-docker-build-push-oasf-agent-financial-assistant, call-helm-publish-identity-sample-financial-assist-oasf]
+    needs:
+      [
+        call-docker-build-push-oasf-agent-financial-assistant,
+        call-helm-publish-identity-sample-financial-assist-oasf,
+      ]
     uses: cisco-eti/gh-reusable-workflows/.github/workflows/trigger-deploy.yaml@production
     with:
       deployment-repo: "cisco-eti/identity-service-deployment"

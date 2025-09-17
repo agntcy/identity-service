@@ -10,7 +10,7 @@ services:
       context: ../../../
       dockerfile: deployments/docker/frontend/Dockerfile
       args:
-        - ARTIFACTORY_PASSWORD=${ARTIFACTORY_PASSWORD}
+        - NPM_TOKEN=${NPM_TOKEN}
     restart: always
     ports:
       - ${VITE_APP_CLIENT_PORT}:${VITE_APP_CLIENT_PORT}

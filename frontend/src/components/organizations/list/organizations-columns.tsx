@@ -5,7 +5,7 @@
 
 import {useAuth} from '@/hooks';
 import {TenantReponse} from '@/types/api/iam';
-import {OverflowTooltip, Tag} from '@outshift/spark-design';
+import {OverflowTooltip, Tag} from '@cisco-eti/spark-design';
 import {MRT_ColumnDef} from 'material-react-table';
 
 export const OrganizationsColumns = (): MRT_ColumnDef<TenantReponse, any>[] => {

@@ -3,10 +3,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {Modal, ModalActions, ModalContent, ModalProps, ModalTitle, toast} from '@outshift/spark-design';
+import {Modal, ModalActions, ModalContent, ModalProps, ModalTitle, toast} from '@cisco-eti/spark-design';
 import {Button, Typography} from '@mui/material';
 import {BellIcon, BellOffIcon, RefreshCcwIcon} from 'lucide-react';
-import {GeneralSize, Tag, TagStatus} from '@outshift/spark-design';
+import {GeneralSize, Tag, TagStatus} from '@cisco-eti/spark-design';
 import {Card} from '@/components/ui/card';
 import {useCallback} from 'react';
 import {useNotificationUtils} from '@/providers/notification-utils-provider/notification-utils-provider';

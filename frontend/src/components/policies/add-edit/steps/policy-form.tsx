@@ -9,7 +9,7 @@ import {useFormContext} from 'react-hook-form';
 import {FormControl, FormField, FormItem, FormLabel} from '@/components/ui/form';
 import {useEffect, useMemo} from 'react';
 import {Input} from '@/components/ui/input';
-import {GeneralSize, MenuItem, Select, Tag, Typography} from '@outshift/spark-design';
+import {GeneralSize, MenuItem, Select, Tag, Typography} from '@cisco-eti/spark-design';
 import {PolicyFormValues} from '@/schemas/policy-schema';
 import {Textarea} from '@/components/ui/textarea';
 import {useGetAgenticServices} from '@/queries';

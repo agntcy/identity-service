@@ -48,7 +48,7 @@ vi.mock('@/constants/labels', () => ({
   }
 }));
 
-vi.mock('@outshift/spark-design', () => ({
+vi.mock('@cisco-eti/spark-design', () => ({
   GeneralSize: {
     Small: 'small',
     Medium: 'medium',

@@ -7,7 +7,7 @@ import {createRoot} from 'react-dom/client';
 import App from './app';
 
 import 'vanilla-cookieconsent/dist/cookieconsent.css';
-import '@outshift/spark-design/typography.css';
+import '@cisco-eti/spark-design/typography.css';
 import './styles/typography.css';
 import './styles/index.css';
 

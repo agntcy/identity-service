@@ -74,7 +74,7 @@ vi.mock('@/components/ui/confirm-modal', () => ({
 }));
 
 // Mock external dependencies
-vi.mock('@outshift/spark-design', () => ({
+vi.mock('@cisco-eti/spark-design', () => ({
   Button: ({children, loading, loadingPosition, onClick, variant, startIcon, fullWidth, sx}: any) => (
     <button
       onClick={onClick}
@@ -103,7 +103,7 @@ vi.mock('lucide-react', () => ({
 const mockUseOutletContext = vi.mocked(await import('react-router-dom')).useOutletContext;
 const mockUseAnalytics = vi.mocked(await import('@/hooks')).useAnalytics;
 const mockUseCreateTenant = vi.mocked(await import('@/mutations')).useCreateTenant;
-const mockToast = vi.mocked(await import('@outshift/spark-design')).toast;
+const mockToast = vi.mocked(await import('@cisco-eti/spark-design')).toast;
 
 describe('Organizations', () => {
   const mockAnalyticsTrack = vi.fn();

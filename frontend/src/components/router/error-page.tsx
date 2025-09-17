@@ -5,7 +5,7 @@
 
 import {FallbackProps} from 'react-error-boundary';
 import {isRouteErrorResponse, useRouteError} from 'react-router-dom';
-import {EmptyState} from '@outshift/spark-design';
+import {EmptyState} from '@cisco-eti/spark-design';
 import {Card} from '../ui/card';
 
 interface ErrorPageProps extends Omit<FallbackProps, 'resetErrorBoundary'> {

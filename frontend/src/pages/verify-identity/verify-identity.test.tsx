@@ -91,7 +91,7 @@ vi.mock('lucide-react', () => ({
   )
 }));
 
-vi.mock('@outshift/spark-design', () => ({
+vi.mock('@cisco-eti/spark-design', () => ({
   Link: ({children, href, openInNewTab}: any) => (
     <a data-testid="spark-link" href={href} data-open-in-new-tab={openInNewTab}>
       {children}

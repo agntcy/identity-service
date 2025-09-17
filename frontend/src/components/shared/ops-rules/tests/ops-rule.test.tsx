@@ -10,7 +10,7 @@ import {OpsRule} from '../ops-rule';
 import {renderWithClient} from '@/utils/tests';
 
 // Mock dependencies
-vi.mock('@outshift/spark-design', () => ({
+vi.mock('@cisco-eti/spark-design', () => ({
   Modal: ({children, open, onClose, maxWidth, fullWidth}: any) =>
     open ? (
       <div data-testid="modal" data-max-width={maxWidth} data-full-width={fullWidth}>

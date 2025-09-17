@@ -18,7 +18,7 @@ import {
   Tooltip,
   Typography,
   useDropdownAutocompleteTree
-} from '@outshift/spark-design';
+} from '@cisco-eti/spark-design';
 import {RotateCwIcon} from 'lucide-react';
 import {useCallback, useEffect, useRef} from 'react';
 import {useDebouncedCallback} from 'use-debounce';

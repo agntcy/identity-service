@@ -6,7 +6,7 @@
 import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-renderer';
 import {useAddDevice, useDeleteDevice, useTestDevice} from '@/mutations';
 import {useGetDevices} from '@/queries';
-import {EmptyState, Table, toast, Typography} from '@outshift/spark-design';
+import {EmptyState, Table, toast, Typography} from '@cisco-eti/spark-design';
 import React, {useCallback, useMemo, useState} from 'react';
 import {ConfirmModal} from '../ui/confirm-modal';
 import {useAnalytics} from '@/hooks';

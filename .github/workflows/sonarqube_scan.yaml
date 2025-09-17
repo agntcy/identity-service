@@ -53,23 +53,23 @@ jobs:
               touch .env
             fi
           fi
-          if grep -q '^ARTIFACTORY_PASSWORD=' .env; then
-            sed -i "s#^ARTIFACTORY_PASSWORD=.*#ARTIFACTORY_PASSWORD=${{ secrets.ARTIFACTORY_PASSWORD }}#" .env
+          if grep -q '^NPM_TOKEN=' .env; then
+            sed -i "s#^NPM_TOKEN=.*#NPM_TOKEN=${{ secrets.GITHUB_TOKEN }}#" .env
           else
-            echo 'ARTIFACTORY_PASSWORD=${{ secrets.ARTIFACTORY_PASSWORD }}' >> .env
+            echo 'NPM_TOKEN=${{ secrets.GITHUB_TOKEN }}' >> .env
           fi
 
       - name: Set up Node (for frontend tests)
         uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v4
         with:
           node-version: 22
-          cache: 'yarn'
+          cache: "yarn"
           cache-dependency-path: frontend/yarn.lock
 
       - name: Install frontend dependencies
         working-directory: frontend
         env:
-          ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
+          NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           corepack enable
           yarn install --frozen-lockfile || yarn install

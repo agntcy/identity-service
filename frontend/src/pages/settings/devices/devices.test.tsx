@@ -90,7 +90,7 @@ vi.mock('@/components/ui/qr-code-modal', () => ({
 }));
 
 // Mock Spark Design
-vi.mock('@outshift/spark-design', () => ({
+vi.mock('@cisco-eti/spark-design', () => ({
   Button: ({children, loading, loadingPosition, onClick, variant, startIcon, fullWidth, sx}: any) => (
     <button
       data-testid="add-device-button"
@@ -121,7 +121,7 @@ const mockUseOutletContext = vi.mocked(await import('react-router-dom')).useOutl
 const mockUseAnalytics = vi.mocked(await import('@/hooks')).useAnalytics;
 const mockUseAddDevice = vi.mocked(await import('@/mutations')).useAddDevice;
 const mockUseQueryClient = vi.mocked(await import('@tanstack/react-query')).useQueryClient;
-const mockToast = vi.mocked(await import('@outshift/spark-design')).toast;
+const mockToast = vi.mocked(await import('@cisco-eti/spark-design')).toast;
 
 describe('Devices', () => {
   const mockSubNav = [

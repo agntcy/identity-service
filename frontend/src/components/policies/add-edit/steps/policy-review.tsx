@@ -5,7 +5,7 @@
  */
 
 import {Card, CardContent} from '@/components/ui/card';
-import {Accordion, Divider, EmptyState, GeneralSize, Pagination, Table, Tag, Typography} from '@outshift/spark-design';
+import {Accordion, Divider, EmptyState, GeneralSize, Pagination, Table, Tag, Typography} from '@cisco-eti/spark-design';
 import {useCallback, useMemo, useState} from 'react';
 import KeyValue, {KeyValuePair} from '@/components/ui/key-value';
 import {AgenticServiceType} from '@/components/shared/agentic-services/agentic-service-type';

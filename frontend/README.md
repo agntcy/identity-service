@@ -31,28 +31,31 @@ This repository contains all components of the Agent Identity Service UI - a Rea
 - Node.js >= 20
 - Yarn (configured as package manager)
 - NVM (Node Version Manager)
-- Access to Cisco DevHub Cloud for Spark Design library
+- Access to GitHub Packages Registry for Spark Design library
 
 ## 🔐 Authentication Setup for Spark Design Library
 
-Before installing dependencies, you need to authenticate with Cisco's NPM registry to access the Outshift Spark Design library.
+**Note**: This package is hosted on GitHub Packages Registry and requires authentication.
 
-### 1. Generate DevHub Cloud Token
+To install this library, you'll need to authenticate with GitHub Packages using a Personal Access Token (PAT):
 
-1. Go to [Outshift - NPM](https://artifactory.devhub-cloud.cisco.com/ui/repos/tree/General/outshift-npm)
-2. Follow the instructions to generate a token for the `outshift-npm` repository
-3. Store this token securely - you'll need it for npm login
+### Step 1: Create a Personal Access Token
 
-### 2. Login to NPM Registry
+1. Go to [GitHub Settings > Developer settings > Personal access tokens](https://github.com/settings/tokens)
+2. Create a new token with **packages:read** permission
+3. Copy and securely store the generated token
+
+### Step 2: Configure NPM Authentication
 
 ```bash
-npm login --registry=https://artifactory.devhub-cloud.cisco.com/artifactory/api/npm/outshift-npm/ --scope=@outshift --auth-type=web
+npm login --registry=https://npm.pkg.github.com --scope=@cisco-eti
 ```
 
-**Credentials:**
+When prompted, enter:
 
-- **Username**: Your Cisco username
-- **Password**: The token generated in step 1
+- **Username**: Your GitHub username
+- **Password**: The Personal Access Token you created above
+- **Email**: Your GitHub email address
 
 ## 🛠 Development Setup
 
@@ -109,9 +112,9 @@ Configure the following environment variables in your `.env` file:
 - `VITE_IAM_OIDC_ISSUER` - OIDC issuer URL
 - `VITE_IAM_MULTI_TENANT` - Enable multi-tenant support (true/false)
 
-#### Artifactory
+#### GitHub NPM
 
-- `ARTIFACTORY_PASSWORD` - Password for Artifactory access (for CI/CD)
+- `NPM_TOKEN` - Your GitHub Personal Access Token for package registry access
 
 #### Analytics
 
@@ -314,6 +317,6 @@ yarn generate-pwa-assets
 
 For issues related to:
 
-- **Spark Design Library**: Check Outshift documentation
-- **Authentication**: Verify your DevHub Cloud access
-- **Development**: Check this README or project
+- **Spark Design Library**: Check GitHub Packages Registry access
+- **Authentication**: Verify your GitHub Personal Access Token
+- **Development**: Check this README

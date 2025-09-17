@@ -84,7 +84,7 @@ vi.mock('@mui/material', () => ({
 }));
 
 // Mock Spark Design components - Remove any style-related props
-vi.mock('@outshift/spark-design', () => ({
+vi.mock('@cisco-eti/spark-design', () => ({
   OverflowTooltip: ({value, someLongText, children, ...props}: any) => (
     <div data-testid="overflow-tooltip" data-value={value} {...props}>
       {someLongText || value || children}

@@ -5,7 +5,7 @@
 
 import {useGetSession, useGetSettings} from '@/queries';
 import {IdpType} from '@/types/api/settings';
-import {toast} from '@outshift/spark-design';
+import {toast} from '@cisco-eti/spark-design';
 import {useEffect, useMemo} from 'react';
 import {useSettingsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';

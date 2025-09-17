@@ -9,7 +9,7 @@ import {VariantProps, cva} from 'class-variance-authority';
 import {cn} from '@/lib/utils';
 import {Skeleton} from './skeleton';
 import {Typography} from '@mui/material';
-import {OverflowTooltip} from '@outshift/spark-design';
+import {OverflowTooltip} from '@cisco-eti/spark-design';
 
 const statsCardStyles = cva('gap-4 w-full min-h-20 px-0 pb-0', {
   variants: {

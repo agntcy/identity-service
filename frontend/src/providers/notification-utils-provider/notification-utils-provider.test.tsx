@@ -34,7 +34,7 @@ vi.mock('@/providers/pwa-provider/pwa-provider', () => ({
   usePwa: vi.fn()
 }));
 
-vi.mock('@outshift/spark-design', () => ({
+vi.mock('@cisco-eti/spark-design', () => ({
   toast: vi.fn()
 }));
 
@@ -58,7 +58,7 @@ const mockUnsubscribeNotifications = vi.mocked(await import('@/lib/notifications
 const mockArrayBufferToBase64 = vi.mocked(await import('@/lib/utils')).arrayBufferToBase64;
 const mockUseRegisterDevice = vi.mocked(await import('@/mutations')).useRegisterDevice;
 const mockUsePwa = vi.mocked(await import('@/providers/pwa-provider/pwa-provider')).usePwa;
-const mockToast = vi.mocked(await import('@outshift/spark-design')).toast;
+const mockToast = vi.mocked(await import('@cisco-eti/spark-design')).toast;
 const mockGetDeviceInfo = vi.mocked(await import('@/lib/device')).default;
 const mockNotificationUtils = vi.mocked(await import('@/utils/notification-store')).notificationUtils;
 

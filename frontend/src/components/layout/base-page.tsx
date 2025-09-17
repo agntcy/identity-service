@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {Breadcrumbs, BreadcrumbsProps, Tab, Tabs, TabsProps} from '@outshift/spark-design';
+import {Breadcrumbs, BreadcrumbsProps, Tab, Tabs, TabsProps} from '@cisco-eti/spark-design';
 import ScrollShadowWrapper from '../ui/scroll-shadow-wrapper';
 import {Box, BoxProps, Typography} from '@mui/material';
 import {ReactNode, useCallback, useEffect} from 'react';
