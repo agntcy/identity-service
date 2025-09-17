@@ -12,6 +12,7 @@ import (
 	policycore "github.com/outshift/identity-service/internal/core/policy"
 	policymocks "github.com/outshift/identity-service/internal/core/policy/mocks"
 	"github.com/outshift/identity-service/internal/core/policy/types"
+	"github.com/outshift/identity-service/internal/pkg/errutil"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -68,7 +69,7 @@ func TestEvaluation_Evaluate_should_not_pass(t *testing.T) {
 	_, err := sut.Evaluate(ctx, calledApp, callingAppID, toolName)
 
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "not allowed")
+	assert.ErrorIs(t, err, errutil.Unauthorized("auth.unauthorized", "The application is unauthorized to make a call."))
 }
 
 func TestEvaluation_Evaluate_should_return_err_when_input_is_not_valid(t *testing.T) {
@@ -85,6 +86,6 @@ func TestEvaluation_Evaluate_should_return_err_when_input_is_not_valid(t *testin
 		_, err := sut.Evaluate(ctx, calledApp, "", emptyToolName)
 
 		assert.Error(t, err)
-		assert.ErrorContains(t, err, "please provide a tool name")
+		assert.ErrorIs(t, err, errutil.ValidationFailed("auth.emptyToolName", "Please provide a tool name."))
 	})
 }

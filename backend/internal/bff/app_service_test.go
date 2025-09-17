@@ -11,6 +11,7 @@ import (
 	"github.com/agntcy/identity/pkg/jwk"
 	"github.com/google/uuid"
 	"github.com/outshift/identity-service/internal/bff"
+	appcore "github.com/outshift/identity-service/internal/core/app"
 	appmocks "github.com/outshift/identity-service/internal/core/app/mocks"
 	apptypes "github.com/outshift/identity-service/internal/core/app/types"
 	badgemocks "github.com/outshift/identity-service/internal/core/badge/mocks"
@@ -23,6 +24,7 @@ import (
 	settingsmocks "github.com/outshift/identity-service/internal/core/settings/mocks"
 	settingstypes "github.com/outshift/identity-service/internal/core/settings/types"
 	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
+	"github.com/outshift/identity-service/internal/pkg/errutil"
 	iammocks "github.com/outshift/identity-service/internal/pkg/iam/mocks"
 	"github.com/outshift/identity-service/internal/pkg/pagination"
 	"github.com/outshift/identity-service/internal/pkg/ptrutil"
@@ -91,16 +93,16 @@ func TestAppService_CreateApp_should_return_err_when_app_is_invalid(t *testing.T
 	t.Parallel()
 
 	testCases := map[string]*struct {
-		app    *apptypes.App
-		errMsg string
+		app *apptypes.App
+		err error
 	}{
 		"nil app": {
-			app:    nil,
-			errMsg: "app cannot be nil",
+			app: nil,
+			err: errutil.InvalidRequest("app.invalidApp", "Application payload is invalid."),
 		},
 		"invalid app type": {
-			app:    &apptypes.App{Type: apptypes.APP_TYPE_UNSPECIFIED},
-			errMsg: "app type is required",
+			app: &apptypes.App{Type: apptypes.APP_TYPE_UNSPECIFIED},
+			err: errutil.ValidationFailed("app.invalidAppType", "Application type is invalid."),
 		},
 	}
 
@@ -114,7 +116,7 @@ func TestAppService_CreateApp_should_return_err_when_app_is_invalid(t *testing.T
 			_, err := sut.CreateApp(ctx, tc.app)
 
 			assert.Error(t, err)
-			assert.ErrorContains(t, err, tc.errMsg)
+			assert.ErrorIs(t, err, tc.err)
 		})
 	}
 }
@@ -133,7 +135,7 @@ func TestAppService_CreateApp_should_return_err_when_issuer_not_found(t *testing
 	_, err := sut.CreateApp(ctx, app)
 
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "unable to fetch settings")
+	assert.ErrorContains(t, err, "repository failed to fetch settings")
 }
 
 func TestAppService_CreateApp_should_return_err_when_idp_type_is_invalid(t *testing.T) {
@@ -157,7 +159,7 @@ func TestAppService_CreateApp_should_return_err_when_idp_type_is_invalid(t *test
 	_, err := sut.CreateApp(ctx, app)
 
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "failed to create IDP instance")
+	assert.ErrorContains(t, err, "failed to create IdP instance")
 }
 
 func TestAppService_CreateApp_should_return_err_when_client_cred_pair_creation_fails(t *testing.T) {
@@ -370,13 +372,13 @@ func TestAppService_GetApp_should_return_not_found(t *testing.T) {
 	ctx := context.Background()
 	invalidAppID := "INVALID_APP"
 	appRepo := appmocks.NewRepository(t)
-	appRepo.EXPECT().GetApp(ctx, invalidAppID).Return(nil, errors.New("not found"))
+	appRepo.EXPECT().GetApp(ctx, invalidAppID).Return(nil, appcore.ErrAppNotFound)
 	sut := bff.NewAppService(appRepo, nil, nil, nil, nil, nil, nil, nil, nil, nil)
 
 	app, err := sut.GetApp(ctx, invalidAppID)
 
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "not found")
+	assert.ErrorIs(t, err, errutil.NotFound("app.notFound", "Application not found"))
 	assert.Nil(t, app)
 }
 
@@ -390,7 +392,7 @@ func TestAppService_GetApp_should_return_err_if_id_is_empty(t *testing.T) {
 	app, err := sut.GetApp(ctx, emptyAppID)
 
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "app ID cannot be empty")
+	assert.ErrorIs(t, err, errutil.ValidationFailed("app.idInvalid", "Invalid application ID"))
 	assert.Nil(t, app)
 }
 

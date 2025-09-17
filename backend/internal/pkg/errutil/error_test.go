@@ -1,0 +1,39 @@
+// Copyright 2025 Cisco Systems, Inc. and its affiliates
+// SPDX-License-Identifier: Apache-2.0
+
+package errutil_test
+
+import (
+	"errors"
+	"testing"
+
+	"github.com/google/uuid"
+	"github.com/outshift/identity-service/internal/pkg/errutil"
+	"github.com/stretchr/testify/assert"
+)
+
+func TestIsDomainError(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]*struct {
+		err            error
+		expectedResult bool
+	}{
+		"should return true": {
+			err:            errutil.InvalidRequest(uuid.NewString(), "something"),
+			expectedResult: true,
+		},
+		"should return false": {
+			err:            errors.New("random"),
+			expectedResult: false,
+		},
+	}
+
+	for tn, tc := range testCases {
+		t.Run(tn, func(t *testing.T) {
+			t.Parallel()
+
+			assert.Equal(t, tc.expectedResult, errutil.IsDomainError(tc.err))
+		})
+	}
+}

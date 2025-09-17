@@ -4,6 +4,9 @@
 package grpcutil
 
 import (
+	"errors"
+
+	"github.com/outshift/identity-service/internal/pkg/errutil"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -22,4 +25,20 @@ func BadRequestError(err error) error {
 
 func InternalError(err error) error {
 	return status.Errorf(codes.Internal, "%v", err)
+}
+
+func Error(err error) error {
+	domainErr := &errutil.DomainError{}
+	if errors.As(err, &domainErr) {
+		switch domainErr.Reason {
+		case errutil.ErrorReasonNotFound:
+			return NotFoundError(err)
+		case errutil.ErrorReasonValidationFailed:
+			return BadRequestError(err)
+		case errutil.ErrorReasonInvalidRequest:
+			return BadRequestError(err)
+		}
+	}
+
+	return err
 }

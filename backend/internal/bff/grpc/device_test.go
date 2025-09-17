@@ -10,15 +10,15 @@ import (
 	"github.com/google/uuid"
 	identity_service_sdk_go "github.com/outshift/identity-service/api/server/outshift/identity/service/v1alpha1"
 	"github.com/outshift/identity-service/internal/bff/grpc"
-	grpctesting "github.com/outshift/identity-service/internal/bff/grpc/testing"
 	bffmocks "github.com/outshift/identity-service/internal/bff/mocks"
 	devicetypes "github.com/outshift/identity-service/internal/core/device/types"
 	"github.com/outshift/identity-service/internal/pkg/pagination"
 	"github.com/outshift/identity-service/internal/pkg/ptrutil"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"google.golang.org/grpc/codes"
 )
+
+var errDeviceUnexpected = errors.New("failed")
 
 func TestDeviceService_AddDevice_should_succeed(t *testing.T) {
 	t.Parallel()
@@ -34,17 +34,17 @@ func TestDeviceService_AddDevice_should_succeed(t *testing.T) {
 	assert.NotNil(t, ret)
 }
 
-func TestDeviceService_AddDevice_should_return_badrequest_when_core_service_fails(t *testing.T) {
+func TestDeviceService_AddDevice_should_propagate_error_when_core_service_fails(t *testing.T) {
 	t.Parallel()
 
 	deviceSrv := bffmocks.NewDeviceService(t)
-	deviceSrv.EXPECT().AddDevice(t.Context(), mock.Anything).Return(nil, errors.New("failed"))
+	deviceSrv.EXPECT().AddDevice(t.Context(), mock.Anything).Return(nil, errDeviceUnexpected)
 
 	sut := grpc.NewDeviceService(deviceSrv)
 
 	_, err := sut.AddDevice(t.Context(), &identity_service_sdk_go.AddDeviceRequest{})
 
-	grpctesting.AssertGrpcError(t, err, codes.InvalidArgument, "failed to add device: failed")
+	assert.ErrorIs(t, err, errDeviceUnexpected)
 }
 
 func TestDeviceService_RegisterDevice_should_succeed(t *testing.T) {
@@ -62,17 +62,17 @@ func TestDeviceService_RegisterDevice_should_succeed(t *testing.T) {
 	assert.NoError(t, err)
 }
 
-func TestDeviceService_RegisterDevice_should_return_notfound_when_core_service_fails(t *testing.T) {
+func TestDeviceService_RegisterDevice_should_propagate_error_when_core_service_fails(t *testing.T) {
 	t.Parallel()
 
 	deviceSrv := bffmocks.NewDeviceService(t)
-	deviceSrv.EXPECT().RegisterDevice(t.Context(), mock.Anything, mock.Anything).Return(errors.New("failed"))
+	deviceSrv.EXPECT().RegisterDevice(t.Context(), mock.Anything, mock.Anything).Return(errDeviceUnexpected)
 
 	sut := grpc.NewDeviceService(deviceSrv)
 
 	_, err := sut.RegisterDevice(t.Context(), &identity_service_sdk_go.RegisterDeviceRequest{})
 
-	grpctesting.AssertGrpcError(t, err, codes.NotFound, "failed to get device: failed")
+	assert.ErrorIs(t, err, errDeviceUnexpected)
 }
 
 func TestDeviceService_ListDevices_should_succeed(t *testing.T) {
@@ -102,19 +102,19 @@ func TestDeviceService_ListDevices_should_succeed(t *testing.T) {
 	assert.NotNil(t, ret)
 }
 
-func TestDeviceService_ListDevices_should_badrequest_when_core_service_fails(t *testing.T) {
+func TestDeviceService_ListDevices_should_propagate_error_when_core_service_fails(t *testing.T) {
 	t.Parallel()
 
 	deviceSrv := bffmocks.NewDeviceService(t)
 	deviceSrv.EXPECT().
 		ListRegisteredDevices(t.Context(), mock.Anything, mock.Anything).
-		Return(nil, errors.New("failed"))
+		Return(nil, errDeviceUnexpected)
 
 	sut := grpc.NewDeviceService(deviceSrv)
 
 	_, err := sut.ListDevices(t.Context(), &identity_service_sdk_go.ListDevicesRequest{})
 
-	grpctesting.AssertGrpcError(t, err, codes.InvalidArgument, "failed")
+	assert.ErrorIs(t, err, errDeviceUnexpected)
 }
 
 func TestDeviceService_TestDevice_should_succeed(t *testing.T) {
@@ -132,15 +132,15 @@ func TestDeviceService_TestDevice_should_succeed(t *testing.T) {
 	assert.NoError(t, err)
 }
 
-func TestDeviceService_TestDevice_should_returb_badrequest_when_core_service_fails(t *testing.T) {
+func TestDeviceService_TestDevice_should_propagate_error_when_core_service_fails(t *testing.T) {
 	t.Parallel()
 
 	deviceSrv := bffmocks.NewDeviceService(t)
-	deviceSrv.EXPECT().TestDevice(t.Context(), mock.Anything).Return(errors.New("failed"))
+	deviceSrv.EXPECT().TestDevice(t.Context(), mock.Anything).Return(errDeviceUnexpected)
 
 	sut := grpc.NewDeviceService(deviceSrv)
 
 	_, err := sut.TestDevice(t.Context(), &identity_service_sdk_go.TestDeviceRequest{})
 
-	grpctesting.AssertGrpcError(t, err, codes.InvalidArgument, "failed")
+	assert.ErrorIs(t, err, errDeviceUnexpected)
 }

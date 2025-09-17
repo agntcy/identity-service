@@ -11,15 +11,15 @@ import (
 	"github.com/google/uuid"
 	identity_service_sdk_go "github.com/outshift/identity-service/api/server/outshift/identity/service/v1alpha1"
 	"github.com/outshift/identity-service/internal/bff/grpc"
-	grpctesting "github.com/outshift/identity-service/internal/bff/grpc/testing"
 	bffmocks "github.com/outshift/identity-service/internal/bff/mocks"
 	apptypes "github.com/outshift/identity-service/internal/core/app/types"
 	authtypes "github.com/outshift/identity-service/internal/core/auth/types/int"
 	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"google.golang.org/grpc/codes"
 )
+
+var errAuthUnexpected = errors.New("failed")
 
 func TestAuthService_AppInfo_should_succeed(t *testing.T) {
 	t.Parallel()
@@ -38,7 +38,7 @@ func TestAuthService_AppInfo_should_succeed(t *testing.T) {
 	assert.NotNil(t, ret)
 }
 
-func TestAuthService_AppInfo_should_return_notfound_when_context_does_not_have_app_id(t *testing.T) {
+func TestAuthService_AppInfo_should_return_error_when_context_does_not_have_app_id(t *testing.T) {
 	t.Parallel()
 
 	ctxWithoutAppID := context.Background()
@@ -47,23 +47,23 @@ func TestAuthService_AppInfo_should_return_notfound_when_context_does_not_have_a
 
 	_, err := sut.AppInfo(ctxWithoutAppID, nil)
 
-	grpctesting.AssertGrpcError(t, err, codes.NotFound, "app ID not found in context")
+	assert.ErrorIs(t, err, identitycontext.ErrAppNotFound)
 }
 
-func TestAuthService_AppInfo_should_return_badrequest_when_core_service_fails(t *testing.T) {
+func TestAuthService_AppInfo_should_propagate_error_when_core_service_fails(t *testing.T) {
 	t.Parallel()
 
 	appID := uuid.NewString()
 	ctx := identitycontext.InsertAppID(context.Background(), appID)
 
 	appSrv := bffmocks.NewAppService(t)
-	appSrv.EXPECT().GetApp(ctx, appID).Return(nil, errors.New("failed"))
+	appSrv.EXPECT().GetApp(ctx, appID).Return(nil, errAuthUnexpected)
 
 	sut := grpc.NewAuthService(nil, appSrv)
 
 	_, err := sut.AppInfo(ctx, nil)
 
-	grpctesting.AssertGrpcError(t, err, codes.InvalidArgument, "failed to get app info")
+	assert.ErrorIs(t, err, errAuthUnexpected)
 }
 
 func TestAuthService_Authorize_should_succeed(t *testing.T) {
@@ -91,19 +91,19 @@ func TestAuthService_Authorize_should_succeed(t *testing.T) {
 	assert.Equal(t, authCode, ret.AuthorizationCode)
 }
 
-func TestAuthService_Authorize_should_return_badrequest_when_core_service_fails(t *testing.T) {
+func TestAuthService_Authorize_should_propagate_error_when_core_service_fails(t *testing.T) {
 	t.Parallel()
 
 	authSrv := bffmocks.NewAuthService(t)
 	authSrv.EXPECT().
 		Authorize(t.Context(), mock.Anything, mock.Anything, mock.Anything).
-		Return(nil, errors.New("failed"))
+		Return(nil, errAuthUnexpected)
 
 	sut := grpc.NewAuthService(authSrv, nil)
 
 	_, err := sut.Authorize(t.Context(), &identity_service_sdk_go.AuthorizeRequest{})
 
-	grpctesting.AssertGrpcError(t, err, codes.Unauthenticated, "failed to authorize")
+	assert.ErrorIs(t, err, errAuthUnexpected)
 }
 
 func TestAuthService_Token_should_succeed(t *testing.T) {
@@ -123,29 +123,17 @@ func TestAuthService_Token_should_succeed(t *testing.T) {
 	assert.Equal(t, accessToken, ret.AccessToken)
 }
 
-func TestAuthService_Token_should_return_badrequest_when_auth_code_is_empty(t *testing.T) {
-	t.Parallel()
-
-	emptyAuthCode := ""
-
-	sut := grpc.NewAuthService(nil, nil)
-
-	_, err := sut.Token(t.Context(), &identity_service_sdk_go.TokenRequest{AuthorizationCode: emptyAuthCode})
-
-	grpctesting.AssertGrpcError(t, err, codes.InvalidArgument, "authorization code cannot be empty")
-}
-
-func TestAuthService_Token_should_return_unauthorized_when_core_service_fails(t *testing.T) {
+func TestAuthService_Token_should_propagate_when_core_service_fails(t *testing.T) {
 	t.Parallel()
 
 	authSrv := bffmocks.NewAuthService(t)
-	authSrv.EXPECT().Token(t.Context(), mock.Anything).Return(nil, errors.New("failed"))
+	authSrv.EXPECT().Token(t.Context(), mock.Anything).Return(nil, errAuthUnexpected)
 
 	sut := grpc.NewAuthService(authSrv, nil)
 
 	_, err := sut.Token(t.Context(), &identity_service_sdk_go.TokenRequest{AuthorizationCode: uuid.NewString()})
 
-	grpctesting.AssertGrpcError(t, err, codes.Unauthenticated, "failed to issue token: failed")
+	assert.ErrorIs(t, err, errAuthUnexpected)
 }
 
 func TestAuthService_ExtAuthz_should_succeed(t *testing.T) {
@@ -167,11 +155,11 @@ func TestAuthService_ExtAuthz_should_succeed(t *testing.T) {
 	assert.NoError(t, err)
 }
 
-func TestAuthService_ExtAuthz_should_return_unauthorized_when_core_service_fails(t *testing.T) {
+func TestAuthService_ExtAuthz_should_propagate_when_core_service_fails(t *testing.T) {
 	t.Parallel()
 
 	authSrv := bffmocks.NewAuthService(t)
-	authSrv.EXPECT().ExtAuthZ(t.Context(), mock.Anything, mock.Anything).Return(errors.New("failed"))
+	authSrv.EXPECT().ExtAuthZ(t.Context(), mock.Anything, mock.Anything).Return(errAuthUnexpected)
 
 	sut := grpc.NewAuthService(authSrv, nil)
 
@@ -179,7 +167,7 @@ func TestAuthService_ExtAuthz_should_return_unauthorized_when_core_service_fails
 		AccessToken: uuid.NewString(),
 	})
 
-	grpctesting.AssertGrpcError(t, err, codes.Unauthenticated, "failed to authorize")
+	assert.ErrorIs(t, err, errAuthUnexpected)
 }
 
 func TestAuthService_ApproveToken_should_succeed(t *testing.T) {
@@ -205,17 +193,17 @@ func TestAuthService_ApproveToken_should_succeed(t *testing.T) {
 	assert.NoError(t, err)
 }
 
-func TestAuthService_ApproveToken_should_return_internal_error_when_core_service_fails(t *testing.T) {
+func TestAuthService_ApproveToken_should_propagate_error_when_core_service_fails(t *testing.T) {
 	t.Parallel()
 
 	authSrv := bffmocks.NewAuthService(t)
 	authSrv.EXPECT().
 		ApproveToken(t.Context(), mock.Anything, mock.Anything, mock.Anything, mock.Anything).
-		Return(errors.New("failed"))
+		Return(errAuthUnexpected)
 
 	sut := grpc.NewAuthService(authSrv, nil)
 
 	_, err := sut.ApproveToken(t.Context(), &identity_service_sdk_go.ApproveTokenRequest{})
 
-	grpctesting.AssertGrpcError(t, err, codes.Internal, "failed to approve token")
+	assert.ErrorIs(t, err, errAuthUnexpected)
 }

@@ -10,15 +10,15 @@ import (
 	"github.com/google/uuid"
 	identity_service_sdk_go "github.com/outshift/identity-service/api/server/outshift/identity/service/v1alpha1"
 	"github.com/outshift/identity-service/internal/bff/grpc"
-	grpctesting "github.com/outshift/identity-service/internal/bff/grpc/testing"
 	bffmocks "github.com/outshift/identity-service/internal/bff/mocks"
 	policytypes "github.com/outshift/identity-service/internal/core/policy/types"
 	"github.com/outshift/identity-service/internal/pkg/pagination"
 	"github.com/outshift/identity-service/internal/pkg/ptrutil"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"google.golang.org/grpc/codes"
 )
+
+var errPolicyUnexpected = errors.New("failed")
 
 // CreatePolicy
 
@@ -46,19 +46,19 @@ func TestPolicyService_CreatePolicy_should_succeed(t *testing.T) {
 	assert.NotNil(t, ret)
 }
 
-func TestPolicyService_CreatePolicy_should_return_badrequest_when_core_service_fails(t *testing.T) {
+func TestPolicyService_CreatePolicy_should_propagate_error_when_core_service_fails(t *testing.T) {
 	t.Parallel()
 
 	policySrv := bffmocks.NewPolicyService(t)
 	policySrv.EXPECT().
 		CreatePolicy(t.Context(), mock.Anything, mock.Anything, mock.Anything).
-		Return(nil, errors.New("failed"))
+		Return(nil, errPolicyUnexpected)
 
 	sut := grpc.NewPolicyService(policySrv)
 
 	_, err := sut.CreatePolicy(t.Context(), &identity_service_sdk_go.CreatePolicyRequest{})
 
-	grpctesting.AssertGrpcError(t, err, codes.InvalidArgument, "failed")
+	assert.ErrorIs(t, err, errPolicyUnexpected)
 }
 
 // CreateRule
@@ -93,19 +93,19 @@ func TestPolicyService_CreateRule_should_succeed(t *testing.T) {
 	assert.NotNil(t, ret)
 }
 
-func TestPolicyService_CreateRule_should_return_badrequest_when_core_service_fails(t *testing.T) {
+func TestPolicyService_CreateRule_should_propagate_error_when_core_service_fails(t *testing.T) {
 	t.Parallel()
 
 	policySrv := bffmocks.NewPolicyService(t)
 	policySrv.EXPECT().
 		CreateRule(t.Context(), mock.Anything, mock.Anything, mock.Anything, mock.Anything, mock.Anything, mock.Anything).
-		Return(nil, errors.New("failed"))
+		Return(nil, errPolicyUnexpected)
 
 	sut := grpc.NewPolicyService(policySrv)
 
 	_, err := sut.CreateRule(t.Context(), &identity_service_sdk_go.CreateRuleRequest{})
 
-	grpctesting.AssertGrpcError(t, err, codes.InvalidArgument, "failed")
+	assert.ErrorIs(t, err, errPolicyUnexpected)
 }
 
 // DeletePolicy
@@ -125,19 +125,19 @@ func TestPolicyService_DeletePolicy_should_succeed(t *testing.T) {
 	assert.NoError(t, err)
 }
 
-func TestPolicyService_DeletePolicy_should_return_badrequest_when_core_service_fails(t *testing.T) {
+func TestPolicyService_DeletePolicy_should_propagate_error_when_core_service_fails(t *testing.T) {
 	t.Parallel()
 
 	policyID := uuid.NewString()
 
 	policySrv := bffmocks.NewPolicyService(t)
-	policySrv.EXPECT().DeletePolicy(t.Context(), policyID).Return(errors.New("failed"))
+	policySrv.EXPECT().DeletePolicy(t.Context(), policyID).Return(errPolicyUnexpected)
 
 	sut := grpc.NewPolicyService(policySrv)
 
 	_, err := sut.DeletePolicy(t.Context(), &identity_service_sdk_go.DeletePolicyRequest{PolicyId: policyID})
 
-	grpctesting.AssertGrpcError(t, err, codes.InvalidArgument, "failed")
+	assert.ErrorIs(t, err, errPolicyUnexpected)
 }
 
 // DeleteRule
@@ -161,17 +161,17 @@ func TestPolicyService_DeleteRule_should_succeed(t *testing.T) {
 	assert.NoError(t, err)
 }
 
-func TestPolicyService_DeleteRule_should_return_badrequest_when_core_service_fails(t *testing.T) {
+func TestPolicyService_DeleteRule_should_propagate_error_when_core_service_fails(t *testing.T) {
 	t.Parallel()
 
 	policySrv := bffmocks.NewPolicyService(t)
-	policySrv.EXPECT().DeleteRule(t.Context(), mock.Anything, mock.Anything).Return(errors.New("failed"))
+	policySrv.EXPECT().DeleteRule(t.Context(), mock.Anything, mock.Anything).Return(errPolicyUnexpected)
 
 	sut := grpc.NewPolicyService(policySrv)
 
 	_, err := sut.DeleteRule(t.Context(), &identity_service_sdk_go.DeleteRuleRequest{})
 
-	grpctesting.AssertGrpcError(t, err, codes.InvalidArgument, "failed")
+	assert.ErrorIs(t, err, errPolicyUnexpected)
 }
 
 // GetPolicy
@@ -192,19 +192,19 @@ func TestPolicyService_GetPolicy_should_succeed(t *testing.T) {
 	assert.NotNil(t, ret)
 }
 
-func TestPolicyService_GetPolicy_should_return_notfound_when_core_service_fails(t *testing.T) {
+func TestPolicyService_GetPolicy_should_propagate_error_when_core_service_fails(t *testing.T) {
 	t.Parallel()
 
 	policyID := uuid.NewString()
 
 	policySrv := bffmocks.NewPolicyService(t)
-	policySrv.EXPECT().GetPolicy(t.Context(), policyID).Return(nil, errors.New("failed"))
+	policySrv.EXPECT().GetPolicy(t.Context(), policyID).Return(nil, errPolicyUnexpected)
 
 	sut := grpc.NewPolicyService(policySrv)
 
 	_, err := sut.GetPolicy(t.Context(), &identity_service_sdk_go.GetPolicyRequest{PolicyId: policyID})
 
-	grpctesting.AssertGrpcError(t, err, codes.NotFound, "failed")
+	assert.ErrorIs(t, err, errPolicyUnexpected)
 }
 
 // GetRule
@@ -230,13 +230,13 @@ func TestPolicyService_GetRule_should_return_notfound_when_core_service_fails(t 
 	t.Parallel()
 
 	policySrv := bffmocks.NewPolicyService(t)
-	policySrv.EXPECT().GetRule(t.Context(), mock.Anything, mock.Anything).Return(nil, errors.New("failed"))
+	policySrv.EXPECT().GetRule(t.Context(), mock.Anything, mock.Anything).Return(nil, errPolicyUnexpected)
 
 	sut := grpc.NewPolicyService(policySrv)
 
 	_, err := sut.GetRule(t.Context(), &identity_service_sdk_go.GetRuleRequest{})
 
-	grpctesting.AssertGrpcError(t, err, codes.NotFound, "failed")
+	assert.ErrorIs(t, err, errPolicyUnexpected)
 }
 
 // ListPolicies
@@ -273,19 +273,19 @@ func TestPolicyService_ListPolicies_should_succeed(t *testing.T) {
 	assert.NotNil(t, ret.Pagination)
 }
 
-func TestPolicyService_ListPolicies_should_return_badrequest_when_core_service_fails(t *testing.T) {
+func TestPolicyService_ListPolicies_should_propagate_error_when_core_service_fails(t *testing.T) {
 	t.Parallel()
 
 	policySrv := bffmocks.NewPolicyService(t)
 	policySrv.EXPECT().
 		ListPolicies(t.Context(), mock.Anything, mock.Anything, mock.Anything, mock.Anything).
-		Return(nil, errors.New("failed"))
+		Return(nil, errPolicyUnexpected)
 
 	sut := grpc.NewPolicyService(policySrv)
 
 	_, err := sut.ListPolicies(t.Context(), &identity_service_sdk_go.ListPoliciesRequest{})
 
-	grpctesting.AssertGrpcError(t, err, codes.InvalidArgument, "failed")
+	assert.ErrorIs(t, err, errPolicyUnexpected)
 }
 
 // ListRules
@@ -320,19 +320,19 @@ func TestPolicyService_ListRules_should_succeed(t *testing.T) {
 	assert.NotNil(t, ret.Pagination)
 }
 
-func TestPolicyService_ListRules_should_return_badrequest_when_core_service_fails(t *testing.T) {
+func TestPolicyService_ListRules_should_propagate_error_when_core_service_fails(t *testing.T) {
 	t.Parallel()
 
 	policySrv := bffmocks.NewPolicyService(t)
 	policySrv.EXPECT().
 		ListRules(t.Context(), mock.Anything, mock.Anything, mock.Anything).
-		Return(nil, errors.New("failed"))
+		Return(nil, errPolicyUnexpected)
 
 	sut := grpc.NewPolicyService(policySrv)
 
 	_, err := sut.ListRules(t.Context(), &identity_service_sdk_go.ListRulesRequest{})
 
-	grpctesting.AssertGrpcError(t, err, codes.InvalidArgument, "failed")
+	assert.ErrorIs(t, err, errPolicyUnexpected)
 }
 
 // UpdatePolicy
@@ -363,19 +363,19 @@ func TestPolicyService_UpdatePolicy_should_succeed(t *testing.T) {
 	assert.NotNil(t, ret)
 }
 
-func TestPolicyService_UpdatePolicy_should_return_badrequest_when_core_service_fails(t *testing.T) {
+func TestPolicyService_UpdatePolicy_should_propagate_error_when_core_service_fails(t *testing.T) {
 	t.Parallel()
 
 	policySrv := bffmocks.NewPolicyService(t)
 	policySrv.EXPECT().
 		UpdatePolicy(t.Context(), mock.Anything, mock.Anything, mock.Anything, mock.Anything).
-		Return(nil, errors.New("failed"))
+		Return(nil, errPolicyUnexpected)
 
 	sut := grpc.NewPolicyService(policySrv)
 
 	_, err := sut.UpdatePolicy(t.Context(), &identity_service_sdk_go.UpdatePolicyRequest{})
 
-	grpctesting.AssertGrpcError(t, err, codes.InvalidArgument, "failed")
+	assert.ErrorIs(t, err, errPolicyUnexpected)
 }
 
 // UpdateRule
@@ -412,7 +412,7 @@ func TestPolicyService_UpdateRule_should_succeed(t *testing.T) {
 	assert.NotNil(t, ret)
 }
 
-func TestPolicyService_UpdateRule_should_return_badrequest_when_core_service_fails(t *testing.T) {
+func TestPolicyService_UpdateRule_should_propagate_error_when_core_service_fails(t *testing.T) {
 	t.Parallel()
 
 	policySrv := bffmocks.NewPolicyService(t)
@@ -427,13 +427,13 @@ func TestPolicyService_UpdateRule_should_return_badrequest_when_core_service_fai
 			mock.Anything,
 			mock.Anything,
 		).
-		Return(nil, errors.New("failed"))
+		Return(nil, errPolicyUnexpected)
 
 	sut := grpc.NewPolicyService(policySrv)
 
 	_, err := sut.UpdateRule(t.Context(), &identity_service_sdk_go.UpdateRuleRequest{})
 
-	grpctesting.AssertGrpcError(t, err, codes.InvalidArgument, "failed")
+	assert.ErrorIs(t, err, errPolicyUnexpected)
 }
 
 func TestPolicyService_GetPoliciesCount_should_succeed(t *testing.T) {
@@ -454,17 +454,17 @@ func TestPolicyService_GetPoliciesCount_should_succeed(t *testing.T) {
 	assert.Equal(t, total, ret.Total)
 }
 
-func TestPolicyService_GetPoliciesCount_should_return_badrequest_when_core_service_fails(t *testing.T) {
+func TestPolicyService_GetPoliciesCount_should_propagate_error_when_core_service_fails(t *testing.T) {
 	t.Parallel()
 
 	policySrv := bffmocks.NewPolicyService(t)
 	policySrv.EXPECT().
 		CountAllPolicies(t.Context()).
-		Return(0, errors.New("failed"))
+		Return(0, errPolicyUnexpected)
 
 	sut := grpc.NewPolicyService(policySrv)
 
 	_, err := sut.GetPoliciesCount(t.Context(), &identity_service_sdk_go.GetPoliciesCountRequest{})
 
-	grpctesting.AssertGrpcError(t, err, codes.InvalidArgument, "failed")
+	assert.ErrorIs(t, err, errPolicyUnexpected)
 }

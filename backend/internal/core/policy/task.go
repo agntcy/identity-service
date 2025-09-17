@@ -40,7 +40,7 @@ func (s *taskService) UpdateOrCreateForAgent(
 ) (*types.Task, error) {
 	tasks, err := s.policyRepository.GetTasksByAppID(ctx, appID)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("repository failed to fetch tasks for app %s: %w", appID, err)
 	}
 
 	if len(tasks) > 0 {
@@ -50,7 +50,7 @@ func (s *taskService) UpdateOrCreateForAgent(
 
 		err = s.policyRepository.UpdateTasks(ctx, tasks...)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("repository failed to update tasks for app %s: %w", appID, err)
 		}
 
 		return tasks[0], nil
@@ -64,7 +64,7 @@ func (s *taskService) UpdateOrCreateForAgent(
 
 	err = s.policyRepository.CreateTasks(ctx, task)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("repository failed to create tasks for app %s: %w", appID, err)
 	}
 
 	return task, nil

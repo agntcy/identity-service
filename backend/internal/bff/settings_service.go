@@ -5,6 +5,7 @@ package bff
 
 import (
 	"context"
+	"fmt"
 
 	iamtypes "github.com/outshift/identity-service/internal/core/iam/types"
 	issuercore "github.com/outshift/identity-service/internal/core/issuer"
@@ -13,6 +14,7 @@ import (
 	"github.com/outshift/identity-service/internal/pkg/errutil"
 	"github.com/outshift/identity-service/internal/pkg/iam"
 	"github.com/outshift/identity-service/internal/pkg/ptrutil"
+	"github.com/outshift/identity-service/pkg/log"
 )
 
 type SettingsService interface {
@@ -47,11 +49,15 @@ func (s *settingsService) GetSettings(
 ) (*settingstypes.Settings, error) {
 	issuerSettings, err := s.settingsRepository.GetIssuerSettings(ctx)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("repository in GetSettings failed to fetch issuer settings: %w", err)
 	}
 
 	// Get the API key from the IAM client.
-	apiKey, _ := s.iamClient.GetTenantAPIKey(ctx)
+	apiKey, err := s.iamClient.GetTenantAPIKey(ctx)
+	if err != nil {
+		log.Warn(fmt.Errorf("iam client in GetSettings failed to get tenant API key: %w", err))
+	}
+
 	if apiKey == nil {
 		apiKey = &iamtypes.APIKey{}
 	}
@@ -71,14 +77,16 @@ func (s *settingsService) SetApiKey(
 	_, err := s.iamClient.GetTenantAPIKey(ctx)
 	if err == nil {
 		if err := s.iamClient.RevokeTenantAPIKey(ctx); err != nil {
-			return nil, errutil.Err(err, "failed to revoke existing Api key")
+			return nil, fmt.Errorf("failed to revoke existing Api key: %w", err)
 		}
+	} else {
+		log.Warn(fmt.Errorf("iam client in SetApiKey failed to get tenant API key: %w", err))
 	}
 
 	// Generate a new Api key.
 	newApiKey, err := s.iamClient.CreateTenantAPIKey(ctx)
 	if err != nil {
-		return nil, errutil.Err(err, "failed to create new Api key")
+		return nil, fmt.Errorf("iam client in SetApiKey failed to create new Api key: %w", err)
 	}
 
 	// Return the new Api key.
@@ -91,24 +99,28 @@ func (s *settingsService) SetIssuerSettings(
 	ctx context.Context,
 	issuerSettings *settingstypes.IssuerSettings,
 ) (*settingstypes.IssuerSettings, error) {
+	if issuerSettings == nil {
+		return nil, errutil.ValidationFailed("settings.invalidPayload", "Invalid issuer settings payload.")
+	}
+
 	existingSettings, err := s.settingsRepository.GetIssuerSettings(ctx)
 	if err == nil && existingSettings.IssuerID != "" {
-		return nil, errutil.Err(
-			nil,
-			"updating existing issuer settings is not supported",
+		return nil, errutil.InvalidRequest(
+			"settings.updateNotSupported",
+			"Updating existing issuer settings is not supported.",
 		)
 	}
 
 	// Set the issuer id based on the issuer settings.
 	err = s.issuerSrv.SetIssuer(ctx, issuerSettings)
 	if err != nil {
-		return nil, errutil.Err(err, "failed to set issuer settings")
+		return nil, fmt.Errorf("issuer service in SetIssuer failed to set issuer settings: %w", err)
 	}
 
 	// Update the issuer settings in the repository.
 	updatedSettings, err := s.settingsRepository.UpdateIssuerSettings(ctx, issuerSettings)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("repository in SetIssuer failed to update issuer settings: %w", err)
 	}
 
 	return updatedSettings, nil

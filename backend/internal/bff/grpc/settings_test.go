@@ -11,14 +11,14 @@ import (
 	"github.com/google/uuid"
 	identity_service_sdk_go "github.com/outshift/identity-service/api/server/outshift/identity/service/v1alpha1"
 	"github.com/outshift/identity-service/internal/bff/grpc"
-	grpctesting "github.com/outshift/identity-service/internal/bff/grpc/testing"
 	bffmocks "github.com/outshift/identity-service/internal/bff/mocks"
 	settingstypes "github.com/outshift/identity-service/internal/core/settings/types"
 	"github.com/outshift/identity-service/internal/pkg/ptrutil"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"google.golang.org/grpc/codes"
 )
+
+var errSettingsUnexpected = errors.New("failed")
 
 func TestSettingsService_GetSettings(t *testing.T) {
 	t.Parallel()
@@ -48,17 +48,17 @@ func TestSettingsService_GetSettings(t *testing.T) {
 		assert.NotNil(t, ret.IssuerSettings)
 	})
 
-	t.Run("should return bad request when core service fails", func(t *testing.T) {
+	t.Run("should propagate error when core service fails", func(t *testing.T) {
 		t.Parallel()
 
 		settingsSrv := bffmocks.NewSettingsService(t)
-		settingsSrv.EXPECT().GetSettings(ctx).Return(nil, errors.New("failed"))
+		settingsSrv.EXPECT().GetSettings(ctx).Return(nil, errSettingsUnexpected)
 
 		sut := grpc.NewSettingsService(settingsSrv)
 
 		_, err := sut.GetSettings(ctx, &identity_service_sdk_go.GetSettingsRequest{})
 
-		grpctesting.AssertGrpcError(t, err, codes.InvalidArgument, "failed")
+		assert.ErrorIs(t, err, errSettingsUnexpected)
 	})
 }
 
@@ -81,17 +81,17 @@ func TestSettingsService_SetApiKey(t *testing.T) {
 		assert.NotNil(t, ret)
 	})
 
-	t.Run("should return bad request when core service fails", func(t *testing.T) {
+	t.Run("should propagate error when core service fails", func(t *testing.T) {
 		t.Parallel()
 
 		settingsSrv := bffmocks.NewSettingsService(t)
-		settingsSrv.EXPECT().SetApiKey(ctx).Return(nil, errors.New("failed"))
+		settingsSrv.EXPECT().SetApiKey(ctx).Return(nil, errSettingsUnexpected)
 
 		sut := grpc.NewSettingsService(settingsSrv)
 
 		_, err := sut.SetApiKey(ctx, &identity_service_sdk_go.SetApiKeyRequest{})
 
-		grpctesting.AssertGrpcError(t, err, codes.InvalidArgument, "failed")
+		assert.ErrorIs(t, err, errSettingsUnexpected)
 	})
 }
 
@@ -124,23 +124,11 @@ func TestSettingsService_SetIssuer(t *testing.T) {
 		assert.NotNil(t, ret)
 	})
 
-	t.Run("should return a bad request when request has an invalid issuer settings", func(t *testing.T) {
-		t.Parallel()
-
-		sut := grpc.NewSettingsService(nil)
-
-		_, err := sut.SetIssuer(ctx, &identity_service_sdk_go.SetIssuerRequest{
-			IssuerSettings: nil,
-		})
-
-		grpctesting.AssertGrpcError(t, err, codes.InvalidArgument, "issuer settings cannot be nil")
-	})
-
-	t.Run("should return a bad request when core service fails", func(t *testing.T) {
+	t.Run("should propagate error when core service fails", func(t *testing.T) {
 		t.Parallel()
 
 		settingsSrv := bffmocks.NewSettingsService(t)
-		settingsSrv.EXPECT().SetIssuerSettings(ctx, mock.Anything).Return(nil, errors.New("failed"))
+		settingsSrv.EXPECT().SetIssuerSettings(ctx, mock.Anything).Return(nil, errSettingsUnexpected)
 
 		sut := grpc.NewSettingsService(settingsSrv)
 
@@ -148,6 +136,6 @@ func TestSettingsService_SetIssuer(t *testing.T) {
 			IssuerSettings: &identity_service_sdk_go.IssuerSettings{},
 		})
 
-		grpctesting.AssertGrpcError(t, err, codes.InvalidArgument, "failed")
+		assert.ErrorIs(t, err, errSettingsUnexpected)
 	})
 }

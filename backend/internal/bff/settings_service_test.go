@@ -14,6 +14,7 @@ import (
 	issuermocks "github.com/outshift/identity-service/internal/core/issuer/mocks"
 	settingsmocks "github.com/outshift/identity-service/internal/core/settings/mocks"
 	settingstypes "github.com/outshift/identity-service/internal/core/settings/types"
+	"github.com/outshift/identity-service/internal/pkg/errutil"
 	iammocks "github.com/outshift/identity-service/internal/pkg/iam/mocks"
 	"github.com/stretchr/testify/assert"
 )
@@ -186,7 +187,11 @@ func TestSettingsService_SetIssuerSettings(t *testing.T) {
 		_, err := sut.SetIssuerSettings(ctx, issuerSettings)
 
 		assert.Error(t, err)
-		assert.ErrorContains(t, err, "updating existing issuer settings is not supported")
+		assert.ErrorIs(
+			t,
+			err,
+			errutil.InvalidRequest("settings.updateNotSupported", "Updating existing issuer settings is not supported."),
+		)
 	})
 
 	t.Run("should return an error when IssuerService fails", func(t *testing.T) {
@@ -222,5 +227,15 @@ func TestSettingsService_SetIssuerSettings(t *testing.T) {
 
 		assert.Error(t, err)
 		assert.ErrorContains(t, err, "failed")
+	})
+
+	t.Run("should return an error when input is nil", func(t *testing.T) {
+		t.Parallel()
+
+		sut := bff.NewSettingsService(nil, nil, nil)
+
+		_, err := sut.SetIssuerSettings(ctx, nil)
+
+		assert.ErrorIs(t, err, errutil.ValidationFailed("settings.invalidPayload", "Invalid issuer settings payload."))
 	})
 }

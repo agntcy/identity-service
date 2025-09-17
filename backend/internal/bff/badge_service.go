@@ -130,12 +130,16 @@ func (s *badgeService) IssueBadge(
 ) (*badgetypes.Badge, error) {
 	settings, err := s.settingsRepository.GetIssuerSettings(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("unable to get settings: %w", err)
+		return nil, fmt.Errorf("repository in IssueBadge failed to fetch settings: %w", err)
 	}
 
 	app, err := s.appRepository.GetApp(ctx, appID)
 	if err != nil {
-		return nil, fmt.Errorf("unable to get the application: %w", err)
+		if errors.Is(err, appcore.ErrAppNotFound) {
+			return nil, errutil.NotFound("badge.appNotFound", "Application not found.")
+		}
+
+		return nil, fmt.Errorf("repository in IssueBadge failed to get the application: %w", err)
 	}
 
 	var in issueInput
@@ -145,14 +149,18 @@ func (s *badgeService) IssueBadge(
 
 	claims, badgeType, err := s.createBadgeClaims(ctx, app, &in)
 	if err != nil {
-		return nil, errutil.Err(err, "unable to create badge claims")
+		return nil, err
 	}
 
 	log.Debug("Creating badge with claims: ", claims)
 
 	privKey, err := s.keyStore.RetrievePrivKey(ctx, settings.KeyID)
 	if err != nil {
-		return nil, errutil.Err(err, "unable to retrieve private key")
+		return nil, fmt.Errorf(
+			"key store in IssueBadge failed to retrieve private key (%s): %w",
+			settings.KeyID,
+			err,
+		)
 	}
 
 	log.Debug("Using private key: ", privKey)
@@ -165,14 +173,14 @@ func (s *badgeService) IssueBadge(
 		privKey,
 	)
 	if err != nil {
-		return nil, errutil.Err(err, "unable to issue badge")
+		return nil, fmt.Errorf("unable to issue badge: %w", err)
 	}
 
 	log.Debug("Issued badge: ", badge)
 
 	clientCredentials, err := s.credentialStore.Get(ctx, app.ID)
 	if err != nil {
-		return nil, errutil.Err(err, "unable to get client credentials")
+		return nil, fmt.Errorf("unable to get client credentials in IssueBadge for app %s: %w", app.ID, err)
 	}
 
 	issuer := identitycore.Issuer{
@@ -187,7 +195,7 @@ func (s *badgeService) IssueBadge(
 		&issuer,
 	)
 	if err != nil {
-		return nil, fmt.Errorf("unable to publish the badge: %w", err)
+		return nil, fmt.Errorf("identity service failed to publish the badge: %w", err)
 	}
 
 	err = s.createTasks(ctx, app, claims)
@@ -198,12 +206,12 @@ func (s *badgeService) IssueBadge(
 	// revoke all active badges
 	err = s.badgeRevoker.RevokeAll(ctx, app.ID, clientCredentials, &issuer, privKey)
 	if err != nil {
-		return nil, fmt.Errorf("unable to revoke current badges: %w", err)
+		return nil, fmt.Errorf("unable to revoke current badges for app %s: %w", app.ID, err)
 	}
 
 	err = s.badgeRepository.Create(ctx, badge)
 	if err != nil {
-		return nil, fmt.Errorf("unable to store the badge: %w", err)
+		return nil, fmt.Errorf("repository in IssueBadge failed to store the badge: %w", err)
 	}
 
 	return badge, nil
@@ -233,7 +241,7 @@ func (s *badgeService) createBadgeClaims(
 	default:
 		return nil,
 			badgetypes.BADGE_TYPE_UNSPECIFIED,
-			errors.New("unsupported app type")
+			errutil.InvalidRequest("badge.appTypeNotSupported", "Unsupported application type.")
 	}
 
 	if err != nil {
@@ -260,13 +268,20 @@ func (s *badgeService) createA2ABadgeClaims(
 	if in.a2a.WellKnownUrl != nil {
 		a2aClaims, err = s.a2aClient.Discover(ctx, *in.a2a.WellKnownUrl)
 		if err != nil {
-			return nil,
-				fmt.Errorf("unable to discover A2A agent card: %w", err)
+			log.Error(fmt.Errorf("a2a client failed to discover agent card (%s): %w", *in.a2a.WellKnownUrl, err))
+
+			return nil, errutil.InvalidRequest(
+				"badge.a2aDiscoveryFailed",
+				"Unable to discover A2A agent card (%s).",
+				*in.a2a.WellKnownUrl,
+			)
 		}
 	} else {
 		a2aSchema, err := base64.StdEncoding.DecodeString(*in.a2a.SchemaBase64)
 		if err != nil {
-			return nil, err
+			log.Warn(fmt.Errorf("unable to decode in.a2a.SchemaBase64: %w", err))
+
+			return nil, errutil.InvalidRequest("badge.invalidSchemaBase64", "Unable to decode SchemaBase64.")
 		}
 
 		a2aClaims = string(a2aSchema)
@@ -285,7 +300,9 @@ func (s *badgeService) createOASFBadgeClaims(in *issueInput) (*badgetypes.BadgeC
 
 	oasfSchema, err := base64.StdEncoding.DecodeString(in.oasf.SchemaBase64)
 	if err != nil {
-		return nil, err
+		log.Warn(fmt.Errorf("unable to decode in.oasf.SchemaBase64: %w", err))
+
+		return nil, errutil.InvalidRequest("badge.invalidSchemaBase64", "Unable to decode SchemaBase64.")
 	}
 
 	// see how you can validate the OASF schema
@@ -310,24 +327,32 @@ func (s *badgeService) createMCPBadgeClaims(
 	if in.mcp.Name != nil && in.mcp.Url != nil {
 		mcpServer, err := s.mcpClient.AutoDiscover(ctx, *in.mcp.Name, *in.mcp.Url)
 		if err != nil {
-			return nil, fmt.Errorf("unable to discover MCP server: %w", err)
+			log.Error(fmt.Errorf("mcp client failed to auto discover the server (%s): %w", *in.mcp.Url, err))
+
+			return nil, errutil.InvalidRequest(
+				"badge.mcpDiscoveryFailed",
+				"Unable to discover MCP server (%s).",
+				*in.mcp.Url,
+			)
 		}
 
 		if mcpServer == nil {
-			return nil, fmt.Errorf("no MCP server found")
+			return nil, errutil.InvalidRequest("badge.mcpServerNotFound", "No MCP server found (%s).", *in.mcp.Url)
 		}
 
 		// Marshal the MCP server to JSON
 		mcpServerData, err := json.Marshal(mcpServer)
 		if err != nil {
-			return nil, fmt.Errorf("error marshalling MCP server: %w", err)
+			return nil, fmt.Errorf("error marshalling MCP server (%s): %w", *in.mcp.Url, err)
 		}
 
 		mcpClaims = string(mcpServerData)
 	} else if in.mcp.SchemaBase64 != nil {
 		mcpSchema, err := base64.StdEncoding.DecodeString(*in.mcp.SchemaBase64)
 		if err != nil {
-			return nil, err
+			log.Warn(fmt.Errorf("unable to decode in.mcp.SchemaBase64: %w", err))
+
+			return nil, errutil.InvalidRequest("badge.invalidSchemaBase64", "Unable to decode SchemaBase64.")
 		}
 
 		mcpClaims = string(mcpSchema)
@@ -347,12 +372,12 @@ func (s *badgeService) createTasks(
 	case apptypes.APP_TYPE_AGENT_A2A, apptypes.APP_TYPE_AGENT_OASF:
 		_, err := s.taskService.UpdateOrCreateForAgent(ctx, app.ID, ptrutil.DerefStr(app.Name))
 		if err != nil {
-			return fmt.Errorf("error trying to create tasks: %w", err)
+			return fmt.Errorf("error trying to create tasks for agent %s: %w", app.ID, err)
 		}
 	case apptypes.APP_TYPE_MCP_SERVER:
 		_, err := s.taskService.CreateForMCP(ctx, app.ID, claims.Badge)
 		if err != nil {
-			return fmt.Errorf("error trying to create tasks: %w", err)
+			return fmt.Errorf("error trying to create tasks for MCP server %s: %w", app.ID, err)
 		}
 	}
 
@@ -363,8 +388,8 @@ func (s *badgeService) VerifyBadge(
 	ctx context.Context,
 	badge *string,
 ) (*badgetypes.VerificationResult, error) {
-	if badge == nil {
-		return nil, errors.New("badge or verifiable credential is empty")
+	if badge == nil || *badge == "" {
+		return nil, errutil.ValidationFailed("badge.emptyBadge", "Badge or Verifiable Credential is empty")
 	}
 
 	// Use the identity service to verify the VC
@@ -378,9 +403,17 @@ func (s *badgeService) GetBadge(
 	ctx context.Context,
 	appID string,
 ) (*badgetypes.Badge, error) {
+	if appID == "" {
+		return nil, errutil.ValidationFailed("badge.invalidAppID", "Invalid application ID.")
+	}
+
 	badge, err := s.badgeRepository.GetLatestByAppID(ctx, appID)
 	if err != nil {
-		return nil, err
+		if errors.Is(err, badgecore.ErrBadgeNotFound) {
+			return nil, errutil.NotFound("badge.notFound", "No badge found for the application.")
+		}
+
+		return nil, fmt.Errorf("repository in GetBadge failed to fetch latest badge for app %s: %w", appID, err)
 	}
 
 	return badge, nil

@@ -71,7 +71,7 @@ func (r *postgresRepository) GetLatestByAppID(
 		First(&badge)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			return nil, fmt.Errorf("badge not found: %w", result.Error)
+			return nil, badgecore.ErrBadgeNotFound
 		}
 
 		return nil, fmt.Errorf("there was an error fetching the badge: %w", result.Error)

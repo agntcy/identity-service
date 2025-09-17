@@ -102,6 +102,14 @@ func (o *SessionDeviceOTP) HasExpired() bool {
 	return expiresAt <= now
 }
 
+func (o *SessionDeviceOTP) IsDenied() bool {
+	return o.Approved != nil && !*o.Approved
+}
+
+func (o *SessionDeviceOTP) IsApproved() bool {
+	return o.Approved != nil && *o.Approved
+}
+
 const (
 	sessionDeviceOTPLength      = 128
 	SessionDeviceOTPDuration    = 60 * time.Second

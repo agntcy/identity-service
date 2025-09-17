@@ -12,6 +12,8 @@ import (
 
 var ErrTenantNotFound = errors.New("context doesn't contain a tenant id")
 var ErrAppNotFound = errors.New("context doesn't contain an app id")
+var ErrUserNotFound = errors.New("context doesn't contain a user id")
+var ErrOrganizationNotFound = errors.New("context doesn't contain an organization id")
 
 // InsertTenantID inserts tenantID into the context.
 func InsertTenantID(ctx context.Context, tenantID string) context.Context {

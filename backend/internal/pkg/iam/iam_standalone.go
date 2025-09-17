@@ -18,7 +18,6 @@ import (
 	iamcore "github.com/outshift/identity-service/internal/core/iam"
 	"github.com/outshift/identity-service/internal/core/iam/types"
 	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
-	"github.com/outshift/identity-service/internal/pkg/errutil"
 	"github.com/outshift/identity-service/internal/pkg/ptrutil"
 	"github.com/outshift/identity-service/internal/pkg/strutil"
 )
@@ -91,9 +90,7 @@ func (c *StandaloneClient) RevokeTenantAPIKey(
 
 	err = c.iamRepository.DeleteAPIKey(ctx, apiKey)
 	if err != nil {
-		return errutil.Err(
-			err, "there was an error revoking the APIKey",
-		)
+		return fmt.Errorf("there was an error revoking the APIKey: %w", err)
 	}
 
 	return nil
@@ -141,9 +138,7 @@ func (c *StandaloneClient) RevokeAppAPIKey(
 
 	err = c.iamRepository.DeleteAPIKey(ctx, apiKey)
 	if err != nil {
-		return errutil.Err(
-			err, "there was an error revoking the APIKey",
-		)
+		return fmt.Errorf("there was an error revoking the APIKey: %w", err)
 	}
 
 	return nil
@@ -154,26 +149,17 @@ func (c *StandaloneClient) AuthJwt(
 	header string,
 ) (context.Context, error) {
 	if header == "" {
-		return ctx, errutil.Err(
-			nil,
-			"Authorization header is required",
-		)
+		return ctx, errors.New("authorization header is required")
 	}
 
 	accessToken, err := c.getTokenFromBearer(header)
 	if err != nil {
-		return ctx, errutil.Err(
-			nil,
-			"invalid Authorization header format",
-		)
+		return ctx, errors.New("invalid Authorization header format")
 	}
 
 	username, validateErr := c.validateAccessToken(accessToken)
 	if validateErr != nil {
-		return ctx, errutil.Err(
-			validateErr,
-			"there was an error validating the access token",
-		)
+		return ctx, fmt.Errorf("there was an error validating the access token: %w", validateErr)
 	}
 
 	ctx = identitycontext.InsertTenantID(ctx, standaloneTenantID)
@@ -211,24 +197,18 @@ func (c *StandaloneClient) AuthAPIKey(
 
 	aKey, err := c.iamRepository.GetAPIKeyBySecret(ctx, apiKey)
 	if err != nil {
-		return ctx, errutil.Err(
-			err, "there was an error fetching the APIKey",
-		)
+		return ctx, fmt.Errorf("there was an error fetching the APIKey: %w", err)
 	}
 
 	// Verify that the API key is for a tenant
 	if !forApp && (aKey.AppID != nil && *aKey.AppID != "") {
-		return ctx, errutil.Err(
-			nil, "the provided APIKey is not for a tenant",
-		)
+		return ctx, errors.New("the provided APIKey is not for a tenant")
 	}
 
 	// Verify that the API key is for an app if required
 	if forApp {
 		if aKey.AppID == nil || *aKey.AppID == "" {
-			return ctx, errutil.Err(
-				nil, "the provided APIKey is not for an app",
-			)
+			return ctx, errors.New("the provided APIKey is not for an app")
 		}
 
 		// Insert app ID into context
@@ -243,9 +223,7 @@ func (c *StandaloneClient) validateAccessToken(
 ) (*string, error) {
 	claims, err := c.userJwtVerifier.VerifyAccessToken(accessToken)
 	if err != nil {
-		return nil, errutil.Err(
-			err, "there was an error verifying the access token",
-		)
+		return nil, fmt.Errorf("there was an error verifying the access token: %w", err)
 	}
 
 	var username *string

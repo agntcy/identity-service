@@ -62,7 +62,7 @@ func TestIssuerService_SetIssuer_should_return_err_when_ctx_does_not_contain_org
 	})
 
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "organization id not found in context")
+	assert.ErrorIs(t, err, identitycontext.ErrOrganizationNotFound)
 }
 
 func TestIssuerService_SetIssuer_should_return_err_when_ctx_does_not_contain_user_id(t *testing.T) {

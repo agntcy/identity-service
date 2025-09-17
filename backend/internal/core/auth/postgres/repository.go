@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	sessioncore "github.com/outshift/identity-service/internal/core/auth"
+	authcore "github.com/outshift/identity-service/internal/core/auth"
 	types "github.com/outshift/identity-service/internal/core/auth/types/int"
 	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
 	"github.com/outshift/identity-service/internal/pkg/secrets"
@@ -22,7 +22,7 @@ type postgresRepository struct {
 	crypter   secrets.Crypter
 }
 
-func NewRepository(dbContext *gorm.DB, crypter secrets.Crypter) sessioncore.Repository {
+func NewRepository(dbContext *gorm.DB, crypter secrets.Crypter) authcore.Repository {
 	return &postgresRepository{
 		dbContext: dbContext,
 		crypter:   crypter,
@@ -62,6 +62,10 @@ func (r *postgresRepository) GetByAuthorizationCode(
 		Where("expires_at > ?", time.Now().Unix()).
 		First(model)
 	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return nil, authcore.ErrSessionNotFound
+		}
+
 		return nil, fmt.Errorf("there was an error retrieving the session by code: %w", result.Error)
 	}
 
@@ -85,6 +89,10 @@ func (r *postgresRepository) GetByAccessToken(
 		Where("access_token = ?", r.crypter.Encrypt(accessToken)).
 		First(model)
 	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return nil, authcore.ErrSessionNotFound
+		}
+
 		return nil, fmt.Errorf("there was an error retrieving the session by token ID: %w", result.Error)
 	}
 
@@ -126,7 +134,7 @@ func (r *postgresRepository) GetDeviceOTP(
 	result := r.dbContext.First(&otp, uuid.MustParse(id))
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			return nil, sessioncore.ErrDeviceOTPNotFound
+			return nil, authcore.ErrDeviceOTPNotFound
 		}
 
 		return nil, fmt.Errorf("there was an error fetching the OTP: %w", result.Error)
@@ -167,7 +175,7 @@ func (r *postgresRepository) GetDeviceOTPByValue(
 		First(&otp)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			return nil, sessioncore.ErrDeviceOTPNotFound
+			return nil, authcore.ErrDeviceOTPNotFound
 		}
 
 		return nil, fmt.Errorf("there was an error fetching the OTP by value: %w", result.Error)

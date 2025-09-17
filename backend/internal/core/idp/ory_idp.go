@@ -5,13 +5,13 @@ package idp
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
 
 	orysdk "github.com/ory/client-go"
 	"github.com/outshift/identity-service/internal/core/settings/types"
-	"github.com/outshift/identity-service/internal/pkg/errutil"
 	"github.com/outshift/identity-service/internal/pkg/ptrutil"
 	"github.com/outshift/identity-service/pkg/log"
 )
@@ -35,10 +35,7 @@ func NewOryIdp(settings *types.OryIdpSettings) Idp {
 
 func (d *OryIdp) TestSettings(ctx context.Context) error {
 	if d.settings == nil {
-		return errutil.Err(
-			nil,
-			"ory idp settings are not configured",
-		)
+		return errors.New("ory idp settings are not configured")
 	}
 
 	_, body, err := d.getClient().
@@ -48,10 +45,7 @@ func (d *OryIdp) TestSettings(ctx context.Context) error {
 
 	err = d.oryParseAPIResponse(err, body)
 	if err != nil {
-		return errutil.Err(
-			err,
-			"failed to connect to Ory IdP",
-		)
+		return fmt.Errorf("failed to connect to Ory IdP: %w", err)
 	}
 
 	return nil
@@ -78,9 +72,9 @@ func (d *OryIdp) CreateClientCredentialsPair(
 
 	err = d.oryParseAPIResponse(err, body)
 	if err != nil {
-		return nil, errutil.Err(
+		return nil, fmt.Errorf(
+			"failed to create client credentials pair in Ory IdP: %w",
 			err,
-			"failed to create client credentials pair in Ory IdP",
 		)
 	}
 
@@ -112,9 +106,9 @@ func (d *OryIdp) DeleteClientCredentialsPair(
 
 	err = d.oryParseAPIResponse(err, body)
 	if err != nil {
-		return errutil.Err(
+		return fmt.Errorf(
+			"failed to delete client credentials pair in Ory IdP: %w",
 			err,
-			"failed to delete client credentials pair in Ory IdP",
 		)
 	}
 
@@ -141,25 +135,20 @@ func (d *OryIdp) oryParseAPIResponse(err error, response *http.Response) error {
 	}()
 
 	if response == nil || response.Body == nil || err != nil {
-		return errutil.Err(
-			err, "empty response from Ory API",
-		)
+		return fmt.Errorf("empty response from Ory API: %w", err)
 	}
 
 	data, bodyErr := io.ReadAll(response.Body)
 	if bodyErr != nil {
-		return errutil.Err(
-			nil, "empty response body from Ory API",
-		)
+		return errors.New("empty response body from Ory API")
 	}
 
 	if response.StatusCode != http.StatusOK &&
 		response.StatusCode != http.StatusCreated &&
 		response.StatusCode != http.StatusNoContent {
-		return errutil.Err(
-			nil,
-			fmt.Sprintf("ory API call failed: %s, status code: %d",
-				string(data), response.StatusCode),
+		return fmt.Errorf(
+			"ory API call failed: %s, status code: %d",
+			string(data), response.StatusCode,
 		)
 	}
 

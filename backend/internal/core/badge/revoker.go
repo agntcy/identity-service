@@ -60,12 +60,12 @@ func (s *revoker) RevokeAll(
 
 		err = s.identityService.RevokeVerifiableCredential(ctx, clientCredentials, &badge.VerifiableCredential, issuer)
 		if err != nil {
-			return fmt.Errorf("unable to revoke badge %s: %w", badge.ID, err)
+			return fmt.Errorf("identity service failed to revoke badge %s: %w", badge.ID, err)
 		}
 
 		err = s.badgeRepository.Update(ctx, badge)
 		if err != nil {
-			return fmt.Errorf("unable to save revoked badge %s: %w", badge.ID, err)
+			return fmt.Errorf("repository failed to save revoked badge %s: %w", badge.ID, err)
 		}
 	}
 

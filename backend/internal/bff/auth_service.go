@@ -6,6 +6,7 @@ package bff
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/agntcy/identity/pkg/oidc"
@@ -101,41 +102,42 @@ func (s *authService) Authorize(
 	resolverMetadataID, toolName, _ *string,
 ) (*authtypes.Session, error) {
 	// Get calling identity from context
-	ownerAppID, ok := identitycontext.GetAppID(ctx)
-	if !ok || ownerAppID == "" {
-		return nil, errutil.Err(
-			nil,
-			"app ID not found in context",
-		)
+	callerAppID, ok := identitycontext.GetAppID(ctx)
+	if !ok || callerAppID == "" {
+		return nil, errutil.Unauthorized("auth.invalidCallerAppId", "Caller application ID should be present in the request.")
 	}
 
-	_, err := s.appRepository.GetApp(ctx, ownerAppID)
+	_, err := s.appRepository.GetApp(ctx, callerAppID)
 	if err != nil {
-		return nil, errutil.Err(err, "app not found")
+		if errors.Is(err, appcore.ErrAppNotFound) {
+			return nil, errutil.NotFound("auth.callerAppNotFound", "Caller application not found.")
+		}
+
+		return nil, fmt.Errorf("repository failed to fetch the app %s: %w", callerAppID, err)
 	}
 
-	// If resolverMetadataID is provided, get appID
-	var appID *string
+	// If resolverMetadataID is provided, get calleeAppID
+	var calleeAppID *string
 
 	// When resolverMetadataID is not provided, it means the session is for all apps
 	// Policy will be evaluated on the external authorization step
 	if resolverMetadataID != nil && *resolverMetadataID != "" {
-		app, err := s.appRepository.GetAppByResolverMetadataID(ctx, *resolverMetadataID)
+		calleeApp, err := s.getCalleeAppByResolverMetadataID(ctx, *resolverMetadataID)
 		if err != nil {
-			return nil, errutil.Err(err, "app not found by resolver metadata ID")
+			return nil, err
 		}
 
-		if app.ID == ownerAppID {
-			return nil, errutil.Err(
-				nil,
-				"cannot authorize the same app",
+		if calleeApp.ID == callerAppID {
+			return nil, errutil.InvalidRequest(
+				"auth.invalidCalleeApp",
+				"The caller app and the callee app should not be the same.",
 			)
 		}
 
-		appID = &app.ID
+		calleeAppID = &calleeApp.ID
 
 		// Evaluate the session based on existing policies
-		_, err = s.policyEvaluator.Evaluate(ctx, app, ownerAppID, ptrutil.DerefStr(toolName))
+		_, err = s.policyEvaluator.Evaluate(ctx, calleeApp, callerAppID, ptrutil.DerefStr(toolName))
 		if err != nil {
 			return nil, err
 		}
@@ -143,17 +145,14 @@ func (s *authService) Authorize(
 
 	// Create new session
 	session, err := s.authRepository.Create(ctx, &authtypes.Session{
-		OwnerAppID:        ownerAppID,
-		AppID:             appID,
+		OwnerAppID:        callerAppID,
+		AppID:             calleeAppID,
 		ToolName:          toolName,
 		AuthorizationCode: ptrutil.Ptr(strutil.Random(codeLength)),
 		ExpiresAt:         ptrutil.Ptr(time.Now().Add(sessionDuration).Unix()),
 	})
 	if err != nil {
-		return nil, errutil.Err(
-			err,
-			"failed to create session",
-		)
+		return nil, fmt.Errorf("repository failed to save session: %w", err)
 	}
 
 	log.Debug("Created new session: ", session.ID)
@@ -162,67 +161,86 @@ func (s *authService) Authorize(
 	return session, nil
 }
 
+func (s *authService) getCalleeAppByResolverMetadataID(
+	ctx context.Context,
+	resolverMetadataID string,
+) (*apptypes.App, error) {
+	calleeApp, err := s.appRepository.GetAppByResolverMetadataID(ctx, resolverMetadataID)
+	if err != nil {
+		if errors.Is(err, appcore.ErrAppNotFound) {
+			return nil, errutil.InvalidRequest(
+				"auth.calleeAppNotFound",
+				"No application found with the resolver metadata ID %s.",
+				resolverMetadataID,
+			)
+		}
+
+		return nil, fmt.Errorf(
+			"repository failed to fetch the app with resolver metadata ID %s: %w",
+			resolverMetadataID,
+			err,
+		)
+	}
+
+	return calleeApp, nil
+}
+
 func (s *authService) Token(
 	ctx context.Context,
 	authorizationCode string,
 ) (*authtypes.Session, error) {
 	if authorizationCode == "" {
-		return nil, errutil.Err(
-			nil,
-			"authorization code cannot be empty",
-		)
+		return nil, errutil.ValidationFailed("auth.emptyAuthCode", "Authorization code cannot be empty.")
 	}
 
 	// Get session by authorization code
 	session, err := s.authRepository.GetByAuthorizationCode(ctx, authorizationCode)
 	if err != nil {
-		return nil, errutil.Err(
-			err,
-			"invalid session",
-		)
+		if errors.Is(err, authcore.ErrSessionNotFound) {
+			return nil, errutil.Unauthorized("auth.sessionNotFound", "Session not found.")
+		}
+
+		return nil, fmt.Errorf("repository failed to fetch session: %w", err)
 	}
 
 	log.Debug("Got session by authorization code: ", session.ID)
 
 	// Check if session already has an access token
 	if session.AccessToken != nil {
-		return nil, errutil.Err(
-			nil,
-			"a token has already been issued",
-		)
+		return nil, errutil.InvalidRequest("auth.tokenAlreadyIssued", "A token has already been issued.")
 	}
 
 	// Get client credentials from the session
 	clientCredentials, err := s.credentialStore.Get(ctx, session.OwnerAppID)
 	if err != nil || clientCredentials == nil {
-		return nil, errutil.Err(
-			err,
-			"failed to get client credentials",
-		)
+		return nil, fmt.Errorf("credential store client failed to get client credentials: %w", err)
 	}
 
 	issuer, issErr := s.settingsRepository.GetIssuerSettings(ctx)
 	if issErr != nil {
-		return nil, errutil.Err(err, "failed to fetch issuer settings")
+		return nil, fmt.Errorf("repository failed to fetch issuer settings: %w", err)
 	}
 
 	accessToken, err := s.issueAccessToken(ctx, issuer, clientCredentials)
 	if err != nil {
-		return nil, errutil.Err(
-			err,
-			"failed to issue token",
-		)
+		return nil, fmt.Errorf("failed to issue access token: %w", err)
 	}
 
-	// Look if a session exists
+	// Look if a session with the same access token already exists
 	existingSession, err := s.authRepository.GetByAccessToken(ctx, accessToken)
 	if err == nil {
 		// Expire current session
 		session.ExpiresAt = ptrutil.Ptr(time.Now().Add(-time.Hour).Unix())
-		_ = s.authRepository.Update(ctx, session)
+
+		err := s.authRepository.Update(ctx, session)
+		if err != nil {
+			log.Error(fmt.Errorf("repository failed to update a session with existing access token: %w", err))
+		}
 
 		// Return existing session if it exists
 		return existingSession, nil
+	} else if !errors.Is(err, authcore.ErrSessionNotFound) {
+		log.Error(fmt.Errorf("authRepository.GetByAccessToken failed: %w", err))
 	}
 
 	// Update session with token ID
@@ -233,10 +251,7 @@ func (s *authService) Token(
 
 	err = s.authRepository.Update(ctx, session)
 	if err != nil {
-		return nil, errutil.Err(
-			err,
-			"failed to update the session",
-		)
+		return nil, fmt.Errorf("repository failed to update the session: %w", err)
 	}
 
 	return session, nil
@@ -249,27 +264,37 @@ func (s *authService) issueAccessToken(
 ) (string, error) {
 	if issuer.IdpType != settingstypes.IDP_TYPE_SELF && clientCredentials.ClientSecret != "" {
 		// Issue a token from an IdP
-		return s.oidcAuthenticator.Token(
+		accessToken, err := s.oidcAuthenticator.Token(
 			ctx,
 			clientCredentials.Issuer,
 			clientCredentials.ClientID,
 			clientCredentials.ClientSecret,
 		)
+		if err != nil {
+			return "", fmt.Errorf("oidc authenticator failed to issue JWT: %w", err)
+		}
+
+		return accessToken, err
 	} else if issuer.IdpType == settingstypes.IDP_TYPE_SELF {
 		privKey, keyErr := s.keyStore.RetrievePrivKey(ctx, issuer.KeyID)
 		if keyErr != nil {
-			return "", errutil.Err(
+			return "", fmt.Errorf(
+				"error retrieving private key from vault for access token generation: %w",
 				keyErr,
-				"error retrieving private key from vault for proof generation",
 			)
 		}
 
 		// Issue a self-signed JWT proof
-		return oidc.SelfIssueJWT(
+		accessToken, err := oidc.SelfIssueJWT(
 			clientCredentials.Issuer,
 			clientCredentials.ClientID,
 			privKey,
 		)
+		if err != nil {
+			return "", fmt.Errorf("failed to self issue a JWT: %w", err)
+		}
+
+		return accessToken, err
 	}
 
 	return "", errors.New("issuer is not self-issued and the client secret is not set")
@@ -281,22 +306,16 @@ func (s *authService) ExtAuthZ(
 	toolName string,
 ) error {
 	if accessToken == "" {
-		return errutil.Err(
-			nil,
-			"access token cannot be empty",
-		)
+		return errutil.ValidationFailed("auth.emptyAccessToken", "Access token cannot be empty.")
 	}
 
-	session, err := s.authRepository.GetByAccessToken(ctx, accessToken)
+	session, err := s.getSessionByAccessToken(ctx, accessToken)
 	if err != nil {
-		return errutil.Err(
-			err,
-			"invalid session",
-		)
+		return err
 	}
 
 	if session.HasExpired() {
-		return errutil.Err(nil, "the session has expired")
+		return errutil.Unauthorized("auth.sessionExpired", "The session has expired.")
 	}
 
 	log.Debug("Got session by access token: ", session.ID)
@@ -305,9 +324,9 @@ func (s *authService) ExtAuthZ(
 
 	log.Debug("Session appID: ", calleeAppID)
 
-	calleeApp, err := s.appRepository.GetApp(ctx, calleeAppID)
+	calleeApp, err := s.getExtAuthZCalleeApp(ctx, calleeAppID)
 	if err != nil {
-		return errutil.Err(err, "app not found")
+		return err
 	}
 
 	log.Debug("Got app info: ", calleeApp.ID)
@@ -315,25 +334,25 @@ func (s *authService) ExtAuthZ(
 	// If the session appID is provided (in the authorize call)
 	// it needs to match the current context appID
 	if !session.ValidateApp(calleeAppID) {
-		return errutil.Err(
-			nil,
-			"access token is not valid for the specified app",
+		return errutil.Unauthorized(
+			"auth.invalidAccessTokenForApp",
+			"The access token is not valid for the specified app.",
 		)
 	}
 
 	// If the session toolName is provided (in the authorize call)
 	// we cannot specify another toolName in the ext-authz request
 	if !session.ValidateTool(toolName) {
-		return errutil.Err(
-			nil,
-			"access token is not valid for the specified tool",
+		return errutil.Unauthorized(
+			"auth.invalidAccessTokenForTool",
+			"The access token is not valid for the specified tool.",
 		)
 	}
 
 	// validate the caller app
-	callerApp, err := s.appRepository.GetApp(ctx, session.OwnerAppID)
+	callerApp, err := s.getExtAuthZCallerApp(ctx, session.OwnerAppID)
 	if err != nil {
-		return errutil.Err(err, "the caller app not found")
+		return err
 	}
 
 	log.Debug("Verifying access token: ", accessToken)
@@ -341,15 +360,14 @@ func (s *authService) ExtAuthZ(
 	// Validate expiration of the access token
 	err = jwtutil.Verify(accessToken)
 	if err != nil {
-		return err
+		log.Error(fmt.Errorf("failed to verify JWT in ExtAuthZ: %w", err))
+		return errutil.Unauthorized("auth.invalidAccessToken", "The access token is invalid.")
 	}
 
 	// Evaluate the session based on existing policies
 	// Evaluate based on provided appID and toolName and the session appID, toolName
 	rule, err := s.policyEvaluator.Evaluate(ctx, calleeApp, session.OwnerAppID, toolName)
 	if err != nil {
-		log.Error("Policy evaluation failed: ", err)
-
 		return err
 	}
 
@@ -360,23 +378,54 @@ func (s *authService) ExtAuthZ(
 		}
 	}
 
-	if session.ExpiresAt == nil {
-		// We set the token to expire after 1 min.
-		// The reason we do this is because DUO and ORY
-		// generate the same access token in a 1 sec time window
-		// and agents can call other services multiple times
-		// during the same prompt which can lead to a failure.
-		//
-		//nolint:mnd // obviously it's not a magic number
-		session.ExpireAfter(60 * time.Second)
-
-		err = s.authRepository.Update(ctx, session)
-		if err != nil {
-			return err
-		}
+	err = s.expireSessionIfNecessary(ctx, session)
+	if err != nil {
+		return err
 	}
 
 	return nil
+}
+
+func (s *authService) getExtAuthZCalleeApp(ctx context.Context, appID string) (*apptypes.App, error) {
+	calleeApp, err := s.appRepository.GetApp(ctx, appID)
+	if err != nil {
+		if errors.Is(err, appcore.ErrAppNotFound) {
+			return nil, errutil.Unauthorized("auth.calleeAppNotFound", "Callee application not found.")
+		}
+
+		return nil, fmt.Errorf("repository in ExtAuthZ failed to fetch callee app %s: %w", appID, err)
+	}
+
+	return calleeApp, nil
+}
+
+func (s *authService) getExtAuthZCallerApp(ctx context.Context, appID string) (*apptypes.App, error) {
+	callerApp, err := s.appRepository.GetApp(ctx, appID)
+	if err != nil {
+		if errors.Is(err, appcore.ErrAppNotFound) {
+			return nil, errutil.Unauthorized("auth.callerAppNotFound", "Caller application not found.")
+		}
+
+		return nil, fmt.Errorf("repository in ExtAuthZ failed to fetch caller app %s: %w", appID, err)
+	}
+
+	return callerApp, nil
+}
+
+func (s *authService) getSessionByAccessToken(
+	ctx context.Context,
+	accessToken string,
+) (*authtypes.Session, error) {
+	session, err := s.authRepository.GetByAccessToken(ctx, accessToken)
+	if err != nil {
+		if errors.Is(err, authcore.ErrSessionNotFound) {
+			return nil, errutil.Unauthorized("auth.sessionNotFound", "Session not found.")
+		}
+
+		return nil, fmt.Errorf("repository failed to fetch session with access token: %w", err)
+	}
+
+	return session, nil
 }
 
 func (s *authService) sendDeviceOTPAndWaitForApproval(
@@ -394,6 +443,26 @@ func (s *authService) sendDeviceOTPAndWaitForApproval(
 	return s.waitForDeviceApproval(ctx, otp.ID)
 }
 
+func (s *authService) expireSessionIfNecessary(ctx context.Context, session *authtypes.Session) error {
+	if session.ExpiresAt == nil {
+		// We set the token to expire after 1 min.
+		// The reason we do this is because DUO and ORY
+		// generate the same access token in a 1 sec time window
+		// and agents can call other services multiple times
+		// during the same prompt which can lead to a failure.
+		//
+		//nolint:mnd // obviously it's not a magic number
+		session.ExpireAfter(60 * time.Second)
+
+		err := s.authRepository.Update(ctx, session)
+		if err != nil {
+			return fmt.Errorf("repository in ExtAuthZ failed to update session: %w", err)
+		}
+	}
+
+	return nil
+}
+
 func (s *authService) ApproveToken(
 	ctx context.Context,
 	deviceID string,
@@ -403,19 +472,23 @@ func (s *authService) ApproveToken(
 ) error {
 	otp, err := s.authRepository.GetDeviceOTPByValue(ctx, deviceID, sessionID, otpValue)
 	if err != nil {
-		return err
+		if errors.Is(err, authcore.ErrDeviceOTPNotFound) {
+			return errutil.InvalidRequest("auth.deviceOtpNotFound", "Device OTP not found.")
+		}
+
+		return fmt.Errorf("repository failed to get device OTP by value for device %s: %w", deviceID, err)
 	}
 
 	if otp == nil {
-		return errors.New("cannot find OTP")
+		return errutil.InvalidRequest("auth.deviceOtpNotFound", "Device OTP not found.")
 	}
 
 	if otp.HasExpired() {
-		return errors.New("the OTP is already expired")
+		return errutil.InvalidRequest("auth.otpExpired", "The device OTP is expired.")
 	}
 
 	if otp.Used || otp.Approved != nil {
-		return errors.New("the OTP is already used")
+		return errutil.InvalidRequest("auth.otpAlreadyUsed", "The device OTP is already used.")
 	}
 
 	otp.Approved = &approve
@@ -423,7 +496,7 @@ func (s *authService) ApproveToken(
 
 	err = s.authRepository.UpdateDeviceOTP(ctx, otp)
 	if err != nil {
-		return err
+		return fmt.Errorf("repository in ApproveToken failed to update device OTP %s: %w", otp.ID, err)
 	}
 
 	return nil
@@ -438,20 +511,24 @@ func (s *authService) sendDeviceOTP(
 ) (*authtypes.SessionDeviceOTP, error) {
 	devices, err := s.deviceRepository.GetDevices(ctx, session.UserID)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("repository in ExtAuthZ failed to devices: %w", err)
 	}
 
 	if len(devices) == 0 {
-		return nil, errors.New("no devices registered")
+		return nil, errutil.InvalidRequest(
+			"auth.noDevicesRegistered",
+			"No user devices registered. Unable to send a notification for user approval.",
+		)
 	}
 
+	// For now we take the lastest registered device and send it the OTP.
 	device := devices[len(devices)-1]
 
 	otp := authtypes.NewSessionDeviceOTP(session.ID, device.ID)
 
 	err = s.authRepository.CreateDeviceOTP(ctx, otp)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("repository failed to create device OTP: %w", err)
 	}
 
 	err = s.notifService.SendOTPNotification(
@@ -463,7 +540,7 @@ func (s *authService) sendDeviceOTP(
 		toolName,
 	)
 	if err != nil {
-		return nil, errutil.Err(err, "unable to send notification")
+		return nil, fmt.Errorf("unable to send notification to device %s: %w", device.ID, err)
 	}
 
 	return otp, nil
@@ -476,24 +553,24 @@ func (s *authService) waitForDeviceApproval(ctx context.Context, otpID string) e
 		authtypes.SessionDeviceOTPDuration,
 		tick,
 		func() (bool, error) {
-			otp, err := s.authRepository.GetDeviceOTP(ctx, otpID)
+			otp, err := s.getDeviceOTP(ctx, otpID)
 			if err != nil {
 				return true, err
 			}
 
 			if otp.Used {
-				return true, errors.New("the OTP is already used")
+				return true, errutil.Unauthorized("auth.otpAlreadyUsed", "The device OTP is already used.")
 			}
 
 			if otp.HasExpired() {
-				return true, errors.New("the OTP is expired")
+				return true, errutil.Unauthorized("auth.otpExpired", "The device OTP is expired.")
 			}
 
-			if otp.Approved != nil && !*otp.Approved {
-				return true, errors.New("the OTP has been denied by the user")
+			if otp.IsDenied() {
+				return true, errutil.Unauthorized("auth.otpDenied", "The device OTP has been denied by the user.")
 			}
 
-			if otp.Approved != nil && *otp.Approved {
+			if otp.IsApproved() {
 				return true, nil
 			}
 
@@ -510,21 +587,43 @@ func (s *authService) waitForDeviceApproval(ctx context.Context, otpID string) e
 		return nil
 	}
 
-	log.Warn(loopErr)
+	if errutil.IsDomainError(loopErr) {
+		log.Error(loopErr)
+	} else {
+		log.Info(loopErr)
+	}
 
-	return errors.New("the user did not approve the invocation")
+	return errutil.Unauthorized("auth.invocationNotApproved", "The user did not approve the invocation.")
+}
+
+func (s *authService) getDeviceOTP(ctx context.Context, otpID string) (*authtypes.SessionDeviceOTP, error) {
+	otp, err := s.authRepository.GetDeviceOTP(ctx, otpID)
+	if err != nil {
+		if errors.Is(err, authcore.ErrDeviceOTPNotFound) {
+			return nil, errutil.InvalidRequest("auth.deviceOtpNotFound", "Device OTP not found.")
+		}
+
+		return nil, fmt.Errorf("repository failed to get device OTP %s: %w", otpID, err)
+	}
+
+	return otp, nil
 }
 
 func (s *authService) flagDeviceOTPAsUsed(ctx context.Context, otpID string) error {
 	otp, err := s.authRepository.GetDeviceOTP(ctx, otpID)
 	if err != nil {
-		return err
+		return fmt.Errorf("repository in flagDeviceOTPAsUsed failed to get device OTP %s: %w", otpID, err)
 	}
 
 	otp.Used = true
 	otp.UpdatedAt = ptrutil.Ptr(time.Now().Unix())
 
-	return s.authRepository.UpdateDeviceOTP(ctx, otp)
+	err = s.authRepository.UpdateDeviceOTP(ctx, otp)
+	if err != nil {
+		return fmt.Errorf("repository in flagDeviceOTPAsUsed failed to update device OTP %s: %w", otpID, err)
+	}
+
+	return nil
 }
 
 func (s *authService) activeWaitLoop(
@@ -538,7 +637,7 @@ func (s *authService) activeWaitLoop(
 	for {
 		select {
 		case <-timeout:
-			return errors.New("timeout")
+			return errors.New("extAuthZ active wait loop timed out")
 		case <-tick:
 			stop, err := onTick()
 			if err != nil {

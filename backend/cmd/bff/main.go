@@ -109,12 +109,17 @@ func main() {
 	iamClient := initializeIAMClient(config, dbContext, crypter)
 
 	// Tenant interceptor
-	authInterceptor := interceptors.NewAuthInterceptor(
-		iamClient,
-	)
+	authInterceptor := interceptors.NewAuthInterceptor(iamClient)
+
+	// Unhandled errors interceptor
+	errorInterceptor := interceptors.NewErrorInterceptor(config.IsProd())
 
 	// Initialize the gRPC Server
-	grpcsrv, err := initializeGrpcServer(config, authInterceptor.Unary)
+	grpcsrv, err := initializeGrpcServer(
+		config,
+		errorInterceptor.Unary,
+		authInterceptor.Unary,
+	)
 	if err != nil {
 		log.Fatal(err)
 	}

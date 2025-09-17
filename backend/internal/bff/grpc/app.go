@@ -5,13 +5,13 @@ package grpc
 
 import (
 	"context"
-	"errors"
 
 	identity_service_sdk_go "github.com/outshift/identity-service/api/server/outshift/identity/service/v1alpha1"
 	"github.com/outshift/identity-service/internal/bff"
 	"github.com/outshift/identity-service/internal/bff/grpc/converters"
 	apptypes "github.com/outshift/identity-service/internal/core/app/types"
 	"github.com/outshift/identity-service/internal/pkg/convertutil"
+	"github.com/outshift/identity-service/internal/pkg/errutil"
 	"github.com/outshift/identity-service/internal/pkg/grpcutil"
 	"github.com/outshift/identity-service/internal/pkg/pagination"
 	"github.com/outshift/identity-service/internal/pkg/sorting"
@@ -40,13 +40,10 @@ func (s *appService) CreateApp(
 	req *identity_service_sdk_go.CreateAppRequest,
 ) (*identity_service_sdk_go.App, error) {
 	app := converters.ToApp(req.GetApp())
-	if app == nil {
-		return nil, grpcutil.BadRequestError(errors.New("app cannot be nil"))
-	}
 
 	createdApp, err := s.appSrv.CreateApp(ctx, app)
 	if err != nil {
-		return nil, grpcutil.BadRequestError(err)
+		return nil, grpcutil.Error(err)
 	}
 
 	return converters.FromApp(createdApp), nil
@@ -77,7 +74,7 @@ func (s *appService) ListApps(
 
 	apps, err := s.appSrv.ListApps(ctx, paginationFilter, req.Query, appTypes, sortBy)
 	if err != nil {
-		return nil, grpcutil.BadRequestError(err)
+		return nil, grpcutil.Error(err)
 	}
 
 	return &identity_service_sdk_go.ListAppsResponse{
@@ -92,7 +89,7 @@ func (s *appService) GetAppsCount(
 ) (*identity_service_sdk_go.GetAppsCountResponse, error) {
 	totalCount, err := s.appSrv.CountAllApps(ctx)
 	if err != nil {
-		return nil, grpcutil.BadRequestError(err)
+		return nil, grpcutil.Error(err)
 	}
 
 	return &identity_service_sdk_go.GetAppsCountResponse{
@@ -104,13 +101,9 @@ func (s *appService) GetApp(
 	ctx context.Context,
 	req *identity_service_sdk_go.GetAppRequest,
 ) (*identity_service_sdk_go.App, error) {
-	if req == nil || req.GetAppId() == "" {
-		return nil, grpcutil.BadRequestError(errors.New("app ID cannot be empty"))
-	}
-
 	app, err := s.appSrv.GetApp(ctx, req.GetAppId())
 	if err != nil {
-		return nil, grpcutil.BadRequestError(err)
+		return nil, grpcutil.Error(err)
 	}
 
 	return converters.FromApp(app), nil
@@ -122,14 +115,16 @@ func (s *appService) UpdateApp(
 ) (*identity_service_sdk_go.App, error) {
 	app := converters.ToApp(req.GetApp())
 	if app == nil {
-		return nil, grpcutil.BadRequestError(errors.New("app cannot be nil"))
+		return nil, grpcutil.BadRequestError(
+			errutil.InvalidRequest("app.invalidApp", "Application payload is invalid."),
+		)
 	}
 
 	app.ID = req.AppId
 
 	updatedApp, err := s.appSrv.UpdateApp(ctx, app)
 	if err != nil {
-		return nil, grpcutil.BadRequestError(err)
+		return nil, grpcutil.Error(err)
 	}
 
 	return converters.FromApp(updatedApp), nil
@@ -141,7 +136,7 @@ func (s *appService) DeleteApp(
 ) (*emptypb.Empty, error) {
 	err := s.appSrv.DeleteApp(ctx, req.AppId)
 	if err != nil {
-		return nil, grpcutil.BadRequestError(err)
+		return nil, grpcutil.Error(err)
 	}
 
 	return &emptypb.Empty{}, nil
@@ -151,13 +146,9 @@ func (s *appService) RefreshAppApiKey(
 	ctx context.Context,
 	req *identity_service_sdk_go.RefreshAppApiKeyRequest,
 ) (*identity_service_sdk_go.App, error) {
-	if req == nil || req.GetAppId() == "" {
-		return nil, grpcutil.BadRequestError(errors.New("app ID cannot be empty"))
-	}
-
 	app, err := s.appSrv.RefreshAppAPIKey(ctx, req.GetAppId())
 	if err != nil {
-		return nil, grpcutil.BadRequestError(err)
+		return nil, grpcutil.Error(err)
 	}
 
 	return converters.FromApp(app), nil
@@ -169,7 +160,7 @@ func (s *appService) GetBadge(
 ) (*identity_service_sdk_go.Badge, error) {
 	badge, err := s.badgeSrv.GetBadge(ctx, in.AppId)
 	if err != nil {
-		return nil, grpcutil.NotFoundError(err)
+		return nil, grpcutil.Error(err)
 	}
 
 	return converters.FromBadge(badge), nil
@@ -181,7 +172,7 @@ func (s *appService) GetTasks(
 ) (*identity_service_sdk_go.GetTasksResponse, error) {
 	tasksPerAppType, err := s.appSrv.GetTasksPerAppType(ctx, in.GetExcludeAppIds())
 	if err != nil {
-		return nil, grpcutil.BadRequestError(err)
+		return nil, grpcutil.Error(err)
 	}
 
 	result := make(map[string]*identity_service_sdk_go.GetTasksResponse_TaskList)

@@ -5,11 +5,12 @@ package policy
 
 import (
 	"context"
-	"errors"
+	"fmt"
 
 	"github.com/agntcy/identity/pkg/log"
 	apptypes "github.com/outshift/identity-service/internal/core/app/types"
 	"github.com/outshift/identity-service/internal/core/policy/types"
+	"github.com/outshift/identity-service/internal/pkg/errutil"
 )
 
 type Evaluator interface {
@@ -38,7 +39,7 @@ func (e *evaluator) Evaluate(
 	toolName string,
 ) (*types.Rule, error) {
 	if calledApp.Type == apptypes.APP_TYPE_MCP_SERVER && toolName == "" {
-		return nil, errors.New("please provide a tool name")
+		return nil, errutil.ValidationFailed("auth.emptyToolName", "Please provide a tool name.")
 	}
 
 	log.Debug("Evaluating policies for app: ", calledApp.ID,
@@ -46,7 +47,7 @@ func (e *evaluator) Evaluate(
 
 	policies, err := e.policyRepository.GetPoliciesByAppID(ctx, callingAppID)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("repository failed to fetch policies for app %s: %w", callingAppID, err)
 	}
 
 	for _, policy := range policies {
@@ -56,5 +57,5 @@ func (e *evaluator) Evaluate(
 		}
 	}
 
-	return nil, errors.New("not allowed")
+	return nil, errutil.Unauthorized("auth.unauthorized", "The application is unauthorized to make a call.")
 }

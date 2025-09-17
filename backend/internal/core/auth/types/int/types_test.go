@@ -183,3 +183,69 @@ func TestSessionDeviceOTP_HasExpired(t *testing.T) {
 		})
 	}
 }
+
+func TestSessionDeviceOTP_IsDenied(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]*struct {
+		approved       *bool
+		expectedResult bool
+	}{
+		"should return true when approved equals false": {
+			approved:       ptrutil.Ptr(false),
+			expectedResult: true,
+		},
+		"should return false when approved equals true": {
+			approved:       ptrutil.Ptr(true),
+			expectedResult: false,
+		},
+		"should return false when approved is nil": {
+			approved:       nil,
+			expectedResult: false,
+		},
+	}
+
+	for tn, tc := range testCases {
+		t.Run(tn, func(t *testing.T) {
+			t.Parallel()
+
+			sut := types.NewSessionDeviceOTP("SESSION_ID", "DEVICE_ID")
+			sut.Approved = tc.approved
+
+			assert.Equal(t, tc.expectedResult, sut.IsDenied())
+		})
+	}
+}
+
+func TestSessionDeviceOTP_IsApproved(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]*struct {
+		approved       *bool
+		expectedResult bool
+	}{
+		"should return true when approved equals true": {
+			approved:       ptrutil.Ptr(true),
+			expectedResult: true,
+		},
+		"should return false when approved equals false": {
+			approved:       ptrutil.Ptr(false),
+			expectedResult: false,
+		},
+		"should return false when approved is nil": {
+			approved:       nil,
+			expectedResult: false,
+		},
+	}
+
+	for tn, tc := range testCases {
+		t.Run(tn, func(t *testing.T) {
+			t.Parallel()
+
+			sut := types.NewSessionDeviceOTP("SESSION_ID", "DEVICE_ID")
+			sut.Approved = tc.approved
+
+			assert.Equal(t, tc.expectedResult, sut.IsApproved())
+		})
+	}
+}

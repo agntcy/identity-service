@@ -37,7 +37,7 @@ func (s *PolicyService) CreatePolicy(
 		in.AssignedTo,
 	)
 	if err != nil {
-		return nil, grpcutil.BadRequestError(err)
+		return nil, grpcutil.Error(err)
 	}
 
 	return converters.FromPolicy(result), nil
@@ -57,7 +57,7 @@ func (s *PolicyService) CreateRule(
 		policytypes.RuleAction(in.GetAction()),
 	)
 	if err != nil {
-		return nil, grpcutil.BadRequestError(err)
+		return nil, grpcutil.Error(err)
 	}
 
 	return converters.FromRule(result), nil
@@ -69,7 +69,7 @@ func (s *PolicyService) DeletePolicy(
 ) (*emptypb.Empty, error) {
 	err := s.policyService.DeletePolicy(ctx, in.PolicyId)
 	if err != nil {
-		return nil, grpcutil.BadRequestError(err)
+		return nil, grpcutil.Error(err)
 	}
 
 	return &emptypb.Empty{}, nil
@@ -81,7 +81,7 @@ func (s *PolicyService) DeleteRule(
 ) (*emptypb.Empty, error) {
 	err := s.policyService.DeleteRule(ctx, in.RuleId, in.PolicyId)
 	if err != nil {
-		return nil, grpcutil.BadRequestError(err)
+		return nil, grpcutil.Error(err)
 	}
 
 	return &emptypb.Empty{}, nil
@@ -93,7 +93,7 @@ func (s *PolicyService) GetPolicy(
 ) (*identity_service_sdk_go.Policy, error) {
 	policy, err := s.policyService.GetPolicy(ctx, in.PolicyId)
 	if err != nil {
-		return nil, grpcutil.NotFoundError(err)
+		return nil, grpcutil.Error(err)
 	}
 
 	return converters.FromPolicy(policy), nil
@@ -105,7 +105,7 @@ func (s *PolicyService) GetRule(
 ) (*identity_service_sdk_go.Rule, error) {
 	rule, err := s.policyService.GetRule(ctx, in.RuleId, in.PolicyId)
 	if err != nil {
-		return nil, grpcutil.NotFoundError(err)
+		return nil, grpcutil.Error(err)
 	}
 
 	return converters.FromRule(rule), nil
@@ -129,7 +129,7 @@ func (s *PolicyService) ListPolicies(
 		in.GetRulesForAppIds(),
 	)
 	if err != nil {
-		return nil, grpcutil.BadRequestError(err)
+		return nil, grpcutil.Error(err)
 	}
 
 	return &identity_service_sdk_go.ListPoliciesResponse{
@@ -150,7 +150,7 @@ func (s *PolicyService) ListRules(
 
 	rules, err := s.policyService.ListRules(ctx, in.PolicyId, paginationFilter, in.Query)
 	if err != nil {
-		return nil, grpcutil.BadRequestError(err)
+		return nil, grpcutil.Error(err)
 	}
 
 	return &identity_service_sdk_go.ListRulesResponse{
@@ -171,7 +171,7 @@ func (s *PolicyService) UpdatePolicy(
 		in.AssignedTo,
 	)
 	if err != nil {
-		return nil, grpcutil.BadRequestError(err)
+		return nil, grpcutil.Error(err)
 	}
 
 	return converters.FromPolicy(policy), nil
@@ -192,7 +192,7 @@ func (s *PolicyService) UpdateRule(
 		policytypes.RuleAction(in.GetAction()),
 	)
 	if err != nil {
-		return nil, grpcutil.BadRequestError(err)
+		return nil, grpcutil.Error(err)
 	}
 
 	return converters.FromRule(rule), nil
@@ -204,7 +204,7 @@ func (s *PolicyService) GetPoliciesCount(
 ) (*identity_service_sdk_go.GetPoliciesCountResponse, error) {
 	total, err := s.policyService.CountAllPolicies(ctx)
 	if err != nil {
-		return nil, grpcutil.BadRequestError(err)
+		return nil, grpcutil.Error(err)
 	}
 
 	return &identity_service_sdk_go.GetPoliciesCountResponse{

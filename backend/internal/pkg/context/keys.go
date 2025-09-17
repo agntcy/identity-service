@@ -5,7 +5,9 @@ package identitycontext
 
 // Keep this as string
 // The context value matching is based on value + type
-const TenantID string = "tenant-id"
-const UserID string = "user-id"
-const OrganizationID string = "organization-id"
-const AppID string = "app-id"
+const (
+	TenantID       string = "tenant-id"
+	UserID         string = "user-id"
+	OrganizationID string = "organization-id"
+	AppID          string = "app-id"
+)

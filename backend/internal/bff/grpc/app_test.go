@@ -24,6 +24,8 @@ import (
 	"google.golang.org/grpc/codes"
 )
 
+var errAppUnexpected = errors.New("failed")
+
 func TestAppService_CreateApp_should_succeed(t *testing.T) {
 	t.Parallel()
 
@@ -46,32 +48,11 @@ func TestAppService_CreateApp_should_succeed(t *testing.T) {
 	assert.NotNil(t, actual)
 }
 
-func TestAppService_CreateApp_should_return_badrequest_when_req_is_invalid(t *testing.T) {
-	t.Parallel()
-
-	testCases := map[string]*identity_service_sdk_go.CreateAppRequest{
-		"nil request":   nil,
-		"empty request": {},
-	}
-
-	for tn, tc := range testCases {
-		t.Run(tn, func(t *testing.T) {
-			t.Parallel()
-
-			sut := grpc.NewAppService(nil, nil)
-
-			_, err := sut.CreateApp(t.Context(), tc)
-
-			grpctesting.AssertGrpcError(t, err, codes.InvalidArgument, "app cannot be nil")
-		})
-	}
-}
-
-func TestAppService_CreateApp_should_return_badrequest_when_core_services_fails(t *testing.T) {
+func TestAppService_CreateApp_should_propagate_error_when_core_service_fails(t *testing.T) {
 	t.Parallel()
 
 	appSrv := bffmocks.NewAppService(t)
-	appSrv.EXPECT().CreateApp(t.Context(), mock.Anything).Return(nil, errors.New("failed"))
+	appSrv.EXPECT().CreateApp(t.Context(), mock.Anything).Return(nil, errAppUnexpected)
 
 	sut := grpc.NewAppService(appSrv, nil)
 
@@ -80,7 +61,7 @@ func TestAppService_CreateApp_should_return_badrequest_when_core_services_fails(
 		&identity_service_sdk_go.CreateAppRequest{App: &identity_service_sdk_go.App{}},
 	)
 
-	grpctesting.AssertGrpcError(t, err, codes.InvalidArgument, "failed")
+	assert.ErrorIs(t, err, errAppUnexpected)
 }
 
 func TestAppService_ListApps_should_succeed(t *testing.T) {
@@ -142,19 +123,19 @@ func TestAppService_ListApps_should_parse_parameters(t *testing.T) {
 	assert.NoError(t, err)
 }
 
-func TestAppService_ListApps_should_return_badrequest_when_core_service_fails(t *testing.T) {
+func TestAppService_ListApps_should_propagate_error_when_core_service_fails(t *testing.T) {
 	t.Parallel()
 
 	appSrv := bffmocks.NewAppService(t)
 	appSrv.EXPECT().
 		ListApps(t.Context(), mock.Anything, mock.Anything, mock.Anything, mock.Anything).
-		Return(nil, errors.New("failed"))
+		Return(nil, errAppUnexpected)
 
 	sut := grpc.NewAppService(appSrv, nil)
 
 	_, err := sut.ListApps(t.Context(), &identity_service_sdk_go.ListAppsRequest{})
 
-	grpctesting.AssertGrpcError(t, err, codes.InvalidArgument, "failed")
+	assert.ErrorIs(t, err, errAppUnexpected)
 }
 
 func TestAppService_GetAppsCount_should_succeed(t *testing.T) {
@@ -173,17 +154,17 @@ func TestAppService_GetAppsCount_should_succeed(t *testing.T) {
 	assert.Equal(t, count, actual.Total)
 }
 
-func TestAppService_GetAppsCount_should_return_badrequest_when_core_service_fails(t *testing.T) {
+func TestAppService_GetAppsCount_should_propagate_error_when_core_service_fails(t *testing.T) {
 	t.Parallel()
 
 	appSrv := bffmocks.NewAppService(t)
-	appSrv.EXPECT().CountAllApps(t.Context()).Return(0, errors.New("failed"))
+	appSrv.EXPECT().CountAllApps(t.Context()).Return(0, errAppUnexpected)
 
 	sut := grpc.NewAppService(appSrv, nil)
 
 	_, err := sut.GetAppsCount(t.Context(), &identity_service_sdk_go.GetAppsCountRequest{})
 
-	grpctesting.AssertGrpcError(t, err, codes.InvalidArgument, "failed")
+	assert.ErrorIs(t, err, errAppUnexpected)
 }
 
 func TestAppService_GetApp_should_succeed(t *testing.T) {
@@ -200,27 +181,6 @@ func TestAppService_GetApp_should_succeed(t *testing.T) {
 
 	assert.NoError(t, err)
 	assert.Equal(t, appID, *actual.Id)
-}
-
-func TestAppService_GetApp_should_return_badrequest_when_req_has_no_app_id(t *testing.T) {
-	t.Parallel()
-
-	testCases := map[string]*identity_service_sdk_go.GetAppRequest{
-		"req is nil":        nil,
-		"req has no app ID": {},
-	}
-
-	for tn, tc := range testCases {
-		t.Run(tn, func(t *testing.T) {
-			t.Parallel()
-
-			sut := grpc.NewAppService(nil, nil)
-
-			_, err := sut.GetApp(t.Context(), tc)
-
-			grpctesting.AssertGrpcError(t, err, codes.InvalidArgument, "app ID cannot be empty")
-		})
-	}
 }
 
 func TestAppService_UpdateApp_should_succeed(t *testing.T) {
@@ -250,13 +210,13 @@ func TestAppService_UpdateApp_should_succeed(t *testing.T) {
 	assert.Equal(t, appID, actual.GetId())
 }
 
-func TestAppService_UpdateApp_should_return_badrequest_when_core_service_fails(t *testing.T) {
+func TestAppService_UpdateApp_should_propagate_error_when_core_service_fails(t *testing.T) {
 	t.Parallel()
 
 	appID := uuid.NewString()
 
 	appSrv := bffmocks.NewAppService(t)
-	appSrv.EXPECT().UpdateApp(t.Context(), mock.Anything).Return(nil, errors.New("failed"))
+	appSrv.EXPECT().UpdateApp(t.Context(), mock.Anything).Return(nil, errAppUnexpected)
 
 	sut := grpc.NewAppService(appSrv, nil)
 
@@ -268,7 +228,7 @@ func TestAppService_UpdateApp_should_return_badrequest_when_core_service_fails(t
 		},
 	)
 
-	grpctesting.AssertGrpcError(t, err, codes.InvalidArgument, "failed")
+	assert.ErrorIs(t, err, errAppUnexpected)
 }
 
 func TestAppService_UpdateApp_should_return_badrequest_when_req_is_invalid(t *testing.T) {
@@ -287,7 +247,7 @@ func TestAppService_UpdateApp_should_return_badrequest_when_req_is_invalid(t *te
 
 			_, err := sut.UpdateApp(t.Context(), tc)
 
-			grpctesting.AssertGrpcError(t, err, codes.InvalidArgument, "app cannot be nil")
+			grpctesting.AssertGrpcError(t, err, codes.InvalidArgument, "Application payload is invalid.")
 		})
 	}
 }
@@ -307,11 +267,11 @@ func TestAppService_DeleteApp_should_succeed(t *testing.T) {
 	assert.NoError(t, err)
 }
 
-func TestAppService_DeleteApp_should_return_badrequest_when_core_service_fails(t *testing.T) {
+func TestAppService_DeleteApp_should_propagate_error_when_core_service_fails(t *testing.T) {
 	t.Parallel()
 
 	appSrv := bffmocks.NewAppService(t)
-	appSrv.EXPECT().DeleteApp(t.Context(), mock.Anything).Return(errors.New("failed"))
+	appSrv.EXPECT().DeleteApp(t.Context(), mock.Anything).Return(errAppUnexpected)
 
 	sut := grpc.NewAppService(appSrv, nil)
 
@@ -320,7 +280,7 @@ func TestAppService_DeleteApp_should_return_badrequest_when_core_service_fails(t
 		&identity_service_sdk_go.DeleteAppRequest{AppId: uuid.NewString()},
 	)
 
-	grpctesting.AssertGrpcError(t, err, codes.InvalidArgument, "failed")
+	assert.ErrorIs(t, err, errAppUnexpected)
 }
 
 func TestAppService_RefreshAppApiKey_should_succeed(t *testing.T) {
@@ -342,36 +302,13 @@ func TestAppService_RefreshAppApiKey_should_succeed(t *testing.T) {
 	assert.NotNil(t, ret)
 }
 
-func TestAppService_RefreshAppApiKey_should_return_badrequest_when_request_is_invalid(
-	t *testing.T,
-) {
-	t.Parallel()
-
-	testCases := map[string]*identity_service_sdk_go.RefreshAppApiKeyRequest{
-		"req is nil":   nil,
-		"req is empty": {},
-	}
-
-	for tn, tc := range testCases {
-		t.Run(tn, func(t *testing.T) {
-			t.Parallel()
-
-			sut := grpc.NewAppService(nil, nil)
-
-			_, err := sut.RefreshAppApiKey(t.Context(), tc)
-
-			grpctesting.AssertGrpcError(t, err, codes.InvalidArgument, "app ID cannot be empty")
-		})
-	}
-}
-
-func TestAppService_RefreshAppApiKey_should_return_badrequest_when_core_service_fails(
+func TestAppService_RefreshAppApiKey_should_propagate_error_when_core_service_fails(
 	t *testing.T,
 ) {
 	t.Parallel()
 
 	appSrv := bffmocks.NewAppService(t)
-	appSrv.EXPECT().RefreshAppAPIKey(t.Context(), mock.Anything).Return(nil, errors.New("failed"))
+	appSrv.EXPECT().RefreshAppAPIKey(t.Context(), mock.Anything).Return(nil, errAppUnexpected)
 
 	sut := grpc.NewAppService(appSrv, nil)
 
@@ -380,7 +317,7 @@ func TestAppService_RefreshAppApiKey_should_return_badrequest_when_core_service_
 		&identity_service_sdk_go.RefreshAppApiKeyRequest{AppId: uuid.NewString()},
 	)
 
-	grpctesting.AssertGrpcError(t, err, codes.InvalidArgument, "failed")
+	assert.ErrorIs(t, err, errAppUnexpected)
 }
 
 func TestAppService_GetBadge_should_succeed(t *testing.T) {
@@ -399,14 +336,14 @@ func TestAppService_GetBadge_should_succeed(t *testing.T) {
 	assert.NotNil(t, ret)
 }
 
-func TestAppService_GetBadge_should_return_notfound_when_core_service_fails(t *testing.T) {
+func TestAppService_GetBadge_should_propagate_error_when_core_service_fails(t *testing.T) {
 	t.Parallel()
 
 	// this is the last code I'm writing before removing 4 wisdom teeth in about 2 hours...
 	// and it happened to be a unit test...
 
 	badgeSrv := bffmocks.NewBadgeService(t)
-	badgeSrv.EXPECT().GetBadge(t.Context(), mock.Anything).Return(nil, errors.New("failed"))
+	badgeSrv.EXPECT().GetBadge(t.Context(), mock.Anything).Return(nil, errAppUnexpected)
 
 	sut := grpc.NewAppService(nil, badgeSrv)
 
@@ -415,7 +352,7 @@ func TestAppService_GetBadge_should_return_notfound_when_core_service_fails(t *t
 		&identity_service_sdk_go.GetBadgeRequest{AppId: uuid.NewString()},
 	)
 
-	grpctesting.AssertGrpcError(t, err, codes.NotFound, "failed")
+	assert.ErrorIs(t, err, errAppUnexpected)
 }
 
 func TestAppService_GetTasks_should_succeed(t *testing.T) {
@@ -440,15 +377,15 @@ func TestAppService_GetTasks_should_succeed(t *testing.T) {
 	assert.Contains(t, ret.Result, apptypes.APP_TYPE_MCP_SERVER.String())
 }
 
-func TestAppService_GetTasks_should_return_badrequest_when_core_service_fails(t *testing.T) {
+func TestAppService_GetTasks_should_propagate_error_when_core_service_fails(t *testing.T) {
 	t.Parallel()
 
 	appSrv := bffmocks.NewAppService(t)
-	appSrv.EXPECT().GetTasksPerAppType(t.Context(), mock.Anything).Return(nil, errors.New("failed"))
+	appSrv.EXPECT().GetTasksPerAppType(t.Context(), mock.Anything).Return(nil, errAppUnexpected)
 
 	sut := grpc.NewAppService(appSrv, nil)
 
 	_, err := sut.GetTasks(t.Context(), &identity_service_sdk_go.GetTasksRequest{})
 
-	grpctesting.AssertGrpcError(t, err, codes.InvalidArgument, "failed")
+	assert.ErrorIs(t, err, errAppUnexpected)
 }

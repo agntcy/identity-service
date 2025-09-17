@@ -6,6 +6,7 @@ package idp
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"path"
@@ -14,7 +15,6 @@ import (
 	duosdk "github.com/duosecurity/duo_api_golang"
 	"github.com/google/uuid"
 	"github.com/outshift/identity-service/internal/core/settings/types"
-	"github.com/outshift/identity-service/internal/pkg/errutil"
 	"github.com/outshift/identity-service/pkg/log"
 )
 
@@ -52,10 +52,7 @@ func NewDuoIdp(settings *types.DuoIdpSettings) Idp {
 
 func (d *DuoIdp) TestSettings(ctx context.Context) error {
 	if d.settings == nil {
-		return errutil.Err(
-			nil,
-			"duo idp settings are not configured",
-		)
+		return errors.New("duo idp settings are not configured")
 	}
 
 	d.api = duosdk.NewDuoApi(
@@ -116,18 +113,12 @@ func (d *DuoIdp) CreateClientCredentialsPair(
 		paylod,
 	)
 	if err != nil {
-		return nil, errutil.Err(
-			err,
-			"failed to create client credentials pair in Duo IdP",
-		)
+		return nil, fmt.Errorf("failed to create client credentials pair in Duo IdP: %w", err)
 	}
 
 	var integrationData integration
 	if err := json.Unmarshal(data, &integrationData); err != nil {
-		return nil, errutil.Err(
-			err,
-			"failed to unmarshal Duo IdP integration data",
-		)
+		return nil, fmt.Errorf("failed to unmarshal Duo IdP integration data: %w", err)
 	}
 
 	return &ClientCredentials{
@@ -161,12 +152,10 @@ func (d *DuoIdp) deleteIntegration(clientCredentials *ClientCredentials) error {
 		duosdk.JSONParams{},
 	)
 	if err != nil {
-		return errutil.Err(
+		return fmt.Errorf(
+			"failed to delete client credentials pair for issuer %s: %w",
+			clientCredentials.Issuer,
 			err,
-			fmt.Sprintf(
-				"failed to delete client credentials pair for issuer %s",
-				clientCredentials.Issuer,
-			),
 		)
 	}
 
@@ -190,18 +179,18 @@ func (d *DuoIdp) duoCall(
 	}()
 
 	if err != nil {
-		return nil, errutil.Err(
+		return nil, fmt.Errorf(
+			"duo API call failed: %s: %w",
+			string(data),
 			err,
-			fmt.Sprintf("duo API call failed: %s",
-				string(data)),
 		)
 	}
 
 	if response.StatusCode != http.StatusOK {
-		return nil, errutil.Err(
+		return nil, fmt.Errorf(
+			"duo API call failed: %s, status code: %d: %w",
+			string(data), response.StatusCode,
 			err,
-			fmt.Sprintf("duo API call failed: %s, status code: %d",
-				string(data), response.StatusCode),
 		)
 	}
 

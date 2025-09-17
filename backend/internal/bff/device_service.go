@@ -5,6 +5,8 @@ package bff
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -17,7 +19,7 @@ import (
 
 type DeviceService interface {
 	AddDevice(ctx context.Context, device *devicetypes.Device) (*devicetypes.Device, error)
-	RegisterDevice(ctx context.Context, deviceId string, device *devicetypes.Device) error
+	RegisterDevice(ctx context.Context, deviceID string, device *devicetypes.Device) error
 	ListRegisteredDevices(
 		ctx context.Context,
 		paginationFilter pagination.PaginationFilter,
@@ -26,6 +28,11 @@ type DeviceService interface {
 	DeleteDevice(ctx context.Context, deviceID string) error
 	TestDevice(ctx context.Context, deviceID string) error
 }
+
+var (
+	errDeviceNotFound = errutil.NotFound("device.notFound", "Device not found.")
+	errInvalidID      = errutil.ValidationFailed("device.idInvalid", "Invalid device ID.")
+)
 
 type deviceService struct {
 	deviceRepository    devicecore.Repository
@@ -47,10 +54,7 @@ func (s *deviceService) AddDevice(
 	device *devicetypes.Device,
 ) (*devicetypes.Device, error) {
 	if device == nil {
-		return nil, errutil.Err(
-			nil,
-			"device cannot be nil",
-		)
+		return nil, errutil.ValidationFailed("device.invalidDevice", "Invalid device payload.")
 	}
 
 	userID, _ := identitycontext.GetUserID(ctx)
@@ -60,35 +64,35 @@ func (s *deviceService) AddDevice(
 	device.CreatedAt = time.Now().UTC()
 
 	// Add the device to the repository.
-	return s.deviceRepository.AddDevice(ctx, device)
+	storedDevice, err := s.deviceRepository.AddDevice(ctx, device)
+	if err != nil {
+		return nil, fmt.Errorf("repository in AddDevice failed to add device: %w", err)
+	}
+
+	return storedDevice, nil
 }
 
 func (s *deviceService) RegisterDevice(
 	ctx context.Context,
-	deviceId string,
+	deviceID string,
 	device *devicetypes.Device,
 ) error {
 	if device == nil {
-		return errutil.Err(
-			nil,
-			"device cannot be nil",
-		)
+		return errutil.ValidationFailed("device.invalidDevice", "Invalid device payload.")
 	}
 
-	if deviceId == "" {
-		return errutil.Err(
-			nil,
-			"device ID cannot be empty",
-		)
+	if deviceID == "" {
+		return errInvalidID
 	}
 
 	// Get the device from the repository.
-	existingDevice, err := s.deviceRepository.GetDevice(ctx, deviceId)
+	existingDevice, err := s.deviceRepository.GetDevice(ctx, deviceID)
 	if err != nil {
-		return errutil.Err(
-			err,
-			"failed to get device",
-		)
+		if errors.Is(err, devicecore.ErrDeviceNotFound) {
+			return errDeviceNotFound
+		}
+
+		return fmt.Errorf("repository in RegisterDevice failed to get device %s: %w", deviceID, err)
 	}
 
 	// Update
@@ -97,15 +101,19 @@ func (s *deviceService) RegisterDevice(
 
 	// Try to send a notification about the device registration.
 	if err := s.notificationService.SendDeviceRegisteredNotification(existingDevice); err != nil {
-		return errutil.Err(
+		return fmt.Errorf(
+			"failed to send notification for device registration (deviceID = %s): %w",
+			existingDevice.ID,
 			err,
-			"failed to send notification for device registration",
 		)
 	}
 
 	_, err = s.deviceRepository.UpdateDevice(ctx, existingDevice)
+	if err != nil {
+		return fmt.Errorf("repository in RegisterDevice failed to update device %s: %w", existingDevice.ID, err)
+	}
 
-	return err
+	return nil
 }
 
 func (s *deviceService) ListRegisteredDevices(
@@ -115,21 +123,29 @@ func (s *deviceService) ListRegisteredDevices(
 ) (*pagination.Pageable[devicetypes.Device], error) {
 	page, err := s.deviceRepository.ListRegisteredDevices(ctx, paginationFilter, query)
 	if err != nil {
-		return nil, errutil.Err(err, "failed to fetch registered devices")
+		return nil, fmt.Errorf("repository in ListRegisteredDevices failed to fetch registered devices: %w", err)
 	}
 
 	return page, nil
 }
 
 func (s *deviceService) DeleteDevice(ctx context.Context, deviceID string) error {
+	if deviceID == "" {
+		return errInvalidID
+	}
+
 	device, err := s.deviceRepository.GetDevice(ctx, deviceID)
 	if err != nil {
-		return err
+		if errors.Is(err, devicecore.ErrDeviceNotFound) {
+			return errDeviceNotFound
+		}
+
+		return fmt.Errorf("repository in DeleteDevice failed to get device %s: %w", deviceID, err)
 	}
 
 	err = s.deviceRepository.DeleteDevice(ctx, device)
 	if err != nil {
-		return err
+		return fmt.Errorf("repository in DeleteDevice failed to delete device %s: %w", deviceID, err)
 	}
 
 	return nil
@@ -138,12 +154,16 @@ func (s *deviceService) DeleteDevice(ctx context.Context, deviceID string) error
 func (s *deviceService) TestDevice(ctx context.Context, deviceID string) error {
 	device, err := s.deviceRepository.GetDevice(ctx, deviceID)
 	if err != nil {
-		return errutil.Err(err, "failed to get device")
+		if errors.Is(err, devicecore.ErrDeviceNotFound) {
+			return errDeviceNotFound
+		}
+
+		return fmt.Errorf("repository in TestDevice failed to get device %s: %w", deviceID, err)
 	}
 
 	err = s.notificationService.SendInfoNotification(device, "This is a test notification!")
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to send test notification: %w", err)
 	}
 
 	return nil
