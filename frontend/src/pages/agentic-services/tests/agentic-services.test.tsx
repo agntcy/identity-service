@@ -144,7 +144,9 @@ describe('AgentServices', () => {
     vi.clearAllMocks();
     mockUseAnalytics.mockReturnValue({
       analyticsTrack: mockAnalyticsTrack,
-      analyticsPage: vi.fn()
+      analyticsPage: vi.fn(),
+      analyticsIdentify: vi.fn(),
+      analyticsReset: vi.fn()
     });
 
     mockUseShallow.mockImplementation((selectorFn) => selectorFn);

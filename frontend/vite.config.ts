@@ -70,7 +70,8 @@ export default defineConfig(({mode}) => {
           'src/hooks',
           'src/lib',
           'src/components/shared/maze',
-          'src/components/shared/manifest'
+          'src/components/shared/manifest',
+          'src/providers/analytics-provider/implementations'
         ],
         include: ['src/']
       }

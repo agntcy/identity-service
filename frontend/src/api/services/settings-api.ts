@@ -9,12 +9,12 @@ import {AuthInfo} from '@/types/okta';
 import config from '@/config';
 import {Settings} from '@/types/api/settings';
 import {httpErrorsAuth, USER_NOT_AUTH} from '@/constants/http-errors';
-import {AnalyticsBrowser} from '@segment/analytics-next';
+import {AnalyticsService} from '@/types/analytics/analytics';
 
 export class SettingsAPIClass extends SettingsApi.Api<Settings> {
   protected authInfo: AuthInfo | null | undefined;
   protected retry = false;
-  protected analytics: AnalyticsBrowser | undefined;
+  protected analytics: AnalyticsService | undefined;
   protected tokenExpiredHttpHandler?: () => Promise<AuthInfo | undefined>;
   protected logout?: (params: {
     revokeAccessToken?: boolean;
@@ -106,7 +106,7 @@ export class SettingsAPIClass extends SettingsApi.Api<Settings> {
     this.logout = handlers.logout;
   }
 
-  public setAnalytics = (analytics?: AnalyticsBrowser) => {
+  public setAnalytics = (analytics?: AnalyticsService) => {
     this.analytics = analytics;
   };
 }

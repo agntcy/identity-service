@@ -22,11 +22,11 @@ export const NodeRoute = ({children, disableErrorBoundary, pageTitle}: NodeRoute
 
   useEffect(() => {
     if (pageTitle && analyticsPage) {
-      analyticsPage('VISIT_PAGE', {
+      analyticsPage('VISIT_PAGE', pageTitle, {
         pageTitle: pageTitle
       });
     }
-  }, [analyticsPage, pageTitle]);
+  }, [pageTitle, analyticsPage]);
 
   return disableErrorBoundary ? (
     getWrappedChildren()

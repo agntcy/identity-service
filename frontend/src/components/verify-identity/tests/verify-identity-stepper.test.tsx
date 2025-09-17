@@ -307,7 +307,12 @@ describe('VerifyIdentityStepper', () => {
     mockNavigate.mockReturnValue(mockNavigateFn);
     mockUseForm.mockReturnValue(mockFormMethods as any);
     mockUseStepper.mockReturnValue(mockStepperMethods as any);
-    mockUseAnalytics.mockReturnValue({analyticsTrack: mockAnalyticsTrack, analyticsPage: vi.fn()});
+    mockUseAnalytics.mockReturnValue({
+      analyticsTrack: mockAnalyticsTrack,
+      analyticsPage: vi.fn(),
+      analyticsIdentify: vi.fn(),
+      analyticsReset: vi.fn()
+    });
     mockUseVerifyBadge.mockReturnValue(mockVerifyBadgeMutation as any);
     mockValidateForm.mockReturnValue({success: true});
     mockJwtDecode.mockReturnValue({iss: 'test', sub: 'test'});

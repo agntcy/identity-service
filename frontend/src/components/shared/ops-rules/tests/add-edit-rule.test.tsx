@@ -227,7 +227,9 @@ describe('AddEditRule', () => {
     mockUseUpdateRule.mockReturnValue(mockUpdateRule as any);
     mockUseAnalytics.mockReturnValue({
       analyticsTrack: mockAnalyticsTrack,
-      analyticsPage: vi.fn()
+      analyticsPage: vi.fn(),
+      analyticsIdentify: vi.fn(),
+      analyticsReset: vi.fn()
     });
     mockValidateForm.mockReturnValue({success: true});
 

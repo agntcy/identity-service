@@ -61,7 +61,9 @@ describe('NodeRoute', () => {
 
     mockUseAnalytics.mockReturnValue({
       analyticsPage: mockAnalyticsPage,
-      analyticsTrack: vi.fn()
+      analyticsTrack: vi.fn(),
+      analyticsIdentify: vi.fn(),
+      analyticsReset: vi.fn()
     });
   });
 
@@ -229,7 +231,7 @@ describe('NodeRoute', () => {
       );
 
       expect(mockAnalyticsPage).toHaveBeenCalledTimes(1);
-      expect(mockAnalyticsPage).toHaveBeenCalledWith('VISIT_PAGE', {
+      expect(mockAnalyticsPage).toHaveBeenCalledWith('VISIT_PAGE', 'Test Page', {
         pageTitle: 'Test Page'
       });
     });
@@ -262,7 +264,7 @@ describe('NodeRoute', () => {
       );
 
       expect(mockAnalyticsPage).toHaveBeenCalledTimes(1);
-      expect(mockAnalyticsPage).toHaveBeenCalledWith('VISIT_PAGE', {
+      expect(mockAnalyticsPage).toHaveBeenCalledWith('VISIT_PAGE', 'First Page', {
         pageTitle: 'First Page'
       });
 
@@ -273,7 +275,7 @@ describe('NodeRoute', () => {
       );
 
       expect(mockAnalyticsPage).toHaveBeenCalledTimes(2);
-      expect(mockAnalyticsPage).toHaveBeenLastCalledWith('VISIT_PAGE', {
+      expect(mockAnalyticsPage).toHaveBeenLastCalledWith('VISIT_PAGE', 'Second Page', {
         pageTitle: 'Second Page'
       });
     });
@@ -312,7 +314,7 @@ describe('NodeRoute', () => {
       );
 
       expect(mockAnalyticsPage).toHaveBeenCalledTimes(1);
-      expect(mockAnalyticsPage).toHaveBeenCalledWith('VISIT_PAGE', {
+      expect(mockAnalyticsPage).toHaveBeenCalledWith('VISIT_PAGE', 'New Page', {
         pageTitle: 'New Page'
       });
     });
@@ -352,7 +354,9 @@ describe('NodeRoute', () => {
       // Change the analyticsPage function
       mockUseAnalytics.mockReturnValue({
         analyticsPage: newAnalyticsPage,
-        analyticsTrack: vi.fn()
+        analyticsTrack: vi.fn(),
+        analyticsIdentify: vi.fn(),
+        analyticsReset: vi.fn()
       });
 
       rerender(
@@ -362,7 +366,7 @@ describe('NodeRoute', () => {
       );
 
       expect(newAnalyticsPage).toHaveBeenCalledTimes(1);
-      expect(newAnalyticsPage).toHaveBeenCalledWith('VISIT_PAGE', {
+      expect(newAnalyticsPage).toHaveBeenCalledWith('VISIT_PAGE', 'Test Page', {
         pageTitle: 'Test Page'
       });
     });
@@ -379,7 +383,7 @@ describe('NodeRoute', () => {
       expect(mockErrorBoundary).not.toHaveBeenCalled();
       expect(screen.queryByTestId('error-boundary')).not.toBeInTheDocument();
       expect(screen.getByTestId('test-child')).toBeInTheDocument();
-      expect(mockAnalyticsPage).toHaveBeenCalledWith('VISIT_PAGE', {
+      expect(mockAnalyticsPage).toHaveBeenCalledWith('VISIT_PAGE', 'Test Page', {
         pageTitle: 'Test Page'
       });
     });
@@ -411,7 +415,7 @@ describe('NodeRoute', () => {
       }).not.toThrow();
 
       expect(screen.getByTestId('test-child')).toBeInTheDocument();
-      expect(mockAnalyticsPage).toHaveBeenCalledWith('VISIT_PAGE', {
+      expect(mockAnalyticsPage).toHaveBeenCalledWith('VISIT_PAGE', 'Custom Page Title', {
         pageTitle: 'Custom Page Title'
       });
     });
@@ -458,7 +462,7 @@ describe('NodeRoute', () => {
         </NodeRoute>
       );
 
-      expect(mockAnalyticsPage).toHaveBeenCalledWith('VISIT_PAGE', {
+      expect(mockAnalyticsPage).toHaveBeenCalledWith('VISIT_PAGE', longTitle, {
         pageTitle: longTitle
       });
     });
@@ -472,7 +476,7 @@ describe('NodeRoute', () => {
         </NodeRoute>
       );
 
-      expect(mockAnalyticsPage).toHaveBeenCalledWith('VISIT_PAGE', {
+      expect(mockAnalyticsPage).toHaveBeenCalledWith('VISIT_PAGE', specialTitle, {
         pageTitle: specialTitle
       });
     });
@@ -492,7 +496,9 @@ describe('NodeRoute', () => {
     it('handles useAnalytics returning undefined analyticsPage gracefully', () => {
       mockUseAnalytics.mockReturnValue({
         analyticsPage: undefined as any,
-        analyticsTrack: vi.fn()
+        analyticsTrack: vi.fn(),
+        analyticsIdentify: vi.fn(),
+        analyticsReset: vi.fn()
       });
 
       // This test should verify that the component handles undefined analyticsPage gracefully
