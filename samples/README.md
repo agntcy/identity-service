@@ -32,7 +32,7 @@ You need AzureOpenAI credentials to run the samples.
 1. Clone the `identity-service` repository:
 
    ```bash
-   git clone https://github.com/cisco-eti/identity-service.git
+   git clone https://github.com/outshift-open/identity-service.git
    ```
 
 2. Navigate to the `samples` directory and run the following command to start the Docker containers:
