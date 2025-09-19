@@ -25,7 +25,7 @@ vi.mock('@/utils/get-auth-config', () => ({
   isMultiTenant: vi.fn(() => true)
 }));
 
-import { isMultiTenant } from '@/utils/get-auth-config';
+import {isMultiTenant} from '@/utils/get-auth-config';
 
 // Mock dependencies
 vi.mock('@/router/paths', () => ({

@@ -448,14 +448,16 @@ describe('SettingsProvider', () => {
       expect(mockStoreFunctions.setIsAdmin).toHaveBeenCalledWith(true);
       // Update the expected mock session structure to match what's actually being created
       expect(mockStoreFunctions.setSession).toHaveBeenCalledWith({
-        groups: [{
-          role: 'ADMIN',
-          group: {
-            id: 'mock-group-id',
-            name: 'mock-group-name'
-          },
-          productRoles: []
-        }],
+        groups: [
+          {
+            role: 'ADMIN',
+            group: {
+              id: 'mock-group-id',
+              name: 'mock-group-name'
+            },
+            productRoles: []
+          }
+        ],
         username: 'username'
       });
     });
