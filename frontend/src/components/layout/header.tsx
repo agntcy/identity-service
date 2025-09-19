@@ -21,6 +21,8 @@ import {useGetDevices} from '@/queries';
 import {GlobalSearch} from '../shared/helpers/global-search';
 import Logo from '@/assets/header/header.svg?react';
 import {globalConfig} from '@/config/global';
+import {cn} from '@/lib/utils';
+import {isMultiTenant} from '@/utils/get-auth-config';
 
 export const Header = () => {
   const {isMobile} = useWindowSize();
@@ -98,6 +100,7 @@ const UserSection = ({
   const open = Boolean(anchorEl);
 
   const {isMobile} = useWindowSize();
+  const isMulti = isMultiTenant();
 
   const navigate = useNavigate();
   const {authInfo, logout} = useAuth();
@@ -167,7 +170,7 @@ const UserSection = ({
       >
         <div className="text-left hidden md:block">
           <Typography variant="subtitle2" sx={(theme) => ({color: theme.palette.vars.baseTextStrong})}>
-            <span className="capitalize">{authInfo?.user?.name || 'User'}</span>
+            <span className={cn(isMulti && 'capitalize')}>{authInfo?.user?.name || authInfo?.user?.username || 'User'}</span>
           </Typography>
           <div className="-mt-[3px]">
             <Typography
@@ -192,9 +195,11 @@ const UserSection = ({
           </div>
           <div className="text-center">
             <Typography variant="subtitle2" sx={(theme) => ({color: theme.palette.vars.baseTextStrong})}>
-              <span className="capitalize">{authInfo?.user?.name || 'User'}</span>
+              <span className={cn(isMulti && 'capitalize')}>
+                {authInfo?.user?.name || authInfo?.user?.username || 'User'}
+              </span>
             </Typography>
-            <div className="-mt-[4px]">
+            <div>
               <Typography
                 variant="caption"
                 sx={(theme) => ({
