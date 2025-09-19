@@ -11,6 +11,7 @@ const {
   mockUseAuth,
   mockUseAnalyticsContext,
   mockLoading,
+  mockIsMultiTenant,
   mockIamAPI,
   mockSettingsAPI,
   mockAgenticServicesAPI,
@@ -21,6 +22,7 @@ const {
   mockUseAuth: vi.fn(),
   mockUseAnalyticsContext: vi.fn(),
   mockLoading: vi.fn(),
+  mockIsMultiTenant: vi.fn(),
   mockIamAPI: {
     setTokenExpiredHandlers: vi.fn(),
     setAnalytics: vi.fn(),
@@ -78,6 +80,10 @@ vi.mock('../analytics-provider/analytics-provider', () => ({
   useAnalyticsContext: mockUseAnalyticsContext
 }));
 
+vi.mock('@/utils/get-auth-config', () => ({
+  isMultiTenant: mockIsMultiTenant
+}));
+
 import {ApiProvider} from './api-provider';
 
 describe('ApiProvider', () => {
@@ -89,6 +95,7 @@ describe('ApiProvider', () => {
     vi.clearAllMocks();
     mockLoading.mockReturnValue(<div data-testid="loading">Loading...</div>);
     mockUseAnalyticsContext.mockReturnValue({analytics: mockAnalytics});
+    mockIsMultiTenant.mockReturnValue(true); // Default to multi-tenant mode for most tests
   });
 
   it('renders children when authInfo is undefined', async () => {
@@ -227,5 +234,41 @@ describe('ApiProvider', () => {
     expect(mockBadgeAPI.setAuthInfo).not.toHaveBeenCalled();
     expect(mockPolicyAPI.setAuthInfo).not.toHaveBeenCalled();
     expect(mockDevicesAPI.setAuthInfo).not.toHaveBeenCalled();
+  });
+
+  describe('when not multi-tenant', () => {
+    beforeEach(() => {
+      mockIsMultiTenant.mockReturnValue(false);
+    });
+
+    it('does not set IamAPI handlers but sets others', () => {
+      mockUseAuth.mockReturnValue({
+        authInfo: {isAuthenticated: true},
+        tokenExpiredHttpHandler: mockTokenExpiredHttpHandler,
+        logout: mockLogout
+      });
+
+      render(<ApiProvider>Test Children</ApiProvider>);
+
+      const expectedHandlers = {tokenExpiredHttpHandler: mockTokenExpiredHttpHandler, logout: mockLogout};
+
+      // IamAPI should not be called in non-multi-tenant mode
+      expect(mockIamAPI.setTokenExpiredHandlers).not.toHaveBeenCalled();
+      expect(mockIamAPI.setAnalytics).not.toHaveBeenCalled();
+      expect(mockIamAPI.setAuthInfo).not.toHaveBeenCalled();
+
+      // Other APIs should still be called
+      expect(mockSettingsAPI.setTokenExpiredHandlers).toHaveBeenCalledWith(expectedHandlers);
+      expect(mockAgenticServicesAPI.setTokenExpiredHandlers).toHaveBeenCalledWith(expectedHandlers);
+      expect(mockBadgeAPI.setTokenExpiredHandlers).toHaveBeenCalledWith(expectedHandlers);
+      expect(mockPolicyAPI.setTokenExpiredHandlers).toHaveBeenCalledWith(expectedHandlers);
+      expect(mockDevicesAPI.setTokenExpiredHandlers).toHaveBeenCalledWith(expectedHandlers);
+
+      expect(mockSettingsAPI.setAnalytics).toHaveBeenCalledWith(mockAnalytics);
+      expect(mockAgenticServicesAPI.setAnalytics).toHaveBeenCalledWith(mockAnalytics);
+      expect(mockBadgeAPI.setAnalytics).toHaveBeenCalledWith(mockAnalytics);
+      expect(mockPolicyAPI.setAnalytics).toHaveBeenCalledWith(mockAnalytics);
+      expect(mockDevicesAPI.setAnalytics).toHaveBeenCalledWith(mockAnalytics);
+    });
   });
 });

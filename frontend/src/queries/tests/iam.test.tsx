@@ -28,6 +28,11 @@ vi.mock('@/api/services', () => ({
   }
 }));
 
+// Mock isMultiTenant utility
+vi.mock('@/utils/get-auth-config', () => ({
+  isMultiTenant: vi.fn(() => true) // Enable multi-tenant mode for tests
+}));
+
 const mockedIamAPI = vi.mocked(IamAPI);
 
 // Helper to create a mock Axios response
