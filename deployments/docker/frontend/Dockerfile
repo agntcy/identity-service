@@ -37,7 +37,7 @@ WORKDIR /home/web
 COPY --from=build /home/web/dist ./dist
 COPY --chown=web:web ./deployments/docker/frontend/nginx/entrypoint.sh .
 COPY --chown=web:web ./deployments/docker/frontend/nginx/nginx.conf ./nginx/nginx.env.conf
-COPY --chown=web:web ./deployments/docker/frontend/nginx/csp-header.conf ./nginx/csp-header.conf
+COPY --chown=web:web ./deployments/docker/frontend/nginx/csp-header.env.conf ./nginx/csp-header.env.conf
 RUN mkdir ./nginx/logs && \
   mkdir ./nginx/tmp && \
   chown web:web ./nginx/logs && \
