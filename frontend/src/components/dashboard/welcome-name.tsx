@@ -4,11 +4,14 @@
  */
 
 import {useAuth, useWindowSize} from '@/hooks';
+import {cn} from '@/lib/utils';
+import {isMultiTenant} from '@/utils/get-auth-config';
 import {Typography} from '@open-ui-kit/core';
 
 export const WelcomeName = () => {
   const {authInfo} = useAuth();
   const {isMobile} = useWindowSize();
+  const isMulti = isMultiTenant();
   return (
     <div className="bg-[#00142B] h-full">
       <div className="w-full h-[200px] md:h-[184px] flex flex-col justify-between sticky top-0 z-0">
@@ -19,7 +22,10 @@ export const WelcomeName = () => {
               textAlign="center"
               sx={(theme) => ({color: theme.palette.vars.brandIconTertiaryDefault})}
             >
-              Welcome to Agent Identity Service, <span className="capitalize">{authInfo?.user?.name || 'User'}!</span>
+              Welcome to Agent Identity Service,{' '}
+              <span className={cn(isMulti && 'capitalize')}>
+                {authInfo?.user?.name || authInfo?.user?.username || 'User'}!
+              </span>
             </Typography>
             <Typography
               variant={isMobile ? 'body2' : 'body1'}
