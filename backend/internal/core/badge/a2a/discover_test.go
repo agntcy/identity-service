@@ -38,7 +38,7 @@ func TestDiscover_should_add_wellknow_suffix(t *testing.T) {
 	card := `{"name": "some_random_agent", "skills": []}`
 
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		assert.Equal(t, "/.well-known/agent.json", r.URL.Path)
+		assert.Equal(t, "/.well-known/agent-card.json", r.URL.Path)
 		fmt.Fprint(w, card)
 	}))
 	defer ts.Close()
