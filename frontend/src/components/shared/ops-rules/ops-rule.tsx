@@ -8,7 +8,7 @@ import {DeleteRule} from './delete-rule';
 import {AddEditRule} from './add-edit-rule';
 import {useGetRule} from '@/queries';
 import {useCallback, useState} from 'react';
-import {EmptyState, Modal} from '@cisco-eti/spark-design';
+import {EmptyState, Modal} from '@open-ui-kit/core';
 import {LoaderRelative} from '@/components/ui/loading';
 
 interface OpsRuleProps {

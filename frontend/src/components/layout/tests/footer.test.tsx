@@ -19,7 +19,7 @@ const mockUseWindowSize = vi.fn();
 const mockShowPreferences = vi.fn();
 
 // Mock dependencies
-vi.mock('@cisco-eti/spark-design', () => ({
+vi.mock('@open-ui-kit/core', () => ({
   Footer: ({productNode, links}: any) => (
     <footer data-testid="spark-footer">
       <div data-testid="product-node">{productNode}</div>

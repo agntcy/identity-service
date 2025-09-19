@@ -4,7 +4,7 @@
  */
 
 import {FallbackProps} from 'react-error-boundary';
-import {EmptyState} from '@cisco-eti/spark-design';
+import {EmptyState} from '@open-ui-kit/core';
 import {Card} from '../ui/card';
 
 interface ErrorPageBoundaryProps extends Omit<FallbackProps, 'resetErrorBoundary'> {

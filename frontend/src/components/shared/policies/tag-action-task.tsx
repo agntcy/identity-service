@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {GeneralSize, Tag, TagProps, TagStatus, Typography} from '@cisco-eti/spark-design';
+import {GeneralSize, Tag, TagProps, TagStatus, Typography} from '@open-ui-kit/core';
 import {RuleAction} from '@/types/api/policy';
 import React from 'react';
 

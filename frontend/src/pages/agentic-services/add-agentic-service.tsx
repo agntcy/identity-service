@@ -7,7 +7,7 @@ import {AddAgenticServiceStepper} from '@/components/agentic-services/add/add-ag
 import {BasePage} from '@/components/layout/base-page';
 import {PATHS} from '@/router/paths';
 import {docs} from '@/utils/docs';
-import {Link} from '@cisco-eti/spark-design';
+import {Link} from '@open-ui-kit/core';
 import {ExternalLinkIcon} from 'lucide-react';
 
 const AddAgenticService: React.FC = () => {

@@ -10,7 +10,7 @@ import {useCallback} from 'react';
 import {useFieldArray, UseFormReturn, useWatch} from 'react-hook-form';
 import {Button, Divider, IconButton, Tooltip, Typography} from '@mui/material';
 import {PolicyLogicyFormValues} from '@/schemas/policy-logic-schema';
-import {Accordion, GeneralSize, Tag} from '@cisco-eti/spark-design';
+import {Accordion, GeneralSize, Tag} from '@open-ui-kit/core';
 import {RuleAction} from '@/types/api/policy';
 import {RuleForm} from './rule-form';
 import {labels} from '@/constants/labels';

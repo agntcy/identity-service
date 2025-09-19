@@ -42,7 +42,7 @@ vi.mock('@/config/global', () => ({
   }
 }));
 
-vi.mock('@cisco-eti/spark-design', () => ({
+vi.mock('@open-ui-kit/core', () => ({
   Button: ({children, onClick, ...props}: any) => (
     <button onClick={onClick} data-testid={props['data-testid'] || 'button'} {...props}>
       {children}

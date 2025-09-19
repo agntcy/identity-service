@@ -9,7 +9,7 @@ import {render, screen, fireEvent} from '@testing-library/react';
 import {ErrorPageBoundary} from '../error-page-boundary';
 
 // Mock Spark Design EmptyState
-vi.mock('@cisco-eti/spark-design', () => ({
+vi.mock('@open-ui-kit/core', () => ({
   EmptyState: vi.fn(({variant, title, description, actionTitle, actionCallback, containerProps, ...props}) => {
     const handleClick = () => {
       if (actionCallback && typeof actionCallback === 'function') {

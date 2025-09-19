@@ -48,7 +48,7 @@ vi.mock('@/constants/labels', () => ({
   }
 }));
 
-vi.mock('@cisco-eti/spark-design', () => ({
+vi.mock('@open-ui-kit/core', () => ({
   GeneralSize: {
     Small: 'small',
     Medium: 'medium',

@@ -84,7 +84,7 @@ vi.mock('@/components/ui/conditional-query-renderer', () => ({
   )
 }));
 
-vi.mock('@cisco-eti/spark-design', () => ({
+vi.mock('@open-ui-kit/core', () => ({
   Button: ({children, variant, onClick, sx, endIcon, ...props}: any) => (
     <button
       data-testid="invite-user-button"

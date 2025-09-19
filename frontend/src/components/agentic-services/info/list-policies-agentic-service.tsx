@@ -4,7 +4,7 @@
  */
 
 import {useCallback, useMemo, useState} from 'react';
-import {Box, EmptyState, Table} from '@cisco-eti/spark-design';
+import {Box, EmptyState, Table} from '@open-ui-kit/core';
 import {useGetPolicies} from '@/queries';
 import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
 import {Card} from '@/components/ui/card';

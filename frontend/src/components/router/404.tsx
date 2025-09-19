@@ -5,7 +5,7 @@
 
 import React from 'react';
 import {useNavigate} from 'react-router-dom';
-import {EmptyState} from '@cisco-eti/spark-design';
+import {EmptyState} from '@open-ui-kit/core';
 import {Card} from '../ui/card';
 
 const NotFound: React.FC = () => {

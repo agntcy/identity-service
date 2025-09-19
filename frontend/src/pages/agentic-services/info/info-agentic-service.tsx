@@ -11,7 +11,7 @@ import {useAnalytics} from '@/hooks';
 import {useDeleteAgenticService} from '@/mutations';
 import {useGetAgenticService} from '@/queries';
 import {PATHS} from '@/router/paths';
-import {Button, toast} from '@cisco-eti/spark-design';
+import {Button, toast} from '@open-ui-kit/core';
 import {PencilIcon, Trash2Icon} from 'lucide-react';
 import {useCallback, useState} from 'react';
 import {generatePath, Outlet, useNavigate, useParams} from 'react-router-dom';

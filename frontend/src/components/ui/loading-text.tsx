@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {Typography} from '@cisco-eti/spark-design';
+import {Typography} from '@open-ui-kit/core';
 
 export const LoadingText = ({text}: {text: string}) => {
   return (

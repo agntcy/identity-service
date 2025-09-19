@@ -4,7 +4,7 @@
  */
 
 import {Card, CardContent} from '@/components/ui/card';
-import {GeneralSize, Link, Tag, Typography} from '@cisco-eti/spark-design';
+import {GeneralSize, Link, Tag, Typography} from '@open-ui-kit/core';
 import {useMemo} from 'react';
 import KeyValue, {KeyValuePair} from '@/components/ui/key-value';
 import {AgenticServiceType} from '@/components/shared/agentic-services/agentic-service-type';

@@ -4,7 +4,7 @@
  */
 
 import React, {createContext, useState, useContext, ReactNode, useCallback, useMemo} from 'react';
-import {Banner, BannerProps} from '@cisco-eti/spark-design';
+import {Banner, BannerProps} from '@open-ui-kit/core';
 import {useWindowSize} from '@/hooks';
 import {docs} from '@/utils/docs';
 

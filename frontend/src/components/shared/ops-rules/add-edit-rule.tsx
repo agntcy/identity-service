@@ -7,7 +7,7 @@ import {Form} from '@/components/ui/form';
 import {RuleFormValues, RuleSchema} from '@/schemas/rule-schema';
 import {Policy, Rule} from '@/types/api/policy';
 import {zodResolver} from '@hookform/resolvers/zod';
-import {Button, Modal, ModalActions, ModalContent, ModalTitle, toast} from '@cisco-eti/spark-design';
+import {Button, Modal, ModalActions, ModalContent, ModalTitle, toast} from '@open-ui-kit/core';
 import {useCallback, useEffect} from 'react';
 import {useForm} from 'react-hook-form';
 import {RuleForm} from './forms/rule-form';

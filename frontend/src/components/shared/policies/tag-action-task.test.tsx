@@ -9,7 +9,7 @@ import {TagActionTask} from './tag-action-task';
 import {RuleAction} from '@/types/api/policy';
 
 // Mock dependencies
-vi.mock('@cisco-eti/spark-design', () => ({
+vi.mock('@open-ui-kit/core', () => ({
   Tag: ({children, size, status, ...props}: any) => (
     <div data-testid="tag" data-size={size} data-status={status} {...props}>
       {children}

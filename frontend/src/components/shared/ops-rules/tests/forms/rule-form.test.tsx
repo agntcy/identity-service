@@ -23,7 +23,7 @@ vi.mock('@/queries', () => ({
   useGetDevices: vi.fn()
 }));
 
-vi.mock('@cisco-eti/spark-design', () => ({
+vi.mock('@open-ui-kit/core', () => ({
   Checkbox: vi.fn(({children, disabled, checked, onChange, id, ...props}) =>
     React.createElement('input', {
       type: 'checkbox',

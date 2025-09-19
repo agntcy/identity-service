@@ -9,7 +9,7 @@ import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-render
 import {useAnalytics} from '@/hooks';
 import {useGetTenant} from '@/queries';
 import {PATHS} from '@/router/paths';
-import {Button} from '@cisco-eti/spark-design';
+import {Button} from '@open-ui-kit/core';
 import {PlusIcon} from 'lucide-react';
 import {useState} from 'react';
 import {useParams} from 'react-router-dom';

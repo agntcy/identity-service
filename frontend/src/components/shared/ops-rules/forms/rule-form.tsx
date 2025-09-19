@@ -6,7 +6,7 @@
 import {useFormContext} from 'react-hook-form';
 import {FormControl, FormField, FormItem, FormLabel} from '@/components/ui/form';
 import {Input} from '@/components/ui/input';
-import {Checkbox, IconButton, Skeleton} from '@cisco-eti/spark-design';
+import {Checkbox, IconButton, Skeleton} from '@open-ui-kit/core';
 import {TaskForm} from './task-form';
 import {RuleFormValues} from '@/schemas/rule-schema';
 import {Policy} from '@/types/api/policy';

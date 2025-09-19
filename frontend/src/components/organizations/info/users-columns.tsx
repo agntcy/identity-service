@@ -4,7 +4,7 @@
  */
 
 import {UserResponse} from '@/types/api/iam';
-import {GeneralSize, Tag} from '@cisco-eti/spark-design';
+import {GeneralSize, Tag} from '@open-ui-kit/core';
 import {MRT_ColumnDef} from 'material-react-table';
 
 export const UsersColumns = (): MRT_ColumnDef<UserResponse, any>[] => {

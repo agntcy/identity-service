@@ -37,7 +37,7 @@ vi.mock('react-router-dom', async (importOriginal) => {
 });
 
 // Mock Spark Design components
-vi.mock('@cisco-eti/spark-design', () => ({
+vi.mock('@open-ui-kit/core', () => ({
   Button: ({children, onClick, variant, sx, ...props}: any) => (
     <button onClick={onClick} data-testid="spark-button" data-variant={variant} style={sx} {...props}>
       {children}

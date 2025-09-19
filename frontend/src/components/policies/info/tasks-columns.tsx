@@ -8,7 +8,7 @@ import {useGetAgenticService} from '@/queries';
 import {PATHS} from '@/router/paths';
 import {Task} from '@/types/api/policy';
 import {Skeleton, Typography} from '@mui/material';
-import {GeneralSize, Link, Tag, TagStatus} from '@cisco-eti/spark-design';
+import {GeneralSize, Link, Tag, TagStatus} from '@open-ui-kit/core';
 import {MRT_ColumnDef} from 'material-react-table';
 import {generatePath} from 'react-router-dom';
 

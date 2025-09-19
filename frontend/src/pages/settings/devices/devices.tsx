@@ -10,7 +10,7 @@ import {useAnalytics} from '@/hooks';
 import {useAddDevice} from '@/mutations';
 import {PATHS} from '@/router/paths';
 import {Device} from '@/types/api/device';
-import {Button, toast} from '@cisco-eti/spark-design';
+import {Button, toast} from '@open-ui-kit/core';
 import {useQueryClient} from '@tanstack/react-query';
 import {PlusIcon} from 'lucide-react';
 import React, {useCallback, useMemo, useState} from 'react';

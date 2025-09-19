@@ -5,7 +5,7 @@
 
 import {Card, CardContent} from '@/components/ui/card';
 import {useStepper} from '../stepper';
-import {Typography} from '@cisco-eti/spark-design';
+import {Typography} from '@open-ui-kit/core';
 import {useMemo} from 'react';
 import {AgenticServiceFormValues} from '@/schemas/agentic-service-schema';
 import KeyValue, {KeyValuePair} from '@/components/ui/key-value';

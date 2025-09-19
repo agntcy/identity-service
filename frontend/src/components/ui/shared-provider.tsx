@@ -5,7 +5,7 @@
 
 import {ReactNode} from 'react';
 import {cn} from '@/lib/utils';
-import {Typography} from '@cisco-eti/spark-design';
+import {Typography} from '@open-ui-kit/core';
 import {Tooltip} from '@mui/material';
 import {Card} from '@/components/ui/card';
 

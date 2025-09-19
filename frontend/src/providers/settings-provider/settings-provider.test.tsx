@@ -27,7 +27,7 @@ vi.mock('zustand/react/shallow', () => ({
 }));
 
 // Mock toast
-vi.mock('@cisco-eti/spark-design', () => ({
+vi.mock('@open-ui-kit/core', () => ({
   toast: vi.fn()
 }));
 
@@ -39,7 +39,7 @@ vi.mock('@/components/ui/loading', () => ({
 const mockUseGetSession = vi.mocked(await import('@/queries')).useGetSession;
 const mockUseGetSettings = vi.mocked(await import('@/queries')).useGetSettings;
 const mockUseSettingsStore = vi.mocked(await import('@/store')).useSettingsStore;
-const mockToast = vi.mocked(await import('@cisco-eti/spark-design')).toast;
+const mockToast = vi.mocked(await import('@open-ui-kit/core')).toast;
 const mockUseShallow = vi.mocked(await import('zustand/react/shallow')).useShallow;
 
 // Test wrapper component

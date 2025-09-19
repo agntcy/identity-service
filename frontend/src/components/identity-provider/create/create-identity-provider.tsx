@@ -12,7 +12,7 @@ import {IdpType, IssuerSettings} from '@/types/api/settings';
 import {IdentityProvidersFormValues, IdentityProvidersSchema} from '@/schemas/identity-provider-schema';
 import {validateForm} from '@/lib/utils';
 import {useSetIdentityProvider} from '@/mutations';
-import {Button, toast} from '@cisco-eti/spark-design';
+import {Button, toast} from '@open-ui-kit/core';
 import {IdentityProviderForm} from './form/identity-provider-form';
 import {useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';

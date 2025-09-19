@@ -122,7 +122,7 @@ vi.mock('../steps/verification-results', () => ({
 }));
 
 // Mock external libraries
-vi.mock('@cisco-eti/spark-design', () => ({
+vi.mock('@open-ui-kit/core', () => ({
   Button: ({children, variant, onClick, type, loading, loadingPosition, disabled, className, sx}: any) => (
     <button
       data-testid={`button-${variant || 'default'}`}
@@ -218,7 +218,7 @@ import {useStepper} from '../stepper';
 import {useAnalytics} from '@/hooks';
 import {useVerifyBadge} from '@/mutations/badge';
 import {validateForm} from '@/lib/utils';
-import {toast} from '@cisco-eti/spark-design';
+import {toast} from '@open-ui-kit/core';
 import {jwtDecode} from 'jwt-decode';
 
 // Test data

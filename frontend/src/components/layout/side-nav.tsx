@@ -12,7 +12,7 @@ import {ChevronLeftIcon, ChevronRightIcon, LayoutDashboardIcon} from 'lucide-rea
 import OrganizationLogo from '@/assets/organization.svg?react';
 import {useAnalytics, useAuth} from '@/hooks';
 import {OrganizationsDrawer} from './organizations-drawer';
-import {OverflowTooltip, TooltipProps} from '@cisco-eti/spark-design';
+import {OverflowTooltip, TooltipProps} from '@open-ui-kit/core';
 import SettingsIcon from '@/assets/sidebar/settings.svg?react';
 import AgenticServicesLogo from '@/assets/sidebar/agentic-services.svg?react';
 import PoliciesLogo from '@/assets/sidebar/access-policies.svg?react';
