@@ -11,11 +11,6 @@ on:
   push:
     branches: [main]
 
-permissions:
-  id-token: read
-  contents: read
-  packages: read
-
 jobs:
   test:
     runs-on: ubuntu-latest
