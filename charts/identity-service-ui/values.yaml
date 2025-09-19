@@ -50,7 +50,14 @@ configmap:
   VITE_IAM_UI: ""
   VITE_IAM_API: ""
   VITE_IAM_OIDC_ISSUER: ""
-  VITE_IAM_MULTI_TENANT: ""
+
+  # Secondary OIDC provider defaults
+  VITE_OIDC_UI: ""
+  VITE_OIDC_CLIENT_ID: ""
+  VITE_OIDC_ISSUER: ""
+
+  # Multi-tenant and authentication mode
+  VITE_MULTI_TENANT: ""
 
   VITE_SEGMENT_ID: ""
   VITE_MAZE_ID: ""

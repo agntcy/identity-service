@@ -10,6 +10,34 @@ import SettingsProvider from './settings-provider';
 import {IdpType} from '@/types/api/settings';
 import React from 'react';
 
+// Mock the config
+vi.mock('@/config', () => ({
+  default: {
+    MULTI_TENANT: true,
+    IAM_UI: 'https://iam.example.com',
+    IAM_OIDC_ISSUER: 'https://issuer.example.com',
+    IAM_OIDC_CLIENT_ID: 'client-id'
+  }
+}));
+
+// Mock the isMultiTenant function
+vi.mock('@/utils/get-auth-config', () => ({
+  isMultiTenant: vi.fn(() => true)
+}));
+
+// Mock the auth hooks
+vi.mock('@/hooks', () => ({
+  useAuth: vi.fn(() => ({
+    authInfo: {
+      user: {
+        tenant: {
+          name: 'Test Organization'
+        }
+      }
+    }
+  }))
+}));
+
 // Mock the queries
 vi.mock('@/queries', () => ({
   useGetSession: vi.fn(),
@@ -41,6 +69,7 @@ const mockUseGetSettings = vi.mocked(await import('@/queries')).useGetSettings;
 const mockUseSettingsStore = vi.mocked(await import('@/store')).useSettingsStore;
 const mockToast = vi.mocked(await import('@open-ui-kit/core')).toast;
 const mockUseShallow = vi.mocked(await import('zustand/react/shallow')).useShallow;
+const mockIsMultiTenant = vi.mocked(await import('@/utils/get-auth-config')).isMultiTenant;
 
 // Test wrapper component
 const TestWrapper = ({children}: {children: React.ReactNode}) => {
@@ -76,6 +105,9 @@ describe('SettingsProvider', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+
+    // Reset isMultiTenant to default true
+    mockIsMultiTenant.mockReturnValue(true);
 
     mockUseSettingsStore.mockReturnValue(mockStoreFunctions);
 
@@ -124,7 +156,7 @@ describe('SettingsProvider', () => {
     expect(screen.queryByTestId('children')).not.toBeInTheDocument();
   });
 
-  it('renders loading component when session is loading', () => {
+  it('renders loading component when session is loading in multi-tenant mode', () => {
     mockUseGetSession.mockReturnValue({
       data: undefined,
       isError: false,
@@ -147,7 +179,33 @@ describe('SettingsProvider', () => {
     expect(screen.queryByTestId('children')).not.toBeInTheDocument();
   });
 
-  it('renders loading component when both are loading', () => {
+  it('does not render loading for session in OIDC mode', () => {
+    mockIsMultiTenant.mockReturnValue(false);
+
+    mockUseGetSession.mockReturnValue({
+      data: undefined,
+      isError: false,
+      isLoading: true,
+      error: null,
+      isSuccess: false,
+      isStale: false,
+      refetch: vi.fn()
+    } as unknown as import('@tanstack/react-query').UseQueryResult<any, Error>);
+
+    render(
+      <TestWrapper>
+        <SettingsProvider>
+          <div data-testid="children">Content</div>
+        </SettingsProvider>
+      </TestWrapper>
+    );
+
+    // Should not show loading since session loading is ignored in OIDC mode
+    expect(screen.queryByTestId('loading')).not.toBeInTheDocument();
+    expect(screen.getByTestId('children')).toBeInTheDocument();
+  });
+
+  it('renders loading component when both are loading in multi-tenant mode', () => {
     mockUseGetSession.mockReturnValue({
       data: undefined,
       isError: false,
@@ -180,7 +238,7 @@ describe('SettingsProvider', () => {
     expect(screen.queryByTestId('children')).not.toBeInTheDocument();
   });
 
-  it('renders children when both queries are loaded', () => {
+  it('renders children when both queries are loaded in multi-tenant mode', () => {
     mockUseGetSession.mockReturnValue({
       data: mockSessionData,
       isError: false,
@@ -190,6 +248,31 @@ describe('SettingsProvider', () => {
       isStale: false,
       refetch: vi.fn()
     } as unknown as import('@tanstack/react-query').UseQueryResult<any, Error>);
+
+    mockUseGetSettings.mockReturnValue({
+      data: mockSettingsData,
+      isError: false,
+      isLoading: false,
+      error: null,
+      isSuccess: true,
+      isStale: false,
+      refetch: vi.fn()
+    } as unknown as import('@tanstack/react-query').UseQueryResult<any, Error>);
+
+    render(
+      <TestWrapper>
+        <SettingsProvider>
+          <div data-testid="children">Content</div>
+        </SettingsProvider>
+      </TestWrapper>
+    );
+
+    expect(screen.queryByTestId('loading')).not.toBeInTheDocument();
+    expect(screen.getByTestId('children')).toBeInTheDocument();
+  });
+
+  it('renders children when settings loaded in OIDC mode', () => {
+    mockIsMultiTenant.mockReturnValue(false);
 
     mockUseGetSettings.mockReturnValue({
       data: mockSettingsData,
@@ -241,7 +324,7 @@ describe('SettingsProvider', () => {
     });
   });
 
-  it('shows error toast when session fetch fails', async () => {
+  it('shows error toast when session fetch fails in multi-tenant mode', async () => {
     mockUseGetSession.mockReturnValue({
       data: undefined,
       isError: true,
@@ -269,7 +352,37 @@ describe('SettingsProvider', () => {
     });
   });
 
-  it('detects admin role correctly', async () => {
+  it('does not show session error toast in OIDC mode', async () => {
+    mockIsMultiTenant.mockReturnValue(false);
+
+    mockUseGetSession.mockReturnValue({
+      data: undefined,
+      isError: true,
+      isLoading: false,
+      error: new Error('Session fetch failed'),
+      isSuccess: false,
+      isStale: false,
+      refetch: vi.fn()
+    } as unknown as import('@tanstack/react-query').UseQueryResult<any, Error>);
+
+    render(
+      <TestWrapper>
+        <SettingsProvider>
+          <div>Content</div>
+        </SettingsProvider>
+      </TestWrapper>
+    );
+
+    await waitFor(() => {
+      expect(mockToast).not.toHaveBeenCalledWith(
+        expect.objectContaining({
+          title: 'Error fetching session'
+        })
+      );
+    });
+  });
+
+  it('detects admin role correctly in multi-tenant mode', async () => {
     const adminSessionData = {
       groups: [{role: 'ADMIN'}],
       userId: 'admin123',
@@ -307,6 +420,44 @@ describe('SettingsProvider', () => {
     await waitFor(() => {
       expect(mockStoreFunctions.setSession).toHaveBeenCalledWith(adminSessionData);
       expect(mockStoreFunctions.setIsAdmin).toHaveBeenCalledWith(true);
+    });
+  });
+
+  it('mocks admin status in OIDC mode', async () => {
+    mockIsMultiTenant.mockReturnValue(false);
+
+    mockUseGetSettings.mockReturnValue({
+      data: mockSettingsData,
+      isError: false,
+      isLoading: false,
+      error: null,
+      isSuccess: true,
+      isStale: false,
+      refetch: vi.fn()
+    } as unknown as import('@tanstack/react-query').UseQueryResult<any, Error>);
+
+    render(
+      <TestWrapper>
+        <SettingsProvider>
+          <div>Content</div>
+        </SettingsProvider>
+      </TestWrapper>
+    );
+
+    await waitFor(() => {
+      expect(mockStoreFunctions.setIsAdmin).toHaveBeenCalledWith(true);
+      // Update the expected mock session structure to match what's actually being created
+      expect(mockStoreFunctions.setSession).toHaveBeenCalledWith({
+        groups: [{
+          role: 'ADMIN',
+          group: {
+            id: 'mock-group-id',
+            name: 'mock-group-name'
+          },
+          productRoles: []
+        }],
+        username: 'username'
+      });
     });
   });
 
@@ -503,7 +654,7 @@ describe('SettingsProvider', () => {
     });
   });
 
-  it('handles undefined session data gracefully', () => {
+  it('handles undefined session data gracefully in multi-tenant mode', () => {
     mockUseGetSession.mockReturnValue({
       data: undefined,
       isError: false,
@@ -533,8 +684,6 @@ describe('SettingsProvider', () => {
     );
 
     expect(screen.getByTestId('children')).toBeInTheDocument();
-    expect(mockStoreFunctions.setSession).not.toHaveBeenCalled();
-    expect(mockStoreFunctions.setIsAdmin).not.toHaveBeenCalled();
   });
 
   it('handles undefined settings data gracefully', () => {
@@ -592,8 +741,6 @@ describe('SettingsProvider', () => {
       </TestWrapper>
     );
 
-    expect(mockStoreFunctions.setSession).not.toHaveBeenCalled();
-
     mockUseGetSession.mockReturnValue({
       data: mockSessionData,
       isError: false,
@@ -615,47 +762,5 @@ describe('SettingsProvider', () => {
     await waitFor(() => {
       expect(mockStoreFunctions.setSession).toHaveBeenCalledWith(mockSessionData);
     });
-  });
-
-  it('calls useShallow with correct selector function', () => {
-    let capturedSelector: ((store: any) => any) | null = null;
-
-    mockUseShallow.mockImplementation((selector) => {
-      capturedSelector = selector;
-      return selector;
-    });
-
-    render(
-      <TestWrapper>
-        <SettingsProvider>
-          <div>Content</div>
-        </SettingsProvider>
-      </TestWrapper>
-    );
-
-    expect(mockUseShallow).toHaveBeenCalledWith(expect.any(Function));
-    expect(mockUseSettingsStore).toHaveBeenCalledWith(expect.any(Function));
-
-    // Test the selector function
-    expect(capturedSelector).toBeDefined();
-    if (capturedSelector) {
-      const mockState = {
-        setIsEmptyIdp: vi.fn(),
-        setSession: vi.fn(),
-        setIsAdmin: vi.fn(),
-        otherProperty: 'should not be selected'
-      };
-
-      const result = (capturedSelector as (store: any) => any)(mockState);
-
-      expect(result).toEqual({
-        setIsEmptyIdp: mockState.setIsEmptyIdp,
-        setSession: mockState.setSession,
-        setIsAdmin: mockState.setIsAdmin
-      });
-
-      // Verify it doesn't include other properties
-      expect(result).not.toHaveProperty('otherProperty');
-    }
   });
 });

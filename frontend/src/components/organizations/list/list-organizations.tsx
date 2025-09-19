@@ -67,7 +67,7 @@ export const ListOrganizations = () => {
   const deleteTenantMutation = useDeleteTenant({
     callbacks: {
       onSuccess: () => {
-        void logout({
+        void logout?.({
           revokeAccessToken: true,
           revokeRefreshToken: true,
           clearTokensBeforeRedirect: true

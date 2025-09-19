@@ -27,8 +27,16 @@ let mockIsTbacEnabled = true;
 
 vi.mock('@/config', () => ({
   default: {
-    IAM_MULTI_TENANT: true
+    MULTI_TENANT: true,
+    IAM_UI: 'https://iam.example.com',
+    IAM_OIDC_ISSUER: 'https://issuer.example.com',
+    IAM_OIDC_CLIENT_ID: 'client-id'
   }
+}));
+
+// Mock the isMultiTenant function
+vi.mock('@/utils/get-auth-config', () => ({
+  isMultiTenant: vi.fn(() => true)
 }));
 
 vi.mock('@/hooks', () => ({

@@ -17,7 +17,7 @@ import SettingsIcon from '@/assets/sidebar/settings.svg?react';
 import AgenticServicesLogo from '@/assets/sidebar/agentic-services.svg?react';
 import PoliciesLogo from '@/assets/sidebar/access-policies.svg?react';
 import VerifyIdentityLogo from '@/assets/sidebar/verify-identity.svg?react';
-import config from '@/config';
+import {isMultiTenant} from '@/utils/get-auth-config';
 import '@/styles/side-nav.css';
 
 interface SideNavLinkItem {
@@ -92,6 +92,8 @@ export const SideNav: React.FC<{
     return currentPathName.startsWith(link.href);
   });
 
+  const isMulti = isMultiTenant();
+
   return (
     <>
       <nav
@@ -99,7 +101,7 @@ export const SideNav: React.FC<{
         className="flex relative flex-col justify-between gap-1 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2 bg-[#EFF3FC] h-full side-bar pl-4"
       >
         <div>
-          {config.IAM_MULTI_TENANT && (
+          {isMulti && (
             <div className={cn('pr-4', isCollapsed && 'pr-4', isOrgOpen && 'pr-0')}>
               <SideNavLink
                 label={
@@ -158,7 +160,7 @@ export const SideNav: React.FC<{
           </IconButton>
         </div>
       </nav>
-      {config.IAM_MULTI_TENANT && (
+      {isMulti && (
         <OrganizationsDrawer isOpen={isOrgOpen} onChange={(value) => setIsOrgOpen(value)} isCollapsed={isCollapsed} />
       )}
     </>
