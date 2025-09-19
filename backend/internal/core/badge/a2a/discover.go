@@ -49,8 +49,6 @@ func (d *discoveryClient) Discover(
 	// Check if the well-known URL ends with .json, if not, append the default V3 suffix
 	if !wellKnownUrlRegex.MatchString(wellKnownUrlTrimmed) {
 		wellKnownUrl = wellKnownUrlTrimmed + wellKnownUrlSuffixV3
-	} else {
-		wellKnownUrl = wellKnownUrlTrimmed
 	}
 
 	log.Debug("Using well-known URL for agent discovery: ", wellKnownUrl)
