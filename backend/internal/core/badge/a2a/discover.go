@@ -20,6 +20,8 @@ const (
 	wellKnownUrlSuffixV3 = "/.well-known/agent-card.json"
 )
 
+var wellKnownUrlRegex = regexp.MustCompile(wellKnownMatcher)
+
 // The discoverClient interface defines the core methods for discovering a deployed A2A agent
 type DiscoveryClient interface {
 	Discover(
@@ -45,7 +47,6 @@ func (d *discoveryClient) Discover(
 	wellKnownUrlTrimmed := strings.TrimSuffix(wellKnownUrl, "/")
 
 	// Check if the well-known URL ends with .json, if not, append the default V3 suffix
-	var wellKnownUrlRegex = regexp.MustCompile(wellKnownMatcher)
 	if !wellKnownUrlRegex.MatchString(wellKnownUrl) {
 		wellKnownUrl = wellKnownUrlTrimmed + wellKnownUrlSuffixV3
 	} else {
