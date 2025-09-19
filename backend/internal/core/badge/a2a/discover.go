@@ -41,10 +41,15 @@ func (d *discoveryClient) Discover(
 	ctx context.Context,
 	wellKnownUrl string,
 ) (string, error) {
+	// Trim any trailing slashes from the well-known URL
+	wellKnownUrlTrimmed := strings.TrimSuffix(wellKnownUrl, "/")
+
 	// Check if the well-known URL ends with .json, if not, append the default V3 suffix
 	var wellKnownUrlRegex = regexp.MustCompile(wellKnownMatcher)
 	if !wellKnownUrlRegex.MatchString(wellKnownUrl) {
-		wellKnownUrl = strings.TrimSuffix(wellKnownUrl, "/") + wellKnownUrlSuffixV3
+		wellKnownUrl = wellKnownUrlTrimmed + wellKnownUrlSuffixV3
+	} else {
+		wellKnownUrl = wellKnownUrlTrimmed
 	}
 
 	log.Debug("Using well-known URL for agent discovery: ", wellKnownUrl)
