@@ -31,7 +31,7 @@ vi.mock('@mui/material', () => ({
   )
 }));
 
-vi.mock('@cisco-eti/spark-design', () => ({
+vi.mock('@open-ui-kit/core', () => ({
   Tooltip: ({children, title, placement}: any) => (
     <div data-testid="tooltip" data-title={title} data-placement={placement}>
       {children}

@@ -13,7 +13,7 @@ import {PATHS} from '@/router/paths';
 import {OrganizationFormValues, OrganizationSchema} from '@/schemas/organization-schema';
 import {TenantReponse} from '@/types/api/iam';
 import {zodResolver} from '@hookform/resolvers/zod';
-import {Button, toast, Typography} from '@cisco-eti/spark-design';
+import {Button, toast, Typography} from '@open-ui-kit/core';
 import {useCallback, useEffect} from 'react';
 import {useForm} from 'react-hook-form';
 import {Link, useNavigate} from 'react-router-dom';

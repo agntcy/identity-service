@@ -7,7 +7,7 @@ import type {ReactNode} from 'react';
 import React from 'react';
 import {LoaderRelative, Loading} from './loading';
 import {parseError} from '@/utils/api';
-import {EmptyState, EmptyStateProps} from '@cisco-eti/spark-design';
+import {EmptyState, EmptyStateProps} from '@open-ui-kit/core';
 import {cn} from '@/lib/utils';
 import {Card} from './card';
 import {PlusIcon, RefreshCwIcon} from 'lucide-react';

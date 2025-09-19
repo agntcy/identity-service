@@ -60,8 +60,8 @@ vi.mock('@/components/layout/footer', () => ({
 }));
 
 // Mock external dependencies
-vi.mock('@cisco-eti/spark-design', async () => {
-  const actual = await vi.importActual('@cisco-eti/spark-design');
+vi.mock('@open-ui-kit/core', async () => {
+  const actual = await vi.importActual('@open-ui-kit/core');
   return {
     ...actual,
     Link: ({children, href, openInNewTab, ...props}: any) => (

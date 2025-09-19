@@ -11,7 +11,7 @@ import {zodResolver} from '@hookform/resolvers/zod';
 import {z} from 'zod';
 import {Form} from '@/components/ui/form';
 import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from '@/components/ui/accordion';
-import {Button, toast, Typography} from '@cisco-eti/spark-design';
+import {Button, toast, Typography} from '@open-ui-kit/core';
 import {validateForm} from '@/lib/utils';
 import {PolicyForm} from './steps/policy-form';
 import {PolicyFormValues, PolicySchema} from '@/schemas/policy-schema';

@@ -16,7 +16,7 @@ vi.mock('virtual:pwa-register/react', () => ({
 }));
 
 // Mock toast
-vi.mock('@cisco-eti/spark-design', () => ({
+vi.mock('@open-ui-kit/core', () => ({
   toast: vi.fn()
 }));
 
@@ -31,7 +31,7 @@ Object.defineProperty(navigator, 'onLine', {
 
 // Get mocked functions after the mocks are set up
 const mockUseRegisterSW = vi.mocked(await import('virtual:pwa-register/react')).useRegisterSW;
-const mockToast = vi.mocked(await import('@cisco-eti/spark-design')).toast;
+const mockToast = vi.mocked(await import('@open-ui-kit/core')).toast;
 
 describe('PwaProvider', () => {
   const mockUpdateServiceWorker = vi.fn();

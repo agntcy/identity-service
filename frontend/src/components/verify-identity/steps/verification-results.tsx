@@ -20,7 +20,7 @@ import {
   TagStatus,
   toast,
   Typography
-} from '@cisco-eti/spark-design';
+} from '@open-ui-kit/core';
 import {VerificationResult} from '@/types/api/badge';
 import KeyValue, {KeyValuePair} from '@/components/ui/key-value';
 import {useCallback, useMemo} from 'react';

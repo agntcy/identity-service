@@ -6,7 +6,7 @@
 
 import {useCallback, useMemo, useState} from 'react';
 import {ConditionalQueryRenderer} from '../../ui/conditional-query-renderer';
-import {Box, EmptyState, Link, MenuItem, SelectNodeType, Table, toast, Typography} from '@cisco-eti/spark-design';
+import {Box, EmptyState, Link, MenuItem, SelectNodeType, Table, toast, Typography} from '@open-ui-kit/core';
 import {useGetAgenticServices, useGetAgenticServiceTotalCount} from '@/queries';
 import {MRT_PaginationState, MRT_SortingState} from 'material-react-table';
 import {AgenticServiceColumns} from './agentic-services-columns';

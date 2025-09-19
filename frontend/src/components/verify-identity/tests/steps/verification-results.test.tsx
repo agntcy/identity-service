@@ -20,7 +20,7 @@ vi.mock('@/hooks', () => ({
   useAnalytics: vi.fn()
 }));
 
-vi.mock('@cisco-eti/spark-design', () => ({
+vi.mock('@open-ui-kit/core', () => ({
   Accordion: vi.fn(({children, title}: {children?: React.ReactNode; title?: string; subTitle?: React.ReactNode}) =>
     React.createElement('div', {'data-testid': 'accordion', 'data-title': title}, children)
   ),
@@ -138,7 +138,7 @@ vi.mock('@/constants/pagination', () => ({
 // Import mocked dependencies
 import {useStepper} from '../../stepper';
 import {useAnalytics} from '@/hooks';
-import {toast} from '@cisco-eti/spark-design';
+import {toast} from '@open-ui-kit/core';
 
 const mockUseStepper = vi.mocked(useStepper);
 const mockUseAnalytics = vi.mocked(useAnalytics);

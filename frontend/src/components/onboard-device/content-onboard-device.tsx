@@ -6,7 +6,7 @@
 import {Button, Typography} from '@mui/material';
 import {Card} from '../ui/card';
 import {BellIcon, BellOffIcon, RefreshCcwIcon} from 'lucide-react';
-import {GeneralSize, Tag, TagStatus} from '@cisco-eti/spark-design';
+import {GeneralSize, Tag, TagStatus} from '@open-ui-kit/core';
 import {useNotificationUtils} from '@/providers/notification-utils-provider/notification-utils-provider';
 
 export const ContentOnBoardDevice = ({id}: {id?: string}) => {

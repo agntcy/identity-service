@@ -15,7 +15,7 @@ import {
 import {arrayBufferToBase64} from '@/lib/utils';
 import {useRegisterDevice} from '@/mutations';
 import {usePwa} from '@/providers/pwa-provider/pwa-provider';
-import {toast} from '@cisco-eti/spark-design';
+import {toast} from '@open-ui-kit/core';
 import getDeviceInfo from '@/lib/device';
 import {notificationUtils} from '@/utils/notification-store';
 

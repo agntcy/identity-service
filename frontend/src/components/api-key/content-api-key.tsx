@@ -6,7 +6,7 @@
 import {ConditionalQueryRenderer} from '@/components/ui/conditional-query-renderer';
 import {useSetApiKey} from '@/mutations';
 import {useGetSettings} from '@/queries';
-import {CardContent, CopyButton, toast, Typography} from '@cisco-eti/spark-design';
+import {CardContent, CopyButton, toast, Typography} from '@open-ui-kit/core';
 import {EllipsisVerticalIcon, RefreshCcwIcon} from 'lucide-react';
 import React, {useCallback, useState} from 'react';
 import {ConfirmModal} from '../ui/confirm-modal';

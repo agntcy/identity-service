@@ -28,7 +28,7 @@ vi.mock('@mui/material', () => ({
   )
 }));
 
-vi.mock('@cisco-eti/spark-design', () => ({
+vi.mock('@open-ui-kit/core', () => ({
   Modal: ({children, maxWidth, fullWidth, open, ...props}: any) => (
     <div data-testid="modal" data-max-width={maxWidth} data-full-width={fullWidth} data-open={open} {...props}>
       {children}
@@ -90,7 +90,7 @@ vi.mock('@/hooks', () => ({
 
 // Import mocked modules
 import {useForm} from 'react-hook-form';
-import {toast} from '@cisco-eti/spark-design';
+import {toast} from '@open-ui-kit/core';
 import {useInviteUser} from '@/mutations';
 import {validateForm} from '@/lib/utils';
 import {useGetGroupsTenant} from '@/queries';

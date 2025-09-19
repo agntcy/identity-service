@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {Button, Link, Typography} from '@cisco-eti/spark-design';
+import {Button, Link, Typography} from '@open-ui-kit/core';
 import EmptyState from '@/assets/empty-state.svg?react';
 import {CheckIcon, PlusIcon} from 'lucide-react';
 import ScrollShadowWrapper from '@/components/ui/scroll-shadow-wrapper';

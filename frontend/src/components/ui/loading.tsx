@@ -4,7 +4,7 @@
  */
 
 import {cn} from '@/lib/utils';
-import {Spinner, SpinnerProps} from '@cisco-eti/spark-design';
+import {Spinner, SpinnerProps} from '@open-ui-kit/core';
 
 export interface LoadingProps {
   classNameContainer?: React.CSSProperties;

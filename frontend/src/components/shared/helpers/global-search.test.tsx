@@ -77,7 +77,7 @@ vi.mock('../agentic-services/agentic-service-type', () => ({
 }));
 
 // Mock Spark Design components
-vi.mock('@cisco-eti/spark-design', () => ({
+vi.mock('@open-ui-kit/core', () => ({
   GeneralSize: {
     Small: 'small'
   },

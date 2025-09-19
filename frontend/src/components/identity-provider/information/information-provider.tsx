@@ -5,7 +5,7 @@
 
 import {Card, CardContent} from '@/components/ui/card';
 import {ExternalLinkIcon} from 'lucide-react';
-import {Link, Typography} from '@cisco-eti/spark-design';
+import {Link, Typography} from '@open-ui-kit/core';
 import {useMemo} from 'react';
 import {IdpType, IssuerSettings} from '@/types/api/settings';
 import KeyValue, {KeyValuePair} from '@/components/ui/key-value';

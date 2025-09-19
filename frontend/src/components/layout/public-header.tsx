@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {Button, Header} from '@cisco-eti/spark-design';
+import {Button, Header} from '@open-ui-kit/core';
 import {Link} from 'react-router-dom';
 import {useAuth} from '@/hooks';
 import {ReactNode} from 'react';

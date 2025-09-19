@@ -149,7 +149,7 @@ vi.mock('lucide-react', () => ({
   )
 }));
 
-vi.mock('@cisco-eti/spark-design', () => ({
+vi.mock('@open-ui-kit/core', () => ({
   Button: ({children, startIcon, variant, color, onClick, sx, loading, loadingPosition, ...props}: any) => (
     <button
       data-testid="spark-button"
@@ -181,7 +181,7 @@ const mockUseDeleteAgenticService = vi.mocked(useDeleteAgenticService);
 const mockUseGetAgenticService = vi.mocked(useGetAgenticService);
 const mockUseParams = vi.mocked(await import('react-router-dom')).useParams;
 const mockUseShallow = vi.mocked(await import('zustand/react/shallow')).useShallow;
-const mockToastImport = vi.mocked(await import('@cisco-eti/spark-design')).toast;
+const mockToastImport = vi.mocked(await import('@open-ui-kit/core')).toast;
 const mockUseNavigate = vi.mocked(await import('react-router-dom')).useNavigate;
 const mockGeneratePath = vi.mocked(await import('react-router-dom')).generatePath;
 

@@ -115,7 +115,7 @@ vi.mock('lucide-react', () => ({
   )
 }));
 
-vi.mock('@cisco-eti/spark-design', () => ({
+vi.mock('@open-ui-kit/core', () => ({
   Button: ({children, startIcon, variant, sx, ...props}: any) => (
     <button data-testid="spark-button" data-variant={variant} style={sx} {...props}>
       {startIcon}

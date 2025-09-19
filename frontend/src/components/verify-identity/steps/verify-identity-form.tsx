@@ -7,7 +7,7 @@ import {Card, CardContent} from '@/components/ui/card';
 import {useFormContext} from 'react-hook-form';
 import {FormControl, FormField, FormItem, FormLabel} from '@/components/ui/form';
 import {useCallback, useEffect} from 'react';
-import {Divider, toast, Typography} from '@cisco-eti/spark-design';
+import {Divider, toast, Typography} from '@open-ui-kit/core';
 import {FileUpload} from '@/components/ui/file-upload';
 import {VerifyIdentityFormValues} from '@/schemas/verify-identity-schema';
 import {Textarea} from '@/components/ui/textarea';

@@ -10,7 +10,7 @@ import {zodResolver} from '@hookform/resolvers/zod';
 import {z} from 'zod';
 import {Form} from '@/components/ui/form';
 import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from '@/components/ui/accordion';
-import {Button, toast, Typography} from '@cisco-eti/spark-design';
+import {Button, toast, Typography} from '@open-ui-kit/core';
 import {AgenticServicForm} from './steps/agentic-service-form';
 import {ConfirmInfo} from './steps/confirm-info';
 import {AgenticServiceFormValues, AgenticServiceSchema} from '@/schemas/agentic-service-schema';

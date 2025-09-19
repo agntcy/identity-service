@@ -14,7 +14,7 @@ import {
   ModalSubtitle,
   ModalTitle,
   Typography
-} from '@cisco-eti/spark-design';
+} from '@open-ui-kit/core';
 import QRCode from 'react-qr-code';
 
 interface QRCodeModalProps extends Omit<ModalProps, 'title' | 'subtitle'> {

@@ -9,7 +9,7 @@ import {ConfirmModal} from '@/components/ui/confirm-modal';
 import {useAnalytics} from '@/hooks';
 import {useCreateTenant} from '@/mutations';
 import {PATHS} from '@/router/paths';
-import {Button, toast} from '@cisco-eti/spark-design';
+import {Button, toast} from '@open-ui-kit/core';
 import {PlusIcon} from 'lucide-react';
 import {useCallback, useState} from 'react';
 import {useOutletContext} from 'react-router-dom';

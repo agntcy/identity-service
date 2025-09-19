@@ -20,7 +20,7 @@ vi.mock('zustand/react/shallow', () => ({
 }));
 
 // Mock SparkThemeProvider
-vi.mock('@cisco-eti/spark-design', () => ({
+vi.mock('@open-ui-kit/core', () => ({
   ThemeProvider: vi.fn(({children, isDarkMode}) =>
     React.createElement('div', {'data-testid': 'spark-theme-provider', 'data-dark-mode': isDarkMode}, children)
   )
@@ -28,7 +28,7 @@ vi.mock('@cisco-eti/spark-design', () => ({
 
 const mockUseThemeStore = vi.mocked(await import('@/store')).useThemeStore;
 const mockUseShallow = vi.mocked(await import('zustand/react/shallow')).useShallow;
-const mockSparkThemeProvider = vi.mocked(await import('@cisco-eti/spark-design')).ThemeProvider;
+const mockSparkThemeProvider = vi.mocked(await import('@open-ui-kit/core')).ThemeProvider;
 
 describe('ThemeProvider', () => {
   const createMockState = (isDarkMode: boolean) => ({

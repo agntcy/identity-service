@@ -7,7 +7,7 @@
 import {App, AppType} from '@/types/api/app';
 import {validateForm} from '@/lib/utils';
 import {Button} from '@mui/material';
-import {Modal, ModalActions, ModalContent, ModalProps, ModalTitle, toast} from '@cisco-eti/spark-design';
+import {Modal, ModalActions, ModalContent, ModalProps, ModalTitle, toast} from '@open-ui-kit/core';
 import {BadgeFormValues, BadgeSchema} from '@/schemas/badge-schema';
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';

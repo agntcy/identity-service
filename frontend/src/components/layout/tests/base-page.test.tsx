@@ -19,7 +19,7 @@ vi.mock('../ui/scroll-shadow-wrapper', () => ({
   default: ({children}: any) => <div data-testid="scroll-shadow-wrapper">{children}</div>
 }));
 
-vi.mock('@cisco-eti/spark-design', () => ({
+vi.mock('@open-ui-kit/core', () => ({
   Breadcrumbs: ({items}: any) => (
     <div data-testid="breadcrumbs">
       {items?.map((item: {label: any; text: any}, idx: React.Key | null | undefined) => (

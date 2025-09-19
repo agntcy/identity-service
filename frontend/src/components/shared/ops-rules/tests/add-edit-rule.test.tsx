@@ -14,7 +14,7 @@ import {AddEditRule} from '../add-edit-rule';
 import {useCreateRule, useUpdateRule} from '@/mutations';
 import {useAnalytics} from '@/hooks';
 import {validateForm} from '@/lib/utils';
-import {toast} from '@cisco-eti/spark-design';
+import {toast} from '@open-ui-kit/core';
 import {Policy, Rule, RuleAction} from '@/types/api/policy';
 
 // Mock dependencies
@@ -54,7 +54,7 @@ vi.mock('@/schemas/rule-schema', () => ({
   RuleFormValues: {}
 }));
 
-vi.mock('@cisco-eti/spark-design', () => ({
+vi.mock('@open-ui-kit/core', () => ({
   Button: vi.fn(({children, onClick, type, disabled, loading, variant, sx, loadingPosition, ...props}) =>
     React.createElement(
       'button',

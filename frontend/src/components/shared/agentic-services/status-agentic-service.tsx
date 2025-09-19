@@ -4,7 +4,7 @@
  */
 
 import {AppStatus} from '@/types/api/app';
-import {Badge, Typography} from '@cisco-eti/spark-design';
+import {Badge, Typography} from '@open-ui-kit/core';
 
 export const StatusAgenticService = ({status}: {status?: AppStatus}) => {
   if (status === AppStatus.APP_STATUS_ACTIVE) {

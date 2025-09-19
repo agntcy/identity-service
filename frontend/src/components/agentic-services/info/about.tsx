@@ -4,7 +4,7 @@
  */
 
 import {Card, CardContent} from '@/components/ui/card';
-import {CopyButton, IconButton, toast, Typography} from '@cisco-eti/spark-design';
+import {CopyButton, IconButton, toast, Typography} from '@open-ui-kit/core';
 import {useCallback, useMemo, useState} from 'react';
 import {App} from '@/types/api/app';
 import KeyValue, {KeyValuePair} from '@/components/ui/key-value';

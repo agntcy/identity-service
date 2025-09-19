@@ -7,7 +7,7 @@ import {ConfirmModal} from '@/components/ui/confirm-modal';
 import {useAnalytics} from '@/hooks';
 import {useDeleteRule} from '@/mutations';
 import {Policy, Rule} from '@/types/api/policy';
-import {toast} from '@cisco-eti/spark-design';
+import {toast} from '@open-ui-kit/core';
 import {useCallback} from 'react';
 
 interface DeleteRuleProps {
