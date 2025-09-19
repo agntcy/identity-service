@@ -88,12 +88,14 @@ In order to use `TBAC` effectively, you need to follow the following steps:
 
 1. **Create the Agentic Services and issue badges for them.**
 
-- Before you can define `TBAC` policies, you need to create your Agentic Services and issue badges for them. This process involves registering your services and ensuring they are discoverable within the **Agent Identity Service** (including localhost CLI). For detailed instructions on creating Agentic Services, refer to the [Agentic Services Documentation](/docs/agentic-service).
+- Before you can define `TBAC` policies, you need to create your Agentic Services and issue badges for them.
+  This process involves registering your services and ensuring they are discoverable within the **Agent Identity Service** (including localhost CLI).
+  For detailed instructions on creating Agentic Services, refer to the [Agentic Services Documentation](/docs/agentic-service).
 
-:::tip[NOTE]
+  :::tip[NOTE]
 
-The tasks available for `TBAC` are automatically discovered from the Agentic Services when you issue the badge.
-:::
+  The tasks available for `TBAC` are automatically discovered from the Agentic Services when you issue the badge.
+  :::
 
 2. **Define the `TBAC` policies and rules for your Agentic Services.**
 
