@@ -12,9 +12,9 @@ on:
     branches: [main]
 
 permissions:
-  id-token: write
+  id-token: read
   contents: read
-  packages: write
+  packages: read
 
 jobs:
   test:
