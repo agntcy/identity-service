@@ -47,7 +47,7 @@ func (d *discoveryClient) Discover(
 	wellKnownUrlTrimmed := strings.TrimSuffix(wellKnownUrl, "/")
 
 	// Check if the well-known URL ends with .json, if not, append the default V3 suffix
-	if !wellKnownUrlRegex.MatchString(wellKnownUrl) {
+	if !wellKnownUrlRegex.MatchString(wellKnownUrlTrimmed) {
 		wellKnownUrl = wellKnownUrlTrimmed + wellKnownUrlSuffixV3
 	} else {
 		wellKnownUrl = wellKnownUrlTrimmed
