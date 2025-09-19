@@ -3,11 +3,6 @@
 
 FROM node:22-alpine AS build
 
-# set NPM_TOKEN as an ENV var
-ARG NPM_TOKEN
-
-ENV NPM_TOKEN=${NPM_TOKEN}
-
 # Install packages
 RUN apk add --update \
   libpng-dev \
@@ -21,8 +16,6 @@ WORKDIR /home/web
 
 # Copy src
 COPY ./frontend .
-
-RUN touch .env && echo "NPM_TOKEN=${NPM_TOKEN}" >> .env
 
 # Install libs
 RUN yarn install
@@ -54,7 +47,7 @@ RUN mkdir ./nginx/logs && \
 RUN sed -i 's/<script id="vite-plugin-pwa:inline-sw">/<script id="vite-plugin-pwa:inline-sw" nonce="c28133ca-0587-459b-9d44-7015cde0ef83">/g' ./dist/index.html
 
 # Add SSI vars
-RUN sed -i 's/<head>/<head>\<script nonce="111dd4a0-4c4e-43a9-8eb4-6446ad2e10c7" language="javascript"\>window.apiUrl=`\<!--#echo var="apiUrl"--\>`;window.logLevel=`\<!--#echo var="logLevel"--\>`;window.segmentId=`\<!--#echo var="segmentId"--\>`;window.iamProductId=`\<!--#echo var="iamProductId"--\>`;window.iamUi=`\<!--#echo var="iamUi"--\>`;window.iamApi=`\<!--#echo var="iamApi"--\>`;window.iamOidcClientId=`\<!--#echo var="iamOidcClientId"--\>`;window.iamOidcIssuer=`\<!--#echo var="iamOidcIssuer"--\>`;window.docsUrl=`\<!--#echo var="docsUrl"--\>`;window.mazeId=`\<!--#echo var="mazeId"--\>`;window.iamMultiTenant=`\<!--#echo var="iamMultiTenant"--\>`;window.appBaseName=`\<!--#echo var="appBaseName"--\>`;<\/script>/g' ./dist/index.html
+RUN sed -i 's/<head>/<head>\<script nonce="111dd4a0-4c4e-43a9-8eb4-6446ad2e10c7" language="javascript"\>window.apiUrl=`\<!--#echo var="apiUrl"--\>`;window.logLevel=`\<!--#echo var="logLevel"--\>`;window.segmentId=`\<!--#echo var="segmentId"--\>`;window.iamProductId=`\<!--#echo var="iamProductId"--\>`;window.iamUi=`\<!--#echo var="iamUi"--\>`;window.iamApi=`\<!--#echo var="iamApi"--\>`;window.iamOidcClientId=`\<!--#echo var="iamOidcClientId"--\>`;window.iamOidcIssuer=`\<!--#echo var="iamOidcIssuer"--\>`;window.oidcUi=`\<!--#echo var="oidcUi"--\>`;window.oidcClientId=`\<!--#echo var="oidcClientId"--\>`;window.oidcIssuer=`\<!--#echo var="oidcIssuer"--\>`;window.docsUrl=`\<!--#echo var="docsUrl"--\>`;window.mazeId=`\<!--#echo var="mazeId"--\>`;window.multiTenant=`\<!--#echo var="multiTenant"--\>`;window.appBaseName=`\<!--#echo var="appBaseName"--\>`;<\/script>/g' ./dist/index.html
 
 # Set non root user
 USER web

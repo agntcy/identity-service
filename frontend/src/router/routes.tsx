@@ -15,7 +15,7 @@ import {Loading} from '@/components/ui/loading';
 import {useSettingsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
 import {useWindowSize} from '@/hooks';
-import config from '@/config';
+import {isMultiTenant} from '@/utils/get-auth-config';
 
 // Components
 const Layout = React.lazy(() => import('@/components/layout/layout'));
@@ -140,6 +140,8 @@ export const useRoutes = () => {
   );
 
   const {isMobile} = useWindowSize();
+
+  const isMulti = isMultiTenant();
 
   const routes = useMemo<Route[]>(() => {
     return [
@@ -367,7 +369,7 @@ export const useRoutes = () => {
           },
           {
             path: PATHS.settings.organizationsAndUsers.base,
-            disabled: !config.IAM_MULTI_TENANT,
+            disabled: !isMulti,
             children: [
               {
                 index: true,
@@ -408,7 +410,7 @@ export const useRoutes = () => {
         ]
       }
     ];
-  }, [isAdmin, isEmptyIdp, isMobile]);
+  }, [isAdmin, isEmptyIdp, isMobile, isMulti]);
 
   const removeDisabledRoutes = useCallback((routes: Route[]): Route[] => {
     return routes

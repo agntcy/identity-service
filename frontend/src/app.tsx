@@ -7,7 +7,6 @@ import {ErrorBoundary} from 'react-error-boundary';
 import {HelmetProvider} from 'react-helmet-async';
 import {Router} from './router/router';
 import {Toaster} from '@open-ui-kit/core';
-import AuthProvider from './providers/auth-provider/auth-provider';
 import {ThemeProvider} from './providers/theme-provider/theme-provider';
 import {ApiProvider} from './providers/api-provider/api-provider';
 import {QueryProvider} from './providers/query-provider/query-provider';
@@ -23,6 +22,7 @@ import {Manifest} from './components/shared/manifest/manifest';
 import {NotificationUtilsProvider} from './providers/notification-utils-provider/notification-utils-provider';
 import {ErrorPageBoundary} from './components/router/error-page-boundary';
 import {Maze} from './components/shared/maze/maze';
+import AuthProvider from './providers/auth-provider/auth-provider';
 
 const App = () => {
   const {isMobile} = useWindowSize();

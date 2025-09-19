@@ -4,12 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import config from '@/config';
 import {PATHS} from '@/router/paths';
+import {isMultiTenant} from '@/utils/get-auth-config';
 import {useMemo} from 'react';
 import {Outlet} from 'react-router-dom';
 
 const SettingsBase: React.FC = () => {
+  const isMulti = isMultiTenant();
+
   const subNav = useMemo(() => {
     return [
       {
@@ -25,7 +27,7 @@ const SettingsBase: React.FC = () => {
         label: 'Devices',
         href: PATHS.settings.devices.base
       },
-      ...(config.IAM_MULTI_TENANT
+      ...(isMulti
         ? [
             {
               label: 'Organizations & Users',
@@ -34,7 +36,7 @@ const SettingsBase: React.FC = () => {
           ]
         : [])
     ];
-  }, []);
+  }, [isMulti]);
 
   return <Outlet context={{subNav}} />;
 };

@@ -5,6 +5,15 @@
 
 import {AccessToken, IDToken, RefreshToken, OktaAuth, SignoutOptions, OktaAuthOptions} from '@okta/okta-auth-js';
 
+export enum Idp {
+  Google = 'Google',
+  Github = 'Github',
+  LinkedIn = 'LinkedIn',
+  Cisco = 'Cisco',
+  SecurityCloud = 'SecurityCloud',
+  AppD = 'AppD'
+}
+
 export type OnAuthRequiredFunction = (oktaAuth: OktaAuth | undefined) => Promise<void> | void;
 export type OnAuthResumeFunction = () => void;
 
@@ -13,28 +22,46 @@ export type UserAuthInfo = {
   last_name?: string;
 };
 
-export interface Tenant {
-  id?: string;
-  name?: string;
+export type AuthConfigCommon = {
+  oktaIssuer: string;
+  oktaClient: string;
+  configOptions?: AuthConfigOptions;
+};
+
+export interface AuthContextMEMORY {
+  user?: User;
+  isAuthenticated?: boolean;
+  logout?: () => void;
+  login?: ({username, password}: {username: string; password: string}) => void;
 }
 
 export interface User {
   username?: string;
   name?: string;
   tenant?: Tenant;
+  /**
+   * @deprecated The role object would be depreceate in favour of {@link User.productRole}
+   */
+  role?: string;
   productRole?: string;
   allProductRoles?: string[];
   region?: string;
   isCustomerSupport?: boolean;
 }
 
-export interface AuthConfig {
-  oktaIssuer: string;
-  oktaClient: string;
+export interface Tenant {
+  id?: string;
+  name?: string;
+}
+
+export interface AuthConfigIAM extends AuthConfigCommon {
   iamUI: string;
   iamApi: string;
   productId: string;
-  configOptions?: AuthConfigOptions;
+}
+
+export interface AuthConfigOIDC extends AuthConfigCommon {
+  oidcUi: string;
 }
 
 export interface AuthConfigOptions extends Omit<OktaAuthOptions, 'issuer' | 'clientId' | 'tokenManager' | 'services'> {
@@ -55,16 +82,39 @@ export interface AuthInfo {
   user?: User;
 }
 
-export interface AuthContextProps {
-  authConfig: AuthConfig;
-  oktaInstance: OktaAuth;
-  authInfo?: AuthInfo;
-  loading: boolean;
-  login: () => void;
-  register: (params: {registerUrl: string} | void) => void;
-  logout: (logoutOptions?: SignoutOptions) => Promise<void>;
-  tokenExpiredHttpHandler: () => Promise<AuthInfo | undefined>;
+export interface AuthContextCommon {
+  authInfo?: AuthInfo | null;
+  loading?: boolean;
+  login?: () => void;
+  logout?: (params: SignoutOptions | void) => void;
+  tokenExpiredHttpHandler?: () => Promise<AuthInfo | undefined>;
+}
+
+export interface AuthContextIAM extends AuthContextCommon {
+  oktaInstance?: OktaAuth;
+  authConfig?: AuthConfigIAM;
+  register?: () => void;
   switchTenant?: (tenant?: string | void) => void;
+  _onAuthRequired?: OnAuthRequiredFunction;
+}
+
+export interface AuthContextOIDC extends AuthContextCommon {
+  oktaInstance?: OktaAuth;
+  authConfig?: AuthConfigOIDC;
+  register?: (params: RegisterOIDCFunction | void) => void;
+  _onAuthRequired?: OnAuthRequiredFunction;
+}
+
+export interface RegisterOIDCFunction {
+  registerUrl?: string;
+}
+
+export interface LoginToIAMTenantFunction {
+  iamUI: string;
+  productId: string;
+  tenantId: string;
+  redirectUri?: string;
+  startWithIdp?: Idp;
 }
 
 export interface ErrorProps {
@@ -86,10 +136,16 @@ export interface SecureRouteProps {
   errorComponent?: React.FC<{error: Error}>;
 }
 
-export interface AuthProvidersProps {
-  authConfig?: AuthConfig;
+export interface AuthProvidersPropsOIDC {
+  authConfig: AuthConfigOIDC;
   loadingComponent?: React.ReactNode | React.FC;
   errorComponent?: React.FC<{error: Error}>;
-  children: React.ReactNode;
+  onAuthRequired?: OnAuthRequiredFunction;
+}
+
+export interface AuthProvidersPropsIAM {
+  authConfig: AuthConfigIAM;
+  loadingComponent?: React.ReactNode | React.FC;
+  errorComponent?: React.FC<{error: Error}>;
   onAuthRequired?: OnAuthRequiredFunction;
 }

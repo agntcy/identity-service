@@ -15,10 +15,13 @@ declare global {
     iamApi?: string;
     iamOidcClientId?: string;
     iamOidcIssuer?: string;
+    oidcUi?: string;
+    oidcClientId?: string;
+    oidcIssuer?: string;
     segmentId?: string;
     docsUrl?: string;
     mazeId?: string;
-    iamMultiTenant?: boolean;
+    multiTenant?: boolean;
     appBaseName?: string;
     CookieConsent: typeof CookieConsentVanilla;
   }
@@ -60,6 +63,21 @@ export default {
     : typeof window !== 'undefined'
       ? window.iamOidcIssuer
       : undefined,
+  OIDC_UI: isEnvSet(import.meta.env.VITE_OIDC_UI)
+    ? import.meta.env.VITE_OIDC_UI
+    : typeof window !== 'undefined'
+      ? window.oidcUi
+      : undefined,
+  OIDC_CLIENT_ID: isEnvSet(import.meta.env.VITE_OIDC_CLIENT_ID)
+    ? import.meta.env.VITE_OIDC_CLIENT_ID
+    : typeof window !== 'undefined'
+      ? window.oidcClientId
+      : undefined,
+  OIDC_ISSUER: isEnvSet(import.meta.env.VITE_OIDC_ISSUER)
+    ? import.meta.env.VITE_OIDC_ISSUER
+    : typeof window !== 'undefined'
+      ? window.oidcIssuer
+      : undefined,
   DOCS_URL: isEnvSet(import.meta.env.VITE_DOCS_URL)
     ? import.meta.env.VITE_DOCS_URL
     : typeof window !== 'undefined'
@@ -75,10 +93,10 @@ export default {
     : typeof window !== 'undefined'
       ? window.mazeId
       : undefined,
-  IAM_MULTI_TENANT: isEnvSet(import.meta.env.VITE_IAM_MULTI_TENANT)
-    ? import.meta.env.VITE_IAM_MULTI_TENANT === 'true'
+  MULTI_TENANT: isEnvSet(import.meta.env.VITE_MULTI_TENANT)
+    ? import.meta.env.VITE_MULTI_TENANT === 'true'
     : typeof window !== 'undefined'
-      ? (window.iamMultiTenant ?? true)
+      ? (window.multiTenant ?? true)
       : true,
   APP_BASE_NAME: isEnvSet(import.meta.env.VITE_APP_BASE_NAME)
     ? import.meta.env.VITE_APP_BASE_NAME

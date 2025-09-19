@@ -7,7 +7,7 @@ This repository contains all components of the Agent Identity Service UI - a Rea
 - **Framework**: React 18 with TypeScript
 - **Build Tool**: Vite
 - **UI Libraries**:
-  - Outshift Spark Design
+  - Open UI Kit Core
   - Material-UI (MUI)
   - Radix UI components
   - Tailwind CSS
@@ -31,31 +31,17 @@ This repository contains all components of the Agent Identity Service UI - a Rea
 - Node.js >= 20
 - Yarn (configured as package manager)
 - NVM (Node Version Manager)
-- Access to GitHub Packages Registry for Spark Design library
 
-## 🔐 Authentication Setup for Spark Design Library
+## � UI Component Library
 
-**Note**: This package is hosted on GitHub Packages Registry and requires authentication.
+This project uses [Open UI Kit Core](https://www.npmjs.com/package/@open-ui-kit/core) - a modern, accessible component library available on npm.
 
-To install this library, you'll need to authenticate with GitHub Packages using a Personal Access Token (PAT):
-
-### Step 1: Create a Personal Access Token
-
-1. Go to [GitHub Settings > Developer settings > Personal access tokens](https://github.com/settings/tokens)
-2. Create a new token with **packages:read** permission
-3. Copy and securely store the generated token
-
-### Step 2: Configure NPM Authentication
+**Installation**: The Open UI Kit Core package is publicly available and will be installed automatically with the project dependencies.
 
 ```bash
-npm login --registry=https://npm.pkg.github.com --scope=@cisco-eti
+# Installed automatically with project dependencies
+yarn install
 ```
-
-When prompted, enter:
-
-- **Username**: Your GitHub username
-- **Password**: The Personal Access Token you created above
-- **Email**: Your GitHub email address
 
 ## 🛠 Development Setup
 
@@ -102,6 +88,9 @@ Configure the following environment variables in your `.env` file:
 - `VITE_APP_LOG_LEVEL` - Logging level for the application
 - `VITE_DOCS_URL` - URL for application documentation
 - `VITE_APP_BASE_NAME` - Base name/path for the application routing
+- `VITE_MULTI_TENANT` - Enable multi-tenant support (true/false). This setting also determines the authentication mode:
+  - `true` - Uses IAM authentication with multi-tenant support
+  - `false` - Uses secondary OIDC provider authentication
 
 #### IAM Authentication
 
@@ -110,11 +99,12 @@ Configure the following environment variables in your `.env` file:
 - `VITE_IAM_API` - IAM API service URL
 - `VITE_IAM_OIDC_CLIENT_ID` - OIDC client ID for authentication
 - `VITE_IAM_OIDC_ISSUER` - OIDC issuer URL
-- `VITE_IAM_MULTI_TENANT` - Enable multi-tenant support (true/false)
 
-#### GitHub NPM
+#### Secondary OIDC Provider
 
-- `NPM_TOKEN` - Your GitHub Personal Access Token for package registry access
+- `VITE_OIDC_UI` - Secondary OIDC provider user interface URL
+- `VITE_OIDC_CLIENT_ID` - OAuth 2.0/OIDC client identifier for secondary authentication provider
+- `VITE_OIDC_ISSUER` - OAuth 2.0/OIDC issuer URL for secondary authentication provider
 
 #### Analytics
 

@@ -10,11 +10,22 @@ import {describe, it, vi, expect, beforeEach} from 'vitest';
 import '@testing-library/jest-dom';
 import SettingsBase from './settings-base';
 
+// Update the mock to use MULTI_TENANT instead of IAM_MULTI_TENANT
 vi.mock('@/config', () => ({
   default: {
-    IAM_MULTI_TENANT: true
+    MULTI_TENANT: true,
+    IAM_UI: 'https://iam.example.com',
+    IAM_OIDC_ISSUER: 'https://issuer.example.com',
+    IAM_OIDC_CLIENT_ID: 'client-id'
   }
 }));
+
+// Mock the isMultiTenant function to return true by default
+vi.mock('@/utils/get-auth-config', () => ({
+  isMultiTenant: vi.fn(() => true)
+}));
+
+import { isMultiTenant } from '@/utils/get-auth-config';
 
 // Mock dependencies
 vi.mock('@/router/paths', () => ({
@@ -45,9 +56,11 @@ vi.mock('zustand/react/shallow', () => ({
 describe('SettingsBase', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // Reset the isMultiTenant mock to return true by default
+    vi.mocked(isMultiTenant).mockReturnValue(true);
   });
 
-  it('renders Outlet with current subNav items', () => {
+  it('renders Outlet with current subNav items in multi-tenant mode', () => {
     const {getByTestId} = render(<SettingsBase />);
     const outlet = getByTestId('outlet');
     const contextData = JSON.parse(outlet.getAttribute('data-context') || '{}');
@@ -104,7 +117,7 @@ describe('SettingsBase', () => {
     expect(contextData2.subNav).toEqual(contextData1.subNav);
   });
 
-  it('includes all expected navigation items', () => {
+  it('includes all expected navigation items in multi-tenant mode', () => {
     const {getByTestId} = render(<SettingsBase />);
     const outlet = getByTestId('outlet');
     const contextData = JSON.parse(outlet.getAttribute('data-context') || '{}');
@@ -112,7 +125,7 @@ describe('SettingsBase', () => {
     // Get all labels
     const labels = contextData.subNav.map((item: {label: string}) => item.label);
 
-    // Core settings that should always be present
+    // Core settings that should always be present in multi-tenant mode
     expect(labels).toContain('Identity Provider');
     expect(labels).toContain('API Key');
     expect(labels).toContain('Organizations & Users');
@@ -126,5 +139,22 @@ describe('SettingsBase', () => {
       expect(item.label.length).toBeGreaterThan(0);
       expect(item.href.length).toBeGreaterThan(0);
     });
+  });
+
+  it('excludes Organizations & Users in OIDC mode', () => {
+    // Mock OIDC mode (single-tenant)
+    vi.mocked(isMultiTenant).mockReturnValue(false);
+
+    const {getByTestId} = render(<SettingsBase />);
+    const outlet = getByTestId('outlet');
+    const contextData = JSON.parse(outlet.getAttribute('data-context') || '{}');
+
+    // Get all labels
+    const labels = contextData.subNav.map((item: {label: string}) => item.label);
+
+    // In OIDC mode, Organizations & Users should not be available
+    expect(labels).toContain('Identity Provider');
+    expect(labels).toContain('API Key');
+    expect(labels).not.toContain('Organizations & Users');
   });
 });

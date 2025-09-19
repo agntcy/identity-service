@@ -4,7 +4,7 @@
  */
 
 import axios, {AxiosError, AxiosHeaders, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig} from 'axios';
-import {AuthInfo} from '@/types/okta';
+import {AuthConfigIAM, AuthInfo} from '@/types/okta';
 import {getAuthConfig} from '@/utils/get-auth-config';
 import {httpErrorsAuth} from '@/constants/http-errors';
 import {
@@ -29,9 +29,11 @@ export class IamAPIClass {
     clearTokensBeforeRedirect?: boolean;
   }) => void;
 
+  protected authConfig = getAuthConfig() as AuthConfigIAM;
+
   constructor() {
     this.instance = axios.create({
-      baseURL: getAuthConfig().iamApi,
+      baseURL: this.authConfig.iamApi,
       headers: {
         'Content-Type': 'application/json'
       }
@@ -57,7 +59,7 @@ export class IamAPIClass {
   public getTenants = () => {
     return this.instance.get<GetTenantsResponse>('/tenant', {
       params: {
-        product: getAuthConfig().productId
+        product: this.authConfig.productId
       }
     });
   };
@@ -69,7 +71,7 @@ export class IamAPIClass {
   public createTenant = () => {
     return this.instance.post<TenantReponse>('/tenant/user', undefined, {
       params: {
-        product: getAuthConfig().productId
+        product: this.authConfig.productId
       }
     });
   };
@@ -86,7 +88,7 @@ export class IamAPIClass {
   public inviteUser = (groupId: string, data: InviteUserPayload) => {
     return this.instance.post(`/user/request/invite`, data, {
       params: {
-        product: getAuthConfig().productId,
+        product: this.authConfig.productId,
         group: groupId
       }
     });

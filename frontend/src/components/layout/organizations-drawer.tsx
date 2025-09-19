@@ -16,6 +16,7 @@ import {ConfirmModal} from '../ui/confirm-modal';
 import {PlusIcon} from 'lucide-react';
 import {useCreateTenant} from '@/mutations';
 import {useBanner} from '@/providers/banner-provider/banner-provider';
+import {AuthContextIAM} from '@/types/okta';
 
 export const OrganizationsDrawer: React.FC<{
   isOpen: boolean;
@@ -28,7 +29,7 @@ export const OrganizationsDrawer: React.FC<{
 
   const {analyticsTrack} = useAnalytics();
 
-  const {authInfo, switchTenant} = useAuth();
+  const {authInfo, switchTenant} = useAuth() as AuthContextIAM;
 
   const {data, isLoading, isError} = useGetTenants();
 

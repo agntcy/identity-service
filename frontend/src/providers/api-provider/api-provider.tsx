@@ -9,33 +9,41 @@ import {Loading} from '@/components/ui/loading';
 import {AgenticServicesAPI, DevicesAPI, IamAPI, PolicyAPI, SettingsAPI} from '@/api/services';
 import {BadgeAPI} from '@/api/services/badge-api';
 import {useAnalyticsContext} from '../analytics-provider/analytics-provider';
+import {isMultiTenant} from '@/utils/get-auth-config';
 
 export const ApiProvider = ({children}: React.PropsWithChildren) => {
   const [isSet, setIsSet] = React.useState<boolean>(false);
   const {authInfo, tokenExpiredHttpHandler, logout} = useAuth();
   const {analytics} = useAnalyticsContext();
+  const isMulti = isMultiTenant();
 
   useEffect(() => {
-    IamAPI.setTokenExpiredHandlers({tokenExpiredHttpHandler, logout});
+    if (isMulti) {
+      IamAPI.setTokenExpiredHandlers({tokenExpiredHttpHandler, logout});
+    }
     SettingsAPI.setTokenExpiredHandlers({tokenExpiredHttpHandler, logout});
     AgenticServicesAPI.setTokenExpiredHandlers({tokenExpiredHttpHandler, logout});
     BadgeAPI.setTokenExpiredHandlers({tokenExpiredHttpHandler, logout});
     PolicyAPI.setTokenExpiredHandlers({tokenExpiredHttpHandler, logout});
     DevicesAPI.setTokenExpiredHandlers({tokenExpiredHttpHandler, logout});
-  }, [tokenExpiredHttpHandler, logout]);
+  }, [tokenExpiredHttpHandler, logout, isMulti]);
 
   useEffect(() => {
-    IamAPI.setAnalytics(analytics);
+    if (isMulti) {
+      IamAPI.setAnalytics(analytics);
+    }
     SettingsAPI.setAnalytics(analytics);
     AgenticServicesAPI.setAnalytics(analytics);
     BadgeAPI.setAnalytics(analytics);
     PolicyAPI.setAnalytics(analytics);
     DevicesAPI.setAnalytics(analytics);
-  }, [analytics]);
+  }, [analytics, isMulti]);
 
   useEffect(() => {
     if (authInfo && authInfo.isAuthenticated) {
-      IamAPI.setAuthInfo(authInfo);
+      if (isMulti) {
+        IamAPI.setAuthInfo(authInfo);
+      }
       SettingsAPI.setAuthInfo(authInfo);
       AgenticServicesAPI.setAuthInfo(authInfo);
       BadgeAPI.setAuthInfo(authInfo);
@@ -45,7 +53,7 @@ export const ApiProvider = ({children}: React.PropsWithChildren) => {
     } else {
       setIsSet(true);
     }
-  }, [authInfo]);
+  }, [authInfo, isMulti]);
 
   if (!isSet) {
     return <Loading />;
