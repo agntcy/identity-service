@@ -8,13 +8,17 @@ import (
 	"errors"
 	"io"
 	"net/http"
+	"regexp"
 	"strings"
 
 	"github.com/outshift/identity-service/internal/pkg/httputil"
 	"github.com/outshift/identity-service/pkg/log"
 )
 
-const wellKnownUrlSuffix = "/.well-known/agent.json"
+const (
+	wellKnownMatcher     = `/.well-known/.*\.json$`
+	wellKnownUrlSuffixV3 = "/.well-known/agent-card.json"
+)
 
 // The discoverClient interface defines the core methods for discovering a deployed A2A agent
 type DiscoveryClient interface {
@@ -37,9 +41,10 @@ func (d *discoveryClient) Discover(
 	ctx context.Context,
 	wellKnownUrl string,
 ) (string, error) {
-	// validate the well-known URL
-	if !strings.HasSuffix(wellKnownUrl, wellKnownUrlSuffix) {
-		wellKnownUrl = strings.TrimSuffix(wellKnownUrl, "/") + wellKnownUrlSuffix
+	// Check if the well-known URL ends with .json, if not, append the default V3 suffix
+	var wellKnownUrlRegex = regexp.MustCompile(wellKnownMatcher)
+	if !wellKnownUrlRegex.MatchString(wellKnownUrl) {
+		wellKnownUrl = strings.TrimSuffix(wellKnownUrl, "/") + wellKnownUrlSuffixV3
 	}
 
 	log.Debug("Using well-known URL for agent discovery: ", wellKnownUrl)
