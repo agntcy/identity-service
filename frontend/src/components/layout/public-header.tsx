@@ -17,7 +17,7 @@ export const PublicHeader = ({userSection}: {userSection?: ReactNode}) => {
           <div className="w-12">
             <img src="/logo.svg" alt="Logo" className="w-full" />
           </div>
-          <Logo className="w-[200px] md:w-[300px] lg:w-full" />
+          <Logo className="w-[200px] md:w-[300px] lg:w-full" data-testid="header-logo-svg" />
         </div>
       }
       position="fixed"

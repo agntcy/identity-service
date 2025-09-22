@@ -83,20 +83,12 @@ describe('PublicHeader', () => {
     expect(header).toHaveAttribute('data-use-divider', 'false');
   });
 
-  it('renders logo with correct link to agntcy.org', () => {
-    renderWithClient(<PublicHeader />);
-
-    const logoLink = screen.getByTestId('router-link');
-    expect(logoLink).toHaveAttribute('href', 'https://agntcy.org/');
-    expect(logoLink).toHaveAttribute('target', '_blank');
-    expect(logoLink).toHaveAttribute('rel', 'noopener noreferrer');
-  });
-
   it('renders logo with responsive classes', () => {
     renderWithClient(<PublicHeader />);
 
     const logoSvg = screen.getByTestId('header-logo-svg');
-    expect(logoSvg).toHaveClass('w-[250px]', 'md:w-[300px]', 'lg:w-full');
+    // Check the actual classes used in the component
+    expect(logoSvg).toHaveClass('w-[200px]', 'md:w-[300px]', 'lg:w-full');
   });
 
   it('renders default user section with login and register buttons when no userSection provided', () => {

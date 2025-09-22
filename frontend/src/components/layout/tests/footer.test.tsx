@@ -9,6 +9,7 @@ import {screen} from '@testing-library/react';
 import '@testing-library/jest-dom';
 import {renderWithClient} from '@/utils/tests';
 import {Footer} from '../footer';
+import {globalConfig} from '@/config/global';
 import userEvent from '@testing-library/user-event';
 import {MouseEventHandler, ReactElement, JSXElementConstructor, ReactNode, ReactPortal, Key} from 'react';
 import {ClassAttributes, HTMLAttributes} from 'react';
@@ -109,9 +110,19 @@ describe('Footer', () => {
     // Check if footer logo is rendered
     expect(screen.getByTestId('footer-logo')).toBeInTheDocument();
 
-    // Check copyright text
+    // Check copyright text (should contain year and company name from config)
     const currentYear = new Date().getFullYear();
-    expect(screen.getByText(`© ${currentYear} Cisco Systems, Inc.`)).toBeInTheDocument();
+    // Target the specific span element that contains the copyright text
+    expect(
+      screen.getByText((content, element) => {
+        if (!element || element.tagName !== 'SPAN') {
+          return false;
+        }
+        const normalizedText = element.textContent?.replace(/\s+/g, ' ').trim() || '';
+        const expectedText = `© ${currentYear} ${globalConfig.company.name}`;
+        return normalizedText.includes(expectedText);
+      })
+    ).toBeInTheDocument();
 
     // Check if all desktop links are rendered
     expect(screen.getByText('support@agntcy.com')).toBeInTheDocument();
@@ -132,9 +143,19 @@ describe('Footer', () => {
     // Check if footer logo is still rendered
     expect(screen.getByTestId('footer-logo')).toBeInTheDocument();
 
-    // Check copyright text is still present
+    // Check copyright text is still present (should contain year and company name from config)
     const currentYear = new Date().getFullYear();
-    expect(screen.getByText(`© ${currentYear} Cisco Systems, Inc.`)).toBeInTheDocument();
+    // Target the specific span element that contains the copyright text
+    expect(
+      screen.getByText((content, element) => {
+        if (!element || element.tagName !== 'SPAN') {
+          return false;
+        }
+        const normalizedText = element.textContent?.replace(/\s+/g, ' ').trim() || '';
+        const expectedText = `© ${currentYear} ${globalConfig.company.name}`;
+        return normalizedText.includes(expectedText);
+      })
+    ).toBeInTheDocument();
 
     // In mobile view, only Cookies link should be present
     expect(screen.queryByText('support@agntcy.com')).not.toBeInTheDocument();
@@ -166,8 +187,19 @@ describe('Footer', () => {
 
     renderWithClient(<Footer />);
 
+    // Check that copyright contains current year and company name from config
     const currentYear = new Date().getFullYear();
-    expect(screen.getByText(`© ${currentYear} Cisco Systems, Inc.`)).toBeInTheDocument();
+    // Target the specific span element that contains the copyright text
+    expect(
+      screen.getByText((content, element) => {
+        if (!element || element.tagName !== 'SPAN') {
+          return false;
+        }
+        const normalizedText = element.textContent?.replace(/\s+/g, ' ').trim() || '';
+        const expectedText = `© ${currentYear} ${globalConfig.company.name}`;
+        return normalizedText.includes(expectedText);
+      })
+    ).toBeInTheDocument();
   });
 
   it('has correct link for Terms & Conditions', () => {
