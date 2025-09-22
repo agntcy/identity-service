@@ -21,10 +21,7 @@ const AuthProviderIAM: React.FC<React.PropsWithChildren> = ({children}) => {
 
   const authConfig: AuthConfigIAM = useMemo(() => {
     return {
-      ...(getAuthConfig() as AuthConfigIAM),
-      configOptions: {
-        redirectUri: `${window.location.protocol}//${window.location.host}`
-      }
+      ...(getAuthConfig() as AuthConfigIAM)
     };
   }, []);
 
