@@ -46,7 +46,12 @@ export const Header = () => {
       <SparkHeader
         logo={
           <Link to={PATHS.dashboard}>
-            <Logo className="w-[250px] md:w-[300px] lg:w-full" />
+            <div className="flex items-center gap-2">
+              <div className="w-12">
+                <img src="/logo.svg" alt="Logo" className="w-full" />
+              </div>
+              <Logo className="w-[200px] md:w-[300px] lg:w-full" />
+            </div>
           </Link>
         }
         customSearchNode={

@@ -23,7 +23,10 @@ const Welcome = () => {
               <div className="welcome-title mx-auto w-fit font-[400] leading-[34px] md:leading-[64px] text-[25px] md:text-[50px] lg:text-[60px]">
                 Get started with
               </div>
-              <div className="flex justify-center items-center">
+              <div className="flex justify-center items-start gap-2">
+                <div className="w-32">
+                  <img src="/logo.svg" alt="Logo" className="w-full fill-white stroke-white" />
+                </div>
                 <LandingLogo className="max-w-[350px] md:max-w-[700px] lg:max-w-[914px] max-h-[54px] md:max-h-[104px] lg:max-h-full" />
               </div>
             </div>

@@ -56,6 +56,8 @@ export const Manifest = () => {
 
   return (
     <Helmet>
+      <title>{globalConfig.title}</title>
+      <meta name="description" content={globalConfig.description} />
       <link rel="manifest" href={manifestHref} />
     </Helmet>
   );
