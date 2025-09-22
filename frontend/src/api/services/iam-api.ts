@@ -29,11 +29,11 @@ export class IamAPIClass {
     clearTokensBeforeRedirect?: boolean;
   }) => void;
 
-  protected authConfig = getAuthConfig() as AuthConfigIAM;
+  protected authConfig = getAuthConfig() as AuthConfigIAM | undefined;
 
   constructor() {
     this.instance = axios.create({
-      baseURL: this.authConfig.iamApi,
+      baseURL: this.authConfig?.iamApi,
       headers: {
         'Content-Type': 'application/json'
       }
@@ -59,7 +59,7 @@ export class IamAPIClass {
   public getTenants = () => {
     return this.instance.get<GetTenantsResponse>('/tenant', {
       params: {
-        product: this.authConfig.productId
+        product: this.authConfig?.productId
       }
     });
   };
@@ -71,7 +71,7 @@ export class IamAPIClass {
   public createTenant = () => {
     return this.instance.post<TenantReponse>('/tenant/user', undefined, {
       params: {
-        product: this.authConfig.productId
+        product: this.authConfig?.productId
       }
     });
   };
@@ -88,7 +88,7 @@ export class IamAPIClass {
   public inviteUser = (groupId: string, data: InviteUserPayload) => {
     return this.instance.post(`/user/request/invite`, data, {
       params: {
-        product: this.authConfig.productId,
+        product: this.authConfig?.productId,
         group: groupId
       }
     });

@@ -110,6 +110,32 @@ Configure the following environment variables in your `.env` file:
 - `VITE_SEGMENT_ID` - Segment analytics tracking ID
 - `VITE_MAZE_ID` - Maze analytics tracking ID
 
+#### Authentication Configuration
+
+The application uses default authentication configuration options defined in `src/constants/okta.ts`. These default options apply to both IAM and OIDC authentication providers:
+
+```typescript
+export const defaultAuthConfigOptions: AuthConfigOptions = {
+  scopes: ['openid', 'offline_access'],
+  renew: 'auto',
+  redirectUri: `${window.location.protocol}//${window.location.host}`,
+  devMode: false,
+  renewOnTabActivation: true,
+  tabInactivityDuration: 1800, // 30 minutes
+  syncStorage: true
+};
+```
+
+These options control:
+
+- **scopes**: OAuth 2.0 scopes requested during authentication
+- **renew**: Token renewal strategy ('auto' for automatic renewal)
+- **redirectUri**: URI to redirect to after authentication
+- **devMode**: Development mode flag for additional debugging
+- **renewOnTabActivation**: Whether to renew tokens when tab becomes active
+- **tabInactivityDuration**: Time in seconds before considering tab inactive
+- **syncStorage**: Whether to synchronize authentication state across browser tabs
+
 ### 4. Global Configuration Setup
 
 Configure the application's global settings by editing `src/config/global.ts`:

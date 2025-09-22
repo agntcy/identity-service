@@ -8,7 +8,7 @@ import {AuthConfigOptions} from '@/types/okta';
 export const defaultAuthConfigOptions: AuthConfigOptions = {
   scopes: ['openid', 'offline_access'],
   renew: 'auto',
-  redirectUri: `${window.location.protocol}//${window.location.host}/`,
+  redirectUri: `${window.location.protocol}//${window.location.host}`,
   devMode: false,
   renewOnTabActivation: true,
   tabInactivityDuration: 1800, // 30 minutes

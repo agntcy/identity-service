@@ -21,10 +21,7 @@ const AuthProviderOIDC: React.FC<React.PropsWithChildren> = ({children}) => {
 
   const authConfig: AuthConfigOIDC = React.useMemo(() => {
     return {
-      ...(getAuthConfig() as AuthConfigOIDC),
-      configOptions: {
-        redirectUri: `${window.location.protocol}//${window.location.host}`
-      }
+      ...(getAuthConfig() as AuthConfigOIDC)
     };
   }, []);
 
