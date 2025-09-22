@@ -88,9 +88,7 @@ Configure the following environment variables in your `.env` file:
 - `VITE_APP_LOG_LEVEL` - Logging level for the application
 - `VITE_DOCS_URL` - URL for application documentation
 - `VITE_APP_BASE_NAME` - Base name/path for the application routing
-- `VITE_MULTI_TENANT` - Enable multi-tenant support (true/false). This setting also determines the authentication mode:
-  - `true` - Uses IAM authentication with multi-tenant support
-  - `false` - Uses secondary OIDC provider authentication
+- `VITE_AUTH_TYPE` - Authentication method to use (values: `iam`, `oidc`)
 
 #### IAM Authentication
 
@@ -99,6 +97,7 @@ Configure the following environment variables in your `.env` file:
 - `VITE_IAM_API` - IAM API service URL
 - `VITE_IAM_OIDC_CLIENT_ID` - OIDC client ID for authentication
 - `VITE_IAM_OIDC_ISSUER` - OIDC issuer URL
+- `VITE_IAM_MULTI_TENANT` - Enable multi-tenant support (true/false)
 
 #### Secondary OIDC Provider
 
