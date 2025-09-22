@@ -45,7 +45,26 @@ yarn install
 
 ## 🛠 Development Setup
 
-### 1. Setup Node.js Version
+### 1. Generate PWA Assets (Logo Setup)
+
+> **⚠️ IMPORTANT**  
+> Before starting development, generate the PWA assets from your logo. This step sets up all the necessary icons and splash screens for your app.
+
+```bash
+# Generate PWA assets from the logo.svg file
+yarn generate-pwa-assets
+```
+
+This script will:
+
+- Generate all required PWA icons (favicon, apple-touch-icon, etc.)
+- Create properly sized assets from your `public/logo.svg` file
+- Set up the visual identity for your Progressive Web App
+
+> **📝 NOTE**  
+> Make sure you have your custom logo as `public/logo.svg` before running this command.
+
+### 2. Setup Node.js Version
 
 ```bash
 # Install NVM if you haven't already
@@ -59,7 +78,7 @@ nvm install
 nvm use
 ```
 
-### 2. Clone and Install Dependencies
+### 3. Clone and Install Dependencies
 
 ```bash
 # Clone the repository
@@ -70,7 +89,7 @@ cd identity-service/frontend
 yarn install
 ```
 
-### 3. Environment Configuration
+### 4. Environment Configuration
 
 Create a `.env` file in the root directory:
 
@@ -136,7 +155,7 @@ These options control:
 - **tabInactivityDuration**: Time in seconds before considering tab inactive
 - **syncStorage**: Whether to synchronize authentication state across browser tabs
 
-### 4. Global Configuration Setup
+### 5. Global Configuration Setup
 
 Configure the application's global settings by editing `src/config/global.ts`:
 
