@@ -13,6 +13,7 @@ import {notificationUtils} from '@/utils/notification-store';
 import {ExpirationPlugin} from 'workbox-expiration';
 import {CacheableResponsePlugin} from 'workbox-cacheable-response';
 import {CacheFirst, NetworkFirst, NetworkOnly, StaleWhileRevalidate} from 'workbox-strategies';
+import {globalConfig} from '@/config/global';
 
 const ICON_PATH = '/pwa-192x192.png';
 const BADGE_PATH = '/pwa-64x64.png';
@@ -180,7 +181,7 @@ self.addEventListener('push', async (event) => {
         }
 
         await sendNotification({...notificationData, id, timestamp: Date.now()});
-        await self.registration.showNotification('Outshift Agent Identity Service Powered by AGNTCY', options);
+        await self.registration.showNotification(globalConfig.pwa.name, options);
       }
     }
   } catch (error) {

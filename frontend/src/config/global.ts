@@ -13,14 +13,16 @@ export const globalConfig = {
     backgroundColor: '#eff3fc'
   },
   links: {
-    termsAndConditions:
-      'https://www.cisco.com/c/dam/en_us/about/doing_business/legal/OfferDescriptions/AGNTCY-Agent-Identity-Service.pdf',
-    privacyPolicy: 'https://www.cisco.com/c/en/us/about/legal/privacy-full.html',
-    email: 'support@agntcy.com'
+    termsAndConditions: '#',
+    privacyPolicy: '#',
+    email: 'email@email.com'
   },
   company: {
-    name: 'Cisco Systems, Inc.',
-    url: 'https://www.cisco.com/',
+    name: '<place-holder>',
+    url: '#',
     gitHub: '#'
-  }
+  },
+  title: '<place-holder> Agent Identity Service Powered by AGNTCY',
+  description:
+    '<place-holder> Agent Identity Service is powered by AGNTCY, providing secure and efficient identity management for agents.'
 };

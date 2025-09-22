@@ -59,8 +59,7 @@ export const config: CookieConsentConfig = {
           sections: [
             {
               title: 'Cookie Usage',
-              description:
-                'I use cookies to ensure the basic functionalities of the website and to enhance your online experience. You can choose for each category to opt-in/out whenever you want. For more details relative to cookies and other sensitive data, please read the full <a href="https://www.cisco.com/c/en/us/about/legal/privacy-full.html" class="cc__link" target="_blank">privacy policy</a>.'
+              description: `I use cookies to ensure the basic functionalities of the website and to enhance your online experience. You can choose for each category to opt-in/out whenever you want. For more details relative to cookies and other sensitive data, please read the full <a href="${globalConfig.links.privacyPolicy}" class="cc__link" target="_blank">privacy policy</a>.`
             },
             {
               title: 'Strictly necessary cookies',

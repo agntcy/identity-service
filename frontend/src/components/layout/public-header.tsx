@@ -4,7 +4,6 @@
  */
 
 import {Button, Header} from '@open-ui-kit/core';
-import {Link} from 'react-router-dom';
 import {useAuth} from '@/hooks';
 import {ReactNode} from 'react';
 import Logo from '@/assets/header/header.svg?react';
@@ -14,9 +13,12 @@ export const PublicHeader = ({userSection}: {userSection?: ReactNode}) => {
   return (
     <Header
       logo={
-        <Link to="https://agntcy.org/" target="_blank" rel="noopener noreferrer">
-          <Logo className="w-[250px] md:w-[300px] lg:w-full" />
-        </Link>
+        <div className="flex items-center gap-2">
+          <div className="w-12">
+            <img src="/logo.svg" alt="Logo" className="w-full" />
+          </div>
+          <Logo className="w-[200px] md:w-[300px] lg:w-full" />
+        </div>
       }
       position="fixed"
       userSection={

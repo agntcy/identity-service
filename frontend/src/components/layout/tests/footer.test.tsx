@@ -84,8 +84,8 @@ vi.mock('@/assets/footer/footer.svg?react', () => ({
 vi.mock('@/config/global', () => ({
   globalConfig: {
     company: {
-      name: 'Cisco Systems, Inc.',
-      url: 'https://www.cisco.com'
+      name: '<place-holder-company-name>',
+      url: '<place-holder-company-url>'
     },
     links: {
       email: 'support@agntcy.com',
