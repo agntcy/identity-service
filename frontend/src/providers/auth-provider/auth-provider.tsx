@@ -3,18 +3,21 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {isMultiTenant} from '@/utils/get-auth-config';
 import AuthProviderIAM from './iam/auth-provider-iam';
 import AuthProviderOIDC from './oicd/auth-provider-oidc';
+import config, {AuthType} from '@/config';
+import {AuthError} from '@/components/router/auth-error';
 
 const AuthProvider: React.FC<React.PropsWithChildren> = ({children}) => {
-  const isMultiTenantResult = isMultiTenant();
-
-  if (isMultiTenantResult) {
+  if (!config.AUTH_TYPE) {
+    return <AuthError error={new Error('No AUTH_TYPE configured')} />;
+  } else if (config.AUTH_TYPE === AuthType.IAM) {
     return <AuthProviderIAM>{children}</AuthProviderIAM>;
+  } else if (config.AUTH_TYPE === AuthType.OIDC) {
+    return <AuthProviderOIDC>{children}</AuthProviderOIDC>;
+  } else {
+    return <AuthError error={new Error(`Unknown AUTH_TYPE configured: ${config.AUTH_TYPE}`)} />;
   }
-
-  return <AuthProviderOIDC>{children}</AuthProviderOIDC>;
 };
 
 export default AuthProvider;

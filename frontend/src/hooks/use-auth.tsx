@@ -3,22 +3,22 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {isMultiTenant} from '@/utils/get-auth-config';
 import {useAuthIAM} from '@/providers/auth-provider/iam/use-auth-iam';
 import {useAuthOIDC} from '@/providers/auth-provider/oicd/use-auth-oidc';
 import {AuthContextIAM, AuthContextOIDC} from '@/types/okta';
+import config, {AuthType} from '@/config';
 
 export const useAuth = (): AuthContextIAM | AuthContextOIDC => {
-  const multiTenant = isMultiTenant();
   let auth: typeof useAuthIAM | typeof useAuthOIDC = useAuthOIDC;
 
-  switch (multiTenant) {
-    case true:
-      auth = useAuthIAM;
-      break;
-    case false:
-      auth = useAuthOIDC;
-      break;
+  if (!config.AUTH_TYPE) {
+    console.warn('No AUTH_TYPE configured...');
+  } else if (config.AUTH_TYPE === AuthType.IAM) {
+    auth = useAuthIAM;
+  } else if (config.AUTH_TYPE === AuthType.OIDC) {
+    auth = useAuthOIDC;
+  } else {
+    console.warn(`Unknown AUTH_TYPE configured: ${config.AUTH_TYPE}`);
   }
 
   return {...auth()};

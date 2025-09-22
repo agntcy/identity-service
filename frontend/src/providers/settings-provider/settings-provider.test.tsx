@@ -13,7 +13,7 @@ import React from 'react';
 // Mock the config
 vi.mock('@/config', () => ({
   default: {
-    MULTI_TENANT: true,
+    IAM_MULTI_TENANT: true,
     IAM_UI: 'https://iam.example.com',
     IAM_OIDC_ISSUER: 'https://issuer.example.com',
     IAM_OIDC_CLIENT_ID: 'client-id'
