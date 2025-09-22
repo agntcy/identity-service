@@ -7,34 +7,49 @@ services:
   identity-service-samples-currency-exchange-mcp-server:
     container_name: identity-service-samples-currency-exchange-mcp-server
     build:
-      context: ./mcp/currency_exchange
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./mcp/currency_exchange/Dockerfile
     restart: always
     ports:
-      - "9092:9090"
+      - "9090:9090"
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    environment:
+      - IDENTITY_SERVICE_API_KEY=some_api_key
+      - AZURE_OPENAI_ENDPOINT=some_endpoint
+      - AZURE_OPENAI_API_KEY=some_api_key
   identity-service-samples-currency-exchange-a2a-agent:
     container_name: identity-service-samples-currency-exchange-a2a-agent
     build:
-      context: ./agent/a2a/currency_exchange
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./agent/a2a/currency_exchange/Dockerfile
     restart: always
     depends_on:
       - identity-service-samples-currency-exchange-mcp-server
     ports:
-      - "9093:9091"
+      - "9091:9091"
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    environment:
+      - CURRENCY_EXCHANGE_MCP_SERVER_URL=http://host-docker.internal:9090
+      - IDENTITY_SERVICE_API_KEY=some_api_key
+      - AZURE_OPENAI_ENDPOINT=some_endpoint
+      - AZURE_OPENAI_API_KEY=some_api_key
   identity-service-samples-financial-assistant-oasf-agent:
     container_name: identity-service-samples-financial-assistant-oasf-agent
     build:
-      context: ./agent/oasf/financial_assistant
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./agent/oasf/financial_assistant/Dockerfile
     restart: always
     depends_on:
       - identity-service-samples-currency-exchange-a2a-agent
     ports:
-      - "9094:9092"
+      - "9093:9093"
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    environment:
+      - CURRENCY_EXCHANGE_AGENT_URL=http://host-docker.internal:9091
+      - CURRENCY_EXCHANGE_MCP_SERVER_URL=http://host-docker.internal:9090
+      - IDENTITY_SERVICE_API_KEY=some_api_key
+      - AZURE_OPENAI_ENDPOINT=some_endpoint
+      - AZURE_OPENAI_API_KEY=some_api_key

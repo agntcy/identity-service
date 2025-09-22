@@ -1,4 +1,4 @@
-# Copyright 2025 Cisco Systems, Inc. and its affiliates
+# Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
 # SPDX-License-Identifier: Apache-2.0
 
 [project]
@@ -17,6 +17,7 @@ dependencies = [
     "langchain-mcp-adapters>=0.0.7",
     "langchain-openai>=0.2.0",
     "langgraph>=0.3.29",
+    "identity-service-sdk=0.0.2",
 ]
 
 [tool.hatch.build.targets.wheel]

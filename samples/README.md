@@ -29,18 +29,15 @@ To quickly get started with the samples, follow these steps:
 
 You need AzureOpenAI credentials to run the samples.
 
-1. Clone the `identity-service` repository:
+1. Clone the `identity-service-samples` repository:
 
    ```bash
-   git clone https://github.com/outshift-open/identity-service.git
+   git clone https://github.com/cisco-outshift-ai-agents/identity-service-samples.git
    ```
 
 2. Navigate to the `samples` directory and run the following command to start the Docker containers:
 
    ```bash
-   # From the root of the repository navigate to the samples directory
-   cd samples
-
    # Start the Docker containers
    docker compose up -d
    ```
@@ -55,7 +52,7 @@ To test the A2A Agent sample, navigate to the `samples/agent/oasf/financial_assi
 
 ```bash
 # From the root of the repository navigate to the A2A Agent sample directory
-cd samples/agent/oasf/financial_assistant
+cd agent/oasf/financial_assistant
 
 # Install the required dependencies
 pip install .
@@ -66,11 +63,11 @@ python test_client.py
 
 #### A2A Agent
 
-To test the A2A Agent sample, navigate to the `samples/agent/a2a/currency_exchange` directory and run the following command:
+To test the A2A Agent sample, navigate to the `agent/a2a/currency_exchange` directory and run the following command:
 
 ```bash
 # From the root of the repository navigate to the A2A Agent sample directory
-cd samples/agent/a2a/currency_exchange
+cd agent/a2a/currency_exchange
 
 # Install the required dependencies
 pip install .
@@ -81,11 +78,11 @@ python test_client.py
 
 #### MCP Server
 
-To test the MCP Server sample, navigate to the `samples/mcp/currency_exchange` directory and run the following command:
+To test the MCP Server sample, navigate to the `mcp/currency_exchange` directory and run the following command:
 
 ```bash
 # From the root of the repository navigate to the MCP Server sample directory
-cd samples/mcp/currency_exchange
+cd mcp/currency_exchange
 
 # Install the required dependencies
 pip install .
@@ -93,3 +90,22 @@ pip install .
 # Run the test client
 python test_client.py
 ```
+
+## Roadmap
+
+See the [open issues](https://github.com/cisco-outshift-ai-agents/identity-service-samples/issues) for a list
+of proposed features (and known issues).
+
+## Contributing
+
+Contributions are what make the open source community such an amazing place to
+learn, inspire, and create. Any contributions you make are **greatly
+appreciated**. For detailed contributing guidelines, please see
+[CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Copyright Notice
+
+[Copyright Notice and License](LICENSE)
+
+Distributed under Apache 2.0 License. See LICENSE for more information.
+Copyright [AGNTCY](https://github.com/agntcy) Contributors.
