@@ -24,7 +24,6 @@ go.work
 vault-data/
 
 *.tgz
-sdk/python
 
 .env.*
 .DS_Store
