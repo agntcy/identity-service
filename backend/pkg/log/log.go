@@ -4,6 +4,7 @@
 package log
 
 import (
+	"context"
 	"os"
 
 	"github.com/sirupsen/logrus"
@@ -58,6 +59,10 @@ func Error(args ...interface{}) {
 
 func Warn(args ...interface{}) {
 	logrus.Warn(args...)
+}
+
+func WithContext(ctx context.Context) *logrus.Entry {
+	return logrus.WithContext(ctx)
 }
 
 func WithFields(fields logrus.Fields) *logrus.Entry {

@@ -414,6 +414,7 @@ func (r *repository) GetAllPolicies(
 			"0 < (?)",
 			r.dbContext.Table("tasks").
 				Select("COUNT(tasks.id)").
+				Joins("LEFT JOIN rules ON rules.policy_id = policies.id").
 				Joins("LEFT JOIN rule_tasks ON rule_tasks.task_id = tasks.id").
 				Where("rule_tasks.rule_id = rules.id AND tasks.app_id IN (?)", rulesForAppIDs),
 		)
