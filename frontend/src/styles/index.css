@@ -381,3 +381,7 @@
 .animate-fadeInOut {
   animation: fadeInOut 2s ease-in-out infinite;
 }
+
+.white-logo img {
+  filter: brightness(0) invert(1);
+}
