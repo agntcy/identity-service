@@ -105,7 +105,9 @@ func main() {
 		&iampg.APIKey{},
 	)
 	if err != nil {
-		log.Fatal(err) //nolint:gocritic // It's not a big deal if we exit without closing the DB connection
+		log.Fatal(
+			err,
+		) //nolint:gocritic // It's not a big deal if we exit without closing the DB connection
 	}
 
 	crypter := secrets.NewSymmetricCrypter([]byte(config.SecretsCryptoKey))
@@ -307,7 +309,11 @@ func initializeServices(
 			log.Fatal("unable to load aws config ", err)
 		}
 
-		credentialStore, err = idpcore.NewAwsSmCredentialStore(&awscfg, nil)
+		credentialStore, err = idpcore.NewAwsSmCredentialStore(
+			&awscfg,
+			nil,
+			&config.AwsSecretsPrefix,
+		)
 		if err != nil {
 			log.Fatal("unable to create AWS SM client ", err)
 		}
