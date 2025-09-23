@@ -1,0 +1,52 @@
+# Copyright 2025 Cisco Systems, Inc. and its affiliates
+# SPDX-License-Identifier: Apache-2.0
+#
+---
+name: Reusable Python Build
+
+on:
+  workflow_call:
+
+jobs:
+  python-bindings-wheels:
+    runs-on: ${{ matrix.platform.runner }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./sdk/python
+    strategy:
+      matrix:
+        platform:
+          - runner: ubuntu-22.04
+            os: linux
+            target: x86_64
+          - runner: windows-latest
+            os: windows
+            target: x64
+          - runner: macos-13 # We use macos-13 as it is a x86_64 runner
+            os: macos
+            target: x86_64
+          - runner: macos-15
+            os: macos
+            target: aarch64
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup Python
+        id: setup-python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install build dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install build wheel twine
+      - name: Build wheel
+        run: |
+          python -m build --wheel --sdist
+          python -m twine check dist/*
+      - name: Upload wheel
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheel-${{ matrix.platform.os }}-${{ matrix.platform.target }}
+          path: ./sdk/python/dist
