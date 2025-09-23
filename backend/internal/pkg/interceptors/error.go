@@ -7,6 +7,7 @@ import (
 	"context"
 	"errors"
 
+	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
 	"github.com/outshift/identity-service/internal/pkg/grpcutil"
 	"github.com/outshift/identity-service/pkg/log"
 	"github.com/sirupsen/logrus"
@@ -14,7 +15,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-var errInternalError = errors.New("internal server error")
+var ErrInternalError = errors.New("internal server error")
 
 type ErrorInterceptor struct {
 	isProd bool
@@ -32,20 +33,36 @@ func (i ErrorInterceptor) Unary(
 ) (any, error) {
 	resp, err := handler(ctx, req)
 	if err != nil {
-		if _, ok := status.FromError(err); !ok {
-			log.WithFields(logrus.Fields{log.ErrorField: err}).Error(err)
-
-			var finalErr error
-
-			if i.isProd {
-				finalErr = errInternalError
-			} else {
-				finalErr = err
-			}
-
-			return resp, grpcutil.InternalError(finalErr)
+		// if it's a gRPC Status error then return it
+		if _, ok := status.FromError(err); ok {
+			return resp, err
 		}
+
+		if i.isIdentityContextError(err) {
+			log.WithFields(logrus.Fields{log.ErrorField: err}).Warn(err)
+
+			return resp, grpcutil.UnauthorizedError(err)
+		}
+
+		log.WithFields(logrus.Fields{log.ErrorField: err}).Error(err)
+
+		var finalErr error
+
+		if i.isProd {
+			finalErr = ErrInternalError
+		} else {
+			finalErr = err
+		}
+
+		return resp, grpcutil.InternalError(finalErr)
 	}
 
 	return resp, err
+}
+
+func (i ErrorInterceptor) isIdentityContextError(err error) bool {
+	return errors.Is(err, identitycontext.ErrTenantNotFound) ||
+		errors.Is(err, identitycontext.ErrAppNotFound) ||
+		errors.Is(err, identitycontext.ErrUserNotFound) ||
+		errors.Is(err, identitycontext.ErrOrganizationNotFound)
 }
