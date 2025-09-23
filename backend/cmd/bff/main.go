@@ -312,13 +312,13 @@ func initializeServices(
 		credentialStore, err = idpcore.NewAwsSmCredentialStore(
 			&awscfg,
 			nil,
-			&config.AwsSecretsPrefix,
+			config.AwsSecretsPrefix,
 		)
 		if err != nil {
 			log.Fatal("unable to create AWS SM client ", err)
 		}
 
-		keyStore, err = identitycore.NewAwsSmKeyStore(&awscfg, nil)
+		keyStore, err = identitycore.NewAwsSmKeyStore(&awscfg, nil, config.AwsSecretsPrefix)
 		if err != nil {
 			log.Fatal("unable to create AWS SM key store ", err)
 		}
