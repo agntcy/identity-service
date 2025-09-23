@@ -175,7 +175,7 @@ const config: Config = {
       (function() {
         const mazeConfig = {
           'identity-docs.staging.outshift.ai': 'bb2165a9-97e9-4feb-9fee-27bf371146ad',
-          'identity-docs.outshift.com': ''
+          'identity-docs.outshift.com': 'a9eb2582-a56a-4cbb-b869-3f03b8de7365'
         };
         
         const hostname = window.location.hostname;
