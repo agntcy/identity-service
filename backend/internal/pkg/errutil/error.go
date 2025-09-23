@@ -6,34 +6,7 @@ package errutil
 import (
 	"errors"
 	"fmt"
-	"strings"
-
-	"github.com/outshift/identity-service/pkg/log"
 )
-
-func Err(err error, customMessage string) error {
-	message := customMessage
-
-	if err != nil {
-		// Get last message if there is an error chain
-		allErrs := strings.Split(err.Error(), ":")
-		if len(allErrs) > 0 {
-			message = fmt.Sprintf(
-				"%s: %s",
-				customMessage,
-				strings.TrimSpace(allErrs[len(allErrs)-1]),
-			)
-		} else {
-			message = fmt.Sprintf("%s: %s", customMessage, err.Error())
-		}
-	}
-
-	// Log the full error message
-	log.Error(customMessage, ": ", err)
-
-	// Return a new error with the custom message
-	return errors.New(message)
-}
 
 type ErrorReason string
 
@@ -54,15 +27,12 @@ type DomainError struct {
 	// the error.
 	Reason ErrorReason
 
-	// The underlying error if present
-	Underlying error
-
 	// The message describing the error in a human-readable way. This
 	// field gives additional details about the error.
 	Message string
 }
 
-func newDomainErrorf(id string, reason ErrorReason, err error, format string, args ...any) *DomainError {
+func newDomainErrorf(id string, reason ErrorReason, format string, args ...any) *DomainError {
 	var msg string
 
 	if len(args) > 0 {
@@ -72,10 +42,9 @@ func newDomainErrorf(id string, reason ErrorReason, err error, format string, ar
 	}
 
 	return &DomainError{
-		ID:         id,
-		Reason:     reason,
-		Underlying: err,
-		Message:    msg,
+		ID:      id,
+		Reason:  reason,
+		Message: msg,
 	}
 }
 
@@ -91,28 +60,23 @@ func (err *DomainError) Is(target error) bool {
 
 	return err.ID == domainErr.ID &&
 		err.Reason == domainErr.Reason &&
-		err.Message == domainErr.Message &&
-		(err.Underlying == nil || errors.Is(err.Underlying, domainErr.Underlying))
-}
-
-func (err *DomainError) Unwrap() error {
-	return err.Underlying
+		err.Message == domainErr.Message
 }
 
 func NotFound(id, format string, args ...any) error {
-	return newDomainErrorf(id, ErrorReasonNotFound, nil, format, args...)
+	return newDomainErrorf(id, ErrorReasonNotFound, format, args...)
 }
 
 func ValidationFailed(id, format string, args ...any) error {
-	return newDomainErrorf(id, ErrorReasonValidationFailed, nil, format, args...)
+	return newDomainErrorf(id, ErrorReasonValidationFailed, format, args...)
 }
 
 func InvalidRequest(id, format string, args ...any) error {
-	return newDomainErrorf(id, ErrorReasonInvalidRequest, nil, format, args...)
+	return newDomainErrorf(id, ErrorReasonInvalidRequest, format, args...)
 }
 
 func Unauthorized(id, format string, args ...any) error {
-	return newDomainErrorf(id, ErrorReasonUnauthorized, nil, format, args...)
+	return newDomainErrorf(id, ErrorReasonUnauthorized, format, args...)
 }
 
 func IsDomainError(err error) bool {

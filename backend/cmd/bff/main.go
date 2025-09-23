@@ -98,9 +98,8 @@ func main() {
 		&iampg.APIKey{},
 	)
 	if err != nil {
-		log.Fatal(
-			err,
-		)
+		//nolint:gocritic // It's not a big deal if we exit without closing the DB connection
+		log.Fatal(err)
 	}
 
 	crypter := secrets.NewSymmetricCrypter([]byte(config.SecretsCryptoKey))
