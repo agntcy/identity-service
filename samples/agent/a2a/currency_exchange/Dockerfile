@@ -6,7 +6,7 @@ FROM python:3.12-slim
 RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /code
-COPY ./agent/a2a/currency_exchange/* .
+COPY ./samples/agent/a2a/currency_exchange/* .
 RUN pip install --no-cache-dir .
 
 CMD ["python", "main.py"]
