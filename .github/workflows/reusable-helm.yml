@@ -1,0 +1,72 @@
+# Copyright 2025 Cisco Systems, Inc. and its affiliates
+# SPDX-License-Identifier: Apache-2.0
+
+---
+name: Reusable Helm Chart Release
+
+on:
+  workflow_call:
+    inputs:
+      charts-dir:
+        description: "Path to the Helm charts directory"
+        required: true
+        type: string
+      gh-pages-branch:
+        description: "Branch to publish Helm charts (e.g., gh-pages)"
+        required: true
+        type: string
+    secrets:
+      github-token:
+        description: "Github token"
+        required: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4.3.0
+        with:
+          version: v3.12.0
+
+      - name: Cache Helm dependencies
+        uses: actions/cache@v4.2.3
+        with:
+          path: ~/.cache/helm
+          key: ${{ runner.os }}-helm
+
+      - name: Add Helm repositories
+        run: |
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm repo update
+
+      - name: Update Helm dependencies
+        run: |
+          for chart in ${{ inputs.charts-dir }}/*; do
+            if [ -d "$chart" ]; then
+              echo "Updating dependencies for $chart"
+              helm dependency update "$chart"
+            fi
+          done
+
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.7.0
+        env:
+          CR_TOKEN: ${{ secrets.github-token }}
+        with:
+          charts_dir: ${{ inputs.charts-dir }}
+          packages_with_index: true
+          pages_branch: ${{ inputs.gh-pages-branch }}
+          skip_existing: false
