@@ -1,0 +1,78 @@
+# Copyright 2025 Cisco Systems, Inc. and its affiliates
+# SPDX-License-Identifier: Apache-2.0
+
+---
+name: Build and Push Docker Images
+
+on:
+  workflow_call:
+    inputs:
+      bake-targets:
+        required: true
+        type: string
+        description: "Bake target"
+      bake-file:
+        required: false
+        type: string
+        description: "Bake file"
+        default: "./deployments/docker/docker-bake.hcl"
+      image-tag:
+        required: true
+        type: string
+        description: "Image tag to use."
+      image-repo:
+        required: false
+        type: string
+        description: "Image repo to use."
+    secrets:
+      github-token:
+        description: "Github token"
+        required: false
+
+jobs:
+  build-and-push:
+    name: Build and Push Docker Images
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@09d2acae674a48949e3602304ab46fd20ae0c42f # v4.2.0
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Login to GitHub Container Registry
+        if: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags') }}
+        uses: docker/login-action@184bdaa0721073962dff0199f1fb9940f07167d1 # v3.5.0
+        with:
+          registry: ghcr.io
+          username: ${{github.actor}}
+          password: ${{secrets.github-token}}
+
+      - name: Setup QEMU
+        uses: docker/setup-qemu-action@29109295f81e9208d7d86ff1c6c12d2833863392 # v3.6.0
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435 # v3.11.1
+
+      - name: Setup Buildx env
+        run: echo "BUILDX_BAKE_ENTITLEMENTS_FS=0" >> "$GITHUB_ENV"
+
+      - name: Docker metadata
+        id: metadata
+        uses: docker/metadata-action@c1e51972afc2121e065aed6d45c65596fe445f3f # v5.8.0
+        with:
+          tags: |
+            type=raw,value=${{ inputs.image-tag }}
+            type=raw,value=latest,enable=${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags') }}
+
+      - name: Build and push
+        uses: docker/bake-action@37816e747588cb137173af99ab33873600c46ea8 # v6.8.0
+        with:
+          files: |
+            ${{ inputs.bake-file }}
+            cwd://${{ steps.metadata.outputs.bake-file }}
+          targets: ${{ inputs.bake-targets }}
+          push: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags') }}
+        env:
+          IMAGE_REPO: ${{ inputs.image-repo }}
