@@ -18,13 +18,13 @@ import (
 type AwsSmCredentialStore struct {
 	client        *secretsmanager.Client
 	kmsKeyID      *string
-	secretsPrefix *string
+	secretsPrefix string
 }
 
 func NewAwsSmCredentialStore(
 	cfg *aws.Config,
 	kmsKeyID *string,
-	secretsPrefix *string,
+	secretsPrefix string,
 ) (CredentialStore, error) {
 	if cfg == nil {
 		return nil, errors.New("please provide a configuration for the AWS SM client")
@@ -113,7 +113,7 @@ func (s *AwsSmCredentialStore) Delete(ctx context.Context, subject string) error
 func (s *AwsSmCredentialStore) getSecretPath(tenantID, subject string) string {
 	return fmt.Sprintf(
 		"%s/%s/%s/%s",
-		ptrutil.DerefStr(s.secretsPrefix),
+		s.secretsPrefix,
 		mountPath,
 		tenantID,
 		subject,
