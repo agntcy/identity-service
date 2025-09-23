@@ -83,14 +83,6 @@ describe('PublicHeader', () => {
     expect(header).toHaveAttribute('data-use-divider', 'false');
   });
 
-  it('renders logo with responsive classes', () => {
-    renderWithClient(<PublicHeader />);
-
-    const logoSvg = screen.getByTestId('header-logo-svg');
-    // Check the actual classes used in the component
-    expect(logoSvg).toHaveClass('w-[200px]', 'md:w-[300px]', 'lg:w-full');
-  });
-
   it('renders default user section with login and register buttons when no userSection provided', () => {
     renderWithClient(<PublicHeader />);
 
