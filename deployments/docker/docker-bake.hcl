@@ -12,7 +12,9 @@ function "get_tag" {
 
 group "default" {
   targets = [
+    "ui",
     "bff",
+    "docs",
   ]
 }
 
@@ -38,4 +40,24 @@ target "bff" {
     "docker-metadata-action",
   ]
   tags = get_tag(target.docker-metadata-action.tags, "${target.bff.name}")
+}
+
+target "ui" {
+  context = "."
+  dockerfile = "./deployments/docker/frontend/Dockerfile"
+  inherits = [
+    "_common",
+    "docker-metadata-action",
+  ]
+  tags = get_tag(target.docker-metadata-action.tags, "${target.ui.name}")
+}
+
+target "docs" {
+  context = "."
+  dockerfile = "./deployments/docker/docs/Dockerfile"
+  inherits = [
+    "_common",
+    "docker-metadata-action",
+  ]
+  tags = get_tag(target.docker-metadata-action.tags, "${target.docs.name}")
 }
