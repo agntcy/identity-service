@@ -33,6 +33,7 @@ type Configuration struct {
 	VaultPort                                               string        `split_words:"true" default:"8200"`
 	VaultUseSsl                                             bool          `split_words:"true" default:"false"`
 	AwsRegion                                               string        `split_words:"true"`
+	AwsSecretsPrefix                                        string        `split_words:"true" default:"identity-service"`
 	IdentityHost                                            string        `split_words:"true" default:"0.0.0.0"`
 	IdentityPort                                            string        `split_words:"true" default:"4003"`
 	IamIssuer                                               string        `split_words:"true"`
