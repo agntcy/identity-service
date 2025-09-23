@@ -116,6 +116,7 @@ func main() {
 	// Initialize the gRPC Server
 	grpcsrv, err := initializeGrpcServer(
 		config,
+		interceptors.RequestIdUnary,
 		errorInterceptor.Unary,
 		authInterceptor.Unary,
 	)
@@ -457,6 +458,7 @@ func initializeHttpServer(
 	gwOpts := []runtime.ServeMuxOption{
 		runtime.WithHealthzEndpoint(grpc_health_v1.NewHealthClient(conn)),
 		runtime.WithIncomingHeaderMatcher(grpcutil.CustomMatcher),
+		runtime.WithForwardResponseOption(interceptors.RequestIdHttpForwardResponseOption),
 	}
 	gwmux := runtime.NewServeMux(gwOpts...)
 

@@ -10,4 +10,5 @@ const (
 	UserID         string = "user-id"
 	OrganizationID string = "organization-id"
 	AppID          string = "app-id"
+	RequestID      string = "request-id"
 )

@@ -80,6 +80,24 @@ func InsertAppID(ctx context.Context, appID string) context.Context {
 	return ctx
 }
 
+// InsertRequestID inserts requestID into the context.
+func InsertRequestID(ctx context.Context, requestID string) context.Context {
+	if requestID != "" {
+		return context.WithValue(ctx, RequestID, requestID) //nolint:staticcheck // we'll take care of the key type later
+	}
+
+	return ctx
+}
+
+// GetRequestID fetches the request ID from a context (if any).
+func GetRequestID(ctx context.Context) (string, bool) {
+	requestID, ok := ctx.Value(RequestID).(string)
+	log.Debug("Fetched request ID from context:", ctx)
+	log.Debug("RequestID: ", requestID)
+
+	return requestID, ok
+}
+
 // WithTenantID injects a tenant ID to a context.
 //
 //nolint:staticcheck // using types instead of string will break private IAM context
