@@ -7,17 +7,18 @@ import {Button, Header} from '@open-ui-kit/core';
 import {useAuth} from '@/hooks';
 import {ReactNode} from 'react';
 import Logo from '@/assets/header/header.svg?react';
+import outshiftLogo from '@/assets/outshift/logo-color.svg';
 
 export const PublicHeader = ({userSection}: {userSection?: ReactNode}) => {
   const {login, register} = useAuth();
   return (
     <Header
       logo={
-        <div className="flex items-center gap-2">
-          <div className="w-12">
-            <img src="/logo.svg" alt="Logo" className="w-full" />
+        <div className="flex items-center gap-2 md:gap-2 lg:gap-0">
+          <div className="w-20 lg:w-34">
+            <img src={outshiftLogo} alt="Logo" className="w-full" />
           </div>
-          <Logo className="w-[200px] md:w-[300px] lg:w-full" data-testid="header-logo-svg" />
+          <Logo className="w-[200px] md:w-[250px] lg:w-full" data-testid="header-logo-svg" />
         </div>
       }
       position="fixed"

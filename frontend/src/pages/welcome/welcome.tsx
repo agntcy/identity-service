@@ -9,6 +9,7 @@ import {docs} from '@/utils/docs';
 import LandingLogo from '@/assets/welcome/landing.svg?react';
 import * as CookieConsentVanilla from 'vanilla-cookieconsent';
 import {globalConfig} from '@/config/global';
+import outshiftLogo from '@/assets/outshift/logo-white.svg';
 import '@/styles/welcome.css';
 
 const Welcome = () => {
@@ -24,8 +25,8 @@ const Welcome = () => {
                 Get started with
               </div>
               <div className="flex justify-center items-start gap-2">
-                <div className="w-32">
-                  <img src="/logo.svg" alt="Logo" className="w-full fill-white stroke-white" />
+                <div className="w-64">
+                  <img src={outshiftLogo} alt="Logo" className="w-full fill-white stroke-white" />
                 </div>
                 <LandingLogo className="max-w-[350px] md:max-w-[700px] lg:max-w-[914px] max-h-[54px] md:max-h-[104px] lg:max-h-full" />
               </div>
