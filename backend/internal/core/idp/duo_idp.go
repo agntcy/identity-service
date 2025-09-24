@@ -74,7 +74,7 @@ func (d *DuoIdp) TestSettings(ctx context.Context) error {
 func (d *DuoIdp) CreateClientCredentialsPair(
 	ctx context.Context,
 ) (*ClientCredentials, error) {
-	log.Debug("Creating client credentials pair for Duo IdP")
+	log.FromContext(ctx).Debug("Creating client credentials pair for Duo IdP")
 
 	// Create a custom scope
 	scopeId := uuid.NewString()

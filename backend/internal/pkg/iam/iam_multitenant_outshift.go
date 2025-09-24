@@ -11,11 +11,10 @@ import (
 	"net/http"
 
 	"github.com/agntcy/identity/pkg/cmd"
-	"github.com/agntcy/identity/pkg/log"
 	outshiftiam "github.com/cisco-eti/iam-sdk-golang/iam"
 	"github.com/outshift/identity-service/internal/core/iam/types"
 	"github.com/outshift/identity-service/internal/pkg/ptrutil"
-	"github.com/sirupsen/logrus"
+	"github.com/outshift/identity-service/pkg/log"
 )
 
 //nolint:lll // Ignore linting for long lines
@@ -40,8 +39,7 @@ type MultitenantClient struct {
 func NewMultitenantClient() *MultitenantClient {
 	config, err := cmd.GetConfiguration[Configuration]()
 	if err != nil {
-		log.WithFields(logrus.Fields{log.ErrorField: err}).
-			Fatal("failed to load IAM configuration")
+		log.WithError(err).Fatal("failed to load IAM configuration")
 	}
 
 	outshiftiamClient := outshiftiam.NewClient(

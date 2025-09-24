@@ -44,7 +44,7 @@ func (r *repository) CreateApp(
 	model := newAppModel(app, tenantID)
 
 	// Create the app
-	inserted := r.dbContext.Create(model)
+	inserted := r.dbContext.WithContext(ctx).Create(model)
 	if inserted.Error != nil {
 		return nil, fmt.Errorf("there was an error creating the app: %w", inserted.Error)
 	}
@@ -60,7 +60,7 @@ func (r *repository) UpdateApp(ctx context.Context, app *types.App) error {
 
 	model := newAppModel(app, tenantID)
 
-	err := r.dbContext.
+	err := r.dbContext.WithContext(ctx).
 		Scopes(gormutil.BelongsToTenant(ctx)).
 		Save(model).Error
 	if err != nil {
@@ -76,7 +76,7 @@ func (r *repository) GetApp(
 ) (*types.App, error) {
 	var app App
 
-	result := r.dbContext.
+	result := r.dbContext.WithContext(ctx).
 		Scopes(gormutil.BelongsToTenant(ctx)).
 		First(&app, map[string]any{
 			"id": id,
@@ -98,7 +98,7 @@ func (r *repository) GetAppByResolverMetadataID(
 ) (*types.App, error) {
 	var app App
 
-	result := r.dbContext.
+	result := r.dbContext.WithContext(ctx).
 		Scopes(gormutil.BelongsToTenant(ctx)).
 		First(&app, map[string]any{
 			"resolver_metadata_id": resolverMetadataID,
@@ -124,7 +124,7 @@ func (r *repository) GetAllApps(
 	appTypes []types.AppType,
 	sortBy sorting.Sorting,
 ) (*pagination.Pageable[types.App], error) {
-	dbQuery := r.dbContext
+	dbQuery := r.dbContext.WithContext(ctx)
 
 	if query != nil && *query != "" {
 		dbQuery = dbQuery.Where(
@@ -200,7 +200,7 @@ func (r *repository) GetAllApps(
 func (r *repository) CountAllApps(ctx context.Context) (int64, error) {
 	var totalApps int64
 
-	err := r.dbContext.
+	err := r.dbContext.WithContext(ctx).
 		Model(&App{}).
 		Scopes(gormutil.BelongsToTenant(ctx)).
 		Count(&totalApps).
@@ -215,7 +215,7 @@ func (r *repository) CountAllApps(ctx context.Context) (int64, error) {
 func (r *repository) GetAppsByID(ctx context.Context, ids []string) ([]*types.App, error) {
 	var apps []*App
 
-	result := r.dbContext.
+	result := r.dbContext.WithContext(ctx).
 		Scopes(gormutil.BelongsToTenant(ctx)).
 		Where("id IN ?", ids).
 		Find(&apps)
@@ -240,7 +240,7 @@ func (r *repository) DeleteApp(ctx context.Context, app *types.App) error {
 
 	// This will make a soft delete since the entity has a DeletedAt field
 	// https://gorm.io/docs/delete.html#Soft-Delete
-	err := r.dbContext.
+	err := r.dbContext.WithContext(ctx).
 		Scopes(gormutil.BelongsToTenant(ctx)).
 		Delete(newAppModel(app, tenantID)).Error
 	if err != nil {
@@ -264,7 +264,7 @@ func (r *repository) GetAppStatuses(
 		Status types.AppStatus
 	}
 
-	err := r.dbContext.
+	err := r.dbContext.WithContext(ctx).
 		Raw(`
 			SELECT
 				a.id,

@@ -55,7 +55,9 @@ func (s *settingsService) GetSettings(
 	// Get the API key from the IAM client.
 	apiKey, err := s.iamClient.GetTenantAPIKey(ctx)
 	if err != nil {
-		log.Warn(fmt.Errorf("iam client in GetSettings failed to get tenant API key: %w", err))
+		log.FromContext(ctx).
+			WithError(err).
+			Warn("iam client in GetSettings failed to get tenant API key")
 	}
 
 	if apiKey == nil {
@@ -80,7 +82,9 @@ func (s *settingsService) SetApiKey(
 			return nil, fmt.Errorf("failed to revoke existing Api key: %w", err)
 		}
 	} else {
-		log.Warn(fmt.Errorf("iam client in SetApiKey failed to get tenant API key: %w", err))
+		log.FromContext(ctx).
+			WithError(err).
+			Warn("iam client in SetApiKey failed to get tenant API key")
 	}
 
 	// Generate a new Api key.

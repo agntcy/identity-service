@@ -112,6 +112,8 @@ func (s *service) DeleteClientCredentialsPair(
 ) {
 	err := idp.DeleteClientCredentialsPair(ctx, clientCredentials)
 	if err != nil {
-		log.Error(fmt.Errorf("idp in SetIssuer failed to delete client credentials pair: %w", err))
+		log.FromContext(ctx).
+			WithError(err).
+			Error("idp in SetIssuer failed to delete client credentials pair")
 	}
 }

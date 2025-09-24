@@ -5,22 +5,28 @@ package log
 
 import (
 	"context"
+	"maps"
 	"os"
 
 	"github.com/sirupsen/logrus"
 )
 
-// Commonly used field names here
-const (
-	ErrorField string = "error"
-)
+type contextLogFieldsKey struct{}
 
-func Init(_ string) {
+func Init(isDev bool) {
 	logrus.SetOutput(os.Stdout)
 
-	formatter := &logrus.TextFormatter{
-		FullTimestamp:          true,
-		DisableLevelTruncation: true,
+	var formatter logrus.Formatter
+
+	if isDev {
+		formatter = &logrus.TextFormatter{
+			FullTimestamp:          true,
+			DisableLevelTruncation: true,
+			DisableQuote:           true,
+			ForceColors:            true,
+		}
+	} else {
+		formatter = &logrus.JSONFormatter{}
 	}
 
 	logrus.SetFormatter(formatter)
@@ -38,31 +44,52 @@ func SetLogLevel(aLogLevel string) {
 }
 
 // Info : Configure log level
-func Info(args ...interface{}) {
+func Info(args ...any) {
 	logrus.Info(args...)
 }
 
 // Debug : Configure log level
-func Debug(args ...interface{}) {
+func Debug(args ...any) {
 	logrus.Debug(args...)
 }
 
 // Fatal : Configure log level
-func Fatal(args ...interface{}) {
+func Fatal(args ...any) {
 	logrus.Fatal(args...)
 }
 
 // Error : Configure log level
-func Error(args ...interface{}) {
+func Error(args ...any) {
 	logrus.Error(args...)
 }
 
-func Warn(args ...interface{}) {
+func Warn(args ...any) {
 	logrus.Warn(args...)
 }
 
-func WithContext(ctx context.Context) *logrus.Entry {
-	return logrus.WithContext(ctx)
+func WithError(err error) *logrus.Entry {
+	return logrus.WithError(err)
+}
+
+func WithContextualAttributes(ctx context.Context, fields logrus.Fields) context.Context {
+	nCtx := ctx
+
+	if stored, ok := ctx.Value(contextLogFieldsKey{}).(logrus.Fields); ok {
+		maps.Copy(stored, fields)
+	} else {
+		nCtx = context.WithValue(ctx, contextLogFieldsKey{}, fields)
+	}
+
+	return nCtx
+}
+
+func FromContext(ctx context.Context) *logrus.Entry {
+	fields, ok := ctx.Value(contextLogFieldsKey{}).(logrus.Fields)
+	if !ok {
+		return logrus.WithContext(ctx)
+	}
+
+	return logrus.WithContext(ctx).WithFields(fields)
 }
 
 func WithFields(fields logrus.Fields) *logrus.Entry {

@@ -75,7 +75,7 @@ func (d *OktaIdp) TestSettings(ctx context.Context) error {
 func (d *OktaIdp) CreateClientCredentialsPair(
 	ctx context.Context,
 ) (*ClientCredentials, error) {
-	log.Debug("Creating client credentials pair for Okta IdP")
+	log.FromContext(ctx).Debug("Creating client credentials pair for Okta IdP")
 
 	application, body, err := d.api.ApplicationAPI.CreateApplication(ctx).
 		Application(oktasdk.ListApplications200ResponseInner{

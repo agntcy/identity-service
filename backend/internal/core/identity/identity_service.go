@@ -135,9 +135,9 @@ func (s *service) RegisterIssuer(
 		return nil, fmt.Errorf("error generating proof for issuer registration: %w", err)
 	}
 
-	log.Debug("Registering issuer with common name: ", commonName)
-	log.Debug("Using issuer: ", issuer)
-	log.Debug("Using proof: ", proof)
+	log.FromContext(ctx).Debug("Registering issuer with common name: ", commonName)
+	log.FromContext(ctx).Debug("Using issuer: ", issuer)
+	log.FromContext(ctx).Debug("Using proof: ", proof)
 
 	// Perform the registration with the identity service
 	_, err = s.issuerClient.RegisterIssuer(&issuersdk.RegisterIssuerParams{

@@ -7,10 +7,10 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/agntcy/identity/pkg/log"
 	apptypes "github.com/outshift/identity-service/internal/core/app/types"
 	"github.com/outshift/identity-service/internal/core/policy/types"
 	"github.com/outshift/identity-service/internal/pkg/errutil"
+	"github.com/outshift/identity-service/pkg/log"
 )
 
 type Evaluator interface {
@@ -42,7 +42,7 @@ func (e *evaluator) Evaluate(
 		return nil, errutil.ValidationFailed("auth.emptyToolName", "Please provide a tool name.")
 	}
 
-	log.Debug("Evaluating policies for app: ", calledApp.ID,
+	log.FromContext(ctx).Debug("Evaluating policies for app: ", calledApp.ID,
 		", calling app ID: ", callingAppID, ", tool name: ", toolName)
 
 	policies, err := e.policyRepository.GetPoliciesByAppID(ctx, callingAppID)

@@ -23,7 +23,7 @@ func GetFromCache[T interface{}](
 	shaKey := sha256.Sum256([]byte(key))
 
 	if rawBytes, err := tCache.Get(ctx, shaKey); err == nil {
-		log.Debug("Using cached value for key")
+		log.FromContext(ctx).Debug("Using cached value for key")
 
 		// Decode the result
 		var cachedEntry T

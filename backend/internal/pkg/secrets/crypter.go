@@ -31,14 +31,14 @@ func (c *symmetricCrypter) Encrypt(secret string) string {
 	// Create a new AES cipher using the key
 	block, err := aes.NewCipher(c.key)
 	if err != nil {
-		log.Error("Got error creating new cypher: ", err)
+		log.WithError(err).Error("got error creating new cypher")
 		return ""
 	}
 
 	// Encrypt the data:
 	gcm, gcmErr := cipher.NewGCM(block)
 	if gcmErr != nil {
-		log.Error("Got error creating new GCM: ", gcmErr)
+		log.WithError(gcmErr).Error("got error creating new GCM")
 		return ""
 	}
 
@@ -56,19 +56,19 @@ func (c *symmetricCrypter) Decrypt(secretHex string) string {
 	// Create a new AES cipher with the key and encrypted message
 	block, err := aes.NewCipher(c.key)
 	if err != nil {
-		log.Error("Got error creating new cypher: ", err)
+		log.WithError(err).Error("got error creating new cypher")
 		return ""
 	}
 
 	secret, decodeErr := base64.RawStdEncoding.DecodeString(secretHex)
 	if decodeErr != nil {
-		log.Error("Got error decoding secret: ", decodeErr)
+		log.WithError(decodeErr).Error("got error decoding secret")
 		return ""
 	}
 
 	gcm, gcmErr := cipher.NewGCM(block)
 	if gcmErr != nil {
-		log.Error("Got error creating new GCM: ", gcmErr)
+		log.WithError(gcmErr).Error("got error creating new GCM")
 		return ""
 	}
 
@@ -83,7 +83,7 @@ func (c *symmetricCrypter) Decrypt(secretHex string) string {
 
 	plaintext, err := gcm.Open(nil, nonce, ciphertext, nil)
 	if err != nil {
-		log.Error("Got error decrypting secret: ", err)
+		log.WithError(err).Error("got error decrypting secret")
 	}
 
 	return string(plaintext)

@@ -13,7 +13,6 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
 	"github.com/outshift/identity-service/pkg/log"
-	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/protobuf/proto"
@@ -45,7 +44,7 @@ func setRequestIDHeader(ctx context.Context, requestID string) {
 
 	err := grpc.SetHeader(ctx, header)
 	if err != nil {
-		log.WithFields(logrus.Fields{log.ErrorField: err}).Error("unable to set X-Request-ID header")
+		log.WithError(err).Error("unable to set X-Request-ID header")
 	}
 }
 

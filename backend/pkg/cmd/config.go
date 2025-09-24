@@ -7,7 +7,6 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
 	"github.com/outshift/identity-service/pkg/log"
-	"github.com/sirupsen/logrus"
 )
 
 // GetConfiguration : Populate configuration information from .env and return Configuration model
@@ -16,7 +15,7 @@ func GetConfiguration[T any]() (*T, error) {
 
 	var conf T
 	if err := envconfig.Process("", &conf); err != nil {
-		log.WithFields(logrus.Fields{log.ErrorField: err}).Error("failed to load configuration")
+		log.WithError(err).Error("failed to load configuration")
 		return nil, err
 	}
 

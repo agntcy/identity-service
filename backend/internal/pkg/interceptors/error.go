@@ -10,7 +10,6 @@ import (
 	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
 	"github.com/outshift/identity-service/internal/pkg/grpcutil"
 	"github.com/outshift/identity-service/pkg/log"
-	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/status"
 )
@@ -39,12 +38,12 @@ func (i ErrorInterceptor) Unary(
 		}
 
 		if i.isIdentityContextError(err) {
-			log.WithFields(logrus.Fields{log.ErrorField: err}).Warn(err)
+			log.FromContext(ctx).WithError(err).Warn(err)
 
 			return resp, grpcutil.UnauthorizedError(err)
 		}
 
-		log.WithFields(logrus.Fields{log.ErrorField: err}).Error(err)
+		log.FromContext(ctx).WithError(err).Error(err)
 
 		var finalErr error
 

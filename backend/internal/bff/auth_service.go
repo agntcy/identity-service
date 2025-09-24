@@ -155,8 +155,8 @@ func (s *authService) Authorize(
 		return nil, fmt.Errorf("repository failed to save session: %w", err)
 	}
 
-	log.Debug("Created new session: ", session.ID)
-	log.Debug("Session auth code: ", session.AuthorizationCode)
+	log.FromContext(ctx).Debug("Created new session: ", session.ID)
+	log.FromContext(ctx).Debug("Session auth code: ", session.AuthorizationCode)
 
 	return session, nil
 }
@@ -203,7 +203,7 @@ func (s *authService) Token(
 		return nil, fmt.Errorf("repository failed to fetch session: %w", err)
 	}
 
-	log.Debug("Got session by authorization code: ", session.ID)
+	log.FromContext(ctx).Debug("Got session by authorization code: ", session.ID)
 
 	// Check if session already has an access token
 	if session.AccessToken != nil {
@@ -234,20 +234,22 @@ func (s *authService) Token(
 
 		err := s.authRepository.Update(ctx, session)
 		if err != nil {
-			log.Error(fmt.Errorf("repository failed to update a session with existing access token: %w", err))
+			log.FromContext(ctx).
+				WithError(err).
+				Error("repository in Token failed to update a session with existing access token")
 		}
 
 		// Return existing session if it exists
 		return existingSession, nil
 	} else if !errors.Is(err, authcore.ErrSessionNotFound) {
-		log.Error(fmt.Errorf("authRepository.GetByAccessToken failed: %w", err))
+		log.FromContext(ctx).WithError(err).Error("authRepository.GetByAccessToken failed")
 	}
 
 	// Update session with token ID
 	session.AccessToken = ptrutil.Ptr(accessToken)
 
-	log.Debug("Updating: ", session.ID)
-	log.Debug("Access token: ", *session.AccessToken)
+	log.FromContext(ctx).Debug("Updating: ", session.ID)
+	log.FromContext(ctx).Debug("Access token: ", *session.AccessToken)
 
 	err = s.authRepository.Update(ctx, session)
 	if err != nil {
@@ -318,18 +320,18 @@ func (s *authService) ExtAuthZ(
 		return errutil.Unauthorized("auth.sessionExpired", "The session has expired.")
 	}
 
-	log.Debug("Got session by access token: ", session.ID)
+	log.FromContext(ctx).Debug("Got session by access token: ", session.ID)
 
 	calleeAppID, _ := identitycontext.GetAppID(ctx)
 
-	log.Debug("Session appID: ", calleeAppID)
+	log.FromContext(ctx).Debug("Session appID: ", calleeAppID)
 
 	calleeApp, err := s.getExtAuthZCalleeApp(ctx, calleeAppID)
 	if err != nil {
 		return err
 	}
 
-	log.Debug("Got app info: ", calleeApp.ID)
+	log.FromContext(ctx).Debug("Got app info: ", calleeApp.ID)
 
 	// If the session appID is provided (in the authorize call)
 	// it needs to match the current context appID
@@ -355,12 +357,12 @@ func (s *authService) ExtAuthZ(
 		return err
 	}
 
-	log.Debug("Verifying access token: ", accessToken)
+	log.FromContext(ctx).Debug("Verifying access token: ", accessToken)
 
 	// Validate expiration of the access token
 	err = jwtutil.Verify(accessToken)
 	if err != nil {
-		log.Error(fmt.Errorf("failed to verify JWT in ExtAuthZ: %w", err))
+		log.FromContext(ctx).WithError(err).Error("failed to verify JWT in ExtAuthZ")
 		return errutil.Unauthorized("auth.invalidAccessToken", "The access token is invalid.")
 	}
 
@@ -588,9 +590,11 @@ func (s *authService) waitForDeviceApproval(ctx context.Context, otpID string) e
 	}
 
 	if errutil.IsDomainError(loopErr) {
-		log.Error(loopErr)
+		log.FromContext(ctx).
+			WithError(loopErr).
+			Error("the active wait loop in waitForDeviceApproval failed")
 	} else {
-		log.Info(loopErr)
+		log.FromContext(ctx).Info(loopErr)
 	}
 
 	return errutil.Unauthorized("auth.invocationNotApproved", "The user did not approve the invocation.")

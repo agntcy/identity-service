@@ -120,7 +120,9 @@ func (s *appService) CreateApp(
 		if err != nil && clientCredentials != nil {
 			err = idp.DeleteClientCredentialsPair(ctx, clientCredentials)
 			if err != nil {
-				log.Error(err)
+				log.FromContext(ctx).
+					WithError(err).
+					Error("unable to delete client credentials")
 			}
 		}
 	}()
@@ -191,7 +193,9 @@ func (s *appService) UpdateApp(
 
 	apiKey, err := s.iamClient.GetAppAPIKey(ctx, app.ID)
 	if err != nil {
-		log.Warn(err)
+		log.FromContext(ctx).
+			WithError(err).
+			Warnf("iam client in UpdateApp failed to get API key for %s", app.ID)
 	}
 
 	storedApp.ApiKey = ptrutil.DerefStr(apiKey.Secret)
@@ -219,7 +223,9 @@ func (s *appService) GetApp(
 
 	apiKey, err := s.iamClient.GetAppAPIKey(ctx, app.ID)
 	if err != nil {
-		log.Warn(err)
+		log.FromContext(ctx).
+			WithError(err).
+			Warnf("iam client in GetApp failed to get API key for %s", app.ID)
 	}
 
 	app.ApiKey = ptrutil.DerefStr(apiKey.Secret)
