@@ -8,7 +8,6 @@ description = "Sample LangGraph Financial Assistant"
 requires-python = ">=3.12"
 dependencies = [
     "a2a-sdk==0.2.16",
-    "httpx",
     "uvicorn",
     "click>=8.1.8",
     "httpx>=0.28.1",
@@ -17,7 +16,7 @@ dependencies = [
     "langchain-mcp-adapters>=0.0.7",
     "langchain-openai>=0.3.1",
     "langgraph>=0.3.29",
-    "identity-service-sdk=0.0.2",
+    "identity-service-sdk==0.0.2",
 ]
 
 [tool.hatch.build.targets.wheel]
