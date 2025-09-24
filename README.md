@@ -26,6 +26,73 @@
 
 ---
 
+Agent Identity Service serves as the central hub for managing and verifying digital identities for your Agentic Services. In today's interconnected digital landscape, secure and reliable identity management is paramount. Agent Identity Service addresses this need by providing a streamlined service to:
+
+- Verify the authenticity of existing identity badges.
+- Register new Agentic Services, establishing their unique identities.
+- Define TBAC (Task-Based Access Control) policies to govern access and permissions.
+
+Whether you are integrating existing services or deploying new ones, Agent Identity Service ensures that all your components—including MCP Servers, A2A Agents, and OASF—are properly identified, managed and secured.
+
+## 📚 Table of Contents
+
+- 🌟 [Main Components](#-main-components).
+- ⚡️ [Get Started](#%EF%B8%8F-get-started-in-5-minutes) in 5 Minutes.
+
+You can also:
+
+- 📦 Check-out the [Sample Agents and MCP servers](samples/README.md).
+- 📘 Explore our full [Documentation](https://identity-docs.outshift.com/) to understand our platform's capabilities.
+- 📝 See a full video [Walkthrough](https://www.youtube.com/watch?v=CO3YwjRXyQo&t=1s) of the Identity Service.
+
+## 🌟 Main Components
+
+- **Backend**: Core identity management service.
+- **Frontend**: Web interface for user interactions.
+- **SDKs**: Libraries for various programming languages to interact with the Identity Service.
+- **Docs**: Comprehensive documentation for users and developers.
+- **Samples**: Example agents and MCP servers to demonstrate integration.
+
+## ⚡️ Get Started in 5 Minutes
+
+This short guide allows you to setup the Identity Service `Frontend` as well as the Identity Service `Backend`.
+
+### Prerequisites
+
+To run these steps successfully, you need to have the following installed:
+
+- [Docker Desktop](https://docs.docker.com/get-docker/), or have both: [Docker Engine v27 or higher](https://docs.docker.com/engine/install/) and [Docker Compose v2.35 or higher](https://docs.docker.com/compose/install/)
+
+1. Start the Frontend and the Backend with Docker:
+
+   ```bash
+   ./deployments/scripts/launch.sh
+   ```
+
+   Or use `make` if available locally:
+
+   ```bash
+   make start
+   ```
+
+> [!NOTE]
+> You can also install the `Backend` and the `Frontend` using our [help charts](charts).
+
+2. Access the Frontend UI and the Backend APIs:
+
+   - The Backend APIs will be available at: `http://localhost:4000` for REST and `http://localhost:4001` for gRPC.
+   - The Frontend UI will be available at: `http://localhost:3000`.
+
+## Development
+
+For more detailed development instructions please refer to the following sections:
+
+- [Backend](backend/README.md)
+- [Frontend](frontend/README.md)
+- [Samples](samples/README.md)
+- [Api Spec](backend/api/spec/README.md)
+- [Python SDK](/sdk/python/README.md)
+
 ## Roadmap
 
 See the [open issues](https://github.com/outshift-open/identity-service/issues) for a list
