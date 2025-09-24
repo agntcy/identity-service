@@ -43,7 +43,6 @@ import (
 	"github.com/outshift/identity-service/pkg/grpcserver"
 	"github.com/outshift/identity-service/pkg/log"
 	"github.com/rs/cors"
-	"github.com/sirupsen/logrus"
 	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -62,11 +61,11 @@ func main() {
 
 	config, err := cmd.GetConfiguration[Configuration]()
 	if err != nil {
-		log.WithFields(logrus.Fields{log.ErrorField: err}).Fatal("failed to start")
+		log.WithError(err).Fatal("failed to start")
 	}
 
 	// Configure log level
-	log.Init(config.GoEnv)
+	log.Init(config.IsDev())
 	log.SetLogLevel(config.LogLevel)
 
 	log.Info("Starting in env:", config.GoEnv)
@@ -117,8 +116,9 @@ func main() {
 	grpcsrv, err := initializeGrpcServer(
 		config,
 		interceptors.RequestIdUnary,
-		errorInterceptor.Unary,
 		authInterceptor.Unary,
+		interceptors.ContextualLoggerUnary,
+		errorInterceptor.Unary,
 	)
 	if err != nil {
 		log.Fatal(err)

@@ -152,7 +152,7 @@ func (s *badgeService) IssueBadge(
 		return nil, err
 	}
 
-	log.Debug("Creating badge with claims: ", claims)
+	log.FromContext(ctx).Debug("Creating badge with claims: ", claims)
 
 	privKey, err := s.keyStore.RetrievePrivKey(ctx, settings.KeyID)
 	if err != nil {
@@ -163,7 +163,7 @@ func (s *badgeService) IssueBadge(
 		)
 	}
 
-	log.Debug("Using private key: ", privKey)
+	log.FromContext(ctx).Debug("Using private key: ", privKey)
 
 	badge, err := badgecore.Issue(
 		app.ID,
@@ -176,7 +176,7 @@ func (s *badgeService) IssueBadge(
 		return nil, fmt.Errorf("unable to issue badge: %w", err)
 	}
 
-	log.Debug("Issued badge: ", badge)
+	log.FromContext(ctx).Debug("Issued badge: ", badge)
 
 	clientCredentials, err := s.credentialStore.Get(ctx, app.ID)
 	if err != nil {
@@ -233,7 +233,7 @@ func (s *badgeService) createBadgeClaims(
 		claims, err = s.createA2ABadgeClaims(ctx, in)
 		badgeType = badgetypes.BADGE_TYPE_AGENT_BADGE
 	case apptypes.APP_TYPE_AGENT_OASF:
-		claims, err = s.createOASFBadgeClaims(in)
+		claims, err = s.createOASFBadgeClaims(ctx, in)
 		badgeType = badgetypes.BADGE_TYPE_AGENT_BADGE
 	case apptypes.APP_TYPE_MCP_SERVER:
 		claims, err = s.createMCPBadgeClaims(ctx, in)
@@ -268,7 +268,9 @@ func (s *badgeService) createA2ABadgeClaims(
 	if in.a2a.WellKnownUrl != nil {
 		a2aClaims, err = s.a2aClient.Discover(ctx, *in.a2a.WellKnownUrl)
 		if err != nil {
-			log.Error(fmt.Errorf("a2a client failed to discover agent card (%s): %w", *in.a2a.WellKnownUrl, err))
+			log.FromContext(ctx).
+				WithError(err).
+				Errorf("a2a client failed to discover agent card (%s)", *in.a2a.WellKnownUrl)
 
 			return nil, errutil.InvalidRequest(
 				"badge.a2aDiscoveryFailed",
@@ -279,7 +281,7 @@ func (s *badgeService) createA2ABadgeClaims(
 	} else {
 		a2aSchema, err := base64.StdEncoding.DecodeString(*in.a2a.SchemaBase64)
 		if err != nil {
-			log.Warn(fmt.Errorf("unable to decode in.a2a.SchemaBase64: %w", err))
+			log.FromContext(ctx).WithError(err).Warn("unable to decode in.a2a.SchemaBase64")
 
 			return nil, errutil.InvalidRequest("badge.invalidSchemaBase64", "Unable to decode SchemaBase64.")
 		}
@@ -292,7 +294,7 @@ func (s *badgeService) createA2ABadgeClaims(
 	}, nil
 }
 
-func (s *badgeService) createOASFBadgeClaims(in *issueInput) (*badgetypes.BadgeClaims, error) {
+func (s *badgeService) createOASFBadgeClaims(ctx context.Context, in *issueInput) (*badgetypes.BadgeClaims, error) {
 	err := s.validator.Struct(&in.oasf)
 	if err != nil {
 		return nil, err
@@ -300,7 +302,7 @@ func (s *badgeService) createOASFBadgeClaims(in *issueInput) (*badgetypes.BadgeC
 
 	oasfSchema, err := base64.StdEncoding.DecodeString(in.oasf.SchemaBase64)
 	if err != nil {
-		log.Warn(fmt.Errorf("unable to decode in.oasf.SchemaBase64: %w", err))
+		log.FromContext(ctx).WithError(err).Warn("unable to decode in.oasf.SchemaBase64")
 
 		return nil, errutil.InvalidRequest("badge.invalidSchemaBase64", "Unable to decode SchemaBase64.")
 	}
@@ -327,7 +329,9 @@ func (s *badgeService) createMCPBadgeClaims(
 	if in.mcp.Name != nil && in.mcp.Url != nil {
 		mcpServer, err := s.mcpClient.AutoDiscover(ctx, *in.mcp.Name, *in.mcp.Url)
 		if err != nil {
-			log.Error(fmt.Errorf("mcp client failed to auto discover the server (%s): %w", *in.mcp.Url, err))
+			log.FromContext(ctx).
+				WithError(err).
+				Errorf("mcp client failed to auto discover the server (%s)", *in.mcp.Url)
 
 			return nil, errutil.InvalidRequest(
 				"badge.mcpDiscoveryFailed",
@@ -350,7 +354,7 @@ func (s *badgeService) createMCPBadgeClaims(
 	} else if in.mcp.SchemaBase64 != nil {
 		mcpSchema, err := base64.StdEncoding.DecodeString(*in.mcp.SchemaBase64)
 		if err != nil {
-			log.Warn(fmt.Errorf("unable to decode in.mcp.SchemaBase64: %w", err))
+			log.FromContext(ctx).WithError(err).Warn("unable to decode in.mcp.SchemaBase64")
 
 			return nil, errutil.InvalidRequest("badge.invalidSchemaBase64", "Unable to decode SchemaBase64.")
 		}

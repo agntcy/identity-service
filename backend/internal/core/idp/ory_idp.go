@@ -54,7 +54,7 @@ func (d *OryIdp) TestSettings(ctx context.Context) error {
 func (d *OryIdp) CreateClientCredentialsPair(
 	ctx context.Context,
 ) (*ClientCredentials, error) {
-	log.Debug("Creating client credentials pair for Ory IdP")
+	log.FromContext(ctx).Debug("Creating client credentials pair for Ory IdP")
 
 	// Get client name
 	clientName := getName()

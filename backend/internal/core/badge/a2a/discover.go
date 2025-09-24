@@ -51,7 +51,7 @@ func (d *discoveryClient) Discover(
 		wellKnownUrl = wellKnownUrlTrimmed + wellKnownUrlSuffixV3
 	}
 
-	log.Debug("Using well-known URL for agent discovery: ", wellKnownUrl)
+	log.FromContext(ctx).Debug("Using well-known URL for agent discovery: ", wellKnownUrl)
 
 	// get the agent card from the well-known URL
 	resp, err := httputil.Get(ctx, wellKnownUrl, nil)

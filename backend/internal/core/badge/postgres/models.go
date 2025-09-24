@@ -36,7 +36,8 @@ func (bm *Badge) ToCoreType() *types.Badge {
 
 	err := json.Unmarshal(bm.CredentialSubject, &sub)
 	if err != nil {
-		log.Warn(err)
+		log.WithError(err).
+			Warn("failed to unmarshal CredentialSubject in badge.postgres.ToCoreType")
 	}
 
 	return &types.Badge{
@@ -99,7 +100,8 @@ func (s *CredentialStatus) ToCoreType() *types.CredentialStatus {
 func newBadgeModel(src *types.Badge, tenantID string) *Badge {
 	sub, err := json.Marshal(src.CredentialSubject)
 	if err != nil {
-		log.Warn(err)
+		log.WithError(err).
+			Warn("failed to marshal CredentialSubject in badge.postgres.newBadgeModel")
 	}
 
 	return &Badge{

@@ -6,8 +6,6 @@ package identitycontext
 import (
 	"context"
 	"errors"
-
-	"github.com/agntcy/identity/pkg/log"
 )
 
 var ErrTenantNotFound = errors.New("context doesn't contain a tenant id")
@@ -27,8 +25,6 @@ func InsertTenantID(ctx context.Context, tenantID string) context.Context {
 // TenantID fetches the tenant ID from a context (if any).
 func GetTenantID(ctx context.Context) (string, bool) {
 	tenantID, ok := ctx.Value(TenantID).(string)
-	log.Debug("Fetched tenant ID from context:", ctx)
-	log.Debug("TenantID: ", tenantID)
 
 	return tenantID, ok
 }
@@ -92,8 +88,6 @@ func InsertRequestID(ctx context.Context, requestID string) context.Context {
 // GetRequestID fetches the request ID from a context (if any).
 func GetRequestID(ctx context.Context) (string, bool) {
 	requestID, ok := ctx.Value(RequestID).(string)
-	log.Debug("Fetched request ID from context:", ctx)
-	log.Debug("RequestID: ", requestID)
 
 	return requestID, ok
 }

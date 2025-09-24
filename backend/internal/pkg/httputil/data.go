@@ -14,7 +14,8 @@ import (
 // Timeout : API timeout time
 const Timeout = 5
 
-func Get(ctx context.Context,
+func Get(
+	ctx context.Context,
 	uri string,
 	headers map[string]string,
 ) (*http.Response, error) {
@@ -23,12 +24,12 @@ func Get(ctx context.Context,
 	defer cancel()
 
 	// Create a new request using http
-	log.Debug("Getting uri ", uri)
+	log.FromContext(ctx).Debug("Getting uri ", uri)
 
 	req, _ := http.NewRequestWithContext(ctx, http.MethodGet, uri, http.NoBody)
 
 	// Add headers
-	log.Debug("Getting with headers ", headers)
+	log.FromContext(ctx).Debug("Getting with headers ", headers)
 
 	for key, value := range headers {
 		req.Header.Set(key, value)
@@ -39,7 +40,7 @@ func Get(ctx context.Context,
 
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Debug("Got error", err)
+		log.FromContext(ctx).Debug("Got error", err)
 		return nil, err
 	}
 

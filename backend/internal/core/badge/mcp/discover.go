@@ -50,8 +50,8 @@ func (d *discoveryClient) AutoDiscover(
 		err       error
 	)
 
-	log.Debug("Auto-discovering MCP server at URL: ", url)
-	log.Debug("Using name for MCP server: ", name)
+	log.FromContext(ctx).Debug("Auto-discovering MCP server at URL: ", url)
+	log.FromContext(ctx).Debug("Using name for MCP server: ", name)
 
 	// Attempt to discover the MCP server using the streamable HTTP client first
 	mcpServer, err = d.Discover(ctx, name, url, McpClientTypeStreamableHTTP)
@@ -71,7 +71,7 @@ func (d *discoveryClient) Discover(
 	// Trim the last path "/" from the URL if it exists
 	url = strings.TrimSuffix(url, "/")
 
-	log.Debug("Using MCP URL for discovery: ", url)
+	log.FromContext(ctx).Debug("Using MCP URL for discovery: ", url)
 
 	// Create an MCP client
 	mcpClient, err := d.createClient(url, clientType)
@@ -107,10 +107,12 @@ func (d *discoveryClient) Discover(
 	// After that the resources
 	resourcesList, err := mcpClient.ListResources(rCtx, mcp.ListResourcesRequest{})
 	if err != nil {
-		log.Warn("Failed to discover MCP resources, continuing without them: ", err)
+		log.FromContext(ctx).
+			WithError(err).
+			Warn("failed to discover MCP resources, continuing without them")
 	}
 
-	log.Debug("Parsing discovered MCP tools and resources")
+	log.FromContext(ctx).Debug("Parsing discovered MCP tools and resources")
 
 	// Parse the tools and resources
 	// Get the first batch of tools
@@ -125,7 +127,7 @@ func (d *discoveryClient) Discover(
 		availableTools = append(availableTools, tool)
 	}
 
-	log.Debug(fmt.Sprintf("Discovered %d tools from MCP server", len(availableTools)))
+	log.FromContext(ctx).Debug(fmt.Sprintf("Discovered %d tools from MCP server", len(availableTools)))
 
 	// Get the first batch of resources
 	availableResources := make([]*McpResource, 0)
@@ -137,7 +139,7 @@ func (d *discoveryClient) Discover(
 		}
 	}
 
-	log.Debug(fmt.Sprintf("Discovered %d resources from MCP server", len(availableResources)))
+	log.FromContext(ctx).Debug(fmt.Sprintf("Discovered %d resources from MCP server", len(availableResources)))
 
 	safeUrl, err := d.extractSafeURL(url)
 	if err != nil {
