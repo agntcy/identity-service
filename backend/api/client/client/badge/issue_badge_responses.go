@@ -14,7 +14,7 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/outshift/identity-service/api/client/models"
+	"github.com/outshift-open/identity-service/backend/api/client/models"
 )
 
 // IssueBadgeReader is a Reader for the IssueBadge structure.

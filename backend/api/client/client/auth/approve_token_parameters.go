@@ -15,7 +15,7 @@ import (
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/outshift/identity-service/api/client/models"
+	"github.com/outshift-open/identity-service/backend/api/client/models"
 )
 
 // NewApproveTokenParams creates a new ApproveTokenParams object,
