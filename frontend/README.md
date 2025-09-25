@@ -64,6 +64,30 @@ This script will:
 > **📝 NOTE**  
 > Make sure you have your custom logo as `public/logo.svg` before running this command.
 
+#### Optional: Custom Logos for Different Contexts
+
+For enhanced branding, you can provide context-specific logos that will be used in different parts of the application:
+
+```bash
+# Optional: Add a welcome page specific logo
+# Place your welcome page logo as: public/logo-welcome.svg
+
+# Optional: Add a header specific logo
+# Place your header logo as: public/logo-header.svg
+```
+
+**Logo Fallback System:**
+
+- If `logo-welcome.svg` exists → used on the welcome/landing page
+- If `logo-header.svg` exists → used in the application headers
+- If either doesn't exist → automatically falls back to `logo.svg`
+
+This allows you to:
+
+- Use different logo styles for different contexts (e.g., white logo for dark welcome page)
+- Maintain backward compatibility with just the main `logo.svg`
+- Customize branding per context while keeping the setup simple
+
 ### 2. Setup Node.js Version
 
 ```bash
@@ -185,7 +209,7 @@ export const globalConfig = {
 
 **Important**: Remove any `<place-holder>` text and update all URLs, email addresses, and company information to match your actual application requirements.
 
-### 5. Generate PWA Assets (Logo Setup)
+### 6. Generate PWA Assets (Logo Setup)
 
 > **⚠️ IMPORTANT**  
 > After cloning the repository and configuring your settings, generate the PWA assets from your logo. This step sets up all the necessary icons and splash screens for your app.
@@ -202,9 +226,9 @@ This script will:
 - Set up the visual identity for your Progressive Web App
 
 > **📝 NOTE**  
-> Make sure you have your custom logo as `public/logo.svg` before running this command.
+> Make sure you have your custom logo as `public/logo.svg` before running this command. If you also added optional `logo-welcome.svg` and `logo-header.svg` files (see step 1), they will be used automatically for context-specific branding.
 
-### 6. Start Development Server
+### 7. Start Development Server
 
 ```bash
 # Start the development server
