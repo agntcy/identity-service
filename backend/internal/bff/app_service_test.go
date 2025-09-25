@@ -38,7 +38,7 @@ import (
 func TestAppService_CreateApp_should_succeed(t *testing.T) {
 	t.Parallel()
 
-	ctx := identitycontext.InsertUserID(context.Background(), uuid.NewString())
+	ctx := context.Background()
 	app := &apptypes.App{
 		Type: apptypes.APP_TYPE_AGENT_A2A,
 	}

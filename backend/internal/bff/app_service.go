@@ -20,6 +20,7 @@ import (
 	policytypes "github.com/outshift/identity-service/internal/core/policy/types"
 	settingscore "github.com/outshift/identity-service/internal/core/settings"
 	settingstypes "github.com/outshift/identity-service/internal/core/settings/types"
+	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
 	"github.com/outshift/identity-service/internal/pkg/errutil"
 	"github.com/outshift/identity-service/internal/pkg/iam"
 	"github.com/outshift/identity-service/internal/pkg/pagination"
@@ -110,7 +111,12 @@ func (s *appService) CreateApp(
 		return nil, fmt.Errorf("failed to create IdP instance: %w", err)
 	}
 
-	clientCredentials, err := idp.CreateClientCredentialsPair(ctx)
+	// For self issuers, the SelfIdp will use the UserID stored in the context
+	// as the issuer to create client creds, we should make sure that we always
+	// pass the one in the IssuerSettings.
+	ctxWithIssuer := identitycontext.InsertUserID(ctx, issSettings.IssuerID)
+
+	clientCredentials, err := idp.CreateClientCredentialsPair(ctxWithIssuer)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create client credentials pair: %w", err)
 	}

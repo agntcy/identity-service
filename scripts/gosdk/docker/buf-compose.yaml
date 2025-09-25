@@ -1,0 +1,13 @@
+# Copyright 2025 Cisco Systems, Inc. and its affiliates
+# SPDX-License-Identifier: Apache-2.0
+
+---
+version: '3'
+
+services:
+  buf-go:
+    build:
+      context: ../../../
+      dockerfile: scripts/gosdk/docker/Dockerfile
+    volumes:
+      - ../../../backend:/identity/out
