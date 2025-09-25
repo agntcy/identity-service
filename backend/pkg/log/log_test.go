@@ -14,12 +14,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestWithContextualAttributes(t *testing.T) {
+func TestEnrichContext(t *testing.T) {
 	t.Parallel()
 
 	ctx := identitycontext.InsertAppID(context.Background(), uuid.NewString())
 
-	ctx1 := WithContextualAttributes(ctx, logrus.Fields{
+	ctx1 := EnrichContext(ctx, logrus.Fields{
 		"key1": "new",
 	})
 
@@ -29,7 +29,7 @@ func TestWithContextualAttributes(t *testing.T) {
 		"key1": "new",
 	}, fields)
 
-	ctx2 := WithContextualAttributes(ctx1, logrus.Fields{
+	ctx2 := EnrichContext(ctx1, logrus.Fields{
 		"key1": "newest",
 		"key2": "new",
 	})
