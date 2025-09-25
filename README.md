@@ -80,8 +80,8 @@ To run these steps successfully, you need to have the following installed:
    - `OIDC_CLIENT_ID` - The client ID you created in your OIDC provider.
    - `OIDC_LOGIN_URL` - The login URL of your OIDC provider (e.g., `https://{project_slug}.projects.projects.oryapis.com/oauth2/auth` for Ory).
 
-   > **📝 NOTE**
-   > Make sure to add `http://localhost:5500` as a redirect URI for your OIDC client.
+     > **📝 NOTE**
+     > Make sure to add `http://localhost:5500` as a redirect URI for your OIDC client.
 
 2. Start the Frontend and the Backend with Docker:
 
