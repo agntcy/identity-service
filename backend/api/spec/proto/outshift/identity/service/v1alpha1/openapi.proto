@@ -15,7 +15,7 @@ option (openapi.v3.document) = {
     version: "v1alpha1";
     contact: {
       name: "Outshift Team";
-      url: "https://github.com/agntcy/identity";
+      url: "https://github.com/outshift-open/identity-service";
       email: "identity@outshift.com";
     }
   }
@@ -44,7 +44,7 @@ option (openapi.v3.document) = {
   components: {
     headers: {
       additional_properties: [
-{}
+        {}
       ]
     },
     security_schemes: {
