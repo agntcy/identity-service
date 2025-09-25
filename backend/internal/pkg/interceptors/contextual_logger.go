@@ -77,7 +77,10 @@ func removeSensitiveDataFromMD(md metadata.MD) map[string]any {
 	filtered := make(map[string]any)
 
 	for k, v := range md {
-		if len(v) == 0 || strings.Contains(strings.ToLower(k), "authorization") {
+		header := strings.ToLower(k)
+		if len(v) == 0 ||
+			strings.Contains(header, AuthorizationHeaderKey) ||
+			strings.Contains(header, APIKeyHeaderKey) {
 			continue
 		}
 

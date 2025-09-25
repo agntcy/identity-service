@@ -82,10 +82,11 @@ func TestContextualLoggerUnary_should_enrich_with_grpc_request(t *testing.T) {
 		ctx,
 		metadata.New(
 			map[string]string{
-				"key1":              "key1_value",
-				"AUTHORIZATION":     uuid.NewString(),
-				"key2":              "key2_value",
-				"key_authorization": uuid.NewString(),
+				"key1":                       "key1_value",
+				"AUTHORIZATION":              uuid.NewString(),
+				"key2":                       "key2_value",
+				"key_authorization":          uuid.NewString(),
+				interceptors.APIKeyHeaderKey: uuid.NewString(),
 			},
 		),
 	)
