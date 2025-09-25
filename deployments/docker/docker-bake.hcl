@@ -26,7 +26,7 @@ target "_common" {
   output = [
     "type=image",
   ]
-  services = [
+  platforms = [
     "linux/amd64",
     "linux/arm64",
   ]
