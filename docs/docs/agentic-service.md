@@ -4,7 +4,7 @@ sidebar_position: 3
 
 # Creating Agentic Service Identities
 
-This guide outlines the process of creating and registering Agentic Services within the AGNTCY **Agent Identity Service**, which involves establishing a unique identity for your service and subsequently issuing a badge for its discovery.
+This guide outlines the process of creating and registering Agentic Services within the **Agent Identity Service**, which involves establishing a unique identity for your service and subsequently issuing a badge for its discovery.
 
 ## 1. Create Agentic Service (Identity Creation)
 
@@ -55,7 +55,7 @@ For services that are not directly accessible from the public internet (e.g., se
 **Steps:**
 
 1.  **Install the Python SDK:**
-    - Ensure you have the AGNTCY Python SDK installed. Refer to [the SDK section](/docs/sdk) of the documentation for detailed installation instructions.
+    - Ensure you have the Python SDK installed. Refer to [the SDK section](/docs/sdk) of the documentation for detailed installation instructions.
 2.  **Perform the Badge Creation Command:**
     - Open your terminal or command prompt.
     - Execute the following command:
@@ -69,7 +69,7 @@ For services that are not directly accessible from the public internet (e.g., se
 
 This command will facilitate the offline registration and badge issuance for your Agentic Service.
 
-Once the badge is successfully issued, it will be associated with your Agentic Service, allowing it to be discovered and utilized within the AGNTCY ecosystem.
+Once the badge is successfully issued, it will be associated with your Agentic Service, allowing it to be discovered and utilized.
 You can view the details of your newly created Agentic Service, including its API Key and badge status, in the Agentic Services dashboard:
 
 ![All Agentic Services](/img/agentic-service-all.png)

@@ -33,7 +33,7 @@ indicating the next steps in handling your report.
 
 If you've been unable to successfully draft a vulnerability report via GitHub or
 have not received a response during the alloted response window, please reach out via
-[security@agntcy.org](mailto:security@agntcy.org) contact email.
+[security@agntcy.org](mailto:security@outshift.com) contact email.
 
 After the initial reply to your report, the maintainers will endeavor to keep
 you informed of the progress towards a fix and full announcement, and may ask

@@ -26,7 +26,7 @@ export const EmptyDashboard = () => {
                 <EmptyState className="w-[200px] h-[200px]" />
               </div>
               <Typography variant="h6" textAlign="center">
-                Get started with AGNTCY&apos;s Agent Identity Service
+                Get started with Agent Identity Service
               </Typography>
             </div>
             <div className="text-center mx-auto pb-4 md:pb-0">
