@@ -14,7 +14,7 @@ This repository contains all components of the Agent Identity Service Backend - 
 
 ### Testing Stack
 
-Mockery, Testify, GoMock
+Mockery, Testify
 
 ## 📋 Prerequisites
 
@@ -53,7 +53,6 @@ Configure the following environment variables in your `.env` file:
 > For AWS Secrets Manager, make sure you setup the variables below:
 
     - `AWS_REGION` - AWS region for Secrets Manager
-    - `AWS_SECRETS_PREFIX` - Prefix for AWS Secrets Manager
 
 #### Identity Node Configuration
 
@@ -80,8 +79,8 @@ cd backend/cmd/bff
 go run .
 ```
 
-The REST APIs will be available at `http://localhost:4000`.
-The gRPC APIs will be available at `http://localhost:4001`.
+- The REST APIs will be available at `http://localhost:4000`.
+- The gRPC APIs will be available at `http://localhost:4001`.
 
 ## 🏗 Project Structure
 
@@ -99,7 +98,7 @@ backend/
 
 ## 🧪 Testing
 
-This project uses standard Go testing tools along with Testify and GoMock for unit and integration tests.
+This project uses standard Go testing tools along with Testify and Mockery for unit and integration tests.
 
 ### Running Tests
 

@@ -75,8 +75,8 @@ To run these steps successfully, you need to have the following installed:
    make start
    ```
 
-> [!NOTE]
-> You can also install the `Backend` and the `Frontend` using our [help charts](charts).
+   > **📝 NOTE**
+   > You can also install the `Backend` and the `Frontend` using our [help charts](charts).
 
 2. Access the Frontend UI and the Backend APIs:
 
@@ -110,4 +110,4 @@ appreciated**. For detailed contributing guidelines, please see
 [Copyright Notice and License](LICENSE)
 
 Distributed under Apache 2.0 License. See LICENSE for more information.
-Copyright [AGNTCY](https://github.com/agntcy) Contributors.
+Copyright [2025 Cisco Systems, Inc. and its affiliates](https://github.com/outshift-open) Contributors.

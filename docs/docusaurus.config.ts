@@ -16,7 +16,7 @@ const config: Config = {
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
-  url: 'https://identity.agntcy.org',
+  url: 'https://identity-service.outshift.com',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
@@ -122,7 +122,7 @@ const config: Config = {
           position: 'left',
         },
         {
-          href: 'https://github.com/agntcy/identity',
+          href: 'https://github.com/outshift-open/identity-service',
           label: 'GitHub',
           position: 'right',
         },
@@ -146,8 +146,8 @@ const config: Config = {
               href: 'https://github.com/agntcy',
             },
             {
-              label: 'Identity',
-              href: 'https://github.com/agntcy/identity-spec',
+              label: 'Agent Identity Service',
+              href: 'https://github.com/outshift-open/identity-service',
             },
           ],
         },
@@ -159,11 +159,11 @@ const config: Config = {
       darkTheme: prismThemes.dracula,
     }
   } satisfies Preset.ThemeConfig,
-  
+
   markdown: {
     mermaid: true,
   },
-  
+
   themes: [
     "@docusaurus/theme-mermaid",
     "docusaurus-json-schema-plugin"
@@ -177,10 +177,10 @@ const config: Config = {
           'identity-docs.staging.outshift.ai': 'bb2165a9-97e9-4feb-9fee-27bf371146ad',
           'identity-docs.outshift.com': 'a9eb2582-a56a-4cbb-b869-3f03b8de7365'
         };
-        
+
         const hostname = window.location.hostname;
         const mazeId = mazeConfig[hostname];
-        
+
         if (mazeId) {
           (function (m, a, z, e) {
             window.mazeId = e;

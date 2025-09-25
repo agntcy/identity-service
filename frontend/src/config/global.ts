@@ -16,7 +16,7 @@ export const globalConfig = {
     termsAndConditions:
       'https://www.cisco.com/c/dam/en_us/about/doing_business/legal/OfferDescriptions/AGNTCY-Agent-Identity-Service.pdf',
     privacyPolicy: 'https://www.cisco.com/c/en/us/about/legal/privacy-full.html',
-    email: 'support@agntcy.com'
+    email: 'support@outshift.com'
   },
   company: {
     name: 'Cisco Systems, Inc.',
