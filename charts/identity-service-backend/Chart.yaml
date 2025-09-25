@@ -5,7 +5,7 @@ apiVersion: v2
 name: identity-service-backend
 description: A Helm chart for identity-service backend
 type: application
-version: 0.1.7
+version: 0.1.8
 appVersion: "0.0.1"
 
 maintainers:
