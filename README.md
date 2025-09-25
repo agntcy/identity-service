@@ -63,7 +63,27 @@ To run these steps successfully, you need to have the following installed:
 
 - [Docker Desktop](https://docs.docker.com/get-docker/), or have both: [Docker Engine v27 or higher](https://docs.docker.com/engine/install/) and [Docker Compose v2.35 or higher](https://docs.docker.com/compose/install/)
 
-1. Start the Frontend and the Backend with Docker:
+1. Setup your OIDC Provider
+   You can use any OIDC provider of your choice. For testing purposes, you can use [Ory](https://www.ory.sh/), [Keycloak](https://www.keycloak.org/) or [Auth0](https://auth0.com/).
+
+   Configure the following variables in your shell environment:
+
+   ```env
+   export OIDC_ISSUER_URL=<OIDC_ISSUER_URL>
+   export OIDC_CLIENT_ID=<OIDC_CLIENT_ID>
+   export OIDC_LOGIN_URL=<OIDC_LOGIN_URL>
+   ```
+
+   where:
+
+   - `OIDC_ISSUER_URL` - The URL of your OIDC provider (e.g., `https://{project_slug}.projects.projects.oryapis.com` for Ory).
+   - `OIDC_CLIENT_ID` - The client ID you created in your OIDC provider.
+   - `OIDC_LOGIN_URL` - The login URL of your OIDC provider (e.g., `https://{project_slug}.projects.projects.oryapis.com/oauth2/auth` for Ory).
+
+> **📝 NOTE**
+> Make sure to add `http://localhost:5500` as a redirect URI for your OIDC client.
+
+2. Start the Frontend and the Backend with Docker:
 
    ```bash
    ./deployments/scripts/launch.sh
@@ -78,7 +98,7 @@ To run these steps successfully, you need to have the following installed:
    > **📝 NOTE**
    > You can also install the `Backend` and the `Frontend` using our [help charts](charts).
 
-2. Access the Frontend UI and the Backend APIs:
+3. Access the Frontend UI and the Backend APIs:
 
    - The Backend APIs will be available at: `http://localhost:4000` for REST and `http://localhost:4001` for gRPC.
    - The Frontend UI will be available at: `http://localhost:5500`.
