@@ -3,7 +3,7 @@
 [![OpenAPI v1alpha1](https://img.shields.io/badge/OpenAPI-v1alpha1-blue)](https://identity-docs.outshift.com/openapi/service/v1alpha1)
 [![Protocol Documentation](https://img.shields.io/badge/Protocol-Documentation-blue)](https://identity-docs.outshift.com/protodocs/outshift/identity/service/v1alpha1/app.proto)
 
-`github.com/outshift/identity-service/api/client` is the v1alpha1 Agent Identity Service SDK for the Go programming language that contains the different REST HTTP clients.
+`github.com/outshift-open/identity-service/backend/api/client` is the v1alpha1 Agent Identity Service SDK for the Go programming language that contains the different REST HTTP clients.
 
 The SDK requires a minimum version of `Go 1.24`.
 
@@ -36,9 +36,9 @@ import (
 
   httptransport "github.com/go-openapi/runtime/client"
   "github.com/go-openapi/strfmt"
-  "github.com/outshift/identity-service/api/client/auth"
-  appsdk "github.com/outshift/identity-service/api/client/client/app"
-  apimodels "github.com/outshift/identity-service/api/client/models"
+  "github.com/outshift-open/identity-service/backend/api/client/auth"
+  appsdk "github.com/outshift-open/identity-service/backend/api/client/client/app"
+  apimodels "github.com/outshift-open/identity-service/backend/api/client/models"
 )
 
 func main() {
