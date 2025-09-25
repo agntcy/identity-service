@@ -1,4 +1,4 @@
-# Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+# Copyright 2025 Cisco Systems, Inc. and its affiliates
 # SPDX-License-Identifier: Apache-2.0
 """Main entry point for the Currency Agent server."""
 
