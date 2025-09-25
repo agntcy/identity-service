@@ -14,7 +14,10 @@ if [ ! -f "$FRONTEND_ENV" ]; then
   touch "$FRONTEND_ENV" && \
   echo "VITE_API_URL=http://0.0.0.0:4000" > "$FRONTEND_ENV" && \
   echo "VITE_AUTH_TYPE=oidc" >> "$FRONTEND_ENV" && \
-  echo "VITE_APP_CLIENT_PORT=5500" >> "$FRONTEND_ENV"
+  echo "VITE_APP_CLIENT_PORT=5500" >> "$FRONTEND_ENV" && \
+  echo "VITE_OIDC_ISSUER=${OIDC_ISSUER_URL}" >> "$FRONTEND_ENV" && \
+  echo "VITE_OIDC_CLIENT_ID=${OIDC_CLIENT_ID}" >> "$FRONTEND_ENV" && \
+  echo "VITE_OIDC_UI=${OIDC_REDIRECT_URI}" >> "$FRONTEND_ENV"
 fi
 
 # Check if the .env file exists in the deployments/docker-compose/frontend directory

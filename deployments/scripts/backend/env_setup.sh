@@ -22,6 +22,8 @@ if [ ! -f "$BACKEND_ENV" ]; then
   echo "WEB_APPROVAL_PUB_KEY=default" >> "$BACKEND_ENV" && \
   echo "WEB_APPROVAL_PRIV_KEY=default" >> "$BACKEND_ENV" && \
   echo "VAULT_DEV_ROOT_TOKEN=default" >> "$BACKEND_ENV"
+  echo "IAM_ISSUER=${OIDC_ISSUER_URL}" >> "$BACKEND_ENV" && \
+  echo "IAM_USER_CID=${OIDC_CLIENT_ID}" >> "$BACKEND_ENV"
 fi
 
 # Check if the .env file exists in the deployments/docker-compose/backend directory
