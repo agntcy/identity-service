@@ -48,7 +48,15 @@ export const Header = () => {
           <Link to={PATHS.dashboard}>
             <div className="flex items-center gap-2">
               <div className="w-12">
-                <img src="/logo.svg" alt="Logo" className="w-full" />
+                <img
+                  src="/logo-header.svg"
+                  alt="logo"
+                  className="w-full"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = '/logo.svg';
+                  }}
+                />
               </div>
               <Logo className="w-[200px] md:w-[300px] lg:w-full" />
             </div>

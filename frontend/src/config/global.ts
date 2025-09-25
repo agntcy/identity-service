@@ -5,25 +5,22 @@
 
 export const globalConfig = {
   pwa: {
-    name: 'Outshift Agent Identity Service Powered by AGNTCY',
-    shortName: 'Agent Identity Service',
-    description:
-      'Outshift Agent Identity Service is powered by AGNTCY, providing secure and efficient identity management for agents.',
+    name: 'Agent Identity Service',
+    shortName: 'Identity Service',
+    description: 'A secure and efficient identity management service for agents.',
     themeColor: '#eff3fc',
     backgroundColor: '#eff3fc'
   },
   links: {
-    termsAndConditions:
-      'https://www.cisco.com/c/dam/en_us/about/doing_business/legal/OfferDescriptions/AGNTCY-Agent-Identity-Service.pdf',
-    privacyPolicy: 'https://www.cisco.com/c/en/us/about/legal/privacy-full.html',
-    email: 'support@outshift.com'
+    termsAndConditions: 'https://example.com/terms',
+    privacyPolicy: 'https://example.com/privacy',
+    email: 'support@example.com'
   },
   company: {
-    name: 'Cisco Systems, Inc.',
-    url: 'http://cisco.com/',
-    gitHub: '#'
+    name: 'Your Company Name',
+    url: 'https://example.com/',
+    gitHub: 'https://github.com/your-org/identity-service'
   },
-  title: 'Outshift Agent Identity Service Powered by AGNTCY',
-  description:
-    'Outshift Agent Identity Service is powered by AGNTCY, providing secure and efficient identity management for agents.'
+  title: 'Agent Identity Service',
+  description: 'A secure and efficient identity management service for agents.'
 };
