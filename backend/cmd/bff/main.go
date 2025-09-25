@@ -77,13 +77,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// Disconnect the database client when done
-	defer func() {
-		if err = dbContext.Disconnect(); err != nil {
-			log.Fatal(err)
-		}
-	}()
-
 	// Migrate the database models.
 	// The plural name of the structs will be
 	// used by Gorm to create tables
@@ -107,7 +100,7 @@ func main() {
 	if err != nil {
 		log.Fatal(
 			err,
-		) //nolint:gocritic // It's not a big deal if we exit without closing the DB connection
+		)
 	}
 
 	crypter := secrets.NewSymmetricCrypter([]byte(config.SecretsCryptoKey))
@@ -125,10 +118,6 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	defer func() {
-		_ = grpcsrv.Shutdown(ctx)
-	}()
 
 	// Initialize the application services
 	register := initializeServices(ctx, config, dbContext, crypter, iamClient)
@@ -148,6 +137,17 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// Disconnect the database client when done
+	defer func() {
+		if err = dbContext.Disconnect(); err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	defer func() {
+		_ = grpcsrv.Shutdown(ctx)
+	}()
 
 	defer func() {
 		_ = gwServer.Shutdown(ctx)

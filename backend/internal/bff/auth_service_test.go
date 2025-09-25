@@ -186,7 +186,9 @@ func TestAuthService_Authorize_should_return_err_when_resolver_metadata_id_inval
 	assert.ErrorContains(t, err, "app not found")
 }
 
-func TestAuthService_Authorize_should_return_err_when_called_app_is_same_as_owner_app(t *testing.T) {
+func TestAuthService_Authorize_should_return_err_when_called_app_is_same_as_owner_app(
+	t *testing.T,
+) {
 	t.Parallel()
 
 	invalidCalledApp := &apptypes.App{ID: validOwnerAppID}
@@ -263,7 +265,9 @@ func TestAuthService_Token_should_return_an_access_token_with_idp(t *testing.T) 
 	session := &authtypes.Session{OwnerAppID: validOwnerAppID}
 	authRepo := authmocks.NewRepository(t)
 	authRepo.EXPECT().GetByAuthorizationCode(mock.Anything, authCode).Return(session, nil)
-	authRepo.EXPECT().GetByAccessToken(mock.Anything, mock.Anything).Return(nil, errors.New("not found"))
+	authRepo.EXPECT().
+		GetByAccessToken(mock.Anything, mock.Anything).
+		Return(nil, errors.New("not found"))
 	authRepo.EXPECT().Update(mock.Anything, session).Return(nil)
 
 	credStore := idpmocks.NewCredentialStore(t)
@@ -277,7 +281,17 @@ func TestAuthService_Token_should_return_an_access_token_with_idp(t *testing.T) 
 	}, nil)
 
 	authenticator := oidctesting.NewValidAuthenticator()
-	sut := bff.NewAuthService(authRepo, credStore, authenticator, nil, nil, nil, nil, settingsRepo, nil)
+	sut := bff.NewAuthService(
+		authRepo,
+		credStore,
+		authenticator,
+		nil,
+		nil,
+		nil,
+		nil,
+		settingsRepo,
+		nil,
+	)
 
 	returnedSess, err := sut.Token(context.Background(), authCode)
 
@@ -292,7 +306,9 @@ func TestAuthService_Token_should_return_an_access_token_as_self_issuer(t *testi
 	session := &authtypes.Session{OwnerAppID: validOwnerAppID}
 	authRepo := authmocks.NewRepository(t)
 	authRepo.EXPECT().GetByAuthorizationCode(mock.Anything, authCode).Return(session, nil)
-	authRepo.EXPECT().GetByAccessToken(mock.Anything, mock.Anything).Return(nil, errors.New("not found"))
+	authRepo.EXPECT().
+		GetByAccessToken(mock.Anything, mock.Anything).
+		Return(nil, errors.New("not found"))
 	authRepo.EXPECT().Update(mock.Anything, session).Return(nil)
 
 	credStore := idpmocks.NewCredentialStore(t)
@@ -338,7 +354,17 @@ func TestAuthService_Token_should_expire_session_with_same_access_token(t *testi
 	}, nil)
 
 	authenticator := oidctesting.NewValidAuthenticator()
-	sut := bff.NewAuthService(authRepo, credStore, authenticator, nil, nil, nil, nil, settingsRepo, nil)
+	sut := bff.NewAuthService(
+		authRepo,
+		credStore,
+		authenticator,
+		nil,
+		nil,
+		nil,
+		nil,
+		settingsRepo,
+		nil,
+	)
 
 	returnedSess, err := sut.Token(context.Background(), authCode)
 
@@ -364,7 +390,9 @@ func TestAuthService_Token_should_return_err_if_auth_code_not_stored(t *testing.
 
 	invalidAuthCode := "invalid"
 	authRepo := authmocks.NewRepository(t)
-	authRepo.EXPECT().GetByAuthorizationCode(mock.Anything, invalidAuthCode).Return(nil, errors.New("not found"))
+	authRepo.EXPECT().
+		GetByAuthorizationCode(mock.Anything, invalidAuthCode).
+		Return(nil, errors.New("not found"))
 	sut := bff.NewAuthService(authRepo, nil, nil, nil, nil, nil, nil, nil, nil)
 
 	_, err := sut.Token(context.Background(), invalidAuthCode)
@@ -462,20 +490,54 @@ func TestAuthService_Token_should_return_err_if_access_token_generation_fails(t 
 				Return(&idpcore.ClientCredentials{ClientSecret: tc.clientSecret}, nil)
 
 			settingsRepo := settingsmocks.NewRepository(t)
-			settingsRepo.EXPECT().GetIssuerSettings(mock.Anything).Return(&settingstypes.IssuerSettings{
-				IdpType: tc.idpType,
-			}, nil)
+			settingsRepo.EXPECT().
+				GetIssuerSettings(mock.Anything).
+				Return(&settingstypes.IssuerSettings{
+					IdpType: tc.idpType,
+				}, nil)
 
 			switch tc.idpType {
 			case settingstypes.IDP_TYPE_SELF:
 				keyStore := identitymocks.NewKeyStore(t)
-				keyStore.EXPECT().RetrievePrivKey(mock.Anything, mock.Anything).Return(&jwk.Jwk{}, nil)
-				sut = bff.NewAuthService(authRepo, credStore, nil, nil, nil, nil, nil, settingsRepo, keyStore)
+				keyStore.EXPECT().
+					RetrievePrivKey(mock.Anything, mock.Anything).
+					Return(&jwk.Jwk{}, nil)
+				sut = bff.NewAuthService(
+					authRepo,
+					credStore,
+					nil,
+					nil,
+					nil,
+					nil,
+					nil,
+					settingsRepo,
+					keyStore,
+				)
 			case settingstypes.IDP_TYPE_UNSPECIFIED:
-				sut = bff.NewAuthService(authRepo, credStore, nil, nil, nil, nil, nil, settingsRepo, nil)
+				sut = bff.NewAuthService(
+					authRepo,
+					credStore,
+					nil,
+					nil,
+					nil,
+					nil,
+					nil,
+					settingsRepo,
+					nil,
+				)
 			default:
 				authenticator := oidctesting.NewErroneousAuthenticator()
-				sut = bff.NewAuthService(authRepo, credStore, authenticator, nil, nil, nil, nil, settingsRepo, nil)
+				sut = bff.NewAuthService(
+					authRepo,
+					credStore,
+					authenticator,
+					nil,
+					nil,
+					nil,
+					nil,
+					settingsRepo,
+					nil,
+				)
 			}
 
 			_, err := sut.Token(context.Background(), authCode)
@@ -493,7 +555,9 @@ func TestAuthService_Token_should_return_err_if_update_fails(t *testing.T) {
 	session := &authtypes.Session{OwnerAppID: validOwnerAppID}
 	authRepo := authmocks.NewRepository(t)
 	authRepo.EXPECT().GetByAuthorizationCode(mock.Anything, authCode).Return(session, nil)
-	authRepo.EXPECT().GetByAccessToken(mock.Anything, mock.Anything).Return(nil, errors.New("not found"))
+	authRepo.EXPECT().
+		GetByAccessToken(mock.Anything, mock.Anything).
+		Return(nil, errors.New("not found"))
 	authRepo.EXPECT().Update(mock.Anything, session).Return(errors.New("error"))
 
 	credStore := idpmocks.NewCredentialStore(t)
@@ -507,7 +571,17 @@ func TestAuthService_Token_should_return_err_if_update_fails(t *testing.T) {
 	}, nil)
 
 	authenticator := oidctesting.NewValidAuthenticator()
-	sut := bff.NewAuthService(authRepo, credStore, authenticator, nil, nil, nil, nil, settingsRepo, nil)
+	sut := bff.NewAuthService(
+		authRepo,
+		credStore,
+		authenticator,
+		nil,
+		nil,
+		nil,
+		nil,
+		settingsRepo,
+		nil,
+	)
 
 	_, err := sut.Token(context.Background(), authCode)
 
@@ -645,7 +719,9 @@ func TestAuthService_ExtAuthZ_should_return_err_when_called_app_not_found(t *tes
 	assert.ErrorContains(t, err, "app not found")
 }
 
-func TestAuthService_ExtAuthZ_should_return_err_when_called_app_is_not_same_as_in_session(t *testing.T) {
+func TestAuthService_ExtAuthZ_should_return_err_when_called_app_is_not_same_as_in_session(
+	t *testing.T,
+) {
 	t.Parallel()
 
 	accessToken := generateValidJWT(t)
@@ -666,7 +742,9 @@ func TestAuthService_ExtAuthZ_should_return_err_when_called_app_is_not_same_as_i
 	assert.ErrorContains(t, err, "access token is not valid for the specified app")
 }
 
-func TestAuthService_ExtAuthZ_should_return_err_when_tool_name_is_not_same_as_in_session(t *testing.T) {
+func TestAuthService_ExtAuthZ_should_return_err_when_tool_name_is_not_same_as_in_session(
+	t *testing.T,
+) {
 	t.Parallel()
 
 	accessToken := generateValidJWT(t)
@@ -809,13 +887,25 @@ func TestAuthService_ExtAuthZ_should_send_device_otp_and_continue_after_approvin
 	device1 := &devicetypes.Device{}
 	device2 := &devicetypes.Device{}
 	deviceRepo := devicemocks.NewRepository(t)
-	deviceRepo.EXPECT().GetDevices(ctx, session.UserID).Return([]*devicetypes.Device{device1, device2}, nil)
+	deviceRepo.EXPECT().
+		GetDevices(ctx, session.UserID).
+		Return([]*devicetypes.Device{device1, device2}, nil)
 
 	notifServ := bffmocks.NewNotificationService(t)
 	notifServ.EXPECT().
 		SendOTPNotification(device2, session, mock.Anything, callerApp, calledApp, mock.Anything).
 		Return(nil)
-	sut := bff.NewAuthService(authRepo, nil, nil, appRepo, policyEva, deviceRepo, notifServ, nil, nil)
+	sut := bff.NewAuthService(
+		authRepo,
+		nil,
+		nil,
+		appRepo,
+		policyEva,
+		deviceRepo,
+		notifServ,
+		nil,
+		nil,
+	)
 
 	err := sut.ExtAuthZ(ctx, accessToken, "")
 
@@ -823,7 +913,9 @@ func TestAuthService_ExtAuthZ_should_send_device_otp_and_continue_after_approvin
 	assert.True(t, deviceOTP.Used)
 }
 
-func TestAuthService_ExtAuthZ_should_return_err_when_no_device_registered_during_human_approval(t *testing.T) {
+func TestAuthService_ExtAuthZ_should_return_err_when_no_device_registered_during_human_approval(
+	t *testing.T,
+) {
 	t.Parallel()
 
 	accessToken := generateValidJWT(t)
@@ -897,7 +989,17 @@ func TestAuthService_ExtAuthZ_should_return_err_when_send_notification_fails(t *
 	notifServ.EXPECT().
 		SendOTPNotification(mock.Anything, session, mock.Anything, callerApp, calledApp, mock.Anything).
 		Return(errors.New("failed"))
-	sut := bff.NewAuthService(authRepo, nil, nil, appRepo, policyEva, deviceRepo, notifServ, nil, nil)
+	sut := bff.NewAuthService(
+		authRepo,
+		nil,
+		nil,
+		appRepo,
+		policyEva,
+		deviceRepo,
+		notifServ,
+		nil,
+		nil,
+	)
 
 	err := sut.ExtAuthZ(ctx, accessToken, "")
 
@@ -956,13 +1058,25 @@ func TestAuthService_ExtAuthZ_should_return_err_when_device_otp_is_invalid(t *te
 				Return(&policytypes.Rule{NeedsApproval: true}, nil)
 
 			deviceRepo := devicemocks.NewRepository(t)
-			deviceRepo.EXPECT().GetDevices(ctx, session.UserID).Return([]*devicetypes.Device{{}}, nil)
+			deviceRepo.EXPECT().
+				GetDevices(ctx, session.UserID).
+				Return([]*devicetypes.Device{{}}, nil)
 
 			notifServ := bffmocks.NewNotificationService(t)
 			notifServ.EXPECT().
 				SendOTPNotification(mock.Anything, session, mock.Anything, callerApp, calledApp, mock.Anything).
 				Return(nil)
-			sut := bff.NewAuthService(authRepo, nil, nil, appRepo, policyEva, deviceRepo, notifServ, nil, nil)
+			sut := bff.NewAuthService(
+				authRepo,
+				nil,
+				nil,
+				appRepo,
+				policyEva,
+				deviceRepo,
+				notifServ,
+				nil,
+				nil,
+			)
 
 			err := sut.ExtAuthZ(ctx, accessToken, "")
 

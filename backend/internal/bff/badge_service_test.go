@@ -87,7 +87,9 @@ func initTestServiceIssueBadgeSuccessFixture(t *testing.T) *issueBadgeSuccessFix
 	).Return(nil)
 
 	tasksServ := policymocks.NewTaskService(t)
-	tasksServ.EXPECT().UpdateOrCreateForAgent(ctx, app.ID, ptrutil.DerefStr(app.Name)).Return(nil, nil)
+	tasksServ.EXPECT().
+		UpdateOrCreateForAgent(ctx, app.ID, ptrutil.DerefStr(app.Name)).
+		Return(nil, nil)
 
 	badgeRevoker := badgemocks.NewRevoker(t)
 	badgeRevoker.EXPECT().RevokeAll(ctx, app.ID, mock.Anything, issuer, mock.Anything).Return(nil)
@@ -215,13 +217,19 @@ func TestBadgeService_IssueBadge_should_succeed(t *testing.T) {
 			},
 		},
 		"issue MCP Server badge base64 schema": {
-			options: bff.WithMCP(nil, nil, ptrutil.Ptr("eyJuYW1lIjoibWNwX3NlcnZlciIsInVybCI6IiJ9")), // base64 of the claims
+			options: bff.WithMCP(
+				nil,
+				nil,
+				ptrutil.Ptr("eyJuYW1lIjoibWNwX3NlcnZlciIsInVybCI6IiJ9"),
+			), // base64 of the claims
 			appType: apptypes.APP_TYPE_MCP_SERVER,
 			claims:  `{"name":"mcp_server","url":""}`,
 			sutFactory: func(t *testing.T, fixture *issueBadgeSuccessFixture) bff.BadgeService {
 				t.Helper()
 
-				fixture.tasksServ.EXPECT().CreateForMCP(fixture.ctx, fixture.app.ID, mock.Anything).Return(nil, nil)
+				fixture.tasksServ.EXPECT().
+					CreateForMCP(fixture.ctx, fixture.app.ID, mock.Anything).
+					Return(nil, nil)
 
 				return bff.NewBadgeService(
 					fixture.settingsRepo,
@@ -263,7 +271,9 @@ func TestBadgeService_VerifyBadge_should_not_return_an_error(t *testing.T) {
 	ctx := context.Background()
 	validBadge := "valid_badge"
 	identityServ := identitymocks.NewService(t)
-	identityServ.EXPECT().VerifyVerifiableCredential(ctx, &validBadge).Return(&badgetypes.VerificationResult{}, nil)
+	identityServ.EXPECT().
+		VerifyVerifiableCredential(ctx, &validBadge).
+		Return(&badgetypes.VerificationResult{}, nil)
 	sut := bff.NewBadgeService(nil, nil, nil, nil, nil, nil, identityServ, nil, nil, nil)
 
 	_, err := sut.VerifyBadge(ctx, &validBadge)
