@@ -37,7 +37,6 @@ do_start_frontend:
 	./deployments/scripts/frontend/launch.sh
 	@echo "Frontend started at http://localhost:5500"
 
-
 generate_proto: do_generate_proto
 
 generate_mocks: do_generate_mocks
@@ -50,3 +49,6 @@ stop_docs: do_stop_docs
 
 stop_frontend: do_stop_frontend
 start_frontend: do_start_frontend
+
+start: do_start_backend do_start_frontend do_start_docs
+stop: do_stop_frontend do_stop_backend do_stop_docs
