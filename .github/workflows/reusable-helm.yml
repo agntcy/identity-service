@@ -50,7 +50,6 @@ jobs:
       - name: Add Helm repositories
         run: |
           helm repo add bitnami https://charts.bitnami.com/bitnami
-          # Added hashicorp repo to satisfy dependency 'vault' in identity-service-backend chart
           helm repo add hashicorp https://helm.releases.hashicorp.com
           helm repo update
 
