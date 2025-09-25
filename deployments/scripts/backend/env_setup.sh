@@ -21,7 +21,13 @@ if [ ! -f "$BACKEND_ENV" ]; then
   echo "WEB_APPROVAL_EMAIL=default" >> "$BACKEND_ENV" && \
   echo "WEB_APPROVAL_PUB_KEY=default" >> "$BACKEND_ENV" && \
   echo "WEB_APPROVAL_PRIV_KEY=default" >> "$BACKEND_ENV" && \
+  echo "VAULT_HOST=identity-vault" >> "$BACKEND_ENV" && \
   echo "VAULT_DEV_ROOT_TOKEN=default" >> "$BACKEND_ENV"
+  echo "GO_ENV=development" >> "$BACKEND_ENV" && \
+  echo "IDENTITY_HOST=identity-node" >> "$BACKEND_ENV" && \
+  echo "IDENTITY_PORT=4000" >> "$BACKEND_ENV" && \
+  echo "IAM_ORGANIZATION=default" >> "$BACKEND_ENV" && \
+  echo "SECRETS_CRYPTO_KEY=defaultcryptokey" >> "$BACKEND_ENV" && \
   echo "IAM_ISSUER=${OIDC_ISSUER_URL}" >> "$BACKEND_ENV" && \
   echo "IAM_USER_CID=${OIDC_CLIENT_ID}" >> "$BACKEND_ENV"
 fi
