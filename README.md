@@ -81,7 +81,7 @@ To run these steps successfully, you need to have the following installed:
 2. Access the Frontend UI and the Backend APIs:
 
    - The Backend APIs will be available at: `http://localhost:4000` for REST and `http://localhost:4001` for gRPC.
-   - The Frontend UI will be available at: `http://localhost:3000`.
+   - The Frontend UI will be available at: `http://localhost:5500`.
 
 ## Development
 

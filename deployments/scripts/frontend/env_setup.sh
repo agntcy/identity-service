@@ -8,9 +8,13 @@ IDENTITY_DEPLOYMENTS_DIR=./deployments/docker-compose/frontend
 # This script sets up the environment for the Identity frontend service.
 # It checks for the existence of a .env file in the frontend directory
 if [ ! -f "$FRONTEND_ENV" ]; then
-  echo ".env File not found in the frontend directory, please create one"
+  echo ".env File not found in the frontend directory, using defaults"
 
-  exit 1
+  echo "Creating .env file with defaults"
+  touch "$FRONTEND_ENV" && \
+  echo "VITE_API_URL=http://0.0.0.0:4000" > "$FRONTEND_ENV" && \
+  echo "VITE_AUTH_TYPE=oidc" >> "$FRONTEND_ENV" && \
+  echo "VITE_APP_CLIENT_PORT=5500" >> "$FRONTEND_ENV"
 fi
 
 # Check if the .env file exists in the deployments/docker-compose/frontend directory

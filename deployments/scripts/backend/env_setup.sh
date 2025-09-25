@@ -8,9 +8,20 @@ IDENTITY_DEPLOYMENTS_DIR=./deployments/docker-compose/backend
 # This script sets up the environment for the Identity Backend service.
 # It checks for the existence of a .env file in the backend directory
 if [ ! -f "$BACKEND_ENV" ]; then
-  echo ".env File not found in the backend directory, please create one"
+  echo ".env File not found in the backend directory, using defaults"
 
-  exit 1
+  echo "Creating .env file with defaults"
+  touch "$BACKEND_ENV" && \
+  echo "DB_HOST=identity-postgres" > "$BACKEND_ENV" && \
+  echo "DB_PORT=5432" >> "$BACKEND_ENV" && \
+  echo "DB_USERNAME=postgres" >> "$BACKEND_ENV" && \
+  echo "DB_PASSWORD=postgres" >> "$BACKEND_ENV" && \
+  echo "POSTGRES_PASSWORD=postgres" >> "$BACKEND_ENV" && \
+  echo "POSTGRES_DB=identity" >> "$BACKEND_ENV" && \
+  echo "WEB_APPROVAL_EMAIL=default" >> "$BACKEND_ENV" && \
+  echo "WEB_APPROVAL_PUB_KEY=default" >> "$BACKEND_ENV" && \
+  echo "WEB_APPROVAL_PRIV_KEY=default" >> "$BACKEND_ENV" && \
+  echo "VAULT_DEV_ROOT_TOKEN=default" >> "$BACKEND_ENV"
 fi
 
 # Check if the .env file exists in the deployments/docker-compose/backend directory
