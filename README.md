@@ -76,9 +76,9 @@ To run these steps successfully, you need to have the following installed:
 
    where:
 
-   - `OIDC_ISSUER_URL` - The URL of your OIDC provider (e.g., `https://{project_slug}.projects.projects.oryapis.com` for Ory).
+   - `OIDC_ISSUER_URL` - The URL of your OIDC provider (e.g., `https://{INSTANCE_URL}/oauth2/{CLIENT_ID}/.well-known/openid-configuration`).
    - `OIDC_CLIENT_ID` - The client ID you created in your OIDC provider.
-   - `OIDC_LOGIN_URL` - The login URL of your OIDC provider (e.g., `https://{project_slug}.projects.projects.oryapis.com/oauth2/auth` for Ory).
+   - `OIDC_LOGIN_URL` - The login URL of your OIDC provider (e.g., `https://{INSTANCE_URL}/oauth2/{CLIENT_ID}/authorize`).
 
      > **📝 NOTE**
      > Make sure to add `http://localhost:5500` as a redirect URI for your OIDC client.
