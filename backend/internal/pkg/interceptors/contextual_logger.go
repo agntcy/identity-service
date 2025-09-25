@@ -70,7 +70,7 @@ func ContextualLoggerUnary(
 		fields["request"] = requestFields
 	}
 
-	return handler(log.WithContextualAttributes(ctx, fields), req)
+	return handler(log.EnrichContext(ctx, fields), req)
 }
 
 func removeSensitiveDataFromMD(md metadata.MD) map[string]any {

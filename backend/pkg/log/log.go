@@ -71,7 +71,7 @@ func WithError(err error) *logrus.Entry {
 	return logrus.WithError(err)
 }
 
-func WithContextualAttributes(ctx context.Context, fields logrus.Fields) context.Context {
+func EnrichContext(ctx context.Context, fields logrus.Fields) context.Context {
 	nCtx := ctx
 
 	if stored, ok := ctx.Value(contextLogFieldsKey{}).(logrus.Fields); ok {
