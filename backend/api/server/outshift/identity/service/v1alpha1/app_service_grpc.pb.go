@@ -27,6 +27,7 @@ const (
 	AppService_GetAppsCount_FullMethodName     = "/outshift.identity.service.v1alpha1.AppService/GetAppsCount"
 	AppService_GetApp_FullMethodName           = "/outshift.identity.service.v1alpha1.AppService/GetApp"
 	AppService_CreateApp_FullMethodName        = "/outshift.identity.service.v1alpha1.AppService/CreateApp"
+	AppService_CreateOasfApp_FullMethodName    = "/outshift.identity.service.v1alpha1.AppService/CreateOasfApp"
 	AppService_UpdateApp_FullMethodName        = "/outshift.identity.service.v1alpha1.AppService/UpdateApp"
 	AppService_DeleteApp_FullMethodName        = "/outshift.identity.service.v1alpha1.AppService/DeleteApp"
 	AppService_RefreshAppApiKey_FullMethodName = "/outshift.identity.service.v1alpha1.AppService/RefreshAppApiKey"
@@ -48,6 +49,7 @@ type AppServiceClient interface {
 	GetApp(ctx context.Context, in *GetAppRequest, opts ...grpc.CallOption) (*App, error)
 	// Create a new App.
 	CreateApp(ctx context.Context, in *CreateAppRequest, opts ...grpc.CallOption) (*App, error)
+	CreateOasfApp(ctx context.Context, in *CreateOasfAppRequest, opts ...grpc.CallOption) (*CreateOasfAppResponse, error)
 	// Update an App.
 	UpdateApp(ctx context.Context, in *UpdateAppRequest, opts ...grpc.CallOption) (*App, error)
 	// Delete an existing App.
@@ -102,6 +104,16 @@ func (c *appServiceClient) CreateApp(ctx context.Context, in *CreateAppRequest, 
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(App)
 	err := c.cc.Invoke(ctx, AppService_CreateApp_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *appServiceClient) CreateOasfApp(ctx context.Context, in *CreateOasfAppRequest, opts ...grpc.CallOption) (*CreateOasfAppResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateOasfAppResponse)
+	err := c.cc.Invoke(ctx, AppService_CreateOasfApp_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -172,6 +184,7 @@ type AppServiceServer interface {
 	GetApp(context.Context, *GetAppRequest) (*App, error)
 	// Create a new App.
 	CreateApp(context.Context, *CreateAppRequest) (*App, error)
+	CreateOasfApp(context.Context, *CreateOasfAppRequest) (*CreateOasfAppResponse, error)
 	// Update an App.
 	UpdateApp(context.Context, *UpdateAppRequest) (*App, error)
 	// Delete an existing App.
@@ -202,6 +215,9 @@ func (UnimplementedAppServiceServer) GetApp(context.Context, *GetAppRequest) (*A
 }
 func (UnimplementedAppServiceServer) CreateApp(context.Context, *CreateAppRequest) (*App, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateApp not implemented")
+}
+func (UnimplementedAppServiceServer) CreateOasfApp(context.Context, *CreateOasfAppRequest) (*CreateOasfAppResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateOasfApp not implemented")
 }
 func (UnimplementedAppServiceServer) UpdateApp(context.Context, *UpdateAppRequest) (*App, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateApp not implemented")
@@ -306,6 +322,24 @@ func _AppService_CreateApp_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AppServiceServer).CreateApp(ctx, req.(*CreateAppRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AppService_CreateOasfApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateOasfAppRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AppServiceServer).CreateOasfApp(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AppService_CreateOasfApp_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AppServiceServer).CreateOasfApp(ctx, req.(*CreateOasfAppRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -422,6 +456,10 @@ var AppService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateApp",
 			Handler:    _AppService_CreateApp_Handler,
+		},
+		{
+			MethodName: "CreateOasfApp",
+			Handler:    _AppService_CreateOasfApp_Handler,
 		},
 		{
 			MethodName: "UpdateApp",

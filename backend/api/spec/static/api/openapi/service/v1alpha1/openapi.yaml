@@ -10,7 +10,7 @@ info:
     description: Agent Identity Service API provides a set of endpoints for managing identity and access control within the Outshift ecosystem.
     contact:
         name: Outshift Team
-        url: https://github.com/agntcy/identity
+        url: https://github.com/outshift-open/identity-service
         email: identity@outshift.com
     version: v1alpha1
 servers:
@@ -114,6 +114,30 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/GetAppsCountResponse'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /v1alpha1/apps/oasf:
+        post:
+            tags:
+                - AppService
+            operationId: AppService_CreateOasfApp
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateOasfAppRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateOasfAppResponse'
                 default:
                     description: Default error response
                     content:
@@ -1129,6 +1153,23 @@ components:
                 BadgeClaims represents the content of a Badge VC defined [here]
 
                  [here]: https://spec.identity.agntcy.org/docs/vc/intro/
+        CreateOasfAppRequest:
+            type: object
+            properties:
+                schemaBase64:
+                    type: string
+                    description: The OASF schema in a base64 encoded format
+        CreateOasfAppResponse:
+            type: object
+            properties:
+                app:
+                    allOf:
+                        - $ref: '#/components/schemas/App'
+                    description: The created OASF App.
+                badge:
+                    allOf:
+                        - $ref: '#/components/schemas/Badge'
+                    description: The issued badge for the OASF App.
         CreatePolicyRequest:
             type: object
             properties:
