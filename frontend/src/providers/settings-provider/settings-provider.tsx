@@ -10,8 +10,8 @@ import {useEffect, useMemo} from 'react';
 import {useSettingsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
 import {Loading} from '@/components/ui/loading';
-import {isMultiTenant} from '@/utils/get-auth-config';
 import {useAuth} from '@/hooks';
+import {isMultiTenant} from '@/utils/auth';
 
 const SettingsProvider = ({children}: {children: React.ReactNode}) => {
   const {authInfo} = useAuth();

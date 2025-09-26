@@ -22,7 +22,7 @@ import {GlobalSearch} from '../shared/helpers/global-search';
 import Logo from '@/assets/header/header.svg?react';
 import {globalConfig} from '@/config/global';
 import {cn} from '@/lib/utils';
-import {isMultiTenant} from '@/utils/get-auth-config';
+import {isMultiTenant} from '@/utils/auth';
 
 export const Header = () => {
   const {isMobile} = useWindowSize();

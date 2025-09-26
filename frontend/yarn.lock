@@ -5599,6 +5599,7 @@ __metadata:
     lucide-react: "npm:^0.522.0"
     material-react-table: "npm:^3.2.1"
     msw: "npm:^2.10.5"
+    oidc-client-ts: "npm:^3.3.0"
     prettier: "npm:^3.5.3"
     qs: "npm:^6.14.0"
     react: "npm:^18.2.0"
@@ -5607,6 +5608,7 @@ __metadata:
     react-helmet-async: "npm:^2.0.5"
     react-hook-form: "npm:^7.54.2"
     react-markdown: "npm:^9.0.3"
+    react-oidc-context: "npm:^3.3.0"
     react-qr-code: "npm:^2.0.18"
     react-resizable-panels: "npm:^2.1.7"
     react-router-dom: "npm:^7.3.0"
@@ -10726,6 +10728,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"oidc-client-ts@npm:^3.3.0":
+  version: 3.3.0
+  resolution: "oidc-client-ts@npm:3.3.0"
+  dependencies:
+    jwt-decode: "npm:^4.0.0"
+  checksum: 10/356940cb12075cc80c1b48ac5e67e2676542fa13664214c650fdf70f1f5a9f753bda8bfaf11182eb257a5ae564feefb165397ab44afa7138ba4846b63ecc6f0e
+  languageName: node
+  linkType: hard
+
 "once@npm:^1.3.0":
   version: 1.4.0
   resolution: "once@npm:1.4.0"
@@ -11371,6 +11382,16 @@ __metadata:
     "@types/react": ">=18"
     react: ">=18"
   checksum: 10/07045797b926afafc6aff692c9ee7d1cb9b12bc0e2d2b9f22ab17f2d1036dd807034a58565d67cfcfe94fe43961452a977496a175cbc9028ed51f2eec823c2f4
+  languageName: node
+  linkType: hard
+
+"react-oidc-context@npm:^3.3.0":
+  version: 3.3.0
+  resolution: "react-oidc-context@npm:3.3.0"
+  peerDependencies:
+    oidc-client-ts: ^3.1.0
+    react: ">=16.14.0"
+  checksum: 10/85b53d3f5ab13793a2597e8221017293978e7caa04c51c4a09b91a50869cbef86cd78784ce38609700980d888b088d80fc600bf3a6fccf88231d032e55221e65
   languageName: node
   linkType: hard
 

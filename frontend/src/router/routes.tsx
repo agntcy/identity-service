@@ -10,12 +10,12 @@ import {NodeRoute} from '@/components/router/node-route';
 import NotFound from '@/components/router/404';
 import {Navigate} from 'react-router-dom';
 import React from 'react';
-import {SecureRoute} from '@/components/router/secure-route';
 import {Loading} from '@/components/ui/loading';
 import {useSettingsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
 import {useWindowSize} from '@/hooks';
-import {isMultiTenant} from '@/utils/get-auth-config';
+import {SecureRoute} from '@/components/router/secure-route/secure-route';
+import {isMultiTenant} from '@/utils/auth';
 
 // Components
 const Layout = React.lazy(() => import('@/components/layout/layout'));

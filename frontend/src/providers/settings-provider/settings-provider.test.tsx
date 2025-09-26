@@ -21,8 +21,9 @@ vi.mock('@/config', () => ({
 }));
 
 // Mock the isMultiTenant function
-vi.mock('@/utils/get-auth-config', () => ({
-  isMultiTenant: vi.fn(() => true)
+const mockIsMultiTenant = vi.hoisted(() => vi.fn(() => true));
+vi.mock('@/utils/auth', () => ({
+  isMultiTenant: mockIsMultiTenant
 }));
 
 // Mock the auth hooks
@@ -69,7 +70,6 @@ const mockUseGetSettings = vi.mocked(await import('@/queries')).useGetSettings;
 const mockUseSettingsStore = vi.mocked(await import('@/store')).useSettingsStore;
 const mockToast = vi.mocked(await import('@open-ui-kit/core')).toast;
 const mockUseShallow = vi.mocked(await import('zustand/react/shallow')).useShallow;
-const mockIsMultiTenant = vi.mocked(await import('@/utils/get-auth-config')).isMultiTenant;
 
 // Test wrapper component
 const TestWrapper = ({children}: {children: React.ReactNode}) => {

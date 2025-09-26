@@ -4,7 +4,7 @@
  */
 
 import {IamAPI} from '@/api/services';
-import {isMultiTenant} from '@/utils/get-auth-config';
+import {isMultiTenant} from '@/utils/auth';
 import {useQuery} from '@tanstack/react-query';
 
 export const useGetTenants = () => {

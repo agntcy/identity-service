@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {AuthConfigOptions} from '@/types/okta';
+import {AuthConfigOptionsIAM} from '@/types/auth/iam';
 
-export const defaultAuthConfigOptions: AuthConfigOptions = {
+export const defaultAuthConfigOptionsIAM: AuthConfigOptionsIAM = {
   scopes: ['openid', 'offline_access'],
   renew: 'auto',
   redirectUri: `${window.location.protocol}//${window.location.host}`,

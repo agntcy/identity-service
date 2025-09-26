@@ -30,7 +30,12 @@ vi.mock('@/config', () => ({
     IAM_MULTI_TENANT: true,
     IAM_UI: 'https://iam.example.com',
     IAM_OIDC_ISSUER: 'https://issuer.example.com',
-    IAM_OIDC_CLIENT_ID: 'client-id'
+    IAM_OIDC_CLIENT_ID: 'client-id',
+    AUTH_TYPE: 'iam'
+  },
+  AuthType: {
+    IAM: 'iam',
+    OIDC: 'oidc'
   }
 }));
 

@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {AuthContextIAM as ContextIAM} from '@/types/okta';
+import {AuthContextIAM as ContextIAM} from '@/types/auth/iam';
 import * as React from 'react';
 import {AuthContextIAM} from '@/providers/auth-provider/iam/auth-context-iam';
 

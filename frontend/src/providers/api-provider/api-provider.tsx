@@ -9,7 +9,7 @@ import {Loading} from '@/components/ui/loading';
 import {AgenticServicesAPI, DevicesAPI, IamAPI, PolicyAPI, SettingsAPI} from '@/api/services';
 import {BadgeAPI} from '@/api/services/badge-api';
 import {useAnalyticsContext} from '../analytics-provider/analytics-provider';
-import {isMultiTenant} from '@/utils/get-auth-config';
+import {isMultiTenant} from '@/utils/auth';
 
 export const ApiProvider = ({children}: React.PropsWithChildren) => {
   const [isSet, setIsSet] = React.useState<boolean>(false);

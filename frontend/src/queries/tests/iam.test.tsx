@@ -29,7 +29,7 @@ vi.mock('@/api/services', () => ({
 }));
 
 // Mock isMultiTenant utility
-vi.mock('@/utils/get-auth-config', () => ({
+vi.mock('@/utils/auth', () => ({
   isMultiTenant: vi.fn(() => true) // Enable multi-tenant mode for tests
 }));
 

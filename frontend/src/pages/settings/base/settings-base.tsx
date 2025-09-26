@@ -5,7 +5,7 @@
  */
 
 import {PATHS} from '@/router/paths';
-import {isMultiTenant} from '@/utils/get-auth-config';
+import {isMultiTenant} from '@/utils/auth';
 import {useMemo} from 'react';
 import {Outlet} from 'react-router-dom';
 
