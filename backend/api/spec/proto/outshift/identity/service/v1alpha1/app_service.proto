@@ -173,7 +173,8 @@ message CreateOasfAppResponse {
   Badge badge = 2;
 }
 
-message GetAppsCountRequest {}
+message GetAppsCountRequest {
+}
 
 message AppTypeCountEntry {
   // The type of the App

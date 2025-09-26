@@ -30,6 +30,8 @@ type ClientOption func(*runtime.ClientOperation)
 type ClientService interface {
 	CreateApp(params *CreateAppParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*CreateAppOK, error)
 
+	CreateOasfApp(params *CreateOasfAppParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*CreateOasfAppOK, error)
+
 	DeleteApp(params *DeleteAppParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DeleteAppOK, error)
 
 	GetApp(params *GetAppParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetAppOK, error)
@@ -84,6 +86,44 @@ func (a *Client) CreateApp(params *CreateAppParams, authInfo runtime.ClientAuthI
 	}
 	// unexpected success response
 	unexpectedSuccess := result.(*CreateAppDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
+CreateOasfApp creates an o a s f app from an o a s f schema and issue a badge
+*/
+func (a *Client) CreateOasfApp(params *CreateOasfAppParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*CreateOasfAppOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewCreateOasfAppParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "CreateOasfApp",
+		Method:             "POST",
+		PathPattern:        "/v1alpha1/apps/oasf",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http"},
+		Params:             params,
+		Reader:             &CreateOasfAppReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*CreateOasfAppOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*CreateOasfAppDefault)
 	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
 }
 
