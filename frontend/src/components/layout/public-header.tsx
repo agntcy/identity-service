@@ -14,11 +14,11 @@ export const PublicHeader = ({userSection}: {userSection?: ReactNode}) => {
     <Header
       logo={
         <div className="flex items-center gap-2">
-          <div className="w-12">
+          <div>
             <img
               src="/logo-header.svg"
               alt="logo"
-              className="w-full"
+              className="h-[50px]"
               onError={(e) => {
                 const target = e.target as HTMLImageElement;
                 target.src = '/logo.svg';

@@ -24,18 +24,18 @@ const Welcome = () => {
                 Get started with
               </div>
               <div className="flex justify-center items-center gap-2">
-                <div className="w-32">
+                <div>
                   <img
                     src="/logo-welcome.svg"
                     alt="logo"
-                    className="w-full"
+                    className="h-[50px] md:h-[80px] lg:h-[120px]"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.src = '/logo.svg';
                     }}
                   />
                 </div>
-                <LandingLogo className="max-w-[350px] md:max-w-[700px] lg:max-w-[914px] max-h-[54px] md:max-h-[104px] lg:max-h-full" />
+                <LandingLogo className="max-w-[250px] md:max-w-[500px] lg:max-w-[914px] max-h-[54px] md:max-h-[104px] lg:max-h-full" />
               </div>
             </div>
             <div className="welcome-main-card mx-auto max-w-[350px] md:max-w-[700px] lg:max-w-[914px] h-fit md:h-[350px] px-4 md:px-8 lg:px-[80px] flex flex-col justify-center items-center">
