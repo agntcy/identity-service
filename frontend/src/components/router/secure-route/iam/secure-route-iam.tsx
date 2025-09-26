@@ -3,8 +3,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-/* c8 ignore start */
-
 import {AuthContextIAM, SecureRoutePropsIAM} from '@/types/auth/iam';
 import * as React from 'react';
 import * as ReactRouterDom from 'react-router-dom';
@@ -91,5 +89,3 @@ export const SecureRouteIAM: React.FC<React.PropsWithChildren<SecureRoutePropsIA
 
   return children ? <>{children}</> : <ReactRouterDom.Outlet />;
 };
-
-/* c8 ignore stop */
