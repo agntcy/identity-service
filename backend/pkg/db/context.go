@@ -79,6 +79,8 @@ func (d *dbContext) Client() *gorm.DB {
 
 // AutoMigrate performs auto migration for the given models
 func (d *dbContext) AutoMigrate(types ...interface{}) error {
+	log.Info("Running DB auto migrations")
+
 	// Perform auto migration
 	return d.client.AutoMigrate(types...)
 }
