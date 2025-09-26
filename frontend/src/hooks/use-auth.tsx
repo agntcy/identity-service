@@ -5,8 +5,9 @@
 
 import {useAuthIAM} from '@/providers/auth-provider/iam/use-auth-iam';
 import {useAuthOIDC} from '@/providers/auth-provider/oicd/use-auth-oidc';
-import {AuthContextIAM, AuthContextOIDC} from '@/types/okta';
+import {AuthContextIAM} from '@/types/auth/iam';
 import config, {AuthType} from '@/config';
+import {AuthContextOIDC} from '@/types/auth/oidc';
 
 export const useAuth = (): AuthContextIAM | AuthContextOIDC => {
   let auth: typeof useAuthIAM | typeof useAuthOIDC = useAuthOIDC;

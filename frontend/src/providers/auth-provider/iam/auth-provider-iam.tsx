@@ -5,13 +5,13 @@
 
 import React, {useMemo} from 'react';
 import OktaAuth, {SignoutOptions, TokenResponse} from '@okta/okta-auth-js';
-import {createOktaInstance, getRelativeUrl, getSearchParams} from '@/utils/okta';
-import {AuthConfigIAM, AuthInfo, Tenant, User} from '@/types/okta';
+import {createOktaInstance, getAuthConfig, getRelativeUrl, getSearchParams} from '@/utils/auth';
+import {AuthConfigIAM, Tenant} from '@/types/auth/iam';
 import {Loading} from '@/components/ui/loading';
 import {AuthError} from '@/components/router/auth-error';
-import {getAuthConfig} from '@/utils/get-auth-config';
 import AuthContextIAM from './auth-context-iam';
-import {ACCESS_TOKEN_EXPIRED_EVENT, ACCESS_TOKEN_NAME, defaultAuthConfigOptions} from '@/constants/okta';
+import {ACCESS_TOKEN_EXPIRED_EVENT, ACCESS_TOKEN_NAME, defaultAuthConfigOptionsIAM} from '@/constants/iam';
+import {AuthInfo, User} from '@/types/auth/common';
 
 const AuthProviderIAM: React.FC<React.PropsWithChildren> = ({children}) => {
   const [loading, setLoading] = React.useState<boolean>(true);
@@ -32,7 +32,7 @@ const AuthProviderIAM: React.FC<React.PropsWithChildren> = ({children}) => {
       productId: authConfig?.productId?.trim(),
       oktaClient: authConfig.oktaClient?.trim(),
       oktaIssuer: authConfig.oktaIssuer?.trim(),
-      configOptions: {...defaultAuthConfigOptions, ...authConfig?.configOptions}
+      configOptions: {...defaultAuthConfigOptionsIAM, ...authConfig?.configOptions}
     };
   }, [authConfig]);
 

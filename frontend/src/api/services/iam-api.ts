@@ -4,8 +4,7 @@
  */
 
 import axios, {AxiosError, AxiosHeaders, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig} from 'axios';
-import {AuthConfigIAM, AuthInfo} from '@/types/okta';
-import {getAuthConfig} from '@/utils/get-auth-config';
+import {AuthConfigIAM} from '@/types/auth/iam';
 import {httpErrorsAuth} from '@/constants/http-errors';
 import {
   GetGroupsTenantResponse,
@@ -16,6 +15,8 @@ import {
   TenantReponse
 } from '@/types/api/iam';
 import {AnalyticsService} from '@/types/analytics/analytics';
+import {getAuthConfig} from '@/utils/auth';
+import {AuthInfo} from '@/types/auth/common';
 
 export class IamAPIClass {
   protected authInfo: AuthInfo | null | undefined;

@@ -5,11 +5,11 @@
 
 import {AxiosError, AxiosHeaders, AxiosResponse, InternalAxiosRequestConfig} from 'axios';
 import * as AgenticServiceApi from '../generated/identity/app_service.swagger.api';
-import {AuthInfo} from '@/types/okta';
 import config from '@/config';
 import {httpErrorsAuth, USER_NOT_AUTH} from '@/constants/http-errors';
 import {App} from '@/types/api/app';
 import {AnalyticsService} from '@/types/analytics/analytics';
+import {AuthInfo} from '@/types/auth/common';
 
 export class AgenticServicesAPIClass extends AgenticServiceApi.Api<App> {
   protected authInfo: AuthInfo | null | undefined;

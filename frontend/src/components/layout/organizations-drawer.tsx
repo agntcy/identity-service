@@ -16,7 +16,7 @@ import {ConfirmModal} from '../ui/confirm-modal';
 import {PlusIcon} from 'lucide-react';
 import {useCreateTenant} from '@/mutations';
 import {useBanner} from '@/providers/banner-provider/banner-provider';
-import {AuthContextIAM} from '@/types/okta';
+import {AuthContextIAM} from '@/types/auth/iam';
 
 export const OrganizationsDrawer: React.FC<{
   isOpen: boolean;

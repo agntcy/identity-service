@@ -7,7 +7,7 @@
 import {describe, it, expect, beforeEach, vi, afterEach} from 'vitest';
 import {AgenticServicesAPIClass} from '../services/agentic-services-api';
 import {AxiosError, InternalAxiosRequestConfig} from 'axios';
-import {AuthInfo} from '@/types/okta';
+import {AuthInfo} from '@/types/auth/common';
 import config from '@/config';
 import {USER_NOT_AUTH} from '@/constants/http-errors';
 import {AnalyticsBrowser} from '@segment/analytics-next';

@@ -6,7 +6,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 import {describe, it, expect, beforeEach, vi, afterEach} from 'vitest';
 import {AxiosError, InternalAxiosRequestConfig} from 'axios';
-import {AuthInfo} from '@/types/okta';
+import {AuthInfo} from '@/types/auth/common';
 import config from '@/config';
 import {USER_NOT_AUTH} from '@/constants/http-errors';
 import {AnalyticsBrowser} from '@segment/analytics-next';

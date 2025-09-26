@@ -21,11 +21,11 @@ vi.mock('@/config', () => ({
 }));
 
 // Mock the isMultiTenant function to return true by default
-vi.mock('@/utils/get-auth-config', () => ({
+vi.mock('@/utils/auth', () => ({
   isMultiTenant: vi.fn(() => true)
 }));
 
-import {isMultiTenant} from '@/utils/get-auth-config';
+import {isMultiTenant} from '@/utils/auth';
 
 // Mock dependencies
 vi.mock('@/router/paths', () => ({

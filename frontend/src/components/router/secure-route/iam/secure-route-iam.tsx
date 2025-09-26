@@ -5,11 +5,11 @@
 
 /* c8 ignore start */
 
-import {SecureRouteProps} from '@/types/okta';
+import {AuthContextIAM, SecureRoutePropsIAM} from '@/types/auth/iam';
 import * as React from 'react';
 import * as ReactRouterDom from 'react-router-dom';
-import {AuthError} from './auth-error';
 import {useAuth} from '@/hooks';
+import {AuthError} from '../../auth-error';
 
 let useRouteNavigate: any;
 if ('useNavigate' in ReactRouterDom) {
@@ -24,7 +24,7 @@ if ('useNavigate' in ReactRouterDom) {
   };
 }
 
-export const SecureRoute: React.FC<React.PropsWithChildren<SecureRouteProps>> = ({
+export const SecureRouteIAM: React.FC<React.PropsWithChildren<SecureRoutePropsIAM>> = ({
   redirectPath = '/login',
   isAllowed = true,
   shouldRedirect = true,
@@ -32,7 +32,7 @@ export const SecureRoute: React.FC<React.PropsWithChildren<SecureRouteProps>> = 
   onAuthRequired,
   errorComponent
 }) => {
-  const {oktaInstance, authInfo, login} = useAuth();
+  const {oktaInstance, authInfo, login} = useAuth() as AuthContextIAM;
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   const navigate = useRouteNavigate();
   const pendingLogin = React.useRef(false);

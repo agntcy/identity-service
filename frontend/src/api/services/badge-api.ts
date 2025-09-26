@@ -5,7 +5,7 @@
 
 import {AxiosError, AxiosHeaders, AxiosResponse, InternalAxiosRequestConfig} from 'axios';
 import * as BadgeApi from '../generated/identity/badge_service.swagger.api';
-import {AuthInfo} from '@/types/okta';
+import {AuthInfo} from '@/types/auth/common';
 import config from '@/config';
 import {httpErrorsAuth, USER_NOT_AUTH} from '@/constants/http-errors';
 import {Badge} from '@/types/api/badge';

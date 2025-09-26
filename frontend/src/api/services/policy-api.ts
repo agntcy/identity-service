@@ -5,7 +5,7 @@
 
 import {AxiosError, AxiosHeaders, AxiosResponse, InternalAxiosRequestConfig} from 'axios';
 import * as PolicyApi from '../generated/identity/policy_service.swagger.api';
-import {AuthInfo} from '@/types/okta';
+import {AuthInfo} from '@/types/auth/common';
 import config from '@/config';
 import {httpErrorsAuth, USER_NOT_AUTH} from '@/constants/http-errors';
 import {App} from '@/types/api/app';

@@ -3,12 +3,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {AuthContextOIDC as ContextOIDC} from '@/types/okta';
+import {AuthContextOIDC as ContextOIDC} from '@/types/auth/oidc';
 import * as React from 'react';
-import {AuthContextOIDC} from './auth-context-oidc';
+import {AuthContextOIDCHelper} from './helper/auth-context-oidc-helper';
 
 export const useAuthOIDC = (): ContextOIDC => {
-  const context = React.useContext(AuthContextOIDC);
+  const context = React.useContext(AuthContextOIDCHelper);
 
   if (process.env.NODE_ENV !== 'production') {
     // eslint-disable-next-line react-hooks/rules-of-hooks

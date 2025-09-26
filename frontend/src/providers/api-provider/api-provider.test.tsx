@@ -80,7 +80,7 @@ vi.mock('../analytics-provider/analytics-provider', () => ({
   useAnalyticsContext: mockUseAnalyticsContext
 }));
 
-vi.mock('@/utils/get-auth-config', () => ({
+vi.mock('@/utils/auth', () => ({
   isMultiTenant: mockIsMultiTenant
 }));
 
