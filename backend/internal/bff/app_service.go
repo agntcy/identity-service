@@ -5,6 +5,8 @@ package bff
 
 import (
 	"context"
+	"encoding/base64"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"slices"
@@ -32,6 +34,7 @@ import (
 
 type AppService interface {
 	CreateApp(ctx context.Context, app *apptypes.App) (*apptypes.App, error)
+	CreateAppFromOasfSchema(ctx context.Context, oasfSchemaBase64 string) (*apptypes.App, error)
 	UpdateApp(ctx context.Context, app *apptypes.App) (*apptypes.App, error)
 	GetApp(ctx context.Context, id string) (*apptypes.App, error)
 	ListApps(
@@ -166,6 +169,51 @@ func (s *appService) CreateApp(
 	app.ApiKey = ptrutil.DerefStr(apiKey.Secret)
 
 	return createdApp, nil
+}
+
+func (s *appService) CreateAppFromOasfSchema(
+	ctx context.Context,
+	oasfSchemaBase64 string,
+) (*apptypes.App, error) {
+	if oasfSchemaBase64 == "" {
+		return nil, errutil.ValidationFailed("app.invalidOasfSchema", "Invalid OASF schema.")
+	}
+
+	data, err := base64.StdEncoding.DecodeString(oasfSchemaBase64)
+	if err != nil {
+		log.FromContext(ctx).
+			WithError(err).
+			Warn("Unable to decode CreateAppFromOasfSchema.oasfSchemaBase64")
+
+		return nil, errutil.InvalidRequest("app.invalidSchemaBase64", "Unable to decode SchemaBase64.")
+	}
+
+	var oasfSchema map[string]any
+
+	err = json.Unmarshal(data, &oasfSchema)
+	if err != nil {
+		log.FromContext(ctx).
+			WithError(err).
+			Warn("Unable to unmarshal JSON received from CreateAppFromOasfSchema.oasfSchemaBase64")
+
+		return nil, errutil.InvalidRequest("app.invalidOasfSchema", "Invalid OASF schema.")
+	}
+
+	name, _ := oasfSchema["name"].(string)
+	version, _ := oasfSchema["version"].(string)
+	description, _ := oasfSchema["description"].(string)
+
+	if name != "" && version != "" {
+		name = fmt.Sprintf("%s (%s)", name, version)
+	}
+
+	app := &apptypes.App{
+		Name:        &name,
+		Description: &description,
+		Type:        apptypes.APP_TYPE_AGENT_OASF,
+	}
+
+	return s.CreateApp(ctx, app)
 }
 
 func (s *appService) UpdateApp(

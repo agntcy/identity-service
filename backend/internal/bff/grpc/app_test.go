@@ -64,6 +64,78 @@ func TestAppService_CreateApp_should_propagate_error_when_core_service_fails(t *
 	assert.ErrorIs(t, err, errAppUnexpected)
 }
 
+func TestAppService_CreateOasfApp(t *testing.T) {
+	t.Parallel()
+
+	t.Run("Should create an app and a badge", func(t *testing.T) {
+		t.Parallel()
+
+		var req identity_service_sdk_go.CreateOasfAppRequest
+
+		_ = gofakeit.Struct(&req)
+
+		app := &apptypes.App{
+			ID: uuid.NewString(),
+		}
+
+		appSrv := bffmocks.NewAppService(t)
+		appSrv.EXPECT().CreateAppFromOasfSchema(t.Context(), req.SchemaBase64).Return(app, nil)
+
+		badgeSrv := bffmocks.NewBadgeService(t)
+		badgeSrv.EXPECT().
+			IssueBadge(t.Context(), app.ID, mock.AnythingOfType("bff.IssueOption")).
+			Return(&badgetypes.Badge{}, nil)
+
+		sut := grpc.NewAppService(appSrv, badgeSrv)
+		actual, err := sut.CreateOasfApp(t.Context(), &req)
+
+		assert.NoError(t, err)
+		assert.NotNil(t, actual)
+	})
+
+	t.Run("Should propagate the error returned from the app service", func(t *testing.T) {
+		t.Parallel()
+
+		appSrv := bffmocks.NewAppService(t)
+		appSrv.EXPECT().CreateAppFromOasfSchema(t.Context(), mock.Anything).Return(nil, errAppUnexpected)
+
+		sut := grpc.NewAppService(appSrv, nil)
+
+		_, err := sut.CreateOasfApp(
+			t.Context(),
+			&identity_service_sdk_go.CreateOasfAppRequest{},
+		)
+
+		assert.ErrorIs(t, err, errAppUnexpected)
+	})
+
+	t.Run("Should propagate the error returned from the badge service and delete the app", func(t *testing.T) {
+		t.Parallel()
+
+		var req identity_service_sdk_go.CreateOasfAppRequest
+
+		_ = gofakeit.Struct(&req)
+
+		app := &apptypes.App{
+			ID: uuid.NewString(),
+		}
+
+		appSrv := bffmocks.NewAppService(t)
+		appSrv.EXPECT().CreateAppFromOasfSchema(t.Context(), req.SchemaBase64).Return(app, nil)
+		appSrv.EXPECT().DeleteApp(t.Context(), app.ID).Return(nil)
+
+		badgeSrv := bffmocks.NewBadgeService(t)
+		badgeSrv.EXPECT().
+			IssueBadge(t.Context(), app.ID, mock.AnythingOfType("bff.IssueOption")).
+			Return(nil, errAppUnexpected)
+
+		sut := grpc.NewAppService(appSrv, badgeSrv)
+		_, err := sut.CreateOasfApp(t.Context(), &req)
+
+		assert.ErrorIs(t, err, errAppUnexpected)
+	})
+}
+
 func TestAppService_ListApps_should_succeed(t *testing.T) {
 	t.Parallel()
 
