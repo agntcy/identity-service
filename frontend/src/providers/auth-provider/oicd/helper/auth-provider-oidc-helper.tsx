@@ -185,7 +185,7 @@ const AuthProviderOIDCHelper: React.FC<React.PropsWithChildren<AuthProviderProps
       oidcClient: (getAuthConfig() as AuthConfigOIDC).oidcClient
     },
     authInfo,
-    loading: auth.isLoading,
+    loading: auth.isLoading || loading,
     login,
     register,
     logout,
