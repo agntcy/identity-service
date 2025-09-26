@@ -63,7 +63,7 @@ func (s *appService) CreateOasfApp(
 	if err != nil {
 		delErr := s.appSrv.DeleteApp(ctx, app.ID)
 		if delErr != nil {
-			log.FromContext(ctx).WithError(err).Errorf("gRPC app.CreateOasfApp failed to delete app %s", app.ID)
+			log.FromContext(ctx).WithError(delErr).Errorf("gRPC app.CreateOasfApp failed to delete app %s", app.ID)
 		}
 
 		return nil, grpcutil.Error(err)
