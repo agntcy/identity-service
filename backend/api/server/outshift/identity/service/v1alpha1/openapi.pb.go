@@ -28,9 +28,9 @@ var File_outshift_identity_service_v1alpha1_openapi_proto protoreflect.FileDescr
 
 const file_outshift_identity_service_v1alpha1_openapi_proto_rawDesc = "" +
 	"\n" +
-	"0outshift/identity/service/v1alpha1/openapi.proto\x12\"outshift.identity.service.v1alpha1\x1a\x1bopenapiv3/annotations.protoB\xd5\x04\xbaG\xe5\x03\x12\xf2\x01\n" +
-	"\x1aAgent Identity Service API\x12~Agent Identity Service API provides a set of endpoints for managing identity and access control within the Outshift ecosystem.\"J\n" +
-	"\rOutshift Team\x12\"https://github.com/agntcy/identity\x1a\x15identity@outshift.com2\bv1alpha1\x1a*\n" +
+	"0outshift/identity/service/v1alpha1/openapi.proto\x12\"outshift.identity.service.v1alpha1\x1a\x1bopenapiv3/annotations.protoB\xe4\x04\xbaG\xf4\x03\x12\x81\x02\n" +
+	"\x1aAgent Identity Service API\x12~Agent Identity Service API provides a set of endpoints for managing identity and access control within the Outshift ecosystem.\"Y\n" +
+	"\rOutshift Team\x121https://github.com/outshift-open/identity-service\x1a\x15identity@outshift.com2\bv1alpha1\x1a*\n" +
 	"\x15http://localhost:4000\x12\x11Local environment*\xa2\x012\x02\n" +
 	"\x00:\x9b\x01\n" +
 	"\\\n" +

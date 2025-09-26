@@ -1163,6 +1163,66 @@
           ]
         },
         {
+          "name": "CreateOasfAppRequest",
+          "longName": "CreateOasfAppRequest",
+          "fullName": "outshift.identity.service.v1alpha1.CreateOasfAppRequest",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "schema_base64",
+              "description": "The OASF schema in a base64 encoded format",
+              "label": "",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "CreateOasfAppResponse",
+          "longName": "CreateOasfAppResponse",
+          "fullName": "outshift.identity.service.v1alpha1.CreateOasfAppResponse",
+          "description": "",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": false,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "app",
+              "description": "The created OASF App.",
+              "label": "",
+              "type": "App",
+              "longType": "App",
+              "fullType": "outshift.identity.service.v1alpha1.App",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            },
+            {
+              "name": "badge",
+              "description": "The issued badge for the OASF App.",
+              "label": "",
+              "type": "Badge",
+              "longType": "Badge",
+              "fullType": "outshift.identity.service.v1alpha1.Badge",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
           "name": "DeleteAppRequest",
           "longName": "DeleteAppRequest",
           "fullName": "outshift.identity.service.v1alpha1.DeleteAppRequest",
@@ -1661,6 +1721,29 @@
                       "method": "POST",
                       "pattern": "/v1alpha1/apps",
                       "body": "app"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "CreateOasfApp",
+              "description": "",
+              "requestType": "CreateOasfAppRequest",
+              "requestLongType": "CreateOasfAppRequest",
+              "requestFullType": "outshift.identity.service.v1alpha1.CreateOasfAppRequest",
+              "requestStreaming": false,
+              "responseType": "CreateOasfAppResponse",
+              "responseLongType": "CreateOasfAppResponse",
+              "responseFullType": "outshift.identity.service.v1alpha1.CreateOasfAppResponse",
+              "responseStreaming": false,
+              "options": {
+                "google.api.http": {
+                  "rules": [
+                    {
+                      "method": "POST",
+                      "pattern": "/v1alpha1/apps/oasf",
+                      "body": "*"
                     }
                   ]
                 }

@@ -217,6 +217,105 @@ func (x *CreateAppRequest) GetApp() *App {
 	return nil
 }
 
+type CreateOasfAppRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The OASF schema in a base64 encoded format
+	SchemaBase64  string `protobuf:"bytes,1,opt,name=schema_base64,json=schemaBase64,proto3" json:"schema_base64,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateOasfAppRequest) Reset() {
+	*x = CreateOasfAppRequest{}
+	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateOasfAppRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateOasfAppRequest) ProtoMessage() {}
+
+func (x *CreateOasfAppRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateOasfAppRequest.ProtoReflect.Descriptor instead.
+func (*CreateOasfAppRequest) Descriptor() ([]byte, []int) {
+	return file_outshift_identity_service_v1alpha1_app_service_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *CreateOasfAppRequest) GetSchemaBase64() string {
+	if x != nil {
+		return x.SchemaBase64
+	}
+	return ""
+}
+
+type CreateOasfAppResponse struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// The created OASF App.
+	App *App `protobuf:"bytes,1,opt,name=app,proto3" json:"app,omitempty"`
+	// The issued badge for the OASF App.
+	Badge         *Badge `protobuf:"bytes,2,opt,name=badge,proto3" json:"badge,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateOasfAppResponse) Reset() {
+	*x = CreateOasfAppResponse{}
+	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateOasfAppResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateOasfAppResponse) ProtoMessage() {}
+
+func (x *CreateOasfAppResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateOasfAppResponse.ProtoReflect.Descriptor instead.
+func (*CreateOasfAppResponse) Descriptor() ([]byte, []int) {
+	return file_outshift_identity_service_v1alpha1_app_service_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *CreateOasfAppResponse) GetApp() *App {
+	if x != nil {
+		return x.App
+	}
+	return nil
+}
+
+func (x *CreateOasfAppResponse) GetBadge() *Badge {
+	if x != nil {
+		return x.Badge
+	}
+	return nil
+}
+
 type GetAppsCountRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
@@ -225,7 +324,7 @@ type GetAppsCountRequest struct {
 
 func (x *GetAppsCountRequest) Reset() {
 	*x = GetAppsCountRequest{}
-	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[3]
+	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -237,7 +336,7 @@ func (x *GetAppsCountRequest) String() string {
 func (*GetAppsCountRequest) ProtoMessage() {}
 
 func (x *GetAppsCountRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[3]
+	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -250,7 +349,7 @@ func (x *GetAppsCountRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAppsCountRequest.ProtoReflect.Descriptor instead.
 func (*GetAppsCountRequest) Descriptor() ([]byte, []int) {
-	return file_outshift_identity_service_v1alpha1_app_service_proto_rawDescGZIP(), []int{3}
+	return file_outshift_identity_service_v1alpha1_app_service_proto_rawDescGZIP(), []int{5}
 }
 
 type AppTypeCountEntry struct {
@@ -265,7 +364,7 @@ type AppTypeCountEntry struct {
 
 func (x *AppTypeCountEntry) Reset() {
 	*x = AppTypeCountEntry{}
-	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[4]
+	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -277,7 +376,7 @@ func (x *AppTypeCountEntry) String() string {
 func (*AppTypeCountEntry) ProtoMessage() {}
 
 func (x *AppTypeCountEntry) ProtoReflect() protoreflect.Message {
-	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[4]
+	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -290,7 +389,7 @@ func (x *AppTypeCountEntry) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AppTypeCountEntry.ProtoReflect.Descriptor instead.
 func (*AppTypeCountEntry) Descriptor() ([]byte, []int) {
-	return file_outshift_identity_service_v1alpha1_app_service_proto_rawDescGZIP(), []int{4}
+	return file_outshift_identity_service_v1alpha1_app_service_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *AppTypeCountEntry) GetKey() AppType {
@@ -319,7 +418,7 @@ type GetAppsCountResponse struct {
 
 func (x *GetAppsCountResponse) Reset() {
 	*x = GetAppsCountResponse{}
-	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[5]
+	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -331,7 +430,7 @@ func (x *GetAppsCountResponse) String() string {
 func (*GetAppsCountResponse) ProtoMessage() {}
 
 func (x *GetAppsCountResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[5]
+	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -344,7 +443,7 @@ func (x *GetAppsCountResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAppsCountResponse.ProtoReflect.Descriptor instead.
 func (*GetAppsCountResponse) Descriptor() ([]byte, []int) {
-	return file_outshift_identity_service_v1alpha1_app_service_proto_rawDescGZIP(), []int{5}
+	return file_outshift_identity_service_v1alpha1_app_service_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *GetAppsCountResponse) GetCounts() []*AppTypeCountEntry {
@@ -371,7 +470,7 @@ type GetAppRequest struct {
 
 func (x *GetAppRequest) Reset() {
 	*x = GetAppRequest{}
-	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[6]
+	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -383,7 +482,7 @@ func (x *GetAppRequest) String() string {
 func (*GetAppRequest) ProtoMessage() {}
 
 func (x *GetAppRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[6]
+	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -396,7 +495,7 @@ func (x *GetAppRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAppRequest.ProtoReflect.Descriptor instead.
 func (*GetAppRequest) Descriptor() ([]byte, []int) {
-	return file_outshift_identity_service_v1alpha1_app_service_proto_rawDescGZIP(), []int{6}
+	return file_outshift_identity_service_v1alpha1_app_service_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *GetAppRequest) GetAppId() string {
@@ -418,7 +517,7 @@ type UpdateAppRequest struct {
 
 func (x *UpdateAppRequest) Reset() {
 	*x = UpdateAppRequest{}
-	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[7]
+	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -430,7 +529,7 @@ func (x *UpdateAppRequest) String() string {
 func (*UpdateAppRequest) ProtoMessage() {}
 
 func (x *UpdateAppRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[7]
+	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -443,7 +542,7 @@ func (x *UpdateAppRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateAppRequest.ProtoReflect.Descriptor instead.
 func (*UpdateAppRequest) Descriptor() ([]byte, []int) {
-	return file_outshift_identity_service_v1alpha1_app_service_proto_rawDescGZIP(), []int{7}
+	return file_outshift_identity_service_v1alpha1_app_service_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *UpdateAppRequest) GetAppId() string {
@@ -470,7 +569,7 @@ type DeleteAppRequest struct {
 
 func (x *DeleteAppRequest) Reset() {
 	*x = DeleteAppRequest{}
-	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[8]
+	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -482,7 +581,7 @@ func (x *DeleteAppRequest) String() string {
 func (*DeleteAppRequest) ProtoMessage() {}
 
 func (x *DeleteAppRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[8]
+	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -495,7 +594,7 @@ func (x *DeleteAppRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteAppRequest.ProtoReflect.Descriptor instead.
 func (*DeleteAppRequest) Descriptor() ([]byte, []int) {
-	return file_outshift_identity_service_v1alpha1_app_service_proto_rawDescGZIP(), []int{8}
+	return file_outshift_identity_service_v1alpha1_app_service_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *DeleteAppRequest) GetAppId() string {
@@ -515,7 +614,7 @@ type RefreshAppApiKeyRequest struct {
 
 func (x *RefreshAppApiKeyRequest) Reset() {
 	*x = RefreshAppApiKeyRequest{}
-	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[9]
+	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -527,7 +626,7 @@ func (x *RefreshAppApiKeyRequest) String() string {
 func (*RefreshAppApiKeyRequest) ProtoMessage() {}
 
 func (x *RefreshAppApiKeyRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[9]
+	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -540,7 +639,7 @@ func (x *RefreshAppApiKeyRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RefreshAppApiKeyRequest.ProtoReflect.Descriptor instead.
 func (*RefreshAppApiKeyRequest) Descriptor() ([]byte, []int) {
-	return file_outshift_identity_service_v1alpha1_app_service_proto_rawDescGZIP(), []int{9}
+	return file_outshift_identity_service_v1alpha1_app_service_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *RefreshAppApiKeyRequest) GetAppId() string {
@@ -560,7 +659,7 @@ type GetBadgeRequest struct {
 
 func (x *GetBadgeRequest) Reset() {
 	*x = GetBadgeRequest{}
-	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[10]
+	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -572,7 +671,7 @@ func (x *GetBadgeRequest) String() string {
 func (*GetBadgeRequest) ProtoMessage() {}
 
 func (x *GetBadgeRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[10]
+	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -585,7 +684,7 @@ func (x *GetBadgeRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetBadgeRequest.ProtoReflect.Descriptor instead.
 func (*GetBadgeRequest) Descriptor() ([]byte, []int) {
-	return file_outshift_identity_service_v1alpha1_app_service_proto_rawDescGZIP(), []int{10}
+	return file_outshift_identity_service_v1alpha1_app_service_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *GetBadgeRequest) GetAppId() string {
@@ -605,7 +704,7 @@ type GetTasksRequest struct {
 
 func (x *GetTasksRequest) Reset() {
 	*x = GetTasksRequest{}
-	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[11]
+	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -617,7 +716,7 @@ func (x *GetTasksRequest) String() string {
 func (*GetTasksRequest) ProtoMessage() {}
 
 func (x *GetTasksRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[11]
+	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -630,7 +729,7 @@ func (x *GetTasksRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTasksRequest.ProtoReflect.Descriptor instead.
 func (*GetTasksRequest) Descriptor() ([]byte, []int) {
-	return file_outshift_identity_service_v1alpha1_app_service_proto_rawDescGZIP(), []int{11}
+	return file_outshift_identity_service_v1alpha1_app_service_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *GetTasksRequest) GetExcludeAppIds() []string {
@@ -650,7 +749,7 @@ type GetTasksResponse struct {
 
 func (x *GetTasksResponse) Reset() {
 	*x = GetTasksResponse{}
-	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[12]
+	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -662,7 +761,7 @@ func (x *GetTasksResponse) String() string {
 func (*GetTasksResponse) ProtoMessage() {}
 
 func (x *GetTasksResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[12]
+	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -675,7 +774,7 @@ func (x *GetTasksResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTasksResponse.ProtoReflect.Descriptor instead.
 func (*GetTasksResponse) Descriptor() ([]byte, []int) {
-	return file_outshift_identity_service_v1alpha1_app_service_proto_rawDescGZIP(), []int{12}
+	return file_outshift_identity_service_v1alpha1_app_service_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *GetTasksResponse) GetResult() map[string]*GetTasksResponse_TaskList {
@@ -694,7 +793,7 @@ type GetTasksResponse_TaskList struct {
 
 func (x *GetTasksResponse_TaskList) Reset() {
 	*x = GetTasksResponse_TaskList{}
-	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[13]
+	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -706,7 +805,7 @@ func (x *GetTasksResponse_TaskList) String() string {
 func (*GetTasksResponse_TaskList) ProtoMessage() {}
 
 func (x *GetTasksResponse_TaskList) ProtoReflect() protoreflect.Message {
-	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[13]
+	mi := &file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -719,7 +818,7 @@ func (x *GetTasksResponse_TaskList) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTasksResponse_TaskList.ProtoReflect.Descriptor instead.
 func (*GetTasksResponse_TaskList) Descriptor() ([]byte, []int) {
-	return file_outshift_identity_service_v1alpha1_app_service_proto_rawDescGZIP(), []int{12, 0}
+	return file_outshift_identity_service_v1alpha1_app_service_proto_rawDescGZIP(), []int{14, 0}
 }
 
 func (x *GetTasksResponse_TaskList) GetTasks() []*Task {
@@ -755,7 +854,12 @@ const file_outshift_identity_service_v1alpha1_app_service_proto_rawDesc = "" +
 	"\n" +
 	"_sort_desc\"M\n" +
 	"\x10CreateAppRequest\x129\n" +
-	"\x03app\x18\x01 \x01(\v2'.outshift.identity.service.v1alpha1.AppR\x03app\"\x15\n" +
+	"\x03app\x18\x01 \x01(\v2'.outshift.identity.service.v1alpha1.AppR\x03app\";\n" +
+	"\x14CreateOasfAppRequest\x12#\n" +
+	"\rschema_base64\x18\x01 \x01(\tR\fschemaBase64\"\x93\x01\n" +
+	"\x15CreateOasfAppResponse\x129\n" +
+	"\x03app\x18\x01 \x01(\v2'.outshift.identity.service.v1alpha1.AppR\x03app\x12?\n" +
+	"\x05badge\x18\x02 \x01(\v2).outshift.identity.service.v1alpha1.BadgeR\x05badge\"\x15\n" +
 	"\x13GetAppsCountRequest\"h\n" +
 	"\x11AppTypeCountEntry\x12=\n" +
 	"\x03key\x18\x01 \x01(\x0e2+.outshift.identity.service.v1alpha1.AppTypeR\x03key\x12\x14\n" +
@@ -782,14 +886,15 @@ const file_outshift_identity_service_v1alpha1_app_service_proto_rawDesc = "" +
 	"\x05tasks\x18\x01 \x03(\v2(.outshift.identity.service.v1alpha1.TaskR\x05tasks\x1ax\n" +
 	"\vResultEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12S\n" +
-	"\x05value\x18\x02 \x01(\v2=.outshift.identity.service.v1alpha1.GetTasksResponse.TaskListR\x05value:\x028\x012\x9b\r\n" +
+	"\x05value\x18\x02 \x01(\v2=.outshift.identity.service.v1alpha1.GetTasksResponse.TaskListR\x05value:\x028\x012\x8e\x0f\n" +
 	"\n" +
 	"AppService\x12\xa5\x01\n" +
 	"\bListApps\x123.outshift.identity.service.v1alpha1.ListAppsRequest\x1a4.outshift.identity.service.v1alpha1.ListAppsResponse\".\x92A\x15\x12\tList Apps*\bListApps\x82\xd3\xe4\x93\x02\x10\x12\x0e/v1alpha1/apps\x12\xcd\x01\n" +
 	"\fGetAppsCount\x127.outshift.identity.service.v1alpha1.GetAppsCountRequest\x1a8.outshift.identity.service.v1alpha1.GetAppsCountResponse\"J\x92A'\x12\x17Get apps count per type*\fGetAppsCount\x82\xd3\xe4\x93\x02\x1a\x12\x18/v1alpha1/apps/all/count\x12\x9f\x01\n" +
 	"\x06GetApp\x121.outshift.identity.service.v1alpha1.GetAppRequest\x1a'.outshift.identity.service.v1alpha1.App\"9\x92A\x17\x12\rGet App by Id*\x06GetApp\x82\xd3\xe4\x93\x02\x19\x12\x17/v1alpha1/apps/{app_id}\x12\xa1\x01\n" +
 	"\tCreateApp\x124.outshift.identity.service.v1alpha1.CreateAppRequest\x1a'.outshift.identity.service.v1alpha1.App\"5\x92A\x17\x12\n" +
-	"Create App*\tCreateApp\x82\xd3\xe4\x93\x02\x15:\x03app\"\x0e/v1alpha1/apps\x12\xbd\x01\n" +
+	"Create App*\tCreateApp\x82\xd3\xe4\x93\x02\x15:\x03app\"\x0e/v1alpha1/apps\x12\xf0\x01\n" +
+	"\rCreateOasfApp\x128.outshift.identity.service.v1alpha1.CreateOasfAppRequest\x1a9.outshift.identity.service.v1alpha1.CreateOasfAppResponse\"j\x92AI\x128Create an OASF App from an OASF schema and issue a badge*\rCreateOasfApp\x82\xd3\xe4\x93\x02\x18:\x01*\"\x13/v1alpha1/apps/oasf\x12\xbd\x01\n" +
 	"\tUpdateApp\x124.outshift.identity.service.v1alpha1.UpdateAppRequest\x1a'.outshift.identity.service.v1alpha1.App\"Q\x92A\x17\x12\n" +
 	"Update App*\tUpdateApp\xdaA\x10name,description\x82\xd3\xe4\x93\x02\x1e:\x03app2\x17/v1alpha1/apps/{app_id}\x12\x94\x01\n" +
 	"\tDeleteApp\x124.outshift.identity.service.v1alpha1.DeleteAppRequest\x1a\x16.google.protobuf.Empty\"9\x92A\x17\x12\n" +
@@ -811,64 +916,70 @@ func file_outshift_identity_service_v1alpha1_app_service_proto_rawDescGZIP() []b
 	return file_outshift_identity_service_v1alpha1_app_service_proto_rawDescData
 }
 
-var file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
+var file_outshift_identity_service_v1alpha1_app_service_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
 var file_outshift_identity_service_v1alpha1_app_service_proto_goTypes = []any{
 	(*ListAppsResponse)(nil),          // 0: outshift.identity.service.v1alpha1.ListAppsResponse
 	(*ListAppsRequest)(nil),           // 1: outshift.identity.service.v1alpha1.ListAppsRequest
 	(*CreateAppRequest)(nil),          // 2: outshift.identity.service.v1alpha1.CreateAppRequest
-	(*GetAppsCountRequest)(nil),       // 3: outshift.identity.service.v1alpha1.GetAppsCountRequest
-	(*AppTypeCountEntry)(nil),         // 4: outshift.identity.service.v1alpha1.AppTypeCountEntry
-	(*GetAppsCountResponse)(nil),      // 5: outshift.identity.service.v1alpha1.GetAppsCountResponse
-	(*GetAppRequest)(nil),             // 6: outshift.identity.service.v1alpha1.GetAppRequest
-	(*UpdateAppRequest)(nil),          // 7: outshift.identity.service.v1alpha1.UpdateAppRequest
-	(*DeleteAppRequest)(nil),          // 8: outshift.identity.service.v1alpha1.DeleteAppRequest
-	(*RefreshAppApiKeyRequest)(nil),   // 9: outshift.identity.service.v1alpha1.RefreshAppApiKeyRequest
-	(*GetBadgeRequest)(nil),           // 10: outshift.identity.service.v1alpha1.GetBadgeRequest
-	(*GetTasksRequest)(nil),           // 11: outshift.identity.service.v1alpha1.GetTasksRequest
-	(*GetTasksResponse)(nil),          // 12: outshift.identity.service.v1alpha1.GetTasksResponse
-	(*GetTasksResponse_TaskList)(nil), // 13: outshift.identity.service.v1alpha1.GetTasksResponse.TaskList
-	nil,                               // 14: outshift.identity.service.v1alpha1.GetTasksResponse.ResultEntry
-	(*App)(nil),                       // 15: outshift.identity.service.v1alpha1.App
-	(*v1alpha1.PagedResponse)(nil),    // 16: outshift.identity.service.shared.v1alpha1.PagedResponse
-	(AppType)(0),                      // 17: outshift.identity.service.v1alpha1.AppType
-	(*Task)(nil),                      // 18: outshift.identity.service.v1alpha1.Task
-	(*emptypb.Empty)(nil),             // 19: google.protobuf.Empty
+	(*CreateOasfAppRequest)(nil),      // 3: outshift.identity.service.v1alpha1.CreateOasfAppRequest
+	(*CreateOasfAppResponse)(nil),     // 4: outshift.identity.service.v1alpha1.CreateOasfAppResponse
+	(*GetAppsCountRequest)(nil),       // 5: outshift.identity.service.v1alpha1.GetAppsCountRequest
+	(*AppTypeCountEntry)(nil),         // 6: outshift.identity.service.v1alpha1.AppTypeCountEntry
+	(*GetAppsCountResponse)(nil),      // 7: outshift.identity.service.v1alpha1.GetAppsCountResponse
+	(*GetAppRequest)(nil),             // 8: outshift.identity.service.v1alpha1.GetAppRequest
+	(*UpdateAppRequest)(nil),          // 9: outshift.identity.service.v1alpha1.UpdateAppRequest
+	(*DeleteAppRequest)(nil),          // 10: outshift.identity.service.v1alpha1.DeleteAppRequest
+	(*RefreshAppApiKeyRequest)(nil),   // 11: outshift.identity.service.v1alpha1.RefreshAppApiKeyRequest
+	(*GetBadgeRequest)(nil),           // 12: outshift.identity.service.v1alpha1.GetBadgeRequest
+	(*GetTasksRequest)(nil),           // 13: outshift.identity.service.v1alpha1.GetTasksRequest
+	(*GetTasksResponse)(nil),          // 14: outshift.identity.service.v1alpha1.GetTasksResponse
+	(*GetTasksResponse_TaskList)(nil), // 15: outshift.identity.service.v1alpha1.GetTasksResponse.TaskList
+	nil,                               // 16: outshift.identity.service.v1alpha1.GetTasksResponse.ResultEntry
+	(*App)(nil),                       // 17: outshift.identity.service.v1alpha1.App
+	(*v1alpha1.PagedResponse)(nil),    // 18: outshift.identity.service.shared.v1alpha1.PagedResponse
+	(AppType)(0),                      // 19: outshift.identity.service.v1alpha1.AppType
 	(*Badge)(nil),                     // 20: outshift.identity.service.v1alpha1.Badge
+	(*Task)(nil),                      // 21: outshift.identity.service.v1alpha1.Task
+	(*emptypb.Empty)(nil),             // 22: google.protobuf.Empty
 }
 var file_outshift_identity_service_v1alpha1_app_service_proto_depIdxs = []int32{
-	15, // 0: outshift.identity.service.v1alpha1.ListAppsResponse.apps:type_name -> outshift.identity.service.v1alpha1.App
-	16, // 1: outshift.identity.service.v1alpha1.ListAppsResponse.pagination:type_name -> outshift.identity.service.shared.v1alpha1.PagedResponse
-	17, // 2: outshift.identity.service.v1alpha1.ListAppsRequest.types:type_name -> outshift.identity.service.v1alpha1.AppType
-	15, // 3: outshift.identity.service.v1alpha1.CreateAppRequest.app:type_name -> outshift.identity.service.v1alpha1.App
-	17, // 4: outshift.identity.service.v1alpha1.AppTypeCountEntry.key:type_name -> outshift.identity.service.v1alpha1.AppType
-	4,  // 5: outshift.identity.service.v1alpha1.GetAppsCountResponse.counts:type_name -> outshift.identity.service.v1alpha1.AppTypeCountEntry
-	15, // 6: outshift.identity.service.v1alpha1.UpdateAppRequest.app:type_name -> outshift.identity.service.v1alpha1.App
-	14, // 7: outshift.identity.service.v1alpha1.GetTasksResponse.result:type_name -> outshift.identity.service.v1alpha1.GetTasksResponse.ResultEntry
-	18, // 8: outshift.identity.service.v1alpha1.GetTasksResponse.TaskList.tasks:type_name -> outshift.identity.service.v1alpha1.Task
-	13, // 9: outshift.identity.service.v1alpha1.GetTasksResponse.ResultEntry.value:type_name -> outshift.identity.service.v1alpha1.GetTasksResponse.TaskList
-	1,  // 10: outshift.identity.service.v1alpha1.AppService.ListApps:input_type -> outshift.identity.service.v1alpha1.ListAppsRequest
-	3,  // 11: outshift.identity.service.v1alpha1.AppService.GetAppsCount:input_type -> outshift.identity.service.v1alpha1.GetAppsCountRequest
-	6,  // 12: outshift.identity.service.v1alpha1.AppService.GetApp:input_type -> outshift.identity.service.v1alpha1.GetAppRequest
-	2,  // 13: outshift.identity.service.v1alpha1.AppService.CreateApp:input_type -> outshift.identity.service.v1alpha1.CreateAppRequest
-	7,  // 14: outshift.identity.service.v1alpha1.AppService.UpdateApp:input_type -> outshift.identity.service.v1alpha1.UpdateAppRequest
-	8,  // 15: outshift.identity.service.v1alpha1.AppService.DeleteApp:input_type -> outshift.identity.service.v1alpha1.DeleteAppRequest
-	9,  // 16: outshift.identity.service.v1alpha1.AppService.RefreshAppApiKey:input_type -> outshift.identity.service.v1alpha1.RefreshAppApiKeyRequest
-	10, // 17: outshift.identity.service.v1alpha1.AppService.GetBadge:input_type -> outshift.identity.service.v1alpha1.GetBadgeRequest
-	11, // 18: outshift.identity.service.v1alpha1.AppService.GetTasks:input_type -> outshift.identity.service.v1alpha1.GetTasksRequest
-	0,  // 19: outshift.identity.service.v1alpha1.AppService.ListApps:output_type -> outshift.identity.service.v1alpha1.ListAppsResponse
-	5,  // 20: outshift.identity.service.v1alpha1.AppService.GetAppsCount:output_type -> outshift.identity.service.v1alpha1.GetAppsCountResponse
-	15, // 21: outshift.identity.service.v1alpha1.AppService.GetApp:output_type -> outshift.identity.service.v1alpha1.App
-	15, // 22: outshift.identity.service.v1alpha1.AppService.CreateApp:output_type -> outshift.identity.service.v1alpha1.App
-	15, // 23: outshift.identity.service.v1alpha1.AppService.UpdateApp:output_type -> outshift.identity.service.v1alpha1.App
-	19, // 24: outshift.identity.service.v1alpha1.AppService.DeleteApp:output_type -> google.protobuf.Empty
-	15, // 25: outshift.identity.service.v1alpha1.AppService.RefreshAppApiKey:output_type -> outshift.identity.service.v1alpha1.App
-	20, // 26: outshift.identity.service.v1alpha1.AppService.GetBadge:output_type -> outshift.identity.service.v1alpha1.Badge
-	12, // 27: outshift.identity.service.v1alpha1.AppService.GetTasks:output_type -> outshift.identity.service.v1alpha1.GetTasksResponse
-	19, // [19:28] is the sub-list for method output_type
-	10, // [10:19] is the sub-list for method input_type
-	10, // [10:10] is the sub-list for extension type_name
-	10, // [10:10] is the sub-list for extension extendee
-	0,  // [0:10] is the sub-list for field type_name
+	17, // 0: outshift.identity.service.v1alpha1.ListAppsResponse.apps:type_name -> outshift.identity.service.v1alpha1.App
+	18, // 1: outshift.identity.service.v1alpha1.ListAppsResponse.pagination:type_name -> outshift.identity.service.shared.v1alpha1.PagedResponse
+	19, // 2: outshift.identity.service.v1alpha1.ListAppsRequest.types:type_name -> outshift.identity.service.v1alpha1.AppType
+	17, // 3: outshift.identity.service.v1alpha1.CreateAppRequest.app:type_name -> outshift.identity.service.v1alpha1.App
+	17, // 4: outshift.identity.service.v1alpha1.CreateOasfAppResponse.app:type_name -> outshift.identity.service.v1alpha1.App
+	20, // 5: outshift.identity.service.v1alpha1.CreateOasfAppResponse.badge:type_name -> outshift.identity.service.v1alpha1.Badge
+	19, // 6: outshift.identity.service.v1alpha1.AppTypeCountEntry.key:type_name -> outshift.identity.service.v1alpha1.AppType
+	6,  // 7: outshift.identity.service.v1alpha1.GetAppsCountResponse.counts:type_name -> outshift.identity.service.v1alpha1.AppTypeCountEntry
+	17, // 8: outshift.identity.service.v1alpha1.UpdateAppRequest.app:type_name -> outshift.identity.service.v1alpha1.App
+	16, // 9: outshift.identity.service.v1alpha1.GetTasksResponse.result:type_name -> outshift.identity.service.v1alpha1.GetTasksResponse.ResultEntry
+	21, // 10: outshift.identity.service.v1alpha1.GetTasksResponse.TaskList.tasks:type_name -> outshift.identity.service.v1alpha1.Task
+	15, // 11: outshift.identity.service.v1alpha1.GetTasksResponse.ResultEntry.value:type_name -> outshift.identity.service.v1alpha1.GetTasksResponse.TaskList
+	1,  // 12: outshift.identity.service.v1alpha1.AppService.ListApps:input_type -> outshift.identity.service.v1alpha1.ListAppsRequest
+	5,  // 13: outshift.identity.service.v1alpha1.AppService.GetAppsCount:input_type -> outshift.identity.service.v1alpha1.GetAppsCountRequest
+	8,  // 14: outshift.identity.service.v1alpha1.AppService.GetApp:input_type -> outshift.identity.service.v1alpha1.GetAppRequest
+	2,  // 15: outshift.identity.service.v1alpha1.AppService.CreateApp:input_type -> outshift.identity.service.v1alpha1.CreateAppRequest
+	3,  // 16: outshift.identity.service.v1alpha1.AppService.CreateOasfApp:input_type -> outshift.identity.service.v1alpha1.CreateOasfAppRequest
+	9,  // 17: outshift.identity.service.v1alpha1.AppService.UpdateApp:input_type -> outshift.identity.service.v1alpha1.UpdateAppRequest
+	10, // 18: outshift.identity.service.v1alpha1.AppService.DeleteApp:input_type -> outshift.identity.service.v1alpha1.DeleteAppRequest
+	11, // 19: outshift.identity.service.v1alpha1.AppService.RefreshAppApiKey:input_type -> outshift.identity.service.v1alpha1.RefreshAppApiKeyRequest
+	12, // 20: outshift.identity.service.v1alpha1.AppService.GetBadge:input_type -> outshift.identity.service.v1alpha1.GetBadgeRequest
+	13, // 21: outshift.identity.service.v1alpha1.AppService.GetTasks:input_type -> outshift.identity.service.v1alpha1.GetTasksRequest
+	0,  // 22: outshift.identity.service.v1alpha1.AppService.ListApps:output_type -> outshift.identity.service.v1alpha1.ListAppsResponse
+	7,  // 23: outshift.identity.service.v1alpha1.AppService.GetAppsCount:output_type -> outshift.identity.service.v1alpha1.GetAppsCountResponse
+	17, // 24: outshift.identity.service.v1alpha1.AppService.GetApp:output_type -> outshift.identity.service.v1alpha1.App
+	17, // 25: outshift.identity.service.v1alpha1.AppService.CreateApp:output_type -> outshift.identity.service.v1alpha1.App
+	4,  // 26: outshift.identity.service.v1alpha1.AppService.CreateOasfApp:output_type -> outshift.identity.service.v1alpha1.CreateOasfAppResponse
+	17, // 27: outshift.identity.service.v1alpha1.AppService.UpdateApp:output_type -> outshift.identity.service.v1alpha1.App
+	22, // 28: outshift.identity.service.v1alpha1.AppService.DeleteApp:output_type -> google.protobuf.Empty
+	17, // 29: outshift.identity.service.v1alpha1.AppService.RefreshAppApiKey:output_type -> outshift.identity.service.v1alpha1.App
+	20, // 30: outshift.identity.service.v1alpha1.AppService.GetBadge:output_type -> outshift.identity.service.v1alpha1.Badge
+	14, // 31: outshift.identity.service.v1alpha1.AppService.GetTasks:output_type -> outshift.identity.service.v1alpha1.GetTasksResponse
+	22, // [22:32] is the sub-list for method output_type
+	12, // [12:22] is the sub-list for method input_type
+	12, // [12:12] is the sub-list for extension type_name
+	12, // [12:12] is the sub-list for extension extendee
+	0,  // [0:12] is the sub-list for field type_name
 }
 
 func init() { file_outshift_identity_service_v1alpha1_app_service_proto_init() }
@@ -887,7 +998,7 @@ func file_outshift_identity_service_v1alpha1_app_service_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_outshift_identity_service_v1alpha1_app_service_proto_rawDesc), len(file_outshift_identity_service_v1alpha1_app_service_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   15,
+			NumMessages:   17,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

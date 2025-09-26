@@ -61,6 +61,18 @@ service AppService {
     };
   }
 
+  rpc CreateOasfApp(CreateOasfAppRequest) returns (CreateOasfAppResponse) {
+    option (google.api.http) = {
+      post: "/v1alpha1/apps/oasf"
+      body: "*"
+    };
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "CreateOasfApp";
+      summary: "Create an OASF App from an OASF schema and issue a badge";
+    };
+  }
+
   // Update an App.
   rpc UpdateApp(UpdateAppRequest) returns (App) {
     option (google.api.http) = {
@@ -146,6 +158,19 @@ message ListAppsRequest {
 message CreateAppRequest {
   // The App to create.
   App app = 1;
+}
+
+message CreateOasfAppRequest {
+  // The OASF schema in a base64 encoded format
+  string schema_base64 = 1;
+}
+
+message CreateOasfAppResponse {
+  // The created OASF App.
+  App app = 1;
+
+  // The issued badge for the OASF App.
+  Badge badge = 2;
 }
 
 message GetAppsCountRequest {}

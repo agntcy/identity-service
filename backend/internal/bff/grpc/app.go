@@ -49,6 +49,13 @@ func (s *appService) CreateApp(
 	return converters.FromApp(createdApp), nil
 }
 
+func (s *appService) CreateOasfApp(
+	ctx context.Context,
+	req *identity_service_sdk_go.CreateOasfAppRequest,
+) (*identity_service_sdk_go.CreateOasfAppResponse, error) {
+	panic("unimplemented")
+}
+
 func (s *appService) ListApps(
 	ctx context.Context,
 	req *identity_service_sdk_go.ListAppsRequest,

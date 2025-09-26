@@ -44,7 +44,7 @@ option (openapi.v3.document) = {
   components: {
     headers: {
       additional_properties: [
-        {}
+{}
       ]
     },
     security_schemes: {
