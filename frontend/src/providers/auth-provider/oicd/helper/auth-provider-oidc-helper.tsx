@@ -7,7 +7,7 @@ import * as React from 'react';
 import {Loading} from '@/components/ui/loading';
 import {AuthError} from '@/components/router/auth-error';
 import {AuthProviderProps, useAuth} from 'react-oidc-context';
-import {getAuthConfig, getRelativeUrl} from '@/utils/auth';
+import {getAuthConfig} from '@/utils/auth';
 import AuthContextOIDCHelper from './auth-context-oidc-helper';
 import {AuthInfo, User} from '@/types/auth/common';
 import {AuthConfigOIDC} from '@/types/auth/oidc';
@@ -61,19 +61,9 @@ const AuthProviderOIDCHelper: React.FC<React.PropsWithChildren<AuthProviderProps
     });
   };
 
-  const cleanCredentials = () => {
-    try {
-      setController(false);
-      setAuthInfo(undefined);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   const login = async () => {
     try {
       await auth.signinRedirect({
-        state: JSON.stringify({url: getRelativeUrl()}),
         scope: props.userManager?.settings.scope
       });
     } catch (error) {
@@ -96,10 +86,20 @@ const AuthProviderOIDCHelper: React.FC<React.PropsWithChildren<AuthProviderProps
     try {
       cleanCredentials();
       auth.stopSilentRenew();
+      await auth.clearStaleState();
       await auth.removeUser();
       await auth.revokeTokens(['access_token', 'refresh_token']);
     } catch (error) {
       console.debug(error);
+    }
+  };
+
+  const cleanCredentials = () => {
+    try {
+      setController(false);
+      setAuthInfo(undefined);
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -173,10 +173,6 @@ const AuthProviderOIDCHelper: React.FC<React.PropsWithChildren<AuthProviderProps
   if (auth.error) {
     return <AuthError error={auth.error} />;
   }
-
-  // if (!props.userManager && auth.isAuthenticated) {
-  //   return <AuthError error={new Error('No userManager created in <AuthProvider> component.')} />;
-  // }
 
   if (handleError) {
     return <AuthError error={handleError} />;
