@@ -17,6 +17,9 @@ import (
 
 const (
 	nanosecsInMillisec = 1e6
+
+	//nolint:lll // ignore the linter complaining about the length of this line
+	traceStr = logger.Green + "%s\n\t" + logger.Reset + logger.Yellow + "[%.3fms] " + logger.BlueBold + "[rows:%v]" + logger.Reset + logger.Cyan + " %s" + logger.Reset
 )
 
 type logrusLogger struct{}
@@ -59,12 +62,12 @@ func (l *logrusLogger) Trace(
 
 	logEntry := log.FromContext(ctx)
 
-	if !errors.Is(err, gorm.ErrRecordNotFound) {
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		logEntry = logEntry.WithError(err)
 	}
 
-	logEntry.Infof(
-		"%s\n[%.3fms] [rows:%s] %s",
+	logEntry.Debugf(
+		traceStr,
 		utils.FileWithLineNum(),
 		float64(elapsed.Nanoseconds())/nanosecsInMillisec,
 		rowsStr,
