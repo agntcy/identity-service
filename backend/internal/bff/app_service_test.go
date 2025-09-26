@@ -5,7 +5,10 @@ package bff_test
 
 import (
 	"context"
+	"encoding/base64"
+	"encoding/json"
 	"errors"
+	"fmt"
 	"testing"
 
 	"github.com/agntcy/identity/pkg/jwk"
@@ -316,6 +319,160 @@ func TestAppService_CreateApp_should_return_err_when_create_apikey_fails(t *test
 
 	assert.Error(t, err)
 	assert.ErrorContains(t, err, "failed to generate an api key")
+}
+
+// CreateAppFromOasfSchema
+
+func TestAppService_CreateAppFromOasfSchema_should_succeed(t *testing.T) {
+	t.Parallel()
+
+	name := uuid.NewString()
+	version := uuid.NewString()
+	description := uuid.NewString()
+
+	testCases := map[string]*struct {
+		oasfSchema          map[string]any
+		expectedName        string
+		expectedDescription string
+	}{
+		"the app should have a description and a name containing the version": {
+			oasfSchema: map[string]any{
+				"name":        name,
+				"version":     version,
+				"description": description,
+			},
+			expectedName:        fmt.Sprintf("%s (%s)", name, version),
+			expectedDescription: description,
+		},
+		"the app should have a description and a name without a version": {
+			oasfSchema: map[string]any{
+				"name":        name,
+				"description": description,
+			},
+			expectedName:        name,
+			expectedDescription: description,
+		},
+		"the app should have a description only": {
+			oasfSchema: map[string]any{
+				"version":     version,
+				"description": description,
+			},
+			expectedName:        "",
+			expectedDescription: description,
+		},
+	}
+
+	for tn, tc := range testCases {
+		t.Run(tn, func(t *testing.T) {
+			t.Parallel()
+
+			schemaBase64 := encodeOasfSchemaToBase64(t, tc.oasfSchema)
+
+			ctx := context.Background()
+			issuer := &settingstypes.IssuerSettings{
+				IssuerID: uuid.NewString(),
+				KeyID:    uuid.NewString(),
+				IdpType:  settingstypes.IDP_TYPE_SELF,
+			}
+			resolverMetadataID := uuid.NewString()
+			apiKey := &iamtypes.APIKey{}
+
+			settingsRepo := settingsmocks.NewRepository(t)
+			settingsRepo.EXPECT().GetIssuerSettings(ctx).Return(issuer, nil)
+
+			idpFactory := idp.NewFactory()
+			identityServ := identitymocks.NewService(t)
+			identityServ.EXPECT().
+				GenerateID(ctx, mock.Anything, &identitycore.Issuer{
+					CommonName: issuer.IssuerID,
+					KeyID:      issuer.KeyID,
+				}).
+				Return(resolverMetadataID, nil)
+
+			credStore := idpmocks.NewCredentialStore(t)
+			credStore.EXPECT().Put(ctx, mock.Anything, mock.Anything).Return(nil)
+
+			iamClient := iammocks.NewClient(t)
+			iamClient.EXPECT().CreateAppAPIKey(ctx, mock.Anything).Return(apiKey, nil)
+
+			appRepo := appmocks.NewRepository(t)
+			appRepo.EXPECT().
+				CreateApp(ctx, mock.Anything).
+				RunAndReturn(func(ctx context.Context, app *apptypes.App) (*apptypes.App, error) {
+					return app, nil
+				})
+
+			sut := bff.NewAppService(
+				appRepo,
+				settingsRepo,
+				identityServ,
+				idpFactory,
+				credStore,
+				iamClient,
+				nil,
+				nil,
+				nil,
+				nil,
+			)
+
+			createdApp, err := sut.CreateAppFromOasfSchema(ctx, schemaBase64)
+
+			assert.NoError(t, err)
+			assert.NotNil(t, createdApp)
+			assert.Equal(t, tc.expectedName, *createdApp.Name)
+			assert.Equal(t, tc.expectedDescription, *createdApp.Description)
+			assert.Equal(t, apptypes.APP_TYPE_AGENT_OASF, createdApp.Type)
+		})
+	}
+}
+
+func TestAppService_CreateAppFromOasfSchema_should_fail(t *testing.T) {
+	t.Parallel()
+
+	t.Run("Should return validation error when OASF schema is empty", func(t *testing.T) {
+		t.Parallel()
+
+		emptySchema := ""
+
+		sut := bff.NewAppService(nil, nil, nil, nil, nil, nil, nil, nil, nil, nil)
+
+		_, err := sut.CreateAppFromOasfSchema(context.Background(), emptySchema)
+
+		assert.ErrorIs(t, err, errutil.ValidationFailed("app.invalidOasfSchema", "Invalid OASF schema."))
+	})
+
+	t.Run("Should return invalid request when base64 decoding fails", func(t *testing.T) {
+		t.Parallel()
+
+		invalidBase64 := "something"
+
+		sut := bff.NewAppService(nil, nil, nil, nil, nil, nil, nil, nil, nil, nil)
+
+		_, err := sut.CreateAppFromOasfSchema(context.Background(), invalidBase64)
+
+		assert.ErrorIs(t, err, errutil.InvalidRequest("app.invalidSchemaBase64", "Unable to decode SchemaBase64."))
+	})
+
+	t.Run("Should return invalid request when unmarshaling json fails", func(t *testing.T) {
+		t.Parallel()
+
+		invalidSchema := base64.StdEncoding.EncodeToString([]byte("wrong_json"))
+
+		sut := bff.NewAppService(nil, nil, nil, nil, nil, nil, nil, nil, nil, nil)
+
+		_, err := sut.CreateAppFromOasfSchema(context.Background(), invalidSchema)
+
+		assert.ErrorIs(t, err, errutil.InvalidRequest("app.invalidOasfSchema", "Invalid OASF schema."))
+	})
+}
+
+func encodeOasfSchemaToBase64(t *testing.T, oasfSchema any) string {
+	t.Helper()
+
+	data, err := json.Marshal(&oasfSchema)
+	assert.NoError(t, err)
+
+	return base64.StdEncoding.EncodeToString(data)
 }
 
 // UpdateApp

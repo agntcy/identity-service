@@ -169,6 +169,74 @@ func (_c *AppService_CreateApp_Call) RunAndReturn(run func(ctx context.Context, 
 	return _c
 }
 
+// CreateAppFromOasfSchema provides a mock function for the type AppService
+func (_mock *AppService) CreateAppFromOasfSchema(ctx context.Context, oasfSchemaBase64 string) (*types.App, error) {
+	ret := _mock.Called(ctx, oasfSchemaBase64)
+
+	if len(ret) == 0 {
+		panic("no return value specified for CreateAppFromOasfSchema")
+	}
+
+	var r0 *types.App
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) (*types.App, error)); ok {
+		return returnFunc(ctx, oasfSchemaBase64)
+	}
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) *types.App); ok {
+		r0 = returnFunc(ctx, oasfSchemaBase64)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*types.App)
+		}
+	}
+	if returnFunc, ok := ret.Get(1).(func(context.Context, string) error); ok {
+		r1 = returnFunc(ctx, oasfSchemaBase64)
+	} else {
+		r1 = ret.Error(1)
+	}
+	return r0, r1
+}
+
+// AppService_CreateAppFromOasfSchema_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'CreateAppFromOasfSchema'
+type AppService_CreateAppFromOasfSchema_Call struct {
+	*mock.Call
+}
+
+// CreateAppFromOasfSchema is a helper method to define mock.On call
+//   - ctx context.Context
+//   - oasfSchemaBase64 string
+func (_e *AppService_Expecter) CreateAppFromOasfSchema(ctx interface{}, oasfSchemaBase64 interface{}) *AppService_CreateAppFromOasfSchema_Call {
+	return &AppService_CreateAppFromOasfSchema_Call{Call: _e.mock.On("CreateAppFromOasfSchema", ctx, oasfSchemaBase64)}
+}
+
+func (_c *AppService_CreateAppFromOasfSchema_Call) Run(run func(ctx context.Context, oasfSchemaBase64 string)) *AppService_CreateAppFromOasfSchema_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 context.Context
+		if args[0] != nil {
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 string
+		if args[1] != nil {
+			arg1 = args[1].(string)
+		}
+		run(
+			arg0,
+			arg1,
+		)
+	})
+	return _c
+}
+
+func (_c *AppService_CreateAppFromOasfSchema_Call) Return(app *types.App, err error) *AppService_CreateAppFromOasfSchema_Call {
+	_c.Call.Return(app, err)
+	return _c
+}
+
+func (_c *AppService_CreateAppFromOasfSchema_Call) RunAndReturn(run func(ctx context.Context, oasfSchemaBase64 string) (*types.App, error)) *AppService_CreateAppFromOasfSchema_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // DeleteApp provides a mock function for the type AppService
 func (_mock *AppService) DeleteApp(ctx context.Context, appID string) error {
 	ret := _mock.Called(ctx, appID)

@@ -15,6 +15,7 @@ import (
 	"github.com/outshift/identity-service/internal/pkg/grpcutil"
 	"github.com/outshift/identity-service/internal/pkg/pagination"
 	"github.com/outshift/identity-service/internal/pkg/sorting"
+	"github.com/outshift/identity-service/pkg/log"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -53,7 +54,25 @@ func (s *appService) CreateOasfApp(
 	ctx context.Context,
 	req *identity_service_sdk_go.CreateOasfAppRequest,
 ) (*identity_service_sdk_go.CreateOasfAppResponse, error) {
-	panic("unimplemented")
+	app, err := s.appSrv.CreateAppFromOasfSchema(ctx, req.SchemaBase64)
+	if err != nil {
+		return nil, grpcutil.Error(err)
+	}
+
+	badge, err := s.badgeSrv.IssueBadge(ctx, app.ID, bff.WithOASF(req.SchemaBase64))
+	if err != nil {
+		delErr := s.appSrv.DeleteApp(ctx, app.ID)
+		if delErr != nil {
+			log.FromContext(ctx).WithError(err).Errorf("gRPC app.CreateOasfApp failed to delete app %s", app.ID)
+		}
+
+		return nil, grpcutil.Error(err)
+	}
+
+	return &identity_service_sdk_go.CreateOasfAppResponse{
+		App:   converters.FromApp(app),
+		Badge: converters.FromBadge(badge),
+	}, nil
 }
 
 func (s *appService) ListApps(

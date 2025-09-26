@@ -239,8 +239,8 @@ func (_c *DeviceService_ListRegisteredDevices_Call) RunAndReturn(run func(ctx co
 }
 
 // RegisterDevice provides a mock function for the type DeviceService
-func (_mock *DeviceService) RegisterDevice(ctx context.Context, deviceId string, device *types.Device) error {
-	ret := _mock.Called(ctx, deviceId, device)
+func (_mock *DeviceService) RegisterDevice(ctx context.Context, deviceID string, device *types.Device) error {
+	ret := _mock.Called(ctx, deviceID, device)
 
 	if len(ret) == 0 {
 		panic("no return value specified for RegisterDevice")
@@ -248,7 +248,7 @@ func (_mock *DeviceService) RegisterDevice(ctx context.Context, deviceId string,
 
 	var r0 error
 	if returnFunc, ok := ret.Get(0).(func(context.Context, string, *types.Device) error); ok {
-		r0 = returnFunc(ctx, deviceId, device)
+		r0 = returnFunc(ctx, deviceID, device)
 	} else {
 		r0 = ret.Error(0)
 	}
@@ -262,13 +262,13 @@ type DeviceService_RegisterDevice_Call struct {
 
 // RegisterDevice is a helper method to define mock.On call
 //   - ctx context.Context
-//   - deviceId string
+//   - deviceID string
 //   - device *types.Device
-func (_e *DeviceService_Expecter) RegisterDevice(ctx interface{}, deviceId interface{}, device interface{}) *DeviceService_RegisterDevice_Call {
-	return &DeviceService_RegisterDevice_Call{Call: _e.mock.On("RegisterDevice", ctx, deviceId, device)}
+func (_e *DeviceService_Expecter) RegisterDevice(ctx interface{}, deviceID interface{}, device interface{}) *DeviceService_RegisterDevice_Call {
+	return &DeviceService_RegisterDevice_Call{Call: _e.mock.On("RegisterDevice", ctx, deviceID, device)}
 }
 
-func (_c *DeviceService_RegisterDevice_Call) Run(run func(ctx context.Context, deviceId string, device *types.Device)) *DeviceService_RegisterDevice_Call {
+func (_c *DeviceService_RegisterDevice_Call) Run(run func(ctx context.Context, deviceID string, device *types.Device)) *DeviceService_RegisterDevice_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		var arg0 context.Context
 		if args[0] != nil {
@@ -296,7 +296,7 @@ func (_c *DeviceService_RegisterDevice_Call) Return(err error) *DeviceService_Re
 	return _c
 }
 
-func (_c *DeviceService_RegisterDevice_Call) RunAndReturn(run func(ctx context.Context, deviceId string, device *types.Device) error) *DeviceService_RegisterDevice_Call {
+func (_c *DeviceService_RegisterDevice_Call) RunAndReturn(run func(ctx context.Context, deviceID string, device *types.Device) error) *DeviceService_RegisterDevice_Call {
 	_c.Call.Return(run)
 	return _c
 }
