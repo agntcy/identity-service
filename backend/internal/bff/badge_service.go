@@ -411,7 +411,7 @@ func (s *badgeService) GetBadge(
 		return nil, errutil.ValidationFailed("badge.invalidAppID", "Invalid application ID.")
 	}
 
-	badge, err := s.badgeRepository.GetLatestByAppID(ctx, appID)
+	badge, err := s.badgeRepository.GetLatestByAppIdOrResolverMetadataID(ctx, appID)
 	if err != nil {
 		if errors.Is(err, badgecore.ErrBadgeNotFound) {
 			return nil, errutil.NotFound("badge.notFound", "No badge found for the application.")

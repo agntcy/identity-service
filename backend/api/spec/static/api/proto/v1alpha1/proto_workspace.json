@@ -1329,7 +1329,7 @@
           "fields": [
             {
               "name": "app_id",
-              "description": "App Id to get the badge for.",
+              "description": "App Id or Resolver Metadata ID to get the badge for.",
               "label": "",
               "type": "string",
               "longType": "string",

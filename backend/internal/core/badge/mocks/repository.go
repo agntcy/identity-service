@@ -163,47 +163,47 @@ func (_c *Repository_GetAllActiveBadges_Call) RunAndReturn(run func(ctx context.
 	return _c
 }
 
-// GetLatestByAppID provides a mock function for the type Repository
-func (_mock *Repository) GetLatestByAppID(ctx context.Context, appID string) (*types.Badge, error) {
-	ret := _mock.Called(ctx, appID)
+// GetLatestByAppIdOrResolverMetadataID provides a mock function for the type Repository
+func (_mock *Repository) GetLatestByAppIdOrResolverMetadataID(ctx context.Context, id string) (*types.Badge, error) {
+	ret := _mock.Called(ctx, id)
 
 	if len(ret) == 0 {
-		panic("no return value specified for GetLatestByAppID")
+		panic("no return value specified for GetLatestByAppIdOrResolverMetadataID")
 	}
 
 	var r0 *types.Badge
 	var r1 error
 	if returnFunc, ok := ret.Get(0).(func(context.Context, string) (*types.Badge, error)); ok {
-		return returnFunc(ctx, appID)
+		return returnFunc(ctx, id)
 	}
 	if returnFunc, ok := ret.Get(0).(func(context.Context, string) *types.Badge); ok {
-		r0 = returnFunc(ctx, appID)
+		r0 = returnFunc(ctx, id)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*types.Badge)
 		}
 	}
 	if returnFunc, ok := ret.Get(1).(func(context.Context, string) error); ok {
-		r1 = returnFunc(ctx, appID)
+		r1 = returnFunc(ctx, id)
 	} else {
 		r1 = ret.Error(1)
 	}
 	return r0, r1
 }
 
-// Repository_GetLatestByAppID_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetLatestByAppID'
-type Repository_GetLatestByAppID_Call struct {
+// Repository_GetLatestByAppIdOrResolverMetadataID_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetLatestByAppIdOrResolverMetadataID'
+type Repository_GetLatestByAppIdOrResolverMetadataID_Call struct {
 	*mock.Call
 }
 
-// GetLatestByAppID is a helper method to define mock.On call
+// GetLatestByAppIdOrResolverMetadataID is a helper method to define mock.On call
 //   - ctx context.Context
-//   - appID string
-func (_e *Repository_Expecter) GetLatestByAppID(ctx interface{}, appID interface{}) *Repository_GetLatestByAppID_Call {
-	return &Repository_GetLatestByAppID_Call{Call: _e.mock.On("GetLatestByAppID", ctx, appID)}
+//   - id string
+func (_e *Repository_Expecter) GetLatestByAppIdOrResolverMetadataID(ctx interface{}, id interface{}) *Repository_GetLatestByAppIdOrResolverMetadataID_Call {
+	return &Repository_GetLatestByAppIdOrResolverMetadataID_Call{Call: _e.mock.On("GetLatestByAppIdOrResolverMetadataID", ctx, id)}
 }
 
-func (_c *Repository_GetLatestByAppID_Call) Run(run func(ctx context.Context, appID string)) *Repository_GetLatestByAppID_Call {
+func (_c *Repository_GetLatestByAppIdOrResolverMetadataID_Call) Run(run func(ctx context.Context, id string)) *Repository_GetLatestByAppIdOrResolverMetadataID_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		var arg0 context.Context
 		if args[0] != nil {
@@ -221,12 +221,12 @@ func (_c *Repository_GetLatestByAppID_Call) Run(run func(ctx context.Context, ap
 	return _c
 }
 
-func (_c *Repository_GetLatestByAppID_Call) Return(badge *types.Badge, err error) *Repository_GetLatestByAppID_Call {
+func (_c *Repository_GetLatestByAppIdOrResolverMetadataID_Call) Return(badge *types.Badge, err error) *Repository_GetLatestByAppIdOrResolverMetadataID_Call {
 	_c.Call.Return(badge, err)
 	return _c
 }
 
-func (_c *Repository_GetLatestByAppID_Call) RunAndReturn(run func(ctx context.Context, appID string) (*types.Badge, error)) *Repository_GetLatestByAppID_Call {
+func (_c *Repository_GetLatestByAppIdOrResolverMetadataID_Call) RunAndReturn(run func(ctx context.Context, id string) (*types.Badge, error)) *Repository_GetLatestByAppIdOrResolverMetadataID_Call {
 	_c.Call.Return(run)
 	return _c
 }

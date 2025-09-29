@@ -113,7 +113,7 @@ service AppService {
     option (google.api.http) = {get: "/v1alpha1/apps/{app_id}/badge"};
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       operation_id: "GetAppBadge";
-      summary: "Get the current badge issued for the App";
+      summary: "Get the current badge issued for the App using the App ID or the Resolver Metadata ID.";
     };
   }
 
@@ -216,7 +216,7 @@ message RefreshAppApiKeyRequest {
 }
 
 message GetBadgeRequest {
-  // App Id to get the badge for.
+  // App Id or Resolver Metadata ID to get the badge for.
   string app_id = 1;
 }
 

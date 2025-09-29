@@ -651,7 +651,7 @@ func (x *RefreshAppApiKeyRequest) GetAppId() string {
 
 type GetBadgeRequest struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// App Id to get the badge for.
+	// App Id or Resolver Metadata ID to get the badge for.
 	AppId         string `protobuf:"bytes,1,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -886,7 +886,7 @@ const file_outshift_identity_service_v1alpha1_app_service_proto_rawDesc = "" +
 	"\x05tasks\x18\x01 \x03(\v2(.outshift.identity.service.v1alpha1.TaskR\x05tasks\x1ax\n" +
 	"\vResultEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12S\n" +
-	"\x05value\x18\x02 \x01(\v2=.outshift.identity.service.v1alpha1.GetTasksResponse.TaskListR\x05value:\x028\x012\x8e\x0f\n" +
+	"\x05value\x18\x02 \x01(\v2=.outshift.identity.service.v1alpha1.GetTasksResponse.TaskListR\x05value:\x028\x012\xbd\x0f\n" +
 	"\n" +
 	"AppService\x12\xa5\x01\n" +
 	"\bListApps\x123.outshift.identity.service.v1alpha1.ListAppsRequest\x1a4.outshift.identity.service.v1alpha1.ListAppsResponse\".\x92A\x15\x12\tList Apps*\bListApps\x82\xd3\xe4\x93\x02\x10\x12\x0e/v1alpha1/apps\x12\xcd\x01\n" +
@@ -899,8 +899,8 @@ const file_outshift_identity_service_v1alpha1_app_service_proto_rawDesc = "" +
 	"Update App*\tUpdateApp\xdaA\x10name,description\x82\xd3\xe4\x93\x02\x1e:\x03app2\x17/v1alpha1/apps/{app_id}\x12\x94\x01\n" +
 	"\tDeleteApp\x124.outshift.identity.service.v1alpha1.DeleteAppRequest\x1a\x16.google.protobuf.Empty\"9\x92A\x17\x12\n" +
 	"Delete App*\tDeleteApp\x82\xd3\xe4\x93\x02\x19*\x17/v1alpha1/apps/{app_id}\x12\xde\x01\n" +
-	"\x10RefreshAppApiKey\x12;.outshift.identity.service.v1alpha1.RefreshAppApiKeyRequest\x1a'.outshift.identity.service.v1alpha1.App\"d\x92A2\x12\x1eRefresh the API Key for an App*\x10RefreshAppApiKey\x82\xd3\xe4\x93\x02)\x12'/v1alpha1/apps/{app_id}/api-key/refresh\x12\xcb\x01\n" +
-	"\bGetBadge\x123.outshift.identity.service.v1alpha1.GetBadgeRequest\x1a).outshift.identity.service.v1alpha1.Badge\"_\x92A7\x12(Get the current badge issued for the App*\vGetAppBadge\x82\xd3\xe4\x93\x02\x1f\x12\x1d/v1alpha1/apps/{app_id}/badge\x12\xbe\x01\n" +
+	"\x10RefreshAppApiKey\x12;.outshift.identity.service.v1alpha1.RefreshAppApiKeyRequest\x1a'.outshift.identity.service.v1alpha1.App\"d\x92A2\x12\x1eRefresh the API Key for an App*\x10RefreshAppApiKey\x82\xd3\xe4\x93\x02)\x12'/v1alpha1/apps/{app_id}/api-key/refresh\x12\xfa\x01\n" +
+	"\bGetBadge\x123.outshift.identity.service.v1alpha1.GetBadgeRequest\x1a).outshift.identity.service.v1alpha1.Badge\"\x8d\x01\x92Ae\x12VGet the current badge issued for the App using the App ID or the Resolver Metadata ID.*\vGetAppBadge\x82\xd3\xe4\x93\x02\x1f\x12\x1d/v1alpha1/apps/{app_id}/badge\x12\xbe\x01\n" +
 	"\bGetTasks\x123.outshift.identity.service.v1alpha1.GetTasksRequest\x1a4.outshift.identity.service.v1alpha1.GetTasksResponse\"G\x92A-\x12!Get the list of tasks of all apps*\bGetTasks\x82\xd3\xe4\x93\x02\x11\x12\x0f/v1alpha1/tasks\x1a\b\x92A\x05\n" +
 	"\x03AppBlZjgithub.com/outshift/identity-service/api/server/outshift/identity/service/v1alpha1;identity_service_sdk_gob\x06proto3"
 
