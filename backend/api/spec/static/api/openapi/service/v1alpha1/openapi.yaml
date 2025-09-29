@@ -258,7 +258,7 @@ paths:
             parameters:
                 - name: appId
                   in: path
-                  description: App Id to get the badge for.
+                  description: App Id or Resolver Metadata ID to get the badge for.
                   required: true
                   schema:
                     type: string

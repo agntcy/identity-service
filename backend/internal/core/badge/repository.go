@@ -13,7 +13,7 @@ import (
 type Repository interface {
 	Create(ctx context.Context, badge *types.Badge) error
 	Update(ctx context.Context, badge *types.Badge) error
-	GetLatestByAppID(ctx context.Context, appID string) (*types.Badge, error)
+	GetLatestByAppIdOrResolverMetadataID(ctx context.Context, id string) (*types.Badge, error)
 	GetAllActiveBadges(ctx context.Context, appID string) ([]*types.Badge, error)
 }
 

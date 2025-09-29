@@ -58,15 +58,22 @@ func (r *postgresRepository) Update(ctx context.Context, badge *types.Badge) err
 	return nil
 }
 
-func (r *postgresRepository) GetLatestByAppID(
+func (r *postgresRepository) GetLatestByAppIdOrResolverMetadataID(
 	ctx context.Context,
-	appID string,
+	id string,
 ) (*types.Badge, error) {
 	var badge Badge
 
 	result := r.dbContext.
 		Scopes(gormutil.BelongsToTenant(ctx)).
-		Where("app_id = ?", appID).
+		Where(
+			"app_id = ? OR app_id IN (?)",
+			id,
+			r.dbContext.Table("apps").
+				Scopes(gormutil.BelongsToTenant(ctx)).
+				Select("id").
+				Where("resolver_metadata_id = ?", id),
+		).
 		Order("created_at desc").
 		First(&badge)
 	if result.Error != nil {
