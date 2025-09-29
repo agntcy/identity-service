@@ -90,7 +90,7 @@ backend/
 ├── cmd/                # Main applications for the project
 │   └── bff/            # Backend for Frontend application
 ├── internal/           # Private application and library code
-│   ├── bff/            # BFF specific code
+│   ├── bff/            # Application services and gRPC services
 │   ├── core/           # Core business logic, types, and repositories
 │   └── pkg/            # Shared packages
 └── pkg/                # Public libraries and utilities
