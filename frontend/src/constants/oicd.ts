@@ -14,7 +14,8 @@ export const defaultAuthConfigOptionsOIDC: Partial<AuthProviderProps> = {
   response_type: 'code',
   loadUserInfo: true,
   userStore: new WebStorageStateStore({store: localStorage}),
-  stateStore: new WebStorageStateStore({store: localStorage})
+  stateStore: new WebStorageStateStore({store: localStorage}),
+  extraQueryParams: {audience: 'api://default'}
 };
 
 export const onSigninCallback = () => {
