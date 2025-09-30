@@ -29,7 +29,7 @@ func NewRepository(dbContext *gorm.DB, crypter secrets.Crypter) authcore.Reposit
 	}
 }
 
-func (r *postgresRepository) Create(
+func (r *postgresRepository) CreateSession(
 	ctx context.Context,
 	session *types.Session,
 ) (*types.Session, error) {
@@ -43,7 +43,7 @@ func (r *postgresRepository) Create(
 	return model.ToCoreType(r.crypter), nil
 }
 
-func (r *postgresRepository) GetByAuthorizationCode(
+func (r *postgresRepository) GetSessionByAuthCode(
 	ctx context.Context,
 	code string,
 ) (*types.Session, error) {
@@ -72,7 +72,7 @@ func (r *postgresRepository) GetByAuthorizationCode(
 	return model.ToCoreType(r.crypter), nil
 }
 
-func (r *postgresRepository) GetByAccessToken(
+func (r *postgresRepository) GetSessionByAccessToken(
 	ctx context.Context,
 	accessToken string,
 ) (*types.Session, error) {
@@ -99,7 +99,7 @@ func (r *postgresRepository) GetByAccessToken(
 	return model.ToCoreType(r.crypter), nil
 }
 
-func (r *postgresRepository) Update(ctx context.Context, session *types.Session) error {
+func (r *postgresRepository) UpdateSession(ctx context.Context, session *types.Session) error {
 	model := newSessionModel(session, r.crypter)
 	model.ID = uuid.MustParse(session.ID)
 

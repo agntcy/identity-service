@@ -51,7 +51,7 @@ func TestAuthService_Authorize_should_generate_auth_code(t *testing.T) {
 	ctx := identitycontext.InsertAppID(context.Background(), validOwnerAppID)
 	authRepo := authmocks.NewRepository(t)
 	authRepo.EXPECT().
-		Create(mock.Anything, mock.Anything).
+		CreateSession(mock.Anything, mock.Anything).
 		RunAndReturn(func(_ context.Context, s *authtypes.Session) (*authtypes.Session, error) {
 			return s, nil
 		})
@@ -77,7 +77,7 @@ func TestAuthService_Authorize_should_generate_auth_code_for_specific_app(t *tes
 	ctx := identitycontext.InsertAppID(context.Background(), validOwnerAppID)
 	authRepo := authmocks.NewRepository(t)
 	authRepo.EXPECT().
-		Create(mock.Anything, mock.Anything).
+		CreateSession(mock.Anything, mock.Anything).
 		RunAndReturn(func(_ context.Context, s *authtypes.Session) (*authtypes.Session, error) {
 			return s, nil
 		})
@@ -114,7 +114,7 @@ func TestAuthService_Authorize_should_generate_session_for_tool(t *testing.T) {
 	ctx := identitycontext.InsertAppID(context.Background(), validOwnerAppID)
 	authRepo := authmocks.NewRepository(t)
 	authRepo.EXPECT().
-		Create(mock.Anything, mock.Anything).
+		CreateSession(mock.Anything, mock.Anything).
 		RunAndReturn(func(_ context.Context, s *authtypes.Session) (*authtypes.Session, error) {
 			return s, nil
 		})
@@ -278,11 +278,11 @@ func TestAuthService_Token_should_return_an_access_token_with_idp(t *testing.T) 
 	authCode := uuid.NewString()
 	session := &authtypes.Session{OwnerAppID: validOwnerAppID}
 	authRepo := authmocks.NewRepository(t)
-	authRepo.EXPECT().GetByAuthorizationCode(mock.Anything, authCode).Return(session, nil)
+	authRepo.EXPECT().GetSessionByAuthCode(mock.Anything, authCode).Return(session, nil)
 	authRepo.EXPECT().
-		GetByAccessToken(mock.Anything, mock.Anything).
+		GetSessionByAccessToken(mock.Anything, mock.Anything).
 		Return(nil, errors.New("not found"))
-	authRepo.EXPECT().Update(mock.Anything, session).Return(nil)
+	authRepo.EXPECT().UpdateSession(mock.Anything, session).Return(nil)
 
 	credStore := idpmocks.NewCredentialStore(t)
 	credStore.EXPECT().
@@ -319,11 +319,11 @@ func TestAuthService_Token_should_return_an_access_token_as_self_issuer(t *testi
 	authCode := uuid.NewString()
 	session := &authtypes.Session{OwnerAppID: validOwnerAppID}
 	authRepo := authmocks.NewRepository(t)
-	authRepo.EXPECT().GetByAuthorizationCode(mock.Anything, authCode).Return(session, nil)
+	authRepo.EXPECT().GetSessionByAuthCode(mock.Anything, authCode).Return(session, nil)
 	authRepo.EXPECT().
-		GetByAccessToken(mock.Anything, mock.Anything).
+		GetSessionByAccessToken(mock.Anything, mock.Anything).
 		Return(nil, errors.New("not found"))
-	authRepo.EXPECT().Update(mock.Anything, session).Return(nil)
+	authRepo.EXPECT().UpdateSession(mock.Anything, session).Return(nil)
 
 	credStore := idpmocks.NewCredentialStore(t)
 	credStore.EXPECT().
@@ -353,9 +353,9 @@ func TestAuthService_Token_should_expire_session_with_same_access_token(t *testi
 	session := &authtypes.Session{OwnerAppID: validOwnerAppID}
 	existingSession := &authtypes.Session{AccessToken: ptrutil.Ptr("existingtoken")}
 	authRepo := authmocks.NewRepository(t)
-	authRepo.EXPECT().GetByAuthorizationCode(mock.Anything, authCode).Return(session, nil)
-	authRepo.EXPECT().GetByAccessToken(mock.Anything, mock.Anything).Return(existingSession, nil)
-	authRepo.EXPECT().Update(mock.Anything, session).Once().Return(nil)
+	authRepo.EXPECT().GetSessionByAuthCode(mock.Anything, authCode).Return(session, nil)
+	authRepo.EXPECT().GetSessionByAccessToken(mock.Anything, mock.Anything).Return(existingSession, nil)
+	authRepo.EXPECT().UpdateSession(mock.Anything, session).Once().Return(nil)
 
 	credStore := idpmocks.NewCredentialStore(t)
 	credStore.EXPECT().
@@ -404,7 +404,7 @@ func TestAuthService_Token_should_return_err_if_auth_code_not_stored(t *testing.
 
 	invalidAuthCode := "invalid"
 	authRepo := authmocks.NewRepository(t)
-	authRepo.EXPECT().GetByAuthorizationCode(mock.Anything, invalidAuthCode).Return(nil, authcore.ErrSessionNotFound)
+	authRepo.EXPECT().GetSessionByAuthCode(mock.Anything, invalidAuthCode).Return(nil, authcore.ErrSessionNotFound)
 	sut := bff.NewAuthService(authRepo, nil, nil, nil, nil, nil, nil, nil, nil)
 
 	_, err := sut.Token(context.Background(), invalidAuthCode)
@@ -419,7 +419,7 @@ func TestAuthService_Token_should_return_err_if_session_already_has_access_token
 	authCode := uuid.NewString()
 	session := &authtypes.Session{AccessToken: ptrutil.Ptr("exists")}
 	authRepo := authmocks.NewRepository(t)
-	authRepo.EXPECT().GetByAuthorizationCode(mock.Anything, authCode).Return(session, nil)
+	authRepo.EXPECT().GetSessionByAuthCode(mock.Anything, authCode).Return(session, nil)
 	sut := bff.NewAuthService(authRepo, nil, nil, nil, nil, nil, nil, nil, nil)
 
 	_, err := sut.Token(context.Background(), authCode)
@@ -434,7 +434,7 @@ func TestAuthService_Token_should_return_err_if_client_cred_not_found(t *testing
 	authCode := uuid.NewString()
 	session := &authtypes.Session{OwnerAppID: validOwnerAppID}
 	authRepo := authmocks.NewRepository(t)
-	authRepo.EXPECT().GetByAuthorizationCode(mock.Anything, authCode).Return(session, nil)
+	authRepo.EXPECT().GetSessionByAuthCode(mock.Anything, authCode).Return(session, nil)
 
 	credStore := idpmocks.NewCredentialStore(t)
 	credStore.EXPECT().Get(mock.Anything, session.OwnerAppID).Return(nil, errors.New("not found"))
@@ -452,7 +452,7 @@ func TestAuthService_Token_should_return_err_if_issuer_not_found(t *testing.T) {
 	authCode := uuid.NewString()
 	session := &authtypes.Session{OwnerAppID: validOwnerAppID}
 	authRepo := authmocks.NewRepository(t)
-	authRepo.EXPECT().GetByAuthorizationCode(mock.Anything, authCode).Return(session, nil)
+	authRepo.EXPECT().GetSessionByAuthCode(mock.Anything, authCode).Return(session, nil)
 
 	credStore := idpmocks.NewCredentialStore(t)
 	credStore.EXPECT().
@@ -488,7 +488,7 @@ func TestAuthService_Token_should_return_err_if_access_token_generation_fails(t 
 	authCode := uuid.NewString()
 	session := &authtypes.Session{OwnerAppID: validOwnerAppID}
 	authRepo := authmocks.NewRepository(t)
-	authRepo.EXPECT().GetByAuthorizationCode(mock.Anything, authCode).Return(session, nil)
+	authRepo.EXPECT().GetSessionByAuthCode(mock.Anything, authCode).Return(session, nil)
 
 	var sut bff.AuthService
 
@@ -566,11 +566,11 @@ func TestAuthService_Token_should_return_err_if_update_fails(t *testing.T) {
 	authCode := uuid.NewString()
 	session := &authtypes.Session{OwnerAppID: validOwnerAppID}
 	authRepo := authmocks.NewRepository(t)
-	authRepo.EXPECT().GetByAuthorizationCode(mock.Anything, authCode).Return(session, nil)
+	authRepo.EXPECT().GetSessionByAuthCode(mock.Anything, authCode).Return(session, nil)
 	authRepo.EXPECT().
-		GetByAccessToken(mock.Anything, mock.Anything).
+		GetSessionByAccessToken(mock.Anything, mock.Anything).
 		Return(nil, errors.New("not found"))
-	authRepo.EXPECT().Update(mock.Anything, session).Return(errors.New("error"))
+	authRepo.EXPECT().UpdateSession(mock.Anything, session).Return(errors.New("error"))
 
 	credStore := idpmocks.NewCredentialStore(t)
 	credStore.EXPECT().
@@ -641,9 +641,9 @@ func TestAuthService_ExtAuthZ_should_succeed(t *testing.T) {
 			ctx := identitycontext.InsertAppID(context.Background(), calledApp.ID)
 			authRepo := authmocks.NewRepository(t)
 			authRepo.EXPECT().
-				GetByAccessToken(ctx, accessToken).
+				GetSessionByAccessToken(ctx, accessToken).
 				Return(&tc.session, nil)
-			authRepo.EXPECT().Update(ctx, &tc.session).Return(nil)
+			authRepo.EXPECT().UpdateSession(ctx, &tc.session).Return(nil)
 
 			appRepo := appmocks.NewRepository(t)
 			appRepo.EXPECT().GetApp(ctx, calledApp.ID).Return(calledApp, nil)
@@ -682,7 +682,7 @@ func TestAuthService_ExtAuthZ_should_return_err_when_session_not_found(t *testin
 	invalidAccessToken := "INVALID"
 	authRepo := authmocks.NewRepository(t)
 	authRepo.EXPECT().
-		GetByAccessToken(mock.Anything, invalidAccessToken).
+		GetSessionByAccessToken(mock.Anything, invalidAccessToken).
 		Return(nil, authcore.ErrSessionNotFound)
 	sut := bff.NewAuthService(authRepo, nil, nil, nil, nil, nil, nil, nil, nil)
 
@@ -698,7 +698,7 @@ func TestAuthService_ExtAuthZ_should_return_err_when_session_is_expired(t *testi
 	accessToken := generateValidJWT(t)
 	authRepo := authmocks.NewRepository(t)
 	authRepo.EXPECT().
-		GetByAccessToken(mock.Anything, accessToken).
+		GetSessionByAccessToken(mock.Anything, accessToken).
 		Return(&authtypes.Session{
 			ExpiresAt: ptrutil.Ptr(time.Now().Add(-1 * time.Second).Unix()),
 		}, nil)
@@ -718,7 +718,7 @@ func TestAuthService_ExtAuthZ_should_return_err_when_called_app_not_found(t *tes
 	ctx := identitycontext.InsertAppID(context.Background(), invalidCalledApp.ID)
 	authRepo := authmocks.NewRepository(t)
 	authRepo.EXPECT().
-		GetByAccessToken(ctx, accessToken).
+		GetSessionByAccessToken(ctx, accessToken).
 		Return(&authtypes.Session{}, nil)
 
 	appRepo := appmocks.NewRepository(t)
@@ -741,7 +741,7 @@ func TestAuthService_ExtAuthZ_should_return_err_when_called_app_is_not_same_as_i
 	ctx := identitycontext.InsertAppID(context.Background(), invalidCalledApp.ID)
 	authRepo := authmocks.NewRepository(t)
 	authRepo.EXPECT().
-		GetByAccessToken(ctx, accessToken).
+		GetSessionByAccessToken(ctx, accessToken).
 		Return(&authtypes.Session{AppID: ptrutil.Ptr("VALID_APP")}, nil)
 
 	appRepo := appmocks.NewRepository(t)
@@ -768,7 +768,7 @@ func TestAuthService_ExtAuthZ_should_return_err_when_tool_name_is_not_same_as_in
 	invalidToolName := "INVALID_TOOL"
 	authRepo := authmocks.NewRepository(t)
 	authRepo.EXPECT().
-		GetByAccessToken(ctx, accessToken).
+		GetSessionByAccessToken(ctx, accessToken).
 		Return(&authtypes.Session{ToolName: ptrutil.Ptr("VALID_TOOL")}, nil)
 
 	appRepo := appmocks.NewRepository(t)
@@ -793,7 +793,7 @@ func TestAuthService_ExtAuthZ_should_return_err_when_caller_app_not_found(t *tes
 	ctx := identitycontext.InsertAppID(context.Background(), calledApp.ID)
 	authRepo := authmocks.NewRepository(t)
 	authRepo.EXPECT().
-		GetByAccessToken(ctx, accessToken).
+		GetSessionByAccessToken(ctx, accessToken).
 		Return(session, nil)
 
 	appRepo := appmocks.NewRepository(t)
@@ -816,7 +816,7 @@ func TestAuthService_ExtAuthZ_should_return_err_when_access_token_invalid(t *tes
 	session := &authtypes.Session{OwnerAppID: uuid.NewString()}
 	authRepo := authmocks.NewRepository(t)
 	authRepo.EXPECT().
-		GetByAccessToken(ctx, accessToken).
+		GetSessionByAccessToken(ctx, accessToken).
 		Return(session, nil)
 
 	appRepo := appmocks.NewRepository(t)
@@ -841,9 +841,9 @@ func TestAuthService_ExtAuthZ_should_return_err_if_update_fails(t *testing.T) {
 	session := &authtypes.Session{OwnerAppID: uuid.NewString()}
 	authRepo := authmocks.NewRepository(t)
 	authRepo.EXPECT().
-		GetByAccessToken(ctx, accessToken).
+		GetSessionByAccessToken(ctx, accessToken).
 		Return(session, nil)
-	authRepo.EXPECT().Update(ctx, session).Return(errors.New("failed update"))
+	authRepo.EXPECT().UpdateSession(ctx, session).Return(errors.New("failed update"))
 
 	appRepo := appmocks.NewRepository(t)
 	appRepo.EXPECT().GetApp(ctx, calledApp.ID).Return(calledApp, nil)
@@ -881,9 +881,9 @@ func TestAuthService_ExtAuthZ_should_send_device_otp_and_continue_after_approvin
 	}
 	authRepo := authmocks.NewRepository(t)
 	authRepo.EXPECT().
-		GetByAccessToken(ctx, accessToken).
+		GetSessionByAccessToken(ctx, accessToken).
 		Return(session, nil)
-	authRepo.EXPECT().Update(ctx, session).Return(nil)
+	authRepo.EXPECT().UpdateSession(ctx, session).Return(nil)
 	authRepo.EXPECT().CreateDeviceOTP(ctx, mock.Anything).Return(nil)
 	authRepo.EXPECT().
 		GetDeviceOTP(ctx, mock.Anything).
@@ -946,7 +946,7 @@ func TestAuthService_ExtAuthZ_should_return_err_when_no_device_registered_during
 	}
 	authRepo := authmocks.NewRepository(t)
 	authRepo.EXPECT().
-		GetByAccessToken(ctx, accessToken).
+		GetSessionByAccessToken(ctx, accessToken).
 		Return(session, nil)
 
 	appRepo := appmocks.NewRepository(t)
@@ -986,7 +986,7 @@ func TestAuthService_ExtAuthZ_should_return_err_when_send_notification_fails(t *
 	}
 	authRepo := authmocks.NewRepository(t)
 	authRepo.EXPECT().
-		GetByAccessToken(ctx, accessToken).
+		GetSessionByAccessToken(ctx, accessToken).
 		Return(session, nil)
 	authRepo.EXPECT().CreateDeviceOTP(ctx, mock.Anything).Return(nil)
 
@@ -1058,7 +1058,7 @@ func TestAuthService_ExtAuthZ_should_return_err_when_device_otp_is_invalid(t *te
 			}
 			authRepo := authmocks.NewRepository(t)
 			authRepo.EXPECT().
-				GetByAccessToken(ctx, accessToken).
+				GetSessionByAccessToken(ctx, accessToken).
 				Return(session, nil)
 			authRepo.EXPECT().CreateDeviceOTP(ctx, mock.Anything).Return(nil)
 			authRepo.EXPECT().
