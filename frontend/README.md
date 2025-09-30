@@ -203,7 +203,8 @@ export const globalConfig = {
     gitHub: 'https://github.com/yourcompany' // Replace with your GitHub URL
   },
   title: 'Your App Name', // Replace with your application name
-  description: 'Your app description here' // Replace with your app description
+  description: 'Your app description here', // Replace with your app description
+  demoBanner: false // Disable the demo banner display
 };
 ```
 
