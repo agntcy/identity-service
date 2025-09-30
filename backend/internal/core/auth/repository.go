@@ -11,10 +11,10 @@ import (
 )
 
 type Repository interface {
-	Create(ctx context.Context, session *types.Session) (*types.Session, error)
-	GetByAuthorizationCode(ctx context.Context, code string) (*types.Session, error)
-	GetByAccessToken(ctx context.Context, accessToken string) (*types.Session, error)
-	Update(ctx context.Context, session *types.Session) error
+	CreateSession(ctx context.Context, session *types.Session) (*types.Session, error)
+	GetSessionByAuthCode(ctx context.Context, code string) (*types.Session, error)
+	GetSessionByAccessToken(ctx context.Context, accessToken string) (*types.Session, error)
+	UpdateSession(ctx context.Context, session *types.Session) error
 	CreateDeviceOTP(ctx context.Context, otp *types.SessionDeviceOTP) error
 	GetDeviceOTP(ctx context.Context, id string) (*types.SessionDeviceOTP, error)
 	UpdateDeviceOTP(ctx context.Context, otp *types.SessionDeviceOTP) error

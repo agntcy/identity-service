@@ -38,74 +38,6 @@ func (_m *Repository) EXPECT() *Repository_Expecter {
 	return &Repository_Expecter{mock: &_m.Mock}
 }
 
-// Create provides a mock function for the type Repository
-func (_mock *Repository) Create(ctx context.Context, session *types.Session) (*types.Session, error) {
-	ret := _mock.Called(ctx, session)
-
-	if len(ret) == 0 {
-		panic("no return value specified for Create")
-	}
-
-	var r0 *types.Session
-	var r1 error
-	if returnFunc, ok := ret.Get(0).(func(context.Context, *types.Session) (*types.Session, error)); ok {
-		return returnFunc(ctx, session)
-	}
-	if returnFunc, ok := ret.Get(0).(func(context.Context, *types.Session) *types.Session); ok {
-		r0 = returnFunc(ctx, session)
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*types.Session)
-		}
-	}
-	if returnFunc, ok := ret.Get(1).(func(context.Context, *types.Session) error); ok {
-		r1 = returnFunc(ctx, session)
-	} else {
-		r1 = ret.Error(1)
-	}
-	return r0, r1
-}
-
-// Repository_Create_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Create'
-type Repository_Create_Call struct {
-	*mock.Call
-}
-
-// Create is a helper method to define mock.On call
-//   - ctx context.Context
-//   - session *types.Session
-func (_e *Repository_Expecter) Create(ctx interface{}, session interface{}) *Repository_Create_Call {
-	return &Repository_Create_Call{Call: _e.mock.On("Create", ctx, session)}
-}
-
-func (_c *Repository_Create_Call) Run(run func(ctx context.Context, session *types.Session)) *Repository_Create_Call {
-	_c.Call.Run(func(args mock.Arguments) {
-		var arg0 context.Context
-		if args[0] != nil {
-			arg0 = args[0].(context.Context)
-		}
-		var arg1 *types.Session
-		if args[1] != nil {
-			arg1 = args[1].(*types.Session)
-		}
-		run(
-			arg0,
-			arg1,
-		)
-	})
-	return _c
-}
-
-func (_c *Repository_Create_Call) Return(session1 *types.Session, err error) *Repository_Create_Call {
-	_c.Call.Return(session1, err)
-	return _c
-}
-
-func (_c *Repository_Create_Call) RunAndReturn(run func(ctx context.Context, session *types.Session) (*types.Session, error)) *Repository_Create_Call {
-	_c.Call.Return(run)
-	return _c
-}
-
 // CreateDeviceOTP provides a mock function for the type Repository
 func (_mock *Repository) CreateDeviceOTP(ctx context.Context, otp *types.SessionDeviceOTP) error {
 	ret := _mock.Called(ctx, otp)
@@ -163,55 +95,55 @@ func (_c *Repository_CreateDeviceOTP_Call) RunAndReturn(run func(ctx context.Con
 	return _c
 }
 
-// GetByAccessToken provides a mock function for the type Repository
-func (_mock *Repository) GetByAccessToken(ctx context.Context, accessToken string) (*types.Session, error) {
-	ret := _mock.Called(ctx, accessToken)
+// CreateSession provides a mock function for the type Repository
+func (_mock *Repository) CreateSession(ctx context.Context, session *types.Session) (*types.Session, error) {
+	ret := _mock.Called(ctx, session)
 
 	if len(ret) == 0 {
-		panic("no return value specified for GetByAccessToken")
+		panic("no return value specified for CreateSession")
 	}
 
 	var r0 *types.Session
 	var r1 error
-	if returnFunc, ok := ret.Get(0).(func(context.Context, string) (*types.Session, error)); ok {
-		return returnFunc(ctx, accessToken)
+	if returnFunc, ok := ret.Get(0).(func(context.Context, *types.Session) (*types.Session, error)); ok {
+		return returnFunc(ctx, session)
 	}
-	if returnFunc, ok := ret.Get(0).(func(context.Context, string) *types.Session); ok {
-		r0 = returnFunc(ctx, accessToken)
+	if returnFunc, ok := ret.Get(0).(func(context.Context, *types.Session) *types.Session); ok {
+		r0 = returnFunc(ctx, session)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*types.Session)
 		}
 	}
-	if returnFunc, ok := ret.Get(1).(func(context.Context, string) error); ok {
-		r1 = returnFunc(ctx, accessToken)
+	if returnFunc, ok := ret.Get(1).(func(context.Context, *types.Session) error); ok {
+		r1 = returnFunc(ctx, session)
 	} else {
 		r1 = ret.Error(1)
 	}
 	return r0, r1
 }
 
-// Repository_GetByAccessToken_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetByAccessToken'
-type Repository_GetByAccessToken_Call struct {
+// Repository_CreateSession_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'CreateSession'
+type Repository_CreateSession_Call struct {
 	*mock.Call
 }
 
-// GetByAccessToken is a helper method to define mock.On call
+// CreateSession is a helper method to define mock.On call
 //   - ctx context.Context
-//   - accessToken string
-func (_e *Repository_Expecter) GetByAccessToken(ctx interface{}, accessToken interface{}) *Repository_GetByAccessToken_Call {
-	return &Repository_GetByAccessToken_Call{Call: _e.mock.On("GetByAccessToken", ctx, accessToken)}
+//   - session *types.Session
+func (_e *Repository_Expecter) CreateSession(ctx interface{}, session interface{}) *Repository_CreateSession_Call {
+	return &Repository_CreateSession_Call{Call: _e.mock.On("CreateSession", ctx, session)}
 }
 
-func (_c *Repository_GetByAccessToken_Call) Run(run func(ctx context.Context, accessToken string)) *Repository_GetByAccessToken_Call {
+func (_c *Repository_CreateSession_Call) Run(run func(ctx context.Context, session *types.Session)) *Repository_CreateSession_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		var arg0 context.Context
 		if args[0] != nil {
 			arg0 = args[0].(context.Context)
 		}
-		var arg1 string
+		var arg1 *types.Session
 		if args[1] != nil {
-			arg1 = args[1].(string)
+			arg1 = args[1].(*types.Session)
 		}
 		run(
 			arg0,
@@ -221,80 +153,12 @@ func (_c *Repository_GetByAccessToken_Call) Run(run func(ctx context.Context, ac
 	return _c
 }
 
-func (_c *Repository_GetByAccessToken_Call) Return(session *types.Session, err error) *Repository_GetByAccessToken_Call {
-	_c.Call.Return(session, err)
+func (_c *Repository_CreateSession_Call) Return(session1 *types.Session, err error) *Repository_CreateSession_Call {
+	_c.Call.Return(session1, err)
 	return _c
 }
 
-func (_c *Repository_GetByAccessToken_Call) RunAndReturn(run func(ctx context.Context, accessToken string) (*types.Session, error)) *Repository_GetByAccessToken_Call {
-	_c.Call.Return(run)
-	return _c
-}
-
-// GetByAuthorizationCode provides a mock function for the type Repository
-func (_mock *Repository) GetByAuthorizationCode(ctx context.Context, code string) (*types.Session, error) {
-	ret := _mock.Called(ctx, code)
-
-	if len(ret) == 0 {
-		panic("no return value specified for GetByAuthorizationCode")
-	}
-
-	var r0 *types.Session
-	var r1 error
-	if returnFunc, ok := ret.Get(0).(func(context.Context, string) (*types.Session, error)); ok {
-		return returnFunc(ctx, code)
-	}
-	if returnFunc, ok := ret.Get(0).(func(context.Context, string) *types.Session); ok {
-		r0 = returnFunc(ctx, code)
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*types.Session)
-		}
-	}
-	if returnFunc, ok := ret.Get(1).(func(context.Context, string) error); ok {
-		r1 = returnFunc(ctx, code)
-	} else {
-		r1 = ret.Error(1)
-	}
-	return r0, r1
-}
-
-// Repository_GetByAuthorizationCode_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetByAuthorizationCode'
-type Repository_GetByAuthorizationCode_Call struct {
-	*mock.Call
-}
-
-// GetByAuthorizationCode is a helper method to define mock.On call
-//   - ctx context.Context
-//   - code string
-func (_e *Repository_Expecter) GetByAuthorizationCode(ctx interface{}, code interface{}) *Repository_GetByAuthorizationCode_Call {
-	return &Repository_GetByAuthorizationCode_Call{Call: _e.mock.On("GetByAuthorizationCode", ctx, code)}
-}
-
-func (_c *Repository_GetByAuthorizationCode_Call) Run(run func(ctx context.Context, code string)) *Repository_GetByAuthorizationCode_Call {
-	_c.Call.Run(func(args mock.Arguments) {
-		var arg0 context.Context
-		if args[0] != nil {
-			arg0 = args[0].(context.Context)
-		}
-		var arg1 string
-		if args[1] != nil {
-			arg1 = args[1].(string)
-		}
-		run(
-			arg0,
-			arg1,
-		)
-	})
-	return _c
-}
-
-func (_c *Repository_GetByAuthorizationCode_Call) Return(session *types.Session, err error) *Repository_GetByAuthorizationCode_Call {
-	_c.Call.Return(session, err)
-	return _c
-}
-
-func (_c *Repository_GetByAuthorizationCode_Call) RunAndReturn(run func(ctx context.Context, code string) (*types.Session, error)) *Repository_GetByAuthorizationCode_Call {
+func (_c *Repository_CreateSession_Call) RunAndReturn(run func(ctx context.Context, session *types.Session) (*types.Session, error)) *Repository_CreateSession_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -447,44 +311,55 @@ func (_c *Repository_GetDeviceOTPByValue_Call) RunAndReturn(run func(ctx context
 	return _c
 }
 
-// Update provides a mock function for the type Repository
-func (_mock *Repository) Update(ctx context.Context, session *types.Session) error {
-	ret := _mock.Called(ctx, session)
+// GetSessionByAccessToken provides a mock function for the type Repository
+func (_mock *Repository) GetSessionByAccessToken(ctx context.Context, accessToken string) (*types.Session, error) {
+	ret := _mock.Called(ctx, accessToken)
 
 	if len(ret) == 0 {
-		panic("no return value specified for Update")
+		panic("no return value specified for GetSessionByAccessToken")
 	}
 
-	var r0 error
-	if returnFunc, ok := ret.Get(0).(func(context.Context, *types.Session) error); ok {
-		r0 = returnFunc(ctx, session)
-	} else {
-		r0 = ret.Error(0)
+	var r0 *types.Session
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) (*types.Session, error)); ok {
+		return returnFunc(ctx, accessToken)
 	}
-	return r0
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) *types.Session); ok {
+		r0 = returnFunc(ctx, accessToken)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*types.Session)
+		}
+	}
+	if returnFunc, ok := ret.Get(1).(func(context.Context, string) error); ok {
+		r1 = returnFunc(ctx, accessToken)
+	} else {
+		r1 = ret.Error(1)
+	}
+	return r0, r1
 }
 
-// Repository_Update_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Update'
-type Repository_Update_Call struct {
+// Repository_GetSessionByAccessToken_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetSessionByAccessToken'
+type Repository_GetSessionByAccessToken_Call struct {
 	*mock.Call
 }
 
-// Update is a helper method to define mock.On call
+// GetSessionByAccessToken is a helper method to define mock.On call
 //   - ctx context.Context
-//   - session *types.Session
-func (_e *Repository_Expecter) Update(ctx interface{}, session interface{}) *Repository_Update_Call {
-	return &Repository_Update_Call{Call: _e.mock.On("Update", ctx, session)}
+//   - accessToken string
+func (_e *Repository_Expecter) GetSessionByAccessToken(ctx interface{}, accessToken interface{}) *Repository_GetSessionByAccessToken_Call {
+	return &Repository_GetSessionByAccessToken_Call{Call: _e.mock.On("GetSessionByAccessToken", ctx, accessToken)}
 }
 
-func (_c *Repository_Update_Call) Run(run func(ctx context.Context, session *types.Session)) *Repository_Update_Call {
+func (_c *Repository_GetSessionByAccessToken_Call) Run(run func(ctx context.Context, accessToken string)) *Repository_GetSessionByAccessToken_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		var arg0 context.Context
 		if args[0] != nil {
 			arg0 = args[0].(context.Context)
 		}
-		var arg1 *types.Session
+		var arg1 string
 		if args[1] != nil {
-			arg1 = args[1].(*types.Session)
+			arg1 = args[1].(string)
 		}
 		run(
 			arg0,
@@ -494,12 +369,80 @@ func (_c *Repository_Update_Call) Run(run func(ctx context.Context, session *typ
 	return _c
 }
 
-func (_c *Repository_Update_Call) Return(err error) *Repository_Update_Call {
-	_c.Call.Return(err)
+func (_c *Repository_GetSessionByAccessToken_Call) Return(session *types.Session, err error) *Repository_GetSessionByAccessToken_Call {
+	_c.Call.Return(session, err)
 	return _c
 }
 
-func (_c *Repository_Update_Call) RunAndReturn(run func(ctx context.Context, session *types.Session) error) *Repository_Update_Call {
+func (_c *Repository_GetSessionByAccessToken_Call) RunAndReturn(run func(ctx context.Context, accessToken string) (*types.Session, error)) *Repository_GetSessionByAccessToken_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// GetSessionByAuthCode provides a mock function for the type Repository
+func (_mock *Repository) GetSessionByAuthCode(ctx context.Context, code string) (*types.Session, error) {
+	ret := _mock.Called(ctx, code)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetSessionByAuthCode")
+	}
+
+	var r0 *types.Session
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) (*types.Session, error)); ok {
+		return returnFunc(ctx, code)
+	}
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) *types.Session); ok {
+		r0 = returnFunc(ctx, code)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*types.Session)
+		}
+	}
+	if returnFunc, ok := ret.Get(1).(func(context.Context, string) error); ok {
+		r1 = returnFunc(ctx, code)
+	} else {
+		r1 = ret.Error(1)
+	}
+	return r0, r1
+}
+
+// Repository_GetSessionByAuthCode_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetSessionByAuthCode'
+type Repository_GetSessionByAuthCode_Call struct {
+	*mock.Call
+}
+
+// GetSessionByAuthCode is a helper method to define mock.On call
+//   - ctx context.Context
+//   - code string
+func (_e *Repository_Expecter) GetSessionByAuthCode(ctx interface{}, code interface{}) *Repository_GetSessionByAuthCode_Call {
+	return &Repository_GetSessionByAuthCode_Call{Call: _e.mock.On("GetSessionByAuthCode", ctx, code)}
+}
+
+func (_c *Repository_GetSessionByAuthCode_Call) Run(run func(ctx context.Context, code string)) *Repository_GetSessionByAuthCode_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 context.Context
+		if args[0] != nil {
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 string
+		if args[1] != nil {
+			arg1 = args[1].(string)
+		}
+		run(
+			arg0,
+			arg1,
+		)
+	})
+	return _c
+}
+
+func (_c *Repository_GetSessionByAuthCode_Call) Return(session *types.Session, err error) *Repository_GetSessionByAuthCode_Call {
+	_c.Call.Return(session, err)
+	return _c
+}
+
+func (_c *Repository_GetSessionByAuthCode_Call) RunAndReturn(run func(ctx context.Context, code string) (*types.Session, error)) *Repository_GetSessionByAuthCode_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -557,6 +500,63 @@ func (_c *Repository_UpdateDeviceOTP_Call) Return(err error) *Repository_UpdateD
 }
 
 func (_c *Repository_UpdateDeviceOTP_Call) RunAndReturn(run func(ctx context.Context, otp *types.SessionDeviceOTP) error) *Repository_UpdateDeviceOTP_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// UpdateSession provides a mock function for the type Repository
+func (_mock *Repository) UpdateSession(ctx context.Context, session *types.Session) error {
+	ret := _mock.Called(ctx, session)
+
+	if len(ret) == 0 {
+		panic("no return value specified for UpdateSession")
+	}
+
+	var r0 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, *types.Session) error); ok {
+		r0 = returnFunc(ctx, session)
+	} else {
+		r0 = ret.Error(0)
+	}
+	return r0
+}
+
+// Repository_UpdateSession_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'UpdateSession'
+type Repository_UpdateSession_Call struct {
+	*mock.Call
+}
+
+// UpdateSession is a helper method to define mock.On call
+//   - ctx context.Context
+//   - session *types.Session
+func (_e *Repository_Expecter) UpdateSession(ctx interface{}, session interface{}) *Repository_UpdateSession_Call {
+	return &Repository_UpdateSession_Call{Call: _e.mock.On("UpdateSession", ctx, session)}
+}
+
+func (_c *Repository_UpdateSession_Call) Run(run func(ctx context.Context, session *types.Session)) *Repository_UpdateSession_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 context.Context
+		if args[0] != nil {
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 *types.Session
+		if args[1] != nil {
+			arg1 = args[1].(*types.Session)
+		}
+		run(
+			arg0,
+			arg1,
+		)
+	})
+	return _c
+}
+
+func (_c *Repository_UpdateSession_Call) Return(err error) *Repository_UpdateSession_Call {
+	_c.Call.Return(err)
+	return _c
+}
+
+func (_c *Repository_UpdateSession_Call) RunAndReturn(run func(ctx context.Context, session *types.Session) error) *Repository_UpdateSession_Call {
 	_c.Call.Return(run)
 	return _c
 }

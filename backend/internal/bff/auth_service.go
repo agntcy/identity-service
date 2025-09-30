@@ -144,7 +144,7 @@ func (s *authService) Authorize(
 	}
 
 	// Create new session
-	session, err := s.authRepository.Create(ctx, &authtypes.Session{
+	session, err := s.authRepository.CreateSession(ctx, &authtypes.Session{
 		OwnerAppID:        callerAppID,
 		AppID:             calleeAppID,
 		ToolName:          toolName,
@@ -194,7 +194,7 @@ func (s *authService) Token(
 	}
 
 	// Get session by authorization code
-	session, err := s.authRepository.GetByAuthorizationCode(ctx, authorizationCode)
+	session, err := s.authRepository.GetSessionByAuthCode(ctx, authorizationCode)
 	if err != nil {
 		if errors.Is(err, authcore.ErrSessionNotFound) {
 			return nil, errutil.Unauthorized("auth.sessionNotFound", "Session not found.")
@@ -227,12 +227,12 @@ func (s *authService) Token(
 	}
 
 	// Look if a session with the same access token already exists
-	existingSession, err := s.authRepository.GetByAccessToken(ctx, accessToken)
+	existingSession, err := s.authRepository.GetSessionByAccessToken(ctx, accessToken)
 	if err == nil {
 		// Expire current session
 		session.ExpiresAt = ptrutil.Ptr(time.Now().Add(-time.Hour).Unix())
 
-		err := s.authRepository.Update(ctx, session)
+		err := s.authRepository.UpdateSession(ctx, session)
 		if err != nil {
 			log.FromContext(ctx).
 				WithError(err).
@@ -251,7 +251,7 @@ func (s *authService) Token(
 	log.FromContext(ctx).Debug("Updating: ", session.ID)
 	log.FromContext(ctx).Debug("Access token: ", *session.AccessToken)
 
-	err = s.authRepository.Update(ctx, session)
+	err = s.authRepository.UpdateSession(ctx, session)
 	if err != nil {
 		return nil, fmt.Errorf("repository failed to update the session: %w", err)
 	}
@@ -418,7 +418,7 @@ func (s *authService) getSessionByAccessToken(
 	ctx context.Context,
 	accessToken string,
 ) (*authtypes.Session, error) {
-	session, err := s.authRepository.GetByAccessToken(ctx, accessToken)
+	session, err := s.authRepository.GetSessionByAccessToken(ctx, accessToken)
 	if err != nil {
 		if errors.Is(err, authcore.ErrSessionNotFound) {
 			return nil, errutil.Unauthorized("auth.sessionNotFound", "Session not found.")
@@ -456,7 +456,7 @@ func (s *authService) expireSessionIfNecessary(ctx context.Context, session *aut
 		//nolint:mnd // obviously it's not a magic number
 		session.ExpireAfter(60 * time.Second)
 
-		err := s.authRepository.Update(ctx, session)
+		err := s.authRepository.UpdateSession(ctx, session)
 		if err != nil {
 			return fmt.Errorf("repository in ExtAuthZ failed to update session: %w", err)
 		}
