@@ -9,6 +9,7 @@ services:
   identity-node:
     container_name: identity-node
     image: ghcr.io/agntcy/identity/node:latest
+    pull_policy: always
     restart: always
     depends_on:
       - identity-postgres

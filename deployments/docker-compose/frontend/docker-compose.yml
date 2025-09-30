@@ -7,6 +7,7 @@ services:
   identity-ui:
     container_name: identity-ui
     image: ghcr.io/outshift-open/identity-service/ui:latest
+    pull_policy: always
     restart: always
     ports:
       - ${VITE_APP_CLIENT_PORT}:${VITE_APP_CLIENT_PORT}
