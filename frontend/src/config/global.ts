@@ -22,5 +22,6 @@ export const globalConfig = {
     gitHub: 'https://github.com/your-org/identity-service'
   },
   title: 'Agent Identity Service',
-  description: 'A secure and efficient identity management service for agents.'
+  description: 'A secure and efficient identity management service for agents.',
+  demoBanner: false
 };
