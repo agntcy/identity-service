@@ -96,7 +96,7 @@ To run these steps successfully, you need to have the following installed:
    ```
 
    > **📝 NOTE**
-   > You can also install the `Backend` and the `Frontend` using our [help charts](charts).
+   > You can also install the `Backend` and the `Frontend` using our [Helm charts](charts).
 
 3. Access the Frontend UI and the Backend APIs:
 
