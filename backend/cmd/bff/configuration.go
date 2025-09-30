@@ -37,6 +37,7 @@ type Configuration struct {
 	IdentityHost                                            string        `split_words:"true" default:"0.0.0.0"`
 	IdentityPort                                            string        `split_words:"true" default:"4003"`
 	IamIssuer                                               string        `split_words:"true"`
+	IamUserCidClaimName                                     string        `split_words:"true" default:"cid"`
 	IamUserCid                                              string        `split_words:"true"`
 	IamOrganization                                         string        `split_words:"true"`
 	IamMultiTenant                                          bool          `split_words:"true" default:"false"`
