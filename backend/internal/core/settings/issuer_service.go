@@ -1,7 +1,7 @@
 // Copyright 2025 Cisco Systems, Inc. and its affiliates
 // SPDX-License-Issuerentifier: Apache-2.0
 
-package issuer
+package settings
 
 import (
 	"context"
@@ -15,29 +15,29 @@ import (
 	"github.com/outshift/identity-service/pkg/log"
 )
 
-type Service interface {
+type IssuerService interface {
 	SetIssuer(ctx context.Context, issuerSettings *settingstypes.IssuerSettings) error
 }
 
-type service struct {
+type issuerService struct {
 	identityService identity.Service
 	idpFactory      idpcore.IdpFactory
 	credentialStore idpcore.CredentialStore
 }
 
-func NewService(
+func NewIssuerService(
 	identityService identity.Service,
 	idpFactory idpcore.IdpFactory,
 	credentialStore idpcore.CredentialStore,
-) Service {
-	return &service{
+) IssuerService {
+	return &issuerService{
 		identityService: identityService,
 		idpFactory:      idpFactory,
 		credentialStore: credentialStore,
 	}
 }
 
-func (s *service) SetIssuer(
+func (s *issuerService) SetIssuer(
 	ctx context.Context,
 	issuerSettings *settingstypes.IssuerSettings,
 ) error {
@@ -70,7 +70,7 @@ func (s *service) SetIssuer(
 	defer func() {
 		// Clean up client credentials if they were created.
 		if err != nil && clientCredentials != nil {
-			s.DeleteClientCredentialsPair(ctx, idp, clientCredentials)
+			s.deleteClientCredentialsPair(ctx, idp, clientCredentials)
 		}
 	}()
 
@@ -92,7 +92,7 @@ func (s *service) SetIssuer(
 	if err != nil {
 		// Clean up client credentials if they were created.
 		if clientCredentials != nil {
-			s.DeleteClientCredentialsPair(ctx, idp, clientCredentials)
+			s.deleteClientCredentialsPair(ctx, idp, clientCredentials)
 		}
 
 		return fmt.Errorf("identity service in SetIssuer failed to register issuer: %w", err)
@@ -105,7 +105,7 @@ func (s *service) SetIssuer(
 	return nil
 }
 
-func (s *service) DeleteClientCredentialsPair(
+func (s *issuerService) deleteClientCredentialsPair(
 	ctx context.Context,
 	idp idpcore.Idp,
 	clientCredentials *idpcore.ClientCredentials,

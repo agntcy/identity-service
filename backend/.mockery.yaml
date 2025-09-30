@@ -35,15 +35,13 @@ packages:
   github.com/outshift/identity-service/internal/core/settings:
     interfaces:
       Repository: {}
+      IssuerService: {}
   github.com/outshift/identity-service/internal/core/idp:
     interfaces:
       CredentialStore: {}
   github.com/outshift/identity-service/internal/core/identity:
     interfaces:
       KeyStore: {}
-      Service: {}
-  github.com/outshift/identity-service/internal/core/issuer:
-    interfaces:
       Service: {}
   github.com/outshift/identity-service/internal/bff:
     interfaces:

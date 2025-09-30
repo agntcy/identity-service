@@ -28,9 +28,9 @@ import (
 	iampg "github.com/outshift/identity-service/internal/core/iam/postgres"
 	identitycore "github.com/outshift/identity-service/internal/core/identity"
 	idpcore "github.com/outshift/identity-service/internal/core/idp"
-	"github.com/outshift/identity-service/internal/core/issuer"
 	policycore "github.com/outshift/identity-service/internal/core/policy"
 	policypg "github.com/outshift/identity-service/internal/core/policy/postgres"
+	settingscore "github.com/outshift/identity-service/internal/core/settings"
 	settingspg "github.com/outshift/identity-service/internal/core/settings/postgres"
 	"github.com/outshift/identity-service/internal/pkg/grpcutil"
 	"github.com/outshift/identity-service/internal/pkg/iam"
@@ -364,7 +364,7 @@ func initializeServices(
 		policyRepository,
 		taskService,
 	)
-	issuerSrv := issuer.NewService(
+	issuerSrv := settingscore.NewIssuerService(
 		identityService,
 		idpFactory,
 		credentialStore,
