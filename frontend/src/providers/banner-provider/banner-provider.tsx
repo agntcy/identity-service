@@ -7,6 +7,7 @@ import React, {createContext, useState, useContext, ReactNode, useCallback, useM
 import {Banner, BannerProps} from '@open-ui-kit/core';
 import {useWindowSize} from '@/hooks';
 import {docs} from '@/utils/docs';
+import { globalConfig } from '@/config/global';
 
 interface BannerType extends BannerProps {
   id: string;
@@ -23,7 +24,7 @@ const BannerContext = createContext<BannerContextProps | undefined>(undefined);
 
 export const BannerProvider: React.FC<{children: ReactNode}> = ({children}) => {
   const [banners, setBanners] = useState<BannerType[]>([
-    {
+    ...(globalConfig.demoBanner ? [{
       id: 'docs-banner',
       text: (
         <>
@@ -37,7 +38,7 @@ export const BannerProvider: React.FC<{children: ReactNode}> = ({children}) => {
         </>
       ),
       showCloseButton: false
-    }
+    }] : [])
   ]);
 
   const {isMobile, isTablet} = useWindowSize();
