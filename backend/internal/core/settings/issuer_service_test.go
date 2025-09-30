@@ -1,7 +1,7 @@
 // Copyright 2025 Cisco Systems, Inc. and its affiliates
 // SPDX-License-Issuerentifier: Apache-2.0
 
-package issuer_test
+package settings_test
 
 import (
 	"context"
@@ -13,7 +13,7 @@ import (
 	identitymocks "github.com/outshift/identity-service/internal/core/identity/mocks"
 	"github.com/outshift/identity-service/internal/core/idp"
 	idpmocks "github.com/outshift/identity-service/internal/core/idp/mocks"
-	issuercore "github.com/outshift/identity-service/internal/core/issuer"
+	settingscore "github.com/outshift/identity-service/internal/core/settings"
 	settingstypes "github.com/outshift/identity-service/internal/core/settings/types"
 	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
 	"github.com/stretchr/testify/assert"
@@ -42,7 +42,7 @@ func TestIssuerService_SetIssuer_should_succeed(t *testing.T) {
 	identityServ := identitymocks.NewService(t)
 	identityServ.EXPECT().RegisterIssuer(ctx, mock.Anything, orgID).Return(&issuer, nil)
 
-	sut := issuercore.NewService(identityServ, idpFactory, credStore)
+	sut := settingscore.NewIssuerService(identityServ, idpFactory, credStore)
 
 	err := sut.SetIssuer(ctx, &issuerSettings)
 
@@ -55,7 +55,7 @@ func TestIssuerService_SetIssuer_should_return_err_when_ctx_does_not_contain_org
 	t.Parallel()
 
 	invalidCtx := context.Background()
-	sut := issuercore.NewService(nil, nil, nil)
+	sut := settingscore.NewIssuerService(nil, nil, nil)
 
 	err := sut.SetIssuer(invalidCtx, &settingstypes.IssuerSettings{
 		IdpType: settingstypes.IDP_TYPE_SELF,
@@ -70,7 +70,7 @@ func TestIssuerService_SetIssuer_should_return_err_when_ctx_does_not_contain_use
 
 	invalidCtx := identitycontext.InsertOrganizationID(context.Background(), uuid.NewString())
 	idpFactory := idp.NewFactory()
-	sut := issuercore.NewService(nil, idpFactory, nil)
+	sut := settingscore.NewIssuerService(nil, idpFactory, nil)
 
 	err := sut.SetIssuer(invalidCtx, &settingstypes.IssuerSettings{
 		IdpType: settingstypes.IDP_TYPE_SELF,
@@ -83,7 +83,7 @@ func TestIssuerService_SetIssuer_should_return_err_when_ctx_does_not_contain_use
 func TestIssuerService_SetIssuer_should_return_err_when_input_is_nil(t *testing.T) {
 	t.Parallel()
 
-	sut := issuercore.NewService(nil, nil, nil)
+	sut := settingscore.NewIssuerService(nil, nil, nil)
 
 	err := sut.SetIssuer(context.Background(), nil)
 
@@ -111,7 +111,7 @@ func TestIssuerService_SetIssuer_should_return_err_when_registration_fails(t *te
 		RegisterIssuer(ctx, mock.Anything, orgID).
 		Return(nil, errors.New("failed"))
 
-	sut := issuercore.NewService(identityServ, idpFactory, credStore)
+	sut := settingscore.NewIssuerService(identityServ, idpFactory, credStore)
 
 	err := sut.SetIssuer(ctx, &issuerSettings)
 

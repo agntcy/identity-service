@@ -8,7 +8,6 @@ import (
 	"fmt"
 
 	iamtypes "github.com/outshift/identity-service/internal/core/iam/types"
-	issuercore "github.com/outshift/identity-service/internal/core/issuer"
 	settingscore "github.com/outshift/identity-service/internal/core/settings"
 	settingstypes "github.com/outshift/identity-service/internal/core/settings/types"
 	"github.com/outshift/identity-service/internal/pkg/errutil"
@@ -27,13 +26,13 @@ type SettingsService interface {
 }
 
 type settingsService struct {
-	issuerSrv          issuercore.Service
+	issuerSrv          settingscore.IssuerService
 	iamClient          iam.Client
 	settingsRepository settingscore.Repository
 }
 
 func NewSettingsService(
-	issuerSrv issuercore.Service,
+	issuerSrv settingscore.IssuerService,
 	iamClient iam.Client,
 	settingsRepository settingscore.Repository,
 ) SettingsService {

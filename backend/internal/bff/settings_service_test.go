@@ -11,7 +11,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/outshift/identity-service/internal/bff"
 	iamtypes "github.com/outshift/identity-service/internal/core/iam/types"
-	issuermocks "github.com/outshift/identity-service/internal/core/issuer/mocks"
 	settingsmocks "github.com/outshift/identity-service/internal/core/settings/mocks"
 	settingstypes "github.com/outshift/identity-service/internal/core/settings/types"
 	"github.com/outshift/identity-service/internal/pkg/errutil"
@@ -165,7 +164,7 @@ func TestSettingsService_SetIssuerSettings(t *testing.T) {
 		settingsRepo.EXPECT().GetIssuerSettings(ctx).Return(nil, errors.New("not found"))
 		settingsRepo.EXPECT().UpdateIssuerSettings(ctx, issuerSettings).Return(issuerSettings, nil)
 
-		issuerSrv := issuermocks.NewService(t)
+		issuerSrv := settingsmocks.NewIssuerService(t)
 		issuerSrv.EXPECT().SetIssuer(ctx, issuerSettings).Return(nil)
 
 		sut := bff.NewSettingsService(issuerSrv, nil, settingsRepo)
@@ -200,7 +199,7 @@ func TestSettingsService_SetIssuerSettings(t *testing.T) {
 		settingsRepo := settingsmocks.NewRepository(t)
 		settingsRepo.EXPECT().GetIssuerSettings(ctx).Return(nil, errors.New("not found"))
 
-		issuerSrv := issuermocks.NewService(t)
+		issuerSrv := settingsmocks.NewIssuerService(t)
 		issuerSrv.EXPECT().SetIssuer(ctx, issuerSettings).Return(errors.New("failed"))
 
 		sut := bff.NewSettingsService(issuerSrv, nil, settingsRepo)
@@ -218,7 +217,7 @@ func TestSettingsService_SetIssuerSettings(t *testing.T) {
 		settingsRepo.EXPECT().GetIssuerSettings(ctx).Return(nil, errors.New("not found"))
 		settingsRepo.EXPECT().UpdateIssuerSettings(ctx, issuerSettings).Return(nil, errors.New("failed"))
 
-		issuerSrv := issuermocks.NewService(t)
+		issuerSrv := settingsmocks.NewIssuerService(t)
 		issuerSrv.EXPECT().SetIssuer(ctx, issuerSettings).Return(nil)
 
 		sut := bff.NewSettingsService(issuerSrv, nil, settingsRepo)
