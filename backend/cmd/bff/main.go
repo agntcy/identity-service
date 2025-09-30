@@ -209,6 +209,7 @@ func initializeIAMClient(
 		jwtVerifier := iam.NewOktaJwtVerifier(
 			config.IamIssuer,
 			config.IamUserCid,
+			config.IamUserCidClaimName,
 		)
 		iamClient = iam.NewStandaloneClient(
 			config.IamOrganization,
