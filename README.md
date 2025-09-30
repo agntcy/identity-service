@@ -72,6 +72,7 @@ To run these steps successfully, you need to have the following installed:
    export OIDC_ISSUER_URL=<OIDC_ISSUER_URL>
    export OIDC_CLIENT_ID=<OIDC_CLIENT_ID>
    export OIDC_LOGIN_URL=<OIDC_LOGIN_URL>
+   export OIDC_CLIENT_ID_CLAIM_NAME=<OIDC_CLIENT_ID_CLAIM_NAME>
    ```
 
    where:
@@ -79,6 +80,7 @@ To run these steps successfully, you need to have the following installed:
    - `OIDC_ISSUER_URL` - The URL of your OIDC provider (e.g., `https://{INSTANCE_URL}/oauth2/{CLIENT_ID}/.well-known/openid-configuration`).
    - `OIDC_CLIENT_ID` - The client ID you created in your OIDC provider.
    - `OIDC_LOGIN_URL` - The login URL of your OIDC provider (e.g., `https://{INSTANCE_URL}/oauth2/{CLIENT_ID}/authorize`).
+   - `OIDC_CLIENT_ID_CLAIM_NAME` - The claim name in the Access token that contains the client ID (default: `cid`).
 
      > **📝 NOTE**
      > Make sure to add `http://localhost:5500` as a redirect URI for your OIDC client.

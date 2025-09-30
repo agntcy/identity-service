@@ -30,6 +30,7 @@ if [ ! -f "$BACKEND_ENV" ]; then
   echo "SECRETS_CRYPTO_KEY=defaultcryptokey" >> "$BACKEND_ENV" && \
   echo "IAM_ISSUER=${OIDC_ISSUER_URL}" >> "$BACKEND_ENV" && \
   echo "IAM_USER_CID=${OIDC_CLIENT_ID}" >> "$BACKEND_ENV"
+  echo "IAM_USER_CID_CLAIM_NAME=${OIDC_CLIENT_ID_CLAIM_NAME}" >> "$BACKEND_ENV"
 fi
 
 # Check if the .env file exists in the deployments/docker-compose/backend directory
