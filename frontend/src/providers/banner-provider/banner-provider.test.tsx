@@ -31,6 +31,18 @@ vi.mock('@/utils/docs', () => ({
   docs: vi.fn(() => 'https://docs.example.com')
 }));
 
+// Mock the global config
+vi.mock('@/config/global', () => ({
+  globalConfig: {
+    demoBanner: true,
+    poweredBy: false,
+    links: {
+      termsAndConditions: 'https://example.com/terms',
+      privacyPolicy: 'https://example.com/privacy'
+    }
+  }
+}));
+
 const mockUseWindowSize = vi.mocked(await import('@/hooks')).useWindowSize;
 
 // Test component that uses the banner context

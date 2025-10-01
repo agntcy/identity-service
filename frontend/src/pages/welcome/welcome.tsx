@@ -29,6 +29,7 @@ const Welcome = () => {
                     src="/logo-welcome.svg"
                     alt="logo"
                     className="h-[30px] md:h-[50px] lg:h-[70px]"
+                    data-testid="landing-logo"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.src = '/logo.svg';
