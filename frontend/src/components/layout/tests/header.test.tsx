@@ -321,6 +321,17 @@ vi.mock('../../shared/notifications/notification-settings', () => ({
     ) : null
 }));
 
+// Mock global config
+vi.mock('@/config/global', () => ({
+  globalConfig: {
+    poweredBy: true,
+    company: {
+      name: 'Test Company',
+      url: 'https://test.com'
+    }
+  }
+}));
+
 describe('Header', () => {
   beforeEach(() => {
     vi.clearAllMocks();

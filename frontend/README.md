@@ -204,7 +204,8 @@ export const globalConfig = {
   },
   title: 'Your App Name', // Replace with your application name
   description: 'Your app description here', // Replace with your app description
-  demoBanner: false // Disable the demo banner display
+  demoBanner: false, // Disable the demo banner display
+  poweredBy: false // Control landing page logo display (true: shows branded logo, false: shows text title)
 };
 ```
 

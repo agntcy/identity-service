@@ -48,6 +48,11 @@ vi.mock('@open-ui-kit/core', () => ({
       <div data-testid="header-logo">{logo}</div>
       <div data-testid="header-user-section">{userSection}</div>
     </header>
+  ),
+  Typography: ({children, variant, color, ...props}: any) => (
+    <div data-testid="typography" data-variant={variant} color={color} {...props}>
+      {children}
+    </div>
   )
 }));
 
@@ -58,6 +63,17 @@ vi.mock('@/assets/header/header.svg?react', () => ({
       HeaderLogo
     </div>
   )
+}));
+
+// Mock global config
+vi.mock('@/config/global', () => ({
+  globalConfig: {
+    poweredBy: true,
+    company: {
+      name: 'Test Company',
+      url: 'https://test.com'
+    }
+  }
 }));
 
 describe('PublicHeader', () => {

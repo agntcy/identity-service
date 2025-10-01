@@ -84,6 +84,7 @@ vi.mock('@/assets/footer/footer.svg?react', () => ({
 
 vi.mock('@/config/global', () => ({
   globalConfig: {
+    poweredBy: true,
     company: {
       name: '<place-holder-company-name>',
       url: '<place-holder-company-url>'
