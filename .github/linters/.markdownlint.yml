@@ -43,4 +43,4 @@ MD041:
 
 # MD033/no-inline-html
 MD033:
-  allowed_elements: ['a', 'img', 'alt', 'p', 'br', 'b', 'caption', 'picture', 'source']
+  allowed_elements: ['a', 'img', 'alt', 'p', 'br', 'b', 'caption', 'picture', 'source', 'div']
