@@ -397,6 +397,5 @@ yarn generate-pwa-assets
 
 For issues related to:
 
-- **Spark Design Library**: Check GitHub Packages Registry access
 - **Authentication**: Verify your GitHub Personal Access Token
 - **Development**: Check this README
