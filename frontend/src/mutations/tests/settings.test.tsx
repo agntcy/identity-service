@@ -11,6 +11,7 @@ import {useSetApiKey, useSetIdentityProvider} from '../';
 import {SettingsAPI} from '@/api/services';
 import {
   V1Alpha1ApiKey,
+  V1Alpha1IdpType,
   V1Alpha1IssuerSettings,
   V1Alpha1SetIssuerRequest
 } from '@/api/generated/identity/settings_service.swagger.api';
@@ -162,12 +163,12 @@ describe('settings mutations', () => {
       const mockSetIssuerRequest: V1Alpha1SetIssuerRequest = {
         issuerSettings: {
           issuerId: 'test-issuer-id',
-          keyId: 'test-key-id'
+          idpType: V1Alpha1IdpType.IDP_TYPE_OKTA
         }
       };
       const mockIssuerSettings: V1Alpha1IssuerSettings = {
         issuerId: 'test-issuer-id',
-        keyId: 'test-key-id'
+        idpType: V1Alpha1IdpType.IDP_TYPE_OKTA
       };
       const mockResponse = {data: mockIssuerSettings};
 
@@ -186,12 +187,12 @@ describe('settings mutations', () => {
       const mockSetIssuerRequest: V1Alpha1SetIssuerRequest = {
         issuerSettings: {
           issuerId: 'test-issuer-id',
-          keyId: 'test-key-id'
+          idpType: V1Alpha1IdpType.IDP_TYPE_OKTA
         }
       };
       const mockIssuerSettings: V1Alpha1IssuerSettings = {
         issuerId: 'test-issuer-id',
-        keyId: 'test-key-id'
+        idpType: V1Alpha1IdpType.IDP_TYPE_OKTA
       };
       const mockResponse = {data: mockIssuerSettings};
       const onSuccess = vi.fn();
@@ -211,12 +212,12 @@ describe('settings mutations', () => {
       const mockSetIssuerRequest: V1Alpha1SetIssuerRequest = {
         issuerSettings: {
           issuerId: 'test-issuer-id',
-          keyId: 'test-key-id'
+          idpType: V1Alpha1IdpType.IDP_TYPE_SELF
         }
       };
       const mockIssuerSettings: V1Alpha1IssuerSettings = {
         issuerId: 'test-issuer-id',
-        keyId: 'test-key-id'
+        idpType: V1Alpha1IdpType.IDP_TYPE_SELF
       };
       const mockResponse = {data: mockIssuerSettings};
 
@@ -237,7 +238,7 @@ describe('settings mutations', () => {
       const mockSetIssuerRequest: V1Alpha1SetIssuerRequest = {
         issuerSettings: {
           issuerId: 'test-issuer-id',
-          keyId: 'test-key-id'
+          idpType: V1Alpha1IdpType.IDP_TYPE_SELF
         }
       };
       const onError = vi.fn();
@@ -258,12 +259,12 @@ describe('settings mutations', () => {
       const mockSetIssuerRequest: V1Alpha1SetIssuerRequest = {
         issuerSettings: {
           issuerId: 'test-issuer-id',
-          keyId: 'test-key-id'
+          idpType: V1Alpha1IdpType.IDP_TYPE_SELF
         }
       };
       const mockIssuerSettings: V1Alpha1IssuerSettings = {
         issuerId: 'test-issuer-id',
-        keyId: 'test-key-id'
+        idpType: V1Alpha1IdpType.IDP_TYPE_SELF
       };
       const mockResponse = {data: mockIssuerSettings};
 
@@ -278,9 +279,13 @@ describe('settings mutations', () => {
 
     it('handles empty issuer settings request', async () => {
       const mockSetIssuerRequest: V1Alpha1SetIssuerRequest = {
-        issuerSettings: {}
+        issuerSettings: {
+          idpType: V1Alpha1IdpType.IDP_TYPE_UNSPECIFIED
+        }
       };
-      const mockIssuerSettings: V1Alpha1IssuerSettings = {};
+      const mockIssuerSettings: V1Alpha1IssuerSettings = {
+        idpType: V1Alpha1IdpType.IDP_TYPE_UNSPECIFIED
+      };
       const mockResponse = {data: mockIssuerSettings};
 
       (SettingsAPI.setUpIssuer as Mock).mockResolvedValue(mockResponse);
@@ -312,7 +317,7 @@ describe('settings mutations', () => {
       const mockSetIssuerRequest: V1Alpha1SetIssuerRequest = {
         issuerSettings: {
           issuerId: 'test-issuer-id',
-          keyId: 'test-key-id'
+          idpType: V1Alpha1IdpType.IDP_TYPE_SELF
         }
       };
       const onError = vi.fn();
@@ -353,12 +358,12 @@ describe('settings mutations', () => {
       const mockSetIssuerRequest: V1Alpha1SetIssuerRequest = {
         issuerSettings: {
           issuerId: 'test-issuer-id',
-          keyId: 'test-key-id'
+          idpType: V1Alpha1IdpType.IDP_TYPE_SELF
         }
       };
       const mockIssuerSettings: V1Alpha1IssuerSettings = {
         issuerId: 'test-issuer-id',
-        keyId: 'test-key-id'
+        idpType: V1Alpha1IdpType.IDP_TYPE_SELF
       };
 
       (SettingsAPI.settingsServiceSetApiKey as Mock).mockResolvedValue({data: mockApiKey});
@@ -382,12 +387,12 @@ describe('settings mutations', () => {
       const mockSetIssuerRequest: V1Alpha1SetIssuerRequest = {
         issuerSettings: {
           issuerId: 'test-issuer-id',
-          keyId: 'test-key-id'
+          idpType: V1Alpha1IdpType.IDP_TYPE_SELF
         }
       };
       const mockIssuerSettings: V1Alpha1IssuerSettings = {
         issuerId: 'test-issuer-id',
-        keyId: 'test-key-id'
+        idpType: V1Alpha1IdpType.IDP_TYPE_SELF
       };
 
       const onSuccess1 = vi.fn();

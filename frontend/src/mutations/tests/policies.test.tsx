@@ -316,7 +316,7 @@ describe('policies mutations', () => {
 
   describe('useDeletePolicy', () => {
     it('calls PolicyAPI.deletePolicy with correct id', async () => {
-      const mockResponse = {data: {success: true} as Policy};
+      const mockResponse = {data: {success: true} as unknown as Policy};
 
       (PolicyAPI.deletePolicy as Mock).mockResolvedValue(mockResponse);
 
@@ -330,7 +330,7 @@ describe('policies mutations', () => {
     });
 
     it('calls onSuccess callback when policy deletion succeeds', async () => {
-      const mockResponse = {data: {success: true} as Policy};
+      const mockResponse = {data: {success: true} as unknown as Policy};
       const onSuccess = vi.fn();
 
       (PolicyAPI.deletePolicy as Mock).mockResolvedValue(mockResponse);
@@ -345,7 +345,7 @@ describe('policies mutations', () => {
     });
 
     it('invalidates policies and policies total count queries on success', async () => {
-      const mockResponse = {data: {success: true} as Policy};
+      const mockResponse = {data: {success: true} as unknown as Policy};
 
       (PolicyAPI.deletePolicy as Mock).mockResolvedValue(mockResponse);
 
@@ -381,7 +381,7 @@ describe('policies mutations', () => {
     });
 
     it('works with default empty callbacks parameter', async () => {
-      const mockResponse = {data: {success: true} as Policy};
+      const mockResponse = {data: {success: true} as unknown as Policy};
 
       (PolicyAPI.deletePolicy as Mock).mockResolvedValue(mockResponse);
 
@@ -639,7 +639,7 @@ describe('policies mutations', () => {
   describe('useDeleteRule', () => {
     it('calls PolicyAPI.deleteRule with correct parameters', async () => {
       const deleteParams = {policyId: 'policy-1', ruleId: 'rule-1'};
-      const mockResponse = {data: {success: true} as Rule};
+      const mockResponse = {data: {success: true} as any};
 
       (PolicyAPI.deleteRule as Mock).mockResolvedValue(mockResponse);
 
@@ -654,7 +654,7 @@ describe('policies mutations', () => {
 
     it('calls onSuccess callback when rule deletion succeeds', async () => {
       const deleteParams = {policyId: 'policy-1', ruleId: 'rule-1'};
-      const mockResponse = {data: {success: true} as Rule};
+      const mockResponse = {data: {success: true} as any};
       const onSuccess = vi.fn();
 
       (PolicyAPI.deleteRule as Mock).mockResolvedValue(mockResponse);
@@ -670,7 +670,7 @@ describe('policies mutations', () => {
 
     it('invalidates all policy-related queries including rule query on success', async () => {
       const deleteParams = {policyId: 'policy-1', ruleId: 'rule-1'};
-      const mockResponse = {data: {success: true} as Rule};
+      const mockResponse = {data: {success: true} as any};
 
       (PolicyAPI.deleteRule as Mock).mockResolvedValue(mockResponse);
 
@@ -710,7 +710,7 @@ describe('policies mutations', () => {
 
     it('works with default empty callbacks parameter', async () => {
       const deleteParams = {policyId: 'policy-1', ruleId: 'rule-1'};
-      const mockResponse = {data: {success: true} as Rule};
+      const mockResponse = {data: {success: true} as any};
 
       (PolicyAPI.deleteRule as Mock).mockResolvedValue(mockResponse);
 

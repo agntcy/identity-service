@@ -77,19 +77,27 @@ describe('OpsRule', () => {
   const mockPolicy = {
     id: 'policy-123',
     name: 'Test Policy',
-    description: 'Test policy description'
+    description: 'Test policy description',
+    assignedTo: 'test-app-id',
+    rules: []
   };
 
   const mockRule = {
     id: 'rule-456',
     name: 'Test Rule',
-    description: 'Test rule description'
+    description: 'Test rule description',
+    tasks: [],
+    action: 'RULE_ACTION_ALLOW' as any,
+    needsApproval: false
   };
 
   const mockRuleData = {
     id: 'rule-456',
     name: 'Fetched Rule',
-    description: 'Rule from API'
+    description: 'Rule from API',
+    tasks: [],
+    action: 'RULE_ACTION_ALLOW' as any,
+    needsApproval: false
   };
 
   // Default mock return for useGetRule

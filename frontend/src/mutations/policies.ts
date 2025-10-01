@@ -15,9 +15,23 @@ interface PropsSettingsPolicies {
   };
 }
 
+interface PropsSettingsDeletePolicy {
+  callbacks?: {
+    onSuccess?: (props: AxiosResponse<object, any>) => void;
+    onError?: () => void;
+  };
+}
+
 interface PropsSettingsRules {
   callbacks?: {
     onSuccess?: (props: AxiosResponse<Rule, any>) => void;
+    onError?: () => void;
+  };
+}
+
+interface PropsSettingsDeleteRule {
+  callbacks?: {
+    onSuccess?: (props: AxiosResponse<object, any>) => void;
     onError?: () => void;
   };
 }
@@ -61,9 +75,9 @@ export const useUpdatePolicy = ({callbacks}: PropsSettingsPolicies = {}) => {
   });
 };
 
-export const useDeletePolicy = ({callbacks}: PropsSettingsPolicies = {}) => {
+export const useDeletePolicy = ({callbacks}: PropsSettingsDeletePolicy = {}) => {
   const queryClient = useQueryClient();
-  return useMutation({
+  return useMutation<AxiosResponse<object, any>, Error, string>({
     mutationKey: ['delete-policy'],
     mutationFn: (id: string) => PolicyAPI.deletePolicy(id),
     onError: () => {
@@ -125,9 +139,9 @@ export const useUpdateRule = ({callbacks}: PropsSettingsRules = {}) => {
   });
 };
 
-export const useDeleteRule = ({callbacks}: PropsSettingsRules = {}) => {
+export const useDeleteRule = ({callbacks}: PropsSettingsDeleteRule = {}) => {
   const queryClient = useQueryClient();
-  return useMutation({
+  return useMutation<AxiosResponse<object, any>, Error, {policyId: string; ruleId: string}>({
     mutationKey: ['delete-rule'],
     mutationFn: ({policyId, ruleId}: {policyId: string; ruleId: string}) => PolicyAPI.deleteRule(policyId, ruleId),
     onError: () => {

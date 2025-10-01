@@ -1,8 +1,3 @@
-/**
- * Copyright 2025 Cisco Systems, Inc. and its affiliates
- * SPDX-License-Identifier: Apache-2.0
- */
-
 /* eslint-disable */
 /* tslint:disable */
 // @ts-nocheck
@@ -180,13 +175,8 @@ export interface V1Alpha1IssuerSettings {
    * This is typically the Issuer's ID in the Identity.
    */
   issuerId?: string;
-  /**
-   * A unique identifier for the Key.
-   * This is typically the Key's ID in the vault provider.
-   */
-  keyId?: string;
   /** The type of the IdP. */
-  idpType?: V1Alpha1IdpType;
+  idpType: V1Alpha1IdpType;
   /** Settings for the Duo Identity Provider. */
   duoIdpSettings?: V1Alpha1DuoIdpSettings;
   /** Settings for the Okta Identity Provider. */
@@ -358,7 +348,7 @@ export class HttpClient<SecurityDataType = unknown> {
 }
 
 /**
- * @title outshift/identity/service/v1alpha1/settings_service.proto
+ * @title agntcy/identity/service/v1alpha1/settings_service.proto
  * @version version not set
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {

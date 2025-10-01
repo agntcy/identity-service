@@ -256,7 +256,8 @@ const mockPolicy = {
   id: 'policy-1',
   name: 'Test Policy',
   description: 'Test policy description',
-  assignedTo: 'app-1'
+  assignedTo: 'app-1',
+  rules: []
 };
 
 const mockTasks = {
@@ -697,7 +698,9 @@ describe('TaskForm', () => {
     it('propagates policy to tasks query', () => {
       const customPolicy = {
         id: 'custom-policy',
-        assignedTo: 'custom-app'
+        name: 'Custom Policy',
+        assignedTo: 'custom-app',
+        rules: []
       };
 
       renderWithClient(<TaskForm policy={customPolicy} />);
@@ -733,7 +736,9 @@ describe('TaskForm', () => {
     it('handles policy without assignedTo property', () => {
       const policyWithoutAssignedTo = {
         id: 'policy-without-assigned',
-        name: 'Policy'
+        name: 'Policy',
+        assignedTo: '',
+        rules: []
       };
 
       renderWithClient(<TaskForm policy={policyWithoutAssignedTo} />);

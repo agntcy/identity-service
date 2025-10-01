@@ -1,8 +1,3 @@
-/**
- * Copyright 2025 Cisco Systems, Inc. and its affiliates
- * SPDX-License-Identifier: Apache-2.0
- */
-
 /* eslint-disable */
 /* tslint:disable */
 // @ts-nocheck
@@ -194,11 +189,11 @@ export interface V1Alpha1App {
   /** A unique identifier for the App. */
   id?: string;
   /** A human-readable name for the App. */
-  name?: string;
+  name: string;
   /** A human-readable description for the App. */
   description?: string;
   /** The type of the App. */
-  type?: V1Alpha1AppType;
+  type: V1Alpha1AppType;
   /** The DID value */
   resolverMetadataId?: string;
   /** The API Key Secret for the App. */
@@ -210,11 +205,6 @@ export interface V1Alpha1App {
    * @format date-time
    */
   createdAt?: string;
-  /**
-   * UpdatedAt records the timestamp of the last update to the App
-   * @format date-time
-   */
-  updatedAt?: string;
 }
 
 export interface V1Alpha1AppTypeCountEntry {
@@ -251,6 +241,18 @@ export interface V1Alpha1BadgeClaims {
   id?: string;
   /** The content of the badge */
   badge?: string;
+}
+
+export interface V1Alpha1CreateOasfAppRequest {
+  /** The OASF schema in a base64 encoded format */
+  schemaBase64?: string;
+}
+
+export interface V1Alpha1CreateOasfAppResponse {
+  /** The created OASF App. */
+  app?: V1Alpha1App;
+  /** The issued badge for the OASF App. */
+  badge?: V1Alpha1Badge;
 }
 
 /**
@@ -530,7 +532,7 @@ export class HttpClient<SecurityDataType = unknown> {
 }
 
 /**
- * @title outshift/identity/service/v1alpha1/app_service.proto
+ * @title agntcy/identity/service/v1alpha1/app_service.proto
  * @version version not set
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
@@ -619,6 +621,24 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags App
+     * @name CreateOasfApp
+     * @summary Create an OASF App from an OASF schema and issue a badge
+     * @request POST:/v1alpha1/apps/oasf
+     */
+    createOasfApp: (body: V1Alpha1CreateOasfAppRequest, params: RequestParams = {}) =>
+      this.request<V1Alpha1CreateOasfAppResponse, RpcStatus>({
+        path: `/v1alpha1/apps/oasf`,
+        method: 'POST',
+        body: body,
+        type: ContentType.Json,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags App
      * @name GetApp
      * @summary Get App by Id
      * @request GET:/v1alpha1/apps/{appId}
@@ -686,7 +706,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags App
      * @name GetAppBadge
-     * @summary Get the current badge issued for the App
+     * @summary Get the current badge issued for the App using the App ID or the Resolver Metadata ID.
      * @request GET:/v1alpha1/apps/{appId}/badge
      */
     getAppBadge: (appId: string, params: RequestParams = {}) =>

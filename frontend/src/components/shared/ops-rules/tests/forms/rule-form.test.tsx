@@ -145,7 +145,9 @@ const mockUseGetDevices = vi.mocked(useGetDevices);
 const mockPolicy = {
   id: 'policy-1',
   name: 'Test Policy',
-  description: 'Test policy description'
+  description: 'Test policy description',
+  assignedTo: 'test-app-id',
+  rules: []
 };
 
 describe('RuleForm', () => {
@@ -608,7 +610,9 @@ describe('RuleForm', () => {
     it('propagates policy to TaskForm component', () => {
       const customPolicy = {
         id: 'custom-policy',
-        name: 'Custom Policy'
+        name: 'Custom Policy',
+        assignedTo: 'test-app-id',
+        rules: []
       };
 
       renderWithClient(<RuleForm policy={customPolicy} />);

@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "outshift/identity/service/v1alpha1/settings_service.proto",
+    "title": "agntcy/identity/service/v1alpha1/settings_service.proto",
     "version": "version not set"
   },
   "tags": [
@@ -170,11 +170,8 @@
       "properties": {
         "issuerId": {
           "type": "string",
-          "description": "A unique identifier for the Issuer.\nThis is typically the Issuer's ID in the Identity."
-        },
-        "keyId": {
-          "type": "string",
-          "description": "A unique identifier for the Key.\nThis is typically the Key's ID in the vault provider."
+          "description": "A unique identifier for the Issuer.\nThis is typically the Issuer's ID in the Identity.",
+          "readOnly": true
         },
         "idpType": {
           "$ref": "#/definitions/v1alpha1IdpType",
@@ -193,7 +190,10 @@
           "description": "Settings for the Ory Identity Provider."
         }
       },
-      "title": "Issuer Settings"
+      "title": "Issuer Settings",
+      "required": [
+        "idpType"
+      ]
     },
     "v1alpha1OktaIdpSettings": {
       "type": "object",
@@ -239,7 +239,8 @@
       "properties": {
         "apiKey": {
           "$ref": "#/definitions/v1alpha1ApiKey",
-          "description": "An API Key for the Identity Service."
+          "description": "An API Key for the Identity Service.",
+          "readOnly": true
         },
         "issuerSettings": {
           "$ref": "#/definitions/v1alpha1IssuerSettings",

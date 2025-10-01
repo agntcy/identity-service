@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "outshift/identity/service/v1alpha1/app_service.proto",
+    "title": "agntcy/identity/service/v1alpha1/app_service.proto",
     "version": "version not set"
   },
   "tags": [
@@ -150,6 +150,39 @@
         ]
       }
     },
+    "/v1alpha1/apps/oasf": {
+      "post": {
+        "summary": "Create an OASF App from an OASF schema and issue a badge",
+        "operationId": "CreateOasfApp",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1alpha1CreateOasfAppResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1alpha1CreateOasfAppRequest"
+            }
+          }
+        ],
+        "tags": [
+          "App"
+        ]
+      }
+    },
     "/v1alpha1/apps/{appId}": {
       "get": {
         "summary": "Get App by Id",
@@ -286,7 +319,7 @@
     },
     "/v1alpha1/apps/{appId}/badge": {
       "get": {
-        "summary": "Get the current badge issued for the App",
+        "summary": "Get the current badge issued for the App using the App ID or the Resolver Metadata ID.",
         "operationId": "GetAppBadge",
         "responses": {
           "200": {
@@ -305,7 +338,7 @@
         "parameters": [
           {
             "name": "appId",
-            "description": "App Id to get the badge for.",
+            "description": "App Id or Resolver Metadata ID to get the badge for.",
             "in": "path",
             "required": true,
             "type": "string"
@@ -401,7 +434,8 @@
       "properties": {
         "id": {
           "type": "string",
-          "description": "A unique identifier for the App."
+          "description": "A unique identifier for the App.",
+          "readOnly": true
         },
         "name": {
           "type": "string",
@@ -417,28 +451,31 @@
         },
         "resolverMetadataId": {
           "type": "string",
-          "title": "The DID value"
+          "title": "The DID value",
+          "readOnly": true
         },
         "apiKey": {
           "type": "string",
-          "description": "The API Key Secret for the App."
+          "description": "The API Key Secret for the App.",
+          "readOnly": true
         },
         "status": {
           "$ref": "#/definitions/v1alpha1AppStatus",
-          "title": "The status of the App"
+          "title": "The status of the App",
+          "readOnly": true
         },
         "createdAt": {
           "type": "string",
           "format": "date-time",
-          "title": "CreatedAt records the timestamp of when the App was initially created"
-        },
-        "updatedAt": {
-          "type": "string",
-          "format": "date-time",
-          "title": "UpdatedAt records the timestamp of the last update to the App"
+          "title": "CreatedAt records the timestamp of when the App was initially created",
+          "readOnly": true
         }
       },
-      "description": "Identity Service App."
+      "description": "Identity Service App.",
+      "required": [
+        "name",
+        "type"
+      ]
     },
     "v1alpha1AppStatus": {
       "type": "string",
@@ -503,6 +540,28 @@
       },
       "description": "[here]: https://spec.identity.agntcy.org/docs/vc/intro/",
       "title": "BadgeClaims represents the content of a Badge VC defined [here]"
+    },
+    "v1alpha1CreateOasfAppRequest": {
+      "type": "object",
+      "properties": {
+        "schemaBase64": {
+          "type": "string",
+          "title": "The OASF schema in a base64 encoded format"
+        }
+      }
+    },
+    "v1alpha1CreateOasfAppResponse": {
+      "type": "object",
+      "properties": {
+        "app": {
+          "$ref": "#/definitions/v1alpha1App",
+          "description": "The created OASF App."
+        },
+        "badge": {
+          "$ref": "#/definitions/v1alpha1Badge",
+          "description": "The issued badge for the OASF App."
+        }
+      }
     },
     "v1alpha1CredentialSchema": {
       "type": "object",
@@ -648,23 +707,28 @@
       "properties": {
         "id": {
           "type": "string",
-          "description": "A unique identifier for the Task."
+          "description": "A unique identifier for the Task.",
+          "readOnly": true
         },
         "name": {
           "type": "string",
-          "description": "A human-readable name for the Task."
+          "description": "A human-readable name for the Task.",
+          "readOnly": true
         },
         "description": {
           "type": "string",
-          "description": "A human-readable description for the Task."
+          "description": "A human-readable description for the Task.",
+          "readOnly": true
         },
         "appId": {
           "type": "string",
-          "description": "An application ID for the Task."
+          "description": "An application ID for the Task.",
+          "readOnly": true
         },
         "toolName": {
           "type": "string",
-          "description": "A tool name for the Task."
+          "description": "A tool name for the Task.",
+          "readOnly": true
         }
       },
       "title": "Identity Service Policy Task"

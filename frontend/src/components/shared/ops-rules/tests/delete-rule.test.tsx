@@ -59,13 +59,18 @@ describe('DeleteRule', () => {
   const mockPolicy = {
     id: 'policy-123',
     name: 'Test Policy',
-    description: 'Test policy description'
+    description: 'Test policy description',
+    assignedTo: 'test-app-id',
+    rules: []
   };
 
   const mockRule = {
     id: 'rule-456',
     name: 'Test Rule',
-    description: 'Test rule description'
+    description: 'Test rule description',
+    tasks: [],
+    action: 'RULE_ACTION_ALLOW' as any,
+    needsApproval: false
   };
 
   // Default mock implementations
@@ -387,7 +392,13 @@ describe('DeleteRule', () => {
 
   describe('Callback Dependencies', () => {
     it('callback works correctly with different rule IDs in separate tests', () => {
-      const ruleA = {id: 'rule-A', name: 'Rule A'};
+      const ruleA = {
+        id: 'rule-A',
+        name: 'Rule A',
+        tasks: [],
+        action: 'RULE_ACTION_ALLOW' as any,
+        needsApproval: false
+      };
 
       renderWithClient(<DeleteRule open={true} policy={mockPolicy} rule={ruleA} onClose={mockOnClose} />);
 
@@ -399,7 +410,13 @@ describe('DeleteRule', () => {
     });
 
     it('callback works correctly with different rule IDs - second test', () => {
-      const ruleB = {id: 'rule-B', name: 'Rule B'};
+      const ruleB = {
+        id: 'rule-B',
+        name: 'Rule B',
+        tasks: [],
+        action: 'RULE_ACTION_ALLOW' as any,
+        needsApproval: false
+      };
 
       renderWithClient(<DeleteRule open={true} policy={mockPolicy} rule={ruleB} onClose={mockOnClose} />);
 
@@ -411,7 +428,12 @@ describe('DeleteRule', () => {
     });
 
     it('callback works correctly with different policy IDs in separate tests', () => {
-      const policyA = {id: 'policy-A', name: 'Policy A'};
+      const policyA = {
+        id: 'policy-A',
+        name: 'Policy A',
+        assignedTo: 'test-app-id',
+        rules: []
+      };
 
       renderWithClient(<DeleteRule open={true} policy={policyA} rule={mockRule} onClose={mockOnClose} />);
 
@@ -423,7 +445,12 @@ describe('DeleteRule', () => {
     });
 
     it('callback works correctly with different policy IDs - second test', () => {
-      const policyB = {id: 'policy-B', name: 'Policy B'};
+      const policyB = {
+        id: 'policy-B',
+        name: 'Policy B',
+        assignedTo: 'test-app-id',
+        rules: []
+      };
 
       renderWithClient(<DeleteRule open={true} policy={policyB} rule={mockRule} onClose={mockOnClose} />);
 

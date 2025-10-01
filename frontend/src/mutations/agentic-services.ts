@@ -10,7 +10,7 @@ import {App} from '@/types/api/app';
 
 interface PropsSettingsAgenticServices {
   callbacks?: {
-    onSuccess?: (props: AxiosResponse<App, any>) => void;
+    onSuccess?: (props: AxiosResponse<any, any>) => void;
     onError?: () => void;
   };
 }

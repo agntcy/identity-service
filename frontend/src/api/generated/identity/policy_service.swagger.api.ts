@@ -1,8 +1,3 @@
-/**
- * Copyright 2025 Cisco Systems, Inc. and its affiliates
- * SPDX-License-Identifier: Apache-2.0
- */
-
 /* eslint-disable */
 /* tslint:disable */
 // @ts-nocheck
@@ -243,23 +238,18 @@ export interface V1Alpha1Policy {
   /** A unique identifier for the Policy. */
   id?: string;
   /** A human-readable name for the Policy. */
-  name?: string;
+  name: string;
   /** A human-readable description for the Policy. */
   description?: string;
   /** The requester application that this Policy applies to. */
-  assignedTo?: string;
+  assignedTo: string;
   /** All the rules that apply to this Policy. */
-  rules?: V1Alpha1Rule[];
+  rules: V1Alpha1Rule[];
   /**
    * CreatedAt records the timestamp of when the Policy was initially created
    * @format date-time
    */
   createdAt?: string;
-  /**
-   * UpdatedAt records the timestamp of the last update to the Policy
-   * @format date-time
-   */
-  updatedAt?: string;
 }
 
 /** Identity Service Policy Rule */
@@ -267,26 +257,21 @@ export interface V1Alpha1Rule {
   /** A unique identifier for the Rule. */
   id?: string;
   /** A human-readable name for the Rule. */
-  name?: string;
+  name: string;
   /** A human-readable description for the Rule. */
   description?: string;
   policyId?: string;
   /** The tasks that this Rule applies to. */
-  tasks?: V1Alpha1Task[];
+  tasks: V1Alpha1Task[];
   /** The action applied for the rule when calling the specified tasks */
-  action?: V1Alpha1RuleAction;
+  action: V1Alpha1RuleAction;
   /** Need User Approval for this Rule. */
-  needsApproval?: boolean;
+  needsApproval: boolean;
   /**
    * CreatedAt records the timestamp of when the Rule was initially created
    * @format date-time
    */
   createdAt?: string;
-  /**
-   * UpdatedAt records the timestamp of the last update to the Rule
-   * @format date-time
-   */
-  updatedAt?: string;
 }
 
 /** Identity Service Policy Task */
@@ -440,7 +425,7 @@ export class HttpClient<SecurityDataType = unknown> {
 }
 
 /**
- * @title outshift/identity/service/v1alpha1/policy_service.proto
+ * @title agntcy/identity/service/v1alpha1/policy_service.proto
  * @version version not set
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {

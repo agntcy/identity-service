@@ -58,7 +58,6 @@ describe('useGetSettings', () => {
         apiKey: {apiKey: 'test-api-key'},
         issuerSettings: {
           issuerId: 'test-issuer',
-          keyId: 'test-key',
           idpType: V1Alpha1IdpType.IDP_TYPE_DUO,
           duoIdpSettings: {
             hostname: 'test.duosecurity.com',
@@ -447,7 +446,6 @@ describe('useGetSettings', () => {
       const oktaSettings: V1Alpha1Settings = {
         issuerSettings: {
           issuerId: 'okta-issuer',
-          keyId: 'okta-key',
           idpType: V1Alpha1IdpType.IDP_TYPE_OKTA,
           oktaIdpSettings: {
             orgUrl: 'https://test.okta.com',

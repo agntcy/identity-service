@@ -16,10 +16,10 @@ const path = require('path');
     shell.echo(chalk.blue('Start generate bff...'));
 
     // Globals
-    const IDENTITY_V1ALPHA1_PROTO_PATH = "proto/outshift/identity/service/v1alpha1";
-    const SHARED_V1ALPHA1_PROTO_PATH = "proto/outshift/identity/service/shared/v1alpha1";
-    const IDENTITY_V1ALPHA1_GENERATED_PATH = "outshift/identity/service/v1alpha1";
-    const SHARED_V1ALPHA1_GENERATED_PATH = "outshift/identity/service/shared/v1alpha1";
+    const IDENTITY_V1ALPHA1_PROTO_PATH = "proto/agntcy/identity/service/v1alpha1";
+    const SHARED_V1ALPHA1_PROTO_PATH = "proto/agntcy/identity/service/shared/v1alpha1";
+    const IDENTITY_V1ALPHA1_GENERATED_PATH = "agntcy/identity/service/v1alpha1";
+    const SHARED_V1ALPHA1_GENERATED_PATH = "agntcy/identity/service/shared/v1alpha1";
 
     async function doRenameAndConvert(inputDir, outputDir) {
       shell.mkdir('-p', outputDir);
@@ -53,13 +53,13 @@ const path = require('path');
 
     // Function to rename and convert all files
     async function doRenameAndConvertAll() {
-      await doRenameAndConvert(IDENTITY_V1ALPHA1_GENERATED_PATH, 'identity');
-      await doRenameAndConvert(SHARED_V1ALPHA1_GENERATED_PATH, 'shared');
+      await doRenameAndConvert(`generated/openapi/${IDENTITY_V1ALPHA1_GENERATED_PATH}`, 'identity');
+      await doRenameAndConvert(`generated/openapi/${SHARED_V1ALPHA1_GENERATED_PATH}`, 'shared');
     }
 
     // Generate the code
     shell.echo(chalk.grey('Generating the code...'));
-    shell.rm('-rf', '../outshift');
+    shell.rm('-rf', '../generated');
     shell.rm('-rf', '../src/api/generated');
     shell.cd('../../backend/api/spec');
     doGenerateAll();

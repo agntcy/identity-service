@@ -38,8 +38,7 @@ describe('PoliciesUsedByAgenticService', () => {
     status: V1Alpha1AppStatus.APP_STATUS_ACTIVE,
     resolverMetadataId: 'did:example:123',
     apiKey: 'test-api-key',
-    createdAt: '2023-01-01T00:00:00Z',
-    updatedAt: '2023-01-01T00:00:00Z'
+    createdAt: '2023-01-01T00:00:00Z'
   };
 
   beforeEach(() => {
@@ -132,7 +131,8 @@ describe('PoliciesUsedByAgenticService', () => {
   it('handles minimal app object', () => {
     const minimalApp: V1Alpha1App = {
       id: 'minimal-123',
-      name: 'Minimal Service'
+      name: 'Minimal Service',
+      type: V1Alpha1AppType.APP_TYPE_AGENT_A2A
     };
 
     mockUseOutletContext.mockReturnValue({app: minimalApp});
@@ -269,7 +269,9 @@ describe('PoliciesUsedByAgenticService', () => {
 
   it('handles app with only id field', () => {
     const idOnlyApp: V1Alpha1App = {
-      id: 'id-only-123'
+      id: 'id-only-123',
+      name: 'ID Only App',
+      type: V1Alpha1AppType.APP_TYPE_UNSPECIFIED
     };
 
     mockUseOutletContext.mockReturnValue({app: idOnlyApp});
@@ -283,7 +285,10 @@ describe('PoliciesUsedByAgenticService', () => {
   });
 
   it('handles app with empty object (no properties)', () => {
-    const emptyApp: V1Alpha1App = {};
+    const emptyApp: V1Alpha1App = {
+      name: '',
+      type: V1Alpha1AppType.APP_TYPE_UNSPECIFIED
+    };
 
     mockUseOutletContext.mockReturnValue({app: emptyApp});
 
@@ -307,7 +312,8 @@ describe('PoliciesUsedByAgenticService', () => {
   it('handles app id extraction correctly with optional chaining', () => {
     const appWithId: V1Alpha1App = {
       id: 'chaining-test-123',
-      name: 'Chaining Test'
+      name: 'Chaining Test',
+      type: V1Alpha1AppType.APP_TYPE_UNSPECIFIED
     };
 
     mockUseOutletContext.mockReturnValue({app: appWithId});

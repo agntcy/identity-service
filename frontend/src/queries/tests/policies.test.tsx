@@ -16,6 +16,7 @@ import type {
   V1Alpha1Rule,
   V1Alpha1GetPoliciesCountResponse
 } from '@/api/generated/identity/policy_service.swagger.api';
+import {V1Alpha1RuleAction} from '@/api/generated/identity/policy_service.swagger.api';
 import qs from 'qs';
 
 // Mock the PolicyAPI
@@ -170,7 +171,9 @@ describe('Policies Hooks', () => {
     it('fetches single policy successfully', async () => {
       const mockData: V1Alpha1Policy = {
         id: '1',
-        name: 'Test Policy'
+        name: 'Test Policy',
+        assignedTo: 'test-app',
+        rules: []
       };
       mockedPolicyAPI.getPolicy.mockResolvedValue(createMockAxiosResponse(mockData));
 
@@ -271,7 +274,10 @@ describe('Policies Hooks', () => {
     it('fetches single rule successfully', async () => {
       const mockData: V1Alpha1Rule = {
         id: 'rule-1',
-        name: 'Test Rule'
+        name: 'Test Rule',
+        tasks: [],
+        action: V1Alpha1RuleAction.RULE_ACTION_ALLOW,
+        needsApproval: false
       };
       mockedPolicyAPI.getRule.mockResolvedValue(createMockAxiosResponse(mockData));
 
