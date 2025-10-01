@@ -83,6 +83,7 @@ func TestAppService_CreateApp_should_succeed(t *testing.T) {
 		nil,
 		nil,
 		nil,
+		nil,
 	)
 
 	createdApp, err := sut.CreateApp(ctx, app)
@@ -114,7 +115,7 @@ func TestAppService_CreateApp_should_return_err_when_app_is_invalid(t *testing.T
 			t.Parallel()
 
 			ctx := context.Background()
-			sut := bff.NewAppService(nil, nil, nil, nil, nil, nil, nil, nil, nil, nil)
+			sut := bff.NewAppService(nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil)
 
 			_, err := sut.CreateApp(ctx, tc.app)
 
@@ -133,7 +134,7 @@ func TestAppService_CreateApp_should_return_err_when_issuer_not_found(t *testing
 	}
 	settingsRepo := settingsmocks.NewRepository(t)
 	settingsRepo.EXPECT().GetIssuerSettings(ctx).Return(nil, errors.New("error"))
-	sut := bff.NewAppService(nil, settingsRepo, nil, nil, nil, nil, nil, nil, nil, nil)
+	sut := bff.NewAppService(nil, settingsRepo, nil, nil, nil, nil, nil, nil, nil, nil, nil)
 
 	_, err := sut.CreateApp(ctx, app)
 
@@ -157,7 +158,7 @@ func TestAppService_CreateApp_should_return_err_when_idp_type_is_invalid(t *test
 	settingsRepo.EXPECT().GetIssuerSettings(ctx).Return(issuer, nil)
 
 	idpFactory := idp.NewFactory()
-	sut := bff.NewAppService(nil, settingsRepo, nil, idpFactory, nil, nil, nil, nil, nil, nil)
+	sut := bff.NewAppService(nil, settingsRepo, nil, idpFactory, nil, nil, nil, nil, nil, nil, nil)
 
 	_, err := sut.CreateApp(ctx, app)
 
@@ -179,7 +180,7 @@ func TestAppService_CreateApp_should_return_err_when_client_cred_pair_creation_f
 	settingsRepo.EXPECT().GetIssuerSettings(invalidCtxWithoutUserID).Return(issuer, nil)
 
 	idpFactory := idp.NewFactory()
-	sut := bff.NewAppService(nil, settingsRepo, nil, idpFactory, nil, nil, nil, nil, nil, nil)
+	sut := bff.NewAppService(nil, settingsRepo, nil, idpFactory, nil, nil, nil, nil, nil, nil, nil)
 
 	_, err := sut.CreateApp(invalidCtxWithoutUserID, app)
 
@@ -210,6 +211,7 @@ func TestAppService_CreateApp_should_return_err_when_id_generation_fails(t *test
 		settingsRepo,
 		identityServ,
 		idpFactory,
+		nil,
 		nil,
 		nil,
 		nil,
@@ -262,6 +264,7 @@ func TestAppService_CreateApp_should_return_err_when_client_cred_cannot_be_store
 		nil,
 		nil,
 		nil,
+		nil,
 	)
 
 	_, err := sut.CreateApp(ctx, app)
@@ -309,6 +312,7 @@ func TestAppService_CreateApp_should_return_err_when_create_apikey_fails(t *test
 		idpFactory,
 		credStore,
 		iamClient,
+		nil,
 		nil,
 		nil,
 		nil,
@@ -413,6 +417,7 @@ func TestAppService_CreateAppFromOasfSchema_should_succeed(t *testing.T) {
 				nil,
 				nil,
 				nil,
+				nil,
 			)
 
 			createdApp, err := sut.CreateAppFromOasfSchema(ctx, schemaBase64)
@@ -434,7 +439,7 @@ func TestAppService_CreateAppFromOasfSchema_should_fail(t *testing.T) {
 
 		emptySchema := ""
 
-		sut := bff.NewAppService(nil, nil, nil, nil, nil, nil, nil, nil, nil, nil)
+		sut := bff.NewAppService(nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil)
 
 		_, err := sut.CreateAppFromOasfSchema(context.Background(), emptySchema)
 
@@ -446,7 +451,7 @@ func TestAppService_CreateAppFromOasfSchema_should_fail(t *testing.T) {
 
 		invalidBase64 := "something"
 
-		sut := bff.NewAppService(nil, nil, nil, nil, nil, nil, nil, nil, nil, nil)
+		sut := bff.NewAppService(nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil)
 
 		_, err := sut.CreateAppFromOasfSchema(context.Background(), invalidBase64)
 
@@ -458,7 +463,7 @@ func TestAppService_CreateAppFromOasfSchema_should_fail(t *testing.T) {
 
 		invalidSchema := base64.StdEncoding.EncodeToString([]byte("wrong_json"))
 
-		sut := bff.NewAppService(nil, nil, nil, nil, nil, nil, nil, nil, nil, nil)
+		sut := bff.NewAppService(nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil)
 
 		_, err := sut.CreateAppFromOasfSchema(context.Background(), invalidSchema)
 
@@ -495,7 +500,7 @@ func TestAppService_UpdateApp_should_succeed(t *testing.T) {
 	appRepo.EXPECT().UpdateApp(ctx, storedApp).Return(nil)
 	mockValidGetAppStatus(t, appRepo)
 	iamClient := createValidIamClientWithGettersOnly(t)
-	sut := bff.NewAppService(appRepo, nil, nil, nil, nil, iamClient, nil, nil, nil, nil)
+	sut := bff.NewAppService(appRepo, nil, nil, nil, nil, iamClient, nil, nil, nil, nil, nil)
 
 	_, err := sut.UpdateApp(ctx, app)
 
@@ -515,7 +520,7 @@ func TestAppService_GetApp_should_return_app(t *testing.T) {
 	appRepo.EXPECT().GetApp(ctx, expectedApp.ID).Return(expectedApp, nil)
 	mockValidGetAppStatus(t, appRepo)
 	iamClient := createValidIamClientWithGettersOnly(t)
-	sut := bff.NewAppService(appRepo, nil, nil, nil, nil, iamClient, nil, nil, nil, nil)
+	sut := bff.NewAppService(appRepo, nil, nil, nil, nil, iamClient, nil, nil, nil, nil, nil)
 
 	app, err := sut.GetApp(ctx, expectedApp.ID)
 
@@ -530,7 +535,7 @@ func TestAppService_GetApp_should_return_not_found(t *testing.T) {
 	invalidAppID := "INVALID_APP"
 	appRepo := appmocks.NewRepository(t)
 	appRepo.EXPECT().GetApp(ctx, invalidAppID).Return(nil, appcore.ErrAppNotFound)
-	sut := bff.NewAppService(appRepo, nil, nil, nil, nil, nil, nil, nil, nil, nil)
+	sut := bff.NewAppService(appRepo, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil)
 
 	app, err := sut.GetApp(ctx, invalidAppID)
 
@@ -544,7 +549,7 @@ func TestAppService_GetApp_should_return_err_if_id_is_empty(t *testing.T) {
 
 	ctx := context.Background()
 	emptyAppID := ""
-	sut := bff.NewAppService(nil, nil, nil, nil, nil, nil, nil, nil, nil, nil)
+	sut := bff.NewAppService(nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil)
 
 	app, err := sut.GetApp(ctx, emptyAppID)
 
@@ -565,7 +570,7 @@ func TestAppService_GetApp_should_not_return_err_when_api_key_not_found(t *testi
 	iamClient.EXPECT().
 		GetAppAPIKey(mock.Anything, mock.Anything).
 		Return(&iamtypes.APIKey{}, errors.New("error"))
-	sut := bff.NewAppService(appRepo, nil, nil, nil, nil, iamClient, nil, nil, nil, nil)
+	sut := bff.NewAppService(appRepo, nil, nil, nil, nil, iamClient, nil, nil, nil, nil, nil)
 
 	app, err := sut.GetApp(ctx, expectedApp.ID)
 
@@ -590,7 +595,7 @@ func TestAppService_ListApps_should_return_a_list_of_apps(t *testing.T) {
 		GetAllApps(ctx, mock.Anything, mock.Anything, mock.Anything, mock.Anything).
 		Return(apps, nil)
 	mockValidGetAppStatus(t, appRepo)
-	sut := bff.NewAppService(appRepo, nil, nil, nil, nil, nil, nil, nil, nil, nil)
+	sut := bff.NewAppService(appRepo, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil)
 
 	returnedApps, err := sut.ListApps(
 		ctx,
@@ -641,9 +646,11 @@ func TestAppService_DeleteApp_should_succeed(t *testing.T) {
 		mock.Anything,
 	).Return(nil)
 
-	policyRepo := policymocks.NewRepository(t)
-	policyRepo.EXPECT().DeletePoliciesByAppID(ctx, app.ID).Return(nil)
-	policyRepo.EXPECT().DeleteTasksByAppID(ctx, app.ID).Return(nil)
+	policyRepo := policymocks.NewPolicyRepository(t)
+	policyRepo.EXPECT().DeleteByAppID(ctx, app.ID).Return(nil)
+
+	taskRepo := policymocks.NewTaskRepository(t)
+	taskRepo.EXPECT().DeleteByAppID(ctx, app.ID).Return(nil)
 
 	sut := bff.NewAppService(
 		appRepo,
@@ -655,6 +662,7 @@ func TestAppService_DeleteApp_should_succeed(t *testing.T) {
 		badgeRevoker,
 		keyStore,
 		policyRepo,
+		taskRepo,
 		nil,
 	)
 
@@ -686,9 +694,11 @@ func TestAppService_DeleteApp_should_delete_app_without_client_cred_pair(t *test
 	credStore.EXPECT().Get(ctx, app.ID).Return(nil, idp.ErrCredentialNotFound)
 	credStore.EXPECT().Delete(ctx, app.ID).Return(nil)
 
-	policyRepo := policymocks.NewRepository(t)
-	policyRepo.EXPECT().DeletePoliciesByAppID(ctx, app.ID).Return(nil)
-	policyRepo.EXPECT().DeleteTasksByAppID(ctx, app.ID).Return(nil)
+	policyRepo := policymocks.NewPolicyRepository(t)
+	policyRepo.EXPECT().DeleteByAppID(ctx, app.ID).Return(nil)
+
+	taskRepo := policymocks.NewTaskRepository(t)
+	taskRepo.EXPECT().DeleteByAppID(ctx, app.ID).Return(nil)
 
 	sut := bff.NewAppService(
 		appRepo,
@@ -700,6 +710,7 @@ func TestAppService_DeleteApp_should_delete_app_without_client_cred_pair(t *test
 		nil,
 		nil,
 		policyRepo,
+		taskRepo,
 		nil,
 	)
 
@@ -725,7 +736,7 @@ func TestAppService_RefreshAppAPIKey_should_call_update_with_refreshed_api_key(t
 	iamClient := iammocks.NewClient(t)
 	iamClient.EXPECT().RefreshAppAPIKey(ctx, app.ID).Return(refreshedAPIKey, nil)
 
-	sut := bff.NewAppService(appRepo, nil, nil, nil, nil, iamClient, nil, nil, nil, nil)
+	sut := bff.NewAppService(appRepo, nil, nil, nil, nil, iamClient, nil, nil, nil, nil, nil)
 
 	returnedApp, err := sut.RefreshAppAPIKey(ctx, app.ID)
 

@@ -12,41 +12,47 @@ import (
 	"github.com/outshift/identity-service/internal/pkg/pagination"
 )
 
-type Repository interface {
+type PolicyRepository interface {
 	Create(ctx context.Context, policy *types.Policy) error
-	CreateRule(ctx context.Context, rule *types.Rule) error
-	CreateTasks(ctx context.Context, tasks ...*types.Task) error
-	UpdatePolicy(ctx context.Context, policy *types.Policy) error
-	UpdateRule(ctx context.Context, rule *types.Rule) error
-	UpdateTasks(ctx context.Context, tasks ...*types.Task) error
-	DeletePolicies(ctx context.Context, policies ...*types.Policy) error
-	DeletePoliciesByAppID(ctx context.Context, appID string) error
-	DeleteRules(ctx context.Context, rules ...*types.Rule) error
-	DeleteTasks(ctx context.Context, tasks ...*types.Task) error
-	DeleteTasksByAppID(ctx context.Context, appID string) error
-	GetPolicyByID(ctx context.Context, id string) (*types.Policy, error)
-	GetPoliciesByAppID(ctx context.Context, appID string) ([]*types.Policy, error)
-	GetRuleByID(ctx context.Context, ruleID string, policyID string) (*types.Rule, error)
-	GetTasksByAppID(ctx context.Context, appID string) ([]*types.Task, error)
-	GetTasksPerAppType(
-		ctx context.Context,
-		excludeAppIDs ...string,
-	) (map[apptypes.AppType][]*types.Task, error)
-	GetTasksByID(ctx context.Context, ids []string) ([]*types.Task, error)
-	GetAllPolicies(
+	Update(ctx context.Context, policy *types.Policy) error
+	Delete(ctx context.Context, policies ...*types.Policy) error
+	DeleteByAppID(ctx context.Context, appID string) error
+	GetByID(ctx context.Context, id string) (*types.Policy, error)
+	GetByAppID(ctx context.Context, appID string) ([]*types.Policy, error)
+	GetAll(
 		ctx context.Context,
 		paginationFilter pagination.PaginationFilter,
 		query *string,
 		appIDs []string,
 		rulesForAppIDs []string,
 	) (*pagination.Pageable[types.Policy], error)
-	GetAllRules(
+	CountAll(ctx context.Context) (int64, error)
+}
+
+type RuleRepository interface {
+	Create(ctx context.Context, rule *types.Rule) error
+	Update(ctx context.Context, rule *types.Rule) error
+	Delete(ctx context.Context, rules ...*types.Rule) error
+	GetByID(ctx context.Context, ruleID string, policyID string) (*types.Rule, error)
+	GetAll(
 		ctx context.Context,
 		policyID string,
 		paginationFilter pagination.PaginationFilter,
 		query *string,
 	) (*pagination.Pageable[types.Rule], error)
-	CountAllPolicies(ctx context.Context) (int64, error)
+}
+
+type TaskRepository interface {
+	Create(ctx context.Context, tasks ...*types.Task) error
+	Update(ctx context.Context, tasks ...*types.Task) error
+	Delete(ctx context.Context, tasks ...*types.Task) error
+	DeleteByAppID(ctx context.Context, appID string) error
+	GetByAppID(ctx context.Context, appID string) ([]*types.Task, error)
+	GetPerAppType(
+		ctx context.Context,
+		excludeAppIDs ...string,
+	) (map[apptypes.AppType][]*types.Task, error)
+	GetByID(ctx context.Context, ids []string) ([]*types.Task, error)
 }
 
 var (

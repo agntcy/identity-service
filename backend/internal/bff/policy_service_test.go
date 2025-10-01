@@ -38,10 +38,10 @@ func TestPolicyService_CreatePolicy_should_succeed(t *testing.T) {
 		GetAppsByID(ctx, []string{assignedTo}).
 		Return([]*apptypes.App{{ID: assignedTo}}, nil)
 
-	policyRepo := policymocks.NewRepository(t)
+	policyRepo := policymocks.NewPolicyRepository(t)
 	policyRepo.EXPECT().Create(ctx, mock.Anything).Return(nil)
 
-	sut := bff.NewPolicyService(appRepo, policyRepo)
+	sut := bff.NewPolicyService(appRepo, policyRepo, nil, nil)
 
 	actualPolicy, err := sut.CreatePolicy(ctx, name, description, assignedTo)
 
@@ -58,7 +58,7 @@ func TestPolicyService_CreatePolicy_should_return_err_when_name_is_empty(t *test
 
 	invalidName := ""
 
-	sut := bff.NewPolicyService(nil, nil)
+	sut := bff.NewPolicyService(nil, nil, nil, nil)
 
 	_, err := sut.CreatePolicy(context.Background(), invalidName, "", "")
 
@@ -104,7 +104,7 @@ func TestPolicyService_CreatePolicy_should_return_err_when_app_validation_fails(
 			ctx := context.Background()
 			name := "policy_name"
 			appRepo := tc.buildAppRepo(t, ctx)
-			sut := bff.NewPolicyService(appRepo, nil)
+			sut := bff.NewPolicyService(appRepo, nil, nil, nil)
 
 			_, err := sut.CreatePolicy(ctx, name, "", invalidAssignedTo)
 
@@ -127,12 +127,16 @@ func TestPolicyService_CreateRule_should_succeed(t *testing.T) {
 	taskIDs := []string{uuid.NewString(), uuid.NewString()}
 	needsApproval := true
 
-	policyRepo := policymocks.NewRepository(t)
-	policyRepo.EXPECT().GetPolicyByID(ctx, policy.ID).Return(policy, nil)
-	policyRepo.EXPECT().CreateRule(ctx, mock.Anything).Return(nil)
-	policyRepo.EXPECT().GetTasksByID(ctx, taskIDs).Return(createTasks(t, taskIDs), nil)
+	policyRepo := policymocks.NewPolicyRepository(t)
+	policyRepo.EXPECT().GetByID(ctx, policy.ID).Return(policy, nil)
 
-	sut := bff.NewPolicyService(nil, policyRepo)
+	ruleRepo := policymocks.NewRuleRepository(t)
+	ruleRepo.EXPECT().Create(ctx, mock.Anything).Return(nil)
+
+	taskRepo := policymocks.NewTaskRepository(t)
+	taskRepo.EXPECT().GetByID(ctx, taskIDs).Return(createTasks(t, taskIDs), nil)
+
+	sut := bff.NewPolicyService(nil, policyRepo, ruleRepo, taskRepo)
 
 	actualRule, err := sut.CreateRule(
 		ctx,
@@ -158,7 +162,7 @@ func TestPolicyService_CreateRule_should_return_err_when_name_is_empty(t *testin
 
 	invalidName := ""
 
-	sut := bff.NewPolicyService(nil, nil)
+	sut := bff.NewPolicyService(nil, nil, nil, nil)
 
 	_, err := sut.CreateRule(
 		context.Background(),
@@ -179,7 +183,7 @@ func TestPolicyService_CreateRule_should_return_err_when_action_is_invalid(t *te
 
 	invalidAction := policytypes.RULE_ACTION_UNSPECIFIED
 
-	sut := bff.NewPolicyService(nil, nil)
+	sut := bff.NewPolicyService(nil, nil, nil, nil)
 
 	_, err := sut.CreateRule(
 		context.Background(),
@@ -200,9 +204,9 @@ func TestPolicyService_CreateRule_should_return_err_when_policy_is_invalid(t *te
 
 	ctx := context.Background()
 	invalidPolicy := "RANDOM_INVALID_POLICY"
-	policyRepo := policymocks.NewRepository(t)
-	policyRepo.EXPECT().GetPolicyByID(ctx, invalidPolicy).Return(nil, policycore.ErrPolicyNotFound)
-	sut := bff.NewPolicyService(nil, policyRepo)
+	policyRepo := policymocks.NewPolicyRepository(t)
+	policyRepo.EXPECT().GetByID(ctx, invalidPolicy).Return(nil, policycore.ErrPolicyNotFound)
+	sut := bff.NewPolicyService(nil, policyRepo, nil, nil)
 
 	_, err := sut.CreateRule(
 		context.Background(),
@@ -224,22 +228,22 @@ func TestPolicyService_CreateRule_should_return_err_when_tasks_are_invalid(t *te
 	taskIDs := []string{uuid.NewString(), uuid.NewString()}
 
 	testCases := map[string]*struct {
-		mockGetTasksByID func(t *testing.T, repo *policymocks.Repository, ctx context.Context)
+		mockGetTasksByID func(t *testing.T, repo *policymocks.TaskRepository, ctx context.Context)
 		errMsg           string
 	}{
 		"GetTasksByID returns an error": {
-			mockGetTasksByID: func(t *testing.T, repo *policymocks.Repository, ctx context.Context) {
+			mockGetTasksByID: func(t *testing.T, repo *policymocks.TaskRepository, ctx context.Context) {
 				t.Helper()
 
-				repo.EXPECT().GetTasksByID(ctx, mock.Anything).Return(nil, errors.New("error"))
+				repo.EXPECT().GetByID(ctx, mock.Anything).Return(nil, errors.New("error"))
 			},
 			errMsg: "failed to fetch tasks",
 		},
 		"Task not found": {
-			mockGetTasksByID: func(t *testing.T, repo *policymocks.Repository, ctx context.Context) {
+			mockGetTasksByID: func(t *testing.T, repo *policymocks.TaskRepository, ctx context.Context) {
 				t.Helper()
 
-				repo.EXPECT().GetTasksByID(ctx, mock.Anything).Return([]*policytypes.Task{}, nil)
+				repo.EXPECT().GetByID(ctx, mock.Anything).Return([]*policytypes.Task{}, nil)
 			},
 			errMsg: fmt.Sprintf("Task with ID %s not found.", taskIDs[0]),
 		},
@@ -256,11 +260,13 @@ func TestPolicyService_CreateRule_should_return_err_when_tasks_are_invalid(t *te
 			policy := &policytypes.Policy{ID: uuid.NewString()}
 			needsApproval := true
 
-			policyRepo := policymocks.NewRepository(t)
-			policyRepo.EXPECT().GetPolicyByID(ctx, policy.ID).Return(policy, nil)
-			tc.mockGetTasksByID(t, policyRepo, ctx)
+			policyRepo := policymocks.NewPolicyRepository(t)
+			policyRepo.EXPECT().GetByID(ctx, policy.ID).Return(policy, nil)
 
-			sut := bff.NewPolicyService(nil, policyRepo)
+			taskRepo := policymocks.NewTaskRepository(t)
+			tc.mockGetTasksByID(t, taskRepo, ctx)
+
+			sut := bff.NewPolicyService(nil, policyRepo, nil, taskRepo)
 
 			_, err := sut.CreateRule(
 				ctx,
@@ -286,11 +292,11 @@ func TestPolicyService_DeletePolicy_should_succeed(t *testing.T) {
 	ctx := context.Background()
 	policy := &policytypes.Policy{ID: uuid.NewString()}
 
-	policyRepo := policymocks.NewRepository(t)
-	policyRepo.EXPECT().GetPolicyByID(ctx, policy.ID).Return(policy, nil)
-	policyRepo.EXPECT().DeletePolicies(ctx, policy).Return(nil)
+	policyRepo := policymocks.NewPolicyRepository(t)
+	policyRepo.EXPECT().GetByID(ctx, policy.ID).Return(policy, nil)
+	policyRepo.EXPECT().Delete(ctx, policy).Return(nil)
 
-	sut := bff.NewPolicyService(nil, policyRepo)
+	sut := bff.NewPolicyService(nil, policyRepo, nil, nil)
 
 	err := sut.DeletePolicy(ctx, policy.ID)
 
@@ -303,10 +309,10 @@ func TestPolicyService_DeletePolicy_should_return_err_when_policy_invalid(t *tes
 	ctx := context.Background()
 	invalidPolicyID := uuid.NewString()
 
-	policyRepo := policymocks.NewRepository(t)
-	policyRepo.EXPECT().GetPolicyByID(ctx, invalidPolicyID).Return(nil, policycore.ErrPolicyNotFound)
+	policyRepo := policymocks.NewPolicyRepository(t)
+	policyRepo.EXPECT().GetByID(ctx, invalidPolicyID).Return(nil, policycore.ErrPolicyNotFound)
 
-	sut := bff.NewPolicyService(nil, policyRepo)
+	sut := bff.NewPolicyService(nil, policyRepo, nil, nil)
 
 	err := sut.DeletePolicy(ctx, invalidPolicyID)
 
@@ -320,11 +326,11 @@ func TestPolicyService_DeletePolicy_should_return_err_when_deletion_fails(t *tes
 	ctx := context.Background()
 	policy := &policytypes.Policy{ID: uuid.NewString()}
 
-	policyRepo := policymocks.NewRepository(t)
-	policyRepo.EXPECT().GetPolicyByID(ctx, policy.ID).Return(policy, nil)
-	policyRepo.EXPECT().DeletePolicies(ctx, policy).Return(errors.New("failed"))
+	policyRepo := policymocks.NewPolicyRepository(t)
+	policyRepo.EXPECT().GetByID(ctx, policy.ID).Return(policy, nil)
+	policyRepo.EXPECT().Delete(ctx, policy).Return(errors.New("failed"))
 
-	sut := bff.NewPolicyService(nil, policyRepo)
+	sut := bff.NewPolicyService(nil, policyRepo, nil, nil)
 
 	err := sut.DeletePolicy(ctx, policy.ID)
 
@@ -340,11 +346,11 @@ func TestPolicyService_DeleteRule_should_succeed(t *testing.T) {
 	ctx := context.Background()
 	rule := &policytypes.Rule{ID: uuid.NewString(), PolicyID: uuid.NewString()}
 
-	policyRepo := policymocks.NewRepository(t)
-	policyRepo.EXPECT().GetRuleByID(ctx, rule.ID, rule.PolicyID).Return(rule, nil)
-	policyRepo.EXPECT().DeleteRules(ctx, rule).Return(nil)
+	ruleRepo := policymocks.NewRuleRepository(t)
+	ruleRepo.EXPECT().GetByID(ctx, rule.ID, rule.PolicyID).Return(rule, nil)
+	ruleRepo.EXPECT().Delete(ctx, rule).Return(nil)
 
-	sut := bff.NewPolicyService(nil, policyRepo)
+	sut := bff.NewPolicyService(nil, nil, ruleRepo, nil)
 
 	err := sut.DeleteRule(ctx, rule.ID, rule.PolicyID)
 
@@ -357,10 +363,10 @@ func TestPolicyService_DeleteRule_should_return_err_when_rule_is_invalid(t *test
 	ctx := context.Background()
 	invalidRuleID := uuid.NewString()
 
-	policyRepo := policymocks.NewRepository(t)
-	policyRepo.EXPECT().GetRuleByID(ctx, invalidRuleID, mock.Anything).Return(nil, policycore.ErrRuleNotFound)
+	ruleRepo := policymocks.NewRuleRepository(t)
+	ruleRepo.EXPECT().GetByID(ctx, invalidRuleID, mock.Anything).Return(nil, policycore.ErrRuleNotFound)
 
-	sut := bff.NewPolicyService(nil, policyRepo)
+	sut := bff.NewPolicyService(nil, nil, ruleRepo, nil)
 
 	err := sut.DeleteRule(ctx, invalidRuleID, uuid.NewString())
 
@@ -374,11 +380,11 @@ func TestPolicyService_DeleteRule_should_return_err_when_deletion_fails(t *testi
 	ctx := context.Background()
 	rule := &policytypes.Rule{ID: uuid.NewString(), PolicyID: uuid.NewString()}
 
-	policyRepo := policymocks.NewRepository(t)
-	policyRepo.EXPECT().GetRuleByID(ctx, rule.ID, rule.PolicyID).Return(rule, nil)
-	policyRepo.EXPECT().DeleteRules(ctx, rule).Return(errors.New("failed"))
+	ruleRepo := policymocks.NewRuleRepository(t)
+	ruleRepo.EXPECT().GetByID(ctx, rule.ID, rule.PolicyID).Return(rule, nil)
+	ruleRepo.EXPECT().Delete(ctx, rule).Return(errors.New("failed"))
 
-	sut := bff.NewPolicyService(nil, policyRepo)
+	sut := bff.NewPolicyService(nil, nil, ruleRepo, nil)
 
 	err := sut.DeleteRule(ctx, rule.ID, rule.PolicyID)
 
@@ -397,16 +403,16 @@ func TestPolicyService_UpdatePolicy_should_succeed(t *testing.T) {
 	assignedTo := "new_assigned_to"
 	policy := &policytypes.Policy{ID: uuid.NewString()}
 
-	policyRepo := policymocks.NewRepository(t)
-	policyRepo.EXPECT().GetPolicyByID(ctx, policy.ID).Return(policy, nil)
-	policyRepo.EXPECT().UpdatePolicy(ctx, policy).Return(nil)
+	policyRepo := policymocks.NewPolicyRepository(t)
+	policyRepo.EXPECT().GetByID(ctx, policy.ID).Return(policy, nil)
+	policyRepo.EXPECT().Update(ctx, policy).Return(nil)
 
 	appRepo := appmocks.NewRepository(t)
 	appRepo.EXPECT().
 		GetAppsByID(ctx, []string{assignedTo}).
 		Return([]*apptypes.App{{ID: assignedTo}}, nil)
 
-	sut := bff.NewPolicyService(appRepo, policyRepo)
+	sut := bff.NewPolicyService(appRepo, policyRepo, nil, nil)
 
 	actualPolicy, err := sut.UpdatePolicy(ctx, policy.ID, name, description, assignedTo)
 
@@ -421,7 +427,7 @@ func TestPolicyService_UpdatePolicy_should_return_err_when_name_is_empty(t *test
 	t.Parallel()
 
 	invalidName := ""
-	sut := bff.NewPolicyService(nil, nil)
+	sut := bff.NewPolicyService(nil, nil, nil, nil)
 
 	_, err := sut.UpdatePolicy(context.Background(), uuid.NewString(), invalidName, "", "")
 
@@ -435,10 +441,10 @@ func TestPolicyService_UpdatePolicy_should_return_err_when_policy_is_invalid(t *
 	ctx := context.Background()
 	invalidPolicyID := uuid.NewString()
 
-	policyRepo := policymocks.NewRepository(t)
-	policyRepo.EXPECT().GetPolicyByID(ctx, invalidPolicyID).Return(nil, policycore.ErrPolicyNotFound)
+	policyRepo := policymocks.NewPolicyRepository(t)
+	policyRepo.EXPECT().GetByID(ctx, invalidPolicyID).Return(nil, policycore.ErrPolicyNotFound)
 
-	sut := bff.NewPolicyService(nil, policyRepo)
+	sut := bff.NewPolicyService(nil, policyRepo, nil, nil)
 
 	_, err := sut.UpdatePolicy(ctx, invalidPolicyID, "name", "", "")
 
@@ -453,16 +459,16 @@ func TestPolicyService_UpdatePolicy_should_return_err_when_update_fails(t *testi
 	assignedTo := "app"
 	policy := &policytypes.Policy{ID: uuid.NewString()}
 
-	policyRepo := policymocks.NewRepository(t)
-	policyRepo.EXPECT().GetPolicyByID(ctx, policy.ID).Return(policy, nil)
-	policyRepo.EXPECT().UpdatePolicy(ctx, policy).Return(errors.New("failed"))
+	policyRepo := policymocks.NewPolicyRepository(t)
+	policyRepo.EXPECT().GetByID(ctx, policy.ID).Return(policy, nil)
+	policyRepo.EXPECT().Update(ctx, policy).Return(errors.New("failed"))
 
 	appRepo := appmocks.NewRepository(t)
 	appRepo.EXPECT().
 		GetAppsByID(ctx, []string{assignedTo}).
 		Return([]*apptypes.App{{ID: assignedTo}}, nil)
 
-	sut := bff.NewPolicyService(appRepo, policyRepo)
+	sut := bff.NewPolicyService(appRepo, policyRepo, nil, nil)
 
 	_, err := sut.UpdatePolicy(ctx, policy.ID, "name", "description", assignedTo)
 
@@ -484,12 +490,14 @@ func TestPolicyService_UpdateRule_should_succeed(t *testing.T) {
 	needsApproval := true
 	rule := &policytypes.Rule{ID: uuid.NewString(), PolicyID: policy.ID}
 
-	policyRepo := policymocks.NewRepository(t)
-	policyRepo.EXPECT().GetRuleByID(ctx, rule.ID, policy.ID).Return(rule, nil)
-	policyRepo.EXPECT().GetTasksByID(ctx, taskIDs).Return(createTasks(t, taskIDs), nil)
-	policyRepo.EXPECT().UpdateRule(ctx, mock.Anything).Return(nil)
+	ruleRepo := policymocks.NewRuleRepository(t)
+	ruleRepo.EXPECT().GetByID(ctx, rule.ID, policy.ID).Return(rule, nil)
+	ruleRepo.EXPECT().Update(ctx, mock.Anything).Return(nil)
 
-	sut := bff.NewPolicyService(nil, policyRepo)
+	taskRepo := policymocks.NewTaskRepository(t)
+	taskRepo.EXPECT().GetByID(ctx, taskIDs).Return(createTasks(t, taskIDs), nil)
+
+	sut := bff.NewPolicyService(nil, nil, ruleRepo, taskRepo)
 
 	actualRule, err := sut.UpdateRule(
 		ctx,
@@ -515,7 +523,7 @@ func TestPolicyService_UpdateRule_should_return_err_when_name_is_empty(t *testin
 	t.Parallel()
 
 	invalidName := ""
-	sut := bff.NewPolicyService(nil, nil)
+	sut := bff.NewPolicyService(nil, nil, nil, nil)
 
 	_, err := sut.UpdateRule(
 		context.Background(),
@@ -537,7 +545,7 @@ func TestPolicyService_UpdateRule_should_return_err_when_action_is_invalid(t *te
 
 	invalidAction := policytypes.RULE_ACTION_UNSPECIFIED
 
-	sut := bff.NewPolicyService(nil, nil)
+	sut := bff.NewPolicyService(nil, nil, nil, nil)
 
 	_, err := sut.UpdateRule(
 		context.Background(),
@@ -560,10 +568,10 @@ func TestPolicyService_UpdateRule_should_return_err_when_rule_is_invalid(t *test
 	ctx := context.Background()
 	invalidRuleID := uuid.NewString()
 
-	policyRepo := policymocks.NewRepository(t)
-	policyRepo.EXPECT().GetRuleByID(ctx, invalidRuleID, mock.Anything).Return(nil, policycore.ErrRuleNotFound)
+	ruleRepo := policymocks.NewRuleRepository(t)
+	ruleRepo.EXPECT().GetByID(ctx, invalidRuleID, mock.Anything).Return(nil, policycore.ErrRuleNotFound)
 
-	sut := bff.NewPolicyService(nil, policyRepo)
+	sut := bff.NewPolicyService(nil, nil, ruleRepo, nil)
 
 	_, err := sut.UpdateRule(
 		context.Background(),

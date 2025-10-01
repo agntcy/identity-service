@@ -62,7 +62,8 @@ type appService struct {
 	iamClient          iam.Client
 	badgeRevoker       badgecore.Revoker
 	keyStore           identitycore.KeyStore
-	policyRepository   policycore.Repository
+	policyRepository   policycore.PolicyRepository
+	taskRepository     policycore.TaskRepository
 	taskService        policycore.TaskService
 }
 
@@ -75,7 +76,8 @@ func NewAppService(
 	iamClient iam.Client,
 	badgeRevoker badgecore.Revoker,
 	keyStore identitycore.KeyStore,
-	policyRepository policycore.Repository,
+	policyRepository policycore.PolicyRepository,
+	taskRepository policycore.TaskRepository,
 	taskService policycore.TaskService,
 ) AppService {
 	return &appService{
@@ -88,6 +90,7 @@ func NewAppService(
 		badgeRevoker:       badgeRevoker,
 		keyStore:           keyStore,
 		policyRepository:   policyRepository,
+		taskRepository:     taskRepository,
 		taskService:        taskService,
 	}
 }
@@ -365,12 +368,12 @@ func (s *appService) DeleteApp(ctx context.Context, appID string) error {
 		return fmt.Errorf("credential store failed to delete credentials for app %s: %w", app.ID, err)
 	}
 
-	err = s.policyRepository.DeletePoliciesByAppID(ctx, app.ID)
+	err = s.policyRepository.DeleteByAppID(ctx, app.ID)
 	if err != nil {
 		return fmt.Errorf("repository failed to delete policies for app %s: %w", app.ID, err)
 	}
 
-	err = s.policyRepository.DeleteTasksByAppID(ctx, app.ID)
+	err = s.taskRepository.DeleteByAppID(ctx, app.ID)
 	if err != nil {
 		return fmt.Errorf("repository failed to delete tasks for app %s: %w", app.ID, err)
 	}
@@ -439,7 +442,7 @@ func (s *appService) GetTasksPerAppType(
 	ctx context.Context,
 	excludeAppIDs []string,
 ) (map[apptypes.AppType][]*policytypes.Task, error) {
-	tasks, err := s.policyRepository.GetTasksPerAppType(ctx, strutil.TrimSlice(excludeAppIDs)...)
+	tasks, err := s.taskRepository.GetPerAppType(ctx, strutil.TrimSlice(excludeAppIDs)...)
 	if err != nil {
 		return nil, fmt.Errorf("repository failed to fetch tasks per app type: %w", err)
 	}

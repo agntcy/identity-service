@@ -84,7 +84,7 @@ go run .
 
 ## 🏗 Project Structure
 
-```
+```text
 backend/
 ├── api/                # Protobuf definitions and generated code
 ├── cmd/                # Main applications for the project

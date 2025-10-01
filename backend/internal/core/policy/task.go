@@ -20,17 +20,17 @@ type TaskService interface {
 }
 
 type taskService struct {
-	mcpClient        mcp.DiscoveryClient
-	policyRepository Repository
+	mcpClient      mcp.DiscoveryClient
+	taskRepository TaskRepository
 }
 
 func NewTaskService(
 	mcpClient mcp.DiscoveryClient,
-	policyRepository Repository,
+	taskRepository TaskRepository,
 ) TaskService {
 	return &taskService{
-		mcpClient:        mcpClient,
-		policyRepository: policyRepository,
+		mcpClient:      mcpClient,
+		taskRepository: taskRepository,
 	}
 }
 
@@ -38,7 +38,7 @@ func (s *taskService) UpdateOrCreateForAgent(
 	ctx context.Context,
 	appID, name string,
 ) (*types.Task, error) {
-	tasks, err := s.policyRepository.GetTasksByAppID(ctx, appID)
+	tasks, err := s.taskRepository.GetByAppID(ctx, appID)
 	if err != nil {
 		return nil, fmt.Errorf("repository failed to fetch tasks for app %s: %w", appID, err)
 	}
@@ -48,7 +48,7 @@ func (s *taskService) UpdateOrCreateForAgent(
 			task.Name = fmt.Sprintf("Invoke Agent %s", name)
 		}
 
-		err = s.policyRepository.UpdateTasks(ctx, tasks...)
+		err = s.taskRepository.Update(ctx, tasks...)
 		if err != nil {
 			return nil, fmt.Errorf("repository failed to update tasks for app %s: %w", appID, err)
 		}
@@ -62,7 +62,7 @@ func (s *taskService) UpdateOrCreateForAgent(
 		AppID: appID,
 	}
 
-	err = s.policyRepository.CreateTasks(ctx, task)
+	err = s.taskRepository.Create(ctx, task)
 	if err != nil {
 		return nil, fmt.Errorf("repository failed to create tasks for app %s: %w", appID, err)
 	}
@@ -81,7 +81,7 @@ func (s *taskService) CreateForMCP(
 		return nil, fmt.Errorf("failed to unmarshal MCP schema: %w", err)
 	}
 
-	existingTasks, err := s.policyRepository.GetTasksByAppID(ctx, appID)
+	existingTasks, err := s.taskRepository.GetByAppID(ctx, appID)
 	if err != nil {
 		return nil, err
 	}
@@ -124,17 +124,17 @@ func (s *taskService) CreateForMCP(
 		}
 	}
 
-	err = s.policyRepository.CreateTasks(ctx, tasksToCreate...)
+	err = s.taskRepository.Create(ctx, tasksToCreate...)
 	if err != nil {
 		return nil, err
 	}
 
-	err = s.policyRepository.UpdateTasks(ctx, tasksToUpdate...)
+	err = s.taskRepository.Update(ctx, tasksToUpdate...)
 	if err != nil {
 		return nil, err
 	}
 
-	err = s.policyRepository.DeleteTasks(ctx, tasksToDelete...)
+	err = s.taskRepository.Delete(ctx, tasksToDelete...)
 	if err != nil {
 		return nil, err
 	}

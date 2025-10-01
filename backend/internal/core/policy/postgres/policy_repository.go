@@ -11,7 +11,6 @@ import (
 	"slices"
 	"time"
 
-	apptypes "github.com/outshift/identity-service/internal/core/app/types"
 	policycore "github.com/outshift/identity-service/internal/core/policy"
 	"github.com/outshift/identity-service/internal/core/policy/types"
 	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
@@ -23,17 +22,17 @@ import (
 	"gorm.io/gorm/clause"
 )
 
-type repository struct {
+type policyRepository struct {
 	dbContext *gorm.DB
 }
 
-func NewRepository(dbContext *gorm.DB) policycore.Repository {
-	return &repository{
+func NewPolicyRepository(dbContext *gorm.DB) policycore.PolicyRepository {
+	return &policyRepository{
 		dbContext: dbContext,
 	}
 }
 
-func (r *repository) Create(ctx context.Context, policy *types.Policy) error {
+func (r *policyRepository) Create(ctx context.Context, policy *types.Policy) error {
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
 		return identitycontext.ErrTenantNotFound
@@ -49,48 +48,7 @@ func (r *repository) Create(ctx context.Context, policy *types.Policy) error {
 	return nil
 }
 
-func (r *repository) CreateRule(ctx context.Context, rule *types.Rule) error {
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return identitycontext.ErrTenantNotFound
-	}
-
-	model := NewRuleModel(rule, tenantID)
-
-	result := r.dbContext.Create(model)
-	if result.Error != nil {
-		return fmt.Errorf("there was an error creating the rule: %w", result.Error)
-	}
-
-	return nil
-}
-
-func (r *repository) CreateTasks(ctx context.Context, tasks ...*types.Task) error {
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return identitycontext.ErrTenantNotFound
-	}
-
-	err := r.dbContext.Transaction(func(tx *gorm.DB) error {
-		for _, task := range tasks {
-			model := newTaskModel(task, tenantID)
-
-			err := tx.Create(model).Error
-			if err != nil {
-				return err
-			}
-		}
-
-		return nil
-	})
-	if err != nil {
-		return fmt.Errorf("there was an error creating the tasks: %w", err)
-	}
-
-	return nil
-}
-
-func (r *repository) UpdatePolicy(ctx context.Context, policy *types.Policy) error {
+func (r *policyRepository) Update(ctx context.Context, policy *types.Policy) error {
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
 		return identitycontext.ErrTenantNotFound
@@ -101,50 +59,7 @@ func (r *repository) UpdatePolicy(ctx context.Context, policy *types.Policy) err
 	return r.dbContext.Save(model).Error
 }
 
-func (r *repository) UpdateRule(ctx context.Context, rule *types.Rule) error {
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return identitycontext.ErrTenantNotFound
-	}
-
-	return r.dbContext.Transaction(func(tx *gorm.DB) error {
-		// We need to pass a new instance of the model for each call
-		// since .Model() modifies the passed model and removes all the tasks.
-		err := tx.Model(NewRuleModel(rule, tenantID)).Association("Tasks").Clear()
-		if err != nil {
-			return err
-		}
-
-		return tx.Save(NewRuleModel(rule, tenantID)).Error
-	})
-}
-
-func (r *repository) UpdateTasks(ctx context.Context, tasks ...*types.Task) error {
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return identitycontext.ErrTenantNotFound
-	}
-
-	err := r.dbContext.Transaction(func(tx *gorm.DB) error {
-		for _, task := range tasks {
-			model := newTaskModel(task, tenantID)
-
-			err := tx.Save(model).Error
-			if err != nil {
-				return err
-			}
-		}
-
-		return nil
-	})
-	if err != nil {
-		return fmt.Errorf("there was an error updating the tasks: %w", err)
-	}
-
-	return nil
-}
-
-func (r *repository) DeletePolicies(ctx context.Context, policies ...*types.Policy) error {
+func (r *policyRepository) Delete(ctx context.Context, policies ...*types.Policy) error {
 	tenantID, ok := identitycontext.GetTenantID(ctx)
 	if !ok {
 		return identitycontext.ErrTenantNotFound
@@ -176,75 +91,16 @@ func (r *repository) DeletePolicies(ctx context.Context, policies ...*types.Poli
 	return nil
 }
 
-func (r *repository) DeletePoliciesByAppID(ctx context.Context, appID string) error {
-	policies, err := r.GetPoliciesByAppID(ctx, appID)
+func (r *policyRepository) DeleteByAppID(ctx context.Context, appID string) error {
+	policies, err := r.GetByAppID(ctx, appID)
 	if err != nil {
 		return err
 	}
 
-	return r.DeletePolicies(ctx, policies...)
+	return r.Delete(ctx, policies...)
 }
 
-func (r *repository) DeleteRules(ctx context.Context, rules ...*types.Rule) error {
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return identitycontext.ErrTenantNotFound
-	}
-
-	err := r.dbContext.Transaction(func(tx *gorm.DB) error {
-		for _, rule := range rules {
-			model := NewRuleModel(rule, tenantID)
-
-			err := r.dbContext.Select(clause.Associations).Delete(model).Error
-			if err != nil {
-				return err
-			}
-		}
-
-		return nil
-	})
-	if err != nil {
-		return fmt.Errorf("there was an error deleting the rules: %w", err)
-	}
-
-	return nil
-}
-
-func (r *repository) DeleteTasks(ctx context.Context, tasks ...*types.Task) error {
-	tenantID, ok := identitycontext.GetTenantID(ctx)
-	if !ok {
-		return identitycontext.ErrTenantNotFound
-	}
-
-	err := r.dbContext.Transaction(func(tx *gorm.DB) error {
-		for _, task := range tasks {
-			model := newTaskModel(task, tenantID)
-
-			err := r.dbContext.Select(clause.Associations).Delete(model).Error
-			if err != nil {
-				return err
-			}
-		}
-
-		return nil
-	})
-	if err != nil {
-		return fmt.Errorf("there was an error deleting the tasks: %w", err)
-	}
-
-	return nil
-}
-
-func (r *repository) DeleteTasksByAppID(ctx context.Context, appID string) error {
-	tasks, err := r.GetTasksByAppID(ctx, appID)
-	if err != nil {
-		return err
-	}
-
-	return r.DeleteTasks(ctx, tasks...)
-}
-
-func (r *repository) GetPolicyByID(ctx context.Context, id string) (*types.Policy, error) {
+func (r *policyRepository) GetByID(ctx context.Context, id string) (*types.Policy, error) {
 	var policy Policy
 
 	err := r.dbContext.
@@ -264,7 +120,7 @@ func (r *repository) GetPolicyByID(ctx context.Context, id string) (*types.Polic
 	return policy.ToCoreType(), nil
 }
 
-func (r *repository) GetPoliciesByAppID(
+func (r *policyRepository) GetByAppID(
 	ctx context.Context,
 	appID string,
 ) ([]*types.Policy, error) {
@@ -289,101 +145,7 @@ func (r *repository) GetPoliciesByAppID(
 	}), nil
 }
 
-func (r *repository) GetRuleByID(
-	ctx context.Context,
-	ruleID, policyID string,
-) (*types.Rule, error) {
-	var rule Rule
-
-	err := r.dbContext.
-		Preload("Tasks").
-		Scopes(gormutil.BelongsToTenantForTable(ctx, "rules")).
-		Where(
-			"rules.id = ? AND rules.policy_id = ?",
-			ruleID,
-			policyID,
-		).
-		First(&rule).Error
-	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, policycore.ErrRuleNotFound
-		}
-
-		return nil, fmt.Errorf("unable to fetch rule: %w", err)
-	}
-
-	return rule.ToCoreType(), nil
-}
-
-func (r *repository) GetTasksByAppID(ctx context.Context, appID string) ([]*types.Task, error) {
-	var tasks []*Task
-
-	result := r.dbContext.
-		Scopes(gormutil.BelongsToTenant(ctx)).
-		Where("app_id = ?", appID).
-		Find(&tasks)
-	if result.Error != nil {
-		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			return nil, policycore.ErrTaskNotFound
-		}
-
-		return nil, fmt.Errorf("unable to fetch tasks by app ID: %w", result.Error)
-	}
-
-	return convertutil.ConvertSlice(tasks, func(task *Task) *types.Task {
-		return task.ToCoreType()
-	}), nil
-}
-
-func (r *repository) GetTasksPerAppType(
-	ctx context.Context,
-	excludeAppIDs ...string,
-) (map[apptypes.AppType][]*types.Task, error) {
-	var tasks []*Task
-
-	dbQuery := r.dbContext.Scopes(gormutil.BelongsToTenantForTable(ctx, "tasks"))
-
-	if len(excludeAppIDs) > 0 {
-		dbQuery = dbQuery.Where("tasks.app_id NOT IN (?)", excludeAppIDs)
-	}
-
-	result := dbQuery.Joins("App").Find(&tasks)
-	if result.Error != nil {
-		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			return nil, policycore.ErrTaskNotFound
-		}
-
-		return nil, fmt.Errorf("unable to fetch tasks per app type: %w", result.Error)
-	}
-
-	tasksPerAppType := make(map[apptypes.AppType][]*types.Task)
-	for _, task := range tasks {
-		tasksPerAppType[task.App.Type] = append(tasksPerAppType[task.App.Type], task.ToCoreType())
-	}
-
-	return tasksPerAppType, nil
-}
-
-func (r *repository) GetTasksByID(ctx context.Context, ids []string) ([]*types.Task, error) {
-	var tasks []*Task
-
-	result := r.dbContext.
-		Scopes(gormutil.BelongsToTenant(ctx)).
-		Find(&tasks, ids)
-	if result.Error != nil {
-		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			return nil, policycore.ErrTaskNotFound
-		}
-
-		return nil, fmt.Errorf("unable to fetch tasks: %w", result.Error)
-	}
-
-	return convertutil.ConvertSlice(tasks, func(task *Task) *types.Task {
-		return task.ToCoreType()
-	}), nil
-}
-
-func (r *repository) GetAllPolicies(
+func (r *policyRepository) GetAll(
 	ctx context.Context,
 	paginationFilter pagination.PaginationFilter,
 	query *string,
@@ -523,7 +285,7 @@ func (r *repository) GetAllPolicies(
 	}, nil
 }
 
-func (r *repository) GetAllRules(
+func (r *policyRepository) GetAllRules(
 	ctx context.Context,
 	policyID string,
 	paginationFilter pagination.PaginationFilter,
@@ -572,7 +334,7 @@ func (r *repository) GetAllRules(
 	}, nil
 }
 
-func (r *repository) CountAllPolicies(ctx context.Context) (int64, error) {
+func (r *policyRepository) CountAll(ctx context.Context) (int64, error) {
 	var totalPolicies int64
 
 	err := r.dbContext.
