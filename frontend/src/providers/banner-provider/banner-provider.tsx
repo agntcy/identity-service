@@ -7,7 +7,7 @@ import React, {createContext, useState, useContext, ReactNode, useCallback, useM
 import {Banner, BannerProps} from '@open-ui-kit/core';
 import {useWindowSize} from '@/hooks';
 import {docs} from '@/utils/docs';
-import { globalConfig } from '@/config/global';
+import {globalConfig} from '@/config/global';
 
 interface BannerType extends BannerProps {
   id: string;
@@ -24,21 +24,25 @@ const BannerContext = createContext<BannerContextProps | undefined>(undefined);
 
 export const BannerProvider: React.FC<{children: ReactNode}> = ({children}) => {
   const [banners, setBanners] = useState<BannerType[]>([
-    ...(globalConfig.demoBanner ? [{
-      id: 'docs-banner',
-      text: (
-        <>
-          <span className="text-[10px] lg:text-[16px]">
-            This is a reference implementation of the AGNTCY Agent Identity Service intended for testing and demonstration
-            purposes only.
-          </span>{' '}
-          <a className="underline text-[10px] lg:text-[16px]" href={docs()} target="_blank" rel="noopener noreferrer">
-            Service Documentation
-          </a>
-        </>
-      ),
-      showCloseButton: false
-    }] : [])
+    ...(globalConfig.demoBanner
+      ? [
+          {
+            id: 'docs-banner',
+            text: (
+              <>
+                <span className="text-[10px] lg:text-[16px]">
+                  This is a reference implementation of the AGNTCY Agent Identity Service intended for testing and
+                  demonstration purposes only.
+                </span>{' '}
+                <a className="underline text-[10px] lg:text-[16px]" href={docs()} target="_blank" rel="noopener noreferrer">
+                  Service Documentation
+                </a>
+              </>
+            ),
+            showCloseButton: false
+          }
+        ]
+      : [])
   ]);
 
   const {isMobile, isTablet} = useWindowSize();

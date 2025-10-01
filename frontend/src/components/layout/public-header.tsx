@@ -3,29 +3,36 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {Button, Header} from '@open-ui-kit/core';
+import {Button, Header, Typography} from '@open-ui-kit/core';
 import {useAuth} from '@/hooks';
 import {ReactNode} from 'react';
 import Logo from '@/assets/header/header.svg?react';
+import {globalConfig} from '@/config/global';
 
 export const PublicHeader = ({userSection}: {userSection?: ReactNode}) => {
   const {login, register} = useAuth();
   return (
     <Header
       logo={
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 md:gap-3">
           <div>
             <img
               src="/logo-header.svg"
               alt="logo"
-              className="h-[50px]"
+              className="h-[30px]"
               onError={(e) => {
                 const target = e.target as HTMLImageElement;
                 target.src = '/logo.svg';
               }}
             />
           </div>
-          <Logo className="w-[200px] md:w-[300px] lg:w-full" data-testid="header-logo-svg" />
+          {globalConfig.poweredBy ? (
+            <Logo className="w-[200px] md:w-[300px] lg:w-full" data-testid="header-logo-svg" />
+          ) : (
+            <Typography variant="h6" color="black">
+              Identiy Service
+            </Typography>
+          )}
         </div>
       }
       position="fixed"

@@ -19,23 +19,29 @@ const Welcome = () => {
       <div>
         <div className="flex items-center justify-center h-screen">
           <div className="space-y-4 md:space-y-6 lg:space-y-10">
-            <div className="space-y-2">
+            <div className="space-y-10">
               <div className="welcome-title mx-auto w-fit font-[400] leading-[34px] md:leading-[64px] text-[25px] md:text-[50px] lg:text-[60px]">
                 Get started with
               </div>
-              <div className="flex justify-center items-center gap-2">
+              <div className="flex justify-center items-center gap-2 md:gap-4">
                 <div>
                   <img
                     src="/logo-welcome.svg"
                     alt="logo"
-                    className="h-[50px] md:h-[80px] lg:h-[120px]"
+                    className="h-[30px] md:h-[50px] lg:h-[70px]"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.src = '/logo.svg';
                     }}
                   />
                 </div>
-                <LandingLogo className="max-w-[250px] md:max-w-[500px] lg:max-w-[914px] max-h-[54px] md:max-h-[104px] lg:max-h-full" />
+                {globalConfig.poweredBy ? (
+                  <LandingLogo className="max-w-[250px] md:max-w-[500px] lg:max-w-[914px] max-h-[54px] md:max-h-[104px] lg:max-h-full" />
+                ) : (
+                  <Typography color="white" variant="h1">
+                    <span className="text-[22px] md:text-[48px] lg:text-[58px]">Identity Service</span>
+                  </Typography>
+                )}
               </div>
             </div>
             <div className="welcome-main-card mx-auto max-w-[350px] md:max-w-[700px] lg:max-w-[914px] h-fit md:h-[350px] px-4 md:px-8 lg:px-[80px] flex flex-col justify-center items-center">
