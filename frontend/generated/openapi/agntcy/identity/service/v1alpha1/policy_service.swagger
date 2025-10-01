@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "outshift/identity/service/v1alpha1/policy_service.proto",
+    "title": "agntcy/identity/service/v1alpha1/policy_service.proto",
     "version": "version not set"
   },
   "tags": [
@@ -652,7 +652,8 @@
       "properties": {
         "id": {
           "type": "string",
-          "description": "A unique identifier for the Policy."
+          "description": "A unique identifier for the Policy.",
+          "readOnly": true
         },
         "name": {
           "type": "string",
@@ -677,22 +678,24 @@
         "createdAt": {
           "type": "string",
           "format": "date-time",
-          "title": "CreatedAt records the timestamp of when the Policy was initially created"
-        },
-        "updatedAt": {
-          "type": "string",
-          "format": "date-time",
-          "title": "UpdatedAt records the timestamp of the last update to the Policy"
+          "title": "CreatedAt records the timestamp of when the Policy was initially created",
+          "readOnly": true
         }
       },
-      "description": "Identity Service Policy."
+      "description": "Identity Service Policy.",
+      "required": [
+        "name",
+        "assignedTo",
+        "rules"
+      ]
     },
     "v1alpha1Rule": {
       "type": "object",
       "properties": {
         "id": {
           "type": "string",
-          "description": "A unique identifier for the Rule."
+          "description": "A unique identifier for the Rule.",
+          "readOnly": true
         },
         "name": {
           "type": "string",
@@ -703,7 +706,8 @@
           "description": "A human-readable description for the Rule."
         },
         "policyId": {
-          "type": "string"
+          "type": "string",
+          "readOnly": true
         },
         "tasks": {
           "type": "array",
@@ -724,15 +728,17 @@
         "createdAt": {
           "type": "string",
           "format": "date-time",
-          "title": "CreatedAt records the timestamp of when the Rule was initially created"
-        },
-        "updatedAt": {
-          "type": "string",
-          "format": "date-time",
-          "title": "UpdatedAt records the timestamp of the last update to the Rule"
+          "title": "CreatedAt records the timestamp of when the Rule was initially created",
+          "readOnly": true
         }
       },
-      "title": "Identity Service Policy Rule"
+      "title": "Identity Service Policy Rule",
+      "required": [
+        "name",
+        "tasks",
+        "action",
+        "needsApproval"
+      ]
     },
     "v1alpha1RuleAction": {
       "type": "string",
@@ -748,23 +754,28 @@
       "properties": {
         "id": {
           "type": "string",
-          "description": "A unique identifier for the Task."
+          "description": "A unique identifier for the Task.",
+          "readOnly": true
         },
         "name": {
           "type": "string",
-          "description": "A human-readable name for the Task."
+          "description": "A human-readable name for the Task.",
+          "readOnly": true
         },
         "description": {
           "type": "string",
-          "description": "A human-readable description for the Task."
+          "description": "A human-readable description for the Task.",
+          "readOnly": true
         },
         "appId": {
           "type": "string",
-          "description": "An application ID for the Task."
+          "description": "An application ID for the Task.",
+          "readOnly": true
         },
         "toolName": {
           "type": "string",
-          "description": "A tool name for the Task."
+          "description": "A tool name for the Task.",
+          "readOnly": true
         }
       },
       "title": "Identity Service Policy Task"

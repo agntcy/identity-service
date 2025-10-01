@@ -278,7 +278,7 @@ describe('agentic services mutations', () => {
 
   describe('useDeleteAgenticService', () => {
     it('calls AgenticServicesAPI.deleteApp with correct id', async () => {
-      const mockResponse = {data: {success: true} as App};
+      const mockResponse = {data: {success: true} as unknown as App};
 
       (AgenticServicesAPI.deleteApp as Mock).mockResolvedValue(mockResponse);
 
@@ -292,7 +292,7 @@ describe('agentic services mutations', () => {
     });
 
     it('calls onSuccess callback when app deletion succeeds', async () => {
-      const mockResponse = {data: {success: true} as App};
+      const mockResponse = {data: {success: true} as unknown as App};
       const onSuccess = vi.fn();
 
       (AgenticServicesAPI.deleteApp as Mock).mockResolvedValue(mockResponse);
@@ -307,7 +307,7 @@ describe('agentic services mutations', () => {
     });
 
     it('invalidates agentic services and total count queries on success', async () => {
-      const mockResponse = {data: {success: true} as App};
+      const mockResponse = {data: {success: true} as unknown as App};
 
       (AgenticServicesAPI.deleteApp as Mock).mockResolvedValue(mockResponse);
 
@@ -343,7 +343,7 @@ describe('agentic services mutations', () => {
     });
 
     it('works with default empty callbacks parameter', async () => {
-      const mockResponse = {data: {success: true} as App};
+      const mockResponse = {data: {success: true} as unknown as App};
 
       (AgenticServicesAPI.deleteApp as Mock).mockResolvedValue(mockResponse);
 
@@ -355,7 +355,7 @@ describe('agentic services mutations', () => {
     });
 
     it('works without callbacks', async () => {
-      const mockResponse = {data: {success: true} as App};
+      const mockResponse = {data: {success: true} as unknown as App};
 
       (AgenticServicesAPI.deleteApp as Mock).mockResolvedValue(mockResponse);
 

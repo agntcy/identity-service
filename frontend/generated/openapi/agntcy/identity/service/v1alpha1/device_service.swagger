@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "outshift/identity/service/v1alpha1/device_service.proto",
+    "title": "agntcy/identity/service/v1alpha1/device_service.proto",
     "version": "version not set"
   },
   "tags": [
@@ -239,7 +239,8 @@
       "properties": {
         "id": {
           "type": "string",
-          "description": "A unique identifier for the Device."
+          "description": "A unique identifier for the Device.",
+          "readOnly": true
         },
         "userId": {
           "type": "string",
@@ -256,7 +257,8 @@
         "createdAt": {
           "type": "string",
           "format": "date-time",
-          "description": "The creation time of the Device."
+          "description": "The creation time of the Device.",
+          "readOnly": true
         }
       },
       "title": "Devices used for user approval"

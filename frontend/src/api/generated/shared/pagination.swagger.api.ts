@@ -1,8 +1,3 @@
-/**
- * Copyright 2025 Cisco Systems, Inc. and its affiliates
- * SPDX-License-Identifier: Apache-2.0
- */
-
 /* eslint-disable */
 /* tslint:disable */
 // @ts-nocheck
@@ -164,7 +159,7 @@ export class HttpClient<SecurityDataType = unknown> {
 }
 
 /**
- * @title outshift/identity/service/shared/v1alpha1/pagination.proto
+ * @title agntcy/identity/service/shared/v1alpha1/pagination.proto
  * @version version not set
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {}

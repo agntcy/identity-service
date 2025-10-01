@@ -38,8 +38,7 @@ describe('AboutAgenticService', () => {
     status: V1Alpha1AppStatus.APP_STATUS_ACTIVE,
     resolverMetadataId: 'did:example:123',
     apiKey: 'test-api-key',
-    createdAt: '2023-01-01T00:00:00Z',
-    updatedAt: '2023-01-01T00:00:00Z'
+    createdAt: '2023-01-01T00:00:00Z'
   };
 
   beforeEach(() => {
@@ -137,7 +136,8 @@ describe('AboutAgenticService', () => {
   it('handles minimal app object', () => {
     const minimalApp: V1Alpha1App = {
       id: 'minimal-123',
-      name: 'Minimal Service'
+      name: 'Minimal Service',
+      type: V1Alpha1AppType.APP_TYPE_UNSPECIFIED
     };
 
     mockUseOutletContext.mockReturnValue({app: minimalApp});
@@ -170,13 +170,12 @@ describe('AboutAgenticService', () => {
     const appWithUndefinedValues: V1Alpha1App = {
       id: 'test-123',
       name: 'Test Service',
+      type: V1Alpha1AppType.APP_TYPE_UNSPECIFIED,
       description: undefined,
-      type: undefined,
       resolverMetadataId: undefined,
       apiKey: undefined,
       status: undefined,
-      createdAt: undefined,
-      updatedAt: undefined
+      createdAt: undefined
     };
 
     mockUseOutletContext.mockReturnValue({app: appWithUndefinedValues});
@@ -296,8 +295,7 @@ describe('AboutAgenticService', () => {
   it('handles app with ISO date strings', () => {
     const appWithDates: V1Alpha1App = {
       ...mockApp,
-      createdAt: '2023-12-25T10:30:00.000Z',
-      updatedAt: '2024-01-15T14:45:30.123Z'
+      createdAt: '2023-12-25T10:30:00.000Z'
     };
 
     mockUseOutletContext.mockReturnValue({app: appWithDates});
@@ -375,8 +373,10 @@ describe('AboutAgenticService', () => {
 
   it('handles app with only required fields', () => {
     const requiredFieldsOnly: V1Alpha1App = {
-      id: 'required-123'
-      // Only id provided, all other fields optional
+      id: 'required-123',
+      name: 'Required Service',
+      type: V1Alpha1AppType.APP_TYPE_UNSPECIFIED
+      // Only required fields provided, all other fields optional
     };
 
     mockUseOutletContext.mockReturnValue({app: requiredFieldsOnly});
@@ -388,8 +388,11 @@ describe('AboutAgenticService', () => {
     expect(contentComponent).toHaveAttribute('data-app', JSON.stringify(requiredFieldsOnly));
   });
 
-  it('handles app with empty object (no properties)', () => {
-    const emptyApp: V1Alpha1App = {};
+  it('handles app with minimal required properties', () => {
+    const emptyApp: V1Alpha1App = {
+      name: 'Empty Service',
+      type: V1Alpha1AppType.APP_TYPE_UNSPECIFIED
+    };
 
     mockUseOutletContext.mockReturnValue({app: emptyApp});
 

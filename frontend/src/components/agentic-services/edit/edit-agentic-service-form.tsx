@@ -98,10 +98,11 @@ export const EditAgenticServiceForm = ({app}: {app?: App}) => {
       id: app?.id ?? '',
       data: {
         name: values.name,
-        description: values.description
+        description: values.description,
+        type: app?.type ?? values.type
       }
     });
-  }, [analyticsTrack, app?.id, form, updateMutation]);
+  }, [analyticsTrack, app?.id, app?.type, form, updateMutation]);
 
   useEffect(() => {
     form.reset({

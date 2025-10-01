@@ -1,8 +1,14 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "outshift/identity/service/v1alpha1/auth.proto",
-    "version": "version not set"
+    "title": "Agent Identity Service API",
+    "description": "Agent Identity Service API provides a set of endpoints for managing identity and access control within the Agntcy ecosystem.",
+    "version": "v1alpha1",
+    "contact": {
+      "name": "Agntcy Team",
+      "url": "https://github.com/agntcy/identity-service",
+      "email": "identity@agntcy.org"
+    }
   },
   "consumes": [
     "application/json"
@@ -42,5 +48,25 @@
         }
       }
     }
-  }
+  },
+  "securityDefinitions": {
+    "AccessToken": {
+      "type": "apiKey",
+      "description": "An IAM JWT token issued to a user during an OIDC flow.",
+      "name": "Authorization",
+      "in": "header"
+    },
+    "ApiKey": {
+      "type": "apiKey",
+      "description": "An IAM Api key.",
+      "name": "x-id-api-key",
+      "in": "header"
+    }
+  },
+  "security": [
+    {
+      "AccessToken": [],
+      "ApiKey": []
+    }
+  ]
 }

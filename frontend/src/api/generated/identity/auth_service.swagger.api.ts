@@ -1,8 +1,3 @@
-/**
- * Copyright 2025 Cisco Systems, Inc. and its affiliates
- * SPDX-License-Identifier: Apache-2.0
- */
-
 /* eslint-disable */
 /* tslint:disable */
 // @ts-nocheck
@@ -178,11 +173,11 @@ export interface V1Alpha1App {
   /** A unique identifier for the App. */
   id?: string;
   /** A human-readable name for the App. */
-  name?: string;
+  name: string;
   /** A human-readable description for the App. */
   description?: string;
   /** The type of the App. */
-  type?: V1Alpha1AppType;
+  type: V1Alpha1AppType;
   /** The DID value */
   resolverMetadataId?: string;
   /** The API Key Secret for the App. */
@@ -194,11 +189,6 @@ export interface V1Alpha1App {
    * @format date-time
    */
   createdAt?: string;
-  /**
-   * UpdatedAt records the timestamp of the last update to the App
-   * @format date-time
-   */
-  updatedAt?: string;
 }
 
 export interface V1Alpha1AppInfoResponse {
@@ -218,8 +208,8 @@ export interface V1Alpha1ApproveTokenRequest {
 }
 
 export interface V1Alpha1AuthorizeRequest {
-  /** The app id for which authorization is requested. */
-  appId?: string;
+  /** The resolver metadata id for which authorization is requested. */
+  resolverMetadataId?: string;
   /** The MCP Server tool name. */
   toolName?: string;
   /**
@@ -391,7 +381,7 @@ export class HttpClient<SecurityDataType = unknown> {
 }
 
 /**
- * @title outshift/identity/service/v1alpha1/auth_service.proto
+ * @title agntcy/identity/service/v1alpha1/auth_service.proto
  * @version version not set
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {

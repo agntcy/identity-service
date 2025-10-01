@@ -24,6 +24,7 @@ import type {
   V1Alpha1GetAppsCountResponse,
   V1Alpha1Badge
 } from '@/api/generated/identity/app_service.swagger.api';
+import {V1Alpha1AppType} from '@/api/generated/identity/app_service.swagger.api';
 
 // Mock the AgenticServicesAPI
 vi.mock('@/api/services', () => ({
@@ -76,7 +77,8 @@ describe('Agentic Services Hooks', () => {
         apps: [
           {
             id: 'app-1',
-            name: 'Test App'
+            name: 'Test App',
+            type: V1Alpha1AppType.APP_TYPE_UNSPECIFIED
           } as V1Alpha1App
         ]
       };
@@ -166,7 +168,8 @@ describe('Agentic Services Hooks', () => {
     it('fetches single agentic service successfully', async () => {
       const mockData: V1Alpha1App = {
         id: 'app-1',
-        name: 'Test App'
+        name: 'Test App',
+        type: V1Alpha1AppType.APP_TYPE_UNSPECIFIED
       };
       mockedAgenticServicesAPI.getApp.mockResolvedValue(createMockAxiosResponse(mockData));
 

@@ -85,12 +85,12 @@ export const GlobalSearch = () => {
       {
         id: 'agentic-services',
         items: dataAgenticServices?.apps?.sort((a, b) => (a.name ?? '').localeCompare(b.name ?? '')) || [],
-        renderer: (item: GlobalSearchOptionType) => <ApplicationListItem app={item} />
+        renderer: (item: GlobalSearchOptionType) => <ApplicationListItem app={item as App} />
       },
       {
         id: 'policies',
         items: dataPolicies?.policies?.sort((a, b) => (a.name ?? '').localeCompare(b.name ?? '')) || [],
-        renderer: (item: GlobalSearchOptionType) => <PolicyListItem policy={item} />
+        renderer: (item: GlobalSearchOptionType) => <PolicyListItem policy={item as Policy} />
       }
     ];
   }, [dataAgenticServices?.apps, dataPolicies?.policies]);

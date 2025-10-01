@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "outshift/identity/service/v1alpha1/openapi.proto",
+    "title": "agntcy/identity/service/v1alpha1/iam.proto",
     "version": "version not set"
   },
   "consumes": [

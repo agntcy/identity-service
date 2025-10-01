@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "outshift/identity/service/v1alpha1/auth_service.proto",
+    "title": "agntcy/identity/service/v1alpha1/auth_service.proto",
     "version": "version not set"
   },
   "tags": [
@@ -210,7 +210,8 @@
       "properties": {
         "id": {
           "type": "string",
-          "description": "A unique identifier for the App."
+          "description": "A unique identifier for the App.",
+          "readOnly": true
         },
         "name": {
           "type": "string",
@@ -226,28 +227,31 @@
         },
         "resolverMetadataId": {
           "type": "string",
-          "title": "The DID value"
+          "title": "The DID value",
+          "readOnly": true
         },
         "apiKey": {
           "type": "string",
-          "description": "The API Key Secret for the App."
+          "description": "The API Key Secret for the App.",
+          "readOnly": true
         },
         "status": {
           "$ref": "#/definitions/v1alpha1AppStatus",
-          "title": "The status of the App"
+          "title": "The status of the App",
+          "readOnly": true
         },
         "createdAt": {
           "type": "string",
           "format": "date-time",
-          "title": "CreatedAt records the timestamp of when the App was initially created"
-        },
-        "updatedAt": {
-          "type": "string",
-          "format": "date-time",
-          "title": "UpdatedAt records the timestamp of the last update to the App"
+          "title": "CreatedAt records the timestamp of when the App was initially created",
+          "readOnly": true
         }
       },
-      "description": "Identity Service App."
+      "description": "Identity Service App.",
+      "required": [
+        "name",
+        "type"
+      ]
     },
     "v1alpha1AppInfoResponse": {
       "type": "object",
@@ -305,9 +309,9 @@
     "v1alpha1AuthorizeRequest": {
       "type": "object",
       "properties": {
-        "appId": {
+        "resolverMetadataId": {
           "type": "string",
-          "description": "The app id for which authorization is requested."
+          "description": "The resolver metadata id for which authorization is requested."
         },
         "toolName": {
           "type": "string",

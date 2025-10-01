@@ -309,7 +309,7 @@ describe('AddEditRule', () => {
     });
 
     it('handles missing tasks in rule data', () => {
-      const ruleWithoutTasks = {...mockRule, tasks: undefined};
+      const ruleWithoutTasks = {...mockRule, tasks: []};
       render(<AddEditRule open={true} policy={mockPolicy} rule={ruleWithoutTasks} mode="edit" />);
 
       expect(mockForm.reset).toHaveBeenCalledWith(

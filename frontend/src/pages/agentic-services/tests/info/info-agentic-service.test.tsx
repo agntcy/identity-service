@@ -207,8 +207,7 @@ describe('InfoAgenticService', () => {
     status: V1Alpha1AppStatus.APP_STATUS_ACTIVE,
     resolverMetadataId: 'did:example:123',
     apiKey: 'test-api-key',
-    createdAt: '2023-01-01T00:00:00Z',
-    updatedAt: '2023-01-01T00:00:00Z'
+    createdAt: '2023-01-01T00:00:00Z'
   };
 
   beforeEach(() => {
