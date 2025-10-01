@@ -30,7 +30,7 @@ export const PublicHeader = ({userSection}: {userSection?: ReactNode}) => {
             <Logo className="w-[200px] md:w-[300px] lg:w-full" data-testid="header-logo-svg" />
           ) : (
             <Typography variant="h6" color="black">
-              Identiy Service
+              Identity Service
             </Typography>
           )}
         </div>
