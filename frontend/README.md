@@ -269,7 +269,7 @@ yarn generate-pwa-assets  # Generate PWA assets
 
 ## 🏗 Project Structure
 
-```
+```text
 frontend/
 ├── public/           # Static assets
 ├── src/
@@ -330,7 +330,7 @@ yarn test:ui
 
 Tests should be placed alongside components or in dedicated test directories:
 
-```
+```text
 src/
 ├── components/
 │   ├── Button/

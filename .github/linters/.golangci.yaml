@@ -101,7 +101,7 @@ linters:
       excludes:
         - G115
     interfacebloat:
-      max: 20
+      max: 11
     nestif:
       min-complexity: 10
     nolintlint:

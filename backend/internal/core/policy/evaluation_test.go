@@ -40,8 +40,8 @@ func TestEvaluation_Evaluate_should_pass(t *testing.T) {
 		},
 	}
 
-	policyRepo := policymocks.NewRepository(t)
-	policyRepo.EXPECT().GetPoliciesByAppID(ctx, callingAppID).Return(policies, nil)
+	policyRepo := policymocks.NewPolicyRepository(t)
+	policyRepo.EXPECT().GetByAppID(ctx, callingAppID).Return(policies, nil)
 
 	sut := policycore.NewEvaluator(policyRepo)
 
@@ -61,8 +61,8 @@ func TestEvaluation_Evaluate_should_not_pass(t *testing.T) {
 	toolName := ""
 	emptyPolicies := []*types.Policy{}
 
-	policyRepo := policymocks.NewRepository(t)
-	policyRepo.EXPECT().GetPoliciesByAppID(ctx, callingAppID).Return(emptyPolicies, nil)
+	policyRepo := policymocks.NewPolicyRepository(t)
+	policyRepo.EXPECT().GetByAppID(ctx, callingAppID).Return(emptyPolicies, nil)
 
 	sut := policycore.NewEvaluator(policyRepo)
 

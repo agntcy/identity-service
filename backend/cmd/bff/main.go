@@ -271,7 +271,9 @@ func initializeServices(
 	badgeRepository := badgepg.NewRepository(dbContext.Client())
 	deviceRepository := devicepg.NewRepository(dbContext.Client())
 	authRepository := authpg.NewRepository(dbContext.Client(), crypter)
-	policyRepository := policypg.NewRepository(dbContext.Client())
+	policyRepository := policypg.NewPolicyRepository(dbContext.Client())
+	ruleRepository := policypg.NewRuleRepository(dbContext.Client())
+	taskRepository := policypg.NewTaskRepository(dbContext.Client())
 
 	// Get the token depending on the environment
 	token := ""
@@ -346,7 +348,7 @@ func initializeServices(
 		oidcAuthenticator,
 		config.UniqueIssuerPerTenant,
 	)
-	taskService := policycore.NewTaskService(mcpClient, policyRepository)
+	taskService := policycore.NewTaskService(mcpClient, taskRepository)
 
 	badgeRevoker := badgecore.NewRevoker(badgeRepository, identityService)
 
@@ -363,6 +365,7 @@ func initializeServices(
 		badgeRevoker,
 		keyStore,
 		policyRepository,
+		taskRepository,
 		taskService,
 	)
 	issuerSrv := settingscore.NewIssuerService(
@@ -404,7 +407,12 @@ func initializeServices(
 		settingsRepository,
 		keyStore,
 	)
-	policySrv := bff.NewPolicyService(appRepository, policyRepository)
+	policySrv := bff.NewPolicyService(
+		appRepository,
+		policyRepository,
+		ruleRepository,
+		taskRepository,
+	)
 	deviceSrv := bff.NewDeviceService(
 		deviceRepository,
 		notificationSrv,

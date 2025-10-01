@@ -23,10 +23,10 @@ type Evaluator interface {
 }
 
 type evaluator struct {
-	policyRepository Repository
+	policyRepository PolicyRepository
 }
 
-func NewEvaluator(policyRepository Repository) Evaluator {
+func NewEvaluator(policyRepository PolicyRepository) Evaluator {
 	return &evaluator{
 		policyRepository: policyRepository,
 	}
@@ -45,7 +45,7 @@ func (e *evaluator) Evaluate(
 	log.FromContext(ctx).Debug("Evaluating policies for app: ", calledApp.ID,
 		", calling app ID: ", callingAppID, ", tool name: ", toolName)
 
-	policies, err := e.policyRepository.GetPoliciesByAppID(ctx, callingAppID)
+	policies, err := e.policyRepository.GetByAppID(ctx, callingAppID)
 	if err != nil {
 		return nil, fmt.Errorf("repository failed to fetch policies for app %s: %w", callingAppID, err)
 	}
