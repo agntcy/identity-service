@@ -52,7 +52,7 @@ Configure the following environment variables in your `.env` file:
 > **📝 NOTE**
 > For AWS Secrets Manager, make sure you setup the variables below:
 
-    - `AWS_REGION` - AWS region for Secrets Manager
+- `AWS_REGION` - AWS region for Secrets Manager
 
 #### Identity Node Configuration
 
