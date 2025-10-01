@@ -46,19 +46,25 @@ export const Header = () => {
       <SparkHeader
         logo={
           <Link to={PATHS.dashboard}>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 md:gap-3">
               <div>
                 <img
                   src="/logo-header.svg"
                   alt="logo"
-                  className="h-[50px]"
+                  className="h-[25px]"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     target.src = '/logo.svg';
                   }}
                 />
               </div>
-              <Logo className="w-[200px] md:w-[300px] lg:w-full" />
+              {globalConfig.poweredBy ? (
+                <Logo className="w-[200px] md:w-[300px] lg:w-full" data-testid="header-logo-svg" />
+              ) : (
+                <Typography variant="h6" color="black">
+                  Identiy Service
+                </Typography>
+              )}
             </div>
           </Link>
         }

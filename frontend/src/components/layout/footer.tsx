@@ -17,7 +17,7 @@ export const Footer = () => {
       <SparkFooter
         productNode={
           <div className="flex items-center gap-2 md:gap-4">
-            <FooterLogo className="w-[90px] lg:w-fit" />
+            {globalConfig.poweredBy && <FooterLogo className="w-[90px] lg:w-fit" />}
             <Link to={globalConfig.company.url} target="_blank" rel="noopener noreferrer" style={{textDecoration: 'none'}}>
               <Typography variant="caption" sx={(theme) => ({color: theme.palette.vars.baseTextDefault})}>
                 <span className="text-[11px] lg:text-[12px]">

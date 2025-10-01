@@ -5,7 +5,7 @@
 
 export const globalConfig = {
   pwa: {
-    name: 'Agent Identity Service',
+    name: 'AGNTCY Identity Service',
     shortName: 'Identity Service',
     description: 'A secure and efficient identity management service for agents.',
     themeColor: '#eff3fc',
@@ -21,7 +21,8 @@ export const globalConfig = {
     url: 'https://example.com/',
     gitHub: 'https://github.com/your-org/identity-service'
   },
-  title: 'Agent Identity Service',
+  title: 'AGNTCY Identity Service',
   description: 'A secure and efficient identity management service for agents.',
-  demoBanner: false
+  demoBanner: false,
+  poweredBy: false
 };
