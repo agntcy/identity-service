@@ -1,0 +1,79 @@
+---
+title: auth_service.proto
+hide_title: true
+---
+
+import { ProtoMessage, ProtoServiceMethod, ProtoEnum } from '@theme/ProtoFile';
+
+# `auth_service.proto`
+_**path** agntcy/identity/service/v1alpha1/auth_service.proto_
+
+_**package** agntcy.identity.service.v1alpha1_
+
+
+
+---
+
+## Messages
+
+
+### `AppInfoResponse`
+<ProtoMessage key={0} message={{"name":"AppInfoResponse","longName":"AppInfoResponse","fullName":"agntcy.identity.service.v1alpha1.AppInfoResponse","description":"","hasExtensions":false,"hasFields":true,"hasOneofs":false,"extensions":[],"fields":[{"name":"app","description":"The App information.","label":"","type":"App","longType":"App","fullType":"agntcy.identity.service.v1alpha1.App","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":"","typeLink":"/protodocs/agntcy/identity/service/v1alpha1/app.proto#app"}]}} />
+
+
+### `ApproveTokenRequest`
+<ProtoMessage key={1} message={{"name":"ApproveTokenRequest","longName":"ApproveTokenRequest","fullName":"agntcy.identity.service.v1alpha1.ApproveTokenRequest","description":"","hasExtensions":false,"hasFields":true,"hasOneofs":false,"extensions":[],"fields":[{"name":"device_id","description":"The device id used to handle the approval requestion","label":"","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":""},{"name":"session_id","description":"The session id related to the token that needs to be approved","label":"","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":""},{"name":"otp","description":"The OTP sent to the device related to the request","label":"","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":""},{"name":"approve","description":"The action made by the user (true: allow the token, false: deny the token)","label":"","type":"bool","longType":"bool","fullType":"bool","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":""}]}} />
+
+
+### `AuthorizeRequest`
+<ProtoMessage key={2} message={{"name":"AuthorizeRequest","longName":"AuthorizeRequest","fullName":"agntcy.identity.service.v1alpha1.AuthorizeRequest","description":"","hasExtensions":false,"hasFields":true,"hasOneofs":true,"extensions":[],"fields":[{"name":"resolver_metadata_id","description":"The resolver metadata id for which authorization is requested.","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_resolver_metadata_id","defaultValue":""},{"name":"tool_name","description":"The MCP Server tool name.","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_tool_name","defaultValue":""},{"name":"user_token","description":"The User context in the form of an id or access token.\nMandatory for User Approval Flows.","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_user_token","defaultValue":""}]}} />
+
+
+### `AuthorizeResponse`
+<ProtoMessage key={3} message={{"name":"AuthorizeResponse","longName":"AuthorizeResponse","fullName":"agntcy.identity.service.v1alpha1.AuthorizeResponse","description":"","hasExtensions":false,"hasFields":true,"hasOneofs":false,"extensions":[],"fields":[{"name":"authorization_code","description":"If authorization is successful, return a code to be used for\nthe token endpoint.","label":"","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":""}]}} />
+
+
+### `ExtAuthzRequest`
+<ProtoMessage key={4} message={{"name":"ExtAuthzRequest","longName":"ExtAuthzRequest","fullName":"agntcy.identity.service.v1alpha1.ExtAuthzRequest","description":"","hasExtensions":false,"hasFields":true,"hasOneofs":true,"extensions":[],"fields":[{"name":"access_token","description":"The access token to be authorized.","label":"","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":""},{"name":"tool_name","description":"The tool name that will be invoked","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_tool_name","defaultValue":""}]}} />
+
+
+### `TokenRequest`
+<ProtoMessage key={5} message={{"name":"TokenRequest","longName":"TokenRequest","fullName":"agntcy.identity.service.v1alpha1.TokenRequest","description":"","hasExtensions":false,"hasFields":true,"hasOneofs":false,"extensions":[],"fields":[{"name":"authorization_code","description":"Pass the code received from the authorization endpoint.","label":"","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":""}]}} />
+
+
+### `TokenResponse`
+<ProtoMessage key={6} message={{"name":"TokenResponse","longName":"TokenResponse","fullName":"agntcy.identity.service.v1alpha1.TokenResponse","description":"","hasExtensions":false,"hasFields":true,"hasOneofs":false,"extensions":[],"fields":[{"name":"access_token","description":"The access token issued to the Agent or MCP Server.","label":"","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":""}]}} />
+
+---
+## Services
+
+
+### `AuthService`
+
+AuthService manages auth.
+
+
+#### `AppInfo`
+<ProtoServiceMethod key={'AppInfo-0'} method={{"name":"AppInfo","description":"App info endpoint","requestType":"Empty","requestLongType":".google.protobuf.Empty","requestFullType":"google.protobuf.Empty","requestStreaming":false,"responseType":"AppInfoResponse","responseLongType":"AppInfoResponse","responseFullType":"agntcy.identity.service.v1alpha1.AppInfoResponse","responseStreaming":false,"options":{"google.api.http":{"rules":[{"method":"GET","pattern":"/v1alpha1/auth/app_info"}]}},"responseTypeLink":"/protodocs/agntcy/identity/service/v1alpha1/auth_service.proto#appinforesponse"}} />
+
+
+#### `Authorize`
+<ProtoServiceMethod key={'Authorize-1'} method={{"name":"Authorize","description":"Authorize a request from an Agent or MCP Server","requestType":"AuthorizeRequest","requestLongType":"AuthorizeRequest","requestFullType":"agntcy.identity.service.v1alpha1.AuthorizeRequest","requestStreaming":false,"responseType":"AuthorizeResponse","responseLongType":"AuthorizeResponse","responseFullType":"agntcy.identity.service.v1alpha1.AuthorizeResponse","responseStreaming":false,"options":{"google.api.http":{"rules":[{"method":"POST","pattern":"/v1alpha1/auth/authorize","body":"*"}]}},"requestTypeLink":"/protodocs/agntcy/identity/service/v1alpha1/auth_service.proto#authorizerequest","responseTypeLink":"/protodocs/agntcy/identity/service/v1alpha1/auth_service.proto#authorizeresponse"}} />
+
+
+#### `Token`
+<ProtoServiceMethod key={'Token-2'} method={{"name":"Token","description":"Request token for an Agent or MCP Server","requestType":"TokenRequest","requestLongType":"TokenRequest","requestFullType":"agntcy.identity.service.v1alpha1.TokenRequest","requestStreaming":false,"responseType":"TokenResponse","responseLongType":"TokenResponse","responseFullType":"agntcy.identity.service.v1alpha1.TokenResponse","responseStreaming":false,"options":{"google.api.http":{"rules":[{"method":"POST","pattern":"/v1alpha1/auth/token","body":"*"}]}},"requestTypeLink":"/protodocs/agntcy/identity/service/v1alpha1/auth_service.proto#tokenrequest","responseTypeLink":"/protodocs/agntcy/identity/service/v1alpha1/auth_service.proto#tokenresponse"}} />
+
+
+#### `ExtAuthz`
+<ProtoServiceMethod key={'ExtAuthz-3'} method={{"name":"ExtAuthz","description":"Handle external authorization requests","requestType":"ExtAuthzRequest","requestLongType":"ExtAuthzRequest","requestFullType":"agntcy.identity.service.v1alpha1.ExtAuthzRequest","requestStreaming":false,"responseType":"Empty","responseLongType":".google.protobuf.Empty","responseFullType":"google.protobuf.Empty","responseStreaming":false,"options":{"google.api.http":{"rules":[{"method":"POST","pattern":"/v1alpha1/auth/ext_authz","body":"*"}]}},"requestTypeLink":"/protodocs/agntcy/identity/service/v1alpha1/auth_service.proto#extauthzrequest"}} />
+
+
+#### `ApproveToken`
+<ProtoServiceMethod key={'ApproveToken-4'} method={{"name":"ApproveToken","description":"Handle manual approval of external authorization requets","requestType":"ApproveTokenRequest","requestLongType":"ApproveTokenRequest","requestFullType":"agntcy.identity.service.v1alpha1.ApproveTokenRequest","requestStreaming":false,"responseType":"Empty","responseLongType":".google.protobuf.Empty","responseFullType":"google.protobuf.Empty","responseStreaming":false,"options":{"google.api.http":{"rules":[{"method":"POST","pattern":"/v1alpha1/auth/approve_token","body":"*"}]}},"requestTypeLink":"/protodocs/agntcy/identity/service/v1alpha1/auth_service.proto#approvetokenrequest"}} />
+
+
+---
+
+
+  

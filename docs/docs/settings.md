@@ -5,7 +5,7 @@ title: Settings
 
 # Settings
 
-Welcome to the "Settings" section of the Outshift Agent Identity Service.
+Welcome to the "Settings" section of the Agntcy Agent Identity Service.
 This section provides a comprehensive guide to managing critical configurations, including API Keys, Devices and Organizations & Users.
 This documentation will help you navigate the settings interface and utilize its functionalities effectively.
 

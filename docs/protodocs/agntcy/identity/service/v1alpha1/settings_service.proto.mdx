@@ -1,0 +1,55 @@
+---
+title: settings_service.proto
+hide_title: true
+---
+
+import { ProtoMessage, ProtoServiceMethod, ProtoEnum } from '@theme/ProtoFile';
+
+# `settings_service.proto`
+_**path** agntcy/identity/service/v1alpha1/settings_service.proto_
+
+_**package** agntcy.identity.service.v1alpha1_
+
+
+
+---
+
+## Messages
+
+
+### `GetSettingsRequest`
+<ProtoMessage key={0} message={{"name":"GetSettingsRequest","longName":"GetSettingsRequest","fullName":"agntcy.identity.service.v1alpha1.GetSettingsRequest","description":"Empty request for getting settings.","hasExtensions":false,"hasFields":false,"hasOneofs":false,"extensions":[],"fields":[]}} />
+
+
+### `SetApiKeyRequest`
+<ProtoMessage key={1} message={{"name":"SetApiKeyRequest","longName":"SetApiKeyRequest","fullName":"agntcy.identity.service.v1alpha1.SetApiKeyRequest","description":"Empty request for setting up API Key.","hasExtensions":false,"hasFields":false,"hasOneofs":false,"extensions":[],"fields":[]}} />
+
+
+### `SetIssuerRequest`
+<ProtoMessage key={2} message={{"name":"SetIssuerRequest","longName":"SetIssuerRequest","fullName":"agntcy.identity.service.v1alpha1.SetIssuerRequest","description":"","hasExtensions":false,"hasFields":true,"hasOneofs":false,"extensions":[],"fields":[{"name":"issuer_settings","description":"The Issuer Settings to set up.","label":"","type":"IssuerSettings","longType":"IssuerSettings","fullType":"agntcy.identity.service.v1alpha1.IssuerSettings","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":"","typeLink":"/protodocs/agntcy/identity/service/v1alpha1/settings.proto#issuersettings"}]}} />
+
+---
+## Services
+
+
+### `SettingsService`
+
+SettingsService manages settings.
+
+
+#### `GetSettings`
+<ProtoServiceMethod key={'GetSettings-0'} method={{"name":"GetSettings","description":"Get Settings","requestType":"GetSettingsRequest","requestLongType":"GetSettingsRequest","requestFullType":"agntcy.identity.service.v1alpha1.GetSettingsRequest","requestStreaming":false,"responseType":"Settings","responseLongType":"Settings","responseFullType":"agntcy.identity.service.v1alpha1.Settings","responseStreaming":false,"options":{"google.api.http":{"rules":[{"method":"GET","pattern":"/v1alpha1/settings"}]}},"requestTypeLink":"/protodocs/agntcy/identity/service/v1alpha1/settings_service.proto#getsettingsrequest","responseTypeLink":"/protodocs/agntcy/identity/service/v1alpha1/settings.proto#settings"}} />
+
+
+#### `SetApiKey`
+<ProtoServiceMethod key={'SetApiKey-1'} method={{"name":"SetApiKey","description":"Set up API Key","requestType":"SetApiKeyRequest","requestLongType":"SetApiKeyRequest","requestFullType":"agntcy.identity.service.v1alpha1.SetApiKeyRequest","requestStreaming":false,"responseType":"ApiKey","responseLongType":"ApiKey","responseFullType":"agntcy.identity.service.v1alpha1.ApiKey","responseStreaming":false,"options":{"google.api.http":{"rules":[{"method":"POST","pattern":"/v1alpha1/settings/api-key"}]}},"requestTypeLink":"/protodocs/agntcy/identity/service/v1alpha1/settings_service.proto#setapikeyrequest","responseTypeLink":"/protodocs/agntcy/identity/service/v1alpha1/settings.proto#apikey"}} />
+
+
+#### `SetIssuer`
+<ProtoServiceMethod key={'SetIssuer-2'} method={{"name":"SetIssuer","description":"Set up Issuer","requestType":"SetIssuerRequest","requestLongType":"SetIssuerRequest","requestFullType":"agntcy.identity.service.v1alpha1.SetIssuerRequest","requestStreaming":false,"responseType":"IssuerSettings","responseLongType":"IssuerSettings","responseFullType":"agntcy.identity.service.v1alpha1.IssuerSettings","responseStreaming":false,"options":{"google.api.http":{"rules":[{"method":"POST","pattern":"/v1alpha1/settings/issuer","body":"*"}]}},"requestTypeLink":"/protodocs/agntcy/identity/service/v1alpha1/settings_service.proto#setissuerrequest","responseTypeLink":"/protodocs/agntcy/identity/service/v1alpha1/settings.proto#issuersettings"}} />
+
+
+---
+
+
+  

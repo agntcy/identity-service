@@ -116,13 +116,13 @@ const config: Config = {
           label: 'Docs',
         },
         {
-          to: 'protodocs/outshift/identity/service/v1alpha1/app.proto',
+          to: 'protodocs/agntcy/identity/service/v1alpha1/app.proto',
           activeBasePath: 'protodocs',
           label: 'Protodocs',
           position: 'left',
         },
         {
-          href: 'https://github.com/outshift-open/identity-service',
+          href: 'https://github.com/agntcy/identity-service',
           label: 'GitHub',
           position: 'right',
         },
@@ -147,7 +147,7 @@ const config: Config = {
             },
             {
               label: 'Agent Identity Service',
-              href: 'https://github.com/outshift-open/identity-service',
+              href: 'https://github.com/agntcy/identity-service',
             },
           ],
         },

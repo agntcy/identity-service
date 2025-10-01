@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # Overview
 
-Welcome to the comprehensive documentation for **Outshift Agent Identity Service** (hereafter referred to as "Agent Identity Service"), a foundational service for robust digital identity management. This section provides a high-level overview of Agent Identity Service's purpose, key functionalities, and how you can begin leveraging its capabilities.
+Welcome to the comprehensive documentation for **Agntcy Agent Identity Service** (hereafter referred to as "Agent Identity Service"), a foundational service for robust digital identity management. This section provides a high-level overview of Agent Identity Service's purpose, key functionalities, and how you can begin leveraging its capabilities.
 
 ![Welcome](/img/overview.png)
 

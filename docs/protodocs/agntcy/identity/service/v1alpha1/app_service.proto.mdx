@@ -1,0 +1,139 @@
+---
+title: app_service.proto
+hide_title: true
+---
+
+import { ProtoMessage, ProtoServiceMethod, ProtoEnum } from '@theme/ProtoFile';
+
+# `app_service.proto`
+_**path** agntcy/identity/service/v1alpha1/app_service.proto_
+
+_**package** agntcy.identity.service.v1alpha1_
+
+
+
+---
+
+## Messages
+
+
+### `AppTypeCountEntry`
+<ProtoMessage key={0} message={{"name":"AppTypeCountEntry","longName":"AppTypeCountEntry","fullName":"agntcy.identity.service.v1alpha1.AppTypeCountEntry","description":"","hasExtensions":false,"hasFields":true,"hasOneofs":false,"extensions":[],"fields":[{"name":"key","description":"The type of the App","label":"","type":"AppType","longType":"AppType","fullType":"agntcy.identity.service.v1alpha1.AppType","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":"","typeLink":"/protodocs/agntcy/identity/service/v1alpha1/app.proto#apptype"},{"name":"value","description":"The count of apps of the given type","label":"","type":"int64","longType":"int64","fullType":"int64","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":""}]}} />
+
+
+### `CreateAppRequest`
+<ProtoMessage key={1} message={{"name":"CreateAppRequest","longName":"CreateAppRequest","fullName":"agntcy.identity.service.v1alpha1.CreateAppRequest","description":"","hasExtensions":false,"hasFields":true,"hasOneofs":false,"extensions":[],"fields":[{"name":"app","description":"The App to create.","label":"","type":"App","longType":"App","fullType":"agntcy.identity.service.v1alpha1.App","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":"","typeLink":"/protodocs/agntcy/identity/service/v1alpha1/app.proto#app"}]}} />
+
+
+### `CreateOasfAppRequest`
+<ProtoMessage key={2} message={{"name":"CreateOasfAppRequest","longName":"CreateOasfAppRequest","fullName":"agntcy.identity.service.v1alpha1.CreateOasfAppRequest","description":"","hasExtensions":false,"hasFields":true,"hasOneofs":false,"extensions":[],"fields":[{"name":"schema_base64","description":"The OASF schema in a base64 encoded format","label":"","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":""}]}} />
+
+
+### `CreateOasfAppResponse`
+<ProtoMessage key={3} message={{"name":"CreateOasfAppResponse","longName":"CreateOasfAppResponse","fullName":"agntcy.identity.service.v1alpha1.CreateOasfAppResponse","description":"","hasExtensions":false,"hasFields":true,"hasOneofs":false,"extensions":[],"fields":[{"name":"app","description":"The created OASF App.","label":"","type":"App","longType":"App","fullType":"agntcy.identity.service.v1alpha1.App","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":"","typeLink":"/protodocs/agntcy/identity/service/v1alpha1/app.proto#app"},{"name":"badge","description":"The issued badge for the OASF App.","label":"","type":"Badge","longType":"Badge","fullType":"agntcy.identity.service.v1alpha1.Badge","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":"","typeLink":"/protodocs/agntcy/identity/service/v1alpha1/badge.proto#badge"}]}} />
+
+
+### `DeleteAppRequest`
+<ProtoMessage key={4} message={{"name":"DeleteAppRequest","longName":"DeleteAppRequest","fullName":"agntcy.identity.service.v1alpha1.DeleteAppRequest","description":"","hasExtensions":false,"hasFields":true,"hasOneofs":false,"extensions":[],"fields":[{"name":"app_id","description":"App Id to delete.","label":"","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":""}]}} />
+
+
+### `GetAppRequest`
+<ProtoMessage key={5} message={{"name":"GetAppRequest","longName":"GetAppRequest","fullName":"agntcy.identity.service.v1alpha1.GetAppRequest","description":"","hasExtensions":false,"hasFields":true,"hasOneofs":false,"extensions":[],"fields":[{"name":"app_id","description":"App Id to get.","label":"","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":""}]}} />
+
+
+### `GetAppsCountRequest`
+<ProtoMessage key={6} message={{"name":"GetAppsCountRequest","longName":"GetAppsCountRequest","fullName":"agntcy.identity.service.v1alpha1.GetAppsCountRequest","description":"","hasExtensions":false,"hasFields":false,"hasOneofs":false,"extensions":[],"fields":[]}} />
+
+
+### `GetAppsCountResponse`
+<ProtoMessage key={7} message={{"name":"GetAppsCountResponse","longName":"GetAppsCountResponse","fullName":"agntcy.identity.service.v1alpha1.GetAppsCountResponse","description":"","hasExtensions":false,"hasFields":true,"hasOneofs":false,"extensions":[],"fields":[{"name":"counts","description":"The apps count per app type","label":"repeated","type":"AppTypeCountEntry","longType":"AppTypeCountEntry","fullType":"agntcy.identity.service.v1alpha1.AppTypeCountEntry","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":"","typeLink":"/protodocs/agntcy/identity/service/v1alpha1/app_service.proto#apptypecountentry"},{"name":"total","description":"The total count","label":"","type":"int64","longType":"int64","fullType":"int64","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":""}]}} />
+
+
+### `GetBadgeRequest`
+<ProtoMessage key={8} message={{"name":"GetBadgeRequest","longName":"GetBadgeRequest","fullName":"agntcy.identity.service.v1alpha1.GetBadgeRequest","description":"","hasExtensions":false,"hasFields":true,"hasOneofs":false,"extensions":[],"fields":[{"name":"app_id","description":"App Id or Resolver Metadata ID to get the badge for.","label":"","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":""}]}} />
+
+
+### `GetTasksRequest`
+<ProtoMessage key={9} message={{"name":"GetTasksRequest","longName":"GetTasksRequest","fullName":"agntcy.identity.service.v1alpha1.GetTasksRequest","description":"","hasExtensions":false,"hasFields":true,"hasOneofs":false,"extensions":[],"fields":[{"name":"exclude_app_ids","description":"A filter to exclude fetching tasks for the specified app ids","label":"repeated","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":""}]}} />
+
+
+### `GetTasksResponse`
+<ProtoMessage key={10} message={{"name":"GetTasksResponse","longName":"GetTasksResponse","fullName":"agntcy.identity.service.v1alpha1.GetTasksResponse","description":"","hasExtensions":false,"hasFields":true,"hasOneofs":false,"extensions":[],"fields":[{"name":"result","description":"The list of tasks per Agentic Service type","label":"repeated","type":"ResultEntry","longType":"GetTasksResponse.ResultEntry","fullType":"agntcy.identity.service.v1alpha1.GetTasksResponse.ResultEntry","ismap":true,"isoneof":false,"oneofdecl":"","defaultValue":"","typeLink":"/protodocs/agntcy/identity/service/v1alpha1/app_service.proto#gettasksresponseresultentry"}]}} />
+
+
+### `GetTasksResponse.ResultEntry`
+<ProtoMessage key={11} message={{"name":"ResultEntry","longName":"GetTasksResponse.ResultEntry","fullName":"agntcy.identity.service.v1alpha1.GetTasksResponse.ResultEntry","description":"","hasExtensions":false,"hasFields":true,"hasOneofs":false,"extensions":[],"fields":[{"name":"key","description":"","label":"","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":""},{"name":"value","description":"","label":"","type":"TaskList","longType":"GetTasksResponse.TaskList","fullType":"agntcy.identity.service.v1alpha1.GetTasksResponse.TaskList","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":"","typeLink":"/protodocs/agntcy/identity/service/v1alpha1/app_service.proto#gettasksresponsetasklist"}]}} />
+
+
+### `GetTasksResponse.TaskList`
+<ProtoMessage key={12} message={{"name":"TaskList","longName":"GetTasksResponse.TaskList","fullName":"agntcy.identity.service.v1alpha1.GetTasksResponse.TaskList","description":"","hasExtensions":false,"hasFields":true,"hasOneofs":false,"extensions":[],"fields":[{"name":"tasks","description":"","label":"repeated","type":"Task","longType":"Task","fullType":"agntcy.identity.service.v1alpha1.Task","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":"","typeLink":"/protodocs/agntcy/identity/service/v1alpha1/policy.proto#task"}]}} />
+
+
+### `ListAppsRequest`
+<ProtoMessage key={13} message={{"name":"ListAppsRequest","longName":"ListAppsRequest","fullName":"agntcy.identity.service.v1alpha1.ListAppsRequest","description":"","hasExtensions":false,"hasFields":true,"hasOneofs":true,"extensions":[],"fields":[{"name":"page","description":"The current page of the pagination","label":"optional","type":"int32","longType":"int32","fullType":"int32","ismap":false,"isoneof":true,"oneofdecl":"_page","defaultValue":""},{"name":"size","description":"The page size of the pagination","label":"optional","type":"int32","longType":"int32","fullType":"int32","ismap":false,"isoneof":true,"oneofdecl":"_size","defaultValue":""},{"name":"query","description":"The search query","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_query","defaultValue":""},{"name":"types","description":"The app type filter","label":"repeated","type":"AppType","longType":"AppType","fullType":"agntcy.identity.service.v1alpha1.AppType","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":"","typeLink":"/protodocs/agntcy/identity/service/v1alpha1/app.proto#apptype"},{"name":"sort_column","description":"The column ID to sort by","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_sort_column","defaultValue":""},{"name":"sort_desc","description":"Whether to sort in descending order (true) or ascending order (false)","label":"optional","type":"bool","longType":"bool","fullType":"bool","ismap":false,"isoneof":true,"oneofdecl":"_sort_desc","defaultValue":""}]}} />
+
+
+### `ListAppsResponse`
+<ProtoMessage key={14} message={{"name":"ListAppsResponse","longName":"ListAppsResponse","fullName":"agntcy.identity.service.v1alpha1.ListAppsResponse","description":"","hasExtensions":false,"hasFields":true,"hasOneofs":true,"extensions":[],"fields":[{"name":"apps","description":"A list of Apps.","label":"repeated","type":"App","longType":"App","fullType":"agntcy.identity.service.v1alpha1.App","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":"","typeLink":"/protodocs/agntcy/identity/service/v1alpha1/app.proto#app"},{"name":"pagination","description":"Pagination response.","label":"optional","type":"PagedResponse","longType":"agntcy.identity.service.shared.v1alpha1.PagedResponse","fullType":"agntcy.identity.service.shared.v1alpha1.PagedResponse","ismap":false,"isoneof":true,"oneofdecl":"_pagination","defaultValue":"","typeLink":"/protodocs/agntcy/identity/service/shared/v1alpha1/pagination.proto#pagedresponse"}]}} />
+
+
+### `RefreshAppApiKeyRequest`
+<ProtoMessage key={15} message={{"name":"RefreshAppApiKeyRequest","longName":"RefreshAppApiKeyRequest","fullName":"agntcy.identity.service.v1alpha1.RefreshAppApiKeyRequest","description":"","hasExtensions":false,"hasFields":true,"hasOneofs":false,"extensions":[],"fields":[{"name":"app_id","description":"App Id to refresh the API Key for.","label":"","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":""}]}} />
+
+
+### `UpdateAppRequest`
+<ProtoMessage key={16} message={{"name":"UpdateAppRequest","longName":"UpdateAppRequest","fullName":"agntcy.identity.service.v1alpha1.UpdateAppRequest","description":"","hasExtensions":false,"hasFields":true,"hasOneofs":false,"extensions":[],"fields":[{"name":"app_id","description":"App Id to update.","label":"","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":""},{"name":"app","description":"App parameters to update.","label":"","type":"App","longType":"App","fullType":"agntcy.identity.service.v1alpha1.App","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":"","typeLink":"/protodocs/agntcy/identity/service/v1alpha1/app.proto#app"}]}} />
+
+---
+## Services
+
+
+### `AppService`
+
+AppService manages apps.
+
+
+#### `ListApps`
+<ProtoServiceMethod key={'ListApps-0'} method={{"name":"ListApps","description":"List Apps.","requestType":"ListAppsRequest","requestLongType":"ListAppsRequest","requestFullType":"agntcy.identity.service.v1alpha1.ListAppsRequest","requestStreaming":false,"responseType":"ListAppsResponse","responseLongType":"ListAppsResponse","responseFullType":"agntcy.identity.service.v1alpha1.ListAppsResponse","responseStreaming":false,"options":{"google.api.http":{"rules":[{"method":"GET","pattern":"/v1alpha1/apps"}]}},"requestTypeLink":"/protodocs/agntcy/identity/service/v1alpha1/app_service.proto#listappsrequest","responseTypeLink":"/protodocs/agntcy/identity/service/v1alpha1/app_service.proto#listappsresponse"}} />
+
+
+#### `GetAppsCount`
+<ProtoServiceMethod key={'GetAppsCount-1'} method={{"name":"GetAppsCount","description":"Get apps count per type.","requestType":"GetAppsCountRequest","requestLongType":"GetAppsCountRequest","requestFullType":"agntcy.identity.service.v1alpha1.GetAppsCountRequest","requestStreaming":false,"responseType":"GetAppsCountResponse","responseLongType":"GetAppsCountResponse","responseFullType":"agntcy.identity.service.v1alpha1.GetAppsCountResponse","responseStreaming":false,"options":{"google.api.http":{"rules":[{"method":"GET","pattern":"/v1alpha1/apps/all/count"}]}},"requestTypeLink":"/protodocs/agntcy/identity/service/v1alpha1/app_service.proto#getappscountrequest","responseTypeLink":"/protodocs/agntcy/identity/service/v1alpha1/app_service.proto#getappscountresponse"}} />
+
+
+#### `GetApp`
+<ProtoServiceMethod key={'GetApp-2'} method={{"name":"GetApp","description":"Get App by id","requestType":"GetAppRequest","requestLongType":"GetAppRequest","requestFullType":"agntcy.identity.service.v1alpha1.GetAppRequest","requestStreaming":false,"responseType":"App","responseLongType":"App","responseFullType":"agntcy.identity.service.v1alpha1.App","responseStreaming":false,"options":{"google.api.http":{"rules":[{"method":"GET","pattern":"/v1alpha1/apps/{app_id}"}]}},"requestTypeLink":"/protodocs/agntcy/identity/service/v1alpha1/app_service.proto#getapprequest","responseTypeLink":"/protodocs/agntcy/identity/service/v1alpha1/app.proto#app"}} />
+
+
+#### `CreateApp`
+<ProtoServiceMethod key={'CreateApp-3'} method={{"name":"CreateApp","description":"Create a new App.","requestType":"CreateAppRequest","requestLongType":"CreateAppRequest","requestFullType":"agntcy.identity.service.v1alpha1.CreateAppRequest","requestStreaming":false,"responseType":"App","responseLongType":"App","responseFullType":"agntcy.identity.service.v1alpha1.App","responseStreaming":false,"options":{"google.api.http":{"rules":[{"method":"POST","pattern":"/v1alpha1/apps","body":"app"}]}},"requestTypeLink":"/protodocs/agntcy/identity/service/v1alpha1/app_service.proto#createapprequest","responseTypeLink":"/protodocs/agntcy/identity/service/v1alpha1/app.proto#app"}} />
+
+
+#### `CreateOasfApp`
+<ProtoServiceMethod key={'CreateOasfApp-4'} method={{"name":"CreateOasfApp","description":"","requestType":"CreateOasfAppRequest","requestLongType":"CreateOasfAppRequest","requestFullType":"agntcy.identity.service.v1alpha1.CreateOasfAppRequest","requestStreaming":false,"responseType":"CreateOasfAppResponse","responseLongType":"CreateOasfAppResponse","responseFullType":"agntcy.identity.service.v1alpha1.CreateOasfAppResponse","responseStreaming":false,"options":{"google.api.http":{"rules":[{"method":"POST","pattern":"/v1alpha1/apps/oasf","body":"*"}]}},"requestTypeLink":"/protodocs/agntcy/identity/service/v1alpha1/app_service.proto#createoasfapprequest","responseTypeLink":"/protodocs/agntcy/identity/service/v1alpha1/app_service.proto#createoasfappresponse"}} />
+
+
+#### `UpdateApp`
+<ProtoServiceMethod key={'UpdateApp-5'} method={{"name":"UpdateApp","description":"Update an App.","requestType":"UpdateAppRequest","requestLongType":"UpdateAppRequest","requestFullType":"agntcy.identity.service.v1alpha1.UpdateAppRequest","requestStreaming":false,"responseType":"App","responseLongType":"App","responseFullType":"agntcy.identity.service.v1alpha1.App","responseStreaming":false,"options":{"google.api.http":{"rules":[{"method":"PATCH","pattern":"/v1alpha1/apps/{app_id}","body":"app"}]}},"requestTypeLink":"/protodocs/agntcy/identity/service/v1alpha1/app_service.proto#updateapprequest","responseTypeLink":"/protodocs/agntcy/identity/service/v1alpha1/app.proto#app"}} />
+
+
+#### `DeleteApp`
+<ProtoServiceMethod key={'DeleteApp-6'} method={{"name":"DeleteApp","description":"Delete an existing App.","requestType":"DeleteAppRequest","requestLongType":"DeleteAppRequest","requestFullType":"agntcy.identity.service.v1alpha1.DeleteAppRequest","requestStreaming":false,"responseType":"Empty","responseLongType":".google.protobuf.Empty","responseFullType":"google.protobuf.Empty","responseStreaming":false,"options":{"google.api.http":{"rules":[{"method":"DELETE","pattern":"/v1alpha1/apps/{app_id}"}]}},"requestTypeLink":"/protodocs/agntcy/identity/service/v1alpha1/app_service.proto#deleteapprequest"}} />
+
+
+#### `RefreshAppApiKey`
+<ProtoServiceMethod key={'RefreshAppApiKey-7'} method={{"name":"RefreshAppApiKey","description":"Refresh the api-key for an App.","requestType":"RefreshAppApiKeyRequest","requestLongType":"RefreshAppApiKeyRequest","requestFullType":"agntcy.identity.service.v1alpha1.RefreshAppApiKeyRequest","requestStreaming":false,"responseType":"App","responseLongType":"App","responseFullType":"agntcy.identity.service.v1alpha1.App","responseStreaming":false,"options":{"google.api.http":{"rules":[{"method":"GET","pattern":"/v1alpha1/apps/{app_id}/api-key/refresh"}]}},"requestTypeLink":"/protodocs/agntcy/identity/service/v1alpha1/app_service.proto#refreshappapikeyrequest","responseTypeLink":"/protodocs/agntcy/identity/service/v1alpha1/app.proto#app"}} />
+
+
+#### `GetBadge`
+<ProtoServiceMethod key={'GetBadge-8'} method={{"name":"GetBadge","description":"Get the current badge issued for the App.","requestType":"GetBadgeRequest","requestLongType":"GetBadgeRequest","requestFullType":"agntcy.identity.service.v1alpha1.GetBadgeRequest","requestStreaming":false,"responseType":"Badge","responseLongType":"Badge","responseFullType":"agntcy.identity.service.v1alpha1.Badge","responseStreaming":false,"options":{"google.api.http":{"rules":[{"method":"GET","pattern":"/v1alpha1/apps/{app_id}/badge"}]}},"requestTypeLink":"/protodocs/agntcy/identity/service/v1alpha1/app_service.proto#getbadgerequest","responseTypeLink":"/protodocs/agntcy/identity/service/v1alpha1/badge.proto#badge"}} />
+
+
+#### `GetTasks`
+<ProtoServiceMethod key={'GetTasks-9'} method={{"name":"GetTasks","description":"Get the list of tasks of all apps","requestType":"GetTasksRequest","requestLongType":"GetTasksRequest","requestFullType":"agntcy.identity.service.v1alpha1.GetTasksRequest","requestStreaming":false,"responseType":"GetTasksResponse","responseLongType":"GetTasksResponse","responseFullType":"agntcy.identity.service.v1alpha1.GetTasksResponse","responseStreaming":false,"options":{"google.api.http":{"rules":[{"method":"GET","pattern":"/v1alpha1/tasks"}]}},"requestTypeLink":"/protodocs/agntcy/identity/service/v1alpha1/app_service.proto#gettasksrequest","responseTypeLink":"/protodocs/agntcy/identity/service/v1alpha1/app_service.proto#gettasksresponse"}} />
+
+
+---
+
+
+  
