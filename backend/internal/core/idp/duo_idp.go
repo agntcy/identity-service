@@ -12,10 +12,10 @@ import (
 	"path"
 	"time"
 
+	"github.com/agntcy/identity-service/internal/core/settings/types"
+	"github.com/agntcy/identity-service/pkg/log"
 	duosdk "github.com/duosecurity/duo_api_golang"
 	"github.com/google/uuid"
-	"github.com/outshift/identity-service/internal/core/settings/types"
-	"github.com/outshift/identity-service/pkg/log"
 )
 
 const (

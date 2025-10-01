@@ -10,7 +10,7 @@ import (
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/outshift-open/identity-service/backend/api/client/client/settings"
+	"github.com/agntcy/identity-service/backend/api/client/client/settings"
 )
 
 // Default identity service HTTP client.

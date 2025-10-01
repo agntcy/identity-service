@@ -10,11 +10,11 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/agntcy/identity-service/internal/core/iam/types"
+	"github.com/agntcy/identity-service/internal/pkg/ptrutil"
+	"github.com/agntcy/identity-service/pkg/log"
 	"github.com/agntcy/identity/pkg/cmd"
 	outshiftiam "github.com/cisco-eti/iam-sdk-golang/iam"
-	"github.com/outshift/identity-service/internal/core/iam/types"
-	"github.com/outshift/identity-service/internal/pkg/ptrutil"
-	"github.com/outshift/identity-service/pkg/log"
 )
 
 //nolint:lll // Ignore linting for long lines

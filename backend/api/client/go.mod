@@ -1,4 +1,4 @@
-module github.com/outshift-open/identity-service/backend/api/client
+module github.com/agntcy/identity-service/backend/api/client
 
 go 1.24.1
 

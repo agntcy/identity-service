@@ -8,11 +8,11 @@ import (
 	"errors"
 	"fmt"
 
-	badgecore "github.com/outshift/identity-service/internal/core/badge"
-	"github.com/outshift/identity-service/internal/core/badge/types"
-	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
-	"github.com/outshift/identity-service/internal/pkg/convertutil"
-	"github.com/outshift/identity-service/internal/pkg/gormutil"
+	badgecore "github.com/agntcy/identity-service/internal/core/badge"
+	"github.com/agntcy/identity-service/internal/core/badge/types"
+	identitycontext "github.com/agntcy/identity-service/internal/pkg/context"
+	"github.com/agntcy/identity-service/internal/pkg/convertutil"
+	"github.com/agntcy/identity-service/internal/pkg/gormutil"
 	"gorm.io/gorm"
 )
 

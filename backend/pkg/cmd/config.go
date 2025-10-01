@@ -4,9 +4,9 @@
 package cmd
 
 import (
+	"github.com/agntcy/identity-service/pkg/log"
 	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
-	"github.com/outshift/identity-service/pkg/log"
 )
 
 // GetConfiguration : Populate configuration information from .env and return Configuration model

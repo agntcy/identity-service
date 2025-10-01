@@ -1,0 +1,86 @@
+// Copyright 2025 Cisco Systems, Inc. and its affiliates
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package agntcy.identity.service.v1alpha1;
+
+import "agntcy/identity/service/v1alpha1/badge.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "github.com/agntcy/identity-service/api/server/agntcy/identity/service/v1alpha1;identity_service_sdk_go";
+
+// BadgeService manages badges.
+service BadgeService {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_tag) = {name: "Badge"};
+
+  // Create a new Badge.
+  rpc IssueBadge(IssueBadgeRequest) returns (Badge) {
+    option (google.api.http) = {
+      post: "/v1alpha1/apps/{app_id}/badges"
+      body: "*"
+    };
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "IssueBadge";
+      summary: "Issue a badge";
+    };
+  }
+
+  // Verify a badge.
+  rpc VerifyBadge(VerifyBadgeRequest) returns (VerificationResult) {
+    option (google.api.http) = {
+      post: "/v1alpha1/badges/verify"
+      body: "*"
+    };
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "VerifyBadge";
+      summary: "Verify a badge";
+    };
+  }
+}
+
+message IssueBadgeRequest {
+  // App Id.
+  string app_id = 1;
+
+  // The A2A badge.
+  IssueA2ABadgeRequest a2a = 2;
+
+  // The MCP badge.
+  IssueMcpBadgeRequest mcp = 3;
+
+  // The OASF badge.
+  IssueOASFBadgeRequest oasf = 4;
+}
+
+message IssueMcpBadgeRequest {
+  // The MCP badge name.
+  optional string name = 1;
+
+  // The MCP badge URL.
+  optional string url = 2;
+
+  // Or the MCP Schema in a base64 encoded format.
+  optional string schema_base64 = 3;
+}
+
+message IssueA2ABadgeRequest {
+  // The A2A well_known_url.
+  optional string well_known_url = 1;
+
+  // Or the MCP Schema in a base64 encoded format.
+  optional string schema_base64 = 2;
+}
+
+message IssueOASFBadgeRequest {
+  // The OASF schema in a base64 encoded format
+  string schema_base64 = 1;
+}
+
+message VerifyBadgeRequest {
+  // The JOSE enveloped badge to verify.
+  string badge = 1;
+}

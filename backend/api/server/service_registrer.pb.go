@@ -4,7 +4,7 @@
 package app_grpc_register
 
 import (
-	v1alpha1 "github.com/outshift/identity-service/api/server/outshift/identity/service/v1alpha1"
+	v1alpha1 "github.com/agntcy/identity-service/api/server/agntcy/identity/service/v1alpha1"
 )
 
 import (

@@ -4,10 +4,10 @@
 package converters
 
 import (
-	identity_service_sdk_go "github.com/outshift/identity-service/api/server/outshift/identity/service/v1alpha1"
-	badgetypes "github.com/outshift/identity-service/internal/core/badge/types"
-	"github.com/outshift/identity-service/internal/pkg/convertutil"
-	"github.com/outshift/identity-service/internal/pkg/ptrutil"
+	identity_service_sdk_go "github.com/agntcy/identity-service/api/server/agntcy/identity/service/v1alpha1"
+	badgetypes "github.com/agntcy/identity-service/internal/core/badge/types"
+	"github.com/agntcy/identity-service/internal/pkg/convertutil"
+	"github.com/agntcy/identity-service/internal/pkg/ptrutil"
 )
 
 func FromBadge(src *badgetypes.Badge) *identity_service_sdk_go.Badge {

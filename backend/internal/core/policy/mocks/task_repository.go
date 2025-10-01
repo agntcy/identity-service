@@ -7,8 +7,8 @@ package mocks
 import (
 	"context"
 
-	types0 "github.com/outshift/identity-service/internal/core/app/types"
-	"github.com/outshift/identity-service/internal/core/policy/types"
+	types0 "github.com/agntcy/identity-service/internal/core/app/types"
+	"github.com/agntcy/identity-service/internal/core/policy/types"
 	mock "github.com/stretchr/testify/mock"
 )
 

@@ -63,7 +63,7 @@ type GetAppBadgeParams struct {
 
 	/* AppID.
 
-	   App Id to get the badge for.
+	   App Id or Resolver Metadata ID to get the badge for.
 	*/
 	AppID string
 

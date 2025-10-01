@@ -6,8 +6,8 @@ package convertutil_test
 import (
 	"testing"
 
-	"github.com/outshift/identity-service/internal/pkg/convertutil"
-	"github.com/outshift/identity-service/internal/pkg/ptrutil"
+	"github.com/agntcy/identity-service/internal/pkg/convertutil"
+	"github.com/agntcy/identity-service/internal/pkg/ptrutil"
 	"github.com/stretchr/testify/assert"
 )
 

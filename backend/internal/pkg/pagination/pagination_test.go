@@ -6,9 +6,9 @@ package pagination_test
 import (
 	"testing"
 
-	identity_service_shared_sdk_go "github.com/outshift/identity-service/api/server/outshift/identity/service/shared/v1alpha1"
-	"github.com/outshift/identity-service/internal/pkg/pagination"
-	"github.com/outshift/identity-service/internal/pkg/ptrutil"
+	identity_service_shared_sdk_go "github.com/agntcy/identity-service/api/server/agntcy/identity/service/shared/v1alpha1"
+	"github.com/agntcy/identity-service/internal/pkg/pagination"
+	"github.com/agntcy/identity-service/internal/pkg/ptrutil"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -1,4 +1,4 @@
-module github.com/outshift/identity-service
+module github.com/agntcy/identity-service
 
 go 1.24.5
 

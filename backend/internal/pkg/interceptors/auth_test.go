@@ -9,10 +9,10 @@ import (
 	"fmt"
 	"testing"
 
+	identity_service_sdk_go "github.com/agntcy/identity-service/api/server/agntcy/identity/service/v1alpha1"
+	iammocks "github.com/agntcy/identity-service/internal/pkg/iam/mocks"
+	"github.com/agntcy/identity-service/internal/pkg/interceptors"
 	"github.com/google/uuid"
-	identity_service_sdk_go "github.com/outshift/identity-service/api/server/outshift/identity/service/v1alpha1"
-	iammocks "github.com/outshift/identity-service/internal/pkg/iam/mocks"
-	"github.com/outshift/identity-service/internal/pkg/interceptors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"google.golang.org/grpc"

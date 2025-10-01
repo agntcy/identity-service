@@ -4,10 +4,10 @@
 package postgres
 
 import (
+	"github.com/agntcy/identity-service/internal/core/settings/types"
+	"github.com/agntcy/identity-service/internal/pkg/ptrutil"
+	"github.com/agntcy/identity-service/internal/pkg/secrets"
 	"github.com/google/uuid"
-	"github.com/outshift/identity-service/internal/core/settings/types"
-	"github.com/outshift/identity-service/internal/pkg/ptrutil"
-	"github.com/outshift/identity-service/internal/pkg/secrets"
 )
 
 type IssuerSettings struct {

@@ -6,8 +6,8 @@ package pagination_test
 import (
 	"testing"
 
-	"github.com/outshift/identity-service/internal/pkg/pagination"
-	"github.com/outshift/identity-service/internal/pkg/ptrutil"
+	"github.com/agntcy/identity-service/internal/pkg/pagination"
+	"github.com/agntcy/identity-service/internal/pkg/ptrutil"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -5,7 +5,7 @@
 package mocks
 
 import (
-	"github.com/outshift/identity-service/internal/pkg/webpush"
+	"github.com/agntcy/identity-service/internal/pkg/webpush"
 	mock "github.com/stretchr/testify/mock"
 )
 

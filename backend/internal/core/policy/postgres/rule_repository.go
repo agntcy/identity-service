@@ -9,12 +9,12 @@ import (
 	"errors"
 	"fmt"
 
-	policycore "github.com/outshift/identity-service/internal/core/policy"
-	"github.com/outshift/identity-service/internal/core/policy/types"
-	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
-	"github.com/outshift/identity-service/internal/pkg/convertutil"
-	"github.com/outshift/identity-service/internal/pkg/gormutil"
-	"github.com/outshift/identity-service/internal/pkg/pagination"
+	policycore "github.com/agntcy/identity-service/internal/core/policy"
+	"github.com/agntcy/identity-service/internal/core/policy/types"
+	identitycontext "github.com/agntcy/identity-service/internal/pkg/context"
+	"github.com/agntcy/identity-service/internal/pkg/convertutil"
+	"github.com/agntcy/identity-service/internal/pkg/gormutil"
+	"github.com/agntcy/identity-service/internal/pkg/pagination"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )

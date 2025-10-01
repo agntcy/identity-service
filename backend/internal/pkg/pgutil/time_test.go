@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/outshift/identity-service/internal/pkg/pgutil"
-	"github.com/outshift/identity-service/internal/pkg/ptrutil"
+	"github.com/agntcy/identity-service/internal/pkg/pgutil"
+	"github.com/agntcy/identity-service/internal/pkg/ptrutil"
 	"github.com/stretchr/testify/assert"
 )
 

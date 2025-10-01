@@ -9,11 +9,11 @@ import (
 	"fmt"
 	"time"
 
+	authcore "github.com/agntcy/identity-service/internal/core/auth"
+	types "github.com/agntcy/identity-service/internal/core/auth/types/int"
+	identitycontext "github.com/agntcy/identity-service/internal/pkg/context"
+	"github.com/agntcy/identity-service/internal/pkg/secrets"
 	"github.com/google/uuid"
-	authcore "github.com/outshift/identity-service/internal/core/auth"
-	types "github.com/outshift/identity-service/internal/core/auth/types/int"
-	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
-	"github.com/outshift/identity-service/internal/pkg/secrets"
 	"gorm.io/gorm"
 )
 

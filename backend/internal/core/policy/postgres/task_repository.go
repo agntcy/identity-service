@@ -8,12 +8,12 @@ import (
 	"errors"
 	"fmt"
 
-	apptypes "github.com/outshift/identity-service/internal/core/app/types"
-	policycore "github.com/outshift/identity-service/internal/core/policy"
-	"github.com/outshift/identity-service/internal/core/policy/types"
-	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
-	"github.com/outshift/identity-service/internal/pkg/convertutil"
-	"github.com/outshift/identity-service/internal/pkg/gormutil"
+	apptypes "github.com/agntcy/identity-service/internal/core/app/types"
+	policycore "github.com/agntcy/identity-service/internal/core/policy"
+	"github.com/agntcy/identity-service/internal/core/policy/types"
+	identitycontext "github.com/agntcy/identity-service/internal/pkg/context"
+	"github.com/agntcy/identity-service/internal/pkg/convertutil"
+	"github.com/agntcy/identity-service/internal/pkg/gormutil"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )

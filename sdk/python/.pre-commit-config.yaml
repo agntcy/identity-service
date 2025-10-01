@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 default_stages: [pre-commit, pre-push]
-exclude: (sdk/python/outshift/.*)
+exclude: (sdk/python/agntcy/.*)
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v4.6.0

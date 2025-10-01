@@ -3,7 +3,7 @@
 
 package pagination
 
-import identity_service_shared_sdk_go "github.com/outshift/identity-service/api/server/outshift/identity/service/shared/v1alpha1"
+import identity_service_shared_sdk_go "github.com/agntcy/identity-service/api/server/agntcy/identity/service/shared/v1alpha1"
 
 // Creates a PagedResponse object
 func ConvertToPagedResponse[T any](

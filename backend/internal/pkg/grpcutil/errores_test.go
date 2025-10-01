@@ -8,8 +8,8 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/outshift/identity-service/internal/pkg/errutil"
-	"github.com/outshift/identity-service/internal/pkg/grpcutil"
+	"github.com/agntcy/identity-service/internal/pkg/errutil"
+	"github.com/agntcy/identity-service/internal/pkg/grpcutil"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc/status"
 )

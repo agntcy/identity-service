@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/agntcy/identity-service/internal/pkg/secrets"
 	"github.com/google/uuid"
-	"github.com/outshift/identity-service/internal/pkg/secrets"
 	"github.com/stretchr/testify/assert"
 )
 

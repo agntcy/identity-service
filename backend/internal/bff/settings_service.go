@@ -7,13 +7,13 @@ import (
 	"context"
 	"fmt"
 
-	iamtypes "github.com/outshift/identity-service/internal/core/iam/types"
-	settingscore "github.com/outshift/identity-service/internal/core/settings"
-	settingstypes "github.com/outshift/identity-service/internal/core/settings/types"
-	"github.com/outshift/identity-service/internal/pkg/errutil"
-	"github.com/outshift/identity-service/internal/pkg/iam"
-	"github.com/outshift/identity-service/internal/pkg/ptrutil"
-	"github.com/outshift/identity-service/pkg/log"
+	iamtypes "github.com/agntcy/identity-service/internal/core/iam/types"
+	settingscore "github.com/agntcy/identity-service/internal/core/settings"
+	settingstypes "github.com/agntcy/identity-service/internal/core/settings/types"
+	"github.com/agntcy/identity-service/internal/pkg/errutil"
+	"github.com/agntcy/identity-service/internal/pkg/iam"
+	"github.com/agntcy/identity-service/internal/pkg/ptrutil"
+	"github.com/agntcy/identity-service/pkg/log"
 )
 
 type SettingsService interface {

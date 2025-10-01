@@ -1,9 +1,9 @@
 {
   "files": [
     {
-      "name": "outshift/identity/service/shared/v1alpha1/pagination.proto",
+      "name": "agntcy/identity/service/shared/v1alpha1/pagination.proto",
       "description": "",
-      "package": "outshift.identity.service.shared.v1alpha1",
+      "package": "agntcy.identity.service.shared.v1alpha1",
       "hasEnums": false,
       "hasExtensions": false,
       "hasMessages": true,
@@ -14,7 +14,7 @@
         {
           "name": "PagedResponse",
           "longName": "PagedResponse",
-          "fullName": "outshift.identity.service.shared.v1alpha1.PagedResponse",
+          "fullName": "agntcy.identity.service.shared.v1alpha1.PagedResponse",
           "description": "Pagination response",
           "hasExtensions": false,
           "hasFields": true,
@@ -75,9 +75,9 @@
       "services": []
     },
     {
-      "name": "outshift/identity/service/v1alpha1/app.proto",
+      "name": "agntcy/identity/service/v1alpha1/app.proto",
       "description": "",
-      "package": "outshift.identity.service.v1alpha1",
+      "package": "agntcy.identity.service.v1alpha1",
       "hasEnums": true,
       "hasExtensions": false,
       "hasMessages": true,
@@ -86,7 +86,7 @@
         {
           "name": "AppStatus",
           "longName": "AppStatus",
-          "fullName": "outshift.identity.service.v1alpha1.AppStatus",
+          "fullName": "agntcy.identity.service.v1alpha1.AppStatus",
           "description": "",
           "values": [
             {
@@ -114,7 +114,7 @@
         {
           "name": "AppType",
           "longName": "AppType",
-          "fullName": "outshift.identity.service.v1alpha1.AppType",
+          "fullName": "agntcy.identity.service.v1alpha1.AppType",
           "description": "App Type",
           "values": [
             {
@@ -145,7 +145,7 @@
         {
           "name": "App",
           "longName": "App",
-          "fullName": "outshift.identity.service.v1alpha1.App",
+          "fullName": "agntcy.identity.service.v1alpha1.App",
           "description": "Identity Service App.",
           "hasExtensions": false,
           "hasFields": true,
@@ -194,7 +194,7 @@
               "label": "optional",
               "type": "AppType",
               "longType": "AppType",
-              "fullType": "outshift.identity.service.v1alpha1.AppType",
+              "fullType": "agntcy.identity.service.v1alpha1.AppType",
               "ismap": false,
               "isoneof": true,
               "oneofdecl": "_type",
@@ -230,7 +230,7 @@
               "label": "optional",
               "type": "AppStatus",
               "longType": "AppStatus",
-              "fullType": "outshift.identity.service.v1alpha1.AppStatus",
+              "fullType": "agntcy.identity.service.v1alpha1.AppStatus",
               "ismap": false,
               "isoneof": true,
               "oneofdecl": "_status",
@@ -254,9 +254,9 @@
       "services": []
     },
     {
-      "name": "outshift/identity/service/v1alpha1/badge.proto",
+      "name": "agntcy/identity/service/v1alpha1/badge.proto",
       "description": "",
-      "package": "outshift.identity.service.v1alpha1",
+      "package": "agntcy.identity.service.v1alpha1",
       "hasEnums": true,
       "hasExtensions": false,
       "hasMessages": true,
@@ -265,7 +265,7 @@
         {
           "name": "BadgeType",
           "longName": "BadgeType",
-          "fullName": "outshift.identity.service.v1alpha1.BadgeType",
+          "fullName": "agntcy.identity.service.v1alpha1.BadgeType",
           "description": "The content of the Credential.\nMultiple content types can be supported: AgentBadge, etc.",
           "values": [
             {
@@ -288,7 +288,7 @@
         {
           "name": "CredentialStatusPurpose",
           "longName": "CredentialStatusPurpose",
-          "fullName": "outshift.identity.service.v1alpha1.CredentialStatusPurpose",
+          "fullName": "agntcy.identity.service.v1alpha1.CredentialStatusPurpose",
           "description": "The purpose of the status entry",
           "values": [
             {
@@ -309,7 +309,7 @@
         {
           "name": "Badge",
           "longName": "Badge",
-          "fullName": "outshift.identity.service.v1alpha1.Badge",
+          "fullName": "agntcy.identity.service.v1alpha1.Badge",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -322,7 +322,7 @@
               "label": "optional",
               "type": "VerifiableCredential",
               "longType": "VerifiableCredential",
-              "fullType": "outshift.identity.service.v1alpha1.VerifiableCredential",
+              "fullType": "agntcy.identity.service.v1alpha1.VerifiableCredential",
               "ismap": false,
               "isoneof": true,
               "oneofdecl": "_verifiable_credential",
@@ -345,7 +345,7 @@
         {
           "name": "BadgeClaims",
           "longName": "BadgeClaims",
-          "fullName": "outshift.identity.service.v1alpha1.BadgeClaims",
+          "fullName": "agntcy.identity.service.v1alpha1.BadgeClaims",
           "description": "BadgeClaims represents the content of a Badge VC defined [here]\n\n[here]: https://spec.identity.agntcy.org/docs/vc/intro/",
           "hasExtensions": false,
           "hasFields": true,
@@ -381,7 +381,7 @@
         {
           "name": "CredentialSchema",
           "longName": "CredentialSchema",
-          "fullName": "outshift.identity.service.v1alpha1.CredentialSchema",
+          "fullName": "agntcy.identity.service.v1alpha1.CredentialSchema",
           "description": "CredentialSchema represents the credentialSchema property of a Verifiable Credential.\nmore information can be found [here]\n\n[here]: https://www.w3.org/TR/vc-data-model-2.0/#data-schemas",
           "hasExtensions": false,
           "hasFields": true,
@@ -417,7 +417,7 @@
         {
           "name": "CredentialStatus",
           "longName": "CredentialStatus",
-          "fullName": "outshift.identity.service.v1alpha1.CredentialStatus",
+          "fullName": "agntcy.identity.service.v1alpha1.CredentialStatus",
           "description": "CredentialStatus represents the credentialStatus property of a Verifiable Credential.\nmore information can be found [here]\n\n[here]: https://www.w3.org/TR/vc-data-model-2.0/#status",
           "hasExtensions": false,
           "hasFields": true,
@@ -466,7 +466,7 @@
               "label": "optional",
               "type": "CredentialStatusPurpose",
               "longType": "CredentialStatusPurpose",
-              "fullType": "outshift.identity.service.v1alpha1.CredentialStatusPurpose",
+              "fullType": "agntcy.identity.service.v1alpha1.CredentialStatusPurpose",
               "ismap": false,
               "isoneof": true,
               "oneofdecl": "_purpose",
@@ -477,7 +477,7 @@
         {
           "name": "ErrorInfo",
           "longName": "ErrorInfo",
-          "fullName": "outshift.identity.service.v1alpha1.ErrorInfo",
+          "fullName": "agntcy.identity.service.v1alpha1.ErrorInfo",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -513,7 +513,7 @@
         {
           "name": "Proof",
           "longName": "Proof",
-          "fullName": "outshift.identity.service.v1alpha1.Proof",
+          "fullName": "agntcy.identity.service.v1alpha1.Proof",
           "description": "A data integrity proof provides information about the proof mechanism,\nparameters required to verify that proof, and the proof value itself.",
           "hasExtensions": false,
           "hasFields": true,
@@ -561,7 +561,7 @@
         {
           "name": "VerifiableCredential",
           "longName": "VerifiableCredential",
-          "fullName": "outshift.identity.service.v1alpha1.VerifiableCredential",
+          "fullName": "agntcy.identity.service.v1alpha1.VerifiableCredential",
           "description": "DataModel represents the W3C Verifiable Credential Data Model defined [here]\n\n[here]: https://www.w3.org/TR/vc-data-model/",
           "hasExtensions": false,
           "hasFields": true,
@@ -610,7 +610,7 @@
               "label": "optional",
               "type": "BadgeClaims",
               "longType": "BadgeClaims",
-              "fullType": "outshift.identity.service.v1alpha1.BadgeClaims",
+              "fullType": "agntcy.identity.service.v1alpha1.BadgeClaims",
               "ismap": false,
               "isoneof": true,
               "oneofdecl": "_credential_subject",
@@ -658,7 +658,7 @@
               "label": "repeated",
               "type": "CredentialSchema",
               "longType": "CredentialSchema",
-              "fullType": "outshift.identity.service.v1alpha1.CredentialSchema",
+              "fullType": "agntcy.identity.service.v1alpha1.CredentialSchema",
               "ismap": false,
               "isoneof": false,
               "oneofdecl": "",
@@ -670,7 +670,7 @@
               "label": "repeated",
               "type": "CredentialStatus",
               "longType": "CredentialStatus",
-              "fullType": "outshift.identity.service.v1alpha1.CredentialStatus",
+              "fullType": "agntcy.identity.service.v1alpha1.CredentialStatus",
               "ismap": false,
               "isoneof": false,
               "oneofdecl": "",
@@ -682,7 +682,7 @@
               "label": "optional",
               "type": "Proof",
               "longType": "Proof",
-              "fullType": "outshift.identity.service.v1alpha1.Proof",
+              "fullType": "agntcy.identity.service.v1alpha1.Proof",
               "ismap": false,
               "isoneof": true,
               "oneofdecl": "_proof",
@@ -693,7 +693,7 @@
         {
           "name": "VerificationResult",
           "longName": "VerificationResult",
-          "fullName": "outshift.identity.service.v1alpha1.VerificationResult",
+          "fullName": "agntcy.identity.service.v1alpha1.VerificationResult",
           "description": "The result returned from the verification process defined [here]\n\n[here]: https://www.w3.org/TR/vc-data-model-2.0/#verification",
           "hasExtensions": false,
           "hasFields": true,
@@ -718,7 +718,7 @@
               "label": "optional",
               "type": "VerifiableCredential",
               "longType": "VerifiableCredential",
-              "fullType": "outshift.identity.service.v1alpha1.VerifiableCredential",
+              "fullType": "agntcy.identity.service.v1alpha1.VerifiableCredential",
               "ismap": false,
               "isoneof": true,
               "oneofdecl": "_document",
@@ -766,7 +766,7 @@
               "label": "repeated",
               "type": "ErrorInfo",
               "longType": "ErrorInfo",
-              "fullType": "outshift.identity.service.v1alpha1.ErrorInfo",
+              "fullType": "agntcy.identity.service.v1alpha1.ErrorInfo",
               "ismap": false,
               "isoneof": false,
               "oneofdecl": "",
@@ -778,7 +778,7 @@
               "label": "repeated",
               "type": "ErrorInfo",
               "longType": "ErrorInfo",
-              "fullType": "outshift.identity.service.v1alpha1.ErrorInfo",
+              "fullType": "agntcy.identity.service.v1alpha1.ErrorInfo",
               "ismap": false,
               "isoneof": false,
               "oneofdecl": "",
@@ -790,9 +790,9 @@
       "services": []
     },
     {
-      "name": "outshift/identity/service/v1alpha1/policy.proto",
+      "name": "agntcy/identity/service/v1alpha1/policy.proto",
       "description": "",
-      "package": "outshift.identity.service.v1alpha1",
+      "package": "agntcy.identity.service.v1alpha1",
       "hasEnums": true,
       "hasExtensions": false,
       "hasMessages": true,
@@ -801,7 +801,7 @@
         {
           "name": "RuleAction",
           "longName": "RuleAction",
-          "fullName": "outshift.identity.service.v1alpha1.RuleAction",
+          "fullName": "agntcy.identity.service.v1alpha1.RuleAction",
           "description": "",
           "values": [
             {
@@ -827,7 +827,7 @@
         {
           "name": "Policy",
           "longName": "Policy",
-          "fullName": "outshift.identity.service.v1alpha1.Policy",
+          "fullName": "agntcy.identity.service.v1alpha1.Policy",
           "description": "Identity Service Policy.",
           "hasExtensions": false,
           "hasFields": true,
@@ -888,7 +888,7 @@
               "label": "repeated",
               "type": "Rule",
               "longType": "Rule",
-              "fullType": "outshift.identity.service.v1alpha1.Rule",
+              "fullType": "agntcy.identity.service.v1alpha1.Rule",
               "ismap": false,
               "isoneof": false,
               "oneofdecl": "",
@@ -911,7 +911,7 @@
         {
           "name": "Rule",
           "longName": "Rule",
-          "fullName": "outshift.identity.service.v1alpha1.Rule",
+          "fullName": "agntcy.identity.service.v1alpha1.Rule",
           "description": "Identity Service Policy Rule",
           "hasExtensions": false,
           "hasFields": true,
@@ -972,7 +972,7 @@
               "label": "repeated",
               "type": "Task",
               "longType": "Task",
-              "fullType": "outshift.identity.service.v1alpha1.Task",
+              "fullType": "agntcy.identity.service.v1alpha1.Task",
               "ismap": false,
               "isoneof": false,
               "oneofdecl": "",
@@ -984,7 +984,7 @@
               "label": "optional",
               "type": "RuleAction",
               "longType": "RuleAction",
-              "fullType": "outshift.identity.service.v1alpha1.RuleAction",
+              "fullType": "agntcy.identity.service.v1alpha1.RuleAction",
               "ismap": false,
               "isoneof": true,
               "oneofdecl": "_action",
@@ -1019,7 +1019,7 @@
         {
           "name": "Task",
           "longName": "Task",
-          "fullName": "outshift.identity.service.v1alpha1.Task",
+          "fullName": "agntcy.identity.service.v1alpha1.Task",
           "description": "Identity Service Policy Task",
           "hasExtensions": false,
           "hasFields": true,
@@ -1092,9 +1092,9 @@
       "services": []
     },
     {
-      "name": "outshift/identity/service/v1alpha1/app_service.proto",
+      "name": "agntcy/identity/service/v1alpha1/app_service.proto",
       "description": "",
-      "package": "outshift.identity.service.v1alpha1",
+      "package": "agntcy.identity.service.v1alpha1",
       "hasEnums": false,
       "hasExtensions": false,
       "hasMessages": true,
@@ -1105,7 +1105,7 @@
         {
           "name": "AppTypeCountEntry",
           "longName": "AppTypeCountEntry",
-          "fullName": "outshift.identity.service.v1alpha1.AppTypeCountEntry",
+          "fullName": "agntcy.identity.service.v1alpha1.AppTypeCountEntry",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -1118,7 +1118,7 @@
               "label": "",
               "type": "AppType",
               "longType": "AppType",
-              "fullType": "outshift.identity.service.v1alpha1.AppType",
+              "fullType": "agntcy.identity.service.v1alpha1.AppType",
               "ismap": false,
               "isoneof": false,
               "oneofdecl": "",
@@ -1141,7 +1141,7 @@
         {
           "name": "CreateAppRequest",
           "longName": "CreateAppRequest",
-          "fullName": "outshift.identity.service.v1alpha1.CreateAppRequest",
+          "fullName": "agntcy.identity.service.v1alpha1.CreateAppRequest",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -1154,7 +1154,7 @@
               "label": "",
               "type": "App",
               "longType": "App",
-              "fullType": "outshift.identity.service.v1alpha1.App",
+              "fullType": "agntcy.identity.service.v1alpha1.App",
               "ismap": false,
               "isoneof": false,
               "oneofdecl": "",
@@ -1165,7 +1165,7 @@
         {
           "name": "CreateOasfAppRequest",
           "longName": "CreateOasfAppRequest",
-          "fullName": "outshift.identity.service.v1alpha1.CreateOasfAppRequest",
+          "fullName": "agntcy.identity.service.v1alpha1.CreateOasfAppRequest",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -1189,7 +1189,7 @@
         {
           "name": "CreateOasfAppResponse",
           "longName": "CreateOasfAppResponse",
-          "fullName": "outshift.identity.service.v1alpha1.CreateOasfAppResponse",
+          "fullName": "agntcy.identity.service.v1alpha1.CreateOasfAppResponse",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -1202,7 +1202,7 @@
               "label": "",
               "type": "App",
               "longType": "App",
-              "fullType": "outshift.identity.service.v1alpha1.App",
+              "fullType": "agntcy.identity.service.v1alpha1.App",
               "ismap": false,
               "isoneof": false,
               "oneofdecl": "",
@@ -1214,7 +1214,7 @@
               "label": "",
               "type": "Badge",
               "longType": "Badge",
-              "fullType": "outshift.identity.service.v1alpha1.Badge",
+              "fullType": "agntcy.identity.service.v1alpha1.Badge",
               "ismap": false,
               "isoneof": false,
               "oneofdecl": "",
@@ -1225,7 +1225,7 @@
         {
           "name": "DeleteAppRequest",
           "longName": "DeleteAppRequest",
-          "fullName": "outshift.identity.service.v1alpha1.DeleteAppRequest",
+          "fullName": "agntcy.identity.service.v1alpha1.DeleteAppRequest",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -1249,7 +1249,7 @@
         {
           "name": "GetAppRequest",
           "longName": "GetAppRequest",
-          "fullName": "outshift.identity.service.v1alpha1.GetAppRequest",
+          "fullName": "agntcy.identity.service.v1alpha1.GetAppRequest",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -1273,7 +1273,7 @@
         {
           "name": "GetAppsCountRequest",
           "longName": "GetAppsCountRequest",
-          "fullName": "outshift.identity.service.v1alpha1.GetAppsCountRequest",
+          "fullName": "agntcy.identity.service.v1alpha1.GetAppsCountRequest",
           "description": "",
           "hasExtensions": false,
           "hasFields": false,
@@ -1284,7 +1284,7 @@
         {
           "name": "GetAppsCountResponse",
           "longName": "GetAppsCountResponse",
-          "fullName": "outshift.identity.service.v1alpha1.GetAppsCountResponse",
+          "fullName": "agntcy.identity.service.v1alpha1.GetAppsCountResponse",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -1297,7 +1297,7 @@
               "label": "repeated",
               "type": "AppTypeCountEntry",
               "longType": "AppTypeCountEntry",
-              "fullType": "outshift.identity.service.v1alpha1.AppTypeCountEntry",
+              "fullType": "agntcy.identity.service.v1alpha1.AppTypeCountEntry",
               "ismap": false,
               "isoneof": false,
               "oneofdecl": "",
@@ -1320,7 +1320,7 @@
         {
           "name": "GetBadgeRequest",
           "longName": "GetBadgeRequest",
-          "fullName": "outshift.identity.service.v1alpha1.GetBadgeRequest",
+          "fullName": "agntcy.identity.service.v1alpha1.GetBadgeRequest",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -1344,7 +1344,7 @@
         {
           "name": "GetTasksRequest",
           "longName": "GetTasksRequest",
-          "fullName": "outshift.identity.service.v1alpha1.GetTasksRequest",
+          "fullName": "agntcy.identity.service.v1alpha1.GetTasksRequest",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -1368,7 +1368,7 @@
         {
           "name": "GetTasksResponse",
           "longName": "GetTasksResponse",
-          "fullName": "outshift.identity.service.v1alpha1.GetTasksResponse",
+          "fullName": "agntcy.identity.service.v1alpha1.GetTasksResponse",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -1381,7 +1381,7 @@
               "label": "repeated",
               "type": "ResultEntry",
               "longType": "GetTasksResponse.ResultEntry",
-              "fullType": "outshift.identity.service.v1alpha1.GetTasksResponse.ResultEntry",
+              "fullType": "agntcy.identity.service.v1alpha1.GetTasksResponse.ResultEntry",
               "ismap": true,
               "isoneof": false,
               "oneofdecl": "",
@@ -1392,7 +1392,7 @@
         {
           "name": "ResultEntry",
           "longName": "GetTasksResponse.ResultEntry",
-          "fullName": "outshift.identity.service.v1alpha1.GetTasksResponse.ResultEntry",
+          "fullName": "agntcy.identity.service.v1alpha1.GetTasksResponse.ResultEntry",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -1417,7 +1417,7 @@
               "label": "",
               "type": "TaskList",
               "longType": "GetTasksResponse.TaskList",
-              "fullType": "outshift.identity.service.v1alpha1.GetTasksResponse.TaskList",
+              "fullType": "agntcy.identity.service.v1alpha1.GetTasksResponse.TaskList",
               "ismap": false,
               "isoneof": false,
               "oneofdecl": "",
@@ -1428,7 +1428,7 @@
         {
           "name": "TaskList",
           "longName": "GetTasksResponse.TaskList",
-          "fullName": "outshift.identity.service.v1alpha1.GetTasksResponse.TaskList",
+          "fullName": "agntcy.identity.service.v1alpha1.GetTasksResponse.TaskList",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -1441,7 +1441,7 @@
               "label": "repeated",
               "type": "Task",
               "longType": "Task",
-              "fullType": "outshift.identity.service.v1alpha1.Task",
+              "fullType": "agntcy.identity.service.v1alpha1.Task",
               "ismap": false,
               "isoneof": false,
               "oneofdecl": "",
@@ -1452,7 +1452,7 @@
         {
           "name": "ListAppsRequest",
           "longName": "ListAppsRequest",
-          "fullName": "outshift.identity.service.v1alpha1.ListAppsRequest",
+          "fullName": "agntcy.identity.service.v1alpha1.ListAppsRequest",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -1501,7 +1501,7 @@
               "label": "repeated",
               "type": "AppType",
               "longType": "AppType",
-              "fullType": "outshift.identity.service.v1alpha1.AppType",
+              "fullType": "agntcy.identity.service.v1alpha1.AppType",
               "ismap": false,
               "isoneof": false,
               "oneofdecl": "",
@@ -1536,7 +1536,7 @@
         {
           "name": "ListAppsResponse",
           "longName": "ListAppsResponse",
-          "fullName": "outshift.identity.service.v1alpha1.ListAppsResponse",
+          "fullName": "agntcy.identity.service.v1alpha1.ListAppsResponse",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -1549,7 +1549,7 @@
               "label": "repeated",
               "type": "App",
               "longType": "App",
-              "fullType": "outshift.identity.service.v1alpha1.App",
+              "fullType": "agntcy.identity.service.v1alpha1.App",
               "ismap": false,
               "isoneof": false,
               "oneofdecl": "",
@@ -1560,8 +1560,8 @@
               "description": "Pagination response.",
               "label": "optional",
               "type": "PagedResponse",
-              "longType": "outshift.identity.service.shared.v1alpha1.PagedResponse",
-              "fullType": "outshift.identity.service.shared.v1alpha1.PagedResponse",
+              "longType": "agntcy.identity.service.shared.v1alpha1.PagedResponse",
+              "fullType": "agntcy.identity.service.shared.v1alpha1.PagedResponse",
               "ismap": false,
               "isoneof": true,
               "oneofdecl": "_pagination",
@@ -1572,7 +1572,7 @@
         {
           "name": "RefreshAppApiKeyRequest",
           "longName": "RefreshAppApiKeyRequest",
-          "fullName": "outshift.identity.service.v1alpha1.RefreshAppApiKeyRequest",
+          "fullName": "agntcy.identity.service.v1alpha1.RefreshAppApiKeyRequest",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -1596,7 +1596,7 @@
         {
           "name": "UpdateAppRequest",
           "longName": "UpdateAppRequest",
-          "fullName": "outshift.identity.service.v1alpha1.UpdateAppRequest",
+          "fullName": "agntcy.identity.service.v1alpha1.UpdateAppRequest",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -1621,7 +1621,7 @@
               "label": "",
               "type": "App",
               "longType": "App",
-              "fullType": "outshift.identity.service.v1alpha1.App",
+              "fullType": "agntcy.identity.service.v1alpha1.App",
               "ismap": false,
               "isoneof": false,
               "oneofdecl": "",
@@ -1634,7 +1634,7 @@
         {
           "name": "AppService",
           "longName": "AppService",
-          "fullName": "outshift.identity.service.v1alpha1.AppService",
+          "fullName": "agntcy.identity.service.v1alpha1.AppService",
           "description": "AppService manages apps.",
           "methods": [
             {
@@ -1642,11 +1642,11 @@
               "description": "List Apps.",
               "requestType": "ListAppsRequest",
               "requestLongType": "ListAppsRequest",
-              "requestFullType": "outshift.identity.service.v1alpha1.ListAppsRequest",
+              "requestFullType": "agntcy.identity.service.v1alpha1.ListAppsRequest",
               "requestStreaming": false,
               "responseType": "ListAppsResponse",
               "responseLongType": "ListAppsResponse",
-              "responseFullType": "outshift.identity.service.v1alpha1.ListAppsResponse",
+              "responseFullType": "agntcy.identity.service.v1alpha1.ListAppsResponse",
               "responseStreaming": false,
               "options": {
                 "google.api.http": {
@@ -1664,11 +1664,11 @@
               "description": "Get apps count per type.",
               "requestType": "GetAppsCountRequest",
               "requestLongType": "GetAppsCountRequest",
-              "requestFullType": "outshift.identity.service.v1alpha1.GetAppsCountRequest",
+              "requestFullType": "agntcy.identity.service.v1alpha1.GetAppsCountRequest",
               "requestStreaming": false,
               "responseType": "GetAppsCountResponse",
               "responseLongType": "GetAppsCountResponse",
-              "responseFullType": "outshift.identity.service.v1alpha1.GetAppsCountResponse",
+              "responseFullType": "agntcy.identity.service.v1alpha1.GetAppsCountResponse",
               "responseStreaming": false,
               "options": {
                 "google.api.http": {
@@ -1686,11 +1686,11 @@
               "description": "Get App by id",
               "requestType": "GetAppRequest",
               "requestLongType": "GetAppRequest",
-              "requestFullType": "outshift.identity.service.v1alpha1.GetAppRequest",
+              "requestFullType": "agntcy.identity.service.v1alpha1.GetAppRequest",
               "requestStreaming": false,
               "responseType": "App",
               "responseLongType": "App",
-              "responseFullType": "outshift.identity.service.v1alpha1.App",
+              "responseFullType": "agntcy.identity.service.v1alpha1.App",
               "responseStreaming": false,
               "options": {
                 "google.api.http": {
@@ -1708,11 +1708,11 @@
               "description": "Create a new App.",
               "requestType": "CreateAppRequest",
               "requestLongType": "CreateAppRequest",
-              "requestFullType": "outshift.identity.service.v1alpha1.CreateAppRequest",
+              "requestFullType": "agntcy.identity.service.v1alpha1.CreateAppRequest",
               "requestStreaming": false,
               "responseType": "App",
               "responseLongType": "App",
-              "responseFullType": "outshift.identity.service.v1alpha1.App",
+              "responseFullType": "agntcy.identity.service.v1alpha1.App",
               "responseStreaming": false,
               "options": {
                 "google.api.http": {
@@ -1731,11 +1731,11 @@
               "description": "",
               "requestType": "CreateOasfAppRequest",
               "requestLongType": "CreateOasfAppRequest",
-              "requestFullType": "outshift.identity.service.v1alpha1.CreateOasfAppRequest",
+              "requestFullType": "agntcy.identity.service.v1alpha1.CreateOasfAppRequest",
               "requestStreaming": false,
               "responseType": "CreateOasfAppResponse",
               "responseLongType": "CreateOasfAppResponse",
-              "responseFullType": "outshift.identity.service.v1alpha1.CreateOasfAppResponse",
+              "responseFullType": "agntcy.identity.service.v1alpha1.CreateOasfAppResponse",
               "responseStreaming": false,
               "options": {
                 "google.api.http": {
@@ -1754,11 +1754,11 @@
               "description": "Update an App.",
               "requestType": "UpdateAppRequest",
               "requestLongType": "UpdateAppRequest",
-              "requestFullType": "outshift.identity.service.v1alpha1.UpdateAppRequest",
+              "requestFullType": "agntcy.identity.service.v1alpha1.UpdateAppRequest",
               "requestStreaming": false,
               "responseType": "App",
               "responseLongType": "App",
-              "responseFullType": "outshift.identity.service.v1alpha1.App",
+              "responseFullType": "agntcy.identity.service.v1alpha1.App",
               "responseStreaming": false,
               "options": {
                 "google.api.http": {
@@ -1777,7 +1777,7 @@
               "description": "Delete an existing App.",
               "requestType": "DeleteAppRequest",
               "requestLongType": "DeleteAppRequest",
-              "requestFullType": "outshift.identity.service.v1alpha1.DeleteAppRequest",
+              "requestFullType": "agntcy.identity.service.v1alpha1.DeleteAppRequest",
               "requestStreaming": false,
               "responseType": "Empty",
               "responseLongType": ".google.protobuf.Empty",
@@ -1799,11 +1799,11 @@
               "description": "Refresh the api-key for an App.",
               "requestType": "RefreshAppApiKeyRequest",
               "requestLongType": "RefreshAppApiKeyRequest",
-              "requestFullType": "outshift.identity.service.v1alpha1.RefreshAppApiKeyRequest",
+              "requestFullType": "agntcy.identity.service.v1alpha1.RefreshAppApiKeyRequest",
               "requestStreaming": false,
               "responseType": "App",
               "responseLongType": "App",
-              "responseFullType": "outshift.identity.service.v1alpha1.App",
+              "responseFullType": "agntcy.identity.service.v1alpha1.App",
               "responseStreaming": false,
               "options": {
                 "google.api.http": {
@@ -1821,11 +1821,11 @@
               "description": "Get the current badge issued for the App.",
               "requestType": "GetBadgeRequest",
               "requestLongType": "GetBadgeRequest",
-              "requestFullType": "outshift.identity.service.v1alpha1.GetBadgeRequest",
+              "requestFullType": "agntcy.identity.service.v1alpha1.GetBadgeRequest",
               "requestStreaming": false,
               "responseType": "Badge",
               "responseLongType": "Badge",
-              "responseFullType": "outshift.identity.service.v1alpha1.Badge",
+              "responseFullType": "agntcy.identity.service.v1alpha1.Badge",
               "responseStreaming": false,
               "options": {
                 "google.api.http": {
@@ -1843,11 +1843,11 @@
               "description": "Get the list of tasks of all apps",
               "requestType": "GetTasksRequest",
               "requestLongType": "GetTasksRequest",
-              "requestFullType": "outshift.identity.service.v1alpha1.GetTasksRequest",
+              "requestFullType": "agntcy.identity.service.v1alpha1.GetTasksRequest",
               "requestStreaming": false,
               "responseType": "GetTasksResponse",
               "responseLongType": "GetTasksResponse",
-              "responseFullType": "outshift.identity.service.v1alpha1.GetTasksResponse",
+              "responseFullType": "agntcy.identity.service.v1alpha1.GetTasksResponse",
               "responseStreaming": false,
               "options": {
                 "google.api.http": {
@@ -1865,9 +1865,9 @@
       ]
     },
     {
-      "name": "outshift/identity/service/v1alpha1/auth_service.proto",
+      "name": "agntcy/identity/service/v1alpha1/auth_service.proto",
       "description": "",
-      "package": "outshift.identity.service.v1alpha1",
+      "package": "agntcy.identity.service.v1alpha1",
       "hasEnums": false,
       "hasExtensions": false,
       "hasMessages": true,
@@ -1878,7 +1878,7 @@
         {
           "name": "AppInfoResponse",
           "longName": "AppInfoResponse",
-          "fullName": "outshift.identity.service.v1alpha1.AppInfoResponse",
+          "fullName": "agntcy.identity.service.v1alpha1.AppInfoResponse",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -1891,7 +1891,7 @@
               "label": "",
               "type": "App",
               "longType": "App",
-              "fullType": "outshift.identity.service.v1alpha1.App",
+              "fullType": "agntcy.identity.service.v1alpha1.App",
               "ismap": false,
               "isoneof": false,
               "oneofdecl": "",
@@ -1902,7 +1902,7 @@
         {
           "name": "ApproveTokenRequest",
           "longName": "ApproveTokenRequest",
-          "fullName": "outshift.identity.service.v1alpha1.ApproveTokenRequest",
+          "fullName": "agntcy.identity.service.v1alpha1.ApproveTokenRequest",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -1962,7 +1962,7 @@
         {
           "name": "AuthorizeRequest",
           "longName": "AuthorizeRequest",
-          "fullName": "outshift.identity.service.v1alpha1.AuthorizeRequest",
+          "fullName": "agntcy.identity.service.v1alpha1.AuthorizeRequest",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -2010,7 +2010,7 @@
         {
           "name": "AuthorizeResponse",
           "longName": "AuthorizeResponse",
-          "fullName": "outshift.identity.service.v1alpha1.AuthorizeResponse",
+          "fullName": "agntcy.identity.service.v1alpha1.AuthorizeResponse",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -2034,7 +2034,7 @@
         {
           "name": "ExtAuthzRequest",
           "longName": "ExtAuthzRequest",
-          "fullName": "outshift.identity.service.v1alpha1.ExtAuthzRequest",
+          "fullName": "agntcy.identity.service.v1alpha1.ExtAuthzRequest",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -2070,7 +2070,7 @@
         {
           "name": "TokenRequest",
           "longName": "TokenRequest",
-          "fullName": "outshift.identity.service.v1alpha1.TokenRequest",
+          "fullName": "agntcy.identity.service.v1alpha1.TokenRequest",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -2094,7 +2094,7 @@
         {
           "name": "TokenResponse",
           "longName": "TokenResponse",
-          "fullName": "outshift.identity.service.v1alpha1.TokenResponse",
+          "fullName": "agntcy.identity.service.v1alpha1.TokenResponse",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -2120,7 +2120,7 @@
         {
           "name": "AuthService",
           "longName": "AuthService",
-          "fullName": "outshift.identity.service.v1alpha1.AuthService",
+          "fullName": "agntcy.identity.service.v1alpha1.AuthService",
           "description": "AuthService manages auth.",
           "methods": [
             {
@@ -2132,7 +2132,7 @@
               "requestStreaming": false,
               "responseType": "AppInfoResponse",
               "responseLongType": "AppInfoResponse",
-              "responseFullType": "outshift.identity.service.v1alpha1.AppInfoResponse",
+              "responseFullType": "agntcy.identity.service.v1alpha1.AppInfoResponse",
               "responseStreaming": false,
               "options": {
                 "google.api.http": {
@@ -2150,11 +2150,11 @@
               "description": "Authorize a request from an Agent or MCP Server",
               "requestType": "AuthorizeRequest",
               "requestLongType": "AuthorizeRequest",
-              "requestFullType": "outshift.identity.service.v1alpha1.AuthorizeRequest",
+              "requestFullType": "agntcy.identity.service.v1alpha1.AuthorizeRequest",
               "requestStreaming": false,
               "responseType": "AuthorizeResponse",
               "responseLongType": "AuthorizeResponse",
-              "responseFullType": "outshift.identity.service.v1alpha1.AuthorizeResponse",
+              "responseFullType": "agntcy.identity.service.v1alpha1.AuthorizeResponse",
               "responseStreaming": false,
               "options": {
                 "google.api.http": {
@@ -2173,11 +2173,11 @@
               "description": "Request token for an Agent or MCP Server",
               "requestType": "TokenRequest",
               "requestLongType": "TokenRequest",
-              "requestFullType": "outshift.identity.service.v1alpha1.TokenRequest",
+              "requestFullType": "agntcy.identity.service.v1alpha1.TokenRequest",
               "requestStreaming": false,
               "responseType": "TokenResponse",
               "responseLongType": "TokenResponse",
-              "responseFullType": "outshift.identity.service.v1alpha1.TokenResponse",
+              "responseFullType": "agntcy.identity.service.v1alpha1.TokenResponse",
               "responseStreaming": false,
               "options": {
                 "google.api.http": {
@@ -2196,7 +2196,7 @@
               "description": "Handle external authorization requests",
               "requestType": "ExtAuthzRequest",
               "requestLongType": "ExtAuthzRequest",
-              "requestFullType": "outshift.identity.service.v1alpha1.ExtAuthzRequest",
+              "requestFullType": "agntcy.identity.service.v1alpha1.ExtAuthzRequest",
               "requestStreaming": false,
               "responseType": "Empty",
               "responseLongType": ".google.protobuf.Empty",
@@ -2219,7 +2219,7 @@
               "description": "Handle manual approval of external authorization requets",
               "requestType": "ApproveTokenRequest",
               "requestLongType": "ApproveTokenRequest",
-              "requestFullType": "outshift.identity.service.v1alpha1.ApproveTokenRequest",
+              "requestFullType": "agntcy.identity.service.v1alpha1.ApproveTokenRequest",
               "requestStreaming": false,
               "responseType": "Empty",
               "responseLongType": ".google.protobuf.Empty",
@@ -2242,9 +2242,9 @@
       ]
     },
     {
-      "name": "outshift/identity/service/v1alpha1/badge_service.proto",
+      "name": "agntcy/identity/service/v1alpha1/badge_service.proto",
       "description": "",
-      "package": "outshift.identity.service.v1alpha1",
+      "package": "agntcy.identity.service.v1alpha1",
       "hasEnums": false,
       "hasExtensions": false,
       "hasMessages": true,
@@ -2255,7 +2255,7 @@
         {
           "name": "IssueA2ABadgeRequest",
           "longName": "IssueA2ABadgeRequest",
-          "fullName": "outshift.identity.service.v1alpha1.IssueA2ABadgeRequest",
+          "fullName": "agntcy.identity.service.v1alpha1.IssueA2ABadgeRequest",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -2291,7 +2291,7 @@
         {
           "name": "IssueBadgeRequest",
           "longName": "IssueBadgeRequest",
-          "fullName": "outshift.identity.service.v1alpha1.IssueBadgeRequest",
+          "fullName": "agntcy.identity.service.v1alpha1.IssueBadgeRequest",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -2316,7 +2316,7 @@
               "label": "",
               "type": "IssueA2ABadgeRequest",
               "longType": "IssueA2ABadgeRequest",
-              "fullType": "outshift.identity.service.v1alpha1.IssueA2ABadgeRequest",
+              "fullType": "agntcy.identity.service.v1alpha1.IssueA2ABadgeRequest",
               "ismap": false,
               "isoneof": false,
               "oneofdecl": "",
@@ -2328,7 +2328,7 @@
               "label": "",
               "type": "IssueMcpBadgeRequest",
               "longType": "IssueMcpBadgeRequest",
-              "fullType": "outshift.identity.service.v1alpha1.IssueMcpBadgeRequest",
+              "fullType": "agntcy.identity.service.v1alpha1.IssueMcpBadgeRequest",
               "ismap": false,
               "isoneof": false,
               "oneofdecl": "",
@@ -2340,7 +2340,7 @@
               "label": "",
               "type": "IssueOASFBadgeRequest",
               "longType": "IssueOASFBadgeRequest",
-              "fullType": "outshift.identity.service.v1alpha1.IssueOASFBadgeRequest",
+              "fullType": "agntcy.identity.service.v1alpha1.IssueOASFBadgeRequest",
               "ismap": false,
               "isoneof": false,
               "oneofdecl": "",
@@ -2351,7 +2351,7 @@
         {
           "name": "IssueMcpBadgeRequest",
           "longName": "IssueMcpBadgeRequest",
-          "fullName": "outshift.identity.service.v1alpha1.IssueMcpBadgeRequest",
+          "fullName": "agntcy.identity.service.v1alpha1.IssueMcpBadgeRequest",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -2399,7 +2399,7 @@
         {
           "name": "IssueOASFBadgeRequest",
           "longName": "IssueOASFBadgeRequest",
-          "fullName": "outshift.identity.service.v1alpha1.IssueOASFBadgeRequest",
+          "fullName": "agntcy.identity.service.v1alpha1.IssueOASFBadgeRequest",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -2423,7 +2423,7 @@
         {
           "name": "VerifyBadgeRequest",
           "longName": "VerifyBadgeRequest",
-          "fullName": "outshift.identity.service.v1alpha1.VerifyBadgeRequest",
+          "fullName": "agntcy.identity.service.v1alpha1.VerifyBadgeRequest",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -2449,7 +2449,7 @@
         {
           "name": "BadgeService",
           "longName": "BadgeService",
-          "fullName": "outshift.identity.service.v1alpha1.BadgeService",
+          "fullName": "agntcy.identity.service.v1alpha1.BadgeService",
           "description": "BadgeService manages badges.",
           "methods": [
             {
@@ -2457,11 +2457,11 @@
               "description": "Create a new Badge.",
               "requestType": "IssueBadgeRequest",
               "requestLongType": "IssueBadgeRequest",
-              "requestFullType": "outshift.identity.service.v1alpha1.IssueBadgeRequest",
+              "requestFullType": "agntcy.identity.service.v1alpha1.IssueBadgeRequest",
               "requestStreaming": false,
               "responseType": "Badge",
               "responseLongType": "Badge",
-              "responseFullType": "outshift.identity.service.v1alpha1.Badge",
+              "responseFullType": "agntcy.identity.service.v1alpha1.Badge",
               "responseStreaming": false,
               "options": {
                 "google.api.http": {
@@ -2480,11 +2480,11 @@
               "description": "Verify a badge.",
               "requestType": "VerifyBadgeRequest",
               "requestLongType": "VerifyBadgeRequest",
-              "requestFullType": "outshift.identity.service.v1alpha1.VerifyBadgeRequest",
+              "requestFullType": "agntcy.identity.service.v1alpha1.VerifyBadgeRequest",
               "requestStreaming": false,
               "responseType": "VerificationResult",
               "responseLongType": "VerificationResult",
-              "responseFullType": "outshift.identity.service.v1alpha1.VerificationResult",
+              "responseFullType": "agntcy.identity.service.v1alpha1.VerificationResult",
               "responseStreaming": false,
               "options": {
                 "google.api.http": {
@@ -2503,9 +2503,9 @@
       ]
     },
     {
-      "name": "outshift/identity/service/v1alpha1/device.proto",
+      "name": "agntcy/identity/service/v1alpha1/device.proto",
       "description": "",
-      "package": "outshift.identity.service.v1alpha1",
+      "package": "agntcy.identity.service.v1alpha1",
       "hasEnums": true,
       "hasExtensions": false,
       "hasMessages": true,
@@ -2514,7 +2514,7 @@
         {
           "name": "NotificationType",
           "longName": "NotificationType",
-          "fullName": "outshift.identity.service.v1alpha1.NotificationType",
+          "fullName": "agntcy.identity.service.v1alpha1.NotificationType",
           "description": "",
           "values": [
             {
@@ -2540,7 +2540,7 @@
         {
           "name": "ApprovalRequestInfo",
           "longName": "ApprovalRequestInfo",
-          "fullName": "outshift.identity.service.v1alpha1.ApprovalRequestInfo",
+          "fullName": "agntcy.identity.service.v1alpha1.ApprovalRequestInfo",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -2636,7 +2636,7 @@
         {
           "name": "Device",
           "longName": "Device",
-          "fullName": "outshift.identity.service.v1alpha1.Device",
+          "fullName": "agntcy.identity.service.v1alpha1.Device",
           "description": "Devices used for user approval",
           "hasExtensions": false,
           "hasFields": true,
@@ -2708,7 +2708,7 @@
         {
           "name": "Notification",
           "longName": "Notification",
-          "fullName": "outshift.identity.service.v1alpha1.Notification",
+          "fullName": "agntcy.identity.service.v1alpha1.Notification",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -2733,7 +2733,7 @@
               "label": "optional",
               "type": "NotificationType",
               "longType": "NotificationType",
-              "fullType": "outshift.identity.service.v1alpha1.NotificationType",
+              "fullType": "agntcy.identity.service.v1alpha1.NotificationType",
               "ismap": false,
               "isoneof": true,
               "oneofdecl": "_type",
@@ -2745,7 +2745,7 @@
               "label": "optional",
               "type": "ApprovalRequestInfo",
               "longType": "ApprovalRequestInfo",
-              "fullType": "outshift.identity.service.v1alpha1.ApprovalRequestInfo",
+              "fullType": "agntcy.identity.service.v1alpha1.ApprovalRequestInfo",
               "ismap": false,
               "isoneof": true,
               "oneofdecl": "_approval_request_info",
@@ -2757,9 +2757,9 @@
       "services": []
     },
     {
-      "name": "outshift/identity/service/v1alpha1/device_service.proto",
+      "name": "agntcy/identity/service/v1alpha1/device_service.proto",
       "description": "",
-      "package": "outshift.identity.service.v1alpha1",
+      "package": "agntcy.identity.service.v1alpha1",
       "hasEnums": false,
       "hasExtensions": false,
       "hasMessages": true,
@@ -2770,7 +2770,7 @@
         {
           "name": "AddDeviceRequest",
           "longName": "AddDeviceRequest",
-          "fullName": "outshift.identity.service.v1alpha1.AddDeviceRequest",
+          "fullName": "agntcy.identity.service.v1alpha1.AddDeviceRequest",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -2783,7 +2783,7 @@
               "label": "",
               "type": "Device",
               "longType": "Device",
-              "fullType": "outshift.identity.service.v1alpha1.Device",
+              "fullType": "agntcy.identity.service.v1alpha1.Device",
               "ismap": false,
               "isoneof": false,
               "oneofdecl": "",
@@ -2794,7 +2794,7 @@
         {
           "name": "DeleteDeviceRequest",
           "longName": "DeleteDeviceRequest",
-          "fullName": "outshift.identity.service.v1alpha1.DeleteDeviceRequest",
+          "fullName": "agntcy.identity.service.v1alpha1.DeleteDeviceRequest",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -2818,7 +2818,7 @@
         {
           "name": "ListDevicesRequest",
           "longName": "ListDevicesRequest",
-          "fullName": "outshift.identity.service.v1alpha1.ListDevicesRequest",
+          "fullName": "agntcy.identity.service.v1alpha1.ListDevicesRequest",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -2866,7 +2866,7 @@
         {
           "name": "ListDevicesResponse",
           "longName": "ListDevicesResponse",
-          "fullName": "outshift.identity.service.v1alpha1.ListDevicesResponse",
+          "fullName": "agntcy.identity.service.v1alpha1.ListDevicesResponse",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -2879,7 +2879,7 @@
               "label": "repeated",
               "type": "Device",
               "longType": "Device",
-              "fullType": "outshift.identity.service.v1alpha1.Device",
+              "fullType": "agntcy.identity.service.v1alpha1.Device",
               "ismap": false,
               "isoneof": false,
               "oneofdecl": "",
@@ -2890,8 +2890,8 @@
               "description": "Pagination response.",
               "label": "optional",
               "type": "PagedResponse",
-              "longType": "outshift.identity.service.shared.v1alpha1.PagedResponse",
-              "fullType": "outshift.identity.service.shared.v1alpha1.PagedResponse",
+              "longType": "agntcy.identity.service.shared.v1alpha1.PagedResponse",
+              "fullType": "agntcy.identity.service.shared.v1alpha1.PagedResponse",
               "ismap": false,
               "isoneof": true,
               "oneofdecl": "_pagination",
@@ -2902,7 +2902,7 @@
         {
           "name": "RegisterDeviceRequest",
           "longName": "RegisterDeviceRequest",
-          "fullName": "outshift.identity.service.v1alpha1.RegisterDeviceRequest",
+          "fullName": "agntcy.identity.service.v1alpha1.RegisterDeviceRequest",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -2927,7 +2927,7 @@
               "label": "",
               "type": "Device",
               "longType": "Device",
-              "fullType": "outshift.identity.service.v1alpha1.Device",
+              "fullType": "agntcy.identity.service.v1alpha1.Device",
               "ismap": false,
               "isoneof": false,
               "oneofdecl": "",
@@ -2938,7 +2938,7 @@
         {
           "name": "TestDeviceRequest",
           "longName": "TestDeviceRequest",
-          "fullName": "outshift.identity.service.v1alpha1.TestDeviceRequest",
+          "fullName": "agntcy.identity.service.v1alpha1.TestDeviceRequest",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -2964,7 +2964,7 @@
         {
           "name": "DeviceService",
           "longName": "DeviceService",
-          "fullName": "outshift.identity.service.v1alpha1.DeviceService",
+          "fullName": "agntcy.identity.service.v1alpha1.DeviceService",
           "description": "DeviceService manages device.",
           "methods": [
             {
@@ -2972,11 +2972,11 @@
               "description": "Add new device for approval flow",
               "requestType": "AddDeviceRequest",
               "requestLongType": "AddDeviceRequest",
-              "requestFullType": "outshift.identity.service.v1alpha1.AddDeviceRequest",
+              "requestFullType": "agntcy.identity.service.v1alpha1.AddDeviceRequest",
               "requestStreaming": false,
               "responseType": "Device",
               "responseLongType": "Device",
-              "responseFullType": "outshift.identity.service.v1alpha1.Device",
+              "responseFullType": "agntcy.identity.service.v1alpha1.Device",
               "responseStreaming": false,
               "options": {
                 "google.api.http": {
@@ -2995,7 +2995,7 @@
               "description": "Add new device for approval flow",
               "requestType": "RegisterDeviceRequest",
               "requestLongType": "RegisterDeviceRequest",
-              "requestFullType": "outshift.identity.service.v1alpha1.RegisterDeviceRequest",
+              "requestFullType": "agntcy.identity.service.v1alpha1.RegisterDeviceRequest",
               "requestStreaming": false,
               "responseType": "Empty",
               "responseLongType": ".google.protobuf.Empty",
@@ -3018,11 +3018,11 @@
               "description": "List all registered devices",
               "requestType": "ListDevicesRequest",
               "requestLongType": "ListDevicesRequest",
-              "requestFullType": "outshift.identity.service.v1alpha1.ListDevicesRequest",
+              "requestFullType": "agntcy.identity.service.v1alpha1.ListDevicesRequest",
               "requestStreaming": false,
               "responseType": "ListDevicesResponse",
               "responseLongType": "ListDevicesResponse",
-              "responseFullType": "outshift.identity.service.v1alpha1.ListDevicesResponse",
+              "responseFullType": "agntcy.identity.service.v1alpha1.ListDevicesResponse",
               "responseStreaming": false,
               "options": {
                 "google.api.http": {
@@ -3040,7 +3040,7 @@
               "description": "Delete a registered Device.",
               "requestType": "DeleteDeviceRequest",
               "requestLongType": "DeleteDeviceRequest",
-              "requestFullType": "outshift.identity.service.v1alpha1.DeleteDeviceRequest",
+              "requestFullType": "agntcy.identity.service.v1alpha1.DeleteDeviceRequest",
               "requestStreaming": false,
               "responseType": "Empty",
               "responseLongType": ".google.protobuf.Empty",
@@ -3062,7 +3062,7 @@
               "description": "Send a test notification to a registered device to see if it's well configured.",
               "requestType": "TestDeviceRequest",
               "requestLongType": "TestDeviceRequest",
-              "requestFullType": "outshift.identity.service.v1alpha1.TestDeviceRequest",
+              "requestFullType": "agntcy.identity.service.v1alpha1.TestDeviceRequest",
               "requestStreaming": false,
               "responseType": "Empty",
               "responseLongType": ".google.protobuf.Empty",
@@ -3084,9 +3084,9 @@
       ]
     },
     {
-      "name": "outshift/identity/service/v1alpha1/iam.proto",
+      "name": "agntcy/identity/service/v1alpha1/iam.proto",
       "description": "",
-      "package": "outshift.identity.service.v1alpha1",
+      "package": "agntcy.identity.service.v1alpha1",
       "hasEnums": false,
       "hasExtensions": false,
       "hasMessages": true,
@@ -3097,7 +3097,7 @@
         {
           "name": "APIKey",
           "longName": "APIKey",
-          "fullName": "outshift.identity.service.v1alpha1.APIKey",
+          "fullName": "agntcy.identity.service.v1alpha1.APIKey",
           "description": "APIKey",
           "hasExtensions": false,
           "hasFields": true,
@@ -3182,9 +3182,9 @@
       "services": []
     },
     {
-      "name": "outshift/identity/service/v1alpha1/policy_service.proto",
+      "name": "agntcy/identity/service/v1alpha1/policy_service.proto",
       "description": "",
-      "package": "outshift.identity.service.v1alpha1",
+      "package": "agntcy.identity.service.v1alpha1",
       "hasEnums": false,
       "hasExtensions": false,
       "hasMessages": true,
@@ -3195,7 +3195,7 @@
         {
           "name": "CreatePolicyRequest",
           "longName": "CreatePolicyRequest",
-          "fullName": "outshift.identity.service.v1alpha1.CreatePolicyRequest",
+          "fullName": "agntcy.identity.service.v1alpha1.CreatePolicyRequest",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -3243,7 +3243,7 @@
         {
           "name": "CreateRuleRequest",
           "longName": "CreateRuleRequest",
-          "fullName": "outshift.identity.service.v1alpha1.CreateRuleRequest",
+          "fullName": "agntcy.identity.service.v1alpha1.CreateRuleRequest",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -3316,7 +3316,7 @@
               "label": "",
               "type": "RuleAction",
               "longType": "RuleAction",
-              "fullType": "outshift.identity.service.v1alpha1.RuleAction",
+              "fullType": "agntcy.identity.service.v1alpha1.RuleAction",
               "ismap": false,
               "isoneof": false,
               "oneofdecl": "",
@@ -3327,7 +3327,7 @@
         {
           "name": "DeletePolicyRequest",
           "longName": "DeletePolicyRequest",
-          "fullName": "outshift.identity.service.v1alpha1.DeletePolicyRequest",
+          "fullName": "agntcy.identity.service.v1alpha1.DeletePolicyRequest",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -3351,7 +3351,7 @@
         {
           "name": "DeleteRuleRequest",
           "longName": "DeleteRuleRequest",
-          "fullName": "outshift.identity.service.v1alpha1.DeleteRuleRequest",
+          "fullName": "agntcy.identity.service.v1alpha1.DeleteRuleRequest",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -3387,7 +3387,7 @@
         {
           "name": "GetPoliciesCountRequest",
           "longName": "GetPoliciesCountRequest",
-          "fullName": "outshift.identity.service.v1alpha1.GetPoliciesCountRequest",
+          "fullName": "agntcy.identity.service.v1alpha1.GetPoliciesCountRequest",
           "description": "",
           "hasExtensions": false,
           "hasFields": false,
@@ -3398,7 +3398,7 @@
         {
           "name": "GetPoliciesCountResponse",
           "longName": "GetPoliciesCountResponse",
-          "fullName": "outshift.identity.service.v1alpha1.GetPoliciesCountResponse",
+          "fullName": "agntcy.identity.service.v1alpha1.GetPoliciesCountResponse",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -3422,7 +3422,7 @@
         {
           "name": "GetPolicyRequest",
           "longName": "GetPolicyRequest",
-          "fullName": "outshift.identity.service.v1alpha1.GetPolicyRequest",
+          "fullName": "agntcy.identity.service.v1alpha1.GetPolicyRequest",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -3446,7 +3446,7 @@
         {
           "name": "GetRuleRequest",
           "longName": "GetRuleRequest",
-          "fullName": "outshift.identity.service.v1alpha1.GetRuleRequest",
+          "fullName": "agntcy.identity.service.v1alpha1.GetRuleRequest",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -3482,7 +3482,7 @@
         {
           "name": "ListPoliciesRequest",
           "longName": "ListPoliciesRequest",
-          "fullName": "outshift.identity.service.v1alpha1.ListPoliciesRequest",
+          "fullName": "agntcy.identity.service.v1alpha1.ListPoliciesRequest",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -3554,7 +3554,7 @@
         {
           "name": "ListPoliciesResponse",
           "longName": "ListPoliciesResponse",
-          "fullName": "outshift.identity.service.v1alpha1.ListPoliciesResponse",
+          "fullName": "agntcy.identity.service.v1alpha1.ListPoliciesResponse",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -3567,7 +3567,7 @@
               "label": "repeated",
               "type": "Policy",
               "longType": "Policy",
-              "fullType": "outshift.identity.service.v1alpha1.Policy",
+              "fullType": "agntcy.identity.service.v1alpha1.Policy",
               "ismap": false,
               "isoneof": false,
               "oneofdecl": "",
@@ -3578,8 +3578,8 @@
               "description": "Pagination response.",
               "label": "optional",
               "type": "PagedResponse",
-              "longType": "outshift.identity.service.shared.v1alpha1.PagedResponse",
-              "fullType": "outshift.identity.service.shared.v1alpha1.PagedResponse",
+              "longType": "agntcy.identity.service.shared.v1alpha1.PagedResponse",
+              "fullType": "agntcy.identity.service.shared.v1alpha1.PagedResponse",
               "ismap": false,
               "isoneof": true,
               "oneofdecl": "_pagination",
@@ -3590,7 +3590,7 @@
         {
           "name": "ListRulesRequest",
           "longName": "ListRulesRequest",
-          "fullName": "outshift.identity.service.v1alpha1.ListRulesRequest",
+          "fullName": "agntcy.identity.service.v1alpha1.ListRulesRequest",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -3650,7 +3650,7 @@
         {
           "name": "ListRulesResponse",
           "longName": "ListRulesResponse",
-          "fullName": "outshift.identity.service.v1alpha1.ListRulesResponse",
+          "fullName": "agntcy.identity.service.v1alpha1.ListRulesResponse",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -3663,7 +3663,7 @@
               "label": "repeated",
               "type": "Rule",
               "longType": "Rule",
-              "fullType": "outshift.identity.service.v1alpha1.Rule",
+              "fullType": "agntcy.identity.service.v1alpha1.Rule",
               "ismap": false,
               "isoneof": false,
               "oneofdecl": "",
@@ -3674,8 +3674,8 @@
               "description": "Pagination response.",
               "label": "optional",
               "type": "PagedResponse",
-              "longType": "outshift.identity.service.shared.v1alpha1.PagedResponse",
-              "fullType": "outshift.identity.service.shared.v1alpha1.PagedResponse",
+              "longType": "agntcy.identity.service.shared.v1alpha1.PagedResponse",
+              "fullType": "agntcy.identity.service.shared.v1alpha1.PagedResponse",
               "ismap": false,
               "isoneof": true,
               "oneofdecl": "_pagination",
@@ -3686,7 +3686,7 @@
         {
           "name": "UpdatePolicyRequest",
           "longName": "UpdatePolicyRequest",
-          "fullName": "outshift.identity.service.v1alpha1.UpdatePolicyRequest",
+          "fullName": "agntcy.identity.service.v1alpha1.UpdatePolicyRequest",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -3746,7 +3746,7 @@
         {
           "name": "UpdateRuleRequest",
           "longName": "UpdateRuleRequest",
-          "fullName": "outshift.identity.service.v1alpha1.UpdateRuleRequest",
+          "fullName": "agntcy.identity.service.v1alpha1.UpdateRuleRequest",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -3831,7 +3831,7 @@
               "label": "",
               "type": "RuleAction",
               "longType": "RuleAction",
-              "fullType": "outshift.identity.service.v1alpha1.RuleAction",
+              "fullType": "agntcy.identity.service.v1alpha1.RuleAction",
               "ismap": false,
               "isoneof": false,
               "oneofdecl": "",
@@ -3844,7 +3844,7 @@
         {
           "name": "PolicyService",
           "longName": "PolicyService",
-          "fullName": "outshift.identity.service.v1alpha1.PolicyService",
+          "fullName": "agntcy.identity.service.v1alpha1.PolicyService",
           "description": "PolicyService manages policy.",
           "methods": [
             {
@@ -3852,11 +3852,11 @@
               "description": "List Policies.",
               "requestType": "ListPoliciesRequest",
               "requestLongType": "ListPoliciesRequest",
-              "requestFullType": "outshift.identity.service.v1alpha1.ListPoliciesRequest",
+              "requestFullType": "agntcy.identity.service.v1alpha1.ListPoliciesRequest",
               "requestStreaming": false,
               "responseType": "ListPoliciesResponse",
               "responseLongType": "ListPoliciesResponse",
-              "responseFullType": "outshift.identity.service.v1alpha1.ListPoliciesResponse",
+              "responseFullType": "agntcy.identity.service.v1alpha1.ListPoliciesResponse",
               "responseStreaming": false,
               "options": {
                 "google.api.http": {
@@ -3874,11 +3874,11 @@
               "description": "Get policies total count.",
               "requestType": "GetPoliciesCountRequest",
               "requestLongType": "GetPoliciesCountRequest",
-              "requestFullType": "outshift.identity.service.v1alpha1.GetPoliciesCountRequest",
+              "requestFullType": "agntcy.identity.service.v1alpha1.GetPoliciesCountRequest",
               "requestStreaming": false,
               "responseType": "GetPoliciesCountResponse",
               "responseLongType": "GetPoliciesCountResponse",
-              "responseFullType": "outshift.identity.service.v1alpha1.GetPoliciesCountResponse",
+              "responseFullType": "agntcy.identity.service.v1alpha1.GetPoliciesCountResponse",
               "responseStreaming": false,
               "options": {
                 "google.api.http": {
@@ -3896,11 +3896,11 @@
               "description": "Get Policy by id",
               "requestType": "GetPolicyRequest",
               "requestLongType": "GetPolicyRequest",
-              "requestFullType": "outshift.identity.service.v1alpha1.GetPolicyRequest",
+              "requestFullType": "agntcy.identity.service.v1alpha1.GetPolicyRequest",
               "requestStreaming": false,
               "responseType": "Policy",
               "responseLongType": "Policy",
-              "responseFullType": "outshift.identity.service.v1alpha1.Policy",
+              "responseFullType": "agntcy.identity.service.v1alpha1.Policy",
               "responseStreaming": false,
               "options": {
                 "google.api.http": {
@@ -3918,11 +3918,11 @@
               "description": "Create a new Policy.",
               "requestType": "CreatePolicyRequest",
               "requestLongType": "CreatePolicyRequest",
-              "requestFullType": "outshift.identity.service.v1alpha1.CreatePolicyRequest",
+              "requestFullType": "agntcy.identity.service.v1alpha1.CreatePolicyRequest",
               "requestStreaming": false,
               "responseType": "Policy",
               "responseLongType": "Policy",
-              "responseFullType": "outshift.identity.service.v1alpha1.Policy",
+              "responseFullType": "agntcy.identity.service.v1alpha1.Policy",
               "responseStreaming": false,
               "options": {
                 "google.api.http": {
@@ -3941,11 +3941,11 @@
               "description": "Update a Policy.",
               "requestType": "UpdatePolicyRequest",
               "requestLongType": "UpdatePolicyRequest",
-              "requestFullType": "outshift.identity.service.v1alpha1.UpdatePolicyRequest",
+              "requestFullType": "agntcy.identity.service.v1alpha1.UpdatePolicyRequest",
               "requestStreaming": false,
               "responseType": "Policy",
               "responseLongType": "Policy",
-              "responseFullType": "outshift.identity.service.v1alpha1.Policy",
+              "responseFullType": "agntcy.identity.service.v1alpha1.Policy",
               "responseStreaming": false,
               "options": {
                 "google.api.http": {
@@ -3964,7 +3964,7 @@
               "description": "Delete an existing Policy.",
               "requestType": "DeletePolicyRequest",
               "requestLongType": "DeletePolicyRequest",
-              "requestFullType": "outshift.identity.service.v1alpha1.DeletePolicyRequest",
+              "requestFullType": "agntcy.identity.service.v1alpha1.DeletePolicyRequest",
               "requestStreaming": false,
               "responseType": "Empty",
               "responseLongType": ".google.protobuf.Empty",
@@ -3986,11 +3986,11 @@
               "description": "List Rules.",
               "requestType": "ListRulesRequest",
               "requestLongType": "ListRulesRequest",
-              "requestFullType": "outshift.identity.service.v1alpha1.ListRulesRequest",
+              "requestFullType": "agntcy.identity.service.v1alpha1.ListRulesRequest",
               "requestStreaming": false,
               "responseType": "ListRulesResponse",
               "responseLongType": "ListRulesResponse",
-              "responseFullType": "outshift.identity.service.v1alpha1.ListRulesResponse",
+              "responseFullType": "agntcy.identity.service.v1alpha1.ListRulesResponse",
               "responseStreaming": false,
               "options": {
                 "google.api.http": {
@@ -4008,11 +4008,11 @@
               "description": "Get Rule by id",
               "requestType": "GetRuleRequest",
               "requestLongType": "GetRuleRequest",
-              "requestFullType": "outshift.identity.service.v1alpha1.GetRuleRequest",
+              "requestFullType": "agntcy.identity.service.v1alpha1.GetRuleRequest",
               "requestStreaming": false,
               "responseType": "Rule",
               "responseLongType": "Rule",
-              "responseFullType": "outshift.identity.service.v1alpha1.Rule",
+              "responseFullType": "agntcy.identity.service.v1alpha1.Rule",
               "responseStreaming": false,
               "options": {
                 "google.api.http": {
@@ -4030,11 +4030,11 @@
               "description": "Create a new Rule.",
               "requestType": "CreateRuleRequest",
               "requestLongType": "CreateRuleRequest",
-              "requestFullType": "outshift.identity.service.v1alpha1.CreateRuleRequest",
+              "requestFullType": "agntcy.identity.service.v1alpha1.CreateRuleRequest",
               "requestStreaming": false,
               "responseType": "Rule",
               "responseLongType": "Rule",
-              "responseFullType": "outshift.identity.service.v1alpha1.Rule",
+              "responseFullType": "agntcy.identity.service.v1alpha1.Rule",
               "responseStreaming": false,
               "options": {
                 "google.api.http": {
@@ -4053,11 +4053,11 @@
               "description": "Update a Rule.",
               "requestType": "UpdateRuleRequest",
               "requestLongType": "UpdateRuleRequest",
-              "requestFullType": "outshift.identity.service.v1alpha1.UpdateRuleRequest",
+              "requestFullType": "agntcy.identity.service.v1alpha1.UpdateRuleRequest",
               "requestStreaming": false,
               "responseType": "Rule",
               "responseLongType": "Rule",
-              "responseFullType": "outshift.identity.service.v1alpha1.Rule",
+              "responseFullType": "agntcy.identity.service.v1alpha1.Rule",
               "responseStreaming": false,
               "options": {
                 "google.api.http": {
@@ -4076,7 +4076,7 @@
               "description": "Delete an existing Rule.",
               "requestType": "DeleteRuleRequest",
               "requestLongType": "DeleteRuleRequest",
-              "requestFullType": "outshift.identity.service.v1alpha1.DeleteRuleRequest",
+              "requestFullType": "agntcy.identity.service.v1alpha1.DeleteRuleRequest",
               "requestStreaming": false,
               "responseType": "Empty",
               "responseLongType": ".google.protobuf.Empty",
@@ -4098,9 +4098,9 @@
       ]
     },
     {
-      "name": "outshift/identity/service/v1alpha1/settings.proto",
+      "name": "agntcy/identity/service/v1alpha1/settings.proto",
       "description": "",
-      "package": "outshift.identity.service.v1alpha1",
+      "package": "agntcy.identity.service.v1alpha1",
       "hasEnums": true,
       "hasExtensions": false,
       "hasMessages": true,
@@ -4109,7 +4109,7 @@
         {
           "name": "IdpType",
           "longName": "IdpType",
-          "fullName": "outshift.identity.service.v1alpha1.IdpType",
+          "fullName": "agntcy.identity.service.v1alpha1.IdpType",
           "description": "Type",
           "values": [
             {
@@ -4145,7 +4145,7 @@
         {
           "name": "ApiKey",
           "longName": "ApiKey",
-          "fullName": "outshift.identity.service.v1alpha1.ApiKey",
+          "fullName": "agntcy.identity.service.v1alpha1.ApiKey",
           "description": "An Identity API Key.",
           "hasExtensions": false,
           "hasFields": true,
@@ -4169,7 +4169,7 @@
         {
           "name": "DuoIdpSettings",
           "longName": "DuoIdpSettings",
-          "fullName": "outshift.identity.service.v1alpha1.DuoIdpSettings",
+          "fullName": "agntcy.identity.service.v1alpha1.DuoIdpSettings",
           "description": "Duo IdP Settings",
           "hasExtensions": false,
           "hasFields": true,
@@ -4217,7 +4217,7 @@
         {
           "name": "IssuerSettings",
           "longName": "IssuerSettings",
-          "fullName": "outshift.identity.service.v1alpha1.IssuerSettings",
+          "fullName": "agntcy.identity.service.v1alpha1.IssuerSettings",
           "description": "Issuer Settings",
           "hasExtensions": false,
           "hasFields": true,
@@ -4242,7 +4242,7 @@
               "label": "optional",
               "type": "IdpType",
               "longType": "IdpType",
-              "fullType": "outshift.identity.service.v1alpha1.IdpType",
+              "fullType": "agntcy.identity.service.v1alpha1.IdpType",
               "ismap": false,
               "isoneof": true,
               "oneofdecl": "_idp_type",
@@ -4254,7 +4254,7 @@
               "label": "optional",
               "type": "DuoIdpSettings",
               "longType": "DuoIdpSettings",
-              "fullType": "outshift.identity.service.v1alpha1.DuoIdpSettings",
+              "fullType": "agntcy.identity.service.v1alpha1.DuoIdpSettings",
               "ismap": false,
               "isoneof": true,
               "oneofdecl": "_duo_idp_settings",
@@ -4266,7 +4266,7 @@
               "label": "optional",
               "type": "OktaIdpSettings",
               "longType": "OktaIdpSettings",
-              "fullType": "outshift.identity.service.v1alpha1.OktaIdpSettings",
+              "fullType": "agntcy.identity.service.v1alpha1.OktaIdpSettings",
               "ismap": false,
               "isoneof": true,
               "oneofdecl": "_okta_idp_settings",
@@ -4278,7 +4278,7 @@
               "label": "optional",
               "type": "OryIdpSettings",
               "longType": "OryIdpSettings",
-              "fullType": "outshift.identity.service.v1alpha1.OryIdpSettings",
+              "fullType": "agntcy.identity.service.v1alpha1.OryIdpSettings",
               "ismap": false,
               "isoneof": true,
               "oneofdecl": "_ory_idp_settings",
@@ -4289,7 +4289,7 @@
         {
           "name": "OktaIdpSettings",
           "longName": "OktaIdpSettings",
-          "fullName": "outshift.identity.service.v1alpha1.OktaIdpSettings",
+          "fullName": "agntcy.identity.service.v1alpha1.OktaIdpSettings",
           "description": "Okta IdP Settings",
           "hasExtensions": false,
           "hasFields": true,
@@ -4337,7 +4337,7 @@
         {
           "name": "OryIdpSettings",
           "longName": "OryIdpSettings",
-          "fullName": "outshift.identity.service.v1alpha1.OryIdpSettings",
+          "fullName": "agntcy.identity.service.v1alpha1.OryIdpSettings",
           "description": "Ory IdP Settings",
           "hasExtensions": false,
           "hasFields": true,
@@ -4373,7 +4373,7 @@
         {
           "name": "Settings",
           "longName": "Settings",
-          "fullName": "outshift.identity.service.v1alpha1.Settings",
+          "fullName": "agntcy.identity.service.v1alpha1.Settings",
           "description": "Identity Settings",
           "hasExtensions": false,
           "hasFields": true,
@@ -4386,7 +4386,7 @@
               "label": "optional",
               "type": "ApiKey",
               "longType": "ApiKey",
-              "fullType": "outshift.identity.service.v1alpha1.ApiKey",
+              "fullType": "agntcy.identity.service.v1alpha1.ApiKey",
               "ismap": false,
               "isoneof": true,
               "oneofdecl": "_api_key",
@@ -4398,7 +4398,7 @@
               "label": "optional",
               "type": "IssuerSettings",
               "longType": "IssuerSettings",
-              "fullType": "outshift.identity.service.v1alpha1.IssuerSettings",
+              "fullType": "agntcy.identity.service.v1alpha1.IssuerSettings",
               "ismap": false,
               "isoneof": true,
               "oneofdecl": "_issuer_settings",
@@ -4410,9 +4410,9 @@
       "services": []
     },
     {
-      "name": "outshift/identity/service/v1alpha1/settings_service.proto",
+      "name": "agntcy/identity/service/v1alpha1/settings_service.proto",
       "description": "",
-      "package": "outshift.identity.service.v1alpha1",
+      "package": "agntcy.identity.service.v1alpha1",
       "hasEnums": false,
       "hasExtensions": false,
       "hasMessages": true,
@@ -4423,7 +4423,7 @@
         {
           "name": "GetSettingsRequest",
           "longName": "GetSettingsRequest",
-          "fullName": "outshift.identity.service.v1alpha1.GetSettingsRequest",
+          "fullName": "agntcy.identity.service.v1alpha1.GetSettingsRequest",
           "description": "Empty request for getting settings.",
           "hasExtensions": false,
           "hasFields": false,
@@ -4434,7 +4434,7 @@
         {
           "name": "SetApiKeyRequest",
           "longName": "SetApiKeyRequest",
-          "fullName": "outshift.identity.service.v1alpha1.SetApiKeyRequest",
+          "fullName": "agntcy.identity.service.v1alpha1.SetApiKeyRequest",
           "description": "Empty request for setting up API Key.",
           "hasExtensions": false,
           "hasFields": false,
@@ -4445,7 +4445,7 @@
         {
           "name": "SetIssuerRequest",
           "longName": "SetIssuerRequest",
-          "fullName": "outshift.identity.service.v1alpha1.SetIssuerRequest",
+          "fullName": "agntcy.identity.service.v1alpha1.SetIssuerRequest",
           "description": "",
           "hasExtensions": false,
           "hasFields": true,
@@ -4458,7 +4458,7 @@
               "label": "",
               "type": "IssuerSettings",
               "longType": "IssuerSettings",
-              "fullType": "outshift.identity.service.v1alpha1.IssuerSettings",
+              "fullType": "agntcy.identity.service.v1alpha1.IssuerSettings",
               "ismap": false,
               "isoneof": false,
               "oneofdecl": "",
@@ -4471,7 +4471,7 @@
         {
           "name": "SettingsService",
           "longName": "SettingsService",
-          "fullName": "outshift.identity.service.v1alpha1.SettingsService",
+          "fullName": "agntcy.identity.service.v1alpha1.SettingsService",
           "description": "SettingsService manages settings.",
           "methods": [
             {
@@ -4479,11 +4479,11 @@
               "description": "Get Settings",
               "requestType": "GetSettingsRequest",
               "requestLongType": "GetSettingsRequest",
-              "requestFullType": "outshift.identity.service.v1alpha1.GetSettingsRequest",
+              "requestFullType": "agntcy.identity.service.v1alpha1.GetSettingsRequest",
               "requestStreaming": false,
               "responseType": "Settings",
               "responseLongType": "Settings",
-              "responseFullType": "outshift.identity.service.v1alpha1.Settings",
+              "responseFullType": "agntcy.identity.service.v1alpha1.Settings",
               "responseStreaming": false,
               "options": {
                 "google.api.http": {
@@ -4501,11 +4501,11 @@
               "description": "Set up API Key",
               "requestType": "SetApiKeyRequest",
               "requestLongType": "SetApiKeyRequest",
-              "requestFullType": "outshift.identity.service.v1alpha1.SetApiKeyRequest",
+              "requestFullType": "agntcy.identity.service.v1alpha1.SetApiKeyRequest",
               "requestStreaming": false,
               "responseType": "ApiKey",
               "responseLongType": "ApiKey",
-              "responseFullType": "outshift.identity.service.v1alpha1.ApiKey",
+              "responseFullType": "agntcy.identity.service.v1alpha1.ApiKey",
               "responseStreaming": false,
               "options": {
                 "google.api.http": {
@@ -4523,11 +4523,11 @@
               "description": "Set up Issuer",
               "requestType": "SetIssuerRequest",
               "requestLongType": "SetIssuerRequest",
-              "requestFullType": "outshift.identity.service.v1alpha1.SetIssuerRequest",
+              "requestFullType": "agntcy.identity.service.v1alpha1.SetIssuerRequest",
               "requestStreaming": false,
               "responseType": "IssuerSettings",
               "responseLongType": "IssuerSettings",
-              "responseFullType": "outshift.identity.service.v1alpha1.IssuerSettings",
+              "responseFullType": "agntcy.identity.service.v1alpha1.IssuerSettings",
               "responseStreaming": false,
               "options": {
                 "google.api.http": {

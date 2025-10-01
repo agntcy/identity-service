@@ -12,6 +12,12 @@ import (
 	"strings"
 	"time"
 
+	badgetypes "github.com/agntcy/identity-service/internal/core/badge/types"
+	idpcore "github.com/agntcy/identity-service/internal/core/idp"
+	"github.com/agntcy/identity-service/internal/pkg/convertutil"
+	"github.com/agntcy/identity-service/internal/pkg/httputil"
+	"github.com/agntcy/identity-service/internal/pkg/ptrutil"
+	"github.com/agntcy/identity-service/pkg/log"
 	idsdk "github.com/agntcy/identity/api/client/client/id_service"
 	issuersdk "github.com/agntcy/identity/api/client/client/issuer_service"
 	vcsdk "github.com/agntcy/identity/api/client/client/vc_service"
@@ -19,12 +25,6 @@ import (
 	"github.com/agntcy/identity/pkg/oidc"
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
-	badgetypes "github.com/outshift/identity-service/internal/core/badge/types"
-	idpcore "github.com/outshift/identity-service/internal/core/idp"
-	"github.com/outshift/identity-service/internal/pkg/convertutil"
-	"github.com/outshift/identity-service/internal/pkg/httputil"
-	"github.com/outshift/identity-service/internal/pkg/ptrutil"
-	"github.com/outshift/identity-service/pkg/log"
 )
 
 const (

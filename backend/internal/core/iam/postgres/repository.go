@@ -8,12 +8,12 @@ import (
 	"errors"
 	"fmt"
 
-	iamcore "github.com/outshift/identity-service/internal/core/iam"
-	"github.com/outshift/identity-service/internal/core/iam/types"
-	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
-	"github.com/outshift/identity-service/internal/pkg/gormutil"
-	"github.com/outshift/identity-service/internal/pkg/ptrutil"
-	"github.com/outshift/identity-service/internal/pkg/secrets"
+	iamcore "github.com/agntcy/identity-service/internal/core/iam"
+	"github.com/agntcy/identity-service/internal/core/iam/types"
+	identitycontext "github.com/agntcy/identity-service/internal/pkg/context"
+	"github.com/agntcy/identity-service/internal/pkg/gormutil"
+	"github.com/agntcy/identity-service/internal/pkg/ptrutil"
+	"github.com/agntcy/identity-service/internal/pkg/secrets"
 	"gorm.io/gorm"
 )
 

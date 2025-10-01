@@ -11,8 +11,8 @@ import (
 	"net/textproto"
 	"testing"
 
+	"github.com/agntcy/identity-service/internal/pkg/httputil"
 	"github.com/google/uuid"
-	"github.com/outshift/identity-service/internal/pkg/httputil"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -9,9 +9,9 @@ import (
 	"fmt"
 	"slices"
 
+	"github.com/agntcy/identity-service/internal/core/badge/mcp"
+	"github.com/agntcy/identity-service/internal/core/policy/types"
 	"github.com/google/uuid"
-	"github.com/outshift/identity-service/internal/core/badge/mcp"
-	"github.com/outshift/identity-service/internal/core/policy/types"
 )
 
 type TaskService interface {

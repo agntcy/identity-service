@@ -10,7 +10,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/outshift/identity-service/internal/core/badge/a2a"
+	"github.com/agntcy/identity-service/internal/core/badge/a2a"
 	"github.com/stretchr/testify/assert"
 )
 

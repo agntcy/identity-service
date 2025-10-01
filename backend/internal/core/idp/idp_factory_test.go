@@ -7,8 +7,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/outshift/identity-service/internal/core/idp"
-	"github.com/outshift/identity-service/internal/core/settings/types"
+	"github.com/agntcy/identity-service/internal/core/idp"
+	"github.com/agntcy/identity-service/internal/core/settings/types"
 	"github.com/stretchr/testify/assert"
 )
 

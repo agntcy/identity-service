@@ -7,8 +7,8 @@ package mocks
 import (
 	"context"
 
-	"github.com/outshift/identity-service/internal/core/device/types"
-	"github.com/outshift/identity-service/internal/pkg/pagination"
+	"github.com/agntcy/identity-service/internal/core/device/types"
+	"github.com/agntcy/identity-service/internal/pkg/pagination"
 	mock "github.com/stretchr/testify/mock"
 )
 

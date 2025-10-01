@@ -6,8 +6,8 @@ package types_test
 import (
 	"testing"
 
+	"github.com/agntcy/identity-service/internal/core/badge/types"
 	"github.com/google/uuid"
-	"github.com/outshift/identity-service/internal/core/badge/types"
 	"github.com/stretchr/testify/assert"
 )
 

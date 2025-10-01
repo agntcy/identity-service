@@ -8,13 +8,13 @@ import (
 	"testing"
 	"time"
 
+	"github.com/agntcy/identity-service/internal/bff"
+	bffmocks "github.com/agntcy/identity-service/internal/bff/mocks"
+	devicemocks "github.com/agntcy/identity-service/internal/core/device/mocks"
+	devicetypes "github.com/agntcy/identity-service/internal/core/device/types"
+	identitycontext "github.com/agntcy/identity-service/internal/pkg/context"
+	"github.com/agntcy/identity-service/internal/pkg/errutil"
 	"github.com/google/uuid"
-	"github.com/outshift/identity-service/internal/bff"
-	bffmocks "github.com/outshift/identity-service/internal/bff/mocks"
-	devicemocks "github.com/outshift/identity-service/internal/core/device/mocks"
-	devicetypes "github.com/outshift/identity-service/internal/core/device/types"
-	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
-	"github.com/outshift/identity-service/internal/pkg/errutil"
 	"github.com/stretchr/testify/assert"
 )
 

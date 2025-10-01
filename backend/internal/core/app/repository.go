@@ -7,9 +7,9 @@ import (
 	"context"
 	"errors"
 
-	"github.com/outshift/identity-service/internal/core/app/types"
-	"github.com/outshift/identity-service/internal/pkg/pagination"
-	"github.com/outshift/identity-service/internal/pkg/sorting"
+	"github.com/agntcy/identity-service/internal/core/app/types"
+	"github.com/agntcy/identity-service/internal/pkg/pagination"
+	"github.com/agntcy/identity-service/internal/pkg/sorting"
 )
 
 type Repository interface {

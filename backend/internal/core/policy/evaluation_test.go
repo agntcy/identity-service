@@ -7,12 +7,12 @@ import (
 	"context"
 	"testing"
 
+	apptypes "github.com/agntcy/identity-service/internal/core/app/types"
+	policycore "github.com/agntcy/identity-service/internal/core/policy"
+	policymocks "github.com/agntcy/identity-service/internal/core/policy/mocks"
+	"github.com/agntcy/identity-service/internal/core/policy/types"
+	"github.com/agntcy/identity-service/internal/pkg/errutil"
 	"github.com/google/uuid"
-	apptypes "github.com/outshift/identity-service/internal/core/app/types"
-	policycore "github.com/outshift/identity-service/internal/core/policy"
-	policymocks "github.com/outshift/identity-service/internal/core/policy/mocks"
-	"github.com/outshift/identity-service/internal/core/policy/types"
-	"github.com/outshift/identity-service/internal/pkg/errutil"
 	"github.com/stretchr/testify/assert"
 )
 

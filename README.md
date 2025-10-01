@@ -1,6 +1,6 @@
 # Agent Identity Service
 
-[![Lint](https://github.com/outshift-open/identity-service/actions/workflows/lint.yml/badge.svg?branch=main)](https://github.com/marketplace/actions/super-linter)
+[![Lint](https://github.com/agntcy/identity-service/actions/workflows/lint.yml/badge.svg?branch=main)](https://github.com/marketplace/actions/super-linter)
 [![Contributor-Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-fbab2c.svg)](CODE_OF_CONDUCT.md)
 
 <div>
@@ -117,7 +117,7 @@ For more detailed development instructions please refer to the following section
 
 ## Roadmap
 
-See the [open issues](https://github.com/outshift-open/identity-service/issues) for a list
+See the [open issues](https://github.com/agntcy/identity-service/issues) for a list
 of proposed features (and known issues).
 
 ## Contributing
@@ -132,4 +132,4 @@ appreciated**. For detailed contributing guidelines, please see
 [Copyright Notice and License](LICENSE)
 
 Distributed under Apache 2.0 License. See LICENSE for more information.
-Copyright [2025 Cisco Systems, Inc. and its affiliates](https://github.com/outshift-open) Contributors.
+Copyright [2025 Cisco Systems, Inc. and its affiliates](https://github.com/agntcy) Contributors.

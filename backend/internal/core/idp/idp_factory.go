@@ -7,7 +7,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/outshift/identity-service/internal/core/settings/types"
+	"github.com/agntcy/identity-service/internal/core/settings/types"
 )
 
 type IdpFactory interface {

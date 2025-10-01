@@ -9,14 +9,14 @@ import (
 	"errors"
 	"fmt"
 
-	authpg "github.com/outshift/identity-service/internal/core/auth/postgres"
-	devicecore "github.com/outshift/identity-service/internal/core/device"
-	"github.com/outshift/identity-service/internal/core/device/types"
-	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
-	"github.com/outshift/identity-service/internal/pkg/convertutil"
-	"github.com/outshift/identity-service/internal/pkg/gormutil"
-	"github.com/outshift/identity-service/internal/pkg/pagination"
-	"github.com/outshift/identity-service/internal/pkg/ptrutil"
+	authpg "github.com/agntcy/identity-service/internal/core/auth/postgres"
+	devicecore "github.com/agntcy/identity-service/internal/core/device"
+	"github.com/agntcy/identity-service/internal/core/device/types"
+	identitycontext "github.com/agntcy/identity-service/internal/pkg/context"
+	"github.com/agntcy/identity-service/internal/pkg/convertutil"
+	"github.com/agntcy/identity-service/internal/pkg/gormutil"
+	"github.com/agntcy/identity-service/internal/pkg/pagination"
+	"github.com/agntcy/identity-service/internal/pkg/ptrutil"
 	"gorm.io/gorm"
 )
 

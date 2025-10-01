@@ -7,10 +7,10 @@ import (
 	"encoding/json"
 	"testing"
 
+	"github.com/agntcy/identity-service/internal/core/badge"
+	"github.com/agntcy/identity-service/internal/core/badge/types"
 	"github.com/agntcy/identity/pkg/joseutil"
 	"github.com/google/uuid"
-	"github.com/outshift/identity-service/internal/core/badge"
-	"github.com/outshift/identity-service/internal/core/badge/types"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -7,7 +7,7 @@ import (
 	"context"
 	"net"
 
-	"github.com/outshift/identity-service/pkg"
+	"github.com/agntcy/identity-service/pkg"
 	"google.golang.org/grpc"
 )
 

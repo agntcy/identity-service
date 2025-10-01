@@ -14,7 +14,7 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/outshift-open/identity-service/backend/api/client/models"
+	"github.com/agntcy/identity-service/backend/api/client/models"
 )
 
 // GetPoliciesCountReader is a Reader for the GetPoliciesCount structure.

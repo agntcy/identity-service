@@ -6,7 +6,7 @@ package db
 import (
 	"fmt"
 
-	"github.com/outshift/identity-service/pkg/log"
+	"github.com/agntcy/identity-service/pkg/log"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
