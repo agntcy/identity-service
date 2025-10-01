@@ -58,7 +58,12 @@ func (s *revoker) RevokeAll(
 			return err
 		}
 
-		err = s.identityService.RevokeVerifiableCredential(ctx, clientCredentials, &badge.VerifiableCredential, issuer)
+		err = s.identityService.RevokeVerifiableCredential(
+			ctx,
+			clientCredentials,
+			&badge.VerifiableCredential,
+			issuer,
+		)
 		if err != nil {
 			return fmt.Errorf("identity service failed to revoke badge %s: %w", badge.ID, err)
 		}
