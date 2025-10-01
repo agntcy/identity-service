@@ -7,11 +7,11 @@ import (
 	"database/sql"
 	"time"
 
+	"github.com/agntcy/identity-service/internal/core/iam/types"
+	"github.com/agntcy/identity-service/internal/pkg/pgutil"
+	"github.com/agntcy/identity-service/internal/pkg/secrets"
+	"github.com/agntcy/identity-service/internal/pkg/strutil"
 	"github.com/google/uuid"
-	"github.com/outshift/identity-service/internal/core/iam/types"
-	"github.com/outshift/identity-service/internal/pkg/pgutil"
-	"github.com/outshift/identity-service/internal/pkg/secrets"
-	"github.com/outshift/identity-service/internal/pkg/strutil"
 	"gorm.io/gorm"
 )
 

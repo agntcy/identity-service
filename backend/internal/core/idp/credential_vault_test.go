@@ -9,10 +9,10 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/agntcy/identity-service/internal/core/idp"
+	identitycontext "github.com/agntcy/identity-service/internal/pkg/context"
+	vaultmocks "github.com/agntcy/identity-service/internal/pkg/vault/mocks"
 	"github.com/google/uuid"
-	"github.com/outshift/identity-service/internal/core/idp"
-	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
-	vaultmocks "github.com/outshift/identity-service/internal/pkg/vault/mocks"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )

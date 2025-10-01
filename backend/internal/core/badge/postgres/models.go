@@ -7,11 +7,11 @@ import (
 	"encoding/json"
 	"time"
 
+	app "github.com/agntcy/identity-service/internal/core/app/postgres"
+	"github.com/agntcy/identity-service/internal/core/badge/types"
+	"github.com/agntcy/identity-service/internal/pkg/convertutil"
+	"github.com/agntcy/identity-service/pkg/log"
 	"github.com/lib/pq"
-	app "github.com/outshift/identity-service/internal/core/app/postgres"
-	"github.com/outshift/identity-service/internal/core/badge/types"
-	"github.com/outshift/identity-service/internal/pkg/convertutil"
-	"github.com/outshift/identity-service/pkg/log"
 )
 
 type Badge struct {

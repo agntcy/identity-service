@@ -8,11 +8,11 @@ import (
 	"fmt"
 	"time"
 
-	apptypes "github.com/outshift/identity-service/internal/core/app/types"
-	authtypes "github.com/outshift/identity-service/internal/core/auth/types/int"
-	devicetypes "github.com/outshift/identity-service/internal/core/device/types"
-	"github.com/outshift/identity-service/internal/pkg/ptrutil"
-	"github.com/outshift/identity-service/internal/pkg/webpush"
+	apptypes "github.com/agntcy/identity-service/internal/core/app/types"
+	authtypes "github.com/agntcy/identity-service/internal/core/auth/types/int"
+	devicetypes "github.com/agntcy/identity-service/internal/core/device/types"
+	"github.com/agntcy/identity-service/internal/pkg/ptrutil"
+	"github.com/agntcy/identity-service/internal/pkg/webpush"
 )
 
 const (

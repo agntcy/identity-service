@@ -10,7 +10,7 @@ include:
 services:
   identity-bff:
     container_name: identity-bff
-    image: ghcr.io/outshift-open/identity-service/bff:latest
+    image: ghcr.io/agntcy/identity-service/bff:latest
     pull_policy: always
     restart: always
     depends_on:

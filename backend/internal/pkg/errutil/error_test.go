@@ -7,8 +7,8 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/agntcy/identity-service/internal/pkg/errutil"
 	"github.com/google/uuid"
-	"github.com/outshift/identity-service/internal/pkg/errutil"
 	"github.com/stretchr/testify/assert"
 )
 

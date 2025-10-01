@@ -6,10 +6,10 @@ package grpc
 import (
 	"context"
 
-	identity_service_sdk_go "github.com/outshift/identity-service/api/server/outshift/identity/service/v1alpha1"
-	"github.com/outshift/identity-service/internal/bff"
-	"github.com/outshift/identity-service/internal/bff/grpc/converters"
-	"github.com/outshift/identity-service/internal/pkg/grpcutil"
+	identity_service_sdk_go "github.com/agntcy/identity-service/api/server/agntcy/identity/service/v1alpha1"
+	"github.com/agntcy/identity-service/internal/bff"
+	"github.com/agntcy/identity-service/internal/bff/grpc/converters"
+	"github.com/agntcy/identity-service/internal/pkg/grpcutil"
 )
 
 type settingsService struct {

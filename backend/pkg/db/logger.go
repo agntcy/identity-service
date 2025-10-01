@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/outshift/identity-service/pkg/log"
+	"github.com/agntcy/identity-service/pkg/log"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/utils"

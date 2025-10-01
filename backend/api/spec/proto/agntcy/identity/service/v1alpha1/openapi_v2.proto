@@ -1,0 +1,52 @@
+// Copyright 2025 Cisco Systems, Inc. and its affiliates
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package agntcy.identity.service.v1alpha1;
+
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "github.com/agntcy/identity-service/api/server/agntcy/identity/service/v1alpha1;identity_service_sdk_go";
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "Agent Identity Service API";
+    description: "Agent Identity Service API provides a set of endpoints for managing identity and access control within the Agntcy ecosystem.";
+    version: "v1alpha1";
+    contact: {
+      name: "Agntcy Team";
+      url: "https://github.com/agntcy/identity-service";
+      email: "identity@agntcy.org";
+    }
+  }
+  security_definitions: {
+    security: {
+      key: "ApiKey";
+      value: {
+        type: TYPE_API_KEY;
+        in: IN_HEADER;
+        name: "x-id-api-key";
+        description: "An IAM Api key.";
+      }
+    }
+    security: {
+      key: "AccessToken";
+      value: {
+        type: TYPE_API_KEY;
+        in: IN_HEADER;
+        name: "Authorization";
+        description: "An IAM JWT token issued to a user during an OIDC flow.";
+      }
+    }
+  }
+  security: {
+    security_requirement: {
+      key: "ApiKey";
+      value: {};
+    }
+    security_requirement: {
+      key: "AccessToken";
+      value: {};
+    }
+  }
+};

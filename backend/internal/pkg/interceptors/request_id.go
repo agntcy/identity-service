@@ -9,10 +9,10 @@ import (
 	"net/http"
 	"net/textproto"
 
+	identitycontext "github.com/agntcy/identity-service/internal/pkg/context"
+	"github.com/agntcy/identity-service/pkg/log"
 	"github.com/google/uuid"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
-	"github.com/outshift/identity-service/pkg/log"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/protobuf/proto"

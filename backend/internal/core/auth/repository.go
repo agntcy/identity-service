@@ -7,7 +7,7 @@ import (
 	"context"
 	"errors"
 
-	types "github.com/outshift/identity-service/internal/core/auth/types/int"
+	types "github.com/agntcy/identity-service/internal/core/auth/types/int"
 )
 
 type Repository interface {

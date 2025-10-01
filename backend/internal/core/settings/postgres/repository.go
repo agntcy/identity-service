@@ -8,11 +8,11 @@ import (
 	"errors"
 	"fmt"
 
-	settingscore "github.com/outshift/identity-service/internal/core/settings"
-	"github.com/outshift/identity-service/internal/core/settings/types"
-	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
-	"github.com/outshift/identity-service/internal/pkg/gormutil"
-	"github.com/outshift/identity-service/internal/pkg/secrets"
+	settingscore "github.com/agntcy/identity-service/internal/core/settings"
+	"github.com/agntcy/identity-service/internal/core/settings/types"
+	identitycontext "github.com/agntcy/identity-service/internal/pkg/context"
+	"github.com/agntcy/identity-service/internal/pkg/gormutil"
+	"github.com/agntcy/identity-service/internal/pkg/secrets"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )

@@ -7,9 +7,9 @@ import (
 	"context"
 	"testing"
 
+	"github.com/agntcy/identity-service/internal/core/idp"
+	identitycontext "github.com/agntcy/identity-service/internal/pkg/context"
 	"github.com/google/uuid"
-	"github.com/outshift/identity-service/internal/core/idp"
-	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -8,11 +8,11 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/outshift/identity-service/internal/core/identity"
-	idpcore "github.com/outshift/identity-service/internal/core/idp"
-	settingstypes "github.com/outshift/identity-service/internal/core/settings/types"
-	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
-	"github.com/outshift/identity-service/pkg/log"
+	"github.com/agntcy/identity-service/internal/core/identity"
+	idpcore "github.com/agntcy/identity-service/internal/core/idp"
+	settingstypes "github.com/agntcy/identity-service/internal/core/settings/types"
+	identitycontext "github.com/agntcy/identity-service/internal/pkg/context"
+	"github.com/agntcy/identity-service/pkg/log"
 )
 
 type IssuerService interface {

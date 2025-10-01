@@ -7,11 +7,11 @@
 openapi: 3.0.3
 info:
     title: Agent Identity Service API
-    description: Agent Identity Service API provides a set of endpoints for managing identity and access control within the Outshift ecosystem.
+    description: Agent Identity Service API provides a set of endpoints for managing identity and access control within the Agntcy ecosystem.
     contact:
-        name: Outshift Team
-        url: https://github.com/outshift-open/identity-service
-        email: identity@outshift.com
+        name: Agntcy Team
+        url: https://github.com/agntcy/identity-service
+        email: identity@agntcy.org
     version: v1alpha1
 servers:
     - url: http://localhost:4000

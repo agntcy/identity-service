@@ -204,7 +204,7 @@ func (a *Client) GetApp(params *GetAppParams, authInfo runtime.ClientAuthInfoWri
 }
 
 /*
-GetAppBadge gets the current badge issued for the app
+GetAppBadge gets the current badge issued for the app using the app ID or the resolver metadata ID
 */
 func (a *Client) GetAppBadge(params *GetAppBadgeParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetAppBadgeOK, error) {
 	// TODO: Validate the params before sending

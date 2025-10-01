@@ -1,0 +1,117 @@
+// Copyright 2025 Cisco Systems, Inc. and its affiliates
+// SPDX-License-Identifier: Apache-2.0
+
+syntax = "proto3";
+
+package agntcy.identity.service.v1alpha1;
+
+import "agntcy/identity/service/shared/v1alpha1/pagination.proto";
+import "agntcy/identity/service/v1alpha1/device.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "github.com/agntcy/identity-service/api/server/agntcy/identity/service/v1alpha1;identity_service_sdk_go";
+
+// DeviceService manages device.
+service DeviceService {
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_tag) = {name: "Device"};
+
+  // Add new device for approval flow
+  rpc AddDevice(AddDeviceRequest) returns (Device) {
+    option (google.api.http) = {
+      post: "/v1alpha1/device"
+      body: "device"
+    };
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "AddDevice";
+      summary: "Add new device for approval flow";
+    };
+  }
+
+  // Add new device for approval flow
+  rpc RegisterDevice(RegisterDeviceRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v1alpha1/device/{device_id}"
+      body: "device"
+    };
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "RegisterDevice";
+      summary: "Register device for approval flow";
+    };
+  }
+
+  // List all registered devices
+  rpc ListDevices(ListDevicesRequest) returns (ListDevicesResponse) {
+    option (google.api.http) = {get: "/v1alpha1/device"};
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "ListDevices";
+      summary: "List all registered devices";
+    };
+  }
+
+  // Delete a registered Device.
+  rpc DeleteDevice(DeleteDeviceRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {delete: "/v1alpha1/device/{device_id}"};
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "DeleteDevice";
+      summary: "Delete a registered Device";
+    };
+  }
+
+  // Send a test notification to a registered device to see if it's well configured.
+  rpc TestDevice(TestDeviceRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {post: "/v1alpha1/device/{device_id}/test"};
+
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      operation_id: "TestDevice";
+      summary: "Send a test notification to a registered device to see if it's well configured.";
+    };
+  }
+}
+
+message AddDeviceRequest {
+  // The device information to register.
+  Device device = 1;
+}
+
+message RegisterDeviceRequest {
+  // The unique identifier for the device to register.
+  string device_id = 1;
+
+  // The device information to register.
+  Device device = 2;
+}
+
+message ListDevicesRequest {
+  // The current page of the pagination
+  optional int32 page = 1;
+
+  // The page size of the pagination
+  optional int32 size = 2;
+
+  // The search query
+  optional string query = 3;
+}
+
+message ListDevicesResponse {
+  // A list of Apps.
+  repeated Device devices = 1;
+
+  // Pagination response.
+  optional agntcy.identity.service.shared.v1alpha1.PagedResponse pagination = 2;
+}
+
+message DeleteDeviceRequest {
+  // The device id.
+  string device_id = 1;
+}
+
+message TestDeviceRequest {
+  // The device id.
+  string device_id = 1;
+}

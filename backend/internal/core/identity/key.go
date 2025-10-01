@@ -9,12 +9,12 @@ import (
 	"net"
 	"path"
 
+	identitycontext "github.com/agntcy/identity-service/internal/pkg/context"
 	"github.com/agntcy/identity/pkg/joseutil"
 	"github.com/agntcy/identity/pkg/jwk"
 	"github.com/agntcy/identity/pkg/keystore"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/google/uuid"
-	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
 )
 
 const (

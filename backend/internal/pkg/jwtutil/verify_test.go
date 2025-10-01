@@ -6,7 +6,7 @@ package jwtutil_test
 import (
 	"testing"
 
-	"github.com/outshift/identity-service/internal/pkg/jwtutil"
+	"github.com/agntcy/identity-service/internal/pkg/jwtutil"
 	"github.com/stretchr/testify/assert"
 )
 

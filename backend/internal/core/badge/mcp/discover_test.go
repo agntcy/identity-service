@@ -9,9 +9,9 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	mcpcore "github.com/agntcy/identity-service/internal/core/badge/mcp"
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
-	mcpcore "github.com/outshift/identity-service/internal/core/badge/mcp"
 	"github.com/stretchr/testify/assert"
 )
 

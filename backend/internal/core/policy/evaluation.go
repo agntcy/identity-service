@@ -7,10 +7,10 @@ import (
 	"context"
 	"fmt"
 
-	apptypes "github.com/outshift/identity-service/internal/core/app/types"
-	"github.com/outshift/identity-service/internal/core/policy/types"
-	"github.com/outshift/identity-service/internal/pkg/errutil"
-	"github.com/outshift/identity-service/pkg/log"
+	apptypes "github.com/agntcy/identity-service/internal/core/app/types"
+	"github.com/agntcy/identity-service/internal/core/policy/types"
+	"github.com/agntcy/identity-service/internal/pkg/errutil"
+	"github.com/agntcy/identity-service/pkg/log"
 )
 
 type Evaluator interface {

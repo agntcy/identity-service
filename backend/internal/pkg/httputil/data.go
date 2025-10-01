@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/outshift/identity-service/pkg/log"
+	"github.com/agntcy/identity-service/pkg/log"
 )
 
 // Timeout : API timeout time

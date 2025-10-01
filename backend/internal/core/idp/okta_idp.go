@@ -11,11 +11,11 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/agntcy/identity-service/internal/core/settings/types"
+	"github.com/agntcy/identity-service/internal/pkg/ptrutil"
+	"github.com/agntcy/identity-service/internal/pkg/strutil"
+	"github.com/agntcy/identity-service/pkg/log"
 	oktasdk "github.com/okta/okta-sdk-golang/v5/okta"
-	"github.com/outshift/identity-service/internal/core/settings/types"
-	"github.com/outshift/identity-service/internal/pkg/ptrutil"
-	"github.com/outshift/identity-service/internal/pkg/strutil"
-	"github.com/outshift/identity-service/pkg/log"
 )
 
 const (

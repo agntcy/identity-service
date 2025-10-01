@@ -10,9 +10,9 @@ OUT_DIR="$ROOT_DIR/out"
 SDK_DIR="/api/client"
 SPEC_DIR="$OUT_DIR/api/spec"
 SWAGGER_DIR="generated"
-SERVICE_V1ALPHA1_PROTO_PATH="proto/outshift/identity/service/v1alpha1"
-SERVICE_V1ALPHA1_GENERATED_PATH="$ROOT_DIR/generated/openapi/outshift/identity/service/v1alpha1"
-SWAGGER_SECURITY_DEFINITIONS_PATH="$ROOT_DIR/generated/openapi/outshift/identity/service/v1alpha1/openapi_v2.swagger.json"
+SERVICE_V1ALPHA1_PROTO_PATH="proto/agntcy/identity/service/v1alpha1"
+SERVICE_V1ALPHA1_GENERATED_PATH="$ROOT_DIR/generated/openapi/agntcy/identity/service/v1alpha1"
+SWAGGER_SECURITY_DEFINITIONS_PATH="$ROOT_DIR/generated/openapi/agntcy/identity/service/v1alpha1/openapi_v2.swagger.json"
 #-----------------------------------------------------------------------------#
 
 string_contains() {

@@ -8,13 +8,13 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/agntcy/identity-service/internal/bff"
+	iamtypes "github.com/agntcy/identity-service/internal/core/iam/types"
+	settingsmocks "github.com/agntcy/identity-service/internal/core/settings/mocks"
+	settingstypes "github.com/agntcy/identity-service/internal/core/settings/types"
+	"github.com/agntcy/identity-service/internal/pkg/errutil"
+	iammocks "github.com/agntcy/identity-service/internal/pkg/iam/mocks"
 	"github.com/google/uuid"
-	"github.com/outshift/identity-service/internal/bff"
-	iamtypes "github.com/outshift/identity-service/internal/core/iam/types"
-	settingsmocks "github.com/outshift/identity-service/internal/core/settings/mocks"
-	settingstypes "github.com/outshift/identity-service/internal/core/settings/types"
-	"github.com/outshift/identity-service/internal/pkg/errutil"
-	iammocks "github.com/outshift/identity-service/internal/pkg/iam/mocks"
 	"github.com/stretchr/testify/assert"
 )
 

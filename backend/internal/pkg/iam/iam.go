@@ -6,7 +6,7 @@ package iam
 import (
 	"context"
 
-	"github.com/outshift/identity-service/internal/core/iam/types"
+	"github.com/agntcy/identity-service/internal/core/iam/types"
 )
 
 type Client interface {

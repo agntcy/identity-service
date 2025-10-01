@@ -4,12 +4,12 @@
 package postgres
 
 import (
+	apptypes "github.com/agntcy/identity-service/internal/core/app/types"
+	types "github.com/agntcy/identity-service/internal/core/auth/types/int"
+	devicetypes "github.com/agntcy/identity-service/internal/core/device/types"
+	"github.com/agntcy/identity-service/internal/pkg/secrets"
+	"github.com/agntcy/identity-service/internal/pkg/strutil"
 	"github.com/google/uuid"
-	apptypes "github.com/outshift/identity-service/internal/core/app/types"
-	types "github.com/outshift/identity-service/internal/core/auth/types/int"
-	devicetypes "github.com/outshift/identity-service/internal/core/device/types"
-	"github.com/outshift/identity-service/internal/pkg/secrets"
-	"github.com/outshift/identity-service/internal/pkg/strutil"
 )
 
 type Session struct {

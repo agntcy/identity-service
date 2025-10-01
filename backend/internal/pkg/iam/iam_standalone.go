@@ -10,16 +10,16 @@ import (
 	"strings"
 	"time"
 
+	iamcore "github.com/agntcy/identity-service/internal/core/iam"
+	"github.com/agntcy/identity-service/internal/core/iam/types"
+	identitycontext "github.com/agntcy/identity-service/internal/pkg/context"
+	"github.com/agntcy/identity-service/internal/pkg/ptrutil"
+	"github.com/agntcy/identity-service/internal/pkg/strutil"
 	freecache "github.com/coocood/freecache"
 	"github.com/eko/gocache/lib/v4/cache"
 	"github.com/eko/gocache/lib/v4/store"
 	freecache_store "github.com/eko/gocache/store/freecache/v4"
 	"github.com/google/uuid"
-	iamcore "github.com/outshift/identity-service/internal/core/iam"
-	"github.com/outshift/identity-service/internal/core/iam/types"
-	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
-	"github.com/outshift/identity-service/internal/pkg/ptrutil"
-	"github.com/outshift/identity-service/internal/pkg/strutil"
 )
 
 const (

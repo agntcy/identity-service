@@ -5,9 +5,9 @@
 package mocks
 
 import (
-	types1 "github.com/outshift/identity-service/internal/core/app/types"
-	types0 "github.com/outshift/identity-service/internal/core/auth/types/int"
-	"github.com/outshift/identity-service/internal/core/device/types"
+	types1 "github.com/agntcy/identity-service/internal/core/app/types"
+	types0 "github.com/agntcy/identity-service/internal/core/auth/types/int"
+	"github.com/agntcy/identity-service/internal/core/device/types"
 	mock "github.com/stretchr/testify/mock"
 )
 

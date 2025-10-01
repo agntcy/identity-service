@@ -6,9 +6,9 @@ package converters
 import (
 	"time"
 
-	identity_service_sdk_go "github.com/outshift/identity-service/api/server/outshift/identity/service/v1alpha1"
-	apptypes "github.com/outshift/identity-service/internal/core/app/types"
-	"github.com/outshift/identity-service/internal/pkg/ptrutil"
+	identity_service_sdk_go "github.com/agntcy/identity-service/api/server/agntcy/identity/service/v1alpha1"
+	apptypes "github.com/agntcy/identity-service/internal/core/app/types"
+	"github.com/agntcy/identity-service/internal/pkg/ptrutil"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 

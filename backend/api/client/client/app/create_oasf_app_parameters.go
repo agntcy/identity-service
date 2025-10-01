@@ -15,7 +15,7 @@ import (
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/outshift-open/identity-service/backend/api/client/models"
+	"github.com/agntcy/identity-service/backend/api/client/models"
 )
 
 // NewCreateOasfAppParams creates a new CreateOasfAppParams object,

@@ -7,7 +7,7 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/outshift/identity-service/internal/pkg/errutil"
+	"github.com/agntcy/identity-service/internal/pkg/errutil"
 	epb "google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

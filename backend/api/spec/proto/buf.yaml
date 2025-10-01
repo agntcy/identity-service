@@ -14,18 +14,18 @@ lint:
     - STANDARD
   ignore_only:
     RPC_REQUEST_RESPONSE_UNIQUE:
-      - outshift/identity/service/v1alpha1/app_service.proto
-      - outshift/identity/service/v1alpha1/settings_service.proto
-      - outshift/identity/service/v1alpha1/policy_service.proto
-      - outshift/identity/service/v1alpha1/auth_service.proto
-      - outshift/identity/service/v1alpha1/badge_service.proto
-      - outshift/identity/service/v1alpha1/device_service.proto
+      - agntcy/identity/service/v1alpha1/app_service.proto
+      - agntcy/identity/service/v1alpha1/settings_service.proto
+      - agntcy/identity/service/v1alpha1/policy_service.proto
+      - agntcy/identity/service/v1alpha1/auth_service.proto
+      - agntcy/identity/service/v1alpha1/badge_service.proto
+      - agntcy/identity/service/v1alpha1/device_service.proto
     RPC_RESPONSE_STANDARD_NAME:
-      - outshift/identity/service/v1alpha1/app_service.proto
-      - outshift/identity/service/v1alpha1/settings_service.proto
-      - outshift/identity/service/v1alpha1/policy_service.proto
-      - outshift/identity/service/v1alpha1/auth_service.proto
-      - outshift/identity/service/v1alpha1/badge_service.proto
-      - outshift/identity/service/v1alpha1/device_service.proto
+      - agntcy/identity/service/v1alpha1/app_service.proto
+      - agntcy/identity/service/v1alpha1/settings_service.proto
+      - agntcy/identity/service/v1alpha1/policy_service.proto
+      - agntcy/identity/service/v1alpha1/auth_service.proto
+      - agntcy/identity/service/v1alpha1/badge_service.proto
+      - agntcy/identity/service/v1alpha1/device_service.proto
     RPC_REQUEST_STANDARD_NAME:
-      - outshift/identity/service/v1alpha1/auth_service.proto
+      - agntcy/identity/service/v1alpha1/auth_service.proto

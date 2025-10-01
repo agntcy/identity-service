@@ -4,10 +4,10 @@
 package converters
 
 import (
-	identity_service_sdk_go "github.com/outshift/identity-service/api/server/outshift/identity/service/v1alpha1"
-	policytypes "github.com/outshift/identity-service/internal/core/policy/types"
-	"github.com/outshift/identity-service/internal/pkg/convertutil"
-	"github.com/outshift/identity-service/internal/pkg/ptrutil"
+	identity_service_sdk_go "github.com/agntcy/identity-service/api/server/agntcy/identity/service/v1alpha1"
+	policytypes "github.com/agntcy/identity-service/internal/core/policy/types"
+	"github.com/agntcy/identity-service/internal/pkg/convertutil"
+	"github.com/agntcy/identity-service/internal/pkg/ptrutil"
 )
 
 func FromPolicy(src *policytypes.Policy) *identity_service_sdk_go.Policy {

@@ -5,8 +5,8 @@
 set -o errexit
 set -o nounset
 
-PROTO_PACKAGE_NAME="outshift.identity.service.v1alpha1"
-PROTO_PLATFORM_FILE_PATH="outshift/identity/service/v1alpha1/"
+PROTO_PACKAGE_NAME="agntcy.identity.service.v1alpha1"
+PROTO_PLATFORM_FILE_PATH="agntcy/identity/service/v1alpha1/"
 
 get_module_name_from_package() {
   dirname "$1" | xargs basename
@@ -65,7 +65,7 @@ done
 
 packages=$(echo "$packages" | sed 's/\s$//' | sed 's/^\s//')
 
-cd "${Identity_ROOT}/local/github.com/outshift/identity-service"
+cd "${Identity_ROOT}/local/github.com/agntcy/identity-service"
 
 packages_comma_separated=$(echo "$packages" | tr ' ' ',')
 
@@ -122,7 +122,7 @@ if [ -n "${packages_comma_separated}" ]; then
   # Add the proto package name to the proto files
   for m in $protos; do
     sed -i 's/syntax = "proto2";/syntax = "proto3";/g' "${m}"
-    sed -i 's|go_package = [^ ]\+|go_package = "github.com/outshift/identity-service/api/server/outshift/identity/service/v1alpha1;identity_service_sdk_go";|g' "${m}"
+    sed -i 's|go_package = [^ ]\+|go_package = "github.com/agntcy/identity-service/api/server/agntcy/identity/service/v1alpha1;identity_service_sdk_go";|g' "${m}"
   done
 
   # Add the import path to the proto files
@@ -148,7 +148,7 @@ if [ -n "${packages_comma_separated}" ]; then
     fi
   done
 
-  cp -r "${Identity_ROOT}/local/output/." "${Identity_ROOT}/code/backend/api/spec/proto/outshift/identity/service/v1alpha1"
+  cp -r "${Identity_ROOT}/local/output/." "${Identity_ROOT}/code/backend/api/spec/proto/agntcy/identity/service/v1alpha1"
 fi
 
 echo ""

@@ -5,7 +5,7 @@
 package mocks
 
 import (
-	"github.com/outshift/identity-service/internal/pkg/iam"
+	"github.com/agntcy/identity-service/internal/pkg/iam"
 	mock "github.com/stretchr/testify/mock"
 )
 

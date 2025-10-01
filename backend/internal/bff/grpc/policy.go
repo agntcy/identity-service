@@ -6,13 +6,13 @@ package grpc
 import (
 	"context"
 
-	identity_service_sdk_go "github.com/outshift/identity-service/api/server/outshift/identity/service/v1alpha1"
-	"github.com/outshift/identity-service/internal/bff"
-	"github.com/outshift/identity-service/internal/bff/grpc/converters"
-	policytypes "github.com/outshift/identity-service/internal/core/policy/types"
-	"github.com/outshift/identity-service/internal/pkg/convertutil"
-	"github.com/outshift/identity-service/internal/pkg/grpcutil"
-	"github.com/outshift/identity-service/internal/pkg/pagination"
+	identity_service_sdk_go "github.com/agntcy/identity-service/api/server/agntcy/identity/service/v1alpha1"
+	"github.com/agntcy/identity-service/internal/bff"
+	"github.com/agntcy/identity-service/internal/bff/grpc/converters"
+	policytypes "github.com/agntcy/identity-service/internal/core/policy/types"
+	"github.com/agntcy/identity-service/internal/pkg/convertutil"
+	"github.com/agntcy/identity-service/internal/pkg/grpcutil"
+	"github.com/agntcy/identity-service/internal/pkg/pagination"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 

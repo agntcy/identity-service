@@ -7,9 +7,9 @@ import (
 	"testing"
 	"time"
 
+	types "github.com/agntcy/identity-service/internal/core/auth/types/int"
+	"github.com/agntcy/identity-service/internal/pkg/ptrutil"
 	"github.com/google/uuid"
-	types "github.com/outshift/identity-service/internal/core/auth/types/int"
-	"github.com/outshift/identity-service/internal/pkg/ptrutil"
 	"github.com/stretchr/testify/assert"
 )
 

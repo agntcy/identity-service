@@ -6,9 +6,9 @@ package secrets_test
 import (
 	"testing"
 
+	"github.com/agntcy/identity-service/internal/pkg/ptrutil"
+	"github.com/agntcy/identity-service/internal/pkg/secrets"
 	"github.com/google/uuid"
-	"github.com/outshift/identity-service/internal/pkg/ptrutil"
-	"github.com/outshift/identity-service/internal/pkg/secrets"
 	"github.com/stretchr/testify/assert"
 )
 

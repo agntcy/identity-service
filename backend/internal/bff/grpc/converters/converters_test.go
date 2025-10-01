@@ -13,8 +13,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/agntcy/identity-service/internal/bff/grpc/converters"
 	"github.com/brianvoe/gofakeit/v7"
-	"github.com/outshift/identity-service/internal/bff/grpc/converters"
 	"github.com/stretchr/testify/assert"
 )
 

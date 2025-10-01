@@ -6,11 +6,11 @@ package identitycache_test
 import (
 	"testing"
 
+	identitycache "github.com/agntcy/identity-service/internal/pkg/cache"
 	"github.com/coocood/freecache"
 	"github.com/eko/gocache/lib/v4/cache"
 	freecache_store "github.com/eko/gocache/store/freecache/v4"
 	"github.com/google/uuid"
-	identitycache "github.com/outshift/identity-service/internal/pkg/cache"
 	"github.com/stretchr/testify/assert"
 )
 

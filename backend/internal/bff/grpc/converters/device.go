@@ -4,9 +4,9 @@
 package converters
 
 import (
-	identity_service_sdk_go "github.com/outshift/identity-service/api/server/outshift/identity/service/v1alpha1"
-	devicetypes "github.com/outshift/identity-service/internal/core/device/types"
-	"github.com/outshift/identity-service/internal/pkg/ptrutil"
+	identity_service_sdk_go "github.com/agntcy/identity-service/api/server/agntcy/identity/service/v1alpha1"
+	devicetypes "github.com/agntcy/identity-service/internal/core/device/types"
+	"github.com/agntcy/identity-service/internal/pkg/ptrutil"
 )
 
 func ToDevice(

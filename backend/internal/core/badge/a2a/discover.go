@@ -11,8 +11,8 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/outshift/identity-service/internal/pkg/httputil"
-	"github.com/outshift/identity-service/pkg/log"
+	"github.com/agntcy/identity-service/internal/pkg/httputil"
+	"github.com/agntcy/identity-service/pkg/log"
 )
 
 const (

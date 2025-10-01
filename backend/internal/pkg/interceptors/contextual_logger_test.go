@@ -7,10 +7,10 @@ import (
 	"context"
 	"testing"
 
+	identitycontext "github.com/agntcy/identity-service/internal/pkg/context"
+	"github.com/agntcy/identity-service/internal/pkg/interceptors"
+	"github.com/agntcy/identity-service/pkg/log"
 	"github.com/google/uuid"
-	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
-	"github.com/outshift/identity-service/internal/pkg/interceptors"
-	"github.com/outshift/identity-service/pkg/log"
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc"

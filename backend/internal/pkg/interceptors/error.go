@@ -7,9 +7,9 @@ import (
 	"context"
 	"errors"
 
-	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
-	"github.com/outshift/identity-service/internal/pkg/grpcutil"
-	"github.com/outshift/identity-service/pkg/log"
+	identitycontext "github.com/agntcy/identity-service/internal/pkg/context"
+	"github.com/agntcy/identity-service/internal/pkg/grpcutil"
+	"github.com/agntcy/identity-service/pkg/log"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/status"
 )

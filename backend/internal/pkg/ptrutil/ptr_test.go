@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/agntcy/identity-service/internal/pkg/ptrutil"
 	"github.com/google/uuid"
-	"github.com/outshift/identity-service/internal/pkg/ptrutil"
 	"github.com/stretchr/testify/assert"
 )
 

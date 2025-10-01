@@ -7,10 +7,10 @@ import (
 	"database/sql"
 	"time"
 
-	app "github.com/outshift/identity-service/internal/core/app/postgres"
-	"github.com/outshift/identity-service/internal/core/policy/types"
-	"github.com/outshift/identity-service/internal/pkg/convertutil"
-	"github.com/outshift/identity-service/internal/pkg/pgutil"
+	app "github.com/agntcy/identity-service/internal/core/app/postgres"
+	"github.com/agntcy/identity-service/internal/core/policy/types"
+	"github.com/agntcy/identity-service/internal/pkg/convertutil"
+	"github.com/agntcy/identity-service/internal/pkg/pgutil"
 )
 
 type Task struct {

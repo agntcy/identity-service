@@ -8,44 +8,44 @@ template: testify
 template-data:
   unroll-variadic: true
 packages:
-  github.com/outshift/identity-service/internal/core/app:
+  github.com/agntcy/identity-service/internal/core/app:
     interfaces:
       Repository: {}
-  github.com/outshift/identity-service/internal/core/auth:
+  github.com/agntcy/identity-service/internal/core/auth:
     interfaces:
       Repository: {}
-  github.com/outshift/identity-service/internal/core/badge:
+  github.com/agntcy/identity-service/internal/core/badge:
     interfaces:
       Repository: {}
       Revoker: {}
-  github.com/outshift/identity-service/internal/core/badge/a2a:
+  github.com/agntcy/identity-service/internal/core/badge/a2a:
     interfaces:
       DiscoveryClient: {}
-  github.com/outshift/identity-service/internal/core/badge/mcp:
+  github.com/agntcy/identity-service/internal/core/badge/mcp:
     interfaces:
       DiscoveryClient: {}
-  github.com/outshift/identity-service/internal/core/device:
+  github.com/agntcy/identity-service/internal/core/device:
     interfaces:
       Repository: {}
-  github.com/outshift/identity-service/internal/core/policy:
+  github.com/agntcy/identity-service/internal/core/policy:
     interfaces:
       Evaluator: {}
       PolicyRepository: {}
       RuleRepository: {}
       TaskRepository: {}
       TaskService: {}
-  github.com/outshift/identity-service/internal/core/settings:
+  github.com/agntcy/identity-service/internal/core/settings:
     interfaces:
       Repository: {}
       IssuerService: {}
-  github.com/outshift/identity-service/internal/core/idp:
+  github.com/agntcy/identity-service/internal/core/idp:
     interfaces:
       CredentialStore: {}
-  github.com/outshift/identity-service/internal/core/identity:
+  github.com/agntcy/identity-service/internal/core/identity:
     interfaces:
       KeyStore: {}
       Service: {}
-  github.com/outshift/identity-service/internal/bff:
+  github.com/agntcy/identity-service/internal/bff:
     interfaces:
       AppService: {}
       AuthService: {}
@@ -54,16 +54,16 @@ packages:
       NotificationService: {}
       PolicyService: {}
       SettingsService: {}
-  github.com/outshift/identity-service/internal/core/iam:
+  github.com/agntcy/identity-service/internal/core/iam:
     interfaces:
       Repository: {}
-  github.com/outshift/identity-service/internal/pkg/iam:
+  github.com/agntcy/identity-service/internal/pkg/iam:
     interfaces:
       Client: {}
       JwtVerifier: {}
-  github.com/outshift/identity-service/internal/pkg/vault:
+  github.com/agntcy/identity-service/internal/pkg/vault:
     interfaces:
       VaultClient: {}
-  github.com/outshift/identity-service/internal/pkg/webpush:
+  github.com/agntcy/identity-service/internal/pkg/webpush:
     interfaces:
       WebPushSender: {}

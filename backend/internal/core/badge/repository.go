@@ -7,7 +7,7 @@ import (
 	"context"
 	"errors"
 
-	"github.com/outshift/identity-service/internal/core/badge/types"
+	"github.com/agntcy/identity-service/internal/core/badge/types"
 )
 
 type Repository interface {

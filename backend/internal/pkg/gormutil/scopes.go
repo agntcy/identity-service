@@ -7,8 +7,8 @@ import (
 	"context"
 	"fmt"
 
-	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
-	"github.com/outshift/identity-service/internal/pkg/pagination"
+	identitycontext "github.com/agntcy/identity-service/internal/pkg/context"
+	"github.com/agntcy/identity-service/internal/pkg/pagination"
 	"gorm.io/gorm"
 )
 

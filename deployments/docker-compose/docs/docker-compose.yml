@@ -6,7 +6,7 @@ name: identity-docs
 services:
   identity-docs:
     container_name: identity-docs
-    image: ghcr.io/outshift-open/identity-service/docs:latest
+    image: ghcr.io/agntcy/identity-service/docs:latest
     pull_policy: always
     restart: always
     ports:

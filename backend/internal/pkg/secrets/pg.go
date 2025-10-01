@@ -3,7 +3,7 @@
 
 package secrets
 
-import "github.com/outshift/identity-service/internal/pkg/ptrutil"
+import "github.com/agntcy/identity-service/internal/pkg/ptrutil"
 
 type EncryptedString string
 

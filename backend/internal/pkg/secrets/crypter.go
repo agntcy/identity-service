@@ -8,7 +8,7 @@ import (
 	"crypto/cipher"
 	"encoding/base64"
 
-	"github.com/outshift/identity-service/pkg/log"
+	"github.com/agntcy/identity-service/pkg/log"
 )
 
 type Crypter interface {

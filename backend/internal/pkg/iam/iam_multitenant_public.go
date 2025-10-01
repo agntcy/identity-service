@@ -10,7 +10,7 @@ import (
 	"context"
 	"errors"
 
-	"github.com/outshift/identity-service/internal/core/iam/types"
+	"github.com/agntcy/identity-service/internal/core/iam/types"
 )
 
 // ErrMultitenantNotImplemented is returned by all MultitenantClient methods in non-Outshift builds.

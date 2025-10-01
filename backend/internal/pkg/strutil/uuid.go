@@ -4,8 +4,8 @@
 package strutil
 
 import (
+	"github.com/agntcy/identity-service/internal/pkg/ptrutil"
 	"github.com/google/uuid"
-	"github.com/outshift/identity-service/internal/pkg/ptrutil"
 )
 
 func SafeUuidString(u *uuid.UUID) *string {

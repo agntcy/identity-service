@@ -11,10 +11,10 @@ import os
 from importlib import import_module
 from pkgutil import iter_modules
 
-import outshift.identity.service.v1alpha1
+import agntcy.identity.service.v1alpha1
 from dotenv import load_dotenv
 from google.protobuf import empty_pb2
-from outshift.identity.service.v1alpha1.app_pb2 import AppType
+from agntcy.identity.service.v1alpha1.app_pb2 import AppType
 
 from identityservice import client
 from identityservice.badge.a2a import adiscover as adiscover_a2a
@@ -68,8 +68,8 @@ class IdentityServiceSdk:
 
         # Load dynamically all objects
         _load_grpc_objects(
-            outshift.identity.service.v1alpha1,
-            "outshift.identity.service.v1alpha1",
+            agntcy.identity.service.v1alpha1,
+            "agntcy.identity.service.v1alpha1",
         )
 
         self.client = client.Client(api_key, async_mode)
@@ -80,25 +80,25 @@ class IdentityServiceSdk:
 
     def get_settings_service(
         self,
-    ) -> "outshift.identity.service.v1alpha1.SettingsService":
+    ) -> "agntcy.identity.service.v1alpha1.SettingsService":
         """Return the SettingsService stub."""
         return IdentityServiceSdk.SettingsServiceStub(self.client.channel)
 
     def get_app_service(
         self,
-    ) -> "outshift.identity.service.v1alpha1.AppsService":
+    ) -> "agntcy.identity.service.v1alpha1.AppsService":
         """Return the AppService stub."""
         return IdentityServiceSdk.AppServiceStub(self.client.channel)
 
     def get_badge_service(
         self,
-    ) -> "outshift.identity.service.v1alpha1.BadgeService":
+    ) -> "agntcy.identity.service.v1alpha1.BadgeService":
         """Return the BadgeService stub."""
         return IdentityServiceSdk.BadgeServiceStub(self.client.channel)
 
     def get_auth_service(
         self,
-    ) -> "outshift.identity.service.v1alpha1.AuthService":
+    ) -> "agntcy.identity.service.v1alpha1.AuthService":
         """Return the AuthService stub."""
         return IdentityServiceSdk.AuthServiceStub(self.client.channel)
 
@@ -156,7 +156,7 @@ class IdentityServiceSdk:
 
     def verify_badge(
         self, badge: str
-    ) -> "outshift.identity.service.v1alpha1.VerificationResult":
+    ) -> "agntcy.identity.service.v1alpha1.VerificationResult":
         """Verify a badge.
 
         Parameters:
@@ -171,7 +171,7 @@ class IdentityServiceSdk:
 
     async def averify_badge(
         self, badge: str
-    ) -> "outshift.identity.service.v1alpha1.VerificationResult":
+    ) -> "agntcy.identity.service.v1alpha1.VerificationResult":
         """Verify a badge using async method.
 
         Parameters:

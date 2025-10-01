@@ -6,9 +6,9 @@ package types
 import (
 	"time"
 
+	"github.com/agntcy/identity-service/internal/pkg/ptrutil"
+	"github.com/agntcy/identity-service/internal/pkg/strutil"
 	"github.com/google/uuid"
-	"github.com/outshift/identity-service/internal/pkg/ptrutil"
-	"github.com/outshift/identity-service/internal/pkg/strutil"
 )
 
 // Identity Service Session

@@ -43,8 +43,8 @@ ENV Identity_ROOT="/identity"
 
 COPY scripts/proto/docker/run.sh .
 COPY scripts/proto/docker/protoc.sh .
-COPY ./backend ./local/github.com/outshift/identity-service
-RUN cd ./local/github.com/outshift/identity-service/cmd/bff && \
+COPY ./backend ./local/github.com/agntcy/identity-service
+RUN cd ./local/github.com/agntcy/identity-service/cmd/bff && \
     go mod download
 COPY scripts/proto/docker/protos ./third_party/protos
 

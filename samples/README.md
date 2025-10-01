@@ -108,4 +108,4 @@ appreciated**. For detailed contributing guidelines, please see
 [Copyright Notice and License](LICENSE)
 
 Distributed under Apache 2.0 License. See LICENSE for more information.
-Copyright [2025 Cisco Systems, Inc. and its affiliates](https://github.com/outshift-open) Contributors.
+Copyright [2025 Cisco Systems, Inc. and its affiliates](https://github.com/agntcy) Contributors.

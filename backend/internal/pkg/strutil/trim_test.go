@@ -6,7 +6,7 @@ package strutil_test
 import (
 	"testing"
 
-	"github.com/outshift/identity-service/internal/pkg/strutil"
+	"github.com/agntcy/identity-service/internal/pkg/strutil"
 	"github.com/stretchr/testify/assert"
 )
 

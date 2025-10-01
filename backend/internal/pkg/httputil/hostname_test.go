@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/outshift/identity-service/internal/pkg/httputil"
+	"github.com/agntcy/identity-service/internal/pkg/httputil"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -9,13 +9,13 @@ import (
 	"errors"
 	"fmt"
 
-	appcore "github.com/outshift/identity-service/internal/core/app"
-	"github.com/outshift/identity-service/internal/core/app/types"
-	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
-	"github.com/outshift/identity-service/internal/pkg/convertutil"
-	"github.com/outshift/identity-service/internal/pkg/gormutil"
-	"github.com/outshift/identity-service/internal/pkg/pagination"
-	"github.com/outshift/identity-service/internal/pkg/sorting"
+	appcore "github.com/agntcy/identity-service/internal/core/app"
+	"github.com/agntcy/identity-service/internal/core/app/types"
+	identitycontext "github.com/agntcy/identity-service/internal/pkg/context"
+	"github.com/agntcy/identity-service/internal/pkg/convertutil"
+	"github.com/agntcy/identity-service/internal/pkg/gormutil"
+	"github.com/agntcy/identity-service/internal/pkg/pagination"
+	"github.com/agntcy/identity-service/internal/pkg/sorting"
 	"gorm.io/gorm"
 )
 

@@ -8,9 +8,9 @@ import (
 	"errors"
 	"testing"
 
-	identitycontext "github.com/outshift/identity-service/internal/pkg/context"
-	"github.com/outshift/identity-service/internal/pkg/grpcutil"
-	"github.com/outshift/identity-service/internal/pkg/interceptors"
+	identitycontext "github.com/agntcy/identity-service/internal/pkg/context"
+	"github.com/agntcy/identity-service/internal/pkg/grpcutil"
+	"github.com/agntcy/identity-service/internal/pkg/interceptors"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc"
 )
