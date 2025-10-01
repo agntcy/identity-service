@@ -1,0 +1,41 @@
+---
+title: device.proto
+hide_title: true
+---
+
+import { ProtoMessage, ProtoServiceMethod, ProtoEnum } from '@theme/ProtoFile';
+
+# `device.proto`
+_**path** agntcy/identity/service/v1alpha1/device.proto_
+
+_**package** agntcy.identity.service.v1alpha1_
+
+
+
+---
+
+## Messages
+
+
+### `ApprovalRequestInfo`
+<ProtoMessage key={0} message={{"name":"ApprovalRequestInfo","longName":"ApprovalRequestInfo","fullName":"agntcy.identity.service.v1alpha1.ApprovalRequestInfo","description":"","hasExtensions":false,"hasFields":true,"hasOneofs":true,"extensions":[],"fields":[{"name":"caller_app","description":"","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_caller_app","defaultValue":""},{"name":"callee_app","description":"","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_callee_app","defaultValue":""},{"name":"tool_name","description":"","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_tool_name","defaultValue":""},{"name":"otp","description":"","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_otp","defaultValue":""},{"name":"device_id","description":"","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_device_id","defaultValue":""},{"name":"session_id","description":"","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_session_id","defaultValue":""},{"name":"timeout_in_seconds","description":"","label":"optional","type":"int64","longType":"int64","fullType":"int64","ismap":false,"isoneof":true,"oneofdecl":"_timeout_in_seconds","defaultValue":""}]}} />
+
+
+### `Device`
+<ProtoMessage key={1} message={{"name":"Device","longName":"Device","fullName":"agntcy.identity.service.v1alpha1.Device","description":"Devices used for user approval","hasExtensions":false,"hasFields":true,"hasOneofs":true,"extensions":[],"fields":[{"name":"id","description":"A unique identifier for the Device.","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_id","defaultValue":""},{"name":"user_id","description":"User ID associated with the Device.","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_user_id","defaultValue":""},{"name":"subscription_token","description":"Subscription Token for the Device.","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_subscription_token","defaultValue":""},{"name":"name","description":"The device human-readable name.","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_name","defaultValue":""},{"name":"created_at","description":"The creation time of the Device.","label":"optional","type":"Timestamp","longType":"google.protobuf.Timestamp","fullType":"google.protobuf.Timestamp","ismap":false,"isoneof":true,"oneofdecl":"_created_at","defaultValue":""}]}} />
+
+
+### `Notification`
+<ProtoMessage key={2} message={{"name":"Notification","longName":"Notification","fullName":"agntcy.identity.service.v1alpha1.Notification","description":"","hasExtensions":false,"hasFields":true,"hasOneofs":true,"extensions":[],"fields":[{"name":"body","description":"","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_body","defaultValue":""},{"name":"type","description":"","label":"optional","type":"NotificationType","longType":"NotificationType","fullType":"agntcy.identity.service.v1alpha1.NotificationType","ismap":false,"isoneof":true,"oneofdecl":"_type","defaultValue":"","typeLink":"/protodocs/agntcy/identity/service/v1alpha1/device.proto#notificationtype"},{"name":"approval_request_info","description":"","label":"optional","type":"ApprovalRequestInfo","longType":"ApprovalRequestInfo","fullType":"agntcy.identity.service.v1alpha1.ApprovalRequestInfo","ismap":false,"isoneof":true,"oneofdecl":"_approval_request_info","defaultValue":"","typeLink":"/protodocs/agntcy/identity/service/v1alpha1/device.proto#approvalrequestinfo"}]}} />
+
+---
+## Enums
+
+
+### `NotificationType`
+<ProtoEnum key={0} enumb={{"name":"NotificationType","longName":"NotificationType","fullName":"agntcy.identity.service.v1alpha1.NotificationType","description":"","values":[{"name":"NOTIFICATION_TYPE_UNSPECIFIED","number":"0","description":""},{"name":"NOTIFICATION_TYPE_INFO","number":"1","description":""},{"name":"NOTIFICATION_TYPE_APPROVAL_REQUEST","number":"2","description":""}]}} />
+
+---
+
+
+  

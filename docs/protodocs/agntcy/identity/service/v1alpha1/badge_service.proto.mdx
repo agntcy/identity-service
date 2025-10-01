@@ -1,0 +1,59 @@
+---
+title: badge_service.proto
+hide_title: true
+---
+
+import { ProtoMessage, ProtoServiceMethod, ProtoEnum } from '@theme/ProtoFile';
+
+# `badge_service.proto`
+_**path** agntcy/identity/service/v1alpha1/badge_service.proto_
+
+_**package** agntcy.identity.service.v1alpha1_
+
+
+
+---
+
+## Messages
+
+
+### `IssueA2ABadgeRequest`
+<ProtoMessage key={0} message={{"name":"IssueA2ABadgeRequest","longName":"IssueA2ABadgeRequest","fullName":"agntcy.identity.service.v1alpha1.IssueA2ABadgeRequest","description":"","hasExtensions":false,"hasFields":true,"hasOneofs":true,"extensions":[],"fields":[{"name":"well_known_url","description":"The A2A well_known_url.","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_well_known_url","defaultValue":""},{"name":"schema_base64","description":"Or the MCP Schema in a base64 encoded format.","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_schema_base64","defaultValue":""}]}} />
+
+
+### `IssueBadgeRequest`
+<ProtoMessage key={1} message={{"name":"IssueBadgeRequest","longName":"IssueBadgeRequest","fullName":"agntcy.identity.service.v1alpha1.IssueBadgeRequest","description":"","hasExtensions":false,"hasFields":true,"hasOneofs":false,"extensions":[],"fields":[{"name":"app_id","description":"App Id.","label":"","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":""},{"name":"a2a","description":"The A2A badge.","label":"","type":"IssueA2ABadgeRequest","longType":"IssueA2ABadgeRequest","fullType":"agntcy.identity.service.v1alpha1.IssueA2ABadgeRequest","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":"","typeLink":"/protodocs/agntcy/identity/service/v1alpha1/badge_service.proto#issuea2abadgerequest"},{"name":"mcp","description":"The MCP badge.","label":"","type":"IssueMcpBadgeRequest","longType":"IssueMcpBadgeRequest","fullType":"agntcy.identity.service.v1alpha1.IssueMcpBadgeRequest","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":"","typeLink":"/protodocs/agntcy/identity/service/v1alpha1/badge_service.proto#issuemcpbadgerequest"},{"name":"oasf","description":"The OASF badge.","label":"","type":"IssueOASFBadgeRequest","longType":"IssueOASFBadgeRequest","fullType":"agntcy.identity.service.v1alpha1.IssueOASFBadgeRequest","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":"","typeLink":"/protodocs/agntcy/identity/service/v1alpha1/badge_service.proto#issueoasfbadgerequest"}]}} />
+
+
+### `IssueMcpBadgeRequest`
+<ProtoMessage key={2} message={{"name":"IssueMcpBadgeRequest","longName":"IssueMcpBadgeRequest","fullName":"agntcy.identity.service.v1alpha1.IssueMcpBadgeRequest","description":"","hasExtensions":false,"hasFields":true,"hasOneofs":true,"extensions":[],"fields":[{"name":"name","description":"The MCP badge name.","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_name","defaultValue":""},{"name":"url","description":"The MCP badge URL.","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_url","defaultValue":""},{"name":"schema_base64","description":"Or the MCP Schema in a base64 encoded format.","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_schema_base64","defaultValue":""}]}} />
+
+
+### `IssueOASFBadgeRequest`
+<ProtoMessage key={3} message={{"name":"IssueOASFBadgeRequest","longName":"IssueOASFBadgeRequest","fullName":"agntcy.identity.service.v1alpha1.IssueOASFBadgeRequest","description":"","hasExtensions":false,"hasFields":true,"hasOneofs":false,"extensions":[],"fields":[{"name":"schema_base64","description":"The OASF schema in a base64 encoded format","label":"","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":""}]}} />
+
+
+### `VerifyBadgeRequest`
+<ProtoMessage key={4} message={{"name":"VerifyBadgeRequest","longName":"VerifyBadgeRequest","fullName":"agntcy.identity.service.v1alpha1.VerifyBadgeRequest","description":"","hasExtensions":false,"hasFields":true,"hasOneofs":false,"extensions":[],"fields":[{"name":"badge","description":"The JOSE enveloped badge to verify.","label":"","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":false,"oneofdecl":"","defaultValue":""}]}} />
+
+---
+## Services
+
+
+### `BadgeService`
+
+BadgeService manages badges.
+
+
+#### `IssueBadge`
+<ProtoServiceMethod key={'IssueBadge-0'} method={{"name":"IssueBadge","description":"Create a new Badge.","requestType":"IssueBadgeRequest","requestLongType":"IssueBadgeRequest","requestFullType":"agntcy.identity.service.v1alpha1.IssueBadgeRequest","requestStreaming":false,"responseType":"Badge","responseLongType":"Badge","responseFullType":"agntcy.identity.service.v1alpha1.Badge","responseStreaming":false,"options":{"google.api.http":{"rules":[{"method":"POST","pattern":"/v1alpha1/apps/{app_id}/badges","body":"*"}]}},"requestTypeLink":"/protodocs/agntcy/identity/service/v1alpha1/badge_service.proto#issuebadgerequest","responseTypeLink":"/protodocs/agntcy/identity/service/v1alpha1/badge.proto#badge"}} />
+
+
+#### `VerifyBadge`
+<ProtoServiceMethod key={'VerifyBadge-1'} method={{"name":"VerifyBadge","description":"Verify a badge.","requestType":"VerifyBadgeRequest","requestLongType":"VerifyBadgeRequest","requestFullType":"agntcy.identity.service.v1alpha1.VerifyBadgeRequest","requestStreaming":false,"responseType":"VerificationResult","responseLongType":"VerificationResult","responseFullType":"agntcy.identity.service.v1alpha1.VerificationResult","responseStreaming":false,"options":{"google.api.http":{"rules":[{"method":"POST","pattern":"/v1alpha1/badges/verify","body":"*"}]}},"requestTypeLink":"/protodocs/agntcy/identity/service/v1alpha1/badge_service.proto#verifybadgerequest","responseTypeLink":"/protodocs/agntcy/identity/service/v1alpha1/badge.proto#verificationresult"}} />
+
+
+---
+
+
+  

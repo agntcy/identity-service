@@ -1,0 +1,37 @@
+---
+title: app.proto
+hide_title: true
+---
+
+import { ProtoMessage, ProtoServiceMethod, ProtoEnum } from '@theme/ProtoFile';
+
+# `app.proto`
+_**path** agntcy/identity/service/v1alpha1/app.proto_
+
+_**package** agntcy.identity.service.v1alpha1_
+
+
+
+---
+
+## Messages
+
+
+### `App`
+<ProtoMessage key={0} message={{"name":"App","longName":"App","fullName":"agntcy.identity.service.v1alpha1.App","description":"Identity Service App.","hasExtensions":false,"hasFields":true,"hasOneofs":true,"extensions":[],"fields":[{"name":"id","description":"A unique identifier for the App.","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_id","defaultValue":""},{"name":"name","description":"A human-readable name for the App.","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_name","defaultValue":""},{"name":"description","description":"A human-readable description for the App.","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_description","defaultValue":""},{"name":"type","description":"The type of the App.","label":"optional","type":"AppType","longType":"AppType","fullType":"agntcy.identity.service.v1alpha1.AppType","ismap":false,"isoneof":true,"oneofdecl":"_type","defaultValue":"","typeLink":"/protodocs/agntcy/identity/service/v1alpha1/app.proto#apptype"},{"name":"resolver_metadata_id","description":"The DID value","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_resolver_metadata_id","defaultValue":""},{"name":"api_key","description":"The API Key Secret for the App.","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_api_key","defaultValue":""},{"name":"status","description":"The status of the App","label":"optional","type":"AppStatus","longType":"AppStatus","fullType":"agntcy.identity.service.v1alpha1.AppStatus","ismap":false,"isoneof":true,"oneofdecl":"_status","defaultValue":"","typeLink":"/protodocs/agntcy/identity/service/v1alpha1/app.proto#appstatus"},{"name":"created_at","description":"CreatedAt records the timestamp of when the App was initially created","label":"optional","type":"Timestamp","longType":"google.protobuf.Timestamp","fullType":"google.protobuf.Timestamp","ismap":false,"isoneof":true,"oneofdecl":"_created_at","defaultValue":""}]}} />
+
+---
+## Enums
+
+
+### `AppStatus`
+<ProtoEnum key={0} enumb={{"name":"AppStatus","longName":"AppStatus","fullName":"agntcy.identity.service.v1alpha1.AppStatus","description":"","values":[{"name":"APP_STATUS_UNSPECIFIED","number":"0","description":"Unspecified status"},{"name":"APP_STATUS_ACTIVE","number":"1","description":"The App has at least one active badge"},{"name":"APP_STATUS_PENDING","number":"2","description":"The App has no badges"},{"name":"APP_STATUS_REVOKED","number":"3","description":"The App has all the badges revoked"}]}} />
+
+
+### `AppType`
+<ProtoEnum key={1} enumb={{"name":"AppType","longName":"AppType","fullName":"agntcy.identity.service.v1alpha1.AppType","description":"App Type","values":[{"name":"APP_TYPE_UNSPECIFIED","number":"0","description":"Unspecified Envelope Type."},{"name":"APP_TYPE_AGENT_A2A","number":"1","description":"Agent A2A App Type."},{"name":"APP_TYPE_AGENT_OASF","number":"2","description":"Agent OASF App Type."},{"name":"APP_TYPE_MCP_SERVER","number":"3","description":"Agent MCP Server App Type."}]}} />
+
+---
+
+
+  

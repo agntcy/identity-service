@@ -129,7 +129,7 @@ timeout=timeout, auth=auth
 # Do your HTTPX requests here
 ```
 
-You can see this class fully implemented in our [Financial Agentic Service](https://github.com/outshift-open/identity-service/blob/main/samples/agent/oasf/financial_assistant/currency_exchange_agent.py#L112).
+You can see this class fully implemented in our [Financial Agentic Service](https://github.com/agntcy/identity-service/blob/main/samples/agent/oasf/financial_assistant/currency_exchange_agent.py#L112).
 
 ##### Authorize using the A2A Starlette/FastAPI auth middleware
 
@@ -178,7 +178,7 @@ app.add_middleware(
 uvicorn.run(app, host=host, port=port)
 ```
 
-You can see this class fully implemented in our [Currency Exchange Agentic Service](https://github.com/outshift-open/identity-service/blob/main/samples/agent/a2a/currency_exchange/main.py#L91).
+You can see this class fully implemented in our [Currency Exchange Agentic Service](https://github.com/agntcy/identity-service/blob/main/samples/agent/a2a/currency_exchange/main.py#L91).
 
 ### MCP Integration using the Python SDK
 
@@ -219,7 +219,7 @@ self.graph = create_react_agent(
 )
 ```
 
-You can see this class fully implemented in our [Currency Exchange Agentic Service](https://github.com/outshift-open/identity-service/blob/main/samples/agent/a2a/currency_exchange/agent.py#L80).
+You can see this class fully implemented in our [Currency Exchange Agentic Service](https://github.com/agntcy/identity-service/blob/main/samples/agent/a2a/currency_exchange/agent.py#L80).
 
 Another example using MCP's `ClientSession` and `streamablehttp_client`:
 
@@ -267,7 +267,7 @@ app.add_middleware(
 uvicorn.run(app, host=host, port=port)
 ```
 
-You can see this class fully implemented in our [Currency Exchange MCP Server](https://github.com/outshift-open/identity-service/blob/main/samples/mcp/currency_exchange/main.py#L103).
+You can see this class fully implemented in our [Currency Exchange MCP Server](https://github.com/agntcy/identity-service/blob/main/samples/mcp/currency_exchange/main.py#L103).
 
 ### Standard Starlette/FastAPI auth middleware
 

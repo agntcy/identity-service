@@ -1,0 +1,53 @@
+---
+title: settings.proto
+hide_title: true
+---
+
+import { ProtoMessage, ProtoServiceMethod, ProtoEnum } from '@theme/ProtoFile';
+
+# `settings.proto`
+_**path** agntcy/identity/service/v1alpha1/settings.proto_
+
+_**package** agntcy.identity.service.v1alpha1_
+
+
+
+---
+
+## Messages
+
+
+### `ApiKey`
+<ProtoMessage key={0} message={{"name":"ApiKey","longName":"ApiKey","fullName":"agntcy.identity.service.v1alpha1.ApiKey","description":"An Identity API Key.","hasExtensions":false,"hasFields":true,"hasOneofs":true,"extensions":[],"fields":[{"name":"api_key","description":"","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_api_key","defaultValue":""}]}} />
+
+
+### `DuoIdpSettings`
+<ProtoMessage key={1} message={{"name":"DuoIdpSettings","longName":"DuoIdpSettings","fullName":"agntcy.identity.service.v1alpha1.DuoIdpSettings","description":"Duo IdP Settings","hasExtensions":false,"hasFields":true,"hasOneofs":true,"extensions":[],"fields":[{"name":"hostname","description":"","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_hostname","defaultValue":""},{"name":"integration_key","description":"","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_integration_key","defaultValue":""},{"name":"secret_key","description":"","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_secret_key","defaultValue":""}]}} />
+
+
+### `IssuerSettings`
+<ProtoMessage key={2} message={{"name":"IssuerSettings","longName":"IssuerSettings","fullName":"agntcy.identity.service.v1alpha1.IssuerSettings","description":"Issuer Settings","hasExtensions":false,"hasFields":true,"hasOneofs":true,"extensions":[],"fields":[{"name":"issuer_id","description":"A unique identifier for the Issuer.\nThis is typically the Issuer's ID in the Identity.","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_issuer_id","defaultValue":""},{"name":"idp_type","description":"The type of the IdP.","label":"optional","type":"IdpType","longType":"IdpType","fullType":"agntcy.identity.service.v1alpha1.IdpType","ismap":false,"isoneof":true,"oneofdecl":"_idp_type","defaultValue":"","typeLink":"/protodocs/agntcy/identity/service/v1alpha1/settings.proto#idptype"},{"name":"duo_idp_settings","description":"Settings for the Duo Identity Provider.","label":"optional","type":"DuoIdpSettings","longType":"DuoIdpSettings","fullType":"agntcy.identity.service.v1alpha1.DuoIdpSettings","ismap":false,"isoneof":true,"oneofdecl":"_duo_idp_settings","defaultValue":"","typeLink":"/protodocs/agntcy/identity/service/v1alpha1/settings.proto#duoidpsettings"},{"name":"okta_idp_settings","description":"Settings for the Okta Identity Provider.","label":"optional","type":"OktaIdpSettings","longType":"OktaIdpSettings","fullType":"agntcy.identity.service.v1alpha1.OktaIdpSettings","ismap":false,"isoneof":true,"oneofdecl":"_okta_idp_settings","defaultValue":"","typeLink":"/protodocs/agntcy/identity/service/v1alpha1/settings.proto#oktaidpsettings"},{"name":"ory_idp_settings","description":"Settings for the Ory Identity Provider.","label":"optional","type":"OryIdpSettings","longType":"OryIdpSettings","fullType":"agntcy.identity.service.v1alpha1.OryIdpSettings","ismap":false,"isoneof":true,"oneofdecl":"_ory_idp_settings","defaultValue":"","typeLink":"/protodocs/agntcy/identity/service/v1alpha1/settings.proto#oryidpsettings"}]}} />
+
+
+### `OktaIdpSettings`
+<ProtoMessage key={3} message={{"name":"OktaIdpSettings","longName":"OktaIdpSettings","fullName":"agntcy.identity.service.v1alpha1.OktaIdpSettings","description":"Okta IdP Settings","hasExtensions":false,"hasFields":true,"hasOneofs":true,"extensions":[],"fields":[{"name":"org_url","description":"","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_org_url","defaultValue":""},{"name":"client_id","description":"","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_client_id","defaultValue":""},{"name":"private_key","description":"","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_private_key","defaultValue":""}]}} />
+
+
+### `OryIdpSettings`
+<ProtoMessage key={4} message={{"name":"OryIdpSettings","longName":"OryIdpSettings","fullName":"agntcy.identity.service.v1alpha1.OryIdpSettings","description":"Ory IdP Settings","hasExtensions":false,"hasFields":true,"hasOneofs":true,"extensions":[],"fields":[{"name":"project_slug","description":"","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_project_slug","defaultValue":""},{"name":"api_key","description":"","label":"optional","type":"string","longType":"string","fullType":"string","ismap":false,"isoneof":true,"oneofdecl":"_api_key","defaultValue":""}]}} />
+
+
+### `Settings`
+<ProtoMessage key={5} message={{"name":"Settings","longName":"Settings","fullName":"agntcy.identity.service.v1alpha1.Settings","description":"Identity Settings","hasExtensions":false,"hasFields":true,"hasOneofs":true,"extensions":[],"fields":[{"name":"api_key","description":"An API Key for the Identity Service.","label":"optional","type":"ApiKey","longType":"ApiKey","fullType":"agntcy.identity.service.v1alpha1.ApiKey","ismap":false,"isoneof":true,"oneofdecl":"_api_key","defaultValue":"","typeLink":"/protodocs/agntcy/identity/service/v1alpha1/settings.proto#apikey"},{"name":"issuer_settings","description":"Settings for the Issuer.","label":"optional","type":"IssuerSettings","longType":"IssuerSettings","fullType":"agntcy.identity.service.v1alpha1.IssuerSettings","ismap":false,"isoneof":true,"oneofdecl":"_issuer_settings","defaultValue":"","typeLink":"/protodocs/agntcy/identity/service/v1alpha1/settings.proto#issuersettings"}]}} />
+
+---
+## Enums
+
+
+### `IdpType`
+<ProtoEnum key={0} enumb={{"name":"IdpType","longName":"IdpType","fullName":"agntcy.identity.service.v1alpha1.IdpType","description":"Type","values":[{"name":"IDP_TYPE_UNSPECIFIED","number":"0","description":"Unspecified Envelope Type."},{"name":"IDP_TYPE_DUO","number":"1","description":"Idp Type Duo."},{"name":"IDP_TYPE_OKTA","number":"2","description":"Idp Type Okta."},{"name":"IDP_TYPE_ORY","number":"3","description":"Idp Type Ory."},{"name":"IDP_TYPE_SELF","number":"4","description":"Idp Type Self."}]}} />
+
+---
+
+
+  
