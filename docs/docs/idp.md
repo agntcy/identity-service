@@ -4,10 +4,10 @@ sidebar_position: 2
 
 # Connecting an Identity Provider (IdP)
 
-This document provides a comprehensive guide on how to register a new issuer by connecting an Identity Provider (IdP) within the **Agent Identity Service**. Connecting an IdP is a crucial step for integrating external authentication and authorization services, such as Client Credentials, with your Agent Identity environment.
+This document provides a comprehensive guide on how to register a new issuer by connecting an Identity Provider (IdP) within the **AGNTCY Identity Service**. Connecting an IdP is a crucial step for integrating external authentication and authorization services, such as Client Credentials, with your Agent Identity environment.
 This guide specifically details the process for configuring different Identity Providers, including Duo and Ory.
 
-To access the Identity Provider creation page within the **Agent Identity Service**:
+To access the Identity Provider creation page within the **AGNTCY Identity Service**:
 
 1.  From the main dashboard, locate and click on **Settings** in the left-hand navigation menu.
 2.  Within the Settings section, select **Identity Provider**.

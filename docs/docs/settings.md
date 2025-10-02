@@ -5,13 +5,13 @@ title: Settings
 
 # Settings
 
-Welcome to the "Settings" section of the Agntcy Agent Identity Service.
+Welcome to the "Settings" section of the Agntcy AGNTCY Identity Service.
 This section provides a comprehensive guide to managing critical configurations, including API Keys, Devices and Organizations & Users.
 This documentation will help you navigate the settings interface and utilize its functionalities effectively.
 
 ## API Keys
 
-The API Keys subsection allows administrators to create, view, and manage API Keys within the Agent Identity Service.
+The API Keys subsection allows administrators to create, view, and manage API Keys within the AGNTCY Identity Service.
 These keys are essential for authenticating and securing interactions between Agentic Services and external systems.
 
 ### Accessing API Keys
@@ -43,7 +43,7 @@ These keys are essential for authenticating and securing interactions between Ag
 
 ## Devices
 
-The Devices section within the Agent Identity Service allows you to register and manage your personal devices for secure authentication and notification purposes.
+The Devices section within the AGNTCY Identity Service allows you to register and manage your personal devices for secure authentication and notification purposes.
 By onboarding a device, you enable it to receive push notifications for identity approvals and enhance the overall security posture of your Agent Identity environment.
 This guide details the process of adding a new device and managing existing ones.
 
@@ -77,7 +77,7 @@ Follow these steps to register and configure your device:
 ![Mobile page](/img/Settings_DEVICE_04.png)
 </div>
 
-- To enable notifications, you may need to add the Agent Identity Service web page to your mobile device's home screen. Access your browser's options (e.g., the share icon on iOS) and select "Add to Home Screen".
+- To enable notifications, you may need to add the AGNTCY Identity Service web page to your mobile device's home screen. Access your browser's options (e.g., the share icon on iOS) and select "Add to Home Screen".
 
 <div style={{maxWidth: '300px'}}>
 ![Mobile Device Home setting](/img/Settings_DEVICE_05.png)
@@ -87,7 +87,7 @@ Follow these steps to register and configure your device:
 ![Mobile Device Home setting](/img/Settings_DEVICE_06.png)
 </div>
 
-- Confirm the addition. An icon for the Agent Identity Service will appear on your home screen.
+- Confirm the addition. An icon for the AGNTCY Identity Service will appear on your home screen.
 
 ![Mobile Device Home Addition](/img/Settings_DEVICE_07.png)
 
@@ -105,7 +105,7 @@ Follow these steps to register and configure your device:
 
 ### Managing Registered Devices
 
-Once a device is successfully added, you can view and manage it from the Devices section in the Agent Identity Service portal.
+Once a device is successfully added, you can view and manage it from the Devices section in the AGNTCY Identity Service portal.
 
 1. **Viewing Registered Devices:**
 
@@ -136,7 +136,7 @@ Once a device is successfully added, you can view and manage it from the Devices
 
 ## Organizations & Users
 
-The Organizations & Users subsection provides tools for managing organizational structures and user roles within the Agent Identity Service.
+The Organizations & Users subsection provides tools for managing organizational structures and user roles within the AGNTCY Identity Service.
 This section is crucial for defining user access and maintaining organizational oversight.
 
 ### Accessing Organizations & Users

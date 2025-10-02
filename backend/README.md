@@ -1,6 +1,6 @@
-# Agent Identity Service Backend
+# AGNTCY Identity Service Backend
 
-This repository contains all components of the Agent Identity Service Backend - a Golang-based backend service for managing agent identities.
+This repository contains all components of the AGNTCY Identity Service Backend - a Golang-based backend service for managing agent identities.
 
 ## 🚀 Tech Stack
 

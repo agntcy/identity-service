@@ -1,6 +1,6 @@
 # How to Contribute
 
-Thanks for your interest in contributing to `Agent Identity Service`! Here are a few
+Thanks for your interest in contributing to `AGNTCY Identity Service`! Here are a few
 general guidelines on contributing and reporting bugs that we ask you to review.
 Following these guidelines helps to communicate that you respect the time of the
 contributors managing and developing this open source project. In return, they
@@ -39,7 +39,7 @@ major version release.
 
 ## Other Ways to Contribute
 
-We welcome anyone that wants to contribute to `Agent Identity Service` to triage and
+We welcome anyone that wants to contribute to `AGNTCY Identity Service` to triage and
 reply to open issues to help troubleshoot and fix existing bugs. Here is what
 you can do:
 
@@ -50,9 +50,9 @@ you can do:
   [Wiki](https://github.com/agntcy/identity-service/wiki) with up-to-date
   instructions and code samples.
 - Review existing pull requests, and testing patches against real existing
-  applications that use `Agent Identity Service`.
+  applications that use `AGNTCY Identity Service`.
 - Write a test, or add a missing test case to an existing test.
 
-Thanks again for your interest on contributing to `Agent Identity Service`!
+Thanks again for your interest on contributing to `AGNTCY Identity Service`!
 
 :heart:

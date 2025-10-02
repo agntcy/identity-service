@@ -29,7 +29,7 @@ var File_agntcy_identity_service_v1alpha1_openapi_proto protoreflect.FileDescrip
 const file_agntcy_identity_service_v1alpha1_openapi_proto_rawDesc = "" +
 	"\n" +
 	".agntcy/identity/service/v1alpha1/openapi.proto\x12 agntcy.identity.service.v1alpha1\x1a\x1bopenapiv3/annotations.protoB\xd3\x04\xbaG\xe7\x03\x12\xf4\x01\n" +
-	"\x1aAgent Identity Service API\x12|Agent Identity Service API provides a set of endpoints for managing identity and access control within the Agntcy ecosystem.\"N\n" +
+	"\x1aAGNTCY Identity Service API\x12|AGNTCY Identity Service API provides a set of endpoints for managing identity and access control within the Agntcy ecosystem.\"N\n" +
 	"\vAgntcy Team\x12*https://github.com/agntcy/identity-service\x1a\x13identity@agntcy.org2\bv1alpha1\x1a*\n" +
 	"\x15http://localhost:4000\x12\x11Local environment*\xa2\x012\x02\n" +
 	"\x00:\x9b\x01\n" +

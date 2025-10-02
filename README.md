@@ -1,4 +1,4 @@
-# Agent Identity Service
+# AGNTCY Identity Service
 
 [![Lint](https://github.com/agntcy/identity-service/actions/workflows/lint.yml/badge.svg?branch=main)](https://github.com/marketplace/actions/super-linter)
 [![Contributor-Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-fbab2c.svg)](CODE_OF_CONDUCT.md)
@@ -20,19 +20,19 @@
   </div>
   <br />
   <p align="center">
-    <caption>Welcome to the <b>Agent Identity Service</b> repository</caption>
+    <caption>Welcome to the <b>AGNTCY Identity Service</b> repository</caption>
   </p>
 </div>
 
 ---
 
-Agent Identity Service serves as the central hub for managing and verifying digital identities for your Agentic Services. In today's interconnected digital landscape, secure and reliable identity management is paramount. Agent Identity Service addresses this need by providing a streamlined service to:
+AGNTCY Identity Service serves as the central hub for managing and verifying digital identities for your Agentic Services. In today's interconnected digital landscape, secure and reliable identity management is paramount. AGNTCY Identity Service addresses this need by providing a streamlined service to:
 
 - Verify the authenticity of existing identity badges.
 - Register new Agentic Services, establishing their unique identities.
 - Define TBAC (Task-Based Access Control) policies to govern access and permissions.
 
-Whether you are integrating existing services or deploying new ones, Agent Identity Service ensures that all your components—including MCP Servers, A2A Agents, and OASF—are properly identified, managed and secured.
+Whether you are integrating existing services or deploying new ones, AGNTCY Identity Service ensures that all your components—including MCP Servers, A2A Agents, and OASF—are properly identified, managed and secured.
 
 ## 📚 Table of Contents
 

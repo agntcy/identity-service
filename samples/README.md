@@ -1,6 +1,6 @@
-# Agent Identity Service Samples
+# AGNTCY Identity Service Samples
 
-These samples are designed to help you understand how to use the **Agent Identity Service** effectively.
+These samples are designed to help you understand how to use the **AGNTCY Identity Service** effectively.
 The samples are composed of a `Currency Exchange A2A Agent` leveraging a `Currency Exchange MCP Server` and an `Financial Assistant OASF Agent Definition`.
 
 > [!NOTE]

@@ -58,7 +58,7 @@ export const InstallButtonPwa = (props: FabProps) => {
 
   return (
     <div className="absolute bottom-16 right-6">
-      <Tooltip title="Install Agent Identity Service" placement="left">
+      <Tooltip title="Install AGNTCY Identity Service" placement="left">
         <Fab
           color="primary"
           variant="circular"

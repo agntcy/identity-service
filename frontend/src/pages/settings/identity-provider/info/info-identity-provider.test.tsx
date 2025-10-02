@@ -301,7 +301,7 @@ describe('InfoIdentityProvider', () => {
   it('renders empty state props correctly', () => {
     renderWithClient(<InfoIdentityProvider />, {initialEntries: [PATHS.settings.base]});
 
-    expect(screen.getByTestId('empty-list-state-props-title')).toHaveTextContent('Get started with Agent Identity Service');
+    expect(screen.getByTestId('empty-list-state-props-title')).toHaveTextContent('Get started with AGNTCY Identity Service');
     expect(screen.getByTestId('empty-list-state-props-description')).toHaveTextContent(
       'Connect your identity provider to create and manage identities for your AI agents and MCP servers, including those supporting A2A-compatible protocols like Google A2A, with support for policies and access controls.'
     );

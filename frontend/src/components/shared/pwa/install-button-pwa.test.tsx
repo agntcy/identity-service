@@ -155,7 +155,7 @@ describe('InstallButtonPwa', () => {
       // Now should render the complete structure
       expect(container.firstChild).toHaveClass('absolute', 'bottom-16', 'right-6');
       expect(screen.getByTestId('tooltip')).toBeInTheDocument();
-      expect(screen.getByTestId('tooltip')).toHaveAttribute('data-title', 'Install Agent Identity Service');
+      expect(screen.getByTestId('tooltip')).toHaveAttribute('data-title', 'Install AGNTCY Identity Service');
       expect(screen.getByTestId('tooltip')).toHaveAttribute('data-placement', 'left');
       expect(screen.getByTestId('fab')).toBeInTheDocument();
       expect(screen.getByTestId('monitor-down-icon')).toBeInTheDocument();

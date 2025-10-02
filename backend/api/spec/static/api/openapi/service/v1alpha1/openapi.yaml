@@ -6,8 +6,8 @@
 
 openapi: 3.0.3
 info:
-    title: Agent Identity Service API
-    description: Agent Identity Service API provides a set of endpoints for managing identity and access control within the Agntcy ecosystem.
+    title: AGNTCY Identity Service API
+    description: AGNTCY Identity Service API provides a set of endpoints for managing identity and access control within the Agntcy ecosystem.
     contact:
         name: Agntcy Team
         url: https://github.com/agntcy/identity-service

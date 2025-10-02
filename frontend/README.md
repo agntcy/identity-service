@@ -1,6 +1,6 @@
-# Agent Identity Service UI
+# AGNTCY Identity Service UI
 
-This repository contains all components of the Agent Identity Service UI - a React-based frontend application built with modern web technologies.
+This repository contains all components of the AGNTCY Identity Service UI - a React-based frontend application built with modern web technologies.
 
 ## 🚀 Tech Stack
 

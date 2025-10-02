@@ -1,9 +1,9 @@
-# Agent Identity Service SDK for Go
+# AGNTCY Identity Service SDK for Go
 
 [![OpenAPI v1alpha1](https://img.shields.io/badge/OpenAPI-v1alpha1-blue)](https://identity-docs.outshift.com/openapi/service/v1alpha1)
 [![Protocol Documentation](https://img.shields.io/badge/Protocol-Documentation-blue)](https://identity-docs.outshift.com/protodocs/outshift/identity/service/v1alpha1/app.proto)
 
-`github.com/agntcy/identity-service/backend/api/client` is the v1alpha1 Agent Identity Service SDK for the Go programming language that contains the different REST HTTP clients.
+`github.com/agntcy/identity-service/backend/api/client` is the v1alpha1 AGNTCY Identity Service SDK for the Go programming language that contains the different REST HTTP clients.
 
 The SDK requires a minimum version of `Go 1.24`.
 

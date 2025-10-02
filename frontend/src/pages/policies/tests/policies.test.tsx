@@ -295,7 +295,7 @@ describe('Policies', () => {
 
     renderWithClient(<Policies />);
 
-    expect(screen.getByTestId('empty-title')).toHaveTextContent('Get started with Agent Identity Service');
+    expect(screen.getByTestId('empty-title')).toHaveTextContent('Get started with AGNTCY Identity Service');
     expect(screen.getByTestId('empty-description')).toHaveTextContent(
       'Connect your identity provider to create and manage identities for your AI agents and MCP servers'
     );
@@ -311,7 +311,7 @@ describe('Policies', () => {
 
     renderWithClient(<Policies />);
 
-    expect(screen.getByTestId('empty-title')).toHaveTextContent('Get started with Agent Identity Service');
+    expect(screen.getByTestId('empty-title')).toHaveTextContent('Get started with AGNTCY Identity Service');
     expect(screen.getByTestId('empty-description')).toHaveTextContent(
       'Add an Agentic Service to manage identities and apply TBAC based access control.'
     );

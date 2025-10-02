@@ -281,10 +281,10 @@ export class HttpClient<SecurityDataType = unknown> {
 }
 
 /**
- * @title Agent Identity Service API
+ * @title AGNTCY Identity Service API
  * @version v1alpha1
  * @contact Agntcy Team <identity@agntcy.org> (https://github.com/agntcy/identity-service)
  *
- * Agent Identity Service API provides a set of endpoints for managing identity and access control within the Agntcy ecosystem.
+ * AGNTCY Identity Service API provides a set of endpoints for managing identity and access control within the Agntcy ecosystem.
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {}

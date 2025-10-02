@@ -209,7 +209,7 @@ self.addEventListener('notificationclick', (event) => {
             approve: action === 'allow'
           })
             .then(async () => {
-              await self.registration.showNotification('Agent Identity Service | AGNTCY', {
+              await self.registration.showNotification('AGNTCY Identity Service | AGNTCY', {
                 body: `Your request has been ${action === 'allow' ? 'approved' : 'denied'}.`
               });
             })

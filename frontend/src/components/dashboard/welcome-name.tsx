@@ -22,7 +22,7 @@ export const WelcomeName = () => {
               textAlign="center"
               sx={(theme) => ({color: theme.palette.vars.brandIconTertiaryDefault})}
             >
-              Welcome to Agent Identity Service,{' '}
+              Welcome to AGNTCY Identity Service,{' '}
               <span className={cn(isMulti && 'capitalize')}>
                 {authInfo?.user?.name || authInfo?.user?.username || 'User'}!
               </span>
