@@ -1,5 +1,5 @@
 # pylint: disable=logging-fstring-interpolation, no-member, no-name-in-module
-# Copyright 2025 Cisco Systems, Inc. and its affiliates
+# Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
 # SPDX-License-Identifier: Apache-2.0
 """Identity Service SDK for Python."""
 

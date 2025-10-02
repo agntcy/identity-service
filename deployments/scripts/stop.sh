@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Copyright 2025 Cisco Systems, Inc. and its affiliates
+# Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
 # SPDX-License-Identifier: Apache-2.0
 
 ./deployments/scripts/backend/stop.sh

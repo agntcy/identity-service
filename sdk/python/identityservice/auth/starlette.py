@@ -1,5 +1,5 @@
 # pylint: disable=broad-except, too-few-public-methods, no-name-in-module
-# Copyright 2025 Cisco Systems, Inc. and its affiliates
+# Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
 # SPDX-License-Identifier: Apache-2.0
 """Middleware for Starlette that authenticates the Identity Service bearer token."""
 

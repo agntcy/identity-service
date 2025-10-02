@@ -1,5 +1,5 @@
 # pylint: disable=broad-except, too-few-public-methods, import-self, no-name-in-module, import-error
-# Copyright 2025 Cisco Systems, Inc. and its affiliates
+# Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
 # SPDX-License-Identifier: Apache-2.0
 """MCP Discover for the Identity Service Python SDK."""
 
