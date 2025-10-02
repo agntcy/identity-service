@@ -1,0 +1,58 @@
+apiVersion: v1
+entries:
+  identity-service-backend:
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2025-10-02T07:53:29.279942093Z"
+    dependencies:
+    - name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.1.0
+    - name: vault
+      repository: https://helm.releases.hashicorp.com
+      version: 0.23.0
+    description: A Helm chart for identity-service backend
+    digest: fdf3d051b4815040db097c021bed416ac742b6d79e336db4ba72129775bf0a2e
+    maintainers:
+    - name: identity
+      url: https://github.com/agntcy/identity-service/blob/main/MAINTAINERS.md
+    name: identity-service-backend
+    sources:
+    - https://github.com/agntcy/identity-service
+    type: application
+    urls:
+    - identity-service-backend-0.1.8.tgz
+    version: 0.1.8
+  identity-service-docs:
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2025-10-02T07:53:29.527720207Z"
+    description: A Helm chart for identity documentation service
+    digest: db15b597a735f4c382e8ec23fbbcfea1bb70680273fcb652407a13b3e85b5e77
+    maintainers:
+    - name: identity
+      url: https://github.com/agntcy/identity-service/blob/main/MAINTAINERS.md
+    name: identity-service-docs
+    sources:
+    - https://github.com/agntcy/identity-service
+    type: application
+    urls:
+    - identity-service-docs-0.0.7.tgz
+    version: 0.0.7
+  identity-service-ui:
+  - apiVersion: v2
+    appVersion: 0.0.1
+    created: "2025-10-02T07:53:29.666089582Z"
+    description: A Helm chart for Kubernetes
+    digest: 69e516435fc71f143609a9745db40595bc296745a66a93443cab5b67f8bd0427
+    maintainers:
+    - name: identity
+      url: https://github.com/agntcy/identity-service/blob/main/MAINTAINERS.md
+    name: identity-service-ui
+    sources:
+    - https://github.com/agntcy/identity-service
+    type: application
+    urls:
+    - identity-service-ui-0.1.6.tgz
+    version: 0.1.6
+generated: "2025-10-02T07:53:29.666095343Z"
