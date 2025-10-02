@@ -21,8 +21,8 @@ classifiers = [
 dependencies = ["grpcio", "protobuf", "grpcio-tools", "protoc_gen_openapiv2", "python-dotenv", "mcp (<2.0.0)", "typer", "httpx", "starlette", "a2a-sdk (>=0.2.0)"]
 
 [project.urls]
-"Homepage" = "https://github.com/outshift/identity-service-sdk"
-"Bug Tracker" = "https://github.com/outshift/identity-service-sdk/issues"
+"Homepage" = "https://github.com/agntcy/identity-service/sdk/python"
+"Bug Tracker" = "https://github.com/agntcy/identity-service/issues"
 
 [project.scripts]
 identity-cli = "identityservice.cli:app"

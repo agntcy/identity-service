@@ -3,26 +3,16 @@
 [![Lint](https://github.com/agntcy/identity-service/actions/workflows/lint.yml/badge.svg?branch=main)](https://github.com/marketplace/actions/super-linter)
 [![Contributor-Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-fbab2c.svg)](CODE_OF_CONDUCT.md)
 
-<div>
-  <a href="https://outshift.cisco.com/">
+<p align="center">
+  <a href="https://agntcy.org">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="img/logo-white.png" width="100%">
-      <img alt="" src="img/logo-color.png" width="100%">
+      <source media="(prefers-color-scheme: dark)" srcset="img/logo-white.png" width="300">
+      <img alt="" src="img/logo-color.png" width="300">
     </picture>
   </a>
-  <div align="right">
-    <a href="https://agntcy.org/">
-      <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="img/agntcy-attribution-white.png" width="200">
-        <img alt="" src="img/agntcy-attribution-full-color.png" width="200">
-      </picture>
-    </a>
-  </div>
   <br />
-  <p align="center">
-    <caption>Welcome to the <b>AGNTCY Identity Service</b> repository</caption>
-  </p>
-</div>
+  <caption>Welcome to the <b>Identity Service</b> repository</caption>
+</p>
 
 ---
 
