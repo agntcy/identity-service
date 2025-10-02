@@ -2,16 +2,38 @@
 # Copyright 2025 Cisco Systems, Inc. and its affiliates
 # SPDX-License-Identifier: Apache-2.0
 
+
 # Constants
+HYDRA_TMP_DIR="/tmp/hydra_quickstart"
 HYDRA_QUICKSTART_FILE="quickstart.yml"
-HYDRA_CONFIG_FILE="./contrib/quickstart/5-min/hydra.yml"
+HYDRA_CONFIG_FILE_REL_PATH="contrib/quickstart/5-min/hydra.yml"
 HYDRA_REPOSITORY="https://github.com/ory/hydra.git"
 HYDRA_VERSION="v2.3.0"
 HYDRA_BINARY="hydra"
 HYDRA_SPA_APP_ID="my-hydra-spa"
 
-# Get current IP address
-current_ip=$(ifconfig -l | xargs -n1 ipconfig getifaddr)
+#######################################
+# Set current IP address
+#######################################
+do_set_current_ip() {
+  # Check for the 'ip' command, common on modern Linux
+  if command -v ip >/dev/null 2>&1; then
+    # Use 'ip route' to find the default route and get the src IP
+    # This is the most reliable way to find the primary IP on a multi-homed system
+    current_ip=$(ip route get 1.1.1.1 | awk '{print $7; exit}')
+  # Check for the 'ifconfig' command, common on macOS and older Linux
+  elif command -v ifconfig >/dev/null 2>&1; then
+    # Parse ifconfig output
+    # 1. Get lines with "inet " (note the space to exclude inet6)
+    # 2. Exclude the loopback address (127.0.0.1)
+    # 3. Use awk to print the second field (the IP address)
+    # 4. Take the first IP found
+    current_ip=$(ifconfig | grep 'inet ' | grep -v '127.0.0.1' | awk '{print $2}' | head -n 1)
+  else
+    echo "Error: Could not find 'ip' or 'ifconfig' command." >&2
+    return 1
+  fi
+}
 
 #######################################
 # Create an Hydra application using the Hydra CLI.
@@ -22,24 +44,22 @@ do_setup_oidc() {
 
   # Create a new hydra application
   _=$("$HYDRA_BINARY" create client \
-    --endpoint http://${current_ip}:4445 \
+    --endpoint "http://${current_ip}:4445" \
     --id "$HYDRA_SPA_APP_ID" --audience api://default \
+    --skip-consent --skip-logout-consent \
     --grant-type authorization_code,refresh_token \
     --response-type code \
     --scope offline_access,offline,email,openid,profile \
     --token-endpoint-auth-method none \
     --redirect-uri http://localhost:5500 2>/dev/null)
 
-  echo "Hydra application "$HYDRA_SPA_APP_ID" created."
+  echo "Hydra application '$HYDRA_SPA_APP_ID' created."
 
-  # Set the vars
-  export OIDC_ISSUER_URL=http://${current_ip}:4444
+  # Set the vars for other scripts/processes to use
+  export OIDC_ISSUER_URL="http://${current_ip}:4444"
   export OIDC_CLIENT_ID="$HYDRA_SPA_APP_ID"
-  export OIDC_LOGIN_URL=http://${current_ip}:4444
-  export OIDC_CLIENT_ID_CLAIM_NAME=client_id
-
-  # Go back to the previous directory
-  cd ..
+  export OIDC_LOGIN_URL="http://${current_ip}:4444"
+  export OIDC_CLIENT_ID_CLAIM_NAME="client_id"
 }
 
 #######################################
@@ -49,24 +69,24 @@ do_verify_hydra_cli() {
   if ! command -v hydra > /dev/null; then
     echo "Hydra CLI is not installed. Please install it."
     echo "You can install it using the following guide: https://www.ory.sh/docs/guides/cli/installation"
-
     return 1
   fi
 }
 
 #######################################
 # Set up Hydra by creating an application.
-# #######################################
+#######################################
 do_setup_hydra() {
   echo "Setting up Hydra..."
 
-  # Create a quickstart file
-  echo "Creating Hydra quickstart file..."
+  # Define the absolute path to the hydra config file
+  hydra_config_path="${HYDRA_TMP_DIR}/${HYDRA_CONFIG_FILE_REL_PATH}"
 
   # Generate a random secret
-  secret=$(head -c 16 /dev/urandom | base64)
+  secret=$(head -c 16 /dev/urandom | base64 | tr -d '=+/')
 
-  cat > "$HYDRA_CONFIG_FILE" << EOL
+  # Create the Hydra configuration file with the current IP and secret
+  cat > "$hydra_config_path" << EOL
 serve:
   public:
     cors:
@@ -95,10 +115,12 @@ strategies:
   access_token: jwt
 EOL
 
-
-  echo "Updated Hydra config file with current IP: $current_ip"
+  echo "Updated Hydra config file at '$hydra_config_path' with current IP: $current_ip"
 }
 
+#######################################
+# Clones Hydra repo and starts the Docker containers.
+#######################################
 do_start_hydra_server() {
   # Check if the Hydra CLI is installed
   if ! do_verify_hydra_cli; then
@@ -108,38 +130,46 @@ do_start_hydra_server() {
 
   echo "Starting Hydra OAuth2 Server..."
 
-  # Clone the Hydra repository if it doesn't exist
-  git clone "$HYDRA_REPOSITORY" || echo "Hydra repository already cloned."
-  cd hydra && git checkout "$HYDRA_VERSION" || echo "Hydra version $HYDRA_VERSION already checked out."
+  # Clone the Hydra repository into /tmp if it doesn't exist
+  if [ ! -d "$HYDRA_TMP_DIR" ]; then
+    echo "Cloning Hydra repository to '$HYDRA_TMP_DIR'..."
+    git clone --depth 1 --branch "$HYDRA_VERSION" "$HYDRA_REPOSITORY" "$HYDRA_TMP_DIR"
+  else
+    echo "Hydra repository already exists in '$HYDRA_TMP_DIR'."
+  fi
 
-  # Start Hydra using docker compose
-  docker compose -f "$HYDRA_QUICKSTART_FILE" up -d
+  # Start Hydra using docker compose, specifying the project directory
+  docker compose --project-directory "$HYDRA_TMP_DIR" -f "${HYDRA_TMP_DIR}/${HYDRA_QUICKSTART_FILE}" up -d
 
   # Wait for Hydra to start
+  echo "Waiting for Hydra services to start..."
   sleep 5
 
   echo "Hydra OAuth2 Server started."
 }
 
+#######################################
+# Stops the Docker containers and cleans up the repo.
+#######################################
 do_stop_hydra_server() {
   echo "Stopping Hydra OAuth2 Server..."
 
-  # Check if the hydra directory exists
-  if [ ! -d "hydra" ]; then
-    echo "Hydra directory does not exist. Hydra server may not be running."
-
+  # Check if the hydra temp directory exists
+  if [ ! -d "$HYDRA_TMP_DIR" ]; then
+    echo "Hydra temp directory does not exist. Server may not be running."
     return 1
   fi
 
-  # Stop Hydra using docker compose
-  cd hydra && docker compose -f "$HYDRA_QUICKSTART_FILE" down -v
+  # Stop Hydra using docker compose, specifying the project directory
+  docker compose --project-directory "$HYDRA_TMP_DIR" -f "${HYDRA_TMP_DIR}/${HYDRA_QUICKSTART_FILE}" down -v
 
-  # Clean up Hydra repository
-  cd .. && rm -rf hydra
+  # Clean up Hydra repository from /tmp
+  rm -rf "$HYDRA_TMP_DIR"
 
-  echo "Hydra OAuth2 Server stopped."
+  echo "Hydra OAuth2 Server stopped and temporary files cleaned up."
 }
 
+# Main script execution
 # If argument "stop" is passed, stop the server and exit
 if [ "$1" = "stop" ]; then
   do_stop_hydra_server
@@ -147,11 +177,10 @@ if [ "$1" = "stop" ]; then
   return 0
 fi
 
-# Start Hydra OAuth2 Server
+# Start and configure Hydra
+do_set_current_ip
 do_start_hydra_server
-
-# Configure Hydra
 do_setup_hydra
-
-# Configure OIDC
 do_setup_oidc
+
+echo "Hydra setup complete."
