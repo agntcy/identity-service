@@ -28,8 +28,8 @@ var File_agntcy_identity_service_v1alpha1_openapi_v2_proto protoreflect.FileDesc
 
 const file_agntcy_identity_service_v1alpha1_openapi_v2_proto_rawDesc = "" +
 	"\n" +
-	"1agntcy/identity/service/v1alpha1/openapi_v2.proto\x12 agntcy.identity.service.v1alpha1\x1a.protoc-gen-openapiv2/options/annotations.protoB\x90\x04\x92A\xa4\x03\x12\xf4\x01\n" +
-	"\x1aAGNTCY Identity Service API\x12|AGNTCY Identity Service API provides a set of endpoints for managing identity and access control within the Agntcy ecosystem.\"N\n" +
+	"1agntcy/identity/service/v1alpha1/openapi_v2.proto\x12 agntcy.identity.service.v1alpha1\x1a.protoc-gen-openapiv2/options/annotations.protoB\x92\x04\x92A\xa6\x03\x12\xf6\x01\n" +
+	"\x1bAGNTCY Identity Service API\x12}AGNTCY Identity Service API provides a set of endpoints for managing identity and access control within the Agntcy ecosystem.\"N\n" +
 	"\vAgntcy Team\x12*https://github.com/agntcy/identity-service\x1a\x13identity@agntcy.org2\bv1alpha1Z\x8b\x01\n" +
 	"Z\n" +
 	"\vAccessToken\x12K\b\x02\x126An IAM JWT token issued to a user during an OIDC flow.\x1a\rAuthorization \x02\n" +
