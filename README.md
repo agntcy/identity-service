@@ -16,7 +16,9 @@
 
 ---
 
-AGNTCY Identity Service serves as the central hub for managing and verifying digital identities for your Agentic Services. In today's interconnected digital landscape, secure and reliable identity management is paramount. AGNTCY Identity Service addresses this need by providing a streamlined service to:
+AGNTCY Identity Service serves as the central hub for managing and verifying digital identities for your Agentic Services.
+In today's interconnected digital landscape, secure and reliable identity management is paramount.
+AGNTCY Identity Service addresses this need by providing a streamlined service to:
 
 - Verify the authenticity of existing identity badges.
 - Register new Agentic Services, establishing their unique identities.
