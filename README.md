@@ -53,27 +53,37 @@ To run these steps successfully, you need to have the following installed:
 
 - [Docker Desktop](https://docs.docker.com/get-docker/), or have both: [Docker Engine v27 or higher](https://docs.docker.com/engine/install/) and [Docker Compose v2.35 or higher](https://docs.docker.com/compose/install/)
 
-1. Setup your OIDC Provider
+1. Setup OIDC Provider
 
-   You can use any OIDC provider of your choice. For testing purposes, you can use [Ory](https://www.ory.sh/), [Keycloak](https://www.keycloak.org/) or [Auth0](https://auth0.com/).
-   Configure the following variables in your shell environment:
+   - Create an OIDC application in your OIDC provider.
 
-   ```bash
-   export OIDC_ISSUER_URL=<OIDC_ISSUER_URL>
-   export OIDC_CLIENT_ID=<OIDC_CLIENT_ID>
-   export OIDC_LOGIN_URL=<OIDC_LOGIN_URL>
-   export OIDC_CLIENT_ID_CLAIM_NAME=<OIDC_CLIENT_ID_CLAIM_NAME>
-   ```
+     You can use any OIDC provider of your choice. For testing purposes, you can use [Ory](https://www.ory.sh/), [Keycloak](https://www.keycloak.org/) or [Auth0](https://auth0.com/).
+     Configure the following variables in your shell environment:
 
-   where:
+     ```bash
+     export OIDC_ISSUER_URL=<OIDC_ISSUER_URL>
+     export OIDC_CLIENT_ID=<OIDC_CLIENT_ID>
+     export OIDC_LOGIN_URL=<OIDC_LOGIN_URL>
+     export OIDC_CLIENT_ID_CLAIM_NAME=<OIDC_CLIENT_ID_CLAIM_NAME>
+     ```
 
-   - `OIDC_ISSUER_URL` - The URL of your OIDC provider (e.g., `https://{INSTANCE_URL}/oauth2/{CLIENT_ID}/.well-known/openid-configuration`).
-   - `OIDC_CLIENT_ID` - The client ID you created in your OIDC provider.
-   - `OIDC_LOGIN_URL` - The login URL of your OIDC provider (e.g., `https://{INSTANCE_URL}/oauth2/{CLIENT_ID}/authorize`).
-   - `OIDC_CLIENT_ID_CLAIM_NAME` - The claim name in the Access token that contains the client ID (default: `cid`).
+     where:
 
-     > **📝 NOTE**
-     > Make sure to add `http://localhost:5500` as a redirect URI for your OIDC client.
+     - `OIDC_ISSUER_URL` - The URL of your OIDC provider (e.g., `https://{INSTANCE_URL}/oauth2/{CLIENT_ID}/.well-known/openid-configuration`).
+     - `OIDC_CLIENT_ID` - The client ID you created in your OIDC provider.
+     - `OIDC_LOGIN_URL` - The login URL of your OIDC provider (e.g., `https://{INSTANCE_URL}/oauth2/{CLIENT_ID}/authorize`).
+     - `OIDC_CLIENT_ID_CLAIM_NAME` - The claim name in the Access token that contains the client ID (default: `cid`).
+
+       > **📝 NOTE**
+       > Make sure to add `http://localhost:5500` as a redirect URI for your OIDC client.
+
+   - Or use our demo script to setup a local OIDC provider using [Ory Hydra](https://www.ory.sh/):
+
+     ```bash
+     . ./demo/scripts/setup_hydra_oidc
+     ```
+
+     This will setup a local OIDC provider using Ory and configure the necessary environment variables in your shell.
 
 2. Start the Frontend and the Backend with Docker:
 
