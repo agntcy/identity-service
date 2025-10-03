@@ -1,6 +1,6 @@
-# Agent Identity Backend Architecture
+# Agent Identity Service Backend Architecture
 
-The overall Agent Identity backend architecture is shown in this diagram:
+The overall Agent Identity Service backend architecture is shown in this diagram:
 
 ```mermaid
 block
@@ -13,7 +13,7 @@ block
   block:application:4
     columns 1
     app_label["Application"]
-    Services["App Services"]
+    Services["Application Services"]
     Domain["Domain Models"]
     Repositories
   end
@@ -37,12 +37,12 @@ The purpose of each layer is described as below:
 - **Presentation Layer:** Responsible for bootstrapping the system, implementing the gRPC services, delegating requests to the Application layer and sending responses back to clients. The main packages of this layer:
   - [`cmd/bff`](https://github.com/agntcy/identity-service/tree/main/backend/cmd/bff)
   - [`internal/bff/grpc`](https://github.com/agntcy/identity-service/tree/main/backend/internal/bff/grpc).
-- **Application Layer:** Orchestrates and implements the core business logic of the system. App Services within this layer are responsible for enforcing business rules, processing validations, and coordinating workflows involving domain models, persistence and external systems. The main packages of this layer:
-  - [`internal/bff`](https://github.com/agntcy/identity-service/tree/main/backend/internal/bff): Implements the App Services.
+- **Application Layer:** Orchestrates and implements the core business logic of the system. Application Services within this layer are responsible for enforcing business rules, processing validations, and coordinating workflows involving domain models, persistence and external systems. The main packages of this layer:
+  - [`internal/bff`](https://github.com/agntcy/identity-service/tree/main/backend/internal/bff): Implements the Application Services.
   - [`internal/core`](https://github.com/agntcy/identity-service/tree/main/backend/internal/core): Implements the domain models and rest of the layer.
 - **Infrasturcture Layer:** Responsible for managing technical concerns such as data persistence (repository implementation) and integration with external systems (Identity Node, IAM, IdPs, etc.). The main packages of this layer:
   - [`internal/core`](https://github.com/agntcy/identity-service/tree/main/backend/internal/core): each domain contains the concrete implementation of the repositories and/or the adapters for the external systems.
-  - [`internal/pkg`](https://github.com/agntcy/identity-service/tree/main/backend/internal/pkg): part of this package contains adapters for external systems that are not associated with a specific domain, such as [`internal/pkg/iam`](https://github.com/agntcy/identity-service/tree/main/backend/internal/pkg/iam) and [`internal/pkg/vault`](https://github.com/agntcy/identity-service/tree/main/backend/internal/pkg/vault).
+  - [`internal/pkg`](https://github.com/agntcy/identity-service/tree/main/backend/internal/pkg): part of this package contains adapters for external systems that are not associated with a specific domain, such as [`internal/pkg/vault`](https://github.com/agntcy/identity-service/tree/main/backend/internal/pkg/vault).
 
 ## Bootstrapping
 
@@ -51,7 +51,7 @@ The [`main()`](https://github.com/agntcy/identity-service/blob/main/backend/cmd/
 1. Loading configuration
 2. Establishing a database connection
 3. Running database migrations
-4. Initializing App Services and injecting their dependencies
+4. Initializing Application Services and injecting their dependencies
 6. Starting the gRPC and HTTP servers
 
 ### Configuration
@@ -60,7 +60,7 @@ The backend is configured using environment variables. Additionally, any values 
 
 ### Dependency injection
 
-In Agent Identity backend, dependency injection is performed manually using [constructors](https://go.dev/doc/effective_go#composite_literals). Components depend on eachother using interfaces rather than concrete implementation structs.
+In Agent Identity Service backend, the dependency injection is performed manually using [constructors](https://go.dev/doc/effective_go#composite_literals). Components depend on each other using interfaces rather than concrete implementation structs.
 
 ```golang
 type ServiceA interface {}
