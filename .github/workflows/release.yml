@@ -92,7 +92,7 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
-          pattern: wheel-*
+          pattern: wheel-linux-x86_64
           merge-multiple: true
           path: ./dist
 
