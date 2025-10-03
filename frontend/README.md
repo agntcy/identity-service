@@ -2,6 +2,28 @@
 
 This repository contains all components of the AGNTCY Identity Service UI - a React-based frontend application built with modern web technologies.
 
+## 📸 Screenshots
+
+### Welcome Page
+
+<img src="img/welcome.png" alt="Welcome Page" width="800" />
+
+### Dashboard
+
+<img src="img/dashboard.png" alt="Dashboard" width="800" />
+
+### Agentic Service
+
+<img src="img/agentic-service.png" alt="Agentic Service" width="800" />
+
+### Policy Management
+
+<img src="img/policy.png" alt="Policy Management" width="800" />
+
+### Settings
+
+<img src="img/settings.png" alt="Settings" width="800" />
+
 ## 🚀 Tech Stack
 
 - **Framework**: React 18 with TypeScript
@@ -32,7 +54,7 @@ This repository contains all components of the AGNTCY Identity Service UI - a Re
 - Yarn (configured as package manager)
 - NVM (Node Version Manager)
 
-## � UI Component Library
+## 📖 UI Component Library
 
 This project uses [Open UI Kit Core](https://www.npmjs.com/package/@open-ui-kit/core) - a modern, accessible component library available on npm.
 
