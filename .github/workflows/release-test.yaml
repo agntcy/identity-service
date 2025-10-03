@@ -1,0 +1,103 @@
+name: Release Dry Run (Test)
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version (e.g. 1.2.3-rc1)
+        required: true
+        default: dev-snapshot
+      push_images:
+        description: Push Docker images (true/false)
+        required: false
+        default: "false"
+      publish_testpypi:
+        description: Publish to TestPyPI (true/false)
+        required: false
+        default: "true"
+  push:
+    branches:
+      - robustify-publish-to-pypi
+
+permissions:
+  contents: write
+  packages: write
+  attestations: read
+  id-token: write
+
+env:
+  TEST_VERSION: ${{ github.event.inputs.version || 'dev-snapshot' }}
+
+jobs:
+  pre-release-test:
+    uses: ./.github/workflows/reusable-test.yml
+
+  prepare-release:
+    needs: pre-release-test
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.out.outputs.version }}
+      targets: ${{ steps.targets.outputs.targets }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - id: out
+        run: echo "version=${TEST_VERSION}" >> "$GITHUB_OUTPUT"
+      - id: targets
+        uses: docker/bake-action/subaction/list-targets@37816e747588cb137173af99ab33873600c46ea8
+        with:
+          workdir: ./deployments/docker
+          target: default
+        continue-on-error: true
+
+  build-and-push-all-images:
+    if: >
+      needs.prepare-release.outputs.targets != '' &&
+      (github.event.inputs.push_images == 'true' || github.event_name == 'push')
+    uses: ./.github/workflows/reusable-docker.yml
+    needs: prepare-release
+    strategy:
+      fail-fast: false
+      matrix:
+        target: ${{ fromJson(needs.prepare-release.outputs.targets) }}
+    with:
+      bake-targets: ${{ matrix.target }}
+      image-tag: test-${{ needs.prepare-release.outputs.version }}
+      image-repo: ghcr.io/${{ github.repository }}
+    secrets:
+      github-token: ${{ secrets.GITHUB_TOKEN }}
+
+  package-helm-charts:
+    uses: ./.github/workflows/reusable-helm.yml
+    needs: prepare-release
+    with:
+      charts-dir: "charts"
+      gh-pages-branch: "gh-pages"
+    secrets:
+      github-token: ${{ secrets.GITHUB_TOKEN }}
+    if: false  # disable by default; flip to true to test chart publish
+
+  build-python-sdk:
+    uses: ./.github/workflows/reusable-python.yml
+    needs: prepare-release
+
+  dry-run-publish-python:
+    name: TestPyPI Upload
+    runs-on: ubuntu-latest
+    needs: build-python-sdk
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: wheel-*
+          merge-multiple: true
+          path: dist
+      - run: ls -l dist
+      - name: Publish to TestPyPI
+        if: ${{ github.event.inputs.publish_testpypi == 'true' || github.event_name == 'push' }}
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
+          password: ${{ secrets.TEST_PYPI_API_TOKEN }}
+          packages-dir: dist
