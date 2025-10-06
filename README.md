@@ -26,6 +26,8 @@ AGNTCY Identity Service addresses this need by providing a streamlined service t
 
 Whether you are integrating existing services or deploying new ones, AGNTCY Identity Service ensures that all your components—including MCP Servers, A2A Agents, and OASF—are properly identified, managed and secured.
 
+<img src="frontend/img/dashboard.png" alt="Dashboard" width="800" />
+
 ## 📚 Table of Contents
 
 - 🌟 [Main Components](#-main-components).
