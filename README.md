@@ -124,6 +124,11 @@ For more detailed development instructions please refer to the following section
 See the [open issues](https://github.com/agntcy/identity-service/issues) for a list
 of proposed features (and known issues).
 
+## AGNTCY Identity WG(Working Group)
+
+See the [AGNTCY Calendar](https://calendar.google.com/calendar/u/0/embed?src=admin@ops.agntcy.org&ctz=America/Boise) for the next Identity WG sessions.
+Join the Identity WG here: [Slack Invitation](https://join.slack.com/t/agntcy/shared_invite/zt-34sxmw5e8-LqlUxxcxROq3HRb56QSkUg).
+
 ## Contributing
 
 Contributions are what make the open source community such an amazing place to
