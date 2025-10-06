@@ -1,8 +1,8 @@
 # Errors
 
-Agent Identity Service deals with two types of errors:
+The Agent Identity Service deals with two types of errors:
 - **Domain errors:** arise when a business rule, validation or use case is violated. These errors are represented by the custom type [`DomainError`](https://github.com/agntcy/identity-service/blob/main/backend/internal/pkg/errutil/error.go), which extends Go's `error` interface to provide additional context about the violation. The resulting error messages are also designed to be displayed on the frontend.
-- **Technical errors**: occur due to issues outside the domain logic, such as database failures or system malfunctions, that affect the system's ability to function. These errors are returned as standard Go errors created using the functions from Go's [errors](https://pkg.go.dev/errors) and [fmt](https://pkg.go.dev/fmt) packages (e.g., `fmt.Errorf(...)`, `errors.New(...)`).
+- **Technical errors**: occur due to issues outside the domain logic, such as database failures or system malfunctions, that affect the system's ability to function. These errors are returned as standard Go errors created using the functions from Go's [errors](https://pkg.go.dev/errors) or [fmt](https://pkg.go.dev/fmt) packages (e.g., `fmt.Errorf(...)`, `errors.New(...)`).
 
 ## Domain errors
 
