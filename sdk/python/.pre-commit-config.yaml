@@ -1,6 +1,7 @@
 # Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
 # SPDX-License-Identifier: Apache-2.0
 
+---
 default_stages: [pre-commit, pre-push]
 exclude: |
   ^(agntcy|google|openapiv3)/
