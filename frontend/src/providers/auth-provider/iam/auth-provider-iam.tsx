@@ -253,11 +253,7 @@ const AuthProviderIAM: React.FC<React.PropsWithChildren> = ({children}) => {
           ? {redirectUri: newAuthConfig?.configOptions?.redirectUri?.trim()}
           : {})
       });
-      if (tenant) {
-        window.location.href = `${newAuthConfig?.iamUI}/${newAuthConfig?.productId}/tenants?${queryParams.toString()}`;
-      } else {
-        window.location.href = `${newAuthConfig?.iamUI}/${newAuthConfig?.productId}/tenants?${queryParams.toString()}`;
-      }
+      window.location.href = `${newAuthConfig?.iamUI}/${newAuthConfig?.productId}/tenants?${queryParams.toString()}`;
     } catch (error) {
       console.debug(error);
     }
