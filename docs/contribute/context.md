@@ -1,6 +1,6 @@
 # Identity Context
 
-One of the best features of Go is the `Context` type, it provides a mechanism to control the lifecycle, cancellation, and propagation of request-scoped metadata across the different components of an application.
+One of the most useful features of Go is the `Context` type, it provides a mechanism to control the lifecycle, cancellation, and propagation of request-scoped metadata across the different components of an application.
 
 In the Agent Identity Service, the `Context` is used to carry user and tenant information related to each gRPC request, such as `TenantID`, `AppID` and `UserID`. The [`internal/pkg/context`](https://github.com/agntcy/identity-service/tree/main/backend/internal/pkg/context) package provides functions to set and get this information from the context.
 

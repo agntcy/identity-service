@@ -4,7 +4,7 @@ This document provides guidance on working with domain models, application servi
 
 ## Domain packages
 
-Agent Identity Service is organized into multiple domains, with each domain defined as a separate package within [`internal/core`](https://github.com/agntcy/identity-service/tree/main/backend/internal/core).
+The Agent Identity Service is organized into multiple domains, with each domain defined as a separate package within [`internal/core`](https://github.com/agntcy/identity-service/tree/main/backend/internal/core).
 
 ### Structure
 
@@ -17,8 +17,6 @@ domain/
 │   ├── models.go
 │   └── repository.go
 ├── types/
-│   ├── int/
-│   │   └── types.go
 │   └── types.go
 ├── repository.go
 └── <domain_services>.go
