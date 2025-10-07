@@ -17,6 +17,13 @@ repos:
           "-s=only"
         ]
         files: \.(go|ts|tsx|js|jsx|py|sh|yaml|yml|css|scss)$
+        exclude: |
+          (?x)^(
+            sdk/python/(agntcy|google|openapiv3)/         # generated python proto bindings
+            |backend/api/spec/proto/                      # .proto sources + generated (pb.go in same tree)
+            |backend/api/server/.*\.pb\.go$               # other generated Go protobufs
+            |backend/api/spec/static/api/openapi/         # generated openapi yaml
+          )
 
   - repo: https://github.com/tekwizely/pre-commit-golang
     rev: v1.0.0-rc.2
