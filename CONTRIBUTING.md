@@ -37,6 +37,10 @@ We expect new pull requests to include tests for any affected behavior, and, as
 we follow semantic versioning, we may reserve breaking changes until the next
 major version release.
 
+## Development
+
+In this [development guide](docs/contribute/README.md), you find different resources to help you get started and contribute as a developer.
+
 ## Other Ways to Contribute
 
 We welcome anyone that wants to contribute to `AGNTCY Identity Service` to triage and
