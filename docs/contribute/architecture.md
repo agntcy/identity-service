@@ -89,3 +89,6 @@ sB := NewServiceB(sA)
 Adding a new dependency or updating an existing one is done with the `go get` command.
 
 After importing the dependency in the code, tidy up the `go.mod` and `go.sum` files using the `go mod tidy` command.
+
+> [!IMPORTANT]
+> Avoid using unmaintained libraries as dependencies.
