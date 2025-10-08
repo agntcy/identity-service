@@ -19,7 +19,6 @@ Most models include an ID field of type `uuid.UUID` and a `TenantID` field of ty
 
 Database models are created using factory functions that construct an instance from a domain model. Each database model also provides a method to convert its instance back into the corresponding domain model.
 
-
 ## Migrations
 
 Mapping database models to tables is managed through migrations. In Agent Identity Service, auto-migrations are enabled.

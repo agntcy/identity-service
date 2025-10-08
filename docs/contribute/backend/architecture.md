@@ -37,7 +37,8 @@ The purpose of each layer is described as below:
 - **Presentation Layer:** Responsible for bootstrapping the system, implementing the gRPC services, delegating requests to the Application layer and sending responses back to clients. The main packages of this layer:
   - [`cmd/bff`](https://github.com/agntcy/identity-service/tree/main/backend/cmd/bff)
   - [`internal/bff/grpc`](https://github.com/agntcy/identity-service/tree/main/backend/internal/bff/grpc).
-- **Application Layer:** Orchestrates and implements the core business logic of the system. Application Services within this layer are responsible for enforcing business rules, processing validations, and coordinating workflows involving domain models, persistence and external systems. The main packages of this layer:
+- **Application Layer:** Orchestrates and implements the core business logic of the system. Application Services within this layer are responsible for enforcing business rules, processing validations, and coordinating workflows involving domain models, persistence and external systems.
+The main packages of this layer:
   - [`internal/bff`](https://github.com/agntcy/identity-service/tree/main/backend/internal/bff): Implements the Application Services.
   - [`internal/core`](https://github.com/agntcy/identity-service/tree/main/backend/internal/core): Implements the domain models and rest of the layer.
 - **Infrasturcture Layer:** Responsible for managing technical concerns such as data persistence (repository implementation) and integration with external systems (Identity Node, IAM, IdPs, etc.). The main packages of this layer:
@@ -52,11 +53,12 @@ The [`main()`](https://github.com/agntcy/identity-service/blob/main/backend/cmd/
 2. Establishing a database connection
 3. Running database migrations
 4. Initializing Application Services and injecting their dependencies
-6. Starting the gRPC and HTTP servers
+5. Starting the gRPC and HTTP servers
 
 ### Configuration
 
-The backend is configured using environment variables. Additionally, any values specified in the `.env` file are automatically loaded as environment variables at startup (a sample can be found here [`cmd/bff/.env.sample`](https://github.com/agntcy/identity-service/blob/main/backend/cmd/bff/.env.sample)). All configuration options for the system are defined in the `Configuration` struct located in [`cmd/bff/configuration.go`](https://github.com/agntcy/identity-service/blob/main/backend/cmd/bff/configuration.go).
+The backend is configured using environment variables. Additionally, any values specified in the `.env` file are automatically loaded as environment variables at startup (a sample can be found here [`cmd/bff/.env.sample`](https://github.com/agntcy/identity-service/blob/main/backend/cmd/bff/.env.sample)).
+All configuration options for the system are defined in the `Configuration` struct located in [`cmd/bff/configuration.go`](https://github.com/agntcy/identity-service/blob/main/backend/cmd/bff/configuration.go).
 
 ### Dependency injection
 

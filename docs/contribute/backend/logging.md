@@ -3,7 +3,6 @@
 Logging in the Agent Identity Service is done using [logrus](https://github.com/sirupsen/logrus).
 Logs are forwarded to `stdout` or `stderr` depending on their log level. Logs are structured, they can have key-value pairs which makes querying and processing logs easier and reliable.
 
-
 ## Usage
 
 Import the [`pkg/log`](https://github.com/agntcy/identity-service/blob/main/backend/pkg/log/log.go) package to use one of the following functions to write logs:
@@ -61,7 +60,8 @@ What log level to use?
 
 ## Error logging
 
-In case an unexpected error happened and the execution flow needs to be stopped, **do not** log the error, there is a global gRPC interceptor [`ErrorInterceptor`](https://github.com/agntcy/identity-service/blob/main/backend/internal/pkg/interceptors/error.go) that catches these errors and logs them. This prevents errors from being logged more than once, which facilitates tracing.
+In case an unexpected error happened and the execution flow needs to be stopped, **do not** log the error, there is a global gRPC interceptor [`ErrorInterceptor`](https://github.com/agntcy/identity-service/blob/main/backend/internal/pkg/interceptors/error.go) that catches these errors and logs them.
+This prevents errors from being logged more than once, which facilitates tracing.
 
 ## Formats
 
@@ -80,7 +80,7 @@ INFO[2025-10-06T11:01:49+02:00] Starting in env:development
 ```
 
 ```text
-DEBUG[2025-10-06T10:45:13+02:00] Creating badge with claims full_method=/agntcy.identity.service.v1alpha1.BadgeService/IssueBadge organization_id=6064781c-9522-401f-8edc-22ccba81a623 request=map[:authority:0.0.0.0:4002 content-type:application/grpc grpcgateway-accept:application/json, text/plain, */* grpcgateway-accept-language:en-US,en;q=0.5 grpcgateway-origin:http://localhost:5500 grpcgateway-referer:http://localhost:5500/ grpcgateway-user-agent:Mozilla/5.0 Gecko/20100101 Firefox/143.0 user-agent:grpc-go/1.75.0 x-forwarded-for:127.0.0.1 x-forwarded-host:localhost:4003] request_id=9c216d4f-f0f7-4648-9367-957dc332ed7e tenant_id=0d29df10-801e-4296-a521-8a6e5bcb10e5
+DEBUG[2025-10-06T10:45:13+02:00] Creating badge with claims full_method=/agntcy.identity.service.v1alpha1.BadgeService/IssueBadge organization_id=6064781c-9522-401f-8edc-22ccba81a623 request=map[...] request_id=9c216d4f-f0f7-4648-9367-957dc332ed7e tenant_id=0d29df10-801e-4296-a521-8a6e5bcb10e5
 ```
 
 ### JSON logging format
@@ -96,6 +96,6 @@ Example:
 ```
 
 ```json
-{"full_method":"/agntcy.identity.service.v1alpha1.BadgeService/IssueBadge","level":"debug","msg":"Creating badge with claims: ...}","organization_id":"6064781c-9522-401f-8edc-22ccba81a623","request":{":authority":"0.0.0.0:4002","content-type":"application/grpc","grpcgateway-accept":"application/json, text/plain, */*","grpcgateway-accept-language":"en-US,en;q=0.5","grpcgateway-content-type":"application/json","grpcgateway-origin":"http://localhost:5500","grpcgateway-referer":"http://localhost:5500/","grpcgateway-user-agent":"Mozilla/5.0 Gecko/20100101 Firefox/143.0","user-agent":"grpc-go/1.75.0","x-forwarded-for":"127.0.0.1","x-forwarded-host":"localhost:4003"},"request_id":"2b35e522-47cc-4d8f-a50f-03b07f7070e8","tenant_id":"0d29df10-801e-4296-a521-8a6e5bcb10e5","time":"2025-10-06T10:58:00+02:00"}
+{"full_method":"/agntcy.identity.service.v1alpha1.BadgeService/IssueBadge","level":"debug","msg":"Creating badge with claims: ...}","organization_id":"6064781c-9522-401f-8edc-22ccba81a623","request":{},"request_id":"2b35e522-47cc-4d8f-a50f-03b07f7070e8","tenant_id":"0d29df10-801e-4296-a521-8a6e5bcb10e5","time":"2025-10-06T10:58:00+02:00"}
 
 ```
