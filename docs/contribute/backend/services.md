@@ -38,10 +38,10 @@ For example:
 type AppType int
 
 const (
-	APP_TYPE_UNSPECIFIED AppType = iota
-	APP_TYPE_AGENT_A2A
-	APP_TYPE_AGENT_OASF
-	APP_TYPE_MCP_SERVER
+  APP_TYPE_UNSPECIFIED AppType = iota
+  APP_TYPE_AGENT_A2A
+  APP_TYPE_AGENT_OASF
+  APP_TYPE_MCP_SERVER
 )
 ```
 
@@ -67,7 +67,9 @@ When domain models are defined in `types/types.go`, running `make generate_proto
 
 The generated protobuf messages serve as input and output objects for the presentation layer.
 
-The generation process is handled by the script [`scripts/proto/docker/run.sh`](https://github.com/agntcy/identity-service/blob/main/scripts/proto/docker/run.sh), which utilizes Kubernetes' [`go-to-protobuf`](https://github.com/kubernetes/code-generator/tree/master/cmd/go-to-protobuf) to convert Go structs to protobuf messages and a custom tool [`proto-enum-generator`](https://github.com/agntcy/identity-service/tree/main/scripts/proto/proto-enum-generator) to convert Go enums to protobuf enums.
+The generation process is handled by the script [`scripts/proto/docker/run.sh`](https://github.com/agntcy/identity-service/blob/main/scripts/proto/docker/run.sh).
+It utilizes Kubernetes' [`go-to-protobuf`](https://github.com/kubernetes/code-generator/tree/master/cmd/go-to-protobuf) to convert Go structs to protobuf messages
+and a custom tool [`proto-enum-generator`](https://github.com/agntcy/identity-service/tree/main/scripts/proto/proto-enum-generator) to convert Go enums to protobuf enums.
 
 ## Application services
 
@@ -79,13 +81,15 @@ Business logic that is shared across different application services should be en
 
 ## gRPC services
 
-gRPC services are defined as protobuf services in [`backend/api/spec/proto/agntcy/identity/service/v1alpha1`](https://github.com/agntcy/identity-service/tree/main/backend/api/spec/proto/agntcy/identity/service/v1alpha1). These protobuf service definitions establish the API contract for the Agent Identity Service, supporting both gRPC and HTTP interfaces.
+gRPC services are defined as protobuf services in [`backend/api/spec/proto/agntcy/identity/service/v1alpha1`](https://github.com/agntcy/identity-service/tree/main/backend/api/spec/proto/agntcy/identity/service/v1alpha1).
+These protobuf service definitions establish the API contract for the Agent Identity Service, supporting both gRPC and HTTP interfaces.
 
 Running `make generate_proto` generates both the server code and the Go interfaces for these protobuf services. The implementations of these interfaces are located in [`internal/bff/grpc`](https://github.com/agntcy/identity-service/tree/main/backend/internal/bff/grpc).
 
 ### Registering gRPC services
 
-After implementing a gRPC service, it must be registered as a handler with both the gRPC server and the HTTP server. This is achieved by providing an instance of the concrete implementation of the gRPC interface to the `identity_service_api.GrpcServiceRegister` struct in the `initializeServices()` function within [`main.go`](https://github.com/agntcy/identity-service/blob/main/backend/cmd/bff/main.go).
+After implementing a gRPC service, it must be registered as a handler with both the gRPC server and the HTTP server.
+This is achieved by providing an instance of the concrete implementation of the gRPC interface to the `identity_service_api.GrpcServiceRegister` struct in the `initializeServices()` function within [`main.go`](https://github.com/agntcy/identity-service/blob/main/backend/cmd/bff/main.go).
 
 For example:
 
