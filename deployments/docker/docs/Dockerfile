@@ -8,7 +8,7 @@ WORKDIR /build
 # Generate docs
 COPY docs .
 COPY backend/api/spec/static/api ./static/api
-RUN cd /build && yarn install && npx docusaurus generate-proto-docs && yarn build
+RUN yarn install && npx docusaurus generate-proto-docs && yarn build
 
 # Build final image for running the APIs and docs
 FROM httpd:2.4
