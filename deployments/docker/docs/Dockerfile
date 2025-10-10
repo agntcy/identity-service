@@ -1,7 +1,7 @@
 # Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
 # SPDX-License-Identifier: Apache-2.0
 
-FROM node:alpine as builder-docs
+FROM node:alpine AS builder-docs
 
 WORKDIR /build
 
