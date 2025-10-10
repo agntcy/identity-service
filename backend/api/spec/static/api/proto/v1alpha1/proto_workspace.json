@@ -1,80 +1,6 @@
 {
   "files": [
     {
-      "name": "agntcy/identity/service/shared/v1alpha1/pagination.proto",
-      "description": "",
-      "package": "agntcy.identity.service.shared.v1alpha1",
-      "hasEnums": false,
-      "hasExtensions": false,
-      "hasMessages": true,
-      "hasServices": false,
-      "enums": [],
-      "extensions": [],
-      "messages": [
-        {
-          "name": "PagedResponse",
-          "longName": "PagedResponse",
-          "fullName": "agntcy.identity.service.shared.v1alpha1.PagedResponse",
-          "description": "Pagination response",
-          "hasExtensions": false,
-          "hasFields": true,
-          "hasOneofs": true,
-          "extensions": [],
-          "fields": [
-            {
-              "name": "next_page",
-              "description": "Next page",
-              "label": "optional",
-              "type": "int32",
-              "longType": "int32",
-              "fullType": "int32",
-              "ismap": false,
-              "isoneof": true,
-              "oneofdecl": "_next_page",
-              "defaultValue": ""
-            },
-            {
-              "name": "has_next_page",
-              "description": "Has next page",
-              "label": "optional",
-              "type": "bool",
-              "longType": "bool",
-              "fullType": "bool",
-              "ismap": false,
-              "isoneof": true,
-              "oneofdecl": "_has_next_page",
-              "defaultValue": ""
-            },
-            {
-              "name": "total",
-              "description": "The total size of items",
-              "label": "",
-              "type": "int64",
-              "longType": "int64",
-              "fullType": "int64",
-              "ismap": false,
-              "isoneof": false,
-              "oneofdecl": "",
-              "defaultValue": ""
-            },
-            {
-              "name": "size",
-              "description": "The size of the current page",
-              "label": "",
-              "type": "int32",
-              "longType": "int32",
-              "fullType": "int32",
-              "ismap": false,
-              "isoneof": false,
-              "oneofdecl": "",
-              "defaultValue": ""
-            }
-          ]
-        }
-      ],
-      "services": []
-    },
-    {
       "name": "agntcy/identity/service/v1alpha1/app.proto",
       "description": "",
       "package": "agntcy.identity.service.v1alpha1",
@@ -779,6 +705,80 @@
               "type": "ErrorInfo",
               "longType": "ErrorInfo",
               "fullType": "agntcy.identity.service.v1alpha1.ErrorInfo",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            }
+          ]
+        }
+      ],
+      "services": []
+    },
+    {
+      "name": "agntcy/identity/service/v1alpha1/pagination.proto",
+      "description": "",
+      "package": "agntcy.identity.service.v1alpha1",
+      "hasEnums": false,
+      "hasExtensions": false,
+      "hasMessages": true,
+      "hasServices": false,
+      "enums": [],
+      "extensions": [],
+      "messages": [
+        {
+          "name": "PagedResponse",
+          "longName": "PagedResponse",
+          "fullName": "agntcy.identity.service.v1alpha1.PagedResponse",
+          "description": "Pagination response",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "next_page",
+              "description": "Next page",
+              "label": "optional",
+              "type": "int32",
+              "longType": "int32",
+              "fullType": "int32",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_next_page",
+              "defaultValue": ""
+            },
+            {
+              "name": "has_next_page",
+              "description": "Has next page",
+              "label": "optional",
+              "type": "bool",
+              "longType": "bool",
+              "fullType": "bool",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_has_next_page",
+              "defaultValue": ""
+            },
+            {
+              "name": "total",
+              "description": "The total size of items",
+              "label": "",
+              "type": "int64",
+              "longType": "int64",
+              "fullType": "int64",
+              "ismap": false,
+              "isoneof": false,
+              "oneofdecl": "",
+              "defaultValue": ""
+            },
+            {
+              "name": "size",
+              "description": "The size of the current page",
+              "label": "",
+              "type": "int32",
+              "longType": "int32",
+              "fullType": "int32",
               "ismap": false,
               "isoneof": false,
               "oneofdecl": "",
@@ -1560,8 +1560,8 @@
               "description": "Pagination response.",
               "label": "optional",
               "type": "PagedResponse",
-              "longType": "agntcy.identity.service.shared.v1alpha1.PagedResponse",
-              "fullType": "agntcy.identity.service.shared.v1alpha1.PagedResponse",
+              "longType": "PagedResponse",
+              "fullType": "agntcy.identity.service.v1alpha1.PagedResponse",
               "ismap": false,
               "isoneof": true,
               "oneofdecl": "_pagination",
@@ -2890,8 +2890,8 @@
               "description": "Pagination response.",
               "label": "optional",
               "type": "PagedResponse",
-              "longType": "agntcy.identity.service.shared.v1alpha1.PagedResponse",
-              "fullType": "agntcy.identity.service.shared.v1alpha1.PagedResponse",
+              "longType": "PagedResponse",
+              "fullType": "agntcy.identity.service.v1alpha1.PagedResponse",
               "ismap": false,
               "isoneof": true,
               "oneofdecl": "_pagination",
@@ -3578,8 +3578,8 @@
               "description": "Pagination response.",
               "label": "optional",
               "type": "PagedResponse",
-              "longType": "agntcy.identity.service.shared.v1alpha1.PagedResponse",
-              "fullType": "agntcy.identity.service.shared.v1alpha1.PagedResponse",
+              "longType": "PagedResponse",
+              "fullType": "agntcy.identity.service.v1alpha1.PagedResponse",
               "ismap": false,
               "isoneof": true,
               "oneofdecl": "_pagination",
@@ -3674,8 +3674,8 @@
               "description": "Pagination response.",
               "label": "optional",
               "type": "PagedResponse",
-              "longType": "agntcy.identity.service.shared.v1alpha1.PagedResponse",
-              "fullType": "agntcy.identity.service.shared.v1alpha1.PagedResponse",
+              "longType": "PagedResponse",
+              "fullType": "agntcy.identity.service.v1alpha1.PagedResponse",
               "ismap": false,
               "isoneof": true,
               "oneofdecl": "_pagination",

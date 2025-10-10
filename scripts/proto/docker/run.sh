@@ -165,16 +165,21 @@ rm -rvf "${Identity_ROOT}/code/backend/api/server" 2>&1 || true
 cd "${Identity_ROOT}/code/backend/api/spec"
 
 # Format
+echo "[*] Formatting Protobuf files"
 /usr/local/bin/buf format -w
 
 # Go
+echo "[*] Generating Go files"
 /usr/local/bin/buf generate --debug -v
 
 # Python
+echo "[*] Generating Python files"
 /usr/local/bin/buf generate --include-imports --template buf.gen.python.yaml --output ../../sdk/python
 
 # Openapi
+echo "[*] Generating OpenAPI files"
 /usr/local/bin/buf generate --template buf.gen.openapi.yaml --output ../spec/static/api/openapi/service/v1alpha1 --path proto/${PROTO_PLATFORM_FILE_PATH}
 
 # Proto
+echo "[*] Generating proto_workspace.json"
 /usr/local/bin/buf generate --template buf.gen.doc.yaml --output ../spec/static/api/proto/v1alpha1

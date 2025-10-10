@@ -5,7 +5,7 @@ syntax = "proto3";
 
 package agntcy.identity.service.v1alpha1;
 
-import "agntcy/identity/service/shared/v1alpha1/pagination.proto";
+import "agntcy/identity/service/v1alpha1/pagination.proto";
 import "agntcy/identity/service/v1alpha1/policy.proto";
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
@@ -142,7 +142,7 @@ message ListPoliciesResponse {
   repeated Policy policies = 1;
 
   // Pagination response.
-  optional agntcy.identity.service.shared.v1alpha1.PagedResponse pagination = 2;
+  optional agntcy.identity.service.v1alpha1.PagedResponse pagination = 2;
 }
 
 message ListPoliciesRequest {
@@ -162,7 +162,8 @@ message ListPoliciesRequest {
   repeated string rules_for_app_ids = 5;
 }
 
-message GetPoliciesCountRequest {}
+message GetPoliciesCountRequest {
+}
 
 message GetPoliciesCountResponse {
   // The total count
@@ -209,7 +210,7 @@ message ListRulesResponse {
   repeated Rule rules = 1;
 
   // Pagination response.
-  optional agntcy.identity.service.shared.v1alpha1.PagedResponse pagination = 2;
+  optional agntcy.identity.service.v1alpha1.PagedResponse pagination = 2;
 }
 
 message ListRulesRequest {

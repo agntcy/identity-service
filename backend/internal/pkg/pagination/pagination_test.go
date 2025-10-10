@@ -6,7 +6,7 @@ package pagination_test
 import (
 	"testing"
 
-	identity_service_shared_sdk_go "github.com/agntcy/identity-service/api/server/agntcy/identity/service/shared/v1alpha1"
+	identity_service_sdk_go "github.com/agntcy/identity-service/api/server/agntcy/identity/service/v1alpha1"
 	"github.com/agntcy/identity-service/internal/pkg/pagination"
 	"github.com/agntcy/identity-service/internal/pkg/ptrutil"
 	"github.com/stretchr/testify/assert"
@@ -19,14 +19,14 @@ func TestPagination_ConvertToPagedResponse(t *testing.T) {
 	itemsSize := int32(10)
 	testCases := map[string]*struct {
 		filter         pagination.PaginationFilter
-		expectedResult *identity_service_shared_sdk_go.PagedResponse
+		expectedResult *identity_service_sdk_go.PagedResponse
 	}{
 		"should return a page with a reference to the next page": {
 			filter: pagination.PaginationFilter{
 				Page: ptrutil.Ptr(int32(3)),
 				Size: &itemsSize,
 			},
-			expectedResult: &identity_service_shared_sdk_go.PagedResponse{
+			expectedResult: &identity_service_sdk_go.PagedResponse{
 				HasNextPage: ptrutil.Ptr(true),
 				NextPage:    ptrutil.Ptr(int32(4)),
 				Total:       itemsTotal,
@@ -38,7 +38,7 @@ func TestPagination_ConvertToPagedResponse(t *testing.T) {
 				Page: ptrutil.Ptr(int32(9)),
 				Size: &itemsSize,
 			},
-			expectedResult: &identity_service_shared_sdk_go.PagedResponse{
+			expectedResult: &identity_service_sdk_go.PagedResponse{
 				HasNextPage: ptrutil.Ptr(true),
 				NextPage:    ptrutil.Ptr(int32(10)),
 				Total:       itemsTotal,
@@ -50,7 +50,7 @@ func TestPagination_ConvertToPagedResponse(t *testing.T) {
 				Page: ptrutil.Ptr(int32(10)),
 				Size: &itemsSize,
 			},
-			expectedResult: &identity_service_shared_sdk_go.PagedResponse{
+			expectedResult: &identity_service_sdk_go.PagedResponse{
 				HasNextPage: ptrutil.Ptr(false),
 				NextPage:    nil,
 				Total:       itemsTotal,
