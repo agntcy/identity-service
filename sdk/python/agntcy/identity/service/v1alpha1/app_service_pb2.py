@@ -12,9 +12,9 @@ from google.protobuf.internal import builder as _builder
 _sym_db = _symbol_database.Default()
 
 
-from agntcy.identity.service.shared.v1alpha1 import pagination_pb2 as agntcy_dot_identity_dot_service_dot_shared_dot_v1alpha1_dot_pagination__pb2
 from agntcy.identity.service.v1alpha1 import app_pb2 as agntcy_dot_identity_dot_service_dot_v1alpha1_dot_app__pb2
 from agntcy.identity.service.v1alpha1 import badge_pb2 as agntcy_dot_identity_dot_service_dot_v1alpha1_dot_badge__pb2
+from agntcy.identity.service.v1alpha1 import pagination_pb2 as agntcy_dot_identity_dot_service_dot_v1alpha1_dot_pagination__pb2
 from agntcy.identity.service.v1alpha1 import policy_pb2 as agntcy_dot_identity_dot_service_dot_v1alpha1_dot_policy__pb2
 from google.api import annotations_pb2 as google_dot_api_dot_annotations__pb2
 from google.api import client_pb2 as google_dot_api_dot_client__pb2
@@ -22,7 +22,7 @@ from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 from protoc_gen_openapiv2.options import annotations_pb2 as protoc__gen__openapiv2_dot_options_dot_annotations__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n2agntcy/identity/service/v1alpha1/app_service.proto\x12 agntcy.identity.service.v1alpha1\x1a\x38\x61gntcy/identity/service/shared/v1alpha1/pagination.proto\x1a*agntcy/identity/service/v1alpha1/app.proto\x1a,agntcy/identity/service/v1alpha1/badge.proto\x1a-agntcy/identity/service/v1alpha1/policy.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x17google/api/client.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\"\xb9\x01\n\x10ListAppsResponse\x12\x39\n\x04\x61pps\x18\x01 \x03(\x0b\x32%.agntcy.identity.service.v1alpha1.AppR\x04\x61pps\x12[\n\npagination\x18\x02 \x01(\x0b\x32\x36.agntcy.identity.service.shared.v1alpha1.PagedResponseH\x00R\npagination\x88\x01\x01\x42\r\n\x0b_pagination\"\xa1\x02\n\x0fListAppsRequest\x12\x17\n\x04page\x18\x01 \x01(\x05H\x00R\x04page\x88\x01\x01\x12\x17\n\x04size\x18\x02 \x01(\x05H\x01R\x04size\x88\x01\x01\x12\x19\n\x05query\x18\x03 \x01(\tH\x02R\x05query\x88\x01\x01\x12?\n\x05types\x18\x04 \x03(\x0e\x32).agntcy.identity.service.v1alpha1.AppTypeR\x05types\x12$\n\x0bsort_column\x18\x05 \x01(\tH\x03R\nsortColumn\x88\x01\x01\x12 \n\tsort_desc\x18\x06 \x01(\x08H\x04R\x08sortDesc\x88\x01\x01\x42\x07\n\x05_pageB\x07\n\x05_sizeB\x08\n\x06_queryB\x0e\n\x0c_sort_columnB\x0c\n\n_sort_desc\"K\n\x10\x43reateAppRequest\x12\x37\n\x03\x61pp\x18\x01 \x01(\x0b\x32%.agntcy.identity.service.v1alpha1.AppR\x03\x61pp\";\n\x14\x43reateOasfAppRequest\x12#\n\rschema_base64\x18\x01 \x01(\tR\x0cschemaBase64\"\x8f\x01\n\x15\x43reateOasfAppResponse\x12\x37\n\x03\x61pp\x18\x01 \x01(\x0b\x32%.agntcy.identity.service.v1alpha1.AppR\x03\x61pp\x12=\n\x05\x62\x61\x64ge\x18\x02 \x01(\x0b\x32\'.agntcy.identity.service.v1alpha1.BadgeR\x05\x62\x61\x64ge\"\x15\n\x13GetAppsCountRequest\"f\n\x11\x41ppTypeCountEntry\x12;\n\x03key\x18\x01 \x01(\x0e\x32).agntcy.identity.service.v1alpha1.AppTypeR\x03key\x12\x14\n\x05value\x18\x02 \x01(\x03R\x05value\"y\n\x14GetAppsCountResponse\x12K\n\x06\x63ounts\x18\x01 \x03(\x0b\x32\x33.agntcy.identity.service.v1alpha1.AppTypeCountEntryR\x06\x63ounts\x12\x14\n\x05total\x18\x02 \x01(\x03R\x05total\"&\n\rGetAppRequest\x12\x15\n\x06\x61pp_id\x18\x01 \x01(\tR\x05\x61ppId\"b\n\x10UpdateAppRequest\x12\x15\n\x06\x61pp_id\x18\x01 \x01(\tR\x05\x61ppId\x12\x37\n\x03\x61pp\x18\x02 \x01(\x0b\x32%.agntcy.identity.service.v1alpha1.AppR\x03\x61pp\")\n\x10\x44\x65leteAppRequest\x12\x15\n\x06\x61pp_id\x18\x01 \x01(\tR\x05\x61ppId\"0\n\x17RefreshAppApiKeyRequest\x12\x15\n\x06\x61pp_id\x18\x01 \x01(\tR\x05\x61ppId\"(\n\x0fGetBadgeRequest\x12\x15\n\x06\x61pp_id\x18\x01 \x01(\tR\x05\x61ppId\"9\n\x0fGetTasksRequest\x12&\n\x0f\x65xclude_app_ids\x18\x01 \x03(\tR\rexcludeAppIds\"\xac\x02\n\x10GetTasksResponse\x12V\n\x06result\x18\x01 \x03(\x0b\x32>.agntcy.identity.service.v1alpha1.GetTasksResponse.ResultEntryR\x06result\x1aH\n\x08TaskList\x12<\n\x05tasks\x18\x01 \x03(\x0b\x32&.agntcy.identity.service.v1alpha1.TaskR\x05tasks\x1av\n\x0bResultEntry\x12\x10\n\x03key\x18\x01 \x01(\tR\x03key\x12Q\n\x05value\x18\x02 \x01(\x0b\x32;.agntcy.identity.service.v1alpha1.GetTasksResponse.TaskListR\x05value:\x02\x38\x01\x32\x97\x0f\n\nAppService\x12\xa1\x01\n\x08ListApps\x12\x31.agntcy.identity.service.v1alpha1.ListAppsRequest\x1a\x32.agntcy.identity.service.v1alpha1.ListAppsResponse\".\x92\x41\x15\x12\tList Apps*\x08ListApps\x82\xd3\xe4\x93\x02\x10\x12\x0e/v1alpha1/apps\x12\xc9\x01\n\x0cGetAppsCount\x12\x35.agntcy.identity.service.v1alpha1.GetAppsCountRequest\x1a\x36.agntcy.identity.service.v1alpha1.GetAppsCountResponse\"J\x92\x41\'\x12\x17Get apps count per type*\x0cGetAppsCount\x82\xd3\xe4\x93\x02\x1a\x12\x18/v1alpha1/apps/all/count\x12\x9b\x01\n\x06GetApp\x12/.agntcy.identity.service.v1alpha1.GetAppRequest\x1a%.agntcy.identity.service.v1alpha1.App\"9\x92\x41\x17\x12\rGet App by Id*\x06GetApp\x82\xd3\xe4\x93\x02\x19\x12\x17/v1alpha1/apps/{app_id}\x12\x9d\x01\n\tCreateApp\x12\x32.agntcy.identity.service.v1alpha1.CreateAppRequest\x1a%.agntcy.identity.service.v1alpha1.App\"5\x92\x41\x17\x12\nCreate App*\tCreateApp\x82\xd3\xe4\x93\x02\x15\"\x0e/v1alpha1/apps:\x03\x61pp\x12\xec\x01\n\rCreateOasfApp\x12\x36.agntcy.identity.service.v1alpha1.CreateOasfAppRequest\x1a\x37.agntcy.identity.service.v1alpha1.CreateOasfAppResponse\"j\x92\x41I\x12\x38\x43reate an OASF App from an OASF schema and issue a badge*\rCreateOasfApp\x82\xd3\xe4\x93\x02\x18\"\x13/v1alpha1/apps/oasf:\x01*\x12\xb9\x01\n\tUpdateApp\x12\x32.agntcy.identity.service.v1alpha1.UpdateAppRequest\x1a%.agntcy.identity.service.v1alpha1.App\"Q\x92\x41\x17\x12\nUpdate App*\tUpdateApp\xda\x41\x10name,description\x82\xd3\xe4\x93\x02\x1e\x32\x17/v1alpha1/apps/{app_id}:\x03\x61pp\x12\x92\x01\n\tDeleteApp\x12\x32.agntcy.identity.service.v1alpha1.DeleteAppRequest\x1a\x16.google.protobuf.Empty\"9\x92\x41\x17\x12\nDelete App*\tDeleteApp\x82\xd3\xe4\x93\x02\x19*\x17/v1alpha1/apps/{app_id}\x12\xda\x01\n\x10RefreshAppApiKey\x12\x39.agntcy.identity.service.v1alpha1.RefreshAppApiKeyRequest\x1a%.agntcy.identity.service.v1alpha1.App\"d\x92\x41\x32\x12\x1eRefresh the API Key for an App*\x10RefreshAppApiKey\x82\xd3\xe4\x93\x02)\x12\'/v1alpha1/apps/{app_id}/api-key/refresh\x12\xf6\x01\n\x08GetBadge\x12\x31.agntcy.identity.service.v1alpha1.GetBadgeRequest\x1a\'.agntcy.identity.service.v1alpha1.Badge\"\x8d\x01\x92\x41\x65\x12VGet the current badge issued for the App using the App ID or the Resolver Metadata ID.*\x0bGetAppBadge\x82\xd3\xe4\x93\x02\x1f\x12\x1d/v1alpha1/apps/{app_id}/badge\x12\xba\x01\n\x08GetTasks\x12\x31.agntcy.identity.service.v1alpha1.GetTasksRequest\x1a\x32.agntcy.identity.service.v1alpha1.GetTasksResponse\"G\x92\x41-\x12!Get the list of tasks of all apps*\x08GetTasks\x82\xd3\xe4\x93\x02\x11\x12\x0f/v1alpha1/tasks\x1a\x08\x92\x41\x05\n\x03\x41ppB\xc2\x02\n$com.agntcy.identity.service.v1alpha1B\x0f\x41ppServiceProtoP\x01Zfgithub.com/agntcy/identity-service/api/server/agntcy/identity/service/v1alpha1;identity_service_sdk_go\xa2\x02\x03\x41IS\xaa\x02 Agntcy.Identity.Service.V1alpha1\xca\x02 Agntcy\\Identity\\Service\\V1alpha1\xe2\x02,Agntcy\\Identity\\Service\\V1alpha1\\GPBMetadata\xea\x02#Agntcy::Identity::Service::V1alpha1b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n2agntcy/identity/service/v1alpha1/app_service.proto\x12 agntcy.identity.service.v1alpha1\x1a*agntcy/identity/service/v1alpha1/app.proto\x1a,agntcy/identity/service/v1alpha1/badge.proto\x1a\x31\x61gntcy/identity/service/v1alpha1/pagination.proto\x1a-agntcy/identity/service/v1alpha1/policy.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x17google/api/client.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\"\xb2\x01\n\x10ListAppsResponse\x12\x39\n\x04\x61pps\x18\x01 \x03(\x0b\x32%.agntcy.identity.service.v1alpha1.AppR\x04\x61pps\x12T\n\npagination\x18\x02 \x01(\x0b\x32/.agntcy.identity.service.v1alpha1.PagedResponseH\x00R\npagination\x88\x01\x01\x42\r\n\x0b_pagination\"\xa1\x02\n\x0fListAppsRequest\x12\x17\n\x04page\x18\x01 \x01(\x05H\x00R\x04page\x88\x01\x01\x12\x17\n\x04size\x18\x02 \x01(\x05H\x01R\x04size\x88\x01\x01\x12\x19\n\x05query\x18\x03 \x01(\tH\x02R\x05query\x88\x01\x01\x12?\n\x05types\x18\x04 \x03(\x0e\x32).agntcy.identity.service.v1alpha1.AppTypeR\x05types\x12$\n\x0bsort_column\x18\x05 \x01(\tH\x03R\nsortColumn\x88\x01\x01\x12 \n\tsort_desc\x18\x06 \x01(\x08H\x04R\x08sortDesc\x88\x01\x01\x42\x07\n\x05_pageB\x07\n\x05_sizeB\x08\n\x06_queryB\x0e\n\x0c_sort_columnB\x0c\n\n_sort_desc\"K\n\x10\x43reateAppRequest\x12\x37\n\x03\x61pp\x18\x01 \x01(\x0b\x32%.agntcy.identity.service.v1alpha1.AppR\x03\x61pp\";\n\x14\x43reateOasfAppRequest\x12#\n\rschema_base64\x18\x01 \x01(\tR\x0cschemaBase64\"\x8f\x01\n\x15\x43reateOasfAppResponse\x12\x37\n\x03\x61pp\x18\x01 \x01(\x0b\x32%.agntcy.identity.service.v1alpha1.AppR\x03\x61pp\x12=\n\x05\x62\x61\x64ge\x18\x02 \x01(\x0b\x32\'.agntcy.identity.service.v1alpha1.BadgeR\x05\x62\x61\x64ge\"\x15\n\x13GetAppsCountRequest\"f\n\x11\x41ppTypeCountEntry\x12;\n\x03key\x18\x01 \x01(\x0e\x32).agntcy.identity.service.v1alpha1.AppTypeR\x03key\x12\x14\n\x05value\x18\x02 \x01(\x03R\x05value\"y\n\x14GetAppsCountResponse\x12K\n\x06\x63ounts\x18\x01 \x03(\x0b\x32\x33.agntcy.identity.service.v1alpha1.AppTypeCountEntryR\x06\x63ounts\x12\x14\n\x05total\x18\x02 \x01(\x03R\x05total\"&\n\rGetAppRequest\x12\x15\n\x06\x61pp_id\x18\x01 \x01(\tR\x05\x61ppId\"b\n\x10UpdateAppRequest\x12\x15\n\x06\x61pp_id\x18\x01 \x01(\tR\x05\x61ppId\x12\x37\n\x03\x61pp\x18\x02 \x01(\x0b\x32%.agntcy.identity.service.v1alpha1.AppR\x03\x61pp\")\n\x10\x44\x65leteAppRequest\x12\x15\n\x06\x61pp_id\x18\x01 \x01(\tR\x05\x61ppId\"0\n\x17RefreshAppApiKeyRequest\x12\x15\n\x06\x61pp_id\x18\x01 \x01(\tR\x05\x61ppId\"(\n\x0fGetBadgeRequest\x12\x15\n\x06\x61pp_id\x18\x01 \x01(\tR\x05\x61ppId\"9\n\x0fGetTasksRequest\x12&\n\x0f\x65xclude_app_ids\x18\x01 \x03(\tR\rexcludeAppIds\"\xac\x02\n\x10GetTasksResponse\x12V\n\x06result\x18\x01 \x03(\x0b\x32>.agntcy.identity.service.v1alpha1.GetTasksResponse.ResultEntryR\x06result\x1aH\n\x08TaskList\x12<\n\x05tasks\x18\x01 \x03(\x0b\x32&.agntcy.identity.service.v1alpha1.TaskR\x05tasks\x1av\n\x0bResultEntry\x12\x10\n\x03key\x18\x01 \x01(\tR\x03key\x12Q\n\x05value\x18\x02 \x01(\x0b\x32;.agntcy.identity.service.v1alpha1.GetTasksResponse.TaskListR\x05value:\x02\x38\x01\x32\x97\x0f\n\nAppService\x12\xa1\x01\n\x08ListApps\x12\x31.agntcy.identity.service.v1alpha1.ListAppsRequest\x1a\x32.agntcy.identity.service.v1alpha1.ListAppsResponse\".\x92\x41\x15\x12\tList Apps*\x08ListApps\x82\xd3\xe4\x93\x02\x10\x12\x0e/v1alpha1/apps\x12\xc9\x01\n\x0cGetAppsCount\x12\x35.agntcy.identity.service.v1alpha1.GetAppsCountRequest\x1a\x36.agntcy.identity.service.v1alpha1.GetAppsCountResponse\"J\x92\x41\'\x12\x17Get apps count per type*\x0cGetAppsCount\x82\xd3\xe4\x93\x02\x1a\x12\x18/v1alpha1/apps/all/count\x12\x9b\x01\n\x06GetApp\x12/.agntcy.identity.service.v1alpha1.GetAppRequest\x1a%.agntcy.identity.service.v1alpha1.App\"9\x92\x41\x17\x12\rGet App by Id*\x06GetApp\x82\xd3\xe4\x93\x02\x19\x12\x17/v1alpha1/apps/{app_id}\x12\x9d\x01\n\tCreateApp\x12\x32.agntcy.identity.service.v1alpha1.CreateAppRequest\x1a%.agntcy.identity.service.v1alpha1.App\"5\x92\x41\x17\x12\nCreate App*\tCreateApp\x82\xd3\xe4\x93\x02\x15\"\x0e/v1alpha1/apps:\x03\x61pp\x12\xec\x01\n\rCreateOasfApp\x12\x36.agntcy.identity.service.v1alpha1.CreateOasfAppRequest\x1a\x37.agntcy.identity.service.v1alpha1.CreateOasfAppResponse\"j\x92\x41I\x12\x38\x43reate an OASF App from an OASF schema and issue a badge*\rCreateOasfApp\x82\xd3\xe4\x93\x02\x18\"\x13/v1alpha1/apps/oasf:\x01*\x12\xb9\x01\n\tUpdateApp\x12\x32.agntcy.identity.service.v1alpha1.UpdateAppRequest\x1a%.agntcy.identity.service.v1alpha1.App\"Q\x92\x41\x17\x12\nUpdate App*\tUpdateApp\xda\x41\x10name,description\x82\xd3\xe4\x93\x02\x1e\x32\x17/v1alpha1/apps/{app_id}:\x03\x61pp\x12\x92\x01\n\tDeleteApp\x12\x32.agntcy.identity.service.v1alpha1.DeleteAppRequest\x1a\x16.google.protobuf.Empty\"9\x92\x41\x17\x12\nDelete App*\tDeleteApp\x82\xd3\xe4\x93\x02\x19*\x17/v1alpha1/apps/{app_id}\x12\xda\x01\n\x10RefreshAppApiKey\x12\x39.agntcy.identity.service.v1alpha1.RefreshAppApiKeyRequest\x1a%.agntcy.identity.service.v1alpha1.App\"d\x92\x41\x32\x12\x1eRefresh the API Key for an App*\x10RefreshAppApiKey\x82\xd3\xe4\x93\x02)\x12\'/v1alpha1/apps/{app_id}/api-key/refresh\x12\xf6\x01\n\x08GetBadge\x12\x31.agntcy.identity.service.v1alpha1.GetBadgeRequest\x1a\'.agntcy.identity.service.v1alpha1.Badge\"\x8d\x01\x92\x41\x65\x12VGet the current badge issued for the App using the App ID or the Resolver Metadata ID.*\x0bGetAppBadge\x82\xd3\xe4\x93\x02\x1f\x12\x1d/v1alpha1/apps/{app_id}/badge\x12\xba\x01\n\x08GetTasks\x12\x31.agntcy.identity.service.v1alpha1.GetTasksRequest\x1a\x32.agntcy.identity.service.v1alpha1.GetTasksResponse\"G\x92\x41-\x12!Get the list of tasks of all apps*\x08GetTasks\x82\xd3\xe4\x93\x02\x11\x12\x0f/v1alpha1/tasks\x1a\x08\x92\x41\x05\n\x03\x41ppB\xc2\x02\n$com.agntcy.identity.service.v1alpha1B\x0f\x41ppServiceProtoP\x01Zfgithub.com/agntcy/identity-service/api/server/agntcy/identity/service/v1alpha1;identity_service_sdk_go\xa2\x02\x03\x41IS\xaa\x02 Agntcy.Identity.Service.V1alpha1\xca\x02 Agntcy\\Identity\\Service\\V1alpha1\xe2\x02,Agntcy\\Identity\\Service\\V1alpha1\\GPBMetadata\xea\x02#Agntcy::Identity::Service::V1alpha1b\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -54,40 +54,40 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _globals['_APPSERVICE'].methods_by_name['GetBadge']._serialized_options = b'\222Ae\022VGet the current badge issued for the App using the App ID or the Resolver Metadata ID.*\013GetAppBadge\202\323\344\223\002\037\022\035/v1alpha1/apps/{app_id}/badge'
   _globals['_APPSERVICE'].methods_by_name['GetTasks']._options = None
   _globals['_APPSERVICE'].methods_by_name['GetTasks']._serialized_options = b'\222A-\022!Get the list of tasks of all apps*\010GetTasks\202\323\344\223\002\021\022\017/v1alpha1/tasks'
-  _globals['_LISTAPPSRESPONSE']._serialized_start=416
-  _globals['_LISTAPPSRESPONSE']._serialized_end=601
-  _globals['_LISTAPPSREQUEST']._serialized_start=604
-  _globals['_LISTAPPSREQUEST']._serialized_end=893
-  _globals['_CREATEAPPREQUEST']._serialized_start=895
-  _globals['_CREATEAPPREQUEST']._serialized_end=970
-  _globals['_CREATEOASFAPPREQUEST']._serialized_start=972
-  _globals['_CREATEOASFAPPREQUEST']._serialized_end=1031
-  _globals['_CREATEOASFAPPRESPONSE']._serialized_start=1034
-  _globals['_CREATEOASFAPPRESPONSE']._serialized_end=1177
-  _globals['_GETAPPSCOUNTREQUEST']._serialized_start=1179
-  _globals['_GETAPPSCOUNTREQUEST']._serialized_end=1200
-  _globals['_APPTYPECOUNTENTRY']._serialized_start=1202
-  _globals['_APPTYPECOUNTENTRY']._serialized_end=1304
-  _globals['_GETAPPSCOUNTRESPONSE']._serialized_start=1306
-  _globals['_GETAPPSCOUNTRESPONSE']._serialized_end=1427
-  _globals['_GETAPPREQUEST']._serialized_start=1429
-  _globals['_GETAPPREQUEST']._serialized_end=1467
-  _globals['_UPDATEAPPREQUEST']._serialized_start=1469
-  _globals['_UPDATEAPPREQUEST']._serialized_end=1567
-  _globals['_DELETEAPPREQUEST']._serialized_start=1569
-  _globals['_DELETEAPPREQUEST']._serialized_end=1610
-  _globals['_REFRESHAPPAPIKEYREQUEST']._serialized_start=1612
-  _globals['_REFRESHAPPAPIKEYREQUEST']._serialized_end=1660
-  _globals['_GETBADGEREQUEST']._serialized_start=1662
-  _globals['_GETBADGEREQUEST']._serialized_end=1702
-  _globals['_GETTASKSREQUEST']._serialized_start=1704
-  _globals['_GETTASKSREQUEST']._serialized_end=1761
-  _globals['_GETTASKSRESPONSE']._serialized_start=1764
-  _globals['_GETTASKSRESPONSE']._serialized_end=2064
-  _globals['_GETTASKSRESPONSE_TASKLIST']._serialized_start=1872
-  _globals['_GETTASKSRESPONSE_TASKLIST']._serialized_end=1944
-  _globals['_GETTASKSRESPONSE_RESULTENTRY']._serialized_start=1946
-  _globals['_GETTASKSRESPONSE_RESULTENTRY']._serialized_end=2064
-  _globals['_APPSERVICE']._serialized_start=2067
-  _globals['_APPSERVICE']._serialized_end=4010
+  _globals['_LISTAPPSRESPONSE']._serialized_start=409
+  _globals['_LISTAPPSRESPONSE']._serialized_end=587
+  _globals['_LISTAPPSREQUEST']._serialized_start=590
+  _globals['_LISTAPPSREQUEST']._serialized_end=879
+  _globals['_CREATEAPPREQUEST']._serialized_start=881
+  _globals['_CREATEAPPREQUEST']._serialized_end=956
+  _globals['_CREATEOASFAPPREQUEST']._serialized_start=958
+  _globals['_CREATEOASFAPPREQUEST']._serialized_end=1017
+  _globals['_CREATEOASFAPPRESPONSE']._serialized_start=1020
+  _globals['_CREATEOASFAPPRESPONSE']._serialized_end=1163
+  _globals['_GETAPPSCOUNTREQUEST']._serialized_start=1165
+  _globals['_GETAPPSCOUNTREQUEST']._serialized_end=1186
+  _globals['_APPTYPECOUNTENTRY']._serialized_start=1188
+  _globals['_APPTYPECOUNTENTRY']._serialized_end=1290
+  _globals['_GETAPPSCOUNTRESPONSE']._serialized_start=1292
+  _globals['_GETAPPSCOUNTRESPONSE']._serialized_end=1413
+  _globals['_GETAPPREQUEST']._serialized_start=1415
+  _globals['_GETAPPREQUEST']._serialized_end=1453
+  _globals['_UPDATEAPPREQUEST']._serialized_start=1455
+  _globals['_UPDATEAPPREQUEST']._serialized_end=1553
+  _globals['_DELETEAPPREQUEST']._serialized_start=1555
+  _globals['_DELETEAPPREQUEST']._serialized_end=1596
+  _globals['_REFRESHAPPAPIKEYREQUEST']._serialized_start=1598
+  _globals['_REFRESHAPPAPIKEYREQUEST']._serialized_end=1646
+  _globals['_GETBADGEREQUEST']._serialized_start=1648
+  _globals['_GETBADGEREQUEST']._serialized_end=1688
+  _globals['_GETTASKSREQUEST']._serialized_start=1690
+  _globals['_GETTASKSREQUEST']._serialized_end=1747
+  _globals['_GETTASKSRESPONSE']._serialized_start=1750
+  _globals['_GETTASKSRESPONSE']._serialized_end=2050
+  _globals['_GETTASKSRESPONSE_TASKLIST']._serialized_start=1858
+  _globals['_GETTASKSRESPONSE_TASKLIST']._serialized_end=1930
+  _globals['_GETTASKSRESPONSE_RESULTENTRY']._serialized_start=1932
+  _globals['_GETTASKSRESPONSE_RESULTENTRY']._serialized_end=2050
+  _globals['_APPSERVICE']._serialized_start=2053
+  _globals['_APPSERVICE']._serialized_end=3996
 # @@protoc_insertion_point(module_scope)

@@ -3,13 +3,13 @@
 
 package pagination
 
-import identity_service_shared_sdk_go "github.com/agntcy/identity-service/api/server/agntcy/identity/service/shared/v1alpha1"
+import identity_service_sdk_go "github.com/agntcy/identity-service/api/server/agntcy/identity/service/v1alpha1"
 
 // Creates a PagedResponse object
 func ConvertToPagedResponse[T any](
 	paginationFilter PaginationFilter,
 	items *Pageable[T],
-) *identity_service_shared_sdk_go.PagedResponse {
+) *identity_service_sdk_go.PagedResponse {
 	var nextPage *int32
 
 	hasNextPage := int64(
@@ -22,7 +22,7 @@ func ConvertToPagedResponse[T any](
 		nextPage = &n
 	}
 
-	return &identity_service_shared_sdk_go.PagedResponse{
+	return &identity_service_sdk_go.PagedResponse{
 		HasNextPage: &hasNextPage,
 		NextPage:    nextPage,
 		Total:       items.Total,
