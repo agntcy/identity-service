@@ -5,8 +5,8 @@ syntax = "proto3";
 
 package agntcy.identity.service.v1alpha1;
 
-import "agntcy/identity/service/shared/v1alpha1/pagination.proto";
 import "agntcy/identity/service/v1alpha1/device.proto";
+import "agntcy/identity/service/v1alpha1/pagination.proto";
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
@@ -103,7 +103,7 @@ message ListDevicesResponse {
   repeated Device devices = 1;
 
   // Pagination response.
-  optional agntcy.identity.service.shared.v1alpha1.PagedResponse pagination = 2;
+  optional agntcy.identity.service.v1alpha1.PagedResponse pagination = 2;
 }
 
 message DeleteDeviceRequest {

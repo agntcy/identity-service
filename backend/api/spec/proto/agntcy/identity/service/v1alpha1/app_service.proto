@@ -5,9 +5,9 @@ syntax = "proto3";
 
 package agntcy.identity.service.v1alpha1;
 
-import "agntcy/identity/service/shared/v1alpha1/pagination.proto";
 import "agntcy/identity/service/v1alpha1/app.proto";
 import "agntcy/identity/service/v1alpha1/badge.proto";
+import "agntcy/identity/service/v1alpha1/pagination.proto";
 import "agntcy/identity/service/v1alpha1/policy.proto";
 import "google/api/annotations.proto";
 import "google/api/client.proto";
@@ -132,7 +132,7 @@ message ListAppsResponse {
   repeated App apps = 1;
 
   // Pagination response.
-  optional agntcy.identity.service.shared.v1alpha1.PagedResponse pagination = 2;
+  optional agntcy.identity.service.v1alpha1.PagedResponse pagination = 2;
 }
 
 message ListAppsRequest {
