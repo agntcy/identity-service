@@ -39,7 +39,7 @@ do_stop_frontend:
 	@echo "Frontend stopped"
 
 do_start_frontend:
-	./deployments/scripts/frontend/launch.sh
+	./deployments/scripts/frontend/launch.sh ${dev}
 	@echo "Frontend started at http://localhost:5500"
 
 generate_proto: do_generate_proto
