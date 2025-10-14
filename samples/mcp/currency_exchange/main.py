@@ -95,6 +95,9 @@ def get_currency_exchange_rate(
     except ValueError:
         return {"error": "Invalid JSON response from API."}
 
+@mcp.resource(uri="config://version", name="Currency Exchange Version")
+def get_version() -> str:
+    return "1.0.0"
 
 app = FastAPI(lifespan=lambda _: mcp.session_manager.run())
 
