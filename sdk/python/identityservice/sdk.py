@@ -5,16 +5,19 @@
 
 import asyncio
 import base64
-import inspect
 import logging
 import os
-from importlib import import_module
-from pkgutil import iter_modules
 
-import agntcy.identity.service.v1alpha1
-from agntcy.identity.service.v1alpha1.app_pb2 import AppType
 from dotenv import load_dotenv
 from google.protobuf import empty_pb2
+from agntcy.identity.service.v1alpha1.app_pb2 import AppType
+from agntcy.identity.service.v1alpha1.auth_service_pb2 import AuthorizeRequest, TokenRequest, ExtAuthzRequest
+from agntcy.identity.service.v1alpha1.app_service_pb2_grpc import AppServiceStub
+from agntcy.identity.service.v1alpha1.auth_service_pb2_grpc import AuthServiceStub
+from agntcy.identity.service.v1alpha1.badge_pb2 import VerificationResult
+from agntcy.identity.service.v1alpha1.badge_service_pb2 import VerifyBadgeRequest, IssueBadgeRequest
+from agntcy.identity.service.v1alpha1.badge_service_pb2_grpc import BadgeServiceStub
+from agntcy.identity.service.v1alpha1.settings_service_pb2_grpc import SettingsServiceStub
 
 from identityservice import client
 from identityservice.badge.a2a import adiscover as adiscover_a2a
@@ -23,16 +26,6 @@ from identityservice.badge.mcp import discover as discover_mcp
 
 logging.getLogger("identityservice").addHandler(logging.NullHandler())
 logger = logging.getLogger("identityservice.sdk")
-
-
-def _load_grpc_objects(module, path):
-    """Load all the objects from the Python Identity SDK."""
-    for _, modname, _ in iter_modules(module.__path__):
-        # Import the module
-        module = import_module(f"{path}.{modname}")
-        # Inspect the module and set attributes on Identity SDK for each class found
-        for name, obj in inspect.getmembers(module, inspect.isclass):
-            setattr(IdentityServiceSdk, name, obj)
 
 
 class IdentityServiceSdk:
@@ -66,12 +59,6 @@ class IdentityServiceSdk:
             async_mode,
         )
 
-        # Load dynamically all objects
-        _load_grpc_objects(
-            agntcy.identity.service.v1alpha1,
-            "agntcy.identity.service.v1alpha1",
-        )
-
         self.client = client.Client(api_key, async_mode)
 
     def empty_request(self):
@@ -80,27 +67,27 @@ class IdentityServiceSdk:
 
     def get_settings_service(
         self,
-    ) -> "agntcy.identity.service.v1alpha1.SettingsService":
+    ) -> SettingsServiceStub:
         """Return the SettingsService stub."""
-        return IdentityServiceSdk.SettingsServiceStub(self.client.channel)
+        return SettingsServiceStub(self.client.channel)
 
     def get_app_service(
         self,
-    ) -> "agntcy.identity.service.v1alpha1.AppsService":
+    ) -> AppServiceStub:
         """Return the AppService stub."""
-        return IdentityServiceSdk.AppServiceStub(self.client.channel)
+        return AppServiceStub(self.client.channel)
 
     def get_badge_service(
         self,
-    ) -> "agntcy.identity.service.v1alpha1.BadgeService":
+    ) -> BadgeServiceStub:
         """Return the BadgeService stub."""
-        return IdentityServiceSdk.BadgeServiceStub(self.client.channel)
+        return BadgeServiceStub(self.client.channel)
 
     def get_auth_service(
         self,
-    ) -> "agntcy.identity.service.v1alpha1.AuthService":
+    ) -> AuthServiceStub:
         """Return the AuthService stub."""
-        return IdentityServiceSdk.AuthServiceStub(self.client.channel)
+        return AuthServiceStub(self.client.channel)
 
     def access_token(
         self,
@@ -120,15 +107,15 @@ class IdentityServiceSdk:
         """
         try:
             auth_response = self.get_auth_service().Authorize(
-                IdentityServiceSdk.AuthorizeRequest(
-                    resolver_metadata_id=resolver_metadata_id,
+                AuthorizeRequest(
+                    app_id=resolver_metadata_id,
                     tool_name=tool_name,
                     user_token=user_token,
                 )
             )
 
             token_response = self.get_auth_service().Token(
-                IdentityServiceSdk.TokenRequest(
+                TokenRequest(
                     authorization_code=auth_response.authorization_code,
                 )
             )
@@ -148,7 +135,7 @@ class IdentityServiceSdk:
             tool_name (str | None): The name of the tool to authorize for.
         """
         return self.get_auth_service().ExtAuthz(
-            IdentityServiceSdk.ExtAuthzRequest(
+            ExtAuthzRequest(
                 access_token=access_token,
                 tool_name=tool_name,
             )
@@ -156,7 +143,7 @@ class IdentityServiceSdk:
 
     def verify_badge(
         self, badge: str
-    ) -> "agntcy.identity.service.v1alpha1.VerificationResult":
+    ) -> VerificationResult:
         """Verify a badge.
 
         Parameters:
@@ -166,12 +153,12 @@ class IdentityServiceSdk:
             VerificationResult: The result of the verification.
         """
         return self.get_badge_service().VerifyBadge(
-            request=IdentityServiceSdk.VerifyBadgeRequest(badge=badge)
+            request=VerifyBadgeRequest(badge=badge)
         )
 
     async def averify_badge(
         self, badge: str
-    ) -> "agntcy.identity.service.v1alpha1.VerificationResult":
+    ) -> VerificationResult:
         """Verify a badge using async method.
 
         Parameters:
@@ -181,7 +168,7 @@ class IdentityServiceSdk:
             VerificationResult: The result of the verification.
         """
         return await self.get_badge_service().VerifyBadge(
-            IdentityServiceSdk.VerifyBadgeRequest(badge=badge)
+            VerifyBadgeRequest(badge=badge)
         )
 
     def issue_badge(
@@ -242,7 +229,7 @@ class IdentityServiceSdk:
 
         # Issue the badge
         self.get_badge_service().IssueBadge(
-            request=IdentityServiceSdk.IssueBadgeRequest(
+            request=IssueBadgeRequest(
                 app_id=service_id, **claims
             )
         )
@@ -305,7 +292,7 @@ class IdentityServiceSdk:
 
         # Issue the badge
         await self.get_badge_service().IssueBadge(
-            request=IdentityServiceSdk.IssueBadgeRequest(
+            request=IssueBadgeRequest(
                 app_id=service_id, **claims
             )
         )
