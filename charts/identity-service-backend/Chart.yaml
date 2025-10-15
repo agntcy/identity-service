@@ -5,7 +5,7 @@ apiVersion: v2
 name: identity-service-backend
 description: A Helm chart for identity-service backend
 type: application
-version: 0.1.8
+version: 0.1.9
 appVersion: "0.0.1"
 
 maintainers:
@@ -18,6 +18,8 @@ dependencies:
   - name: postgresql
     version: 12.1.0
     repository: https://charts.bitnami.com/bitnami
+    condition: postgresql.enabled
   - name: vault
     version: 0.23.0
     repository: https://helm.releases.hashicorp.com
+    condition: vault.enabled
