@@ -13,7 +13,7 @@ import type { ScalarOptions } from '@scalar/docusaurus'
 const config: Config = {
   title: 'AGNTCY Identity Service',
   tagline: 'Create and manage identities for your MCP Servers, A2A Agents and OASF, with support for Task Based Access Control (TBAC).',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/favicon.svg',
 
   // Set the production url of your site here
   url: 'https://identity-service.outshift.com',
@@ -102,11 +102,11 @@ const config: Config = {
       },
     },
     navbar: {
-      title: 'AGNTCY Identity Service',
+      title: 'Identity Service',
       logo: {
         alt: 'Identity Engine',
-        src: 'img/logo.svg',
-        srcDark: 'img/logo-dark.svg'
+        src: 'img/logo-color.png',
+        srcDark: 'img/logo-white.png'
       },
       items: [
         {
