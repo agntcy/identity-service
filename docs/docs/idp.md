@@ -4,14 +4,15 @@ sidebar_position: 2
 
 # Connecting an Identity Provider (IdP)
 
-This document provides a comprehensive guide on how to register a new issuer by connecting an Identity Provider (IdP) within the **AGNTCY Identity Service**. Connecting an IdP is a crucial step for integrating external authentication and authorization services, such as Client Credentials, with your AGNTCY Identity Service environment.
+This document provides a comprehensive guide on how to register a new issuer by connecting an Identity Provider (IdP) within the **AGNTCY Identity Service**.
+Connecting an IdP is a crucial step for integrating external authentication and authorization services, such as Client Credentials, with your AGNTCY Identity Service environment.
 This guide specifically details the process for configuring different Identity Providers, including Duo and Ory.
 
 To access the Identity Provider creation page within the **AGNTCY Identity Service**:
 
-1.  From the main dashboard, locate and click on **Settings** in the left-hand navigation menu.
-2.  Within the Settings section, select **Identity Provider**.
-3.  On the Identity Provider management page, click the **Connect** button to initiate the creation wizard.
+1. From the main dashboard, locate and click on **Settings** in the left-hand navigation menu.
+2. Within the Settings section, select **Identity Provider**.
+3. On the Identity Provider management page, click the **Connect** button to initiate the creation wizard.
 
 This will direct you to the "Identity Provider Connection" page, where you can begin configuring your new IdP.
 
@@ -46,28 +47,29 @@ Below you can find a screenshot of the Duo Admin API interface, with all the nec
 
 Follow these steps to configure and register your Identity Provider:
 
-1.  **Select Identity Provider:**
+1. **Select Identity Provider:**
 
-    - On the "Identity Provider Connection" page, you will be presented with a selection of supported Identity Providers.
-    - Carefully choose the provider you intend to integrate:
-      - **Duo** (as shown in the example, for Duo Security integration)
-    - **Critical Note:** The selection of an Identity Provider is a **one-time** action. Once saved, this choice cannot be modified later. Ensure you select the correct provider before proceeding.
+   - On the "Identity Provider Connection" page, you will be presented with a selection of supported Identity Providers.
+   - Carefully choose the provider you intend to integrate:
+     - **Duo** (as shown in the example, for Duo Security integration)
+   - **Critical Note:** The selection of an Identity Provider is a **one-time** action. Once saved, this choice cannot be modified later. Ensure you select the correct provider before proceeding.
 
-2.  **Enter Provider Details:**
+2. **Enter Provider Details:**
 
-    - After selecting your desired Identity Provider (e.g., Duo), the "Provider details" section will become active, prompting you for specific configuration parameters.
-    - **Hostname:** Enter the API hostname for your Duo Security account. This is your unique Duo API endpoint.
-      - _Example:_ `api-ffb0a31a.duosecurity.com`
-    - **Integration Key:** Input the Integration Key. This key uniquely identifies your application within Duo Security and is obtained from your Duo Admin Panel when you create or configure an application.
-      - _Example:_ `DI12VLEZPQIF5JH7F8G8`
-    - **Secret Key:** Provide the Secret Key. This is a sensitive credential used for cryptographic signing of requests to the Duo API, ensuring the authenticity and integrity of communications. It is also obtained from your Duo Admin Panel. For security purposes, the input in this field will be masked (displayed as asterisks).
+   - After selecting your desired Identity Provider (e.g., Duo), the "Provider details" section will become active, prompting you for specific configuration parameters.
+   - **Hostname:** Enter the API hostname for your Duo Security account. This is your unique Duo API endpoint.
+     - _Example:_ `api-ffb0a31a.duosecurity.com`
+   - **Integration Key:** Input the Integration Key. This key uniquely identifies your application within Duo Security and is obtained from your Duo Admin Panel when you create or configure an application.
+     - _Example:_ `DI12VLEZPQIF5JH7F8G8`
+   - **Secret Key:** Provide the Secret Key. This is a sensitive credential used for cryptographic signing of requests to the Duo API, ensuring the authenticity and integrity of communications. It is also obtained from your Duo Admin Panel.
+     For security purposes, the input in this field will be masked (displayed as asterisks).
 
 ![Register Issuer With Duo](/img/register-issuer-duo.png)
 
-3.  **Save Configuration:**
-    - Once all required details (Hostname, Integration Key, and Secret Key) have been accurately entered, click the **Save** button.
-    - Upon successful saving, your chosen Identity Provider will be registered and configured within AGNTCY Identity Service.
-    - If you need to discard the entered information and cancel the creation process, click the **Cancel** button.
+3. **Save Configuration:**
+   - Once all required details (Hostname, Integration Key, and Secret Key) have been accurately entered, click the **Save** button.
+   - Upon successful saving, your chosen Identity Provider will be registered and configured within AGNTCY Identity Service.
+   - If you need to discard the entered information and cancel the creation process, click the **Cancel** button.
 
 ![Register Issuer With Duo Success](/img/register-issuer-duo-done.png)
 
@@ -102,29 +104,29 @@ Below you can find a screenshot of the Okta Admin Panel interface, with all the 
 
 Follow these steps to configure and register your Identity Provider:
 
-1.  **Select Identity Provider:**
+1. **Select Identity Provider:**
 
-    - On the "Identity Provider Connection" page, you will be presented with a selection of supported Identity Providers.
-    - Carefully choose the provider you intend to integrate:
-      - **Okta** (as shown in the example, for Okta integration)
-    - **Critical Note:** The selection of an Identity Provider is a **one-time** action. Once saved, this choice cannot be modified later. Ensure you select the correct provider before proceeding.
+   - On the "Identity Provider Connection" page, you will be presented with a selection of supported Identity Providers.
+   - Carefully choose the provider you intend to integrate:
+     - **Okta** (as shown in the example, for Okta integration)
+   - **Critical Note:** The selection of an Identity Provider is a **one-time** action. Once saved, this choice cannot be modified later. Ensure you select the correct provider before proceeding.
 
-2.  **Enter Provider Details:**
+2. **Enter Provider Details:**
 
-    - After selecting your desired Identity Provider (e.g., Okta), the "Provider details" section will become active, prompting you for specific configuration parameters.
-    - **Organization URL:** Enter the Organization URL for your Okta account. This is your unique Okta API endpoint.
-      - _Example:_ `https://trial-2273708.okta.com/`
-    - **Client ID:** Input the Client ID. This key uniquely identifies your application within Okta and is obtained from your Okta Admin Panel when you create or configure an application.
-      - _Example:_ `0oawfccje6jmJdybZ697`
-    - **Private Key:** Provide the Private Key in PEM format (base64 value). This is a sensitive credential used for cryptographic signing of requests to the Okta API, ensuring the authenticity and integrity of communications. It is also obtained from your Okta Admin Panel. For security purposes, the input in this field will be masked (displayed as asterisks).
-      - _Example:_ `MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQD...`
+   - After selecting your desired Identity Provider (e.g., Okta), the "Provider details" section will become active, prompting you for specific configuration parameters.
+   - **Organization URL:** Enter the Organization URL for your Okta account. This is your unique Okta API endpoint.
+     - _Example:_ `https://trial-2273708.okta.com/`
+   - **Client ID:** Input the Client ID. This key uniquely identifies your application within Okta and is obtained from your Okta Admin Panel when you create or configure an application.
+     - _Example:_ `0oawfccje6jmJdybZ697`
+   - **Private Key:** Provide the Private Key in PEM format (base64 value). This is a sensitive credential used for cryptographic signing of requests to the Okta API, ensuring the authenticity and integrity of communications. It is also obtained from your Okta Admin Panel.
+     For security purposes, the input in this field will be masked (displayed as asterisks). - _Example:_ `MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQD...`
 
 ![Register Issuer With Okta](/img/register-issuer-okta.png)
 
-3.  **Save Configuration:**
-    - Once all required details (Organization URL, Client ID, Private Key) have been accurately entered, click the **Save** button.
-    - Upon successful saving, your chosen Identity Provider will be registered and configured within AGNTCY Identity Service.
-    - If you need to discard the entered information and cancel the creation process, click the **Cancel** button.
+3. **Save Configuration:**
+   - Once all required details (Organization URL, Client ID, Private Key) have been accurately entered, click the **Save** button.
+   - Upon successful saving, your chosen Identity Provider will be registered and configured within AGNTCY Identity Service.
+   - If you need to discard the entered information and cancel the creation process, click the **Cancel** button.
 
 ![Register Issuer With Okta Success](/img/register-issuer-okta-done.png)
 
@@ -156,25 +158,25 @@ Below you can find screenshots of the Ory Console interface, showing where to fi
 
 Follow these steps to configure and register your Identity Provider:
 
-1.  **Select Identity Provider:**
+1. **Select Identity Provider:**
 
-    - On the "Identity Provider Connection" page, you will be presented with a selection of supported Identity Providers.
-    - Carefully choose the provider you intend to integrate:
-      - **Ory** (as shown in the example, for Ory integration)
-    - **Critical Note:** The selection of an Identity Provider is a **one-time** action. Once saved, this choice cannot be modified later. Ensure you select the correct provider before proceeding.
+   - On the "Identity Provider Connection" page, you will be presented with a selection of supported Identity Providers.
+   - Carefully choose the provider you intend to integrate:
+     - **Ory** (as shown in the example, for Ory integration)
+   - **Critical Note:** The selection of an Identity Provider is a **one-time** action. Once saved, this choice cannot be modified later. Ensure you select the correct provider before proceeding.
 
-2.  **Enter Provider Details:**
+2. **Enter Provider Details:**
 
-    - After selecting your desired Identity Provider (e.g., Ory), the "Provider details" section will become active, prompting you for specific configuration parameters.
-    - **Project Slug:** Enter the Ory project slug. This is a unique identifier for your Ory project and can be found in your Ory Console under project settings.
-      - _Example:_ `mystifying-kapitsa-y0k3j7igbj`
-    - **API Key:** Provide the API Key. This key is used to authenticate requests from AGNTCY Identity Service to Ory and is generated in your Ory Console.
+   - After selecting your desired Identity Provider (e.g., Ory), the "Provider details" section will become active, prompting you for specific configuration parameters.
+   - **Project Slug:** Enter the Ory project slug. This is a unique identifier for your Ory project and can be found in your Ory Console under project settings.
+     - _Example:_ `mystifying-kapitsa-y0k3j7igbj`
+   - **API Key:** Provide the API Key. This key is used to authenticate requests from AGNTCY Identity Service to Ory and is generated in your Ory Console.
 
 ![Register Issuer With Ory](/img/register-issuer-ory.png)
 
-3.  **Save Configuration:**
-    - Once all required details (Hostname, Integration Key, and Secret Key) have been accurately entered, click the **Save** button.
-    - Upon successful saving, your chosen Identity Provider will be registered and configured within AGNTCY Identity Service.
-    - If you need to discard the entered information and cancel the creation process, click the **Cancel** button.
+3. **Save Configuration:**
+   - Once all required details (Hostname, Integration Key, and Secret Key) have been accurately entered, click the **Save** button.
+   - Upon successful saving, your chosen Identity Provider will be registered and configured within AGNTCY Identity Service.
+   - If you need to discard the entered information and cancel the creation process, click the **Cancel** button.
 
 ![Register Issuer With Ory Success](/img/register-issuer-ory-done.png)
