@@ -41,6 +41,15 @@ type Configuration struct {
 	IamUserCid                                              string        `split_words:"true"`
 	IamOrganization                                         string        `split_words:"true"`
 	IamMultiTenant                                          bool          `split_words:"true" default:"false"`
+	JwtProvider                                             string        `split_words:"true" default:"okta"` // "okta" or "keycloak"
+	KeycloakIssuer                                          string        `split_words:"true"`
+	KeycloakAudience                                        string        `split_words:"true"`
+	KeycloakClientId                                        string        `split_words:"true"`
+	KeycloakRealm                                           string        `split_words:"true"`
+	KeycloakMultiTenant                                     bool          `split_words:"true" default:"false"`
+	KeycloakTenantClaimName                                 string        `split_words:"true" default:"tenant_id"`
+	KeycloakUserClaimName                                   string        `split_words:"true" default:"preferred_username"`
+	KeycloakOrgClaimName                                    string        `split_words:"true" default:"organization"`
 	WebApprovalEmail                                        string        `split_words:"true"                                 required:"true"`
 	WebApprovalPubKey                                       string        `split_words:"true"                                 required:"true"`
 	WebApprovalPrivKey                                      string        `split_words:"true"                                 required:"true"`

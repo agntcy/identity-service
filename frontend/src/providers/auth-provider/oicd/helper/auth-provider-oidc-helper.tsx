@@ -89,6 +89,7 @@ const AuthProviderOIDCHelper: React.FC<React.PropsWithChildren<AuthProviderProps
       await auth.clearStaleState();
       await auth.removeUser();
       await auth.revokeTokens(['access_token', 'refresh_token']);
+      await auth.signoutRedirect()
     } catch (error) {
       console.debug(error);
     }

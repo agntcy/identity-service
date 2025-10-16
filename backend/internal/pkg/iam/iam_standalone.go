@@ -157,21 +157,30 @@ func (c *StandaloneClient) AuthJwt(
 		return ctx, errors.New("invalid Authorization header format")
 	}
 
-	username, validateErr := c.validateAccessToken(accessToken)
+	tokenInfo, validateErr := c.validateAccessToken(accessToken)
 	if validateErr != nil {
 		return ctx, fmt.Errorf("there was an error validating the access token: %w", validateErr)
 	}
 
-	ctx = identitycontext.InsertTenantID(ctx, standaloneTenantID)
+	// Use tenant from token if available, otherwise use default
+	tenantID := standaloneTenantID
+	if tokenInfo.TenantID != nil && *tokenInfo.TenantID != "" {
+		tenantID = *tokenInfo.TenantID
+	}
+	ctx = identitycontext.InsertTenantID(ctx, tenantID)
 
 	// Add username if present
-	if username != nil {
-		ctx = identitycontext.InsertUserID(ctx, *username)
+	if tokenInfo.Username != nil {
+		ctx = identitycontext.InsertUserID(ctx, *tokenInfo.Username)
 	}
 
-	// Add organization
-	if c.organization != "" {
-		ctx = identitycontext.InsertOrganizationID(ctx, c.organization)
+	// Use organization from token if available, otherwise use configured organization
+	organization := c.organization
+	if tokenInfo.Organization != nil && *tokenInfo.Organization != "" {
+		organization = *tokenInfo.Organization
+	}
+	if organization != "" {
+		ctx = identitycontext.InsertOrganizationID(ctx, organization)
 	}
 
 	return ctx, nil
@@ -218,18 +227,63 @@ func (c *StandaloneClient) AuthAPIKey(
 	return ctx, nil
 }
 
+// TokenInfo holds extracted information from JWT token
+type TokenInfo struct {
+	Username     *string
+	TenantID     *string
+	Organization *string
+}
+
 func (c *StandaloneClient) validateAccessToken(
 	accessToken string,
-) (*string, error) {
+) (*TokenInfo, error) {
 	claims, err := c.userJwtVerifier.VerifyAccessToken(accessToken)
 	if err != nil {
 		return nil, fmt.Errorf("there was an error verifying the access token: %w", err)
 	}
 
-	var username *string
+	// Get claim configuration from the JWT verifier
+	claimConfig := c.userJwtVerifier.GetClaimConfig()
+
+	tokenInfo := &TokenInfo{}
+
+	// Extract username using configured claim names
 	if usernameRaw, ok := claims[standaloneUsernameClaimKey].(string); ok {
-		username = &usernameRaw
+		tokenInfo.Username = &usernameRaw
 	}
 
-	return username, nil
+	// Extract tenant information using configured claim name
+	if claimConfig.TenantClaimName != "" {
+		if tenantRaw, ok := claims[claimConfig.TenantClaimName].(string); ok {
+			tokenInfo.TenantID = &tenantRaw
+		}
+	}
+
+	// Extract organization information using configured claim name
+	if claimConfig.OrgClaimName != "" {
+		if orgRaw, ok := claims[claimConfig.OrgClaimName].(string); ok {
+			tokenInfo.Organization = &orgRaw
+		}
+	}
+
+	// Fallback to configured user claim name if username not found
+	if tokenInfo.Username == nil && claimConfig.UserClaimName != "" {
+		if preferredUsername, ok := claims[claimConfig.UserClaimName].(string); ok {
+			tokenInfo.Username = &preferredUsername
+		}
+	}
+
+	// Fallback to realm name as tenant if no tenant_id found (Keycloak-specific)
+	if tokenInfo.TenantID == nil {
+		if realmAccess, ok := claims["realm_access"].(map[string]interface{}); ok {
+			if roles, ok := realmAccess["roles"].([]interface{}); ok && len(roles) > 0 {
+				// Use first role as tenant fallback
+				if roleStr, ok := roles[0].(string); ok {
+					tokenInfo.TenantID = &roleStr
+				}
+			}
+		}
+	}
+
+	return tokenInfo, nil
 }

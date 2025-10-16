@@ -1,7 +1,7 @@
 # Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
 # SPDX-License-Identifier: Apache-2.0
 
-.PHONY: do_generate_proto do_generate_mocks do_generate_go_sdk do_start_backend do_stop_backend do_start_docs do_stop_docs do_start_frontend do_stop_frontend
+.PHONY: do_generate_proto do_generate_mocks do_generate_go_sdk do_start_backend do_stop_backend do_start_docs do_stop_docs do_start_frontend do_stop_frontend do_start_keycloak do_stop_keycloak
 
 do_generate_proto:
 	cd scripts/proto && ./generate.sh
@@ -42,6 +42,14 @@ do_start_frontend:
 	./deployments/scripts/frontend/launch.sh ${dev}
 	@echo "Frontend started at http://localhost:5500"
 
+do_start_keycloak:
+	@./deployments/scripts/keycloak/launch.sh
+	@echo "Keycloak started at http://localhost:8080"
+
+do_stop_keycloak:
+	@./deployments/scripts/keycloak/stop.sh
+	@echo "Keycloak stopped"
+
 generate_proto: do_generate_proto
 
 generate_mocks: do_generate_mocks
@@ -56,6 +64,9 @@ stop_docs: do_stop_docs
 
 stop_frontend: do_stop_frontend
 start_frontend: do_start_frontend
+
+start_keycloak: do_start_keycloak
+stop_keycloak: do_stop_keycloak
 
 start: do_start_backend do_start_frontend do_start_docs
 stop: do_stop_frontend do_stop_backend do_stop_docs

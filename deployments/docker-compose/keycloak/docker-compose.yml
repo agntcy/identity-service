@@ -1,0 +1,34 @@
+# Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
+---
+name: identity-keycloak
+services:
+  identity-keycloak:
+    container_name: identity-keycloak
+    image: quay.io/keycloak/keycloak:25.0.6
+    pull_policy: always
+    restart: always
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./keycloak-data:/opt/keycloak/data/h2
+    env_file:
+      - .env
+    environment:
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin123}
+      KC_METRICS_ENABLED: true
+      KC_HOSTNAME: localhost
+      KC_HOSTNAME_STRICT: false
+      KC_ENABLE_STATISTICS: true
+      KC_HEALTH_ENABLED: true
+      KC_LOG_LEVEL: info
+      KC_PROXY: edge
+      QUARKUS_TRANSACTION_MANAGER_ENABLE_RECOVERY: true
+      KC_HTTP_ENABLED: true
+      KC_DB: dev-file
+      KC_DB_URL_HOST: localhost
+      KC_DB_URL_DATABASE: /opt/keycloak/data/h2/keycloakdb
+      KC_TRANSACTION_XA_ENABLED: false
+    command: start-dev --db=dev-file

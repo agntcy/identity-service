@@ -206,11 +206,39 @@ func initializeIAMClient(
 	if config.IamMultiTenant {
 		iamClient = iam.NewMultitenantClient()
 	} else {
-		jwtVerifier := iam.NewOktaJwtVerifier(
-			config.IamIssuer,
-			config.IamUserCid,
-			config.IamUserCidClaimName,
-		)
+		var jwtVerifier iam.JwtVerifier
+
+		// Choose JWT verifier based on configuration
+		switch config.JwtProvider {
+		case "keycloak":
+			if config.KeycloakMultiTenant {
+				jwtVerifier = iam.NewKeycloakMultiTenantJwtVerifier(
+					config.KeycloakIssuer,
+					config.KeycloakAudience,
+					config.KeycloakClientId,
+					config.KeycloakRealm,
+					config.KeycloakTenantClaimName,
+					config.KeycloakUserClaimName,
+					config.KeycloakOrgClaimName,
+				)
+			} else {
+				jwtVerifier = iam.NewKeycloakJwtVerifier(
+					config.KeycloakIssuer,
+					config.KeycloakAudience,
+					config.KeycloakClientId,
+					config.KeycloakRealm,
+				)
+			}
+		case "okta":
+			fallthrough
+		default:
+			jwtVerifier = iam.NewOktaJwtVerifier(
+				config.IamIssuer,
+				config.IamUserCid,
+				config.IamUserCidClaimName,
+			)
+		}
+
 		iamClient = iam.NewStandaloneClient(
 			config.IamOrganization,
 			iamRepository,
