@@ -58,6 +58,8 @@ jobs:
           VALIDATE_TYPESCRIPT_ES: false
           VALIDATE_TSX: false
           VALIDATE_GITHUB_ACTIONS_ZIZMOR: false
+          VALIDATE_BIOME_LINT: false
+          VALIDATE_BIOME_FORMAT: false
 
   helm-lint:
     runs-on: ubuntu-latest

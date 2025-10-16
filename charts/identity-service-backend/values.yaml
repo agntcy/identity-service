@@ -91,6 +91,7 @@ postgresql:
     size: 10Gi
 
 vault:
+  enabled: true
   fullnameOverride: "identity-vault"
   server:
     enabled: true
