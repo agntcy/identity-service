@@ -61,7 +61,11 @@ export const CreateIdentityProvider = () => {
       integrationKey: undefined,
       secretKey: undefined,
       projectSlug: undefined,
-      apiKey: undefined
+      apiKey: undefined,
+      baseUrl: undefined,
+      realm: undefined,
+      client: undefined,
+      clientSecret: undefined
     });
   }, [form]);
 
@@ -94,6 +98,13 @@ export const CreateIdentityProvider = () => {
       data.oryIdpSettings = {
         apiKey: values.apiKey,
         projectSlug: values.projectSlug
+      };
+    } else if (values.provider === IdpType.IDP_TYPE_KEYCLOAK) {
+      data.keycloakIdpSettings = {
+        baseUrl: values.baseUrl?.replace(/\/$/, ''),
+        realm: values.realm,
+        clientId: values.client,
+        clientSecret: values.clientSecret
       };
     }
     analyticsTrack('CLICK_SAVE_NEW_IDENTITY_PROVIDER', {

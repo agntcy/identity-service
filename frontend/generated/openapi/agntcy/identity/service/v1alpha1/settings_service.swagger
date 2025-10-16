@@ -159,10 +159,11 @@
         "IDP_TYPE_DUO",
         "IDP_TYPE_OKTA",
         "IDP_TYPE_ORY",
-        "IDP_TYPE_SELF"
+        "IDP_TYPE_SELF",
+        "IDP_TYPE_KEYCLOAK"
       ],
       "default": "IDP_TYPE_UNSPECIFIED",
-      "description": "- IDP_TYPE_UNSPECIFIED: Unspecified Envelope Type.\n - IDP_TYPE_DUO: Idp Type Duo.\n - IDP_TYPE_OKTA: Idp Type Okta.\n - IDP_TYPE_ORY: Idp Type Ory.\n - IDP_TYPE_SELF: Idp Type Self.",
+      "description": "- IDP_TYPE_UNSPECIFIED: Unspecified Envelope Type.\n - IDP_TYPE_DUO: Idp Type Duo.\n - IDP_TYPE_OKTA: Idp Type Okta.\n - IDP_TYPE_ORY: Idp Type Ory.\n - IDP_TYPE_SELF: Idp Type Self.\n - IDP_TYPE_KEYCLOAK: Idp Type Keycloak.",
       "title": "Type"
     },
     "v1alpha1IssuerSettings": {
@@ -188,12 +189,34 @@
         "oryIdpSettings": {
           "$ref": "#/definitions/v1alpha1OryIdpSettings",
           "description": "Settings for the Ory Identity Provider."
+        },
+        "keycloakIdpSettings": {
+          "$ref": "#/definitions/v1alpha1KeycloakIdpSettings",
+          "description": "Settings for the Keycloak Identity Provider."
         }
       },
       "title": "Issuer Settings",
       "required": [
         "idpType"
       ]
+    },
+    "v1alpha1KeycloakIdpSettings": {
+      "type": "object",
+      "properties": {
+        "baseUrl": {
+          "type": "string"
+        },
+        "realm": {
+          "type": "string"
+        },
+        "clientId": {
+          "type": "string"
+        },
+        "clientSecret": {
+          "type": "string"
+        }
+      },
+      "title": "Keycloak IdP Settings"
     },
     "v1alpha1OktaIdpSettings": {
       "type": "object",

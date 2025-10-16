@@ -17,9 +17,9 @@ const path = require('path');
 
     // Globals
     const IDENTITY_V1ALPHA1_PROTO_PATH = "proto/agntcy/identity/service/v1alpha1";
-    const SHARED_V1ALPHA1_PROTO_PATH = "proto/agntcy/identity/service/shared/v1alpha1";
+    // const SHARED_V1ALPHA1_PROTO_PATH = "proto/agntcy/identity/service/shared/v1alpha1";
     const IDENTITY_V1ALPHA1_GENERATED_PATH = "agntcy/identity/service/v1alpha1";
-    const SHARED_V1ALPHA1_GENERATED_PATH = "agntcy/identity/service/shared/v1alpha1";
+    // const SHARED_V1ALPHA1_GENERATED_PATH = "agntcy/identity/service/shared/v1alpha1";
 
     async function doRenameAndConvert(inputDir, outputDir) {
       shell.mkdir('-p', outputDir);
@@ -48,13 +48,13 @@ const path = require('path');
     // Function to generate all code
     function doGenerateAll() {
       doGenerate(IDENTITY_V1ALPHA1_PROTO_PATH);
-      doGenerate(SHARED_V1ALPHA1_PROTO_PATH);
+      // doGenerate(SHARED_V1ALPHA1_PROTO_PATH);
     }
 
     // Function to rename and convert all files
     async function doRenameAndConvertAll() {
       await doRenameAndConvert(`generated/openapi/${IDENTITY_V1ALPHA1_GENERATED_PATH}`, 'identity');
-      await doRenameAndConvert(`generated/openapi/${SHARED_V1ALPHA1_GENERATED_PATH}`, 'shared');
+      // await doRenameAndConvert(`generated/openapi/${SHARED_V1ALPHA1_GENERATED_PATH}`, 'shared');
     }
 
     // Generate the code
