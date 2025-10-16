@@ -3,6 +3,30 @@ entries:
   identity-service-backend:
   - apiVersion: v2
     appVersion: 0.0.1
+    created: "2025-10-16T14:16:21.141971642Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 18.0.15
+    - condition: vault.enabled
+      name: vault
+      repository: https://helm.releases.hashicorp.com
+      version: 0.31.0
+    description: A Helm chart for identity-service backend
+    digest: 579270945f5e415dcce26f0a71f82b8a00902fe9844452fe819ac3a11f23668f
+    maintainers:
+    - name: identity
+      url: https://github.com/agntcy/identity-service/blob/main/MAINTAINERS.md
+    name: identity-service-backend
+    sources:
+    - https://github.com/agntcy/identity-service
+    type: application
+    urls:
+    - identity-service-backend-0.1.10.tgz
+    version: 0.1.10
+  - apiVersion: v2
+    appVersion: 0.0.1
     created: "2025-10-02T07:53:29.279942093Z"
     dependencies:
     - name: postgresql
@@ -55,4 +79,4 @@ entries:
     urls:
     - identity-service-ui-0.1.6.tgz
     version: 0.1.6
-generated: "2025-10-02T07:53:29.666095343Z"
+generated: "2025-10-16T14:16:21.141984025Z"
