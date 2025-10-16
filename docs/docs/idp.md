@@ -64,7 +64,7 @@ Follow these steps to configure and register your Identity Provider:
    - **Secret Key:** Provide the Secret Key. This is a sensitive credential used for cryptographic signing of requests to the Duo API, ensuring the authenticity and integrity of communications. It is also obtained from your Duo Admin Panel.
      For security purposes, the input in this field will be masked (displayed as asterisks).
 
-![Register Issuer With Duo](/img/register-issuer-duo.png)
+   ![Register Issuer With Duo](/img/register-issuer-duo.png)
 
 3. **Save Configuration:**
    - Once all required details (Hostname, Integration Key, and Secret Key) have been accurately entered, click the **Save** button.
@@ -121,7 +121,7 @@ Follow these steps to configure and register your Identity Provider:
    - **Private Key:** Provide the Private Key in PEM format (base64 value). This is a sensitive credential used for cryptographic signing of requests to the Okta API, ensuring the authenticity and integrity of communications. It is also obtained from your Okta Admin Panel.
      For security purposes, the input in this field will be masked (displayed as asterisks). - _Example:_ `MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQD...`
 
-![Register Issuer With Okta](/img/register-issuer-okta.png)
+   ![Register Issuer With Okta](/img/register-issuer-okta.png)
 
 3. **Save Configuration:**
    - Once all required details (Organization URL, Client ID, Private Key) have been accurately entered, click the **Save** button.
@@ -172,7 +172,7 @@ Follow these steps to configure and register your Identity Provider:
      - _Example:_ `mystifying-kapitsa-y0k3j7igbj`
    - **API Key:** Provide the API Key. This key is used to authenticate requests from AGNTCY Identity Service to Ory and is generated in your Ory Console.
 
-![Register Issuer With Ory](/img/register-issuer-ory.png)
+   ![Register Issuer With Ory](/img/register-issuer-ory.png)
 
 3. **Save Configuration:**
    - Once all required details (Hostname, Integration Key, and Secret Key) have been accurately entered, click the **Save** button.
