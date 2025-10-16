@@ -63,12 +63,46 @@ export const InformationProvider = ({idpSettings}: {idpSettings?: IssuerSettings
         value: apiKey ? `${'*'.repeat(15)}${apiKey.slice(-5)}` : 'Not provided'
       });
     }
+    if (provider === IdpType.IDP_TYPE_KEYCLOAK) {
+      temp.push({
+        keyProp: 'Base URL',
+        value: idpSettings?.keycloakIdpSettings?.baseUrl || 'Not provided'
+      });
+      temp.push({
+        keyProp: 'Realm',
+        value: idpSettings?.keycloakIdpSettings?.realm || 'Not provided'
+      });
+      temp.push({
+        keyProp: 'Client ID',
+        value: idpSettings?.keycloakIdpSettings?.clientId || 'Not provided'
+      });
+      temp.push({
+        keyProp: 'Client Secret',
+        value: idpSettings?.keycloakIdpSettings?.clientSecret
+          ? `${'*'.repeat(15)}${idpSettings?.keycloakIdpSettings?.clientSecret.slice(-5)}`
+          : 'Not provided'
+      });
+    }
     temp.push({
       keyProp: 'Type',
       value: <ProviderType type={provider} />
     });
     return temp;
-  }, [apiKey, clientId, hostname, integrationKey, orgUrl, privateKey, projectSlug, provider, secretKey]);
+  }, [
+    apiKey,
+    clientId,
+    hostname,
+    idpSettings?.keycloakIdpSettings?.baseUrl,
+    idpSettings?.keycloakIdpSettings?.clientId,
+    idpSettings?.keycloakIdpSettings?.clientSecret,
+    idpSettings?.keycloakIdpSettings?.realm,
+    integrationKey,
+    orgUrl,
+    privateKey,
+    projectSlug,
+    provider,
+    secretKey
+  ]);
 
   return (
     <Card className="text-start space-y-6" variant="secondary">

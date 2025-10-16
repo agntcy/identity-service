@@ -11,6 +11,7 @@ import OktaLogo from '@/assets/okta.svg?react';
 import OasfLogo from '@/assets/oasf.svg?react';
 import OryLogo from '@/assets/ory.svg?react';
 import {IdpType} from '@/types/api/settings';
+import KeycloakLogo from '@/assets/keycloak.png';
 
 export const ProviderType = ({type, className}: {type?: IdpType; className?: string}) => {
   return (
@@ -19,6 +20,7 @@ export const ProviderType = ({type, className}: {type?: IdpType; className?: str
       {type === IdpType.IDP_TYPE_OKTA && <OktaLogo className="h-[20px] w-[20px]" />}
       {type === IdpType.IDP_TYPE_SELF && <OasfLogo className="h-[20px] w-[20px]" />}
       {type === IdpType.IDP_TYPE_ORY && <OryLogo className="h-[22px] w-[22px]" />}
+      {type === IdpType.IDP_TYPE_KEYCLOAK && <img src={KeycloakLogo} alt="Keycloak" className="h-[20px] w-[20px]" />}
       <Typography
         variant="body1"
         fontSize={14}

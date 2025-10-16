@@ -16,6 +16,7 @@ import DuoLogo from '@/assets/duo.svg?react';
 import OktaLogo from '@/assets/okta.svg?react';
 import OasfLogo from '@/assets/oasf.svg?react';
 import OryLogo from '@/assets/ory.svg?react';
+import KeycloakLogo from '@/assets/keycloak.png';
 import {IdpType} from '@/types/api/settings';
 import {docs} from '@/utils/docs';
 import {useAnalytics} from '@/hooks';
@@ -43,6 +44,12 @@ export const IdentityProviderForm = ({isLoading = false}: {isLoading?: boolean})
       type: IdpType.IDP_TYPE_ORY,
       title: 'Ory',
       imgURI: <OryLogo />,
+      isDisabled: isLoading
+    },
+    {
+      type: IdpType.IDP_TYPE_KEYCLOAK,
+      title: 'Keycloak',
+      imgURI: <img src={KeycloakLogo} alt="Keycloak Logo" className="w-6 h-6" />,
       isDisabled: isLoading
     },
     {
@@ -244,6 +251,69 @@ export const IdentityProviderForm = ({isLoading = false}: {isLoading?: boolean})
                   </FormItem>
                 )}
               />
+            </div>
+          </div>
+        )}
+        {idpType === IdpType.IDP_TYPE_KEYCLOAK && (
+          <div className="space-y-4">
+            <div>
+              <Typography variant="subtitle1" fontWeight={600}>
+                Provider details
+              </Typography>
+            </div>
+            <div className="space-y-2">
+              <div className="flex gap-4 items-start">
+                <FormField
+                  control={control}
+                  name="baseUrl"
+                  render={({field}) => (
+                    <FormItem className="w-[50%]">
+                      <FormLabel className="form-label">Base URL</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Type base URL..." {...field} disabled={isLoading} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={control}
+                  name="realm"
+                  render={({field}) => (
+                    <FormItem className="w-[50%]">
+                      <FormLabel className="form-label">Realm</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Type realm..." {...field} disabled={isLoading} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="flex gap-4 items-start pt-2">
+                <FormField
+                  control={control}
+                  name="client"
+                  render={({field}) => (
+                    <FormItem className="w-[50%]">
+                      <FormLabel className="form-label">Client ID</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Type client id..." {...field} disabled={isLoading} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={control}
+                  name="clientSecret"
+                  render={({field}) => (
+                    <FormItem className="w-[50%]">
+                      <FormLabel className="form-label">Client Secret</FormLabel>
+                      <FormControl>
+                        <PasswordInput placeholder="Type client secret..." {...field} disabled={isLoading} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
             </div>
           </div>
         )}
