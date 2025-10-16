@@ -1,8 +1,3 @@
-/**
- * Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
- * SPDX-License-Identifier: Apache-2.0
- */
-
 /* eslint-disable */
 /* tslint:disable */
 // @ts-nocheck
@@ -22,6 +17,7 @@
  *  - IDP_TYPE_OKTA: Idp Type Okta.
  *  - IDP_TYPE_ORY: Idp Type Ory.
  *  - IDP_TYPE_SELF: Idp Type Self.
+ *  - IDP_TYPE_KEYCLOAK: Idp Type Keycloak.
  * @default "IDP_TYPE_UNSPECIFIED"
  */
 export enum V1Alpha1IdpType {
@@ -29,7 +25,8 @@ export enum V1Alpha1IdpType {
   IDP_TYPE_DUO = 'IDP_TYPE_DUO',
   IDP_TYPE_OKTA = 'IDP_TYPE_OKTA',
   IDP_TYPE_ORY = 'IDP_TYPE_ORY',
-  IDP_TYPE_SELF = 'IDP_TYPE_SELF'
+  IDP_TYPE_SELF = 'IDP_TYPE_SELF',
+  IDP_TYPE_KEYCLOAK = 'IDP_TYPE_KEYCLOAK'
 }
 
 /**
@@ -188,6 +185,16 @@ export interface V1Alpha1IssuerSettings {
   oktaIdpSettings?: V1Alpha1OktaIdpSettings;
   /** Settings for the Ory Identity Provider. */
   oryIdpSettings?: V1Alpha1OryIdpSettings;
+  /** Settings for the Keycloak Identity Provider. */
+  keycloakIdpSettings?: V1Alpha1KeycloakIdpSettings;
+}
+
+/** Keycloak IdP Settings */
+export interface V1Alpha1KeycloakIdpSettings {
+  baseUrl?: string;
+  realm?: string;
+  clientId?: string;
+  clientSecret?: string;
 }
 
 /** Okta IdP Settings */
