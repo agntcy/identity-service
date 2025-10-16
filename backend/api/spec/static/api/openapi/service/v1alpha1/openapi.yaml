@@ -1397,6 +1397,7 @@ components:
                         - IDP_TYPE_OKTA
                         - IDP_TYPE_ORY
                         - IDP_TYPE_SELF
+                        - IDP_TYPE_KEYCLOAK
                     type: string
                     description: The type of the IdP.
                     format: enum
@@ -1412,7 +1413,23 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/OryIdpSettings'
                     description: Settings for the Ory Identity Provider.
+                keycloakIdpSettings:
+                    allOf:
+                        - $ref: '#/components/schemas/KeycloakIdpSettings'
+                    description: Settings for the Keycloak Identity Provider.
             description: Issuer Settings
+        KeycloakIdpSettings:
+            type: object
+            properties:
+                baseUrl:
+                    type: string
+                realm:
+                    type: string
+                clientId:
+                    type: string
+                clientSecret:
+                    type: string
+            description: Keycloak IdP Settings
         ListAppsResponse:
             type: object
             properties:

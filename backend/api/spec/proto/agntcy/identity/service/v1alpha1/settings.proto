@@ -40,6 +40,20 @@ message IssuerSettings {
 
   // Settings for the Ory Identity Provider.
   optional OryIdpSettings ory_idp_settings = 6 [(.google.api.field_behavior) = OPTIONAL];
+
+  // Settings for the Keycloak Identity Provider.
+  optional KeycloakIdpSettings keycloak_idp_settings = 7 [(.google.api.field_behavior) = OPTIONAL];
+}
+
+// Keycloak IdP Settings
+message KeycloakIdpSettings {
+  optional string base_url = 1;
+
+  optional string realm = 2;
+
+  optional string client_id = 3;
+
+  optional string client_secret = 4;
 }
 
 // Okta IdP Settings
@@ -79,4 +93,6 @@ enum IdpType {
   IDP_TYPE_ORY = 3;
   // Idp Type Self.
   IDP_TYPE_SELF = 4;
+  // Idp Type Keycloak.
+  IDP_TYPE_KEYCLOAK = 5;
 }
