@@ -119,14 +119,14 @@ Follow these steps to configure and register your Identity Provider:
     - **Private Key:** Provide the Private Key in PEM format (base64 value). This is a sensitive credential used for cryptographic signing of requests to the Okta API, ensuring the authenticity and integrity of communications. It is also obtained from your Okta Admin Panel. For security purposes, the input in this field will be masked (displayed as asterisks).
       - _Example:_ `MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQD...`
 
-![Register Issuer With Duo](/img/register-issuer-okta.png)
+![Register Issuer With Okta](/img/register-issuer-okta.png)
 
 3.  **Save Configuration:**
     - Once all required details (Organization URL, Client ID, Private Key) have been accurately entered, click the **Save** button.
     - Upon successful saving, your chosen Identity Provider will be registered and configured within AGNTCY Identity Service.
     - If you need to discard the entered information and cancel the creation process, click the **Cancel** button.
 
-![Register Issuer With Duo Success](/img/register-issuer-okta-done.png)
+![Register Issuer With Okta Success](/img/register-issuer-okta-done.png)
 
 ## Connecting Ory as an Identity Provider
 
