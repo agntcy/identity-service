@@ -34,6 +34,8 @@ func (t *IdpType) UnmarshalText(text []byte) error {
 		*t = IDP_TYPE_OKTA
 	case IDP_TYPE_ORY.String():
 		*t = IDP_TYPE_ORY
+	case IDP_TYPE_KEYCLOAK.String():
+		*t = IDP_TYPE_KEYCLOAK
 	default:
 		*t = IDP_TYPE_UNSPECIFIED
 	}
