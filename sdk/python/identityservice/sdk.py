@@ -11,13 +11,15 @@ import os
 from dotenv import load_dotenv
 from google.protobuf import empty_pb2
 from agntcy.identity.service.v1alpha1.app_pb2 import AppType
+from agntcy.identity.service.v1alpha1.app_service_pb2_grpc import AppServiceStub, AppServiceAsyncStub
 from agntcy.identity.service.v1alpha1.auth_service_pb2 import AuthorizeRequest, TokenRequest, ExtAuthzRequest
-from agntcy.identity.service.v1alpha1.app_service_pb2_grpc import AppServiceStub
-from agntcy.identity.service.v1alpha1.auth_service_pb2_grpc import AuthServiceStub
+from agntcy.identity.service.v1alpha1.auth_service_pb2_grpc import AuthServiceStub, AuthServiceAsyncStub
 from agntcy.identity.service.v1alpha1.badge_pb2 import VerificationResult
 from agntcy.identity.service.v1alpha1.badge_service_pb2 import VerifyBadgeRequest, IssueBadgeRequest
-from agntcy.identity.service.v1alpha1.badge_service_pb2_grpc import BadgeServiceStub
-from agntcy.identity.service.v1alpha1.settings_service_pb2_grpc import SettingsServiceStub
+from agntcy.identity.service.v1alpha1.badge_service_pb2_grpc import BadgeServiceStub, BadgeServiceAsyncStub
+from agntcy.identity.service.v1alpha1.device_service_pb2_grpc import DeviceServiceStub, DeviceServiceAsyncStub
+from agntcy.identity.service.v1alpha1.policy_service_pb2_grpc import PolicyServiceStub, PolicyServiceAsyncStub
+from agntcy.identity.service.v1alpha1.settings_service_pb2_grpc import SettingsServiceStub, SettingsServiceAsyncStub
 
 from identityservice import client
 from identityservice.badge.a2a import adiscover as adiscover_a2a
@@ -63,12 +65,18 @@ class IdentityServiceSdk:
 
     def empty_request(self):
         """Return an empty request object."""
-        return empty_pb2.Empty()
+        return empty_pb2.Empty() 
 
     def get_settings_service(
         self,
     ) -> SettingsServiceStub:
         """Return the SettingsService stub."""
+        return SettingsServiceStub(self.client.channel)
+
+    def get_settings_async_service(
+        self,
+    ) -> SettingsServiceAsyncStub:
+        """Return the SettingsService async stub."""
         return SettingsServiceStub(self.client.channel)
 
     def get_app_service(
@@ -77,10 +85,22 @@ class IdentityServiceSdk:
         """Return the AppService stub."""
         return AppServiceStub(self.client.channel)
 
+    def get_app_async_service(
+        self,
+    ) -> AppServiceAsyncStub:
+        """Return the AppService async stub."""
+        return AppServiceStub(self.client.channel)
+
     def get_badge_service(
         self,
     ) -> BadgeServiceStub:
         """Return the BadgeService stub."""
+        return BadgeServiceStub(self.client.channel)
+
+    def get_badge_async_service(
+        self,
+    ) -> BadgeServiceAsyncStub:
+        """Return the BadgeService async stub."""
         return BadgeServiceStub(self.client.channel)
 
     def get_auth_service(
@@ -88,6 +108,36 @@ class IdentityServiceSdk:
     ) -> AuthServiceStub:
         """Return the AuthService stub."""
         return AuthServiceStub(self.client.channel)
+
+    def get_auth_async_service(
+        self,
+    ) -> AuthServiceAsyncStub:
+        """Return the AuthService async stub."""
+        return AuthServiceStub(self.client.channel)
+ 
+    def get_device_service(
+        self,
+    ) -> DeviceServiceStub:
+        """Return the DeviceService stub."""
+        return DeviceServiceStub(self.client.channel)
+
+    def get_device_async_service(
+        self,
+    ) -> DeviceServiceAsyncStub:
+        """Return the DeviceService async stub."""
+        return DeviceServiceStub(self.client.channel)
+
+    def get_policy_service(
+        self,
+    ) -> PolicyServiceStub:
+        """Return the PolicyServiceStub stub."""
+        return PolicyServiceStub(self.client.channel)
+
+    def get_policy_async_service(
+        self,
+    ) -> PolicyServiceAsyncStub:
+        """Return the PolicyServiceStub async stub."""
+        return PolicyServiceStub(self.client.channel)
 
     def access_token(
         self,
@@ -156,7 +206,7 @@ class IdentityServiceSdk:
             request=VerifyBadgeRequest(badge=badge)
         )
 
-    async def averify_badge(
+    async def verify_badge_async(
         self, badge: str
     ) -> VerificationResult:
         """Verify a badge using async method.
@@ -194,9 +244,7 @@ class IdentityServiceSdk:
         # Get claims
         claims = {}
 
-        if service_type == AppType.Value(
-            "APP_TYPE_MCP_SERVER"
-        ):  # APP_TYPE_MCP_SERVER
+        if service_type == AppType.APP_TYPE_MCP_SERVER:
             logger.debug(
                 f"[bold green]Discovering MCP server for {service_name} at {url}[/bold green]"
             )
@@ -207,9 +255,7 @@ class IdentityServiceSdk:
             claims["mcp"] = {
                 "schema_base64": base64.b64encode(schema.encode("utf-8")),
             }
-        elif service_type == AppType.Value(
-            "APP_TYPE_AGENT_A2A"
-        ):  # APP_TYPE_AGENT_A2A
+        elif service_type == AppType.APP_TYPE_AGENT_A2A:
             logger.debug(
                 f"""[bold green]Discovering A2A agent for {service_name} at
                 [bold blue]{url}[/bold blue][/bold green]"""
@@ -234,7 +280,7 @@ class IdentityServiceSdk:
             )
         )
 
-    async def aissue_badge(
+    async def issue_badge_async(
         self,
         url: str,
     ):
@@ -257,9 +303,7 @@ class IdentityServiceSdk:
         # Get claims
         claims = {}
 
-        if service_type == AppType.Value(
-            "APP_TYPE_MCP_SERVER"
-        ):  # APP_TYPE_MCP_SERVER
+        if service_type == AppType.APP_TYPE_MCP_SERVER:
             logger.debug(
                 f"[bold green]Discovering MCP server for {service_name} at {url}[/bold green]"
             )
@@ -270,9 +314,7 @@ class IdentityServiceSdk:
             claims["mcp"] = {
                 "schema_base64": base64.b64encode(schema.encode("utf-8")),
             }
-        elif service_type == AppType.Value(
-            "APP_TYPE_AGENT_A2A"
-        ):  # APP_TYPE_AGENT_A2A
+        elif service_type == AppType.APP_TYPE_AGENT_A2A:
             logger.debug(
                 f"""[bold green]Discovering A2A agent for {service_name} at
                 [bold blue]{url}[/bold blue][/bold green]"""
