@@ -1,9 +1,24 @@
-FROM golang:1.24.5-alpine3.21 AS builder
+FROM golang:1.24-alpine3.22 AS gobin
+
+FROM python:3.13-alpine AS builder
 
 ARG BIN="/usr/local/bin"
 ARG BUF_VERSION="1.28.1"
 
-RUN apk update && apk add curl git
+RUN apk update && apk add curl git pipx
+RUN apk add --no-cache \
+    build-base \
+    libffi-dev \
+    python3-dev \
+    musl-dev
+
+# GoLang
+WORKDIR /go
+ENV GOTOOLCHAIN=local
+ENV GOPATH=/go
+ENV PATH=$GOPATH/bin:/usr/local/go/bin:$PATH
+COPY --from=gobin --link /go/ .
+COPY --from=gobin --link /usr/local/go/ /usr/local/go/
 
 WORKDIR /identity/protoc-gen-go-identity
 COPY backend/api/spec/plugins/protoc-gen-go-srvreg .
@@ -36,9 +51,12 @@ RUN go mod download
 RUN cd /identity/proto-enum-generator/cmd/go-enum-to-proto && go install .
 RUN cd /identity/proto-enum-generator/cmd/go-enum-patch && go install .
 
+RUN python3 -m pip install --upgrade pip
+RUN python3 -m pip install grpcio-tools mypy-protobuf
+
 WORKDIR /identity
 
-ENV PATH="$PATH:/identity/bin"
+ENV PATH="$PATH:/identity/bin:/root/.local/bin"
 ENV Identity_ROOT="/identity"
 
 COPY scripts/proto/docker/run.sh .
@@ -47,6 +65,13 @@ COPY ./backend ./local/github.com/agntcy/identity-service
 RUN cd ./local/github.com/agntcy/identity-service/cmd/bff && \
     go mod download
 COPY scripts/proto/docker/protos ./third_party/protos
+
+WORKDIR /identity/third_party/protos
+
+RUN git clone https://github.com/googleapis/googleapis.git
+RUN git clone https://github.com/grpc-ecosystem/grpc-gateway.git
+
+WORKDIR /identity
 
 RUN chmod +x run.sh && \
     mv run.sh /usr/local/bin

@@ -176,6 +176,24 @@ echo "[*] Generating Go files"
 echo "[*] Generating Python files"
 /usr/local/bin/buf generate --include-imports --template buf.gen.python.yaml --output ../../sdk/python
 
+# Python stubs
+cd "${Identity_ROOT}/code/backend/api/spec/proto/"
+
+echo "[*] Generating Python stub files"
+proto_services=$(find . -iname "*_service\.proto")
+for file in $proto_services; do
+  echo $file
+  python3 -m grpc_tools.protoc \
+    --mypy_grpc_out="${Identity_ROOT}/code/sdk/python" \
+    --proto_path="${Identity_ROOT}/third_party/protos" \
+    --proto_path="${Identity_ROOT}/third_party/protos/googleapis" \
+    --proto_path="${Identity_ROOT}/third_party/protos/grpc-gateway" \
+    --proto_path=. \
+    $file
+done
+
+cd "${Identity_ROOT}/code/backend/api/spec"
+
 # Openapi
 echo "[*] Generating OpenAPI files"
 /usr/local/bin/buf generate --template buf.gen.openapi.yaml --output ../spec/static/api/openapi/service/v1alpha1 --path proto/${PROTO_PLATFORM_FILE_PATH}
