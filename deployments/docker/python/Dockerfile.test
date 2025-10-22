@@ -1,0 +1,6 @@
+FROM python:3.13-alpine
+
+WORKDIR /src
+COPY ./sdk/python ./sdk
+WORKDIR /src/sdk
+RUN pip install .[test]

@@ -21,6 +21,16 @@ class Client:  # pylint: disable=too-few-public-methods
         """Initialize the client."""
         load_dotenv()
 
+        # Try to get the API Key from the environment variable
+        if api_key is None:
+            api_key = os.environ.get("IDENTITY_SERVICE_API_KEY")
+
+        # Validate API Key
+        if not api_key:
+            raise ValueError(
+                "An Organization or Agentic Service API Key is required for Identity Service SDK."
+            )
+
         # Get credentials
         grpc_server_url = os.environ.get(
             "IDENTITY_SERVICE_GRPC_SERVER_URL", constant.DEFAULT_GRPC_URL
