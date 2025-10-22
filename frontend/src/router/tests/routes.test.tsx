@@ -120,7 +120,8 @@ describe('useRoutes', () => {
         isAdmin: true,
         setIsAdmin: vi.fn(),
         setSession: vi.fn(),
-        setIsEmptyIdp: vi.fn()
+        setIsEmptyIdp: vi.fn(),
+        setIssuerSettings: vi.fn()
       };
       return selector ? selector(mockState) : mockState;
     });
@@ -148,6 +149,7 @@ describe('useRoutes', () => {
           setIsAdmin: vi.fn(),
           setSession: vi.fn(),
           setIsEmptyIdp: vi.fn(),
+          setIssuerSettings: vi.fn(),
           otherProperty: 'should not be selected'
         };
 
@@ -187,7 +189,8 @@ describe('useRoutes', () => {
           isAdmin: true,
           setIsAdmin: vi.fn(),
           setSession: vi.fn(),
-          setIsEmptyIdp: vi.fn()
+          setIsEmptyIdp: vi.fn(),
+          setIssuerSettings: vi.fn()
         };
         return selector ? selector(mockState) : mockState;
       });
@@ -206,7 +209,8 @@ describe('useRoutes', () => {
           isAdmin: true,
           setIsAdmin: vi.fn(),
           setSession: vi.fn(),
-          setIsEmptyIdp: vi.fn()
+          setIsEmptyIdp: vi.fn(),
+          setIssuerSettings: vi.fn()
         };
         return selector ? selector(mockState) : mockState;
       });
@@ -227,7 +231,8 @@ describe('useRoutes', () => {
           isAdmin: true,
           setIsAdmin: vi.fn(),
           setSession: vi.fn(),
-          setIsEmptyIdp: vi.fn()
+          setIsEmptyIdp: vi.fn(),
+          setIssuerSettings: vi.fn()
         };
         return selector ? selector(mockState) : mockState;
       });
@@ -246,7 +251,8 @@ describe('useRoutes', () => {
           isAdmin: false,
           setIsAdmin: vi.fn(),
           setSession: vi.fn(),
-          setIsEmptyIdp: vi.fn()
+          setIsEmptyIdp: vi.fn(),
+          setIssuerSettings: vi.fn()
         };
         return selector ? selector(mockState) : mockState;
       });
@@ -297,7 +303,8 @@ describe('useRoutes', () => {
           isAdmin: true,
           setIsAdmin: vi.fn(),
           setSession: vi.fn(),
-          setIsEmptyIdp: vi.fn()
+          setIsEmptyIdp: vi.fn(),
+          setIssuerSettings: vi.fn()
         };
         return selector ? selector(mockState) : mockState;
       });
@@ -316,7 +323,8 @@ describe('useRoutes', () => {
           isAdmin: false,
           setIsAdmin: vi.fn(),
           setSession: vi.fn(),
-          setIsEmptyIdp: vi.fn()
+          setIsEmptyIdp: vi.fn(),
+          setIssuerSettings: vi.fn()
         };
         return selector ? selector(mockState) : mockState;
       });
@@ -335,7 +343,8 @@ describe('useRoutes', () => {
           isAdmin: false,
           setIsAdmin: vi.fn(),
           setSession: vi.fn(),
-          setIsEmptyIdp: vi.fn()
+          setIsEmptyIdp: vi.fn(),
+          setIssuerSettings: vi.fn()
         };
         return selector ? selector(mockState) : mockState;
       });
@@ -387,7 +396,8 @@ describe('useRoutes', () => {
           isAdmin: false,
           setIsAdmin: vi.fn(),
           setSession: vi.fn(),
-          setIsEmptyIdp: vi.fn()
+          setIsEmptyIdp: vi.fn(),
+          setIssuerSettings: vi.fn()
         };
         return selector ? selector(mockState) : mockState;
       });
@@ -426,7 +436,8 @@ describe('useRoutes', () => {
           isAdmin: false,
           setIsAdmin: vi.fn(),
           setSession: vi.fn(),
-          setIsEmptyIdp: vi.fn()
+          setIsEmptyIdp: vi.fn(),
+          setIssuerSettings: vi.fn()
         };
         return selector ? selector(mockState) : mockState;
       });

@@ -88,7 +88,8 @@ describe('SettingsProvider', () => {
   const mockStoreFunctions = {
     setIsEmptyIdp: vi.fn(),
     setSession: vi.fn(),
-    setIsAdmin: vi.fn()
+    setIsAdmin: vi.fn(),
+    setIssuerSettings: vi.fn()
   };
 
   const mockSessionData = {

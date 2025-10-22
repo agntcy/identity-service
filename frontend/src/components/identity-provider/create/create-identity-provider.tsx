@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {useCallback} from 'react';
+import {useCallback, useEffect} from 'react';
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {z} from 'zod';
@@ -17,6 +17,8 @@ import {IdentityProviderForm} from './form/identity-provider-form';
 import {useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
 import {useAnalytics} from '@/hooks';
+import {useSettingsStore} from '@/store';
+import {useShallow} from 'zustand/react/shallow';
 
 export const CreateIdentityProvider = () => {
   const form = useForm<IdentityProvidersFormValues>({
@@ -27,6 +29,13 @@ export const CreateIdentityProvider = () => {
   const navigate = useNavigate();
 
   const {analyticsTrack} = useAnalytics();
+
+  const {isEmptyIdp, issuerSettings} = useSettingsStore(
+    useShallow((state) => ({
+      isEmptyIdp: state.isEmptyIdp,
+      issuerSettings: state.issuerSettings
+    }))
+  );
 
   const mutationSetIdentityProvider = useSetIdentityProvider({
     callbacks: {
@@ -110,6 +119,26 @@ export const CreateIdentityProvider = () => {
     handleSave();
   }, [handleSave]);
 
+  useEffect(() => {
+    if (issuerSettings) {
+      form.reset({
+        provider: issuerSettings.idpType,
+        // okta
+        orgUrl: issuerSettings.oktaIdpSettings?.orgUrl,
+        clientId: issuerSettings.oktaIdpSettings?.clientId,
+        privateKey: undefined,
+        // duo
+        hostname: issuerSettings.duoIdpSettings?.hostname,
+        integrationKey: issuerSettings.duoIdpSettings?.integrationKey,
+        secretKey: undefined,
+        // ory
+        projectSlug: issuerSettings.oryIdpSettings?.projectSlug,
+        apiKey: undefined
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [issuerSettings]);
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -117,7 +146,13 @@ export const CreateIdentityProvider = () => {
         <div className="flex justify-end gap-4 items-center">
           <Button
             variant="tertariary"
-            onClick={handleOnClear}
+            onClick={() => {
+              if (isEmptyIdp) {
+                handleOnClear();
+              } else {
+                void navigate(PATHS.settings.base);
+              }
+            }}
             sx={{
               fontWeight: '600 !important'
             }}
