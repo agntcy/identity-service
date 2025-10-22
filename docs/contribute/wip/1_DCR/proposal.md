@@ -35,7 +35,7 @@ Identity Node->>Identity Node: Issue Badge with IdP as Issuer
 Identity Node->>Identity Node: Sign the Badge using the PrivateKey
 ```
 
-## Dyanamic Client Registration (DCR) Proposal
+## Dynamic Client Registration (DCR) Proposal
 
 To streamline the registration and management of Agentic Services, we can propose implementing Dynamic Client Registration (DCR) as defined in OAuth 2.0 and OpenID Connect specifications. This would allow Agentic Services to register themselves dynamically with the `Identity Service`, reducing manual configuration and improving interoperability.
 
