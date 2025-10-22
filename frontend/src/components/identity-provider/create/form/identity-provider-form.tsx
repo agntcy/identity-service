@@ -21,30 +21,41 @@ import {IdpType} from '@/types/api/settings';
 import {docs} from '@/utils/docs';
 import {useAnalytics} from '@/hooks';
 import {IconButton, Tooltip} from '@mui/material';
+import {useSettingsStore} from '@/store';
+import {useShallow} from 'zustand/react/shallow';
 
 export const IdentityProviderForm = ({isLoading = false}: {isLoading?: boolean}) => {
   const {control, watch} = useFormContext<IdentityProvidersFormValues>();
 
   const {analyticsTrack} = useAnalytics();
 
+  const {isEmptyIdp} = useSettingsStore(
+    useShallow((state) => ({
+      isEmptyIdp: state.isEmptyIdp
+    }))
+  );
+
   const identityProviders: SharedProviderProps<IdpType>[] = [
     {
       type: IdpType.IDP_TYPE_DUO,
       title: 'Duo',
       imgURI: <DuoLogo />,
-      isDisabled: isLoading
+      isDisabled: isLoading || !isEmptyIdp,
+      useTooltip: isEmptyIdp
     },
     {
       type: IdpType.IDP_TYPE_OKTA,
       title: 'Okta',
       imgURI: <OktaLogo />,
-      isDisabled: isLoading
+      isDisabled: isLoading || !isEmptyIdp,
+      useTooltip: isEmptyIdp
     },
     {
       type: IdpType.IDP_TYPE_ORY,
       title: 'Ory',
       imgURI: <OryLogo />,
-      isDisabled: isLoading
+      isDisabled: isLoading || !isEmptyIdp,
+      useTooltip: isEmptyIdp
     },
     {
       type: IdpType.IDP_TYPE_KEYCLOAK,
@@ -56,7 +67,9 @@ export const IdentityProviderForm = ({isLoading = false}: {isLoading?: boolean})
       type: IdpType.IDP_TYPE_SELF,
       title: 'AGNTCY',
       imgURI: <OasfLogo />,
-      isDisabled: isLoading,
+      isDisabled: isLoading || !isEmptyIdp,
+      useTooltip: isEmptyIdp,
+
       infoAction: (
         <Tooltip
           title="AGNTCY is an open-source identity provider that allows you to manage your own identity and access management system."
@@ -136,7 +149,7 @@ export const IdentityProviderForm = ({isLoading = false}: {isLoading?: boolean})
                   <FormItem className="w-[50%] pr-2">
                     <FormLabel className="form-label">Hostname</FormLabel>
                     <FormControl>
-                      <Input placeholder="Type hostname..." {...field} disabled={isLoading} />
+                      <Input placeholder="Type hostname..." {...field} disabled={isLoading || !isEmptyIdp} />
                     </FormControl>
                   </FormItem>
                 )}
@@ -149,7 +162,7 @@ export const IdentityProviderForm = ({isLoading = false}: {isLoading?: boolean})
                     <FormItem className="w-[50%]">
                       <FormLabel className="form-label">Integration Key</FormLabel>
                       <FormControl>
-                        <Input placeholder="Type integration key..." {...field} disabled={isLoading} />
+                        <Input placeholder="Type integration key..." {...field} disabled={isLoading || !isEmptyIdp} />
                       </FormControl>
                     </FormItem>
                   )}
@@ -185,7 +198,7 @@ export const IdentityProviderForm = ({isLoading = false}: {isLoading?: boolean})
                   <FormItem className="w-[50%] pr-2">
                     <FormLabel className="form-label">Org URL</FormLabel>
                     <FormControl>
-                      <Input placeholder="Type org URL..." {...field} disabled={isLoading} />
+                      <Input placeholder="Type org URL..." {...field} disabled={isLoading || !isEmptyIdp} />
                     </FormControl>
                   </FormItem>
                 )}
@@ -198,7 +211,7 @@ export const IdentityProviderForm = ({isLoading = false}: {isLoading?: boolean})
                     <FormItem className="w-[50%]">
                       <FormLabel className="form-label">Client ID</FormLabel>
                       <FormControl>
-                        <Input placeholder="Type client id..." {...field} disabled={isLoading} />
+                        <Input placeholder="Type client id..." {...field} disabled={isLoading || !isEmptyIdp} />
                       </FormControl>
                     </FormItem>
                   )}
@@ -234,7 +247,7 @@ export const IdentityProviderForm = ({isLoading = false}: {isLoading?: boolean})
                   <FormItem className="w-[50%]">
                     <FormLabel className="form-label">Project Slug</FormLabel>
                     <FormControl>
-                      <Input placeholder="Type the project slug..." {...field} disabled={isLoading} />
+                      <Input placeholder="Type the project slug..." {...field} disabled={isLoading || !isEmptyIdp} />
                     </FormControl>
                   </FormItem>
                 )}

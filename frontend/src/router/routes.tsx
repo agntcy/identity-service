@@ -331,8 +331,7 @@ export const useRoutes = () => {
                   <NodeRoute pageTitle="connect identity provider">
                     <ConnectionIdentityProvider />
                   </NodeRoute>
-                ),
-                disabled: !isEmptyIdp
+                )
               },
               {
                 path: '*',

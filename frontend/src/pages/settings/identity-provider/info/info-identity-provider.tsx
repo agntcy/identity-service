@@ -10,6 +10,8 @@ import {useAnalytics} from '@/hooks';
 import {useGetSettings} from '@/queries';
 import {PATHS} from '@/router/paths';
 import {useSettingsStore} from '@/store';
+import {Button} from '@mui/material';
+import {PencilIcon} from 'lucide-react';
 import {useNavigate, useOutletContext} from 'react-router-dom';
 
 import {useShallow} from 'zustand/react/shallow';
@@ -66,6 +68,21 @@ const InfoIdentityProvider: React.FC = () => {
         }}
       >
         <InformationProvider idpSettings={data?.issuerSettings} />
+        <div className="flex justify-end gap-4 items-center pt-4">
+          <Button
+            loadingPosition="start"
+            startIcon={<PencilIcon className="h-4 w-4" />}
+            className="cursor-pointer"
+            sx={{
+              fontWeight: '600 !important'
+            }}
+            onClick={() => {
+              void navigate(PATHS.settings.identityProvider.connection);
+            }}
+          >
+            Edit
+          </Button>
+        </div>
       </ConditionalQueryRenderer>
     </BasePage>
   );

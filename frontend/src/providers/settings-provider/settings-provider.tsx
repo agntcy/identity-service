@@ -39,11 +39,12 @@ const SettingsProvider = ({children}: {children: React.ReactNode}) => {
     return !dataSettings?.issuerSettings || dataSettings.issuerSettings.idpType === IdpType.IDP_TYPE_UNSPECIFIED;
   }, [dataSettings?.issuerSettings]);
 
-  const {setIsEmptyIdp, setSession, setIsAdmin} = useSettingsStore(
+  const {setIsEmptyIdp, setSession, setIsAdmin, setIssuerSettings} = useSettingsStore(
     useShallow((state) => ({
       setIsEmptyIdp: state.setIsEmptyIdp,
       setSession: state.setSession,
-      setIsAdmin: state.setIsAdmin
+      setIsAdmin: state.setIsAdmin,
+      setIssuerSettings: state.setIssuerSettings
     }))
   );
 
@@ -94,6 +95,10 @@ const SettingsProvider = ({children}: {children: React.ReactNode}) => {
   useEffect(() => {
     setIsEmptyIdp(isEmptyIdp);
   }, [isEmptyIdp, setIsEmptyIdp]);
+
+  useEffect(() => {
+    setIssuerSettings(dataSettings?.issuerSettings);
+  }, [dataSettings?.issuerSettings, setIssuerSettings]);
 
   // Only show loading for session in multi-tenant mode
   const shouldShowLoading = isLoadingSettings || (multiTenantMode && isLoadingSession);
