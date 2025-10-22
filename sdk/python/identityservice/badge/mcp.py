@@ -4,10 +4,13 @@
 """MCP Discover for the Identity Service Python SDK."""
 
 import json
-from typing import List
+from typing import Dict, List
 
+from httpx import HTTPError
 from mcp import ClientSession
 from mcp.client.streamable_http import streamablehttp_client
+
+from identityservice.exceptions import SdkError
 
 MCP_SUFFIX = "/mcp"
 
@@ -111,5 +114,25 @@ async def discover(name: str, url: str) -> str:
                     resources=available_resources,
                 ).to_json()
 
-    except Exception as err:
-        raise err
+    except Exception as e:
+        if isinstance(e, ExceptionGroup):
+            eg: ExceptionGroup = e
+            metadata = _get_http_error_metadata(eg.exceptions[0])
+            raise SdkError(
+                f"MCP client: {str(eg.exceptions[0])}",
+                metadata=metadata,
+                inner_exception=eg,
+            )
+        raise SdkError("MCP server discovery failed", inner_exception=e)
+
+
+def _get_http_error_metadata(err: HTTPError) -> Dict[str, str]:
+    if not isinstance(err, HTTPError):
+        return None
+
+    body = err.request.content.decode("utf-8")
+    return {
+        "url": str(err.request.url),
+        "method": err.request.method,
+        "body": json.loads(body),
+    }
