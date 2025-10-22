@@ -37,7 +37,7 @@ Identity Node->>Identity Node: Sign the Badge using the PrivateKey
 
 ## Dynamic Client Registration (DCR) Proposal
 
-To streamline the registration and management of Agentic Services, we can propose implementing Dynamic Client Registration (DCR) as defined in OAuth 2.0 and OpenID Connect specifications. This would allow Agentic Services to register themselves dynamically with the `Identity Service`, reducing manual configuration and improving interoperability.
+To streamline the registration and management of Agentic Services, this proposal suggests implementing Dynamic Client Registration (DCR) as defined in OAuth 2.0 and OpenID Connect specifications. This would allow Agentic Services to register themselves dynamically with the `Identity Service`, reducing manual configuration and improving interoperability.
 
 However, since there is a new alternative standard called Client ID Metadata (OAuth Client ID Metadata Document), we are considering this approach instead of the traditional DCR.
 
