@@ -21,7 +21,7 @@ autonumber
 
 User->>Identity Service: Register IdP
 Identity Service->>Idp: Verify Permissions
-Idp->Identity Service: Confirmation
+Idp->>Identity Service: Confirmation
 Identity Service->>Identity Service: Store IdP Settings in Vault
 User->>Identity Service: Create Agentic Service using IdP API
 Identity Service->>Idp: Provision ClientCredentials
