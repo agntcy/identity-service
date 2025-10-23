@@ -26,6 +26,13 @@ jobs:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v4.1.7
         with:
           fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      - name: Install Python SDK dependencies
+        run: |
+          cd sdk/python && pip install .[test]
       - name: 🧹 run superlinter
         uses: super-linter/super-linter@2bdd90ed3262e023ac84bf8fe35dc480721fc1f2 # v8.2.1
         env:
@@ -39,6 +46,7 @@ jobs:
           FILTER_REGEX_EXCLUDE: "(.*/charts/.*)|(sdk/python/agntcy/.*)|(sdk/python/google/.*)|(sdk/python/openapiv3/.*)|(samples/.*)"
           PYTHON_RUFF_CONFIG_FILE: "../../sdk/python/pyproject.toml"
           PYTHON_RUFF_FORMAT_CONFIG_FILE: "../../sdk/python/pyproject.toml"
+          PYTHON_PYLINT_CONFIG_FILE: "../../sdk/python/pyproject.toml"
           PYTHON_MYPY_CONFIG_FILE: "../../sdk/python/pyproject.toml"
           VALIDATE_ALL_CODEBASE: false
           VALIDATE_MARKDOWN_PRETTIER: false
