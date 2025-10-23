@@ -121,7 +121,7 @@ class IdentityServiceSdk:
         try:
             auth_response = self.get_auth_service().Authorize(
                 IdentityServiceSdk.AuthorizeRequest(
-                    app_id=resolver_metadata_id,
+                    resolver_metadata_id=resolver_metadata_id,
                     tool_name=tool_name,
                     user_token=user_token,
                 )
