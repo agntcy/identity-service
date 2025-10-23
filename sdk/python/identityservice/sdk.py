@@ -44,7 +44,6 @@ from agntcy.identity.service.v1alpha1.settings_service_pb2_grpc import (
 )
 from identityservice.badge.claims import create_claims
 from identityservice.client import Client
-from identityservice.exceptions import SdkError
 
 logging.getLogger("identityservice").addHandler(logging.NullHandler())
 logger = logging.getLogger("identityservice.sdk")
