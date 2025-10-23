@@ -22,6 +22,7 @@ echo " \____/\___/    \_/\___/  \_|  |_|  \___/ \__\___/ "
 echo ""
 
 Identity_ROOT=${Identity_ROOT:-}
+# shellcheck disable=SC1091
 . "${Identity_ROOT}/protoc.sh"
 cd "${Identity_ROOT}"
 
@@ -182,14 +183,13 @@ cd "${Identity_ROOT}/code/backend/api/spec/proto/"
 echo "[*] Generating Python stub files"
 proto_services=$(find . -iname "*_service\.proto")
 for file in $proto_services; do
-  echo $file
   python3 -m grpc_tools.protoc \
     --mypy_grpc_out="${Identity_ROOT}/code/sdk/python" \
     --proto_path="${Identity_ROOT}/third_party/protos" \
     --proto_path="${Identity_ROOT}/third_party/protos/googleapis" \
     --proto_path="${Identity_ROOT}/third_party/protos/grpc-gateway" \
     --proto_path=. \
-    $file
+    "$file"
 done
 
 cd "${Identity_ROOT}/code/backend/api/spec"
