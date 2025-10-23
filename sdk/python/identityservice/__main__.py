@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 """Main cli for the Identity Service Python SDK."""
 
+import dataclasses
 import grpc
 import typer
 from typing_extensions import Annotated
@@ -15,6 +16,7 @@ from identityservice.error import (
 from identityservice.exceptions import SdkError
 
 
+@dataclasses.dataclass
 class State:
     """A class to represent the global state of the CLI."""
 
@@ -44,7 +46,7 @@ def main(
 if __name__ == "__main__":
     try:
         cli.app()
-    except Exception as e:
+    except Exception as e: # pylint: disable=broad-exception-caught
         if state.debug:
             raise e
         if isinstance(e, grpc.RpcError):

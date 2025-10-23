@@ -56,3 +56,7 @@ exclude = [
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
+
+[tool.pylint]
+prefer-stubs = true
+ignore-paths = ".venv,agntcy,google,build,openapiv3,protoc_gen_openapiv2"

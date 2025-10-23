@@ -6,7 +6,10 @@ from typing import Any, Dict
 
 
 class SdkError(Exception):
-    """A custom SDK exception raised when a domain logic fails or as a wrapper for other exceptions."""
+    """
+    A custom SDK exception raised when a domain
+    logic fails or as a wrapper for other exceptions.
+    """
 
     def __init__(
         self,
