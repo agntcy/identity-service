@@ -298,7 +298,7 @@ The Python SDK provides two functions to integrate `TBAC` in your application:
 ```python
 access_token(
     self,
-    agentic_service_id: str | None = None,
+    resolver_metadata_id: str | None = None,
     tool_name: str | None = None,
     user_token: str | None = None,
 ) -> str | None

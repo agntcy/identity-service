@@ -16,15 +16,15 @@ logger = logging.getLogger("identityservice.auth.httpx")
 class IdentityServiceAuth(httpx.Auth):
     """Httpx authentication class for the Identity Service SDK."""
 
-    def __init__(self, agentic_service_id: str | None = None):
+    def __init__(self, resolver_metadata_id: str | None = None):
         """Initialize the IdentityServiceAuth class."""
-        self.agentic_service_id = agentic_service_id
+        self.resolver_metadata_id = resolver_metadata_id
         self.sdk = Sdk()
 
     def auth_flow(self, request):
         """Add the Authorization header to the request."""
         access_token = self.sdk.access_token(
-            agentic_service_id=self.agentic_service_id
+            resolver_metadata_id=self.resolver_metadata_id
         )
 
         logger.debug("Issued new access token for Identity Service SDK")
@@ -60,13 +60,13 @@ class IdentityServiceMCPAuth(IdentityServiceAuth):
             ) from e
 
         logger.debug(
-            "Request is a protected MCP call for tool: %s and agentic_service_id: %s",
+            "Request is a protected MCP call for tool: %s and resolver_metadata_id: %s",
             tool_name,
-            self.agentic_service_id,
+            self.resolver_metadata_id,
         )
 
         access_token = self.sdk.access_token(
-            tool_name=tool_name, agentic_service_id=self.agentic_service_id
+            tool_name=tool_name, resolver_metadata_id=self.resolver_metadata_id
         )
 
         logger.debug("Issued new access token for Identity Service SDK")
