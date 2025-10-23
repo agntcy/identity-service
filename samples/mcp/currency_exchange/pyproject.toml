@@ -11,7 +11,7 @@ dependencies = [
     "fastapi[standard]",
     "httpx",
     "mcp",
-    "identity-service-sdk",
+    "agntcy-identity-service-sdk>=0.0.7",
 ]
 
 [tool.hatch.build.targets.wheel]
