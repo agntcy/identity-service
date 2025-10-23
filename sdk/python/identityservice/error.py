@@ -6,13 +6,15 @@ import json
 from typing import Dict
 
 import grpc
-from google.rpc import error_details_pb2
-from google.rpc.status_pb2 import Status
 from grpc_status import rpc_status
+
 from rich.console import Console
 from rich.emoji import Emoji
 from rich.panel import Panel
 from rich.text import Text
+
+from google.rpc.status_pb2 import Status
+from google.rpc import error_details_pb2
 
 from identityservice.exceptions import SdkError
 

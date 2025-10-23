@@ -48,4 +48,4 @@ async def _discover(well_known_url: str, url: str) -> str:
             f"A2A client: {e}",
             metadata={"wellKnownUrl": well_known_url},
             inner_exception=e,
-        )
+        ) from e

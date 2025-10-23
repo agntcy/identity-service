@@ -1,11 +1,11 @@
-# pylint: disable=broad-except, too-few-public-methods, no-name-in-module
+# pylint: disable=broad-except, too-few-public-methods
 # Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
 # SPDX-License-Identifier: Apache-2.0
 """Middleware for Starlette that authenticates the Identity Service bearer token."""
 
 import logging
 
-from a2a.types import AgentCard, HTTPAuthSecurityScheme
+from a2a.types import AgentCard, HTTPAuthSecurityScheme # pylint: disable=import-error,no-name-in-module
 from starlette.applications import Starlette
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request

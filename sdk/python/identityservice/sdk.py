@@ -113,6 +113,7 @@ class IdentityServiceSdk:
         tool_name: str | None = None,
         user_token: str | None = None,
     ) -> str | None:
+        # pylint: disable=line-too-long
         """Authorizes an agentic service and returns an access token.
 
         Parameters:
@@ -255,6 +256,7 @@ class IdentityServiceAsyncSdk:
         tool_name: str | None = None,
         user_token: str | None = None,
     ) -> str | None:
+        # pylint: disable=line-too-long
         """Authorizes an agentic service and returns an access token.
 
         Parameters:

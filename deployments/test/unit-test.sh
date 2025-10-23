@@ -2,20 +2,19 @@
 # Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
 # SPDX-License-Identifier: Apache-2.0
 
-DOCKER_FILE=./deployments/docker/frontend/Dockerfile.test
-TEST_COMMAND='yarn run test:coverage'
+run_unit_tests_container() {
+  # $1 -> docker file
+  # $2 -> test command
+
+  # shellcheck disable=SC2086
+  docker run --rm "$(docker build --no-cache -f "$1" -q .)" $2
+}
 
 echo RUNNING FRONTEND TESTS
-docker run --rm "$(docker build --no-cache -f ${DOCKER_FILE} -q .)" $TEST_COMMAND
-
-DOCKER_FILE=./deployments/docker/backend/Dockerfile.test
-TEST_COMMAND='go test -cover -v ./...'
+run_unit_tests_container "./deployments/docker/frontend/Dockerfile.test" "yarn run test:coverage"
 
 echo RUNNING BACKEND TESTS
-docker run --rm "$(docker build --no-cache -f ${DOCKER_FILE} -q .)" $TEST_COMMAND
-
-DOCKER_FILE=./deployments/docker/python/Dockerfile.test
-TEST_COMMAND='pytest -v -s'
+run_unit_tests_container "./deployments/docker/backend/Dockerfile.test" "go test -cover -v ./..."
 
 echo RUNNING PYTHON SDK TESTS
-docker run --rm "$(docker build --no-cache -f ${DOCKER_FILE} -q .)" $TEST_COMMAND
+run_unit_tests_container "./deployments/docker/python/Dockerfile.test" "pytest -v -s"
