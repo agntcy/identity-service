@@ -39,6 +39,7 @@ jobs:
           FILTER_REGEX_EXCLUDE: "(.*/charts/.*)|(sdk/python/agntcy/.*)|(sdk/python/google/.*)|(sdk/python/openapiv3/.*)|(samples/.*)"
           PYTHON_RUFF_CONFIG_FILE: "../../sdk/python/pyproject.toml"
           PYTHON_RUFF_FORMAT_CONFIG_FILE: "../../sdk/python/pyproject.toml"
+          PYTHON_MYPY_CONFIG_FILE: "../../sdk/python/pyproject.toml"
           VALIDATE_ALL_CODEBASE: false
           VALIDATE_MARKDOWN_PRETTIER: false
           VALIDATE_YAML_PRETTIER: false

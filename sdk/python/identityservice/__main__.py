@@ -46,7 +46,7 @@ def main(
 if __name__ == "__main__":
     try:
         cli.app()
-    except Exception as e: # pylint: disable=broad-exception-caught
+    except Exception as e:  # pylint: disable=broad-exception-caught
         if state.debug:
             raise e
         if isinstance(e, grpc.RpcError):

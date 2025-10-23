@@ -5,7 +5,7 @@
 
 import logging
 
-from a2a.types import AgentCard, HTTPAuthSecurityScheme # pylint: disable=import-error,no-name-in-module
+from a2a.types import AgentCard, HTTPAuthSecurityScheme  # pylint: disable=import-error,no-name-in-module
 from starlette.applications import Starlette
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
