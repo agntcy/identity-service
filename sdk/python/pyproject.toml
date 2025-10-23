@@ -18,7 +18,7 @@ license = "Apache-2.0"
 classifiers = [
     "Programming Language :: Python :: 3",
 ]
-dependencies = ["grpcio", "grpcio-status", "googleapis-common-protos", "protobuf", "grpcio-tools", "protoc_gen_openapiv2", "python-dotenv", "mcp (<2.0.0)", "typer", "httpx", "starlette", "a2a-sdk (>=0.2.0)"]
+dependencies = ["grpcio", "grpcio-status", "googleapis-common-protos", "protobuf", "grpcio-tools", "protoc_gen_openapiv2", "python-dotenv", "mcp (<2.0.0)", "typer", "httpx", "starlette", "a2a-sdk (>=0.2.0)", "types-protobuf", "types-grpcio", "types-grpcio-status"]
 
 [project.optional-dependencies]
 test = ["pytest", "pytest-asyncio"]
@@ -60,3 +60,10 @@ convention = "google"
 [tool.pylint]
 prefer-stubs = true
 ignore-paths = ".venv,agntcy,google,build,openapiv3,protoc_gen_openapiv2"
+
+[tool.mypy]
+exclude = "^(protoc_gen_openapiv2)"
+
+[[tool.mypy.overrides]]
+module = ["google.*", "protoc_gen_openapiv2.*"]
+ignore_errors = true

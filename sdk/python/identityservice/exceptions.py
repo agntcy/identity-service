@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 """Contains the custom exceptions raised by the SDK."""
 
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 
 class SdkError(Exception):
@@ -14,8 +14,8 @@ class SdkError(Exception):
     def __init__(
         self,
         message: str,
-        metadata: Dict[str, Any] = None,
-        inner_exception: Exception = None,
+        metadata: Dict[str, Any] = {},
+        inner_exception: Optional[Exception] = None,
     ):
         """Initialize the SdkError object."""
         self.message = message

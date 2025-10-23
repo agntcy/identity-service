@@ -218,37 +218,37 @@ class IdentityServiceAsyncSdk:
         self,
     ) -> "settings_service_pb2_grpc.SettingsServiceAsyncStub":
         """Return the SettingsService async stub."""
-        return SettingsServiceStub(self.client.channel)
+        return SettingsServiceStub(self.client.channel)  # type: ignore
 
     def get_app_service(
         self,
     ) -> "app_service_pb2_grpc.AppServiceAsyncStub":
         """Return the AppService async stub."""
-        return AppServiceStub(self.client.channel)
+        return AppServiceStub(self.client.channel)  # type: ignore
 
     def get_badge_service(
         self,
     ) -> "badge_service_pb2_grpc.BadgeServiceAsyncStub":
         """Return the BadgeService async stub."""
-        return BadgeServiceStub(self.client.channel)
+        return BadgeServiceStub(self.client.channel)  # type: ignore
 
     def get_auth_service(
         self,
     ) -> "auth_service_pb2_grpc.AuthServiceAsyncStub":
         """Return the AuthService async stub."""
-        return AuthServiceStub(self.client.channel)
+        return AuthServiceStub(self.client.channel)  # type: ignore
 
     def get_device_service(
         self,
     ) -> "device_service_pb2_grpc.DeviceServiceAsyncStub":
         """Return the DeviceService async stub."""
-        return DeviceServiceStub(self.client.channel)
+        return DeviceServiceStub(self.client.channel)  # type: ignore
 
     def get_policy_service(
         self,
     ) -> "policy_service_pb2_grpc.PolicyServiceAsyncStub":
         """Return the PolicyServiceStub async stub."""
-        return PolicyServiceStub(self.client.channel)
+        return PolicyServiceStub(self.client.channel)  # type: ignore
 
     async def access_token(
         self,

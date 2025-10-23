@@ -18,7 +18,7 @@ MCP_SUFFIX = "/mcp"
 class McpTool:
     """Represents a tool in the MCP server."""
 
-    def __init__(self, name: str, description: str, parameters: dict):
+    def __init__(self, name: str, description: str | None, parameters: dict):
         """Initialize a McpTool instance."""
         self.name = name
         self.description = description
@@ -28,7 +28,7 @@ class McpTool:
 class McpResource:
     """Represents a resource in the MCP server."""
 
-    def __init__(self, name: str, description: str, uri: str):
+    def __init__(self, name: str, description: str | None, uri: str):
         """Initialize a McpResource instance."""
         self.name = name
         self.description = description
@@ -120,6 +120,7 @@ async def _discover_tools(session: ClientSession):
 
     return available_tools
 
+
 async def _discover_resources(session: ClientSession):
     """Discover MCP server - List resources"""
     resources_response = await session.list_resources()
@@ -137,9 +138,9 @@ async def _discover_resources(session: ClientSession):
     return available_resources
 
 
-def _get_http_error_metadata(err: HTTPError) -> Dict[str, str]:
+def _get_http_error_metadata(err: Exception) -> Dict[str, str]:
     if not isinstance(err, HTTPError):
-        return None
+        return {}
 
     body = err.request.content.decode("utf-8")
     return {

@@ -13,7 +13,7 @@ from identityservice.exceptions import SdkError
 logger = logging.getLogger(__name__)
 
 
-async def create_claims(url: str, service_name: str, service_type: str):
+async def create_claims(url: str, service_name: str, service_type: AppType):
     """Create the input claims for a badge based on the service type."""
     logger.debug("Service Name: [bold blue]%s[/bold blue]", service_name)
     logger.debug("Service Type: [bold blue]%s[/bold blue]", service_type)
@@ -25,7 +25,7 @@ async def create_claims(url: str, service_name: str, service_type: str):
         logger.debug(
             "[bold green]Discovering MCP server for %s at %s[/bold green]",
             service_name,
-            url
+            url,
         )
 
         # Discover the MCP server
@@ -38,7 +38,7 @@ async def create_claims(url: str, service_name: str, service_type: str):
         logger.debug(
             "[bold green]Discovering A2A agent for %s at [bold blue]%s[/bold blue][/bold green]",
             service_name,
-            url
+            url,
         )
 
         # Discover the A2A agent

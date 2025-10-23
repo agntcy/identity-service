@@ -8,7 +8,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import grpc
 import pytest
-from google.protobuf.empty_pb2 import Empty # pylint: disable=no-name-in-module
+from google.protobuf.empty_pb2 import Empty  # pylint: disable=no-name-in-module
 
 from agntcy.identity.service.v1alpha1.app_pb2 import App, AppType
 from agntcy.identity.service.v1alpha1.auth_service_pb2 import (
@@ -39,9 +39,7 @@ class TestAuthorize:
 
     def test_authorize_success(self, sdk_with_mock_client: IdentityServiceSdk):
         """Test authorize should succeed."""
-        with _patch_grpc_service_stub(
-            AuthServiceStub, {"ExtAuthz": Empty()}
-        ):
+        with _patch_grpc_service_stub(AuthServiceStub, {"ExtAuthz": Empty()}):
             ret = sdk_with_mock_client.authorize("token")
 
         assert isinstance(ret, Empty)
