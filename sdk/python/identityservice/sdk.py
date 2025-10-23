@@ -252,14 +252,14 @@ class IdentityServiceAsyncSdk:
 
     async def access_token(
         self,
-        agentic_service_id: str | None = None,
+        resolver_metadata_id: str | None = None,
         tool_name: str | None = None,
         user_token: str | None = None,
     ) -> str | None:
         """Authorizes an agentic service and returns an access token.
 
         Parameters:
-            agentic_service_id (str | None): The ID of the Agentic Service to authorize for.
+            resolver_metadata_id (str | None): The ResolverMetadata ID of the Agentic Service to authorize for.
             tool_name (str | None): The name of the tool to authorize for.
             user_token (str | None): The user token to use for the token.
 
@@ -268,7 +268,7 @@ class IdentityServiceAsyncSdk:
         """
         auth_response = await self.get_auth_service().Authorize(
             AuthorizeRequest(
-                resolver_metadata_id=agentic_service_id,
+                resolver_metadata_id=resolver_metadata_id,
                 tool_name=tool_name,
                 user_token=user_token,
             )
