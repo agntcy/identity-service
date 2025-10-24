@@ -12,9 +12,9 @@ from importlib import import_module
 from pkgutil import iter_modules
 
 import agntcy.identity.service.v1alpha1
+from agntcy.identity.service.v1alpha1.app_pb2 import AppType
 from dotenv import load_dotenv
 from google.protobuf import empty_pb2
-from agntcy.identity.service.v1alpha1.app_pb2 import AppType
 
 from identityservice import client
 from identityservice.badge.a2a import adiscover as adiscover_a2a
@@ -104,14 +104,14 @@ class IdentityServiceSdk:
 
     def access_token(
         self,
-        agentic_service_id: str | None = None,
+        resolver_metadata_id: str | None = None,
         tool_name: str | None = None,
         user_token: str | None = None,
     ) -> str | None:
         """Authorizes an agentic service and returns an access token.
 
         Parameters:
-            agentic_service_id (str | None): The ID of the Agentic Service to authorize for.
+            resolver_metadata_id (str | None): The ResolverMetadata ID of the Agentic Service to authorize for.
             tool_name (str | None): The name of the tool to authorize for.
             user_token (str | None): The user token to use for the token.
 
@@ -121,7 +121,7 @@ class IdentityServiceSdk:
         try:
             auth_response = self.get_auth_service().Authorize(
                 IdentityServiceSdk.AuthorizeRequest(
-                    app_id=agentic_service_id,
+                    resolver_metadata_id=resolver_metadata_id,
                     tool_name=tool_name,
                     user_token=user_token,
                 )
@@ -136,7 +136,7 @@ class IdentityServiceSdk:
             return token_response.access_token
         except Exception as e:
             raise RuntimeError(
-                f"""Failed to authorize agentic service {agentic_service_id}
+                f"""Failed to authorize agentic service {resolver_metadata_id}
                 with tool {tool_name}: {e}"""
             ) from e
 
