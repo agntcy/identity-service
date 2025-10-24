@@ -39,7 +39,7 @@ jobs:
           FILTER_REGEX_EXCLUDE: "(.*/charts/.*)|(sdk/python/agntcy/.*)|(sdk/python/google/.*)|(sdk/python/openapiv3/.*)|(samples/.*)"
           PYTHON_RUFF_CONFIG_FILE: "../../sdk/python/pyproject.toml"
           PYTHON_RUFF_FORMAT_CONFIG_FILE: "../../sdk/python/pyproject.toml"
-          PYTHON_PYLINT_CONFIG_FILE: ".pylintrc"
+          PYTHON_PYLINT_CONFIG_FILE: "../../sdk/python/pyproject.toml"
           PYTHON_MYPY_CONFIG_FILE: "../../sdk/python/pyproject.toml"
           VALIDATE_ALL_CODEBASE: false
           VALIDATE_MARKDOWN_PRETTIER: false
@@ -104,3 +104,47 @@ jobs:
             echo "Validating templates in: $chart_dir"
             helm template "$chart_dir" > /dev/null
           done
+
+  python-lint:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v4.1.7
+      - name: Set up python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+
+      - name: Install Identity SDK dependencies and lint toolings
+        working-directory: ./sdk/python
+        run: |
+          pip install .[test]
+          pip install .[lint]
+
+      - name: Running RUFF linter
+        working-directory: ./sdk/python
+        run: |
+          ruff --config pyproject.toml check .
+
+      - name: Running RUFF formatter
+        working-directory: ./sdk/python
+        run: |
+          ruff --config pyproject.toml format --check
+
+      - name: Running PYLINT
+        working-directory: ./sdk/python
+        run: |
+          pylint .
+
+      - name: Running MYPY
+        working-directory: ./sdk/python
+        run: |
+          echo "Remove unsued imports related to protoc_gen_openapiv2"
+          ruff check --select F401 agntcy --fix
+
+          echo "Running mypy on identityservice/"
+          mypy identityservice/
+
+          echo "Running mypy on tests/"
+          mypy tests/

@@ -22,6 +22,7 @@ dependencies = ["grpcio", "grpcio-status", "googleapis-common-protos", "protobuf
 
 [project.optional-dependencies]
 test = ["pytest", "pytest-asyncio"]
+lint = ["pylint", "ruff", "mypy"]
 
 [project.urls]
 "Homepage" = "https://github.com/agntcy/identity-service/sdk/python"
@@ -50,6 +51,9 @@ exclude = [
   "google",
   "openapiv3"
 ]
+
+[tool.ruff.format]
+docstring-code-format = true
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["D104", "F401", "F403"]
