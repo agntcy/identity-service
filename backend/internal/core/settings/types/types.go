@@ -76,7 +76,7 @@ type OryIdpSettings struct {
 type KeycloakIdpSettings struct {
 	BaseUrl      string `json:"base_url,omitempty"      protobuf:"bytes,1,opt,name=base_url"`
 	Realm        string `json:"realm,omitempty"         protobuf:"bytes,2,opt,name=realm"`
-	ClientId     string `json:"client_id,omitempty"     protobuf:"bytes,3,opt,name=client_id"`
+	ClientID     string `json:"client_id,omitempty"     protobuf:"bytes,3,opt,name=client_id"`
 	ClientSecret string `json:"client_secret,omitempty" protobuf:"bytes,4,opt,name=client_secret"`
 }
 

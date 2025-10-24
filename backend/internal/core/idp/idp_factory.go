@@ -35,6 +35,8 @@ func (f *idpFactory) Create(
 		idp = NewOryIdp(issuerSettings.OryIdpSettings)
 	case types.IDP_TYPE_SELF:
 		idp = NewSelfIdp()
+	case types.IDP_TYPE_KEYCLOAK:
+		idp = NewKeycloakIdp(issuerSettings.KeycloakIdpSettings)
 	default:
 		return nil, fmt.Errorf("unknown IDP type %s", issuerSettings.IdpType)
 	}
