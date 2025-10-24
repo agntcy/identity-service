@@ -5,6 +5,8 @@
 
 package types
 
+import "time"
+
 // Type
 type IdpType int
 
@@ -112,6 +114,13 @@ type IssuerSettings struct {
 	// Settings for the Keycloak Identity Provider.
 	// +field_behavior:OPTIONAL
 	KeycloakIdpSettings *KeycloakIdpSettings `json:"keycloak_idp_settings,omitempty" protobuf:"bytes,7,opt,name=keycloak_idp_settings"` //nolint:lll // struct tags exceed line length
+
+	// CreatedAt records the timestamp of when the IssuerSettings was initially created
+	// +field_behavior:OUTPUT_ONLY
+	CreatedAt time.Time `json:"created_at" protobuf:"google.protobuf.Timestamp,8,opt,name=created_at"`
+
+	// UpdatedAt records the timestamp of the last update to the IssuerSettings
+	UpdatedAt *time.Time `json:"updated_at,omitempty" protobuf:"-"`
 }
 
 // Identity Settings

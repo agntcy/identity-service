@@ -4,7 +4,11 @@
 package postgres
 
 import (
+	"database/sql"
+	"time"
+
 	"github.com/agntcy/identity-service/internal/core/settings/types"
+	"github.com/agntcy/identity-service/internal/pkg/pgutil"
 	"github.com/agntcy/identity-service/internal/pkg/ptrutil"
 	"github.com/agntcy/identity-service/internal/pkg/secrets"
 	"github.com/google/uuid"
@@ -24,6 +28,8 @@ type IssuerSettings struct {
 	OryIdpSettings        *OryIdpSettings
 	KeycloakIdpSettingsID *uuid.UUID `gorm:"foreignKey:ID"`
 	KeycloakIdpSettings   *KeycloakIdpSettings
+	CreatedAt             time.Time
+	UpdatedAt             sql.NullTime
 }
 
 type DuoIdpSettings struct {
@@ -121,6 +127,8 @@ func (i *IssuerSettings) ToCoreType(crypter secrets.Crypter) *types.IssuerSettin
 		OktaIdpSettings:     i.OktaIdpSettings.ToCoreType(crypter),
 		OryIdpSettings:      i.OryIdpSettings.ToCoreType(crypter),
 		KeycloakIdpSettings: i.KeycloakIdpSettings.ToCoreType(crypter),
+		CreatedAt:           i.CreatedAt,
+		UpdatedAt:           pgutil.SqlNullTimeToTime(i.UpdatedAt),
 	}
 }
 
@@ -181,5 +189,7 @@ func newIssuerSettingsModel(src *types.IssuerSettings, crypter secrets.Crypter) 
 		OktaIdpSettings:     newOktaIdpSettingsModel(src.OktaIdpSettings, crypter),
 		OryIdpSettings:      newOryIdpSettingsModel(src.OryIdpSettings, crypter),
 		KeycloakIdpSettings: newKeycloakIdpSettingsModel(src.KeycloakIdpSettings, crypter),
+		CreatedAt:           src.CreatedAt,
+		UpdatedAt:           pgutil.TimeToSqlNullTime(src.UpdatedAt),
 	}
 }
