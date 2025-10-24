@@ -41,9 +41,23 @@ do_set_current_ip() {
 #######################################
 do_setup_oidc() {
   echo "Setting up OIDC configuration..."
+  
+  # Check if client already exists
+  echo "Checking if client '$HYDRA_SPA_APP_ID' already exists..."
+  if "$HYDRA_BINARY" get client "$HYDRA_SPA_APP_ID" --endpoint "http://${current_ip}:4445" >/dev/null 2>&1; then
+    echo "Client '$HYDRA_SPA_APP_ID' already exists. Deleting and recreating..."
+    
+    # Delete the existing client
+    if ! "$HYDRA_BINARY" delete client "$HYDRA_SPA_APP_ID" --endpoint "http://${current_ip}:4445"; then
+      echo "Failed to delete existing client. Continuing anyway..."
+    fi
+    
+    # Wait a moment for the deletion to process
+    sleep 2
+  fi
 
   # Create a new hydra application
-  _=$("$HYDRA_BINARY" create client \
+  if ! "$HYDRA_BINARY" create client \
     --endpoint "http://${current_ip}:4445" \
     --id "$HYDRA_SPA_APP_ID" --audience api://default \
     --skip-consent --skip-logout-consent \
@@ -51,7 +65,10 @@ do_setup_oidc() {
     --response-type code \
     --scope offline_access,offline,email,openid,profile \
     --token-endpoint-auth-method none \
-    --redirect-uri http://localhost:5500 2>/dev/null)
+    --redirect-uri http://localhost:5500; then
+    echo "Failed to create Hydra client. Check if Hydra admin API is accessible."
+    return 1
+  fi
 
   echo "Hydra application '$HYDRA_SPA_APP_ID' created."
 
