@@ -42,7 +42,12 @@ func (k *KeycloakIdp) TestSettings(ctx context.Context) error {
 		strings.TrimSuffix(k.settings.BaseUrl, "/"),
 		k.settings.Realm)
 
-	resp, err := http.Get(realmURL)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, realmURL, http.NoBody)
+	if err != nil {
+		return fmt.Errorf("failed to create request: %w", err)
+	}
+
+	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return fmt.Errorf("failed to connect to Keycloak: %w", err)
 	}
@@ -50,6 +55,7 @@ func (k *KeycloakIdp) TestSettings(ctx context.Context) error {
 
 	if resp.StatusCode != http.StatusOK {
 		body, _ := io.ReadAll(resp.Body)
+
 		return fmt.Errorf("failed to connect to Keycloak realm: status %d, body: %s",
 			resp.StatusCode, string(body))
 	}
@@ -70,6 +76,7 @@ func (k *KeycloakIdp) CreateClientCredentialsPair(
 
 	// Get admin access token
 	accessToken, err := k.getAccessToken(ctx)
+
 	if err != nil {
 		return nil, fmt.Errorf("failed to get admin access token: %w", err)
 	}
@@ -112,7 +119,7 @@ func (k *KeycloakIdp) DeleteClientCredentialsPair(
 		k.settings.Realm,
 		internalClientID)
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodDelete, clientURL, nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodDelete, clientURL, http.NoBody)
 	if err != nil {
 		return fmt.Errorf("failed to create delete request: %w", err)
 	}
@@ -120,6 +127,7 @@ func (k *KeycloakIdp) DeleteClientCredentialsPair(
 	req.Header.Set("Authorization", "Bearer "+accessToken)
 
 	resp, err := http.DefaultClient.Do(req)
+
 	if err != nil {
 		return fmt.Errorf("failed to delete client: %w", err)
 	}
@@ -155,6 +163,7 @@ func (k *KeycloakIdp) getAccessToken(ctx context.Context) (string, error) {
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	resp, err := http.DefaultClient.Do(req)
+
 	if err != nil {
 		return "", fmt.Errorf("failed to get token: %w", err)
 	}
@@ -231,7 +240,7 @@ func (k *KeycloakIdp) createClient(ctx context.Context, accessToken, clientID st
 		k.settings.Realm,
 		internalClientID)
 
-	req, err = http.NewRequestWithContext(ctx, http.MethodGet, secretURL, nil)
+	req, err = http.NewRequestWithContext(ctx, http.MethodGet, secretURL, http.NoBody)
 	if err != nil {
 		return "", fmt.Errorf("failed to create secret request: %w", err)
 	}
@@ -267,7 +276,7 @@ func (k *KeycloakIdp) getClientInternalID(ctx context.Context, accessToken, clie
 		k.settings.Realm,
 		url.QueryEscape(clientID))
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, clientsURL, nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, clientsURL, http.NoBody)
 	if err != nil {
 		return "", fmt.Errorf("failed to create request: %w", err)
 	}
