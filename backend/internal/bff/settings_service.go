@@ -8,6 +8,7 @@ import (
 	"fmt"
 
 	iamtypes "github.com/agntcy/identity-service/internal/core/iam/types"
+	idpcore "github.com/agntcy/identity-service/internal/core/idp"
 	settingscore "github.com/agntcy/identity-service/internal/core/settings"
 	settingstypes "github.com/agntcy/identity-service/internal/core/settings/types"
 	"github.com/agntcy/identity-service/internal/pkg/errutil"
@@ -29,17 +30,20 @@ type settingsService struct {
 	issuerSrv          settingscore.IssuerService
 	iamClient          iam.Client
 	settingsRepository settingscore.Repository
+	idpFactory         idpcore.IdpFactory
 }
 
 func NewSettingsService(
 	issuerSrv settingscore.IssuerService,
 	iamClient iam.Client,
 	settingsRepository settingscore.Repository,
+	idpFactory idpcore.IdpFactory,
 ) SettingsService {
 	return &settingsService{
 		issuerSrv:          issuerSrv,
 		iamClient:          iamClient,
 		settingsRepository: settingsRepository,
+		idpFactory:         idpFactory,
 	}
 }
 
@@ -108,10 +112,7 @@ func (s *settingsService) SetIssuerSettings(
 
 	existingSettings, err := s.settingsRepository.GetIssuerSettings(ctx)
 	if err == nil && existingSettings.IssuerID != "" {
-		return nil, errutil.InvalidRequest(
-			"settings.updateNotSupported",
-			"Updating existing issuer settings is not supported.",
-		)
+		return s.updateIssuerSettings(ctx, existingSettings, issuerSettings)
 	}
 
 	// Set the issuer id based on the issuer settings.
@@ -124,6 +125,65 @@ func (s *settingsService) SetIssuerSettings(
 	updatedSettings, err := s.settingsRepository.UpdateIssuerSettings(ctx, issuerSettings)
 	if err != nil {
 		return nil, fmt.Errorf("repository in SetIssuer failed to update issuer settings: %w", err)
+	}
+
+	return updatedSettings, nil
+}
+
+func (s *settingsService) updateIssuerSettings(
+	ctx context.Context,
+	issuerSettings *settingstypes.IssuerSettings,
+	updatePayload *settingstypes.IssuerSettings,
+) (*settingstypes.IssuerSettings, error) {
+	if issuerSettings.IdpType != updatePayload.IdpType {
+		return nil, errutil.InvalidRequest("settings.invalidIdpType", "Invalid IdP type in the update payload.")
+	}
+
+	switch issuerSettings.IdpType {
+	case settingstypes.IDP_TYPE_DUO:
+		if updatePayload.DuoIdpSettings == nil || updatePayload.DuoIdpSettings.SecretKey == "" {
+			return nil, errutil.ValidationFailed(
+				"settings.invalidDuoUpdatePayload",
+				"Invalid Duo settings payload. Make sure the secret key is not empty.",
+			)
+		}
+
+		issuerSettings.DuoIdpSettings.SecretKey = updatePayload.DuoIdpSettings.SecretKey
+	case settingstypes.IDP_TYPE_OKTA:
+		if updatePayload.OktaIdpSettings == nil || updatePayload.OktaIdpSettings.PrivateKey == "" {
+			return nil, errutil.ValidationFailed(
+				"settings.invalidOktaUpdatePayload",
+				"Invalid Okta settings payload. Make sure the private key is not empty.",
+			)
+		}
+
+		issuerSettings.OktaIdpSettings.PrivateKey = updatePayload.OktaIdpSettings.PrivateKey
+	case settingstypes.IDP_TYPE_ORY:
+		if updatePayload.OryIdpSettings == nil || updatePayload.OryIdpSettings.ApiKey == "" {
+			return nil, errutil.ValidationFailed(
+				"settings.invalidOryUpdatePayload",
+				"Invalid Ory settings payload. Make sure the API key is not empty.",
+			)
+		}
+
+		issuerSettings.OryIdpSettings.ApiKey = updatePayload.OryIdpSettings.ApiKey
+	default:
+		return nil, errutil.InvalidRequest(
+			"settings.updateNotSupported",
+			"Updating existing issuer settings is not supported for IdP type %s.",
+			issuerSettings.IdpType,
+		)
+	}
+
+	// Validate the new settings by trying to connect to the IdP
+	_, err := s.idpFactory.Create(ctx, updatePayload)
+	if err != nil {
+		return nil, fmt.Errorf("idp factory in updateIssuerSettings failed to create an IdP instance: %w", err)
+	}
+
+	updatedSettings, err := s.settingsRepository.UpdateIssuerSettings(ctx, issuerSettings)
+	if err != nil {
+		return nil, fmt.Errorf("repository in updateIssuerSettings failed to update issuer settings: %w", err)
 	}
 
 	return updatedSettings, nil

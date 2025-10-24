@@ -377,6 +377,7 @@ func initializeServices(
 		issuerSrv,
 		iamClient,
 		settingsRepository,
+		idpFactory,
 	)
 	badgeSrv := bff.NewBadgeService(
 		settingsRepository,

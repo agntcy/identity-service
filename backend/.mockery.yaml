@@ -41,6 +41,7 @@ packages:
   github.com/agntcy/identity-service/internal/core/idp:
     interfaces:
       CredentialStore: {}
+      IdpFactory: {}
   github.com/agntcy/identity-service/internal/core/identity:
     interfaces:
       KeyStore: {}
