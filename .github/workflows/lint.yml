@@ -119,23 +119,20 @@ jobs:
       - name: Install Identity SDK dependencies and lint toolings
         working-directory: ./sdk/python
         run: |
-          pip install .[test]
-          pip install .[lint]
+          pip install ".[test]"
+          pip install ".[lint]"
 
       - name: Running RUFF linter
         working-directory: ./sdk/python
-        run: |
-          ruff --config pyproject.toml check .
+        run: ruff --config pyproject.toml check .
 
       - name: Running RUFF formatter
         working-directory: ./sdk/python
-        run: |
-          ruff --config pyproject.toml format --check
+        run: ruff --config pyproject.toml format --check
 
       - name: Running PYLINT
         working-directory: ./sdk/python
-        run: |
-          pylint .
+        run: pylint .
 
       - name: Running MYPY
         working-directory: ./sdk/python
