@@ -46,7 +46,7 @@ const InfoIdentityProvider: React.FC = () => {
       ]}
       rightSideItems={
         !isEmptyIdp ? (
-          <div className="flex justify-end gap-4 items-center pt-4">
+          <div className="flex justify-end gap-4 items-center">
             <Button
               loadingPosition="start"
               variant="secondary"
