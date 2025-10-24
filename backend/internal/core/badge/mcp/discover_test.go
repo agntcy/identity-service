@@ -52,6 +52,7 @@ func TestDiscover(t *testing.T) {
 				server.WithSSEContextFunc(func(ctx context.Context, r *http.Request) context.Context {
 					ctx = context.WithValue(ctx, testHeaderKey, r.Header.Get("X-Test-Header"))
 					ctx = context.WithValue(ctx, testHeaderFuncKey, r.Header.Get("X-Test-Header-Func"))
+
 					return ctx
 				}),
 			),

@@ -109,7 +109,7 @@ type IssuerSettings struct {
 
 	// Settings for the Keycloak Identity Provider.
 	// +field_behavior:OPTIONAL
-	KeycloakIdpSettings *KeycloakIdpSettings `json:"keycloak_idp_settings,omitempty" protobuf:"bytes,7,opt,name=keycloak_idp_settings"` //nolint:lll
+	KeycloakIdpSettings *KeycloakIdpSettings `json:"keycloak_idp_settings,omitempty" protobuf:"bytes,7,opt,name=keycloak_idp_settings"` //nolint:lll // struct tags exceed line length
 }
 
 // Identity Settings
