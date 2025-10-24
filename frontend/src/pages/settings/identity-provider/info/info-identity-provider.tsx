@@ -71,6 +71,7 @@ const InfoIdentityProvider: React.FC = () => {
         <div className="flex justify-end gap-4 items-center pt-4">
           <Button
             loadingPosition="start"
+            variant='secondary'
             startIcon={<PencilIcon className="h-4 w-4" />}
             className="cursor-pointer"
             sx={{
