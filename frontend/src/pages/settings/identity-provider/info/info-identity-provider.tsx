@@ -44,6 +44,26 @@ const InfoIdentityProvider: React.FC = () => {
           text: 'Identity Provider'
         }
       ]}
+      rightSideItems={
+        !isEmptyIdp ? (
+          <div className="flex justify-end gap-4 items-center pt-4">
+            <Button
+              loadingPosition="start"
+              variant="secondary"
+              startIcon={<PencilIcon className="h-4 w-4" />}
+              className="cursor-pointer"
+              sx={{
+                fontWeight: '600 !important'
+              }}
+              onClick={() => {
+                void navigate(PATHS.settings.identityProvider.connection);
+              }}
+            >
+              Edit
+            </Button>
+          </div>
+        ) : undefined
+      }
     >
       <ConditionalQueryRenderer
         itemName="Identity Provider"
@@ -68,22 +88,6 @@ const InfoIdentityProvider: React.FC = () => {
         }}
       >
         <InformationProvider idpSettings={data?.issuerSettings} />
-        <div className="flex justify-end gap-4 items-center pt-4">
-          <Button
-            loadingPosition="start"
-            variant="secondary"
-            startIcon={<PencilIcon className="h-4 w-4" />}
-            className="cursor-pointer"
-            sx={{
-              fontWeight: '600 !important'
-            }}
-            onClick={() => {
-              void navigate(PATHS.settings.identityProvider.connection);
-            }}
-          >
-            Edit
-          </Button>
-        </div>
       </ConditionalQueryRenderer>
     </BasePage>
   );
