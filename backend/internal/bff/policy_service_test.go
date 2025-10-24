@@ -81,6 +81,7 @@ func TestPolicyService_CreatePolicy_should_return_err_when_app_validation_fails(
 
 				appRepo := appmocks.NewRepository(t)
 				appRepo.EXPECT().GetAppsByID(ctx, mock.Anything).Return(nil, errors.New("error"))
+
 				return appRepo
 			},
 			errMsg: "failed to fetch apps",
@@ -91,6 +92,7 @@ func TestPolicyService_CreatePolicy_should_return_err_when_app_validation_fails(
 
 				appRepo := appmocks.NewRepository(t)
 				appRepo.EXPECT().GetAppsByID(ctx, mock.Anything).Return([]*apptypes.App{}, nil)
+
 				return appRepo
 			},
 			errMsg: "not found",

@@ -76,13 +76,13 @@ func (k *KeycloakIdp) CreateClientCredentialsPair(
 
 	// Get admin access token
 	accessToken, err := k.getAccessToken(ctx)
-
 	if err != nil {
 		return nil, fmt.Errorf("failed to get admin access token: %w", err)
 	}
 
 	// Create a new client in Keycloak
 	clientID := getName()
+
 	clientSecret, err := k.createClient(ctx, accessToken, clientID)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create client in Keycloak: %w", err)
@@ -127,14 +127,15 @@ func (k *KeycloakIdp) DeleteClientCredentialsPair(
 	req.Header.Set("Authorization", "Bearer "+accessToken)
 
 	resp, err := http.DefaultClient.Do(req)
-
 	if err != nil {
 		return fmt.Errorf("failed to delete client: %w", err)
 	}
+
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusNoContent && resp.StatusCode != http.StatusOK {
 		body, _ := io.ReadAll(resp.Body)
+
 		return fmt.Errorf("failed to delete client: status %d, body: %s",
 			resp.StatusCode, string(body))
 	}
@@ -163,14 +164,15 @@ func (k *KeycloakIdp) getAccessToken(ctx context.Context) (string, error) {
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	resp, err := http.DefaultClient.Do(req)
-
 	if err != nil {
 		return "", fmt.Errorf("failed to get token: %w", err)
 	}
+
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
 		body, _ := io.ReadAll(resp.Body)
+
 		return "", fmt.Errorf("failed to get token: status %d, body: %s",
 			resp.StatusCode, string(body))
 	}
@@ -224,6 +226,7 @@ func (k *KeycloakIdp) createClient(ctx context.Context, accessToken, clientID st
 
 	if resp.StatusCode != http.StatusCreated {
 		body, _ := io.ReadAll(resp.Body)
+
 		return "", fmt.Errorf("failed to create client: status %d, body: %s",
 			resp.StatusCode, string(body))
 	}
@@ -255,6 +258,7 @@ func (k *KeycloakIdp) createClient(ctx context.Context, accessToken, clientID st
 
 	if resp.StatusCode != http.StatusOK {
 		body, _ := io.ReadAll(resp.Body)
+
 		return "", fmt.Errorf("failed to get client secret: status %d, body: %s",
 			resp.StatusCode, string(body))
 	}
@@ -291,6 +295,7 @@ func (k *KeycloakIdp) getClientInternalID(ctx context.Context, accessToken, clie
 
 	if resp.StatusCode != http.StatusOK {
 		body, _ := io.ReadAll(resp.Body)
+
 		return "", fmt.Errorf("failed to get clients: status %d, body: %s",
 			resp.StatusCode, string(body))
 	}
