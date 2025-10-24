@@ -14,7 +14,7 @@ class SdkError(Exception):
     def __init__(
         self,
         message: str,
-        metadata: Dict[str, Any] = {},
+        metadata: Optional[Dict[str, Any]] = None,
         inner_exception: Optional[Exception] = None,
     ):
         """Initialize the SdkError object."""
