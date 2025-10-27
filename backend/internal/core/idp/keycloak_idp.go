@@ -251,6 +251,7 @@ func (k *KeycloakIdp) createClient(ctx context.Context, accessToken, clientID st
 		if err != nil {
 			return fmt.Errorf("failed to read response body: %w", err)
 		}
+
 		return fmt.Errorf("failed to create client: status %d, body: %s",
 			resp.StatusCode, string(body))
 	}
@@ -282,6 +283,7 @@ func (k *KeycloakIdp) getClientInternalID(ctx context.Context, accessToken, clie
 		if err != nil {
 			return "", fmt.Errorf("failed to read response body: %w", err)
 		}
+
 		return "", fmt.Errorf("failed to get clients: status %d, body: %s",
 			resp.StatusCode, string(body))
 	}
@@ -326,6 +328,7 @@ func (k *KeycloakIdp) getClientSecret(ctx context.Context, accessToken, internal
 		if err != nil {
 			return "", fmt.Errorf("failed to read response body: %w", err)
 		}
+
 		return "", fmt.Errorf("failed to get client secret: status %d, body: %s",
 			resp.StatusCode, string(body))
 	}
