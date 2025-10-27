@@ -18,8 +18,9 @@ const _RuleAction_name = "RULE_ACTION_UNSPECIFIEDRULE_ACTION_ALLOWRULE_ACTION_DE
 var _RuleAction_index = [...]uint8{0, 23, 40, 56}
 
 func (i RuleAction) String() string {
-	if i < 0 || i >= RuleAction(len(_RuleAction_index)-1) {
+	idx := int(i) - 0
+	if i < 0 || idx >= len(_RuleAction_index)-1 {
 		return "RuleAction(" + strconv.FormatInt(int64(i), 10) + ")"
 	}
-	return _RuleAction_name[_RuleAction_index[i]:_RuleAction_index[i+1]]
+	return _RuleAction_name[_RuleAction_index[idx]:_RuleAction_index[idx+1]]
 }

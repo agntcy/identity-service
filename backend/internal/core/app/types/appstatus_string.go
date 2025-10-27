@@ -19,8 +19,9 @@ const _AppStatus_name = "APP_STATUS_UNSPECIFIEDAPP_STATUS_ACTIVEAPP_STATUS_PENDI
 var _AppStatus_index = [...]uint8{0, 22, 39, 57, 75}
 
 func (i AppStatus) String() string {
-	if i < 0 || i >= AppStatus(len(_AppStatus_index)-1) {
+	idx := int(i) - 0
+	if i < 0 || idx >= len(_AppStatus_index)-1 {
 		return "AppStatus(" + strconv.FormatInt(int64(i), 10) + ")"
 	}
-	return _AppStatus_name[_AppStatus_index[i]:_AppStatus_index[i+1]]
+	return _AppStatus_name[_AppStatus_index[idx]:_AppStatus_index[idx+1]]
 }
