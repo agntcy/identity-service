@@ -101,6 +101,7 @@ func (s *issuerService) SetIssuer(
 	// Set the issuer ID and key ID in the issuer settings.
 	issuerSettings.IssuerID = issuer.CommonName
 	issuerSettings.KeyID = issuer.KeyID
+	issuerSettings.ClientID = clientCredentials.ClientID
 
 	return nil
 }
