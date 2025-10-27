@@ -65,3 +65,23 @@ func TestFromOryIdpSettings(t *testing.T) {
 		ApiKey:      ptrutil.Ptr("*****thing"),
 	}, dst)
 }
+
+func TestFromKeycloakIdpSettings(t *testing.T) {
+	t.Parallel()
+
+	src := &settingstypes.KeycloakIdpSettings{
+		BaseUrl:      uuid.NewString(),
+		Realm:        uuid.NewString(),
+		ClientID:     uuid.NewString(),
+		ClientSecret: "something",
+	}
+
+	dst := converters.FromKeycloakIdpSettings(src)
+
+	assert.Equal(t, &identity_service_sdk_go.KeycloakIdpSettings{
+		BaseUrl:      &src.BaseUrl,
+		Realm:        &src.Realm,
+		ClientId:     &src.ClientID,
+		ClientSecret: ptrutil.Ptr("*****thing"),
+	}, dst)
+}
