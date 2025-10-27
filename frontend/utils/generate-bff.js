@@ -17,9 +17,7 @@ const path = require('path');
 
     // Globals
     const IDENTITY_V1ALPHA1_PROTO_PATH = 'proto/agntcy/identity/service/v1alpha1';
-    // const SHARED_V1ALPHA1_PROTO_PATH = "proto/agntcy/identity/service/shared/v1alpha1";
     const IDENTITY_V1ALPHA1_GENERATED_PATH = 'agntcy/identity/service/v1alpha1';
-    // const SHARED_V1ALPHA1_GENERATED_PATH = "agntcy/identity/service/shared/v1alpha1";
 
     async function doRenameAndConvert(inputDir, outputDir) {
       shell.mkdir('-p', outputDir);
