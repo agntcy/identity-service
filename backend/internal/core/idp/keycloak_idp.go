@@ -88,9 +88,21 @@ func (k *KeycloakIdp) CreateClientCredentialsPair(
 	// Create a new client in Keycloak
 	clientID := getName()
 
-	clientSecret, err := k.createClient(ctx, accessToken, clientID)
+	err = k.createClient(ctx, accessToken, clientID)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create client in Keycloak: %w", err)
+	}
+
+	// Get the client's internal ID
+	internalClientID, err := k.getClientInternalID(ctx, accessToken, clientID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get client internal ID: %w", err)
+	}
+
+	// Get the client secret
+	clientSecret, err := k.getClientSecret(ctx, accessToken, internalClientID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get client secret: %w", err)
 	}
 
 	return &ClientCredentials{
@@ -193,7 +205,7 @@ func (k *KeycloakIdp) getAccessToken(ctx context.Context) (string, error) {
 	return tokenResp.AccessToken, nil
 }
 
-func (k *KeycloakIdp) createClient(ctx context.Context, accessToken, clientID string) (string, error) {
+func (k *KeycloakIdp) createClient(ctx context.Context, accessToken, clientID string) error {
 	clientsURL := fmt.Sprintf("%s/admin/realms/%s/clients",
 		strings.TrimSuffix(k.settings.BaseUrl, "/"),
 		k.settings.Realm)
@@ -211,13 +223,13 @@ func (k *KeycloakIdp) createClient(ctx context.Context, accessToken, clientID st
 
 	jsonData, err := json.Marshal(clientData)
 	if err != nil {
-		return "", fmt.Errorf("failed to marshal client data: %w", err)
+		return fmt.Errorf("failed to marshal client data: %w", err)
 	}
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, clientsURL,
 		strings.NewReader(string(jsonData)))
 	if err != nil {
-		return "", fmt.Errorf("failed to create client request: %w", err)
+		return fmt.Errorf("failed to create client request: %w", err)
 	}
 
 	req.Header.Set("Authorization", "Bearer "+accessToken)
@@ -225,30 +237,20 @@ func (k *KeycloakIdp) createClient(ctx context.Context, accessToken, clientID st
 
 	resp, err := k.httpClient.Do(req)
 	if err != nil {
-		return "", fmt.Errorf("failed to create client: %w", err)
+		return fmt.Errorf("failed to create client: %w", err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusCreated {
-		body, _ := io.ReadAll(resp.Body)
-
-		return "", fmt.Errorf("failed to create client: status %d, body: %s",
+		body, err := io.ReadAll(resp.Body)
+		if err != nil {
+			return fmt.Errorf("failed to read response body: %w", err)
+		}
+		return fmt.Errorf("failed to create client: status %d, body: %s",
 			resp.StatusCode, string(body))
 	}
 
-	// Get the client's internal ID from Location header or by querying
-	internalClientID, err := k.getClientInternalID(ctx, accessToken, clientID)
-	if err != nil {
-		return "", fmt.Errorf("failed to get client internal ID: %w", err)
-	}
-
-	// Get the client secret
-	clientSecret, err := k.getClientSecret(ctx, accessToken, internalClientID)
-	if err != nil {
-		return "", fmt.Errorf("failed to get client secret: %w", err)
-	}
-
-	return clientSecret, nil
+	return nil
 }
 
 func (k *KeycloakIdp) getClientInternalID(ctx context.Context, accessToken, clientID string) (string, error) {
@@ -271,8 +273,10 @@ func (k *KeycloakIdp) getClientInternalID(ctx context.Context, accessToken, clie
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		body, _ := io.ReadAll(resp.Body)
-
+		body, err := io.ReadAll(resp.Body)
+		if err != nil {
+			return "", fmt.Errorf("failed to read response body: %w", err)
+		}
 		return "", fmt.Errorf("failed to get clients: status %d, body: %s",
 			resp.StatusCode, string(body))
 	}
