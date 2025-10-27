@@ -243,40 +243,12 @@ func (k *KeycloakIdp) createClient(ctx context.Context, accessToken, clientID st
 	}
 
 	// Get the client secret
-	secretURL := fmt.Sprintf("%s/admin/realms/%s/clients/%s/client-secret",
-		strings.TrimSuffix(k.settings.BaseUrl, "/"),
-		k.settings.Realm,
-		internalClientID)
-
-	req, err = http.NewRequestWithContext(ctx, http.MethodGet, secretURL, http.NoBody)
-	if err != nil {
-		return "", fmt.Errorf("failed to create secret request: %w", err)
-	}
-
-	req.Header.Set("Authorization", "Bearer "+accessToken)
-
-	resp, err = k.httpClient.Do(req)
+	clientSecret, err := k.getClientSecret(ctx, accessToken, internalClientID)
 	if err != nil {
 		return "", fmt.Errorf("failed to get client secret: %w", err)
 	}
-	defer resp.Body.Close()
 
-	if resp.StatusCode != http.StatusOK {
-		body, _ := io.ReadAll(resp.Body)
-
-		return "", fmt.Errorf("failed to get client secret: status %d, body: %s",
-			resp.StatusCode, string(body))
-	}
-
-	var secretResp struct {
-		Value string `json:"value"`
-	}
-
-	if err := json.NewDecoder(resp.Body).Decode(&secretResp); err != nil {
-		return "", fmt.Errorf("failed to decode secret response: %w", err)
-	}
-
-	return secretResp.Value, nil
+	return clientSecret, nil
 }
 
 func (k *KeycloakIdp) getClientInternalID(ctx context.Context, accessToken, clientID string) (string, error) {
@@ -319,4 +291,43 @@ func (k *KeycloakIdp) getClientInternalID(ctx context.Context, accessToken, clie
 	}
 
 	return clients[0].ID, nil
+}
+
+func (k *KeycloakIdp) getClientSecret(ctx context.Context, accessToken, internalClientID string) (string, error) {
+	secretURL := fmt.Sprintf("%s/admin/realms/%s/clients/%s/client-secret",
+		strings.TrimSuffix(k.settings.BaseUrl, "/"),
+		k.settings.Realm,
+		internalClientID)
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, secretURL, http.NoBody)
+	if err != nil {
+		return "", fmt.Errorf("failed to create secret request: %w", err)
+	}
+
+	req.Header.Set("Authorization", "Bearer "+accessToken)
+
+	resp, err := k.httpClient.Do(req)
+	if err != nil {
+		return "", fmt.Errorf("failed to get client secret: %w", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		body, err := io.ReadAll(resp.Body)
+		if err != nil {
+			return "", fmt.Errorf("failed to read response body: %w", err)
+		}
+		return "", fmt.Errorf("failed to get client secret: status %d, body: %s",
+			resp.StatusCode, string(body))
+	}
+
+	var secretResp struct {
+		Value string `json:"value"`
+	}
+
+	if err := json.NewDecoder(resp.Body).Decode(&secretResp); err != nil {
+		return "", fmt.Errorf("failed to decode secret response: %w", err)
+	}
+
+	return secretResp.Value, nil
 }
