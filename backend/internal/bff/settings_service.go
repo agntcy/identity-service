@@ -141,38 +141,26 @@ func (s *settingsService) updateIssuerSettings(
 
 	switch issuerSettings.IdpType {
 	case settingstypes.IDP_TYPE_DUO:
-		if updatePayload.DuoIdpSettings == nil || updatePayload.DuoIdpSettings.SecretKey == "" {
-			return nil, errutil.ValidationFailed(
-				"settings.invalidDuoUpdatePayload",
-				"Invalid Duo settings payload. Make sure the secret key is not empty.",
-			)
+		if err := s.validateDuoUpdateSettings(updatePayload.DuoIdpSettings); err != nil {
+			return nil, err
 		}
 
 		issuerSettings.DuoIdpSettings.SecretKey = updatePayload.DuoIdpSettings.SecretKey
 	case settingstypes.IDP_TYPE_OKTA:
-		if updatePayload.OktaIdpSettings == nil || updatePayload.OktaIdpSettings.PrivateKey == "" {
-			return nil, errutil.ValidationFailed(
-				"settings.invalidOktaUpdatePayload",
-				"Invalid Okta settings payload. Make sure the private key is not empty.",
-			)
+		if err := s.validateOktaUpdateSettings(updatePayload.OktaIdpSettings); err != nil {
+			return nil, err
 		}
 
 		issuerSettings.OktaIdpSettings.PrivateKey = updatePayload.OktaIdpSettings.PrivateKey
 	case settingstypes.IDP_TYPE_ORY:
-		if updatePayload.OryIdpSettings == nil || updatePayload.OryIdpSettings.ApiKey == "" {
-			return nil, errutil.ValidationFailed(
-				"settings.invalidOryUpdatePayload",
-				"Invalid Ory settings payload. Make sure the API key is not empty.",
-			)
+		if err := s.validateOryUpdateSettings(updatePayload.OryIdpSettings); err != nil {
+			return nil, err
 		}
 
 		issuerSettings.OryIdpSettings.ApiKey = updatePayload.OryIdpSettings.ApiKey
 	case settingstypes.IDP_TYPE_KEYCLOAK:
-		if updatePayload.KeycloakIdpSettings == nil || updatePayload.KeycloakIdpSettings.ClientSecret == "" {
-			return nil, errutil.ValidationFailed(
-				"settings.invalidKeycloakUpdatePayload",
-				"Invalid Keycloak settings payload. Make sure the client secret is not empty.",
-			)
+		if err := s.validateKeycloakUpdateSettings(updatePayload.KeycloakIdpSettings); err != nil {
+			return nil, err
 		}
 
 		issuerSettings.KeycloakIdpSettings.ClientSecret = updatePayload.KeycloakIdpSettings.ClientSecret
@@ -196,4 +184,56 @@ func (s *settingsService) updateIssuerSettings(
 	}
 
 	return updatedSettings, nil
+}
+
+func (*settingsService) validateDuoUpdateSettings(
+	settings *settingstypes.DuoIdpSettings,
+) error {
+	if settings == nil || settings.SecretKey == "" {
+		return errutil.ValidationFailed(
+			"settings.invalidDuoUpdatePayload",
+			"Invalid Duo settings payload. Make sure the secret key is not empty.",
+		)
+	}
+
+	return nil
+}
+
+func (s *settingsService) validateOktaUpdateSettings(
+	settings *settingstypes.OktaIdpSettings,
+) error {
+	if settings == nil || settings.PrivateKey == "" {
+		return errutil.ValidationFailed(
+			"settings.invalidOktaUpdatePayload",
+			"Invalid Okta settings payload. Make sure the private key is not empty.",
+		)
+	}
+
+	return nil
+}
+
+func (s *settingsService) validateOryUpdateSettings(
+	settings *settingstypes.OryIdpSettings,
+) error {
+	if settings == nil || settings.ApiKey == "" {
+		return errutil.ValidationFailed(
+			"settings.invalidOryUpdatePayload",
+			"Invalid Ory settings payload. Make sure the API key is not empty.",
+		)
+	}
+
+	return nil
+}
+
+func (s *settingsService) validateKeycloakUpdateSettings(
+	settings *settingstypes.KeycloakIdpSettings,
+) error {
+	if settings == nil || settings.ClientSecret == "" {
+		return errutil.ValidationFailed(
+			"settings.invalidKeycloakUpdatePayload",
+			"Invalid Keycloak settings payload. Make sure the client secret is not empty.",
+		)
+	}
+
+	return nil
 }
