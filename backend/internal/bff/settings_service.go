@@ -167,6 +167,15 @@ func (s *settingsService) updateIssuerSettings(
 		}
 
 		issuerSettings.OryIdpSettings.ApiKey = updatePayload.OryIdpSettings.ApiKey
+	case settingstypes.IDP_TYPE_KEYCLOAK:
+		if updatePayload.KeycloakIdpSettings == nil || updatePayload.KeycloakIdpSettings.ClientSecret == "" {
+			return nil, errutil.ValidationFailed(
+				"settings.invalidKeycloakUpdatePayload",
+				"Invalid Keycloak settings payload. Make sure the client secret is not empty.",
+			)
+		}
+
+		issuerSettings.KeycloakIdpSettings.ClientSecret = updatePayload.KeycloakIdpSettings.ClientSecret
 	default:
 		return nil, errutil.InvalidRequest(
 			"settings.updateNotSupported",

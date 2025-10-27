@@ -371,6 +371,10 @@ func TestSettingsService_SetIssuerSettings_should_not_update_with_idp_type_misma
 			input:  settingstypes.IDP_TYPE_DUO,
 			stored: settingstypes.IDP_TYPE_ORY,
 		},
+		"keycloak settings with the wrong idp type": {
+			input:  settingstypes.IDP_TYPE_DUO,
+			stored: settingstypes.IDP_TYPE_KEYCLOAK,
+		},
 	}
 
 	for tn, tc := range testCases {
@@ -462,6 +466,26 @@ func TestSettingsService_SetIssuerSettings_should_not_update_when_payload_is_emp
 			err: errutil.ValidationFailed(
 				"settings.invalidOryUpdatePayload",
 				"Invalid Ory settings payload. Make sure the API key is not empty.",
+			),
+		},
+		"nil Keycloak settings payload": {
+			input: &settingstypes.IssuerSettings{
+				IdpType:             settingstypes.IDP_TYPE_KEYCLOAK,
+				KeycloakIdpSettings: nil,
+			},
+			err: errutil.ValidationFailed(
+				"settings.invalidKeycloakUpdatePayload",
+				"Invalid Keycloak settings payload. Make sure the client secret is not empty.",
+			),
+		},
+		"empty client secret in Keycloak settings payload": {
+			input: &settingstypes.IssuerSettings{
+				IdpType:             settingstypes.IDP_TYPE_KEYCLOAK,
+				KeycloakIdpSettings: &settingstypes.KeycloakIdpSettings{ClientSecret: ""},
+			},
+			err: errutil.ValidationFailed(
+				"settings.invalidKeycloakUpdatePayload",
+				"Invalid Keycloak settings payload. Make sure the client secret is not empty.",
 			),
 		},
 	}
