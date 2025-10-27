@@ -39,6 +39,7 @@ var testData []any = []any{
 	converters.ToOktaIdpSettings,
 	converters.ToDuoIdpSettings,
 	converters.ToOryIdpSettings,
+	converters.ToKeycloakIdpSettings,
 	converters.ToIssuerSettings,
 }
 
