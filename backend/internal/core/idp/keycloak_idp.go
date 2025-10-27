@@ -12,22 +12,28 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 
 	"github.com/agntcy/identity-service/internal/core/settings/types"
 	"github.com/agntcy/identity-service/pkg/log"
 )
 
 const (
-	keycloakGrantType = "client_credentials"
+	keycloakGrantType  = "client_credentials"
+	defaultHTTPTimeout = 30 * time.Second
 )
 
 type KeycloakIdp struct {
-	settings *types.KeycloakIdpSettings
+	settings   *types.KeycloakIdpSettings
+	httpClient *http.Client
 }
 
 func NewKeycloakIdp(settings *types.KeycloakIdpSettings) Idp {
 	return &KeycloakIdp{
 		settings: settings,
+		httpClient: &http.Client{
+			Timeout: defaultHTTPTimeout,
+		},
 	}
 }
 
@@ -46,7 +52,7 @@ func (k *KeycloakIdp) TestSettings(ctx context.Context) error {
 		return fmt.Errorf("failed to create request: %w", err)
 	}
 
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := k.httpClient.Do(req)
 	if err != nil {
 		return fmt.Errorf("failed to connect to Keycloak: %w", err)
 	}
@@ -125,7 +131,7 @@ func (k *KeycloakIdp) DeleteClientCredentialsPair(
 
 	req.Header.Set("Authorization", "Bearer "+accessToken)
 
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := k.httpClient.Do(req)
 	if err != nil {
 		return fmt.Errorf("failed to delete client: %w", err)
 	}
@@ -162,7 +168,7 @@ func (k *KeycloakIdp) getAccessToken(ctx context.Context) (string, error) {
 
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := k.httpClient.Do(req)
 	if err != nil {
 		return "", fmt.Errorf("failed to get token: %w", err)
 	}
@@ -217,7 +223,7 @@ func (k *KeycloakIdp) createClient(ctx context.Context, accessToken, clientID st
 	req.Header.Set("Authorization", "Bearer "+accessToken)
 	req.Header.Set("Content-Type", "application/json")
 
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := k.httpClient.Do(req)
 	if err != nil {
 		return "", fmt.Errorf("failed to create client: %w", err)
 	}
@@ -249,7 +255,7 @@ func (k *KeycloakIdp) createClient(ctx context.Context, accessToken, clientID st
 
 	req.Header.Set("Authorization", "Bearer "+accessToken)
 
-	resp, err = http.DefaultClient.Do(req)
+	resp, err = k.httpClient.Do(req)
 	if err != nil {
 		return "", fmt.Errorf("failed to get client secret: %w", err)
 	}
@@ -286,7 +292,7 @@ func (k *KeycloakIdp) getClientInternalID(ctx context.Context, accessToken, clie
 
 	req.Header.Set("Authorization", "Bearer "+accessToken)
 
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := k.httpClient.Do(req)
 	if err != nil {
 		return "", fmt.Errorf("failed to get clients: %w", err)
 	}
