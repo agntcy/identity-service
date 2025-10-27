@@ -43,9 +43,9 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_ISSUERSETTINGS'].fields_by_name['okta_idp_settings']._serialized_options = b'\340A\001'
   _globals['_ISSUERSETTINGS'].fields_by_name['ory_idp_settings']._loaded_options = None
   _globals['_ISSUERSETTINGS'].fields_by_name['ory_idp_settings']._serialized_options = b'\340A\001'
-  _globals['_ISSUERSETTINGS'].fields_by_name['keycloak_idp_settings']._options = None
+  _globals['_ISSUERSETTINGS'].fields_by_name['keycloak_idp_settings']._loaded_options = None
   _globals['_ISSUERSETTINGS'].fields_by_name['keycloak_idp_settings']._serialized_options = b'\340A\001'
-  _globals['_SETTINGS'].fields_by_name['api_key']._options = None
+  _globals['_SETTINGS'].fields_by_name['api_key']._loaded_options = None
   _globals['_SETTINGS'].fields_by_name['api_key']._serialized_options = b'\340A\003'
   _globals['_SETTINGS'].fields_by_name['issuer_settings']._loaded_options = None
   _globals['_SETTINGS'].fields_by_name['issuer_settings']._serialized_options = b'\340A\001'
