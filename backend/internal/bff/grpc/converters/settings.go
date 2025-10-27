@@ -135,6 +135,8 @@ func FromIssuerSettings(
 		DuoIdpSettings:      FromDuoIdpSettings(src.DuoIdpSettings),
 		OryIdpSettings:      FromOryIdpSettings(src.OryIdpSettings),
 		KeycloakIdpSettings: FromKeycloakIdpSettings(src.KeycloakIdpSettings),
+		CreatedAt:           newTimestamp(&src.CreatedAt),
+		UpdatedAt:           newTimestamp(src.UpdatedAt),
 	}
 }
 
