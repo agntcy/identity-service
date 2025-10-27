@@ -12,6 +12,7 @@ import (
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -211,8 +212,12 @@ type IssuerSettings struct {
 	OryIdpSettings *OryIdpSettings `protobuf:"bytes,6,opt,name=ory_idp_settings,json=oryIdpSettings,proto3,oneof" json:"ory_idp_settings,omitempty"`
 	// Settings for the Keycloak Identity Provider.
 	KeycloakIdpSettings *KeycloakIdpSettings `protobuf:"bytes,7,opt,name=keycloak_idp_settings,json=keycloakIdpSettings,proto3,oneof" json:"keycloak_idp_settings,omitempty"`
-	unknownFields       protoimpl.UnknownFields
-	sizeCache           protoimpl.SizeCache
+	// CreatedAt records the timestamp of when the IssuerSettings was initially created
+	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
+	// UpdatedAt records the timestamp of the last update to the IssuerSettings
+	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=updated_at,json=updatedAt,proto3,oneof" json:"updated_at,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *IssuerSettings) Reset() {
@@ -283,6 +288,20 @@ func (x *IssuerSettings) GetOryIdpSettings() *OryIdpSettings {
 func (x *IssuerSettings) GetKeycloakIdpSettings() *KeycloakIdpSettings {
 	if x != nil {
 		return x.KeycloakIdpSettings
+	}
+	return nil
+}
+
+func (x *IssuerSettings) GetCreatedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.CreatedAt
+	}
+	return nil
+}
+
+func (x *IssuerSettings) GetUpdatedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.UpdatedAt
 	}
 	return nil
 }
@@ -529,7 +548,7 @@ var File_agntcy_identity_service_v1alpha1_settings_proto protoreflect.FileDescri
 
 const file_agntcy_identity_service_v1alpha1_settings_proto_rawDesc = "" +
 	"\n" +
-	"/agntcy/identity/service/v1alpha1/settings.proto\x12 agntcy.identity.service.v1alpha1\x1a\x1fgoogle/api/field_behavior.proto\"2\n" +
+	"/agntcy/identity/service/v1alpha1/settings.proto\x12 agntcy.identity.service.v1alpha1\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"2\n" +
 	"\x06ApiKey\x12\x1c\n" +
 	"\aapi_key\x18\x01 \x01(\tH\x00R\x06apiKey\x88\x01\x01B\n" +
 	"\n" +
@@ -541,21 +560,27 @@ const file_agntcy_identity_service_v1alpha1_settings_proto_rawDesc = "" +
 	"secret_key\x18\x03 \x01(\tH\x02R\tsecretKey\x88\x01\x01B\v\n" +
 	"\t_hostnameB\x12\n" +
 	"\x10_integration_keyB\r\n" +
-	"\v_secret_key\"\xa6\x05\n" +
+	"\v_secret_key\"\xce\x06\n" +
 	"\x0eIssuerSettings\x12%\n" +
 	"\tissuer_id\x18\x01 \x01(\tB\x03\xe0A\x03H\x00R\bissuerId\x88\x01\x01\x12N\n" +
 	"\bidp_type\x18\x03 \x01(\x0e2).agntcy.identity.service.v1alpha1.IdpTypeB\x03\xe0A\x02H\x01R\aidpType\x88\x01\x01\x12d\n" +
 	"\x10duo_idp_settings\x18\x04 \x01(\v20.agntcy.identity.service.v1alpha1.DuoIdpSettingsB\x03\xe0A\x01H\x02R\x0eduoIdpSettings\x88\x01\x01\x12g\n" +
 	"\x11okta_idp_settings\x18\x05 \x01(\v21.agntcy.identity.service.v1alpha1.OktaIdpSettingsB\x03\xe0A\x01H\x03R\x0foktaIdpSettings\x88\x01\x01\x12d\n" +
 	"\x10ory_idp_settings\x18\x06 \x01(\v20.agntcy.identity.service.v1alpha1.OryIdpSettingsB\x03\xe0A\x01H\x04R\x0eoryIdpSettings\x88\x01\x01\x12s\n" +
-	"\x15keycloak_idp_settings\x18\a \x01(\v25.agntcy.identity.service.v1alpha1.KeycloakIdpSettingsB\x03\xe0A\x01H\x05R\x13keycloakIdpSettings\x88\x01\x01B\f\n" +
+	"\x15keycloak_idp_settings\x18\a \x01(\v25.agntcy.identity.service.v1alpha1.KeycloakIdpSettingsB\x03\xe0A\x01H\x05R\x13keycloakIdpSettings\x88\x01\x01\x12C\n" +
+	"\n" +
+	"created_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampB\x03\xe0A\x03H\x06R\tcreatedAt\x88\x01\x01\x12C\n" +
+	"\n" +
+	"updated_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampB\x03\xe0A\x03H\aR\tupdatedAt\x88\x01\x01B\f\n" +
 	"\n" +
 	"_issuer_idB\v\n" +
 	"\t_idp_typeB\x13\n" +
 	"\x11_duo_idp_settingsB\x14\n" +
 	"\x12_okta_idp_settingsB\x13\n" +
 	"\x11_ory_idp_settingsB\x18\n" +
-	"\x16_keycloak_idp_settings\"\xd3\x01\n" +
+	"\x16_keycloak_idp_settingsB\r\n" +
+	"\v_created_atB\r\n" +
+	"\v_updated_at\"\xd3\x01\n" +
 	"\x13KeycloakIdpSettings\x12\x1e\n" +
 	"\bbase_url\x18\x01 \x01(\tH\x00R\abaseUrl\x88\x01\x01\x12\x19\n" +
 	"\x05realm\x18\x02 \x01(\tH\x01R\x05realm\x88\x01\x01\x12 \n" +
@@ -611,14 +636,15 @@ func file_agntcy_identity_service_v1alpha1_settings_proto_rawDescGZIP() []byte {
 var file_agntcy_identity_service_v1alpha1_settings_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_agntcy_identity_service_v1alpha1_settings_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_agntcy_identity_service_v1alpha1_settings_proto_goTypes = []any{
-	(IdpType)(0),                // 0: agntcy.identity.service.v1alpha1.IdpType
-	(*ApiKey)(nil),              // 1: agntcy.identity.service.v1alpha1.ApiKey
-	(*DuoIdpSettings)(nil),      // 2: agntcy.identity.service.v1alpha1.DuoIdpSettings
-	(*IssuerSettings)(nil),      // 3: agntcy.identity.service.v1alpha1.IssuerSettings
-	(*KeycloakIdpSettings)(nil), // 4: agntcy.identity.service.v1alpha1.KeycloakIdpSettings
-	(*OktaIdpSettings)(nil),     // 5: agntcy.identity.service.v1alpha1.OktaIdpSettings
-	(*OryIdpSettings)(nil),      // 6: agntcy.identity.service.v1alpha1.OryIdpSettings
-	(*Settings)(nil),            // 7: agntcy.identity.service.v1alpha1.Settings
+	(IdpType)(0),                  // 0: agntcy.identity.service.v1alpha1.IdpType
+	(*ApiKey)(nil),                // 1: agntcy.identity.service.v1alpha1.ApiKey
+	(*DuoIdpSettings)(nil),        // 2: agntcy.identity.service.v1alpha1.DuoIdpSettings
+	(*IssuerSettings)(nil),        // 3: agntcy.identity.service.v1alpha1.IssuerSettings
+	(*KeycloakIdpSettings)(nil),   // 4: agntcy.identity.service.v1alpha1.KeycloakIdpSettings
+	(*OktaIdpSettings)(nil),       // 5: agntcy.identity.service.v1alpha1.OktaIdpSettings
+	(*OryIdpSettings)(nil),        // 6: agntcy.identity.service.v1alpha1.OryIdpSettings
+	(*Settings)(nil),              // 7: agntcy.identity.service.v1alpha1.Settings
+	(*timestamppb.Timestamp)(nil), // 8: google.protobuf.Timestamp
 }
 var file_agntcy_identity_service_v1alpha1_settings_proto_depIdxs = []int32{
 	0, // 0: agntcy.identity.service.v1alpha1.IssuerSettings.idp_type:type_name -> agntcy.identity.service.v1alpha1.IdpType
@@ -626,13 +652,15 @@ var file_agntcy_identity_service_v1alpha1_settings_proto_depIdxs = []int32{
 	5, // 2: agntcy.identity.service.v1alpha1.IssuerSettings.okta_idp_settings:type_name -> agntcy.identity.service.v1alpha1.OktaIdpSettings
 	6, // 3: agntcy.identity.service.v1alpha1.IssuerSettings.ory_idp_settings:type_name -> agntcy.identity.service.v1alpha1.OryIdpSettings
 	4, // 4: agntcy.identity.service.v1alpha1.IssuerSettings.keycloak_idp_settings:type_name -> agntcy.identity.service.v1alpha1.KeycloakIdpSettings
-	1, // 5: agntcy.identity.service.v1alpha1.Settings.api_key:type_name -> agntcy.identity.service.v1alpha1.ApiKey
-	3, // 6: agntcy.identity.service.v1alpha1.Settings.issuer_settings:type_name -> agntcy.identity.service.v1alpha1.IssuerSettings
-	7, // [7:7] is the sub-list for method output_type
-	7, // [7:7] is the sub-list for method input_type
-	7, // [7:7] is the sub-list for extension type_name
-	7, // [7:7] is the sub-list for extension extendee
-	0, // [0:7] is the sub-list for field type_name
+	8, // 5: agntcy.identity.service.v1alpha1.IssuerSettings.created_at:type_name -> google.protobuf.Timestamp
+	8, // 6: agntcy.identity.service.v1alpha1.IssuerSettings.updated_at:type_name -> google.protobuf.Timestamp
+	1, // 7: agntcy.identity.service.v1alpha1.Settings.api_key:type_name -> agntcy.identity.service.v1alpha1.ApiKey
+	3, // 8: agntcy.identity.service.v1alpha1.Settings.issuer_settings:type_name -> agntcy.identity.service.v1alpha1.IssuerSettings
+	9, // [9:9] is the sub-list for method output_type
+	9, // [9:9] is the sub-list for method input_type
+	9, // [9:9] is the sub-list for extension type_name
+	9, // [9:9] is the sub-list for extension extendee
+	0, // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_agntcy_identity_service_v1alpha1_settings_proto_init() }

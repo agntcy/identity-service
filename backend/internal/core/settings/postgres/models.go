@@ -20,6 +20,7 @@ type IssuerSettings struct {
 	IssuerID              *string       `gorm:"type:varchar(256);"`
 	KeyID                 *string       `gorm:"type:varchar(256);"`
 	IdpType               types.IdpType `gorm:"not null;type:uint;default:0;"`
+	ClientID              *string       `gorm:"type:varchar(256);"`
 	DuoIdpSettingsID      *uuid.UUID    `gorm:"foreignKey:ID"`
 	DuoIdpSettings        *DuoIdpSettings
 	OktaIdpSettingsID     *uuid.UUID `gorm:"foreignKey:ID"`
@@ -123,6 +124,7 @@ func (i *IssuerSettings) ToCoreType(crypter secrets.Crypter) *types.IssuerSettin
 		IssuerID:            ptrutil.DerefStr(i.IssuerID),
 		KeyID:               ptrutil.DerefStr(i.KeyID),
 		IdpType:             i.IdpType,
+		ClientID:            ptrutil.DerefStr(i.ClientID),
 		DuoIdpSettings:      i.DuoIdpSettings.ToCoreType(crypter),
 		OktaIdpSettings:     i.OktaIdpSettings.ToCoreType(crypter),
 		OryIdpSettings:      i.OryIdpSettings.ToCoreType(crypter),
@@ -185,6 +187,7 @@ func newIssuerSettingsModel(src *types.IssuerSettings, crypter secrets.Crypter) 
 		IssuerID:            ptrutil.Ptr(src.IssuerID),
 		KeyID:               ptrutil.Ptr(src.KeyID),
 		IdpType:             src.IdpType,
+		ClientID:            &src.ClientID,
 		DuoIdpSettings:      newDuoIdpSettingsModel(src.DuoIdpSettings, crypter),
 		OktaIdpSettings:     newOktaIdpSettingsModel(src.OktaIdpSettings, crypter),
 		OryIdpSettings:      newOryIdpSettingsModel(src.OryIdpSettings, crypter),

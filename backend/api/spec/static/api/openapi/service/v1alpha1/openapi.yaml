@@ -1417,6 +1417,16 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/KeycloakIdpSettings'
                     description: Settings for the Keycloak Identity Provider.
+                createdAt:
+                    readOnly: true
+                    type: string
+                    description: CreatedAt records the timestamp of when the IssuerSettings was initially created
+                    format: date-time
+                updatedAt:
+                    readOnly: true
+                    type: string
+                    description: UpdatedAt records the timestamp of the last update to the IssuerSettings
+                    format: date-time
             description: Issuer Settings
         KeycloakIdpSettings:
             type: object

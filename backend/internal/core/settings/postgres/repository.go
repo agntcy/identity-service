@@ -48,6 +48,7 @@ func (r *repository) UpdateIssuerSettings(
 		existingSettings.IdpType = model.IdpType
 		existingSettings.IssuerID = model.IssuerID
 		existingSettings.KeyID = model.KeyID
+		existingSettings.ClientID = model.ClientID
 
 		var previousIdpSettingsID uuid.UUID
 

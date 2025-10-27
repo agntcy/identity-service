@@ -1,4 +1,7 @@
+import datetime
+
 from google.api import field_behavior_pb2 as _field_behavior_pb2
+from google.protobuf import timestamp_pb2 as _timestamp_pb2
 from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
@@ -39,20 +42,24 @@ class DuoIdpSettings(_message.Message):
     def __init__(self, hostname: _Optional[str] = ..., integration_key: _Optional[str] = ..., secret_key: _Optional[str] = ...) -> None: ...
 
 class IssuerSettings(_message.Message):
-    __slots__ = ("issuer_id", "idp_type", "duo_idp_settings", "okta_idp_settings", "ory_idp_settings", "keycloak_idp_settings")
+    __slots__ = ("issuer_id", "idp_type", "duo_idp_settings", "okta_idp_settings", "ory_idp_settings", "keycloak_idp_settings", "created_at", "updated_at")
     ISSUER_ID_FIELD_NUMBER: _ClassVar[int]
     IDP_TYPE_FIELD_NUMBER: _ClassVar[int]
     DUO_IDP_SETTINGS_FIELD_NUMBER: _ClassVar[int]
     OKTA_IDP_SETTINGS_FIELD_NUMBER: _ClassVar[int]
     ORY_IDP_SETTINGS_FIELD_NUMBER: _ClassVar[int]
     KEYCLOAK_IDP_SETTINGS_FIELD_NUMBER: _ClassVar[int]
+    CREATED_AT_FIELD_NUMBER: _ClassVar[int]
+    UPDATED_AT_FIELD_NUMBER: _ClassVar[int]
     issuer_id: str
     idp_type: IdpType
     duo_idp_settings: DuoIdpSettings
     okta_idp_settings: OktaIdpSettings
     ory_idp_settings: OryIdpSettings
     keycloak_idp_settings: KeycloakIdpSettings
-    def __init__(self, issuer_id: _Optional[str] = ..., idp_type: _Optional[_Union[IdpType, str]] = ..., duo_idp_settings: _Optional[_Union[DuoIdpSettings, _Mapping]] = ..., okta_idp_settings: _Optional[_Union[OktaIdpSettings, _Mapping]] = ..., ory_idp_settings: _Optional[_Union[OryIdpSettings, _Mapping]] = ..., keycloak_idp_settings: _Optional[_Union[KeycloakIdpSettings, _Mapping]] = ...) -> None: ...
+    created_at: _timestamp_pb2.Timestamp
+    updated_at: _timestamp_pb2.Timestamp
+    def __init__(self, issuer_id: _Optional[str] = ..., idp_type: _Optional[_Union[IdpType, str]] = ..., duo_idp_settings: _Optional[_Union[DuoIdpSettings, _Mapping]] = ..., okta_idp_settings: _Optional[_Union[OktaIdpSettings, _Mapping]] = ..., ory_idp_settings: _Optional[_Union[OryIdpSettings, _Mapping]] = ..., keycloak_idp_settings: _Optional[_Union[KeycloakIdpSettings, _Mapping]] = ..., created_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
 
 class KeycloakIdpSettings(_message.Message):
     __slots__ = ("base_url", "realm", "client_id", "client_secret")
