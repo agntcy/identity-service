@@ -18,8 +18,7 @@ import (
 )
 
 const (
-	keycloakClientName = "keycloak-client"
-	keycloakGrantType  = "client_credentials"
+	keycloakGrantType = "client_credentials"
 )
 
 type KeycloakIdp struct {
