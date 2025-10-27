@@ -9,7 +9,7 @@ HYDRA_QUICKSTART_FILE="quickstart.yml"
 HYDRA_CONFIG_FILE_REL_PATH="contrib/quickstart/5-min/hydra.yml"
 HYDRA_REPOSITORY="https://github.com/ory/hydra.git"
 HYDRA_VERSION="v2.3.0"
-HYDRA_BINARY="hydra"
+HYDRA_BINARY="docker run --rm -it oryd/hydra"
 HYDRA_SPA_APP_ID="my-hydra-spa"
 
 #######################################
@@ -41,23 +41,23 @@ do_set_current_ip() {
 #######################################
 do_setup_oidc() {
   echo "Setting up OIDC configuration..."
-  
+
   # Check if client already exists
   echo "Checking if client '$HYDRA_SPA_APP_ID' already exists..."
-  if "$HYDRA_BINARY" get client "$HYDRA_SPA_APP_ID" --endpoint "http://${current_ip}:4445" >/dev/null 2>&1; then
+  if $HYDRA_BINARY get client "$HYDRA_SPA_APP_ID" --endpoint "http://${current_ip}:4445" >/dev/null 2>&1; then
     echo "Client '$HYDRA_SPA_APP_ID' already exists. Deleting and recreating..."
-    
+
     # Delete the existing client
-    if ! "$HYDRA_BINARY" delete client "$HYDRA_SPA_APP_ID" --endpoint "http://${current_ip}:4445"; then
+    if ! $HYDRA_BINARY delete client "$HYDRA_SPA_APP_ID" --endpoint "http://${current_ip}:4445"; then
       echo "Failed to delete existing client. Continuing anyway..."
     fi
-    
+
     # Wait a moment for the deletion to process
     sleep 2
   fi
 
   # Create a new hydra application
-  if ! "$HYDRA_BINARY" create client \
+  if ! $HYDRA_BINARY create client \
     --endpoint "http://${current_ip}:4445" \
     --id "$HYDRA_SPA_APP_ID" --audience api://default \
     --skip-consent --skip-logout-consent \
@@ -77,17 +77,6 @@ do_setup_oidc() {
   export OIDC_CLIENT_ID="$HYDRA_SPA_APP_ID"
   export OIDC_LOGIN_URL="http://${current_ip}:4444"
   export OIDC_CLIENT_ID_CLAIM_NAME="client_id"
-}
-
-#######################################
-# Verify if Hydra CLI is installed.
-#######################################
-do_verify_hydra_cli() {
-  if ! command -v hydra > /dev/null; then
-    echo "Hydra CLI is not installed. Please install it."
-    echo "You can install it using the following guide: https://www.ory.sh/docs/guides/cli/installation"
-    return 1
-  fi
 }
 
 #######################################
@@ -139,12 +128,6 @@ EOL
 # Clones Hydra repo and starts the Docker containers.
 #######################################
 do_start_hydra_server() {
-  # Check if the Hydra CLI is installed
-  if ! do_verify_hydra_cli; then
-    echo "Hydra CLI is not installed. Please install it before proceeding."
-    return 1
-  fi
-
   echo "Starting Hydra OAuth2 Server..."
 
   # Clone the Hydra repository into /tmp if it doesn't exist
