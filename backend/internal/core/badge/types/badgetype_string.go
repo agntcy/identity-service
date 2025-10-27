@@ -18,8 +18,9 @@ const _BadgeType_name = "BADGE_TYPE_UNSPECIFIEDBADGE_TYPE_AGENT_BADGEBADGE_TYPE_
 var _BadgeType_index = [...]uint8{0, 22, 44, 64}
 
 func (i BadgeType) String() string {
-	if i < 0 || i >= BadgeType(len(_BadgeType_index)-1) {
+	idx := int(i) - 0
+	if i < 0 || idx >= len(_BadgeType_index)-1 {
 		return "BadgeType(" + strconv.FormatInt(int64(i), 10) + ")"
 	}
-	return _BadgeType_name[_BadgeType_index[i]:_BadgeType_index[i+1]]
+	return _BadgeType_name[_BadgeType_index[idx]:_BadgeType_index[idx+1]]
 }

@@ -17,8 +17,9 @@ const _CredentialStatusPurpose_name = "CREDENTIAL_STATUS_PURPOSE_UNSPECIFIEDCRED
 var _CredentialStatusPurpose_index = [...]uint8{0, 37, 73}
 
 func (i CredentialStatusPurpose) String() string {
-	if i < 0 || i >= CredentialStatusPurpose(len(_CredentialStatusPurpose_index)-1) {
+	idx := int(i) - 0
+	if i < 0 || idx >= len(_CredentialStatusPurpose_index)-1 {
 		return "CredentialStatusPurpose(" + strconv.FormatInt(int64(i), 10) + ")"
 	}
-	return _CredentialStatusPurpose_name[_CredentialStatusPurpose_index[i]:_CredentialStatusPurpose_index[i+1]]
+	return _CredentialStatusPurpose_name[_CredentialStatusPurpose_index[idx]:_CredentialStatusPurpose_index[idx+1]]
 }

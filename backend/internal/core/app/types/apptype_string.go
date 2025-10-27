@@ -19,8 +19,9 @@ const _AppType_name = "APP_TYPE_UNSPECIFIEDAPP_TYPE_AGENT_A2AAPP_TYPE_AGENT_OASF
 var _AppType_index = [...]uint8{0, 20, 38, 57, 76}
 
 func (i AppType) String() string {
-	if i < 0 || i >= AppType(len(_AppType_index)-1) {
+	idx := int(i) - 0
+	if i < 0 || idx >= len(_AppType_index)-1 {
 		return "AppType(" + strconv.FormatInt(int64(i), 10) + ")"
 	}
-	return _AppType_name[_AppType_index[i]:_AppType_index[i+1]]
+	return _AppType_name[_AppType_index[idx]:_AppType_index[idx+1]]
 }
