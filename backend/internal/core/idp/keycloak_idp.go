@@ -30,7 +30,12 @@ type KeycloakIdp struct {
 
 func NewKeycloakIdp(settings *types.KeycloakIdpSettings) Idp {
 	return &KeycloakIdp{
-		settings: settings,
+		settings: &types.KeycloakIdpSettings{
+			BaseUrl:      strings.TrimSuffix(settings.BaseUrl, "/"),
+			Realm:        settings.Realm,
+			ClientID:     settings.ClientID,
+			ClientSecret: settings.ClientSecret,
+		},
 		httpClient: &http.Client{
 			Timeout: defaultHTTPTimeout,
 		},
@@ -44,7 +49,7 @@ func (k *KeycloakIdp) TestSettings(ctx context.Context) error {
 
 	// Test connection by getting realm info
 	realmURL := fmt.Sprintf("%s/realms/%s",
-		strings.TrimSuffix(k.settings.BaseUrl, "/"),
+		k.settings.BaseUrl,
 		k.settings.Realm)
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, realmURL, http.NoBody)
@@ -132,7 +137,7 @@ func (k *KeycloakIdp) DeleteClientCredentialsPair(
 
 	// Delete the client
 	clientURL := fmt.Sprintf("%s/admin/realms/%s/clients/%s",
-		strings.TrimSuffix(k.settings.BaseUrl, "/"),
+		k.settings.BaseUrl,
 		k.settings.Realm,
 		internalClientID)
 
@@ -164,7 +169,7 @@ func (k *KeycloakIdp) DeleteClientCredentialsPair(
 
 func (k *KeycloakIdp) getAccessToken(ctx context.Context) (string, error) {
 	tokenURL := fmt.Sprintf("%s/realms/%s/protocol/openid-connect/token",
-		strings.TrimSuffix(k.settings.BaseUrl, "/"),
+		k.settings.BaseUrl,
 		k.settings.Realm)
 
 	data := url.Values{}
@@ -207,7 +212,7 @@ func (k *KeycloakIdp) getAccessToken(ctx context.Context) (string, error) {
 
 func (k *KeycloakIdp) createClient(ctx context.Context, accessToken, clientID string) error {
 	clientsURL := fmt.Sprintf("%s/admin/realms/%s/clients",
-		strings.TrimSuffix(k.settings.BaseUrl, "/"),
+		k.settings.BaseUrl,
 		k.settings.Realm)
 
 	clientData := map[string]interface{}{
@@ -255,7 +260,7 @@ func (k *KeycloakIdp) createClient(ctx context.Context, accessToken, clientID st
 
 func (k *KeycloakIdp) getClientInternalID(ctx context.Context, accessToken, clientID string) (string, error) {
 	clientsURL := fmt.Sprintf("%s/admin/realms/%s/clients?clientId=%s",
-		strings.TrimSuffix(k.settings.BaseUrl, "/"),
+		k.settings.BaseUrl,
 		k.settings.Realm,
 		url.QueryEscape(clientID))
 
@@ -299,7 +304,7 @@ func (k *KeycloakIdp) getClientInternalID(ctx context.Context, accessToken, clie
 
 func (k *KeycloakIdp) getClientSecret(ctx context.Context, accessToken, internalClientID string) (string, error) {
 	secretURL := fmt.Sprintf("%s/admin/realms/%s/clients/%s/client-secret",
-		strings.TrimSuffix(k.settings.BaseUrl, "/"),
+		k.settings.BaseUrl,
 		k.settings.Realm,
 		internalClientID)
 
