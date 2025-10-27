@@ -184,8 +184,8 @@ func newKeycloakIdpSettingsModel(src *types.KeycloakIdpSettings, crypter secrets
 
 func newIssuerSettingsModel(src *types.IssuerSettings, crypter secrets.Crypter) *IssuerSettings {
 	return &IssuerSettings{
-		IssuerID:            ptrutil.Ptr(src.IssuerID),
-		KeyID:               ptrutil.Ptr(src.KeyID),
+		IssuerID:            &src.IssuerID,
+		KeyID:               &src.KeyID,
 		IdpType:             src.IdpType,
 		ClientID:            &src.ClientID,
 		DuoIdpSettings:      newDuoIdpSettingsModel(src.DuoIdpSettings, crypter),
