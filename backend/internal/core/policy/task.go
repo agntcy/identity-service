@@ -20,16 +20,13 @@ type TaskService interface {
 }
 
 type taskService struct {
-	mcpClient      mcp.DiscoveryClient
 	taskRepository TaskRepository
 }
 
 func NewTaskService(
-	mcpClient mcp.DiscoveryClient,
 	taskRepository TaskRepository,
 ) TaskService {
 	return &taskService{
-		mcpClient:      mcpClient,
 		taskRepository: taskRepository,
 	}
 }

@@ -348,7 +348,7 @@ func initializeServices(
 		oidcAuthenticator,
 		config.UniqueIssuerPerTenant,
 	)
-	taskService := policycore.NewTaskService(mcpClient, taskRepository)
+	taskService := policycore.NewTaskService(taskRepository)
 
 	badgeRevoker := badgecore.NewRevoker(badgeRepository, identityService)
 
