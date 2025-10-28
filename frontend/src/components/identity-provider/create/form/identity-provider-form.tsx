@@ -61,7 +61,8 @@ export const IdentityProviderForm = ({isLoading = false}: {isLoading?: boolean})
       type: IdpType.IDP_TYPE_KEYCLOAK,
       title: 'Keycloak',
       imgURI: <img src={KeycloakLogo} alt="Keycloak Logo" className="w-6 h-6" />,
-      isDisabled: isLoading
+      isDisabled: isLoading || !isEmptyIdp,
+      useTooltip: isEmptyIdp
     },
     {
       type: IdpType.IDP_TYPE_SELF,
@@ -283,7 +284,7 @@ export const IdentityProviderForm = ({isLoading = false}: {isLoading?: boolean})
                     <FormItem className="w-[50%]">
                       <FormLabel className="form-label">Base URL</FormLabel>
                       <FormControl>
-                        <Input placeholder="Type base URL..." {...field} disabled={isLoading} />
+                        <Input placeholder="Type base URL..." {...field} disabled={isLoading || !isEmptyIdp} />
                       </FormControl>
                     </FormItem>
                   )}
@@ -295,7 +296,7 @@ export const IdentityProviderForm = ({isLoading = false}: {isLoading?: boolean})
                     <FormItem className="w-[50%]">
                       <FormLabel className="form-label">Realm</FormLabel>
                       <FormControl>
-                        <Input placeholder="Type realm..." {...field} disabled={isLoading} />
+                        <Input placeholder="Type realm..." {...field} disabled={isLoading || !isEmptyIdp} />
                       </FormControl>
                     </FormItem>
                   )}
@@ -309,7 +310,7 @@ export const IdentityProviderForm = ({isLoading = false}: {isLoading?: boolean})
                     <FormItem className="w-[50%]">
                       <FormLabel className="form-label">Client ID</FormLabel>
                       <FormControl>
-                        <Input placeholder="Type client id..." {...field} disabled={isLoading} />
+                        <Input placeholder="Type client id..." {...field} disabled={isLoading || !isEmptyIdp} />
                       </FormControl>
                     </FormItem>
                   )}
