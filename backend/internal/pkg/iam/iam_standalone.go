@@ -8,39 +8,28 @@ import (
 	"errors"
 	"fmt"
 	"strings"
-	"time"
 
 	iamcore "github.com/agntcy/identity-service/internal/core/iam"
 	"github.com/agntcy/identity-service/internal/core/iam/types"
 	identitycontext "github.com/agntcy/identity-service/internal/pkg/context"
 	"github.com/agntcy/identity-service/internal/pkg/ptrutil"
 	"github.com/agntcy/identity-service/internal/pkg/strutil"
-	freecache "github.com/coocood/freecache"
-	"github.com/eko/gocache/lib/v4/cache"
-	"github.com/eko/gocache/lib/v4/store"
-	freecache_store "github.com/eko/gocache/store/freecache/v4"
 	"github.com/google/uuid"
 )
 
 const (
-	standaloneDefaultAud       = "api://default"
-	standaloneUsernameClaimKey = "sub"
-
-	standaloneApiKeyV1ExpirationTime = 30 // 30 seconds
-	standaloneDefaultApiKeyCacheSize = 1024 * 1024 * 10
-
+	standaloneDefaultAud            = "api://default"
+	standaloneUsernameClaimKey      = "sub"
 	standaloneApiKeyName            = "default"
 	standaloneApiKeyLength          = 32
 	standaloneTokenComponentsLength = 1
 	standaloneBearerPrefix          = "Bearer "
-
-	standaloneTenantID = "default"
+	standaloneTenantID              = "default"
 )
 
 type StandaloneClient struct {
 	iamRepository   iamcore.Repository
 	userJwtVerifier JwtVerifier
-	apiKeyV1Cache   *cache.Cache[[]byte]
 	organization    string
 }
 
@@ -49,17 +38,9 @@ func NewStandaloneClient(
 	iamRepository iamcore.Repository,
 	jwtVerifier JwtVerifier,
 ) *StandaloneClient {
-	// Add cache for V1
-	freecacheStore := freecache_store.NewFreecache(
-		freecache.NewCache(standaloneDefaultApiKeyCacheSize),
-		store.WithExpiration(standaloneApiKeyV1ExpirationTime*time.Second),
-	)
-	apiKeyV1Cache := cache.New[[]byte](freecacheStore)
-
 	return &StandaloneClient{
 		iamRepository,
 		jwtVerifier,
-		apiKeyV1Cache,
 		organization,
 	}
 }
