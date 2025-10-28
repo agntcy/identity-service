@@ -169,5 +169,5 @@ The identity chain would look like this:
 
 ```mermaid
 flowchart TD
-    ClientID --> Metadata URI --> KYA --> AID --> Badge-WellKnown --> IdP-Issuer
+    ClientID --> Metadata-URI --> KYA --> AID --> Badge-WellKnown --> IdP-Issuer
 ```
