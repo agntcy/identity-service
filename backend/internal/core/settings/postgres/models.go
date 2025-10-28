@@ -4,7 +4,11 @@
 package postgres
 
 import (
+	"database/sql"
+	"time"
+
 	"github.com/agntcy/identity-service/internal/core/settings/types"
+	"github.com/agntcy/identity-service/internal/pkg/pgutil"
 	"github.com/agntcy/identity-service/internal/pkg/ptrutil"
 	"github.com/agntcy/identity-service/internal/pkg/secrets"
 	"github.com/google/uuid"
@@ -16,6 +20,7 @@ type IssuerSettings struct {
 	IssuerID              *string       `gorm:"type:varchar(256);"`
 	KeyID                 *string       `gorm:"type:varchar(256);"`
 	IdpType               types.IdpType `gorm:"not null;type:uint;default:0;"`
+	ClientID              *string       `gorm:"type:varchar(256);"`
 	DuoIdpSettingsID      *uuid.UUID    `gorm:"foreignKey:ID"`
 	DuoIdpSettings        *DuoIdpSettings
 	OktaIdpSettingsID     *uuid.UUID `gorm:"foreignKey:ID"`
@@ -24,6 +29,8 @@ type IssuerSettings struct {
 	OryIdpSettings        *OryIdpSettings
 	KeycloakIdpSettingsID *uuid.UUID `gorm:"foreignKey:ID"`
 	KeycloakIdpSettings   *KeycloakIdpSettings
+	CreatedAt             time.Time
+	UpdatedAt             sql.NullTime
 }
 
 type DuoIdpSettings struct {
@@ -117,10 +124,13 @@ func (i *IssuerSettings) ToCoreType(crypter secrets.Crypter) *types.IssuerSettin
 		IssuerID:            ptrutil.DerefStr(i.IssuerID),
 		KeyID:               ptrutil.DerefStr(i.KeyID),
 		IdpType:             i.IdpType,
+		ClientID:            ptrutil.DerefStr(i.ClientID),
 		DuoIdpSettings:      i.DuoIdpSettings.ToCoreType(crypter),
 		OktaIdpSettings:     i.OktaIdpSettings.ToCoreType(crypter),
 		OryIdpSettings:      i.OryIdpSettings.ToCoreType(crypter),
 		KeycloakIdpSettings: i.KeycloakIdpSettings.ToCoreType(crypter),
+		CreatedAt:           i.CreatedAt,
+		UpdatedAt:           pgutil.SqlNullTimeToTime(i.UpdatedAt),
 	}
 }
 
@@ -174,12 +184,15 @@ func newKeycloakIdpSettingsModel(src *types.KeycloakIdpSettings, crypter secrets
 
 func newIssuerSettingsModel(src *types.IssuerSettings, crypter secrets.Crypter) *IssuerSettings {
 	return &IssuerSettings{
-		IssuerID:            ptrutil.Ptr(src.IssuerID),
-		KeyID:               ptrutil.Ptr(src.KeyID),
+		IssuerID:            &src.IssuerID,
+		KeyID:               &src.KeyID,
 		IdpType:             src.IdpType,
+		ClientID:            &src.ClientID,
 		DuoIdpSettings:      newDuoIdpSettingsModel(src.DuoIdpSettings, crypter),
 		OktaIdpSettings:     newOktaIdpSettingsModel(src.OktaIdpSettings, crypter),
 		OryIdpSettings:      newOryIdpSettingsModel(src.OryIdpSettings, crypter),
 		KeycloakIdpSettings: newKeycloakIdpSettingsModel(src.KeycloakIdpSettings, crypter),
+		CreatedAt:           src.CreatedAt,
+		UpdatedAt:           pgutil.TimeToSqlNullTime(src.UpdatedAt),
 	}
 }

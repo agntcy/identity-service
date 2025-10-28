@@ -5,6 +5,7 @@ syntax = "proto3";
 package agntcy.identity.service.v1alpha1;
 
 import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
 
 // Package-wide variables from generator "generated".
 option go_package = "github.com/agntcy/identity-service/api/server/agntcy/identity/service/v1alpha1;identity_service_sdk_go";
@@ -43,6 +44,12 @@ message IssuerSettings {
 
   // Settings for the Keycloak Identity Provider.
   optional KeycloakIdpSettings keycloak_idp_settings = 7 [(.google.api.field_behavior) = OPTIONAL];
+
+  // CreatedAt records the timestamp of when the IssuerSettings was initially created
+  optional .google.protobuf.Timestamp created_at = 8 [(.google.api.field_behavior) = OUTPUT_ONLY];
+
+  // UpdatedAt records the timestamp of the last update to the IssuerSettings
+  optional .google.protobuf.Timestamp updated_at = 9 [(.google.api.field_behavior) = OUTPUT_ONLY];
 }
 
 // Keycloak IdP Settings
