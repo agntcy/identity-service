@@ -11,7 +11,7 @@ The `Identity Service` currently integrates IdPs (e.g. Okta, Duo, Ory...) using 
 
 ### Badges and Signature
 
-For each tenant, the `Identity Service` generates a key pair and uses it to sign and verify badges for Agentic Services. The keypair is stored in the `Identity Service` vault.
+For each tenant, the `Identity Service` generates a keypair and uses it to sign and verify badges for Agentic Services. The keypair is stored in the `Identity Service` vault.
 
 ### Flow Diagrams
 
@@ -113,21 +113,21 @@ Idp ->> Identity Service: Issue JWT Access Token
 ## Addons for draft-ietf-oauth-client-id-metadata-document-00
 
 The Client ID Metadata Document contains claims defined by
-[IANA OAuth Dynamic Client Registration Metadata](https://www.iana.org/assignments/oauth-parameters/oauth-parameters.xhtml#client-metadata)
-in relation with [RFC7591](https://datatracker.ietf.org/doc/html/rfc7591) and [RFC7592](https://datatracker.ietf.org/doc/html/rfc7592), such as `client_name`, `redirect_uris`, `token_endpoint_auth_method`, `jwks_uri`, etc.
+[OAuth Client ID Metadata Document](https://www.iana.org/assignments/oauth-parameters/oauth-parameters.xhtml#client-metadata)
+in relation with [RFC7592](https://datatracker.ietf.org/doc/html/rfc7592), such as `client_name`, `redirect_uris`, `token_endpoint_auth_method`, `jwks_uri`, etc.
 
 These claims are OAuth2 generic and can be used in various contexts.
 Specificially for Agentic Services, we can propose additional claims to enhance the functionality and interoperability of the services.
 
 ### Verifiable Credentials Extension (W3C)
 
-The Agent Identity Service uses badges as Verifiable Credentials (VCs) based on the W3C VC Data Model.
-A badge is issued by the Identity Provider (IdP) and signed using a private key stored in the Identity Service vault.
-Its claims contains information about the Agentic Service, such as its identity (ResolverMetadataID), Agent Card Definition, MCP Server Tools and Resources.
+The Agent Identity Service uses badges as Verifiable Credentials (VCs) based on the [W3C VC Data Model](https://www.w3.org/TR/vc-data-model-2.0/).
+A badge is issued by the Identity Provider (IdP) and signed using a private key stored in the `Identity Service` vault.
+Its claims contains information about the Agentic Service, such as its identity (ResolverMetadataID), Agent Card Definition or MCP Server's Tools and Resources.
 
-In addition to send the keypair location using `jwks_uri`, we can propose to adding the signed badge (W3C Verifiable Credential) as an extension to the Client ID Metadata Document.
-The VC can be verified therefore verified by the Identity Provider's Authorization Server using the public key retrieved from the `jwks_uri`.
-Then Authorization Server might decide to include additional claims in the issued tokens based on the VC content.
+In addition to send the keypair location using `jwks_uri`, we propose adding the signed badge (W3C Verifiable Credential) as an extension to the Client ID Metadata Document.
+The VC can be therefore verified by the Identity Provider's Authorization Server using the public key retrieved from the `jwks_uri`.
+Then Authorization Server might decide to include additional claims in the issued access tokens based on the VC's content.
 
 The Client ID Metadata Document could now contain the following field:
 
