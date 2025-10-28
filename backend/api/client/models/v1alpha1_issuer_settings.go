@@ -17,6 +17,11 @@ import (
 // swagger:model v1alpha1IssuerSettings
 type V1alpha1IssuerSettings struct {
 
+	// CreatedAt records the timestamp of when the IssuerSettings was initially created
+	// Read Only: true
+	// Format: date-time
+	CreatedAt strfmt.DateTime `json:"createdAt,omitempty"`
+
 	// Settings for the Duo Identity Provider.
 	DuoIdpSettings *V1alpha1DuoIdpSettings `json:"duoIdpSettings,omitempty"`
 
@@ -37,11 +42,20 @@ type V1alpha1IssuerSettings struct {
 
 	// Settings for the Ory Identity Provider.
 	OryIdpSettings *V1alpha1OryIdpSettings `json:"oryIdpSettings,omitempty"`
+
+	// UpdatedAt records the timestamp of the last update to the IssuerSettings
+	// Read Only: true
+	// Format: date-time
+	UpdatedAt strfmt.DateTime `json:"updatedAt,omitempty"`
 }
 
 // Validate validates this v1alpha1 issuer settings
 func (m *V1alpha1IssuerSettings) Validate(formats strfmt.Registry) error {
 	var res []error
+
+	if err := m.validateCreatedAt(formats); err != nil {
+		res = append(res, err)
+	}
 
 	if err := m.validateDuoIdpSettings(formats); err != nil {
 		res = append(res, err)
@@ -63,9 +77,25 @@ func (m *V1alpha1IssuerSettings) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateUpdatedAt(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *V1alpha1IssuerSettings) validateCreatedAt(formats strfmt.Registry) error {
+	if swag.IsZero(m.CreatedAt) { // not required
+		return nil
+	}
+
+	if err := validate.FormatOf("createdAt", "body", "date-time", m.CreatedAt.String(), formats); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -189,9 +219,25 @@ func (m *V1alpha1IssuerSettings) validateOryIdpSettings(formats strfmt.Registry)
 	return nil
 }
 
+func (m *V1alpha1IssuerSettings) validateUpdatedAt(formats strfmt.Registry) error {
+	if swag.IsZero(m.UpdatedAt) { // not required
+		return nil
+	}
+
+	if err := validate.FormatOf("updatedAt", "body", "date-time", m.UpdatedAt.String(), formats); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // ContextValidate validate this v1alpha1 issuer settings based on the context it is used
 func (m *V1alpha1IssuerSettings) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
+
+	if err := m.contextValidateCreatedAt(ctx, formats); err != nil {
+		res = append(res, err)
+	}
 
 	if err := m.contextValidateDuoIdpSettings(ctx, formats); err != nil {
 		res = append(res, err)
@@ -217,9 +263,22 @@ func (m *V1alpha1IssuerSettings) ContextValidate(ctx context.Context, formats st
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateUpdatedAt(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *V1alpha1IssuerSettings) contextValidateCreatedAt(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "createdAt", "body", m.CreatedAt); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -348,6 +407,15 @@ func (m *V1alpha1IssuerSettings) contextValidateOryIdpSettings(ctx context.Conte
 
 			return err
 		}
+	}
+
+	return nil
+}
+
+func (m *V1alpha1IssuerSettings) contextValidateUpdatedAt(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "updatedAt", "body", m.UpdatedAt); err != nil {
+		return err
 	}
 
 	return nil
