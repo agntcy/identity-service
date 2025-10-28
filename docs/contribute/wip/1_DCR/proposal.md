@@ -110,7 +110,7 @@ note right of Identity Service: Provide jwt_private_key_jwt authentication
 Idp ->> Identity Service: Issue JWT Access Token
 ```
 
-## Addons for draft-ietf-oauth-client-id-metadata-document-00
+## Extensions for draft-ietf-oauth-client-id-metadata-document-00
 
 The Client ID Metadata Document contains claims defined by
 [OAuth Client ID Metadata Document](https://www.iana.org/assignments/oauth-parameters/oauth-parameters.xhtml#client-metadata)
