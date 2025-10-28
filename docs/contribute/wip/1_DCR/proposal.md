@@ -86,7 +86,7 @@ autonumber
 
 Identity Service->>Idp: Issue JWT Access Token for Agentic Service
 note right of Identity Service: Send the Metadata URI as Client ID
-note right of Identity Service: Provide jwt_private_key_jwt authentication
+note right of Identity Service: Provide private_key_jwt authentication
 Idp ->> Idp: Get the metadata document from the Metadata URI
 note left of Idp: Retrieve the OAuth2 claims, including jwks_uri
 Idp ->> Identity Service: Issue JWT Access Token
