@@ -5,10 +5,10 @@
 
 import logging
 
+import httpx
+
 from identityservice.auth.common import get_mcp_request_tool_name
 from identityservice.sdk import IdentityServiceSdk as Sdk
-
-import httpx
 
 logger = logging.getLogger("identityservice.auth.httpx")
 

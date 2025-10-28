@@ -4,10 +4,13 @@
 """MCP Discover for the Identity Service Python SDK."""
 
 import json
-from typing import List
+from typing import Dict, List
 
+from httpx import HTTPError
 from mcp import ClientSession
 from mcp.client.streamable_http import streamablehttp_client
+
+from identityservice.exceptions import SdkError
 
 MCP_SUFFIX = "/mcp"
 
@@ -15,7 +18,7 @@ MCP_SUFFIX = "/mcp"
 class McpTool:
     """Represents a tool in the MCP server."""
 
-    def __init__(self, name: str, description: str, parameters: dict):
+    def __init__(self, name: str, description: str | None, parameters: dict):
         """Initialize a McpTool instance."""
         self.name = name
         self.description = description
@@ -25,7 +28,7 @@ class McpTool:
 class McpResource:
     """Represents a resource in the MCP server."""
 
-    def __init__(self, name: str, description: str, uri: str):
+    def __init__(self, name: str, description: str | None, uri: str):
         """Initialize a McpResource instance."""
         self.name = name
         self.description = description
@@ -73,35 +76,9 @@ async def discover(name: str, url: str) -> str:
                 # Initialize the connection
                 await session.initialize()
 
-                # Discover MCP server - List tools
-                tools_response = await session.list_tools()
+                available_tools = await _discover_tools(session)
 
-                available_tools = []
-                for tool in tools_response.tools:
-                    # Convert input schema to JSON and parse it
-                    json_params = json.dumps(tool.inputSchema)
-                    parameters = json.loads(json_params)
-
-                    available_tools.append(
-                        McpTool(
-                            name=tool.name,
-                            description=tool.description,
-                            parameters=parameters,
-                        )
-                    )
-
-                # Discover MCP server - List resources
-                resources_response = await session.list_resources()
-
-                available_resources = []
-                for resource in resources_response.resources:
-                    available_resources.append(
-                        McpResource(
-                            name=resource.name,
-                            description=resource.description,
-                            uri=str(resource.uri),
-                        )
-                    )
+                available_resources = await _discover_resources(session)
 
                 # Return the discovered MCP server
                 return McpServer(
@@ -111,5 +88,63 @@ async def discover(name: str, url: str) -> str:
                     resources=available_resources,
                 ).to_json()
 
-    except Exception as err:
-        raise err
+    except Exception as e:
+        if isinstance(e, ExceptionGroup):
+            eg: ExceptionGroup = e
+            metadata = _get_http_error_metadata(eg.exceptions[0])
+            raise SdkError(
+                f"MCP client: {str(eg.exceptions[0])}",
+                metadata=metadata,
+                inner_exception=eg,
+            ) from e
+        raise SdkError("MCP server discovery failed", inner_exception=e) from e
+
+
+async def _discover_tools(session: ClientSession):
+    """Discover MCP server - List tools"""
+    tools_response = await session.list_tools()
+
+    available_tools = []
+    for tool in tools_response.tools:
+        # Convert input schema to JSON and parse it
+        json_params = json.dumps(tool.inputSchema)
+        parameters = json.loads(json_params)
+
+        available_tools.append(
+            McpTool(
+                name=tool.name,
+                description=tool.description,
+                parameters=parameters,
+            )
+        )
+
+    return available_tools
+
+
+async def _discover_resources(session: ClientSession):
+    """Discover MCP server - List resources"""
+    resources_response = await session.list_resources()
+
+    available_resources = []
+    for resource in resources_response.resources:
+        available_resources.append(
+            McpResource(
+                name=resource.name,
+                description=resource.description,
+                uri=str(resource.uri),
+            )
+        )
+
+    return available_resources
+
+
+def _get_http_error_metadata(err: Exception) -> Dict[str, str]:
+    if not isinstance(err, HTTPError):
+        return {}
+
+    body = err.request.content.decode("utf-8")
+    return {
+        "url": str(err.request.url),
+        "method": err.request.method,
+        "body": json.loads(body),
+    }

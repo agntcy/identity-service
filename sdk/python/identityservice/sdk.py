@@ -4,35 +4,54 @@
 """Identity Service SDK for Python."""
 
 import asyncio
-import base64
-import inspect
 import logging
-import os
-from importlib import import_module
-from pkgutil import iter_modules
 
-import agntcy.identity.service.v1alpha1
-from agntcy.identity.service.v1alpha1.app_pb2 import AppType
-from dotenv import load_dotenv
 from google.protobuf import empty_pb2
 
-from identityservice import client
-from identityservice.badge.a2a import adiscover as adiscover_a2a
-from identityservice.badge.a2a import discover as discover_a2a
-from identityservice.badge.mcp import discover as discover_mcp
+from agntcy.identity.service.v1alpha1 import (
+    app_service_pb2_grpc,
+    auth_service_pb2_grpc,
+    badge_service_pb2_grpc,
+    device_service_pb2_grpc,
+    policy_service_pb2_grpc,
+    settings_service_pb2_grpc,
+)
+from agntcy.identity.service.v1alpha1.app_service_pb2_grpc import AppServiceStub
+from agntcy.identity.service.v1alpha1.auth_service_pb2 import (
+    AuthorizeRequest,
+    ExtAuthzRequest,
+    TokenRequest,
+)
+from agntcy.identity.service.v1alpha1.auth_service_pb2_grpc import (
+    AuthServiceStub,
+)
+from agntcy.identity.service.v1alpha1.badge_pb2 import Badge, VerificationResult
+from agntcy.identity.service.v1alpha1.badge_service_pb2 import (
+    IssueBadgeRequest,
+    VerifyBadgeRequest,
+)
+from agntcy.identity.service.v1alpha1.badge_service_pb2_grpc import (
+    BadgeServiceStub,
+)
+from agntcy.identity.service.v1alpha1.device_service_pb2_grpc import (
+    DeviceServiceStub,
+)
+from agntcy.identity.service.v1alpha1.policy_service_pb2_grpc import (
+    PolicyServiceStub,
+)
+from agntcy.identity.service.v1alpha1.settings_service_pb2_grpc import (
+    SettingsServiceStub,
+)
+from identityservice.badge.claims import create_claims
+from identityservice.client import Client
 
 logging.getLogger("identityservice").addHandler(logging.NullHandler())
 logger = logging.getLogger("identityservice.sdk")
 
 
-def _load_grpc_objects(module, path):
-    """Load all the objects from the Python Identity SDK."""
-    for _, modname, _ in iter_modules(module.__path__):
-        # Import the module
-        module = import_module(f"{path}.{modname}")
-        # Inspect the module and set attributes on Identity SDK for each class found
-        for name, obj in inspect.getmembers(module, inspect.isclass):
-            setattr(IdentityServiceSdk, name, obj)
+def empty_request():
+    """Return an empty request object."""
+    return empty_pb2.Empty()
 
 
 class IdentityServiceSdk:
@@ -41,66 +60,52 @@ class IdentityServiceSdk:
     def __init__(
         self,
         api_key: str | None = None,
-        async_mode=False,
     ):
         """Initialize the Identity Service SDK.
 
         Parameters:
             api_key (str | None): The API key to use for authentication.
-            async_mode (bool): Whether to use async mode or not. Defaults to False.
 
         """
-        # Try to get the API Key from the environment variable
-        if api_key is None:
-            load_dotenv()
-            api_key = os.environ.get("IDENTITY_SERVICE_API_KEY")
+        logger.debug("Initializing Identity Service SDK with API Key")
 
-        # Validate API Key
-        if not api_key:
-            raise ValueError(
-                "An Organization or Agentic Service API Key is required for Identity Service SDK."
-            )
-
-        logger.debug(
-            "Initializing Identity Service SDK with API Key, Async Mode: %s",
-            async_mode,
-        )
-
-        # Load dynamically all objects
-        _load_grpc_objects(
-            agntcy.identity.service.v1alpha1,
-            "agntcy.identity.service.v1alpha1",
-        )
-
-        self.client = client.Client(api_key, async_mode)
-
-    def empty_request(self):
-        """Return an empty request object."""
-        return empty_pb2.Empty()
+        self.client = Client(api_key, async_mode=False)
 
     def get_settings_service(
         self,
-    ) -> "agntcy.identity.service.v1alpha1.SettingsService":
+    ) -> SettingsServiceStub:
         """Return the SettingsService stub."""
-        return IdentityServiceSdk.SettingsServiceStub(self.client.channel)
+        return SettingsServiceStub(self.client.channel)
 
     def get_app_service(
         self,
-    ) -> "agntcy.identity.service.v1alpha1.AppsService":
+    ) -> AppServiceStub:
         """Return the AppService stub."""
-        return IdentityServiceSdk.AppServiceStub(self.client.channel)
+        return AppServiceStub(self.client.channel)
 
     def get_badge_service(
         self,
-    ) -> "agntcy.identity.service.v1alpha1.BadgeService":
+    ) -> BadgeServiceStub:
         """Return the BadgeService stub."""
-        return IdentityServiceSdk.BadgeServiceStub(self.client.channel)
+        return BadgeServiceStub(self.client.channel)
 
     def get_auth_service(
         self,
-    ) -> "agntcy.identity.service.v1alpha1.AuthService":
+    ) -> AuthServiceStub:
         """Return the AuthService stub."""
-        return IdentityServiceSdk.AuthServiceStub(self.client.channel)
+        return AuthServiceStub(self.client.channel)
+
+    def get_device_service(
+        self,
+    ) -> DeviceServiceStub:
+        """Return the DeviceService stub."""
+        return DeviceServiceStub(self.client.channel)
+
+    def get_policy_service(
+        self,
+    ) -> PolicyServiceStub:
+        """Return the PolicyServiceStub stub."""
+        return PolicyServiceStub(self.client.channel)
 
     def access_token(
         self,
@@ -108,6 +113,7 @@ class IdentityServiceSdk:
         tool_name: str | None = None,
         user_token: str | None = None,
     ) -> str | None:
+        # pylint: disable=line-too-long
         """Authorizes an agentic service and returns an access token.
 
         Parameters:
@@ -118,27 +124,21 @@ class IdentityServiceSdk:
         Returns:
             str: The issued access token.
         """
-        try:
-            auth_response = self.get_auth_service().Authorize(
-                IdentityServiceSdk.AuthorizeRequest(
-                    resolver_metadata_id=resolver_metadata_id,
-                    tool_name=tool_name,
-                    user_token=user_token,
-                )
+        auth_response = self.get_auth_service().Authorize(
+            AuthorizeRequest(
+                resolver_metadata_id=resolver_metadata_id,
+                tool_name=tool_name,
+                user_token=user_token,
             )
+        )
 
-            token_response = self.get_auth_service().Token(
-                IdentityServiceSdk.TokenRequest(
-                    authorization_code=auth_response.authorization_code,
-                )
+        token_response = self.get_auth_service().Token(
+            TokenRequest(
+                authorization_code=auth_response.authorization_code,
             )
+        )
 
-            return token_response.access_token
-        except Exception as e:
-            raise RuntimeError(
-                f"""Failed to authorize agentic service {resolver_metadata_id}
-                with tool {tool_name}: {e}"""
-            ) from e
+        return token_response.access_token
 
     def authorize(self, access_token: str, tool_name: str | None = None):
         """Authorize an agentic service with an access token.
@@ -148,15 +148,13 @@ class IdentityServiceSdk:
             tool_name (str | None): The name of the tool to authorize for.
         """
         return self.get_auth_service().ExtAuthz(
-            IdentityServiceSdk.ExtAuthzRequest(
+            ExtAuthzRequest(
                 access_token=access_token,
                 tool_name=tool_name,
             )
         )
 
-    def verify_badge(
-        self, badge: str
-    ) -> "agntcy.identity.service.v1alpha1.VerificationResult":
+    def verify_badge(self, badge: str) -> VerificationResult:
         """Verify a badge.
 
         Parameters:
@@ -166,12 +164,140 @@ class IdentityServiceSdk:
             VerificationResult: The result of the verification.
         """
         return self.get_badge_service().VerifyBadge(
-            request=IdentityServiceSdk.VerifyBadgeRequest(badge=badge)
+            VerifyBadgeRequest(badge=badge)
         )
 
-    async def averify_badge(
-        self, badge: str
-    ) -> "agntcy.identity.service.v1alpha1.VerificationResult":
+    def issue_badge(
+        self,
+        url: str,
+    ) -> Badge:
+        """Issue a badge for an agentic service.
+
+        Parameters:
+            url (str): The URL of the agentic service to issue a badge for.
+        """
+        # Fetch the agentic service
+        app_info = self.get_auth_service().AppInfo(empty_pb2.Empty())
+
+        # Get name and type
+        service_name = app_info.app.name
+        service_type = app_info.app.type
+        service_id = app_info.app.id
+
+        logger.debug(f"Service Name: [bold blue]{service_name}[/bold blue]")
+        logger.debug(f"Service Type: [bold blue]{service_type}[/bold blue]")
+
+        # Get claims
+        claims = asyncio.run(create_claims(url, service_name, service_type))
+
+        # Issue the badge
+        return self.get_badge_service().IssueBadge(
+            request=IssueBadgeRequest(app_id=service_id, **claims)
+        )
+
+
+class IdentityServiceAsyncSdk:
+    """Identity Service Async SDK for Python."""
+
+    def __init__(
+        self,
+        api_key: str | None = None,
+    ):
+        """Initialize the Identity Service SDK.
+
+        Parameters:
+            api_key (str | None): The API key to use for authentication.
+            async_mode (bool): Whether to use async mode or not. Defaults to False.
+
+        """
+        logger.debug("Initializing Identity Service async SDK with API Key")
+
+        self.client = Client(api_key, async_mode=True)
+
+    def get_settings_service(
+        self,
+    ) -> "settings_service_pb2_grpc.SettingsServiceAsyncStub":
+        """Return the SettingsService async stub."""
+        return SettingsServiceStub(self.client.channel)  # type: ignore
+
+    def get_app_service(
+        self,
+    ) -> "app_service_pb2_grpc.AppServiceAsyncStub":
+        """Return the AppService async stub."""
+        return AppServiceStub(self.client.channel)  # type: ignore
+
+    def get_badge_service(
+        self,
+    ) -> "badge_service_pb2_grpc.BadgeServiceAsyncStub":
+        """Return the BadgeService async stub."""
+        return BadgeServiceStub(self.client.channel)  # type: ignore
+
+    def get_auth_service(
+        self,
+    ) -> "auth_service_pb2_grpc.AuthServiceAsyncStub":
+        """Return the AuthService async stub."""
+        return AuthServiceStub(self.client.channel)  # type: ignore
+
+    def get_device_service(
+        self,
+    ) -> "device_service_pb2_grpc.DeviceServiceAsyncStub":
+        """Return the DeviceService async stub."""
+        return DeviceServiceStub(self.client.channel)  # type: ignore
+
+    def get_policy_service(
+        self,
+    ) -> "policy_service_pb2_grpc.PolicyServiceAsyncStub":
+        """Return the PolicyServiceStub async stub."""
+        return PolicyServiceStub(self.client.channel)  # type: ignore
+
+    async def access_token(
+        self,
+        resolver_metadata_id: str | None = None,
+        tool_name: str | None = None,
+        user_token: str | None = None,
+    ) -> str | None:
+        # pylint: disable=line-too-long
+        """Authorizes an agentic service and returns an access token.
+
+        Parameters:
+            resolver_metadata_id (str | None): The ResolverMetadata ID of the Agentic Service to authorize for.
+            tool_name (str | None): The name of the tool to authorize for.
+            user_token (str | None): The user token to use for the token.
+
+        Returns:
+            str: The issued access token.
+        """
+        auth_response = await self.get_auth_service().Authorize(
+            AuthorizeRequest(
+                resolver_metadata_id=resolver_metadata_id,
+                tool_name=tool_name,
+                user_token=user_token,
+            )
+        )
+
+        token_response = await self.get_auth_service().Token(
+            TokenRequest(
+                authorization_code=auth_response.authorization_code,
+            )
+        )
+
+        return token_response.access_token
+
+    async def authorize(self, access_token: str, tool_name: str | None = None):
+        """Authorize an agentic service with an access token using async method.
+
+        Parameters:
+            access_token (str): The access token to authorize with.
+            tool_name (str | None): The name of the tool to authorize for.
+        """
+        return await self.get_auth_service().ExtAuthz(
+            ExtAuthzRequest(
+                access_token=access_token,
+                tool_name=tool_name,
+            )
+        )
+
+    async def verify_badge(self, badge: str) -> VerificationResult:
         """Verify a badge using async method.
 
         Parameters:
@@ -181,20 +307,20 @@ class IdentityServiceSdk:
             VerificationResult: The result of the verification.
         """
         return await self.get_badge_service().VerifyBadge(
-            IdentityServiceSdk.VerifyBadgeRequest(badge=badge)
+            VerifyBadgeRequest(badge=badge)
         )
 
-    def issue_badge(
+    async def issue_badge(
         self,
         url: str,
-    ):
+    ) -> Badge:
         """Issue a badge for an agentic service.
 
         Parameters:
             url (str): The URL of the agentic service to issue a badge for.
         """
         # Fetch the agentic service
-        app_info = self.get_auth_service().AppInfo(self.empty_request())
+        app_info = await self.get_auth_service().AppInfo(empty_pb2.Empty())
 
         # Get name and type
         service_name = app_info.app.name
@@ -205,107 +331,9 @@ class IdentityServiceSdk:
         logger.debug(f"Service Type: [bold blue]{service_type}[/bold blue]")
 
         # Get claims
-        claims = {}
-
-        if service_type == AppType.Value(
-            "APP_TYPE_MCP_SERVER"
-        ):  # APP_TYPE_MCP_SERVER
-            logger.debug(
-                f"[bold green]Discovering MCP server for {service_name} at {url}[/bold green]"
-            )
-
-            # Discover the MCP server
-            schema = asyncio.run(discover_mcp(service_name, url))
-
-            claims["mcp"] = {
-                "schema_base64": base64.b64encode(schema.encode("utf-8")),
-            }
-        elif service_type == AppType.Value(
-            "APP_TYPE_AGENT_A2A"
-        ):  # APP_TYPE_AGENT_A2A
-            logger.debug(
-                f"""[bold green]Discovering A2A agent for {service_name} at
-                [bold blue]{url}[/bold blue][/bold green]"""
-            )
-
-            # Discover the A2A agent
-            schema = discover_a2a(url)
-
-            claims["a2a"] = {
-                "schema_base64": base64.b64encode(schema.encode("utf-8")),
-            }
-
-        if not claims:
-            raise ValueError(
-                f"Unsupported service type: {service_type} for service {service_name}"
-            )
+        claims = await create_claims(url, service_name, service_type)
 
         # Issue the badge
-        self.get_badge_service().IssueBadge(
-            request=IdentityServiceSdk.IssueBadgeRequest(
-                app_id=service_id, **claims
-            )
-        )
-
-    async def aissue_badge(
-        self,
-        url: str,
-    ):
-        """Issue a badge for an agentic service.
-
-        Parameters:
-            url (str): The URL of the agentic service to issue a badge for.
-        """
-        # Fetch the agentic service
-        app_info = await self.get_auth_service().AppInfo(self.empty_request())
-
-        # Get name and type
-        service_name = app_info.app.name
-        service_type = app_info.app.type
-        service_id = app_info.app.id
-
-        logger.debug(f"Service Name: [bold blue]{service_name}[/bold blue]")
-        logger.debug(f"Service Type: [bold blue]{service_type}[/bold blue]")
-
-        # Get claims
-        claims = {}
-
-        if service_type == AppType.Value(
-            "APP_TYPE_MCP_SERVER"
-        ):  # APP_TYPE_MCP_SERVER
-            logger.debug(
-                f"[bold green]Discovering MCP server for {service_name} at {url}[/bold green]"
-            )
-
-            # Discover the MCP server
-            schema = await discover_mcp(service_name, url)
-
-            claims["mcp"] = {
-                "schema_base64": base64.b64encode(schema.encode("utf-8")),
-            }
-        elif service_type == AppType.Value(
-            "APP_TYPE_AGENT_A2A"
-        ):  # APP_TYPE_AGENT_A2A
-            logger.debug(
-                f"""[bold green]Discovering A2A agent for {service_name} at
-                [bold blue]{url}[/bold blue][/bold green]"""
-            )
-
-            # Discover the A2A agent
-            schema = await adiscover_a2a(url)
-
-            claims["a2a"] = {
-                "schema_base64": base64.b64encode(schema.encode("utf-8")),
-            }
-
-        if not claims:
-            raise ValueError(
-                f"Unsupported service type: {service_type} for service {service_name}"
-            )
-
-        # Issue the badge
-        await self.get_badge_service().IssueBadge(
-            request=IdentityServiceSdk.IssueBadgeRequest(
-                app_id=service_id, **claims
-            )
+        return await self.get_badge_service().IssueBadge(
+            request=IssueBadgeRequest(app_id=service_id, **claims)
         )

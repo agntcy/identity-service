@@ -54,6 +54,8 @@ func (r *repository) UpdateIssuerSettings(
 		existingSettings.OktaIdpSettings = model.OktaIdpSettings
 	case types.IDP_TYPE_ORY:
 		existingSettings.OryIdpSettings = model.OryIdpSettings
+	case types.IDP_TYPE_KEYCLOAK:
+		existingSettings.KeycloakIdpSettings = model.KeycloakIdpSettings
 	}
 
 	updated := r.dbContext.

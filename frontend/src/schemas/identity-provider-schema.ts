@@ -16,7 +16,11 @@ export const IdentityProvidersSchema = z
     integrationKey: z.string().optional(),
     secretKey: z.string().optional(),
     projectSlug: z.string().optional(),
-    apiKey: z.string().optional()
+    apiKey: z.string().optional(),
+    baseUrl: z.string().optional(),
+    realm: z.string().optional(),
+    client: z.string().optional(),
+    clientSecret: z.string().optional()
   })
   .superRefine((data, ctx) => {
     if (data.provider === IdpType.IDP_TYPE_DUO) {
@@ -68,6 +72,31 @@ export const IdentityProvidersSchema = z
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: 'Project Slug is required for Ory'
+        });
+      }
+    } else if (data.provider === IdpType.IDP_TYPE_KEYCLOAK) {
+      if (!data.baseUrl) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Base URL is required for Keycloak'
+        });
+      }
+      if (!data.realm) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Realm is required for Keycloak'
+        });
+      }
+      if (!data.client) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Client ID is required for Keycloak'
+        });
+      }
+      if (!data.clientSecret) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Client Secret is required for Keycloak'
         });
       }
     }

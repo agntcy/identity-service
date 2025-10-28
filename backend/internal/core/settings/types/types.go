@@ -1,6 +1,8 @@
 // Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
 // SPDX-License-Identifier: Apache-2.0
 
+//go:generate stringer -type=IdpType
+
 package types
 
 // Type
@@ -21,6 +23,9 @@ const (
 
 	// Idp Type Self.
 	IDP_TYPE_SELF
+
+	// Idp Type Keycloak.
+	IDP_TYPE_KEYCLOAK
 )
 
 func (t *IdpType) UnmarshalText(text []byte) error {
@@ -31,6 +36,8 @@ func (t *IdpType) UnmarshalText(text []byte) error {
 		*t = IDP_TYPE_OKTA
 	case IDP_TYPE_ORY.String():
 		*t = IDP_TYPE_ORY
+	case IDP_TYPE_KEYCLOAK.String():
+		*t = IDP_TYPE_KEYCLOAK
 	default:
 		*t = IDP_TYPE_UNSPECIFIED
 	}
@@ -67,6 +74,14 @@ type OryIdpSettings struct {
 	ApiKey      string `json:"api_key,omitempty"      protobuf:"bytes,2,opt,name=api_key"`
 }
 
+// Keycloak IdP Settings
+type KeycloakIdpSettings struct {
+	BaseUrl      string `json:"base_url,omitempty"      protobuf:"bytes,1,opt,name=base_url"`
+	Realm        string `json:"realm,omitempty"         protobuf:"bytes,2,opt,name=realm"`
+	ClientID     string `json:"client_id,omitempty"     protobuf:"bytes,3,opt,name=client_id"`
+	ClientSecret string `json:"client_secret,omitempty" protobuf:"bytes,4,opt,name=client_secret"`
+}
+
 // Issuer Settings
 type IssuerSettings struct {
 	// A unique identifier for the Issuer.
@@ -93,6 +108,10 @@ type IssuerSettings struct {
 	// Settings for the Ory Identity Provider.
 	// +field_behavior:OPTIONAL
 	OryIdpSettings *OryIdpSettings `json:"ory_idp_settings,omitempty" protobuf:"bytes,6,opt,name=ory_idp_settings"`
+
+	// Settings for the Keycloak Identity Provider.
+	// +field_behavior:OPTIONAL
+	KeycloakIdpSettings *KeycloakIdpSettings `json:"keycloak_idp_settings,omitempty" protobuf:"bytes,7,opt,name=keycloak_idp_settings"` //nolint:lll // struct tags exceed line length
 }
 
 // Identity Settings

@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: Apache-2.0
 """Constants for the Identity Service Python SDK."""
 
-
 DEFAULT_GRPC_URL = "api.grpc.agent-identity.outshift.com"
 GRPC_MAX_MESSAGE_LENGTH = 1024 * 1024 * 1024
 GRPC_KEEP_ALIVE_TIME_MS = 100000

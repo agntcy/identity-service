@@ -11,17 +11,19 @@ import (
 )
 
 type IssuerSettings struct {
-	ID                uuid.UUID     `gorm:"primaryKey;default:gen_random_uuid()"`
-	TenantID          string        `gorm:"not null;type:varchar(256);"`
-	IssuerID          *string       `gorm:"type:varchar(256);"`
-	KeyID             *string       `gorm:"type:varchar(256);"`
-	IdpType           types.IdpType `gorm:"not null;type:uint;default:0;"`
-	DuoIdpSettingsID  *uuid.UUID    `gorm:"foreignKey:ID"`
-	DuoIdpSettings    *DuoIdpSettings
-	OktaIdpSettingsID *uuid.UUID `gorm:"foreignKey:ID"`
-	OktaIdpSettings   *OktaIdpSettings
-	OryIdpSettingsID  *uuid.UUID `gorm:"foreignKey:ID"`
-	OryIdpSettings    *OryIdpSettings
+	ID                    uuid.UUID     `gorm:"primaryKey;default:gen_random_uuid()"`
+	TenantID              string        `gorm:"not null;type:varchar(256);"`
+	IssuerID              *string       `gorm:"type:varchar(256);"`
+	KeyID                 *string       `gorm:"type:varchar(256);"`
+	IdpType               types.IdpType `gorm:"not null;type:uint;default:0;"`
+	DuoIdpSettingsID      *uuid.UUID    `gorm:"foreignKey:ID"`
+	DuoIdpSettings        *DuoIdpSettings
+	OktaIdpSettingsID     *uuid.UUID `gorm:"foreignKey:ID"`
+	OktaIdpSettings       *OktaIdpSettings
+	OryIdpSettingsID      *uuid.UUID `gorm:"foreignKey:ID"`
+	OryIdpSettings        *OryIdpSettings
+	KeycloakIdpSettingsID *uuid.UUID `gorm:"foreignKey:ID"`
+	KeycloakIdpSettings   *KeycloakIdpSettings
 }
 
 type DuoIdpSettings struct {
@@ -42,6 +44,14 @@ type OryIdpSettings struct {
 	ID          uuid.UUID                `gorm:"primaryKey;default:gen_random_uuid()"`
 	ProjectSlug string                   `gorm:"not null;type:varchar(256);"`
 	ApiKey      *secrets.EncryptedString `gorm:"type:varchar(4096);"`
+}
+
+type KeycloakIdpSettings struct {
+	ID           uuid.UUID                `gorm:"primaryKey;default:gen_random_uuid()"`
+	BaseUrl      string                   `gorm:"not null;type:varchar(512);"`
+	Realm        string                   `gorm:"not null;type:varchar(256);"`
+	ClientID     string                   `gorm:"not null;type:varchar(256);"`
+	ClientSecret *secrets.EncryptedString `gorm:"type:varchar(4096);"`
 }
 
 type Device struct {
@@ -86,18 +96,31 @@ func (i *OryIdpSettings) ToCoreType(crypter secrets.Crypter) *types.OryIdpSettin
 	}
 }
 
+func (i *KeycloakIdpSettings) ToCoreType(crypter secrets.Crypter) *types.KeycloakIdpSettings {
+	if i == nil {
+		return nil
+	}
+
+	return &types.KeycloakIdpSettings{
+		BaseUrl:      i.BaseUrl,
+		Realm:        i.Realm,
+		ClientID:     i.ClientID,
+		ClientSecret: ptrutil.DerefStr(secrets.EncryptedStringToRaw(i.ClientSecret, crypter)),
+	}
+}
 func (i *IssuerSettings) ToCoreType(crypter secrets.Crypter) *types.IssuerSettings {
 	if i == nil {
 		return nil
 	}
 
 	return &types.IssuerSettings{
-		IssuerID:        ptrutil.DerefStr(i.IssuerID),
-		KeyID:           ptrutil.DerefStr(i.KeyID),
-		IdpType:         i.IdpType,
-		DuoIdpSettings:  i.DuoIdpSettings.ToCoreType(crypter),
-		OktaIdpSettings: i.OktaIdpSettings.ToCoreType(crypter),
-		OryIdpSettings:  i.OryIdpSettings.ToCoreType(crypter),
+		IssuerID:            ptrutil.DerefStr(i.IssuerID),
+		KeyID:               ptrutil.DerefStr(i.KeyID),
+		IdpType:             i.IdpType,
+		DuoIdpSettings:      i.DuoIdpSettings.ToCoreType(crypter),
+		OktaIdpSettings:     i.OktaIdpSettings.ToCoreType(crypter),
+		OryIdpSettings:      i.OryIdpSettings.ToCoreType(crypter),
+		KeycloakIdpSettings: i.KeycloakIdpSettings.ToCoreType(crypter),
 	}
 }
 
@@ -136,13 +159,27 @@ func newOryIdpSettingsModel(src *types.OryIdpSettings, crypter secrets.Crypter) 
 	}
 }
 
+func newKeycloakIdpSettingsModel(src *types.KeycloakIdpSettings, crypter secrets.Crypter) *KeycloakIdpSettings {
+	if src == nil {
+		return nil
+	}
+
+	return &KeycloakIdpSettings{
+		BaseUrl:      src.BaseUrl,
+		Realm:        src.Realm,
+		ClientID:     src.ClientID,
+		ClientSecret: secrets.NewEncryptedString(&src.ClientSecret, crypter),
+	}
+}
+
 func newIssuerSettingsModel(src *types.IssuerSettings, crypter secrets.Crypter) *IssuerSettings {
 	return &IssuerSettings{
-		IssuerID:        ptrutil.Ptr(src.IssuerID),
-		KeyID:           ptrutil.Ptr(src.KeyID),
-		IdpType:         src.IdpType,
-		DuoIdpSettings:  newDuoIdpSettingsModel(src.DuoIdpSettings, crypter),
-		OktaIdpSettings: newOktaIdpSettingsModel(src.OktaIdpSettings, crypter),
-		OryIdpSettings:  newOryIdpSettingsModel(src.OryIdpSettings, crypter),
+		IssuerID:            ptrutil.Ptr(src.IssuerID),
+		KeyID:               ptrutil.Ptr(src.KeyID),
+		IdpType:             src.IdpType,
+		DuoIdpSettings:      newDuoIdpSettingsModel(src.DuoIdpSettings, crypter),
+		OktaIdpSettings:     newOktaIdpSettingsModel(src.OktaIdpSettings, crypter),
+		OryIdpSettings:      newOryIdpSettingsModel(src.OryIdpSettings, crypter),
+		KeycloakIdpSettings: newKeycloakIdpSettingsModel(src.KeycloakIdpSettings, crypter),
 	}
 }

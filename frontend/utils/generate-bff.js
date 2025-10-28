@@ -16,10 +16,8 @@ const path = require('path');
     shell.echo(chalk.blue('Start generate bff...'));
 
     // Globals
-    const IDENTITY_V1ALPHA1_PROTO_PATH = "proto/agntcy/identity/service/v1alpha1";
-    const SHARED_V1ALPHA1_PROTO_PATH = "proto/agntcy/identity/service/shared/v1alpha1";
-    const IDENTITY_V1ALPHA1_GENERATED_PATH = "agntcy/identity/service/v1alpha1";
-    const SHARED_V1ALPHA1_GENERATED_PATH = "agntcy/identity/service/shared/v1alpha1";
+    const IDENTITY_V1ALPHA1_PROTO_PATH = 'proto/agntcy/identity/service/v1alpha1';
+    const IDENTITY_V1ALPHA1_GENERATED_PATH = 'agntcy/identity/service/v1alpha1';
 
     async function doRenameAndConvert(inputDir, outputDir) {
       shell.mkdir('-p', outputDir);
@@ -29,7 +27,11 @@ const path = require('path');
         if (fs.lstatSync(filePath).isFile()) {
           const name = file.split('.').slice(0, -1).join('.');
           shell.mv(filePath, path.join(inputDir, name));
-          if (shell.exec(`swagger-typescript-api generate -p ./${path.join(inputDir, name)} -o ./src/api/generated/${outputDir} -n ${name}.api.ts --axios`).code !== 0) {
+          if (
+            shell.exec(
+              `swagger-typescript-api generate -p ./${path.join(inputDir, name)} -o ./src/api/generated/${outputDir} -n ${name}.api.ts --axios`
+            ).code !== 0
+          ) {
             shell.echo(chalk.red(`Error: swagger-typescript-api failed for ${name}.`));
           }
         }
@@ -39,7 +41,10 @@ const path = require('path');
 
     // Function to generate code using buf
     function doGenerate(protoPath) {
-      if (shell.exec(`buf generate --template buf.gen.openapiv2.yaml --output ../../../frontend --path ${protoPath}`).code !== 0) {
+      if (
+        shell.exec(`buf generate --template buf.gen.openapiv2.yaml --output ../../../frontend --path ${protoPath}`).code !==
+        0
+      ) {
         shell.echo(chalk.red(`Error: buf generate failed for ${protoPath}.`));
         shell.exit(1);
       }
@@ -48,13 +53,13 @@ const path = require('path');
     // Function to generate all code
     function doGenerateAll() {
       doGenerate(IDENTITY_V1ALPHA1_PROTO_PATH);
-      doGenerate(SHARED_V1ALPHA1_PROTO_PATH);
+      // doGenerate(SHARED_V1ALPHA1_PROTO_PATH);
     }
 
     // Function to rename and convert all files
     async function doRenameAndConvertAll() {
       await doRenameAndConvert(`generated/openapi/${IDENTITY_V1ALPHA1_GENERATED_PATH}`, 'identity');
-      await doRenameAndConvert(`generated/openapi/${SHARED_V1ALPHA1_GENERATED_PATH}`, 'shared');
+      // await doRenameAndConvert(`generated/openapi/${SHARED_V1ALPHA1_GENERATED_PATH}`, 'shared');
     }
 
     // Generate the code

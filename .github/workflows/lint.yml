@@ -46,6 +46,10 @@ jobs:
           VALIDATE_GO: false
           VALIDATE_ENV: false
           VALIDATE_SHELL_SHFMT: false
+          VALIDATE_PYTHON_PYLINT: false
+          VALIDATE_PYTHON_MYPY: false
+          VALIDATE_PYTHON_RUFF: false
+          VALIDATE_PYTHON_RUFF_FORMAT: false
           VALIDATE_PYTHON_BLACK: false
           VALIDATE_PYTHON_PYINK: false
           VALIDATE_PYTHON_ISORT: false
@@ -100,3 +104,44 @@ jobs:
             echo "Validating templates in: $chart_dir"
             helm template "$chart_dir" > /dev/null
           done
+
+  python-lint:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v4.1.7
+      - name: Set up python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+
+      - name: Install Identity SDK dependencies and lint toolings
+        working-directory: ./sdk/python
+        run: |
+          pip install ".[test]"
+          pip install ".[lint]"
+
+      - name: Running RUFF linter
+        working-directory: ./sdk/python
+        run: ruff --config pyproject.toml check .
+
+      - name: Running RUFF formatter
+        working-directory: ./sdk/python
+        run: ruff --config pyproject.toml format --check
+
+      - name: Running PYLINT
+        working-directory: ./sdk/python
+        run: pylint .
+
+      - name: Running MYPY
+        working-directory: ./sdk/python
+        run: |
+          echo "Remove unsued imports related to protoc_gen_openapiv2"
+          ruff check --select F401 agntcy --fix
+
+          echo "Running mypy on identityservice/"
+          mypy identityservice/
+
+          echo "Running mypy on tests/"
+          mypy tests/

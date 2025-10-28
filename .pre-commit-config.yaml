@@ -27,6 +27,7 @@ repos:
             |backend/api/spec/proto/                      # .proto sources + generated (pb.go in same tree)
             |backend/api/server/.*\.pb\.go$               # other generated Go protobufs
             |backend/api/spec/static/api/openapi/         # generated openapi yaml
+            |docs/generatedSidebarsProtodocs.js           # generated doc JS file
           )
 
   - repo: https://github.com/tekwizely/pre-commit-golang

@@ -18,7 +18,11 @@ license = "Apache-2.0"
 classifiers = [
     "Programming Language :: Python :: 3",
 ]
-dependencies = ["grpcio", "protobuf", "grpcio-tools", "protoc_gen_openapiv2", "python-dotenv", "mcp (<2.0.0)", "typer", "httpx", "starlette", "a2a-sdk (>=0.2.0)"]
+dependencies = ["grpcio", "grpcio-status", "googleapis-common-protos", "protobuf", "grpcio-tools", "protoc_gen_openapiv2", "python-dotenv", "mcp (<2.0.0)", "typer", "httpx", "starlette", "a2a-sdk (>=0.2.0)", "types-protobuf", "types-grpcio", "types-grpcio-status"]
+
+[project.optional-dependencies]
+test = ["pytest", "pytest-asyncio"]
+lint = ["pylint", "ruff", "mypy"]
 
 [project.urls]
 "Homepage" = "https://github.com/agntcy/identity-service/sdk/python"
@@ -33,7 +37,7 @@ packages = ["identityservice", "identityservice.commands", "identityservice.auth
 [tool.pytest.ini_options]
 minversion = "8.0.0"
 testpaths = [
-  "test",
+  "tests",
 ]
 
 [tool.ruff]
@@ -42,14 +46,28 @@ extend-include = [
   "*.ipynb"
 ]
 exclude = [
-  ".ipynb_checkpoints"
+  ".ipynb_checkpoints",
+  "agntcy",
+  "google",
+  "openapiv3"
 ]
 
-[tool.ruff.lint]
-select = ["D", "I"]
+[tool.ruff.format]
+docstring-code-format = true
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["D104", "F401", "F403"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
+
+[tool.pylint]
+prefer-stubs = true
+ignore-paths = ".venv,agntcy,google,build,openapiv3,protoc_gen_openapiv2"
+
+[tool.mypy]
+exclude = "^(protoc_gen_openapiv2)"
+
+[[tool.mypy.overrides]]
+module = ["google.*", "protoc_gen_openapiv2.*"]
+ignore_errors = true

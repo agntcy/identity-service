@@ -18,8 +18,9 @@ const _NotificationType_name = "NOTIFICATION_TYPE_UNSPECIFIEDNOTIFICATION_TYPE_I
 var _NotificationType_index = [...]uint8{0, 29, 51, 85}
 
 func (i NotificationType) String() string {
-	if i < 0 || i >= NotificationType(len(_NotificationType_index)-1) {
+	idx := int(i) - 0
+	if i < 0 || idx >= len(_NotificationType_index)-1 {
 		return "NotificationType(" + strconv.FormatInt(int64(i), 10) + ")"
 	}
-	return _NotificationType_name[_NotificationType_index[i]:_NotificationType_index[i+1]]
+	return _NotificationType_name[_NotificationType_index[idx]:_NotificationType_index[idx+1]]
 }

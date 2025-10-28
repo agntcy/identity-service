@@ -92,6 +92,36 @@ func ToOryIdpSettings(
 	}
 }
 
+func FromKeycloakIdpSettings(
+	src *settingstypes.KeycloakIdpSettings,
+) *identity_service_sdk_go.KeycloakIdpSettings {
+	if src == nil {
+		return nil
+	}
+
+	return &identity_service_sdk_go.KeycloakIdpSettings{
+		BaseUrl:      ptrutil.Ptr(src.BaseUrl),
+		Realm:        ptrutil.Ptr(src.Realm),
+		ClientId:     ptrutil.Ptr(src.ClientID),
+		ClientSecret: ptrutil.Ptr(strutil.Mask(src.ClientSecret)),
+	}
+}
+
+func ToKeycloakIdpSettings(
+	src *identity_service_sdk_go.KeycloakIdpSettings,
+) *settingstypes.KeycloakIdpSettings {
+	if src == nil {
+		return nil
+	}
+
+	return &settingstypes.KeycloakIdpSettings{
+		BaseUrl:      src.GetBaseUrl(),
+		Realm:        src.GetRealm(),
+		ClientID:     src.GetClientId(),
+		ClientSecret: src.GetClientSecret(),
+	}
+}
+
 func FromIssuerSettings(
 	src *settingstypes.IssuerSettings,
 ) *identity_service_sdk_go.IssuerSettings {
@@ -100,10 +130,11 @@ func FromIssuerSettings(
 	}
 
 	return &identity_service_sdk_go.IssuerSettings{
-		IdpType:         ptrutil.Ptr(identity_service_sdk_go.IdpType(src.IdpType)),
-		OktaIdpSettings: FromOktaIdpSettings(src.OktaIdpSettings),
-		DuoIdpSettings:  FromDuoIdpSettings(src.DuoIdpSettings),
-		OryIdpSettings:  FromOryIdpSettings(src.OryIdpSettings),
+		IdpType:             ptrutil.Ptr(identity_service_sdk_go.IdpType(src.IdpType)),
+		OktaIdpSettings:     FromOktaIdpSettings(src.OktaIdpSettings),
+		DuoIdpSettings:      FromDuoIdpSettings(src.DuoIdpSettings),
+		OryIdpSettings:      FromOryIdpSettings(src.OryIdpSettings),
+		KeycloakIdpSettings: FromKeycloakIdpSettings(src.KeycloakIdpSettings),
 	}
 }
 
@@ -115,10 +146,11 @@ func ToIssuerSettings(
 	}
 
 	return &settingstypes.IssuerSettings{
-		IdpType:         settingstypes.IdpType(src.GetIdpType()),
-		OktaIdpSettings: ToOktaIdpSettings(src.GetOktaIdpSettings()),
-		DuoIdpSettings:  ToDuoIdpSettings(src.GetDuoIdpSettings()),
-		OryIdpSettings:  ToOryIdpSettings(src.GetOryIdpSettings()),
+		IdpType:             settingstypes.IdpType(src.GetIdpType()),
+		OktaIdpSettings:     ToOktaIdpSettings(src.GetOktaIdpSettings()),
+		DuoIdpSettings:      ToDuoIdpSettings(src.GetDuoIdpSettings()),
+		OryIdpSettings:      ToOryIdpSettings(src.GetOryIdpSettings()),
+		KeycloakIdpSettings: ToKeycloakIdpSettings(src.GetKeycloakIdpSettings()),
 	}
 }
 

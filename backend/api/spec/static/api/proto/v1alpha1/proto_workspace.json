@@ -4136,6 +4136,11 @@
               "name": "IDP_TYPE_SELF",
               "number": "4",
               "description": "Idp Type Self."
+            },
+            {
+              "name": "IDP_TYPE_KEYCLOAK",
+              "number": "5",
+              "description": "Idp Type Keycloak."
             }
           ]
         }
@@ -4282,6 +4287,78 @@
               "ismap": false,
               "isoneof": true,
               "oneofdecl": "_ory_idp_settings",
+              "defaultValue": ""
+            },
+            {
+              "name": "keycloak_idp_settings",
+              "description": "Settings for the Keycloak Identity Provider.",
+              "label": "optional",
+              "type": "KeycloakIdpSettings",
+              "longType": "KeycloakIdpSettings",
+              "fullType": "agntcy.identity.service.v1alpha1.KeycloakIdpSettings",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_keycloak_idp_settings",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "KeycloakIdpSettings",
+          "longName": "KeycloakIdpSettings",
+          "fullName": "agntcy.identity.service.v1alpha1.KeycloakIdpSettings",
+          "description": "Keycloak IdP Settings",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "base_url",
+              "description": "",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_base_url",
+              "defaultValue": ""
+            },
+            {
+              "name": "realm",
+              "description": "",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_realm",
+              "defaultValue": ""
+            },
+            {
+              "name": "client_id",
+              "description": "",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_client_id",
+              "defaultValue": ""
+            },
+            {
+              "name": "client_secret",
+              "description": "",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_client_secret",
               "defaultValue": ""
             }
           ]

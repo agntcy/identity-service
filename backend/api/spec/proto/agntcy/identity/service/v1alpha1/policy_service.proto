@@ -162,8 +162,7 @@ message ListPoliciesRequest {
   repeated string rules_for_app_ids = 5;
 }
 
-message GetPoliciesCountRequest {
-}
+message GetPoliciesCountRequest {}
 
 message GetPoliciesCountResponse {
   // The total count
