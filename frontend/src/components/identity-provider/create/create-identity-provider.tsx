@@ -144,7 +144,12 @@ export const CreateIdentityProvider = () => {
         secretKey: undefined,
         // ory
         projectSlug: issuerSettings.oryIdpSettings?.projectSlug,
-        apiKey: undefined
+        apiKey: undefined,
+        // keycloak
+        baseUrl: issuerSettings.keycloakIdpSettings?.baseUrl,
+        realm: issuerSettings.keycloakIdpSettings?.realm,
+        client: issuerSettings.keycloakIdpSettings?.clientId,
+        clientSecret: undefined
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
