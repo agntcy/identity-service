@@ -117,7 +117,7 @@ The Client ID Metadata Document contains claims defined by
 in relation with [RFC7592](https://datatracker.ietf.org/doc/html/rfc7592), such as `client_name`, `redirect_uris`, `token_endpoint_auth_method`, `jwks_uri`, etc.
 
 These claims are OAuth2 generic and can be used in various contexts.
-Specificially for Agentic Services, we can propose additional claims to enhance the functionality and interoperability of the services.
+Specifically for Agentic Services, we can propose additional claims to enhance the functionality and interoperability of the services.
 
 ### Verifiable Credentials Extension (W3C)
 
