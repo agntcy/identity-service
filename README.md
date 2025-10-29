@@ -127,7 +127,7 @@ of proposed features (and known issues).
 ## AGNTCY Identity WG(Working Group)
 
 See the [AGNTCY Calendar](https://calendar.google.com/calendar/u/0/embed?src=admin@ops.agntcy.org&ctz=America/Boise) for the next Identity WG sessions.
-Join the Identity WG here: [Slack Invitation](https://join.slack.com/t/agntcy/shared_invite/zt-34sxmw5e8-LqlUxxcxROq3HRb56QSkUg).
+Join the Identity WG here: [Slack Invitation](https://join.slack.com/t/agntcy/shared_invite/zt-3hb4p7bo0-5H2otGjxGt9OQ1g5jzK_GQ ).
 
 ## Contributing
 
