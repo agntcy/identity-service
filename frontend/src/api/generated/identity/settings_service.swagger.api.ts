@@ -1,5 +1,5 @@
 /**
- * Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+ * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -192,6 +192,16 @@ export interface V1Alpha1IssuerSettings {
   oryIdpSettings?: V1Alpha1OryIdpSettings;
   /** Settings for the Keycloak Identity Provider. */
   keycloakIdpSettings?: V1Alpha1KeycloakIdpSettings;
+  /**
+   * CreatedAt records the timestamp of when the IssuerSettings was initially created
+   * @format date-time
+   */
+  createdAt?: string;
+  /**
+   * UpdatedAt records the timestamp of the last update to the IssuerSettings
+   * @format date-time
+   */
+  updatedAt?: string;
 }
 
 /** Keycloak IdP Settings */

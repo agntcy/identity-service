@@ -193,6 +193,18 @@
         "keycloakIdpSettings": {
           "$ref": "#/definitions/v1alpha1KeycloakIdpSettings",
           "description": "Settings for the Keycloak Identity Provider."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "title": "CreatedAt records the timestamp of when the IssuerSettings was initially created",
+          "readOnly": true
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "title": "UpdatedAt records the timestamp of the last update to the IssuerSettings",
+          "readOnly": true
         }
       },
       "title": "Issuer Settings",
