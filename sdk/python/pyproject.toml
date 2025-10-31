@@ -7,7 +7,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "agntcy-identity-service-sdk"
-version = "0.0.7"
+version = "0.0.8"
 authors = [
     {name = "Jean Diaconu", email = "jdiaconu@cisco.com"},
 ]
