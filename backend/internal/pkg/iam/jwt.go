@@ -17,12 +17,12 @@ type oktaJwtVerifier struct {
 	userJwtVerifier *jwtverifier.JwtVerifier
 }
 
-func NewOktaJwtVerifier(issuer, userCid, userCidClaimName string) JwtVerifier {
+func NewOktaJwtVerifier(issuer, userCid, userCidClaimName, audience string) JwtVerifier {
 	// Init verifier for UI
 	toValidateForUser := map[string]string{}
 
 	// Add cid from UI
-	toValidateForUser["aud"] = standaloneDefaultAud
+	toValidateForUser["aud"] = audience
 	toValidateForUser[userCidClaimName] = userCid
 
 	userJwtVerifierSetup := jwtverifier.JwtVerifier{

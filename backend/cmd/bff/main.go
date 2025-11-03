@@ -210,6 +210,7 @@ func initializeIAMClient(
 			config.IamIssuer,
 			config.IamUserCid,
 			config.IamUserCidClaimName,
+			config.IamAudience,
 		)
 		iamClient = iam.NewStandaloneClient(
 			config.IamOrganization,
