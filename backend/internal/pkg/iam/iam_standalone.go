@@ -18,7 +18,6 @@ import (
 )
 
 const (
-	standaloneDefaultAud            = "api://default"
 	standaloneUsernameClaimKey      = "sub"
 	standaloneApiKeyName            = "default"
 	standaloneApiKeyLength          = 32

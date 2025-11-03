@@ -39,6 +39,7 @@ type Configuration struct {
 	IamIssuer                                               string        `split_words:"true"`
 	IamUserCidClaimName                                     string        `split_words:"true" default:"cid"`
 	IamUserCid                                              string        `split_words:"true"`
+	IamAudience                                             string        `split_words:"true" default:"api://default"`
 	IamOrganization                                         string        `split_words:"true"`
 	IamMultiTenant                                          bool          `split_words:"true" default:"false"`
 	WebApprovalEmail                                        string        `split_words:"true"                                 required:"true"`
