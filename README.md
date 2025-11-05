@@ -36,7 +36,7 @@ Whether you are integrating existing services or deploying new ones, AGNTCY Iden
 You can also:
 
 - 📦 Check-out the [Sample Agents and MCP servers](samples/README.md).
-- 🌐 Try our hosted SaaS [Identity Service](https://agent-identity.outshift.com/) to try our features.
+- 🌐 Sign up for our hosted SaaS [Identity Service](https://agent-identity.outshift.com/) to try our features.
 - 📘 Explore our full [Documentation](https://identity-docs.outshift.com/) to understand our platform's capabilities.
 - 📝 See a full video [Walkthrough](https://www.youtube.com/watch?v=CO3YwjRXyQo&t=1s) of the Identity Service.
 
