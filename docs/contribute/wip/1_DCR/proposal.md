@@ -154,8 +154,8 @@ Idp ->> Identity Service: Issue JWT Access Token
 KYA (Know Your Agent) is a Skyfire specification that links an Agentic Service to a verified person or business, ensuring trust and accountability in digital interactions.
 Once verified, the agent receives a credential or token it can use to authenticate and make payments autonomously (KYA+pay).
 
-A KYA token is a cryptographic credential issued by Skyfire that proves an AI agent’s verified identity and trust status.
-It’s typically issued by a KYA Provider as a signed JSON Web Token (JWT) containing metadata about the agent (aid), user context and its verified owner (bid, ssi, btg).
+A KYA token is a cryptographic credential issued by Skyfire that proves an AI agent's verified identity and trust status.
+It's typically issued by a KYA Provider as a signed JSON Web Token (JWT) containing metadata about the agent (aid), user context and its verified owner (bid, ssi, btg).
 
 To enhance the Client ID Metadata Document for Agentic Services, we can propose adding a KYA Token claim as an extension.
 
