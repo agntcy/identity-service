@@ -8,13 +8,13 @@ This section covers the current state.
 
 The `Identity Service` currently integrates IdPs (e.g. Okta, Duo, Ory, etc.) using their specific APIs for the following functions:
 
-- Registration of ClientCredentials for Agentic Services (Agents, MCP Servers): for each new Agentic Service, 
-a new ClientCredential must be created in the IdP.
+- Registration of ClientCredentials for Agentic Services (Agents, MCP Servers): for each new Agentic Service,
+  a new ClientCredential must be created in the IdP.
 - Rotation of Secrets: when a ClientCredential's secret is rotated, the new secret must be updated in both the IdP and the Agentic Service.
 
 ### Badges and Signature
 
-For each tenant, the `Identity Service` generates a keypair and uses it to sign and verify badges for Agentic Services. 
+For each tenant, the `Identity Service` generates a keypair and uses it to sign and verify badges for Agentic Services.
 The keypair is stored in the `Identity Service` vault.
 
 ### Flow Diagrams
@@ -22,6 +22,7 @@ The keypair is stored in the `Identity Service` vault.
 #### Provisioning Agentic Service with Badge
 
 <!-- markdownlint-disable -->
+
 ```mermaid
 sequenceDiagram
 autonumber
@@ -43,11 +44,13 @@ Identity Node->>Identity Node: Issue Badge with IdP as Issuer
 Identity Node->>Identity Node: Sign the Badge using the PrivateKey
 note right of Identity Node: Badge is a W3C Verifiable Credential
 ```
+
 <!-- markdownlint-enable -->
 
 #### Agentic Service Access Token at Runtime
 
 <!-- markdownlint-disable -->
+
 ```mermaid
 sequenceDiagram
 autonumber
@@ -57,13 +60,14 @@ Identity Service->>Idp: Issue JWT Access Token for Agentic Service
 note right of Identity Service: For Runtime
 Idp->>Identity Service: Issue JWT Access Token
 ```
+
 <!-- markdownlint-enable -->
 
 ## Dynamic Client Registration (DCR) Proposal
 
-To streamline the registration and management of Agentic Services, this proposal suggests implementing 
-Dynamic Client Registration (DCR) as defined in OAuth 2.0 and OpenID Connect specifications. 
-This would allow Agentic Services to register themselves dynamically with the `Identity Service`, 
+To streamline the registration and management of Agentic Services, this proposal suggests implementing
+Dynamic Client Registration (DCR) as defined in OAuth 2.0 and OpenID Connect specifications.
+This would allow Agentic Services to register themselves dynamically with the `Identity Service`,
 reducing manual configuration and improving interoperability.
 
 However, since there is a new alternative standard called Client ID Metadata (OAuth Client ID Metadata Document), we are considering this approach instead of the traditional DCR.
@@ -73,10 +77,12 @@ However, since there is a new alternative standard called Client ID Metadata (OA
 In the current design the IdP and its ClientCredentials are chained with the Badges in the following way:
 
 <!-- markdownlint-disable -->
+
 ```mermaid
 flowchart TD
     IdP-OAuth2 --> ClientCredentials --> JsonWebToken --> ClientId-Claim --> Badge-WellKnown --> IdP-Issuer
 ```
+
 <!-- markdownlint-enable -->
 
 #### Metadata Document Structure
@@ -94,6 +100,7 @@ The Client ID Metadata Document might contain the following fields:
 ##### Provisioning Agentic Service with Badge
 
 <!-- markdownlint-disable -->
+
 ```mermaid
 sequenceDiagram
 autonumber
@@ -110,11 +117,13 @@ Identity Node->>Identity Node: Issue Badge with IdP as Issuer
 Identity Node->>Identity Node: Sign the Badge using the PrivateKey
 note right of Identity Node: Badge is a W3C Verifiable Credential
 ```
+
 <!-- markdownlint-enable -->
 
 #### Agentic Service Access Token at Runtime
 
 <!-- markdownlint-disable -->
+
 ```mermaid
 sequenceDiagram
 autonumber
@@ -125,6 +134,7 @@ note right of Identity Service: Send the Metadata URI as Client ID
 note right of Identity Service: Provide jwt_private_key_jwt authentication
 Idp ->> Identity Service: Issue JWT Access Token
 ```
+
 <!-- markdownlint-enable -->
 
 ## Extensions for draft-ietf-oauth-client-id-metadata-document-00
@@ -153,6 +163,7 @@ The Client ID Metadata Document could now contain the following field:
 Additional details in the flow diagram below:
 
 <!-- markdownlint-disable -->
+
 ```mermaid
 sequenceDiagram
 autonumber
@@ -166,6 +177,7 @@ Idp ->> Idp: Verify the signed Badge (VC) using the public key from jwks_uri
 note left of Idp: Inject other claims in the Access Token based on the Badge (VC) content
 Idp ->> Identity Service: Issue JWT Access Token
 ```
+
 <!-- markdownlint-enable -->
 
 ### KYA (Know Your Agent) Extension (Skyfire)
@@ -187,8 +199,10 @@ The KYA Token could use the 'ResolverMetadataID' as the 'aid' (agent ID) claim t
 The identity chain would look like this:
 
 <!-- markdownlint-disable -->
+
 ```mermaid
 flowchart TD
     ClientID --> Metadata-URI --> KYA --> AID --> Badge-WellKnown --> IdP-Issuer
 ```
+
 <!-- markdownlint-enable -->
