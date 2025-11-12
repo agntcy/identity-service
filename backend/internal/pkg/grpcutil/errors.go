@@ -39,6 +39,8 @@ func Error(err error) error {
 			return BadRequestError(err)
 		case errutil.ErrorReasonInvalidRequest:
 			return BadRequestError(err)
+		case errutil.ErrorReasonUnauthorized:
+			return UnauthorizedError(err)
 		}
 	}
 

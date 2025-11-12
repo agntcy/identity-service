@@ -35,6 +35,10 @@ func TestGrpcError(t *testing.T) {
 			inErr:  errutil.InvalidRequest("c", "c"),
 			outErr: grpcutil.BadRequestError(errutil.InvalidRequest("c", "c")),
 		},
+		"should return unauthorized status error for ErrorReasonUnauthorized": {
+			inErr:  errutil.Unauthorized("d", "d"),
+			outErr: grpcutil.UnauthorizedError(errutil.Unauthorized("d", "d")),
+		},
 		"should return the same error as input when it's not DomainError": {
 			inErr:  generalErr,
 			outErr: generalErr,
