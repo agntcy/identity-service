@@ -68,7 +68,7 @@ type Service interface {
 	) error
 }
 
-// The verificationService struct implements the VerificationService interface
+// service struct implements the VerificationService interface
 type service struct {
 	issuerClient          issuersdk.ClientService
 	idClient              idsdk.ClientService
@@ -78,7 +78,7 @@ type service struct {
 	uniqueIssuerPerTenant bool
 }
 
-// NewVerificationService creates a new instance of the VerificationService
+// NewService creates a new instance of the VerificationService
 func NewService(
 	identityHost, identityPort string,
 	keyStore KeyStore,
@@ -90,6 +90,7 @@ func NewService(
 		"",
 		nil,
 	)
+	transport.Transport = newTransportWithRequestID()
 
 	return &service{
 		issuerClient:          issuersdk.New(transport, strfmt.Default),
@@ -145,6 +146,7 @@ func (s *service) RegisterIssuer(
 			Issuer: issuer,
 			Proof:  proof,
 		},
+		Context: ctx,
 	})
 
 	if err != nil &&
@@ -178,6 +180,7 @@ func (s *service) GenerateID(
 			},
 			Proof: proof,
 		},
+		Context: ctx,
 	})
 	if err != nil {
 		return "", fmt.Errorf("error generating ID with identity service: %w", err)
@@ -239,6 +242,7 @@ func (s *service) PublishVerifiableCredential(
 				ProofValue: proof.ProofValue,
 			},
 		},
+		Context: ctx,
 	})
 	if err != nil {
 		return err
@@ -332,6 +336,7 @@ func (s *service) VerifyVerifiableCredential(
 				Value: *vc,
 			},
 		},
+		Context: ctx,
 	})
 	if err != nil {
 		return nil, fmt.Errorf("error verifying verifiable credential: %w", err)
@@ -349,8 +354,8 @@ func (s *service) VerifyVerifiableCredential(
 		MediaType:                    result.MediaType,
 		Controller:                   result.Controller,
 		ControlledIdentifierDocument: result.ControlledIdentifierDocument,
-		Warnings:                     convertutil.ConvertSlice(result.Warnings, convertErroInfo),
-		Errors:                       convertutil.ConvertSlice(result.Errors, convertErroInfo),
+		Warnings:                     convertutil.ConvertSlice(result.Warnings, convertErrorInfo),
+		Errors:                       convertutil.ConvertSlice(result.Errors, convertErrorInfo),
 	}, nil
 }
 
@@ -403,6 +408,7 @@ func (s *service) RevokeVerifiableCredential(
 				ProofValue: proof.ProofValue,
 			},
 		},
+		Context: ctx,
 	})
 	if err != nil {
 		errInfo, err := tryGetErrorInfo(err)
@@ -441,7 +447,7 @@ func tryGetErrorInfo(err error) (*identitymodels.V1alpha1ErrorInfo, error) {
 	return nil, err
 }
 
-func convertErroInfo(err *identitymodels.V1alpha1ErrorInfo) *badgetypes.ErrorInfo {
+func convertErrorInfo(err *identitymodels.V1alpha1ErrorInfo) *badgetypes.ErrorInfo {
 	if err == nil {
 		return nil
 	}
