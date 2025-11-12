@@ -15,14 +15,7 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-// Enriches logs with identity context (tenantID, userID, etc.)
-// and information about the current gRPC request.
-//
-// It does this by adding a value containing those fields to the context
-// and pass it to the next handler, and to include those fields when logging,
-// use log.FromContext(ctx).
-
-// Enriches the context with tenant and request metadata for structured logging.
+// ContextualLoggerUnary enriches the context with tenant and request metadata for structured logging.
 //
 // This interceptor extracts tenant related information (such as tenant ID, app ID, etc.) from
 // the incoming context, as well as the full gRPC method name and the current request.
