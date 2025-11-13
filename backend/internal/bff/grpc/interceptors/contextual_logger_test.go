@@ -7,8 +7,8 @@ import (
 	"context"
 	"testing"
 
+	"github.com/agntcy/identity-service/internal/bff/grpc/interceptors"
 	identitycontext "github.com/agntcy/identity-service/internal/pkg/context"
-	"github.com/agntcy/identity-service/internal/pkg/interceptors"
 	"github.com/agntcy/identity-service/pkg/log"
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
