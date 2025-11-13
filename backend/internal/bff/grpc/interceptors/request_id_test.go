@@ -9,7 +9,7 @@ import (
 	"net/textproto"
 	"testing"
 
-	"github.com/agntcy/identity-service/internal/pkg/interceptors"
+	"github.com/agntcy/identity-service/internal/bff/grpc/interceptors"
 	"github.com/google/uuid"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/stretchr/testify/assert"

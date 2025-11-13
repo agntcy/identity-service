@@ -10,8 +10,8 @@ import (
 	"testing"
 
 	identity_service_sdk_go "github.com/agntcy/identity-service/api/server/agntcy/identity/service/v1alpha1"
+	"github.com/agntcy/identity-service/internal/bff/grpc/interceptors"
 	iammocks "github.com/agntcy/identity-service/internal/pkg/iam/mocks"
-	"github.com/agntcy/identity-service/internal/pkg/interceptors"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
