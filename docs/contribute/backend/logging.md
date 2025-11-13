@@ -60,7 +60,7 @@ What log level to use?
 
 ## Error logging
 
-In case an unexpected error happened and the execution flow needs to be stopped, **do not** log the error, there is a global gRPC interceptor [`ErrorInterceptor`](https://github.com/agntcy/identity-service/blob/main/backend/internal/pkg/interceptors/error.go) that catches these errors and logs them.
+In case an unexpected error happened and the execution flow needs to be stopped, **do not** log the error, there is a global gRPC interceptor [`ErrorInterceptor`](https://github.com/agntcy/identity-service/blob/main/backend/internal/bff/grpc/interceptors/error.go) that catches these errors and logs them.
 This prevents errors from being logged more than once, which facilitates tracing.
 
 ## Formats

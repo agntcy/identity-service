@@ -9,4 +9,4 @@ The context is propagated to the application and domain services, as well as to 
 For example, repositories use the tenant ID from the context to filter data using the custom GORM scope [`BelongsToTenant`](https://github.com/agntcy/identity-service/blob/main/backend/internal/pkg/gormutil/scopes.go),
 while HTTP clients can use the context to cancel requests if the user closes the connection to the server.
 
-The population of the `Context` with user and tenant metadata is managed by the [`AuthInterceptor`](https://github.com/agntcy/identity-service/blob/main/backend/internal/pkg/interceptors/auth.go) gRPC interceptor.
+The population of the `Context` with user and tenant metadata is managed by the [`AuthInterceptor`](https://github.com/agntcy/identity-service/blob/main/backend/internal/bff/grpc/interceptors/auth.go) gRPC interceptor.

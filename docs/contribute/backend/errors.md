@@ -37,7 +37,7 @@ Since only two types of errors are returned from the Application layer, error ha
 
 - If the error is a *domain error*, a [`status.Status`](https://pkg.go.dev/google.golang.org/grpc/status#Status) is returned with a code corresponding to the `DomainError.Reason` field.
 - If the error is a *technical error*, it is forwarded as-is.
-Later, a custom gRPC interceptor [`ErrorInterceptor`](https://github.com/agntcy/identity-service/blob/main/backend/internal/pkg/interceptors/error.go) logs the error and returns a [`status.Status`](https://pkg.go.dev/google.golang.org/grpc/status#Status) with an `Internal` code as a response.
+Later, a custom gRPC interceptor [`ErrorInterceptor`](https://github.com/agntcy/identity-service/blob/main/backend/internal/bff/grpc/interceptors/error.go) logs the error and returns a [`status.Status`](https://pkg.go.dev/google.golang.org/grpc/status#Status) with an `Internal` code as a response.
 
 The helper function [`grpcutil.Error()`](https://github.com/agntcy/identity-service/blob/main/backend/internal/pkg/grpcutil/errors.go) encapsulates the error handling process described above and can be called from gRPC services, as shown in the following example:
 
