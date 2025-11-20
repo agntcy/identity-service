@@ -6,7 +6,15 @@ Please choose the subgroup(s) that you are interested on, join their recurrent c
 
 ++++++++++++++++++++++++++
 
+## 1) DCR
+
+++++++++++++++++++++++++++
+
 ## 2) Subject Context Transfer Subgroup
+
+### Material in Drive:
+
+[Link to Subject Context Transfer Subgroup in Drive](https://drive.google.com/drive/folders/1DX8X4AAseXmCIuK8Vp1PVOzdEN5ltxPF)
 
 ### Meeting Details
 
@@ -24,5 +32,29 @@ Join by phone
 Join from a video system or application
 Dial 26641313282@webex.com
 You can also dial 173.243.2.68 and enter your meeting number.
+
+++++++++++++++++++++++++++
+
+## 3) XAA
+
+++++++++++++++++++++++++++
+
+## 4) MFA
+
+++++++++++++++++++++++++++
+
+## 5) Audit Logs and Standardization
+
+++++++++++++++++++++++++++
+
+## 6) Policy Engine Integration
+
+++++++++++++++++++++++++++
+
+## 7) Brokered Identity Gateways
+
+++++++++++++++++++++++++++
+
+## 8) Cross Organization Initiatives
 
 ++++++++++++++++++++++++++
