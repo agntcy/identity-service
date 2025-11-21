@@ -9,8 +9,14 @@ HYDRA_QUICKSTART_FILE="quickstart.yml"
 HYDRA_CONFIG_FILE_REL_PATH="contrib/quickstart/5-min/hydra.yml"
 HYDRA_REPOSITORY="https://github.com/ory/hydra.git"
 HYDRA_VERSION="v2.3.0"
-HYDRA_BINARY="docker run --rm -it oryd/hydra"
 HYDRA_SPA_APP_ID="my-hydra-spa"
+
+#######################################
+# Run Hydra CLI command in Docker
+#######################################
+docker_run_hydra() {
+  docker run --rm -it oryd\/hydra $@
+}
 
 #######################################
 # Set current IP address
@@ -44,11 +50,11 @@ do_setup_oidc() {
 
   # Check if client already exists
   echo "Checking if client '$HYDRA_SPA_APP_ID' already exists..."
-  if $HYDRA_BINARY get client "$HYDRA_SPA_APP_ID" --endpoint "http://${current_ip}:4445" >/dev/null 2>&1; then
+  if docker_run_hydra get client "$HYDRA_SPA_APP_ID" --endpoint "http://${current_ip}:4445" >/dev/null 2>&1; then
     echo "Client '$HYDRA_SPA_APP_ID' already exists. Deleting and recreating..."
 
     # Delete the existing client
-    if ! $HYDRA_BINARY delete client "$HYDRA_SPA_APP_ID" --endpoint "http://${current_ip}:4445"; then
+    if ! docker_run_hydra delete client "$HYDRA_SPA_APP_ID" --endpoint "http://${current_ip}:4445"; then
       echo "Failed to delete existing client. Continuing anyway..."
     fi
 
@@ -57,7 +63,7 @@ do_setup_oidc() {
   fi
 
   # Create a new hydra application
-  if ! $HYDRA_BINARY create client \
+  if ! docker_run_hydra create client \
     --endpoint "http://${current_ip}:4445" \
     --id "$HYDRA_SPA_APP_ID" --audience api://default \
     --skip-consent --skip-logout-consent \
