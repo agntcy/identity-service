@@ -15,7 +15,7 @@ HYDRA_SPA_APP_ID="my-hydra-spa"
 # Run Hydra CLI command in Docker
 #######################################
 docker_run_hydra() {
-  docker run --rm -it oryd/hydra $@
+  docker run --rm -it oryd/hydra "$@"
 }
 
 #######################################
