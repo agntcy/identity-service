@@ -4,11 +4,8 @@ Thanks for your interest in contributing to `AGNTCY Identity Service Subgroups (
 These SGs target specific problems within the `AGNTCY Identity Service Working Group`.
 Please choose the subgroup(s) that you are interested on, join their recurrent calls, and contribute.
 
-++++++++++++++++++++++++++
-
 ## 1) DCR
 
-++++++++++++++++++++++++++
 
 ## 2) Subject Context Transfer Subgroup
 
@@ -33,28 +30,14 @@ Join from a video system or application
 Dial 26641313282@webex.com
 You can also dial 173.243.2.68 and enter your meeting number.
 
-++++++++++++++++++++++++++
-
 ## 3) XAA
-
-++++++++++++++++++++++++++
 
 ## 4) MFA
 
-++++++++++++++++++++++++++
-
 ## 5) Audit Logs and Standardization
-
-++++++++++++++++++++++++++
 
 ## 6) Policy Engine Integration
 
-++++++++++++++++++++++++++
-
 ## 7) Brokered Identity Gateways
 
-++++++++++++++++++++++++++
-
 ## 8) Cross Organization Initiatives
-
-++++++++++++++++++++++++++
