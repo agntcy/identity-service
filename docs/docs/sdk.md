@@ -22,7 +22,7 @@ To see more details about the development integration, you can refer to the [Dev
 To install the Python SDK for Agent Identity, you can use pip:
 
 ```bash
-pip install identity-service-sdk
+pip install agntcy-identity-service-sdk
 ```
 
 ### Example Usage
