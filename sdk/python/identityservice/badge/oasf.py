@@ -7,7 +7,7 @@ import os
 from identityservice.exceptions import SdkError
 
 
-async def discover(url: str) -> str:
+def discover(url: str) -> str:
     """Load an OASF schema from a local JSON file.
 
     For OASF, we assume ``url`` is a path to the OASF JSON file that

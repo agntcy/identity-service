@@ -10,34 +10,31 @@ from identityservice.badge import oasf
 from identityservice.exceptions import SdkError
 
 
-@pytest.mark.asyncio
-async def test_discover_success(tmp_path: Path):
+def test_discover_success(tmp_path: Path):
     """discover should return file contents when file exists and is non-empty."""
     schema_path = tmp_path / "oasf.json"
     content = '{"version": "1.0.0", "name": "Test OASF Agent"}'
     schema_path.write_text(content, encoding="utf-8")
 
-    result = await oasf.discover(str(schema_path))
+    result = oasf.discover(str(schema_path))
 
     assert result == content
 
 
-@pytest.mark.asyncio
-async def test_discover_raises_when_file_missing():
+def test_discover_raises_when_file_missing():
     """discover should raise SdkError when file does not exist."""
     with pytest.raises(SdkError) as excinfo:
-        await oasf.discover("/non/existent/oasf.json")
+        oasf.discover("/non/existent/oasf.json")
 
     assert "OASF schema file not found" in str(excinfo.value)
 
 
-@pytest.mark.asyncio
-async def test_discover_raises_when_file_empty(tmp_path: Path):
+def test_discover_raises_when_file_empty(tmp_path: Path):
     """discover should raise SdkError when file is empty."""
     schema_path = tmp_path / "empty.json"
     schema_path.write_text("", encoding="utf-8")
 
     with pytest.raises(SdkError) as excinfo:
-        await oasf.discover(str(schema_path))
+        oasf.discover(str(schema_path))
 
     assert "OASF schema file is empty" in str(excinfo.value)
