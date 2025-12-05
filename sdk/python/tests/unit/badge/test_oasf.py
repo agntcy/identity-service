@@ -14,7 +14,7 @@ from identityservice.exceptions import SdkError
 async def test_discover_success(tmp_path: Path):
     """discover should return file contents when file exists and is non-empty."""
     schema_path = tmp_path / "oasf.json"
-    content = "{\"version\": \"1.0.0\", \"name\": \"Test OASF Agent\"}"
+    content = '{"version": "1.0.0", "name": "Test OASF Agent"}'
     schema_path.write_text(content, encoding="utf-8")
 
     result = await oasf.discover(str(schema_path))
