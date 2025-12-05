@@ -47,6 +47,20 @@ async def create_claims(url: str, service_name: str, service_type: AppType):
         claims["a2a"] = {
             "schema_base64": base64.b64encode(schema.encode("utf-8")),
         }
+    elif service_type == AppType.APP_TYPE_AGENT_OASF:
+        logger.debug(
+            "[bold green]Processing OASF agent for %s at [bold blue]%s[/bold blue][/bold green]",
+            service_name,
+            url,
+        )
+
+        # For OASF, we assume the URL is a path to the OASF JSON file
+        with open(url, "r", encoding="utf-8") as file:
+            schema = file.read()
+
+        claims["oasf"] = {
+            "schema_base64": base64.b64encode(schema.encode("utf-8")),
+        }
 
     if not claims:
         raise SdkError(

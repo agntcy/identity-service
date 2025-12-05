@@ -58,6 +58,10 @@ def create(
         print(
             f"""[bold green]Discovering A2A agent for {service_name} at [bold blue]{url}[/bold blue][/bold green]"""
         )
+    elif service_type == AppType.APP_TYPE_AGENT_OASF:
+        print(
+            f"""[bold green]Processing OASF agent for {service_name} at [bold blue]{url}[/bold blue][/bold green]"""
+        )
 
     print(
         f"[bold green]Issuing badge for service [bold blue]{service_id}[/bold blue][/bold green]"
