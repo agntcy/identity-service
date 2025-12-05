@@ -4,7 +4,7 @@
 
 import base64
 import json
-from unittest.mock import AsyncMock, patch
+from unittest.mock import AsyncMock, patch, mock_open
 
 import pytest
 
@@ -59,6 +59,24 @@ async def test_create_claims_for_a2a_agent():
     assert "a2a" in claims
     assert claims["a2a"]["schema_base64"] == expected_schema
 
+@pytest.mark.asyncio
+async def test_create_claims_for_oasf_agent():
+    """Test create_claims for OASF agent."""
+    # Arrange
+    service_url = "/path/to/oasf.json"
+    service_type = AppType.APP_TYPE_AGENT_OASF
+    oasf_schema = json.dumps({"version": "1.0.0", "name": "Test OASF Agent"})
+    expected_schema = base64.b64encode(oasf_schema.encode("utf-8"))
+
+    # Act
+    m = mock_open(read_data=oasf_schema)
+    with patch("builtins.open", m):
+        claims = await create_claims(service_url, "", service_type)
+
+    # Assert
+    m.assert_called_once_with(service_url, "r", encoding="utf-8")
+    assert "oasf" in claims
+    assert claims["oasf"]["schema_base64"] == expected_schema
 
 @pytest.mark.asyncio
 async def test_create_claims_for_unsupported_service_type():
