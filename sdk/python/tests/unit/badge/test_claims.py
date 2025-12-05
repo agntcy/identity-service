@@ -59,6 +59,7 @@ async def test_create_claims_for_a2a_agent():
     assert "a2a" in claims
     assert claims["a2a"]["schema_base64"] == expected_schema
 
+
 @pytest.mark.asyncio
 async def test_create_claims_for_oasf_agent():
     """Test create_claims for OASF agent."""
@@ -77,6 +78,7 @@ async def test_create_claims_for_oasf_agent():
     m.assert_called_once_with(service_url, "r", encoding="utf-8")
     assert "oasf" in claims
     assert claims["oasf"]["schema_base64"] == expected_schema
+
 
 @pytest.mark.asyncio
 async def test_create_claims_for_unsupported_service_type():
