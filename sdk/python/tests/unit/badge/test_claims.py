@@ -4,7 +4,7 @@
 
 import base64
 import json
-from unittest.mock import AsyncMock, patch, mock_open
+from unittest.mock import AsyncMock, patch
 
 import pytest
 
@@ -70,12 +70,15 @@ async def test_create_claims_for_oasf_agent():
     expected_schema = base64.b64encode(oasf_schema.encode("utf-8"))
 
     # Act
-    m = mock_open(read_data=oasf_schema)
-    with patch("builtins.open", m):
+    with patch(
+        "identityservice.badge.oasf.discover",
+        new_callable=AsyncMock,
+        return_value=oasf_schema,
+    ) as mock_oasf_discover:
         claims = await create_claims(service_url, "", service_type)
 
     # Assert
-    m.assert_called_once_with(service_url, "r", encoding="utf-8")
+    mock_oasf_discover.assert_called_once_with(service_url)
     assert "oasf" in claims
     assert claims["oasf"]["schema_base64"] == expected_schema
 
