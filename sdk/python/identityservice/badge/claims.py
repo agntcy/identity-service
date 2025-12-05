@@ -8,6 +8,7 @@ import logging
 from agntcy.identity.service.v1alpha1.app_pb2 import AppType
 from identityservice.badge import a2a
 from identityservice.badge import mcp
+from identityservice.badge import oasf
 from identityservice.exceptions import SdkError
 
 logger = logging.getLogger(__name__)
@@ -55,8 +56,7 @@ async def create_claims(url: str, service_name: str, service_type: AppType):
         )
 
         # For OASF, we assume the URL is a path to the OASF JSON file
-        with open(url, "r", encoding="utf-8") as file:
-            schema = file.read()
+        schema = await oasf.discover(url)
 
         claims["oasf"] = {
             "schema_base64": base64.b64encode(schema.encode("utf-8")),
