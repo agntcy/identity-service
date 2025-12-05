@@ -72,7 +72,6 @@ async def test_create_claims_for_oasf_agent():
     # Act
     with patch(
         "identityservice.badge.oasf.discover",
-        new_callable=AsyncMock,
         return_value=oasf_schema,
     ) as mock_oasf_discover:
         claims = await create_claims(service_url, "", service_type)

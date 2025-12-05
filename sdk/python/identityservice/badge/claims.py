@@ -56,7 +56,7 @@ async def create_claims(url: str, service_name: str, service_type: AppType):
         )
 
         # For OASF, we assume the URL is a path to the OASF JSON file
-        schema = await oasf.discover(url)
+        schema = oasf.discover(url)
 
         claims["oasf"] = {
             "schema_base64": base64.b64encode(schema.encode("utf-8")),
