@@ -273,6 +273,7 @@ export const useRoutes = () => {
           },
           {
             path: PATHS.policies.create,
+            disabled: isEmptyIdp,
             element: (
               <NodeRoute pageTitle="add policy">
                 <AddPolicy />
@@ -281,6 +282,7 @@ export const useRoutes = () => {
           },
           {
             path: PATHS.policies.info,
+            disabled: isEmptyIdp,
             element: (
               <NodeRoute pageTitle="policy info">
                 <InfoPolicy />
@@ -289,6 +291,7 @@ export const useRoutes = () => {
           },
           {
             path: PATHS.policies.edit,
+            disabled: isEmptyIdp,
             element: (
               <NodeRoute pageTitle="edit policy">
                 <EditPolicy />

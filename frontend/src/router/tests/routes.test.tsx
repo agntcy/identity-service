@@ -65,27 +65,27 @@ vi.mock('@/pages/settings/identity-provider/connection-identity-provider/connect
   default: vi.fn(() => React.createElement('div', null, 'Connection Identity Provider'))
 }));
 
-vi.mock('@/pages/settings/organizations-and-users/organizations-and-users', () => ({
-  default: vi.fn(() => React.createElement('div', null, 'Organizations And Users'))
+vi.mock('@/pages/settings/organizations/base/organizations', () => ({
+  default: vi.fn(() => React.createElement('div', null, 'Organizations'))
 }));
 
-vi.mock('@/pages/settings/organizations-and-users/edit/edit-organizations-and-users', () => ({
-  default: vi.fn(() => React.createElement('div', null, 'Edit Organizations And Users'))
+vi.mock('@/pages/settings/organizations/edit/edit-organization', () => ({
+  default: vi.fn(() => React.createElement('div', null, 'Edit Organization'))
 }));
 
-vi.mock('@/pages/settings/organizations-and-users/info/info-organizations-and-users', () => ({
-  default: vi.fn(() => React.createElement('div', null, 'Info Organizations And Users'))
+vi.mock('@/pages/settings/organizations/info/info-organization', () => ({
+  default: vi.fn(() => React.createElement('div', null, 'Info Organization'))
 }));
 
 vi.mock('@/pages/agentic-services/agentic-services', () => ({
   default: vi.fn(() => React.createElement('div', null, 'Agentic Services'))
 }));
 
-vi.mock('@/pages/agentic-services/add/add-agentic-service', () => ({
+vi.mock('@/pages/agentic-services/add-agentic-service', () => ({
   default: vi.fn(() => React.createElement('div', null, 'Add Agentic Service'))
 }));
 
-vi.mock('@/pages/agentic-services/edit/edit-agentic-service', () => ({
+vi.mock('@/pages/agentic-services/edit-agentic-service', () => ({
   default: vi.fn(() => React.createElement('div', null, 'Edit Agentic Service'))
 }));
 
@@ -93,8 +93,36 @@ vi.mock('@/pages/agentic-services/info/info-agentic-service', () => ({
   default: vi.fn(() => React.createElement('div', null, 'Info Agentic Service'))
 }));
 
+vi.mock('@/pages/agentic-services/info/about-agentic-service', () => ({
+  default: vi.fn(() => React.createElement('div', null, 'About Agentic Service'))
+}));
+
+vi.mock('@/pages/agentic-services/info/policies-assigned-to-agentic-service', () => ({
+  default: vi.fn(() => React.createElement('div', null, 'Policies Assigned To Agentic Service'))
+}));
+
+vi.mock('@/pages/agentic-services/info/policies-used-by-agentic-service', () => ({
+  default: vi.fn(() => React.createElement('div', null, 'Policies Used By Agentic Service'))
+}));
+
+vi.mock('@/pages/verify-identity/verify-identity', () => ({
+  default: vi.fn(() => React.createElement('div', null, 'Verify Identity'))
+}));
+
 vi.mock('@/pages/policies/policies', () => ({
   default: vi.fn(() => React.createElement('div', null, 'Policies'))
+}));
+
+vi.mock('@/pages/policies/add-policy', () => ({
+  default: vi.fn(() => React.createElement('div', null, 'Add Policy'))
+}));
+
+vi.mock('@/pages/policies/info-policy', () => ({
+  default: vi.fn(() => React.createElement('div', null, 'Info Policy'))
+}));
+
+vi.mock('@/pages/policies/edit-policy', () => ({
+  default: vi.fn(() => React.createElement('div', null, 'Edit Policy'))
 }));
 
 vi.mock('@/pages/not-found/not-found', () => ({

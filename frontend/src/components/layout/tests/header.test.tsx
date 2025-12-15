@@ -201,7 +201,8 @@ vi.mock('@/store', () => ({
   ),
   useLocalStore: vi.fn().mockImplementation((selector) =>
     selector({
-      idDevice: 'test-device-id'
+      idDevice: 'test-device-id',
+      cleanStore: vi.fn()
     })
   ),
   useShallow: (fn: any) => fn

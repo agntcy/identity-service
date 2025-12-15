@@ -14,7 +14,7 @@ import UserIcon from '@/assets/user.svg?react';
 import {Link} from 'react-router-dom';
 import {useAnalytics, useAuth, useWindowSize} from '@/hooks';
 import {docs} from '@/utils/docs';
-import {useSettingsStore} from '@/store';
+import {useLocalStore, useSettingsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
 import {NotificationSettings} from '../shared/notifications/notification-settings';
 import {useGetDevices} from '@/queries';
@@ -130,6 +130,12 @@ const UserSection = ({
     }))
   );
 
+  const {cleanStore} = useLocalStore(
+    useShallow((state) => ({
+      cleanStore: state.cleanStore
+    }))
+  );
+
   const role = useMemo(() => {
     const temp = session?.groups[0]?.role || 'VIEWER';
     return temp.toLowerCase();
@@ -147,6 +153,7 @@ const UserSection = ({
     void navigate(PATHS.callBackLoading, {
       replace: true
     });
+    cleanStore();
     handleClose();
   };
 

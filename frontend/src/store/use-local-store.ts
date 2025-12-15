@@ -11,7 +11,15 @@ type LocalStore = {
   setIdDevice: (idDevice: string | undefined) => void;
   onBoarded: boolean;
   setOnBoarded: (onBoarded: boolean) => void;
-  cleanThemeStore: () => void;
+  setIdp: boolean;
+  setSetIdp: (setIdp: boolean) => void;
+  addAgent: boolean;
+  setAddAgent: (addAgent: boolean) => void;
+  createBadge: boolean;
+  setCreateBadge: (createBadge: boolean) => void;
+  createPolicy: boolean;
+  setCreatePolicy: (createPolicy: boolean) => void;
+  cleanStore: () => void;
 };
 
 type PersistStore = (config: StateCreator<LocalStore>, options: PersistOptions<LocalStore>) => StateCreator<LocalStore>;
@@ -21,8 +29,24 @@ export const useLocalStore = create<LocalStore>(
     (set): LocalStore => ({
       onBoarded: false,
       setOnBoarded: (onBoarded: boolean) => set(() => ({onBoarded})),
-      cleanThemeStore: () => set(() => ({onBoarded: false, idDevice: undefined})),
+      cleanStore: () =>
+        set(() => ({
+          onBoarded: false,
+          idDevice: undefined,
+          setIdp: false,
+          addAgent: false,
+          createBadge: false,
+          createPolicy: false
+        })),
       idDevice: undefined,
+      setIdp: false,
+      setSetIdp: (setIdp: boolean) => set(() => ({setIdp})),
+      addAgent: false,
+      setAddAgent: (addAgent: boolean) => set(() => ({addAgent})),
+      createBadge: false,
+      setCreateBadge: (createBadge: boolean) => set(() => ({createBadge})),
+      createPolicy: false,
+      setCreatePolicy: (createPolicy: boolean) => set(() => ({createPolicy})),
       setIdDevice: (idDevice: string | undefined) => set(() => ({idDevice}))
     }),
     {
