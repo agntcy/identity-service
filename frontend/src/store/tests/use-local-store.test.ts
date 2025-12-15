@@ -28,7 +28,7 @@ describe('useLocalStore', () => {
     // Reset store to initial state before each test
     const {result} = renderHook(() => useLocalStore());
     act(() => {
-      result.current.cleanThemeStore();
+      result.current.cleanStore();
     });
   });
 
@@ -156,7 +156,7 @@ describe('useLocalStore', () => {
 
       // Clean the store
       act(() => {
-        result.current.cleanThemeStore();
+        result.current.cleanStore();
       });
 
       expect(result.current.onBoarded).toBe(false);
@@ -167,8 +167,8 @@ describe('useLocalStore', () => {
       const {result} = renderHook(() => useLocalStore());
 
       act(() => {
-        result.current.cleanThemeStore();
-        result.current.cleanThemeStore();
+        result.current.cleanStore();
+        result.current.cleanStore();
       });
 
       expect(result.current.onBoarded).toBe(false);
@@ -180,7 +180,7 @@ describe('useLocalStore', () => {
 
       // Clean without setting any values first
       act(() => {
-        result.current.cleanThemeStore();
+        result.current.cleanStore();
       });
 
       expect(result.current.onBoarded).toBe(false);
@@ -229,7 +229,7 @@ describe('useLocalStore', () => {
 
       // Clean from the other instance
       act(() => {
-        result2.current.cleanThemeStore();
+        result2.current.cleanStore();
       });
 
       expect(result1.current.onBoarded).toBe(false);
@@ -258,7 +258,7 @@ describe('useLocalStore', () => {
       act(() => {
         result.current.setOnBoarded(true);
         result.current.setIdDevice('device-123');
-        result.current.cleanThemeStore();
+        result.current.cleanStore();
       });
 
       expect(result.current.onBoarded).toBe(false);
@@ -318,7 +318,7 @@ describe('useLocalStore', () => {
 
       expect(result1.current.setOnBoarded).toBe(result2.current.setOnBoarded);
       expect(result1.current.setIdDevice).toBe(result2.current.setIdDevice);
-      expect(result1.current.cleanThemeStore).toBe(result2.current.cleanThemeStore);
+      expect(result1.current.cleanStore).toBe(result2.current.cleanStore);
     });
   });
 });

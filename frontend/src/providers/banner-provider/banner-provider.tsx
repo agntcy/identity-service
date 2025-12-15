@@ -31,8 +31,8 @@ export const BannerProvider: React.FC<{children: ReactNode}> = ({children}) => {
             text: (
               <>
                 <span className="text-[10px] lg:text-[16px]">
-                  This is a reference implementation of the AGNTCY Identity Service intended for testing and
-                  demonstration purposes only.
+                  This is a reference implementation of the AGNTCY Identity Service intended for testing and demonstration
+                  purposes only.
                 </span>{' '}
                 <a className="underline text-[10px] lg:text-[16px]" href={docs()} target="_blank" rel="noopener noreferrer">
                   Service Documentation

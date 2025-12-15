@@ -9,7 +9,7 @@ services:
     container_name: identity-vault
     restart: always
     ports:
-      - "8200"
+      - "8200:8200"
     volumes:
       - ./vault-data/file:/vault/file/:rw
     environment:
