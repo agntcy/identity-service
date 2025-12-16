@@ -42,7 +42,9 @@ vi.mock('@/hooks', () => ({
 // Mock the queries
 vi.mock('@/queries', () => ({
   useGetSession: vi.fn(),
-  useGetSettings: vi.fn()
+  useGetSettings: vi.fn(),
+  useGetAgenticServiceTotalCount: vi.fn(),
+  useGetPoliciesCount: vi.fn()
 }));
 
 // Mock the store
@@ -67,6 +69,8 @@ vi.mock('@/components/ui/loading', () => ({
 
 const mockUseGetSession = vi.mocked(await import('@/queries')).useGetSession;
 const mockUseGetSettings = vi.mocked(await import('@/queries')).useGetSettings;
+const mockUseGetAgenticServiceTotalCount = vi.mocked(await import('@/queries')).useGetAgenticServiceTotalCount;
+const mockUseGetPoliciesCount = vi.mocked(await import('@/queries')).useGetPoliciesCount;
 const mockUseSettingsStore = vi.mocked(await import('@/store')).useSettingsStore;
 const mockToast = vi.mocked(await import('@open-ui-kit/core')).toast;
 const mockUseShallow = vi.mocked(await import('zustand/react/shallow')).useShallow;
@@ -89,7 +93,9 @@ describe('SettingsProvider', () => {
     setIsEmptyIdp: vi.fn(),
     setSession: vi.fn(),
     setIsAdmin: vi.fn(),
-    setIssuerSettings: vi.fn()
+    setIssuerSettings: vi.fn(),
+    setTotalAgenticServices: vi.fn(),
+    setTotalPolicies: vi.fn()
   };
 
   const mockSessionData = {
@@ -124,6 +130,26 @@ describe('SettingsProvider', () => {
     } as unknown as import('@tanstack/react-query').UseQueryResult<any, Error>);
 
     mockUseGetSettings.mockReturnValue({
+      data: undefined,
+      isError: false,
+      isLoading: false,
+      error: null,
+      isSuccess: true,
+      isStale: false,
+      refetch: vi.fn()
+    } as unknown as import('@tanstack/react-query').UseQueryResult<any, Error>);
+
+    mockUseGetAgenticServiceTotalCount.mockReturnValue({
+      data: undefined,
+      isError: false,
+      isLoading: false,
+      error: null,
+      isSuccess: true,
+      isStale: false,
+      refetch: vi.fn()
+    } as unknown as import('@tanstack/react-query').UseQueryResult<any, Error>);
+
+    mockUseGetPoliciesCount.mockReturnValue({
       data: undefined,
       isError: false,
       isLoading: false,
