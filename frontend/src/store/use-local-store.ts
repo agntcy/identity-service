@@ -11,8 +11,6 @@ type LocalStore = {
   setIdDevice: (idDevice: string | undefined) => void;
   onBoarded: boolean;
   setOnBoarded: (onBoarded: boolean) => void;
-  setIdp: boolean;
-  setSetIdp: (setIdp: boolean) => void;
   addAgent: boolean;
   setAddAgent: (addAgent: boolean) => void;
   createBadge: boolean;
@@ -39,8 +37,6 @@ export const useLocalStore = create<LocalStore>(
           createPolicy: false
         })),
       idDevice: undefined,
-      setIdp: false,
-      setSetIdp: (setIdp: boolean) => set(() => ({setIdp})),
       addAgent: false,
       setAddAgent: (addAgent: boolean) => set(() => ({addAgent})),
       createBadge: false,

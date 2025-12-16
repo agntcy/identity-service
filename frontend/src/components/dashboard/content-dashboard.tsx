@@ -3,8 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {Checkbox, Divider, Link, Typography} from '@open-ui-kit/core';
-import ScrollShadowWrapper from '@/components/ui/scroll-shadow-wrapper';
+import {Checkbox, Link, Typography} from '@open-ui-kit/core';
 import {PATHS} from '@/router/paths';
 import {docs} from '@/utils/docs';
 import {WelcomeName} from './welcome-name';
@@ -13,95 +12,98 @@ import {useState} from 'react';
 import {PlayButton} from './play-button';
 import VideoThumbNail from '@/assets/dashboard/video-thumbnail.png';
 import {useAnalytics} from '@/hooks';
-import {useLocalStore} from '@/store';
+import {useLocalStore, useSettingsStore} from '@/store';
 import {useShallow} from 'zustand/react/shallow';
+import CheckIcon from '@/assets/dashboard/check.svg?react';
+import {globalConfig} from '@/config/global';
 
 export const ContentDashboard = () => {
   const [showVideo, setShowVideo] = useState(false);
 
   const {analyticsTrack} = useAnalytics();
 
-  const {addAgent, setAddAgent, setIdp, setSetIdp, createBadge, setCreateBadge, createPolicy, setCreatePolicy} =
-    useLocalStore(
-      useShallow((state) => ({
-        addAgent: state.addAgent,
-        setAddAgent: state.setAddAgent,
-        setIdp: state.setIdp,
-        setSetIdp: state.setSetIdp,
-        createBadge: state.createBadge,
-        setCreateBadge: state.setCreateBadge,
-        createPolicy: state.createPolicy,
-        setCreatePolicy: state.setCreatePolicy
-      }))
-    );
+  const {isEmptyIdp, totalAgenticServices, totalPolicies} = useSettingsStore(
+    useShallow((state) => ({
+      isEmptyIdp: state.isEmptyIdp,
+      totalAgenticServices: state.totalAgenticServices,
+      totalPolicies: state.totalPolicies
+    }))
+  );
+
+  const {addAgent, createBadge, createPolicy} = useLocalStore(
+    useShallow((state) => ({
+      addAgent: state.addAgent,
+      createBadge: state.createBadge,
+      createPolicy: state.createPolicy
+    }))
+  );
+
+  const allSet = !isEmptyIdp && totalAgenticServices > 0 && totalPolicies > 0 && addAgent && createBadge && createPolicy;
 
   return (
-    <ScrollShadowWrapper>
-      <div className="flex flex-col h-full gap-[16px] mb-12">
-        <WelcomeName />
-        <div className="dashboard-card mx-6 mb-6">
-          <div className="dashboard-card-content flex flex-row items-start justify-center h-full pt-4 gap-4">
-            <div className="hidden md:flex py-8 pb-12 space-y-4 max-w-[60%] flex-col items-center">
-              <div className="w-full max-w-[700px] aspect-video bg-gray-100 rounded-lg overflow-hidden shadow-md mb-4 relative">
-                {!showVideo ? (
-                  <>
-                    <div className="w-full h-full relative flex items-center justify-center">
-                      <img
-                        src={VideoThumbNail}
-                        alt="Video thumbnail"
-                        className="absolute inset-0 w-full h-full object-cover"
-                      />
-                      <button
-                        onClick={() => setShowVideo(true)}
-                        className="relative group z-10 cursor-pointer"
-                        aria-label="Play video"
-                      >
-                        <div className="transition-transform group-hover:scale-105">
-                          <PlayButton />
-                        </div>
-                      </button>
-                    </div>
-                  </>
-                ) : (
-                  <iframe
-                    width="100%"
-                    height="100%"
-                    src="https://www.youtube.com/embed/CO3YwjRXyQo?autoplay=1"
-                    title="Identity Service Setup Walkthrough"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className="w-full h-full"
-                  />
-                )}
-              </div>
-              <div className="pt-4">
-                <Typography variant="h5" textAlign="center">
-                  Watch our video walkthrough for easy setup
-                </Typography>
-              </div>
-              <div className="text-center mx-auto">
-                <Typography textAlign="center" variant="body1" maxWidth="70%" sx={{margin: '0 auto'}}>
-                  Secure your AI agents and MCP servers with trusted identities. Create, verify, and manage agent identities
-                  for secure communication and authentication.{' '}
-                  <Link
-                    href={docs()}
-                    openInNewTab
-                    fontStyle={{
-                      fontWeight: 400,
-                      fontSize: '16px',
-                      lineHeight: '24px',
-                      letterSpacing: '0.01em'
-                    }}
-                  >
-                    Learn more in our documentation.
-                  </Link>
-                </Typography>
-              </div>
+    <div className="flex flex-col h-full gap-[16px]">
+      <WelcomeName />
+      <div className="dashboard-card mx-6 mb-4">
+        <div className="dashboard-card-content flex flex-row items-start justify-center h-full pt-4 gap-4">
+          <div className="hidden md:flex py-8 pb-12 space-y-4 max-w-[60%] flex-col items-center border-bar mb-4">
+            <div className="w-full max-w-[700px] aspect-video bg-gray-100 rounded-lg overflow-hidden shadow-md mb-4 relative">
+              {!showVideo ? (
+                <>
+                  <div className="w-full h-full relative flex items-center justify-center">
+                    <img
+                      src={VideoThumbNail}
+                      alt="Video thumbnail"
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                    <button
+                      onClick={() => setShowVideo(true)}
+                      className="relative group z-10 cursor-pointer"
+                      aria-label="Play video"
+                    >
+                      <div className="transition-transform group-hover:scale-105">
+                        <PlayButton />
+                      </div>
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <iframe
+                  width="100%"
+                  height="100%"
+                  src="https://www.youtube.com/embed/CO3YwjRXyQo?autoplay=1"
+                  title="Identity Service Setup Walkthrough"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="w-full h-full"
+                />
+              )}
             </div>
-            <div className="hidden md:block">
-              <Divider orientation="vertical" sx={{margin: '0 auto', height: '600px'}} />
+            <div className="pt-4">
+              <Typography variant="h5" textAlign="center">
+                Watch our video walkthrough for easy setup
+              </Typography>
             </div>
+            <div className="text-center mx-auto">
+              <Typography textAlign="center" variant="body1" maxWidth="70%" sx={{margin: '0 auto'}}>
+                Secure your AI agents and MCP servers with trusted identities. Create, verify, and manage agent identities
+                for secure communication and authentication.{' '}
+                <Link
+                  href={docs()}
+                  openInNewTab
+                  fontStyle={{
+                    fontWeight: 400,
+                    fontSize: '16px',
+                    lineHeight: '24px',
+                    letterSpacing: '0.01em'
+                  }}
+                >
+                  Learn more in our documentation.
+                </Link>
+              </Typography>
+            </div>
+          </div>
+          {!allSet ? (
             <div className="w-full md:max-w-[40%] space-y-4 px-8 md:px-4 py-8">
               <Typography variant="h6" textAlign="left" marginBottom={'16px'}>
                 Setup Checklist
@@ -116,14 +118,14 @@ export const ContentDashboard = () => {
                 </Typography>
               </div>
               <div className="space-y-3 pt-2">
-                <div className="flex gap-2 items-start">
+                <div className="flex gap-2 items-center">
                   <Checkbox
                     icon={<RadioButtonUnchecked />}
                     checkedIcon={<CheckCircle />}
                     disableRipple
                     disableFocusRipple
                     disableTouchRipple
-                    checked={setIdp}
+                    checked={!isEmptyIdp}
                     sx={{cursor: 'default'}}
                   />
                   <Link
@@ -137,24 +139,24 @@ export const ContentDashboard = () => {
                     }}
                     onClick={() => {
                       analyticsTrack('CLICK_NAVIGATION_CONNECT_IDENTITY_PROVIDER');
-                      setSetIdp(true);
                     }}
+                    disabled={!isEmptyIdp}
                   >
                     Configure Identity Provider
                   </Link>
                 </div>
-                <div className="flex gap-2 items-start">
+                <div className="flex gap-2 items-center">
                   <Checkbox
                     icon={<RadioButtonUnchecked />}
                     checkedIcon={<CheckCircle />}
                     disableRipple
                     disableFocusRipple
                     disableTouchRipple
-                    checked={addAgent}
+                    checked={!isEmptyIdp && totalAgenticServices > 0 && addAgent}
                     sx={{cursor: 'default'}}
                   />
                   <Link
-                    disabled={setIdp ? false : true}
+                    disabled={!isEmptyIdp && totalAgenticServices > 0 && addAgent}
                     href={PATHS.agenticServices.add}
                     fontStyle={{
                       fontSize: '14px',
@@ -165,24 +167,23 @@ export const ContentDashboard = () => {
                     }}
                     onClick={() => {
                       analyticsTrack('CLICK_NAVIGATION_ADD_AGENTIC_SERVICE');
-                      setAddAgent(true);
                     }}
                   >
                     Add Agentic Service
                   </Link>
                 </div>
-                <div className="flex gap-2 items-start">
+                <div className="flex gap-2 items-center">
                   <Checkbox
                     icon={<RadioButtonUnchecked />}
                     checkedIcon={<CheckCircle />}
                     disableRipple
                     disableFocusRipple
                     disableTouchRipple
-                    checked={createBadge}
+                    checked={!isEmptyIdp && addAgent && totalAgenticServices > 0 && createBadge}
                     sx={{cursor: 'default'}}
                   />
                   <Link
-                    disabled={!(setIdp && addAgent)}
+                    disabled={!isEmptyIdp && addAgent && totalAgenticServices > 0 && createBadge}
                     href={PATHS.agenticServices.base}
                     fontStyle={{
                       fontSize: '14px',
@@ -193,7 +194,6 @@ export const ContentDashboard = () => {
                     }}
                     onClick={() => {
                       analyticsTrack('CLICK_NAVIGATION_CREATE_BADGE');
-                      setCreateBadge(true);
                     }}
                   >
                     Create Badge
@@ -206,12 +206,21 @@ export const ContentDashboard = () => {
                     disableRipple
                     disableFocusRipple
                     disableTouchRipple
-                    checked={createPolicy}
+                    checked={
+                      !isEmptyIdp && addAgent && totalAgenticServices > 0 && createBadge && createPolicy && totalPolicies > 0
+                    }
                     sx={{cursor: 'default'}}
                   />
                   <div>
                     <Link
-                      disabled={!(setIdp && addAgent && createBadge)}
+                      disabled={
+                        !isEmptyIdp &&
+                        addAgent &&
+                        totalAgenticServices > 0 &&
+                        createBadge &&
+                        createPolicy &&
+                        totalPolicies > 0
+                      }
                       href={PATHS.policies.create}
                       fontStyle={{
                         fontSize: '14px',
@@ -222,7 +231,6 @@ export const ContentDashboard = () => {
                       }}
                       onClick={() => {
                         analyticsTrack('CLICK_NAVIGATION_ADD_POLICY');
-                        setCreatePolicy(true);
                       }}
                     >
                       Create TBAC Policy
@@ -234,9 +242,88 @@ export const ContentDashboard = () => {
                 </div>
               </div>
             </div>
-          </div>
+          ) : (
+            <div className="flex flex-row w-full md:max-w-[40%] mx-auto space-y-4 px-8 md:px-4 py-8 items-center justify-center my-auto">
+              <div className="flex justity-center flex-col">
+                <div className="mx-auto mb-4">
+                  <CheckIcon />
+                </div>
+                <Typography variant="h5" textAlign="center" marginBottom={'16px'}>
+                  Congratulations!
+                </Typography>
+                <Typography textAlign="center" variant="body1" maxWidth="90%" sx={{margin: '0 auto'}}>
+                  Your Identity Service is set up and ready to use! Keep exploring Identity Service by{' '}
+                  <Link
+                    href={PATHS.agenticServices.add}
+                    fontStyle={{
+                      fontWeight: 400,
+                      fontSize: '16px',
+                      lineHeight: '24px',
+                      letterSpacing: '0.01em'
+                    }}
+                    onClick={() => analyticsTrack('CLICK_NAVIGATION_ADD_AGENTIC_SERVICE')}
+                  >
+                    adding new agentic
+                  </Link>{' '}
+                  services to generate badges and{' '}
+                  <Link
+                    href={PATHS.policies.create}
+                    fontStyle={{
+                      fontWeight: 400,
+                      fontSize: '16px',
+                      lineHeight: '24px',
+                      letterSpacing: '0.01em'
+                    }}
+                    onClick={() => analyticsTrack('CLICK_NAVIGATION_ADD_POLICY')}
+                  >
+                    create policies
+                  </Link>
+                  ,{' '}
+                  <Link
+                    href={PATHS.verifyIdentity.base}
+                    fontStyle={{
+                      fontWeight: 400,
+                      fontSize: '16px',
+                      lineHeight: '24px',
+                      letterSpacing: '0.01em'
+                    }}
+                    onClick={() => analyticsTrack('CLICK_NAVIGATION_VERIFY_IDENTITIES')}
+                  >
+                    verify identities
+                  </Link>
+                  , or visit our{' '}
+                  <Link
+                    href={globalConfig.company.gitHub}
+                    openInNewTab
+                    fontStyle={{
+                      fontWeight: 400,
+                      fontSize: '16px',
+                      lineHeight: '24px',
+                      letterSpacing: '0.01em'
+                    }}
+                  >
+                    GitHub
+                  </Link>{' '}
+                  or{' '}
+                  <Link
+                    href={docs()}
+                    openInNewTab
+                    fontStyle={{
+                      fontWeight: 400,
+                      fontSize: '16px',
+                      lineHeight: '24px',
+                      letterSpacing: '0.01em'
+                    }}
+                  >
+                    documentation
+                  </Link>{' '}
+                  for more resources.
+                </Typography>
+              </div>
+            </div>
+          )}
         </div>
       </div>
-    </ScrollShadowWrapper>
+    </div>
   );
 };

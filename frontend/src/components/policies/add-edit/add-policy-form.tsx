@@ -22,6 +22,8 @@ import {generatePath, useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
 import {PolicyReview} from './steps/policy-review';
 import {useAnalytics} from '@/hooks';
+import {useLocalStore} from '@/store';
+import {useShallow} from 'zustand/shallow';
 
 export const AddPolicyForm = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -32,6 +34,12 @@ export const AddPolicyForm = () => {
   const navigate = useNavigate();
 
   const {analyticsTrack} = useAnalytics();
+
+  const {setCreatePolicy} = useLocalStore(
+    useShallow((state) => ({
+      setCreatePolicy: state.setCreatePolicy
+    }))
+  );
 
   const form = useForm<z.infer<typeof methods.current.schema>>({
     resolver: zodResolver(methods.current.schema),
@@ -75,12 +83,13 @@ export const AddPolicyForm = () => {
           const path = generatePath(PATHS.policies.info, {
             id: resp.data.id
           });
-          void navigate(path, {replace: true});
+          setCreatePolicy(true);
           analyticsTrack('SAVE_POLICY', {
             policyId: resp.data.id,
             policyName: resp.data.name,
             assignedTo: resp.data.assignedTo
           });
+          void navigate(path, {replace: true});
         }
       },
       onError: () => {

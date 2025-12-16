@@ -132,10 +132,11 @@ export const generateRoutes = (routes: Route[]): Route[] => {
 };
 
 export const useRoutes = () => {
-  const {isEmptyIdp, isAdmin} = useSettingsStore(
+  const {isEmptyIdp, isAdmin, totalAgenticServices} = useSettingsStore(
     useShallow((state) => ({
       isEmptyIdp: state.isEmptyIdp,
-      isAdmin: state.isAdmin
+      isAdmin: state.isAdmin,
+      totalAgenticServices: state.totalAgenticServices
     }))
   );
 
@@ -273,30 +274,30 @@ export const useRoutes = () => {
           },
           {
             path: PATHS.policies.create,
-            disabled: isEmptyIdp,
             element: (
               <NodeRoute pageTitle="add policy">
                 <AddPolicy />
               </NodeRoute>
-            )
+            ),
+            disabled: isEmptyIdp || totalAgenticServices < 1
           },
           {
             path: PATHS.policies.info,
-            disabled: isEmptyIdp,
             element: (
               <NodeRoute pageTitle="policy info">
                 <InfoPolicy />
               </NodeRoute>
-            )
+            ),
+            disabled: isEmptyIdp || totalAgenticServices < 1
           },
           {
             path: PATHS.policies.edit,
-            disabled: isEmptyIdp,
             element: (
               <NodeRoute pageTitle="edit policy">
                 <EditPolicy />
               </NodeRoute>
-            )
+            ),
+            disabled: isEmptyIdp || totalAgenticServices < 1
           },
           {
             path: '*',
@@ -412,7 +413,7 @@ export const useRoutes = () => {
         ]
       }
     ];
-  }, [isAdmin, isEmptyIdp, isMobile, isMulti]);
+  }, [isAdmin, isEmptyIdp, isMobile, isMulti, totalAgenticServices]);
 
   const removeDisabledRoutes = useCallback((routes: Route[]): Route[] => {
     return routes

@@ -19,6 +19,8 @@ import {useCreateAgenticService} from '@/mutations';
 import {generatePath, useNavigate} from 'react-router-dom';
 import {PATHS} from '@/router/paths';
 import {useAnalytics} from '@/hooks';
+import {useLocalStore} from '@/store';
+import {useShallow} from 'zustand/react/shallow';
 
 export const AddAgenticServiceStepper = () => {
   return (
@@ -34,6 +36,12 @@ const FormStepperComponent = () => {
   const navigate = useNavigate();
 
   const {analyticsTrack} = useAnalytics();
+
+  const {setAddAgent} = useLocalStore(
+    useShallow((state) => ({
+      setAddAgent: state.setAddAgent
+    }))
+  );
 
   const form = useForm<z.infer<typeof methods.current.schema>>({
     resolver: zodResolver(methods.current.schema),
@@ -56,6 +64,7 @@ const FormStepperComponent = () => {
         const path = generatePath(PATHS.agenticServices.info.base, {
           id: resp.data.id
         });
+        setAddAgent(true);
         void navigate(path, {replace: true});
       },
       onError: () => {

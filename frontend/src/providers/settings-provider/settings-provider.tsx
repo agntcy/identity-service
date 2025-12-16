@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import {useGetSession, useGetSettings} from '@/queries';
+import {useGetAgenticServiceTotalCount, useGetPoliciesCount, useGetSession, useGetSettings} from '@/queries';
 import {IdpType} from '@/types/api/settings';
 import {toast} from '@open-ui-kit/core';
 import {useEffect, useMemo} from 'react';
@@ -17,6 +17,12 @@ const SettingsProvider = ({children}: {children: React.ReactNode}) => {
   const {authInfo} = useAuth();
 
   const {data: dataSettings, isError: isErrorSettings, isLoading: isLoadingSettings} = useGetSettings();
+  const {
+    data: dataAgenticServices,
+    isLoading: isLoadingAgenticServices,
+    isError: isErrorAgenticServices
+  } = useGetAgenticServiceTotalCount();
+  const {data: dataPolicies, isLoading: isLoadingPolicies, isError: isErrorPolicies} = useGetPoliciesCount({enabled: true});
 
   // Only use session hook in multi-tenant mode
   const multiTenantMode = isMultiTenant();
@@ -39,14 +45,17 @@ const SettingsProvider = ({children}: {children: React.ReactNode}) => {
     return !dataSettings?.issuerSettings || dataSettings.issuerSettings.idpType === IdpType.IDP_TYPE_UNSPECIFIED;
   }, [dataSettings?.issuerSettings]);
 
-  const {setIsEmptyIdp, setSession, setIsAdmin, setIssuerSettings} = useSettingsStore(
-    useShallow((state) => ({
-      setIsEmptyIdp: state.setIsEmptyIdp,
-      setSession: state.setSession,
-      setIsAdmin: state.setIsAdmin,
-      setIssuerSettings: state.setIssuerSettings
-    }))
-  );
+  const {setIsEmptyIdp, setSession, setIsAdmin, setIssuerSettings, setTotalAgenticServices, setTotalPolicies} =
+    useSettingsStore(
+      useShallow((state) => ({
+        setIsEmptyIdp: state.setIsEmptyIdp,
+        setSession: state.setSession,
+        setIsAdmin: state.setIsAdmin,
+        setIssuerSettings: state.setIssuerSettings,
+        setTotalAgenticServices: state.setTotalAgenticServices,
+        setTotalPolicies: state.setTotalPolicies
+      }))
+    );
 
   useEffect(() => {
     if (isErrorSettings) {
@@ -57,6 +66,26 @@ const SettingsProvider = ({children}: {children: React.ReactNode}) => {
       });
     }
   }, [isErrorSettings]);
+
+  useEffect(() => {
+    if (isErrorAgenticServices) {
+      toast({
+        title: 'Error fetching agentic services count',
+        description: 'There was an error fetching the agentic services count. Please try again later.',
+        type: 'error'
+      });
+    }
+  }, [isErrorAgenticServices]);
+
+  useEffect(() => {
+    if (isErrorPolicies) {
+      toast({
+        title: 'Error fetching policies count',
+        description: 'There was an error fetching the policies count. Please try again later.',
+        type: 'error'
+      });
+    }
+  }, [isErrorPolicies]);
 
   useEffect(() => {
     if (multiTenantMode && isErrorSession) {
@@ -93,6 +122,18 @@ const SettingsProvider = ({children}: {children: React.ReactNode}) => {
   }, [dataSession, isAdmin, setSession, setIsAdmin, multiTenantMode, authInfo?.user?.username]);
 
   useEffect(() => {
+    if (dataAgenticServices?.total) {
+      setTotalAgenticServices(Number(dataAgenticServices.total));
+    }
+  }, [dataAgenticServices, setTotalAgenticServices]);
+
+  useEffect(() => {
+    if (dataPolicies?.total) {
+      setTotalPolicies(Number(dataPolicies.total));
+    }
+  }, [dataPolicies, setTotalPolicies]);
+
+  useEffect(() => {
     setIsEmptyIdp(isEmptyIdp);
   }, [isEmptyIdp, setIsEmptyIdp]);
 
@@ -101,7 +142,8 @@ const SettingsProvider = ({children}: {children: React.ReactNode}) => {
   }, [dataSettings?.issuerSettings, setIssuerSettings]);
 
   // Only show loading for session in multi-tenant mode
-  const shouldShowLoading = isLoadingSettings || (multiTenantMode && isLoadingSession);
+  const shouldShowLoading =
+    isLoadingSettings || (multiTenantMode && isLoadingSession) || isLoadingAgenticServices || isLoadingPolicies;
 
   if (shouldShowLoading) {
     return <Loading />;
