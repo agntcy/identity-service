@@ -1,0 +1,125 @@
+/**
+ * Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import {Button, Typography} from '@open-ui-kit/core';
+import {CheckIcon, PlusIcon} from 'lucide-react';
+import {PATHS} from '@/router/paths';
+import {Link, Link as RouterLink} from 'react-router-dom';
+import {useGetAgenticServiceTotalCount, useGetPoliciesCount, useGetSettings} from '@/queries';
+import StatsCard, {Stat} from '../ui/stats-card';
+import {ProviderType} from '../shared/identity-provider/provider-type';
+import {useMemo} from 'react';
+import {cn} from '@/lib/utils';
+import {useAnalytics} from '@/hooks';
+
+export const StatsDashboard = () => {
+  const {analyticsTrack} = useAnalytics();
+
+  const {data: dataSettings, isLoading: isLoadingSettings} = useGetSettings();
+  const {data: dataAgenticServices, isLoading: isLoadingAgenticServices} = useGetAgenticServiceTotalCount();
+  const {data: dataPolicies, isLoading: isLoadingPolicies} = useGetPoliciesCount({enabled: true});
+
+  const statsInfo: Stat[] = useMemo(() => {
+    const temp = [
+      {
+        value: (
+          <Link to={PATHS.settings.identityProvider.base}>
+            <ProviderType type={dataSettings?.issuerSettings?.idpType} />
+          </Link>
+        ),
+        title: 'Identity Provider',
+        loading: isLoadingSettings
+      },
+      {
+        value: <Link to={PATHS.agenticServices.base}>{dataAgenticServices?.total || 0}</Link>,
+        title: 'Total Agentic Services',
+        loading: isLoadingAgenticServices
+      },
+      {
+        value: <Link to={PATHS.policies.base}>{dataPolicies?.total || 0}</Link>,
+        title: 'Total Policies',
+        loading: isLoadingPolicies
+      }
+    ];
+    return temp;
+  }, [
+    dataAgenticServices?.total,
+    dataPolicies?.total,
+    dataSettings?.issuerSettings?.idpType,
+    isLoadingAgenticServices,
+    isLoadingPolicies,
+    isLoadingSettings
+  ]);
+
+  return (
+    <div className="flex flex-col h-full gap-[16px] mb-12">
+      <div className="px-[24px]">
+        <StatsCard className={cn('grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 p-4')} stats={statsInfo} />
+      </div>
+      <div className="card-group px-[24px]">
+        <div className="card-flex-group min-w-[384px] bg-[#FBFCFE] rounded-[8px] flex-col flex justify-start items-center px-20 py-12 hidden md:block">
+          <div className="flex flex-col justify-between min-h-[150px]">
+            <div>
+              <Typography variant="h6" textAlign="center">
+                Verify Identity Badges
+              </Typography>
+              <Typography variant="body1" marginTop={1} textAlign="center">
+                Ensure secure communication and authentication by verifying identities
+              </Typography>
+            </div>
+            <div className="flex justify-center items-center">
+              <RouterLink to={PATHS.verifyIdentity.base} onClick={() => analyticsTrack('CLICK_NAVIGATION_VERIFY_IDENTITY')}>
+                <Button variant="outlined" sx={{fontWeight: '600 !important'}} startIcon={<CheckIcon className="w-4 h-4" />}>
+                  Verify Identity
+                </Button>
+              </RouterLink>
+            </div>
+          </div>
+        </div>
+        <div className="card-flex-group min-w-[384px] bg-[#FBFCFE] rounded-[8px] flex-col flex justify-start items-center px-20 py-12 hidden md:block">
+          <div className="flex flex-col justify-between min-h-[150px]">
+            <div>
+              <Typography variant="h6" textAlign="center">
+                Add Agentic Services
+              </Typography>
+              <Typography variant="body1" marginTop={1} textAlign="center">
+                Add Agentic Services and generate Identity badges
+              </Typography>
+            </div>
+            <div className="flex justify-center items-center">
+              <RouterLink
+                to={PATHS.agenticServices.add}
+                onClick={() => analyticsTrack('CLICK_NAVIGATION_ADD_AGENTIC_SERVICE')}
+              >
+                <Button variant="outlined" sx={{fontWeight: '600 !important'}} startIcon={<PlusIcon className="w-4 h-4" />}>
+                  Add Agentic Service
+                </Button>
+              </RouterLink>
+            </div>
+          </div>
+        </div>
+        <div className="card-flex-group min-w-[384px] bg-[#FBFCFE] rounded-[8px] flex-col flex justify-start items-center px-20 py-12 hidden md:block">
+          <div className="flex flex-col justify-between min-h-[150px]">
+            <div>
+              <Typography variant="h6" textAlign="center">
+                Add Policies
+              </Typography>
+              <Typography variant="body1" marginTop={1} textAlign="center">
+                Manage access and permissions for secure agentic interactions
+              </Typography>
+            </div>
+            <div className="flex justify-center items-center">
+              <RouterLink to={PATHS.policies.create} onClick={() => analyticsTrack('CLICK_NAVIGATION_ADD_POLICY')}>
+                <Button variant="outlined" sx={{fontWeight: '600 !important'}} startIcon={<PlusIcon className="w-4 h-4" />}>
+                  Add Policy
+                </Button>
+              </RouterLink>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};

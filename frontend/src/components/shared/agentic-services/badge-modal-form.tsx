@@ -22,6 +22,8 @@ import {useAnalytics} from '@/hooks';
 import {Form, FormControl, FormField, FormItem, FormLabel} from '@/components/ui/form';
 import {FileUpload} from '@/components/ui/file-upload';
 import {Input} from '@/components/ui/input';
+import {useLocalStore} from '@/store';
+import {useShallow} from 'zustand/react/shallow';
 
 interface BadgeModalFormProps extends ModalProps {
   title?: string;
@@ -58,6 +60,12 @@ export const BadgeModalForm = ({
 
   const {analyticsTrack} = useAnalytics();
 
+  const {setCreateBadge} = useLocalStore(
+    useShallow((state) => ({
+      setCreateBadge: state.setCreateBadge
+    }))
+  );
+
   const createBadge = useIssueBadge({
     callbacks: {
       onSuccess: (resp) => {
@@ -72,6 +80,7 @@ export const BadgeModalForm = ({
           type: 'success'
         });
         onBadgeCreated?.(resp.data);
+        setCreateBadge(true);
         if (navigateTo) {
           const path = generatePath(PATHS.agenticServices.info.base, {id: app.id});
           void navigate(path);

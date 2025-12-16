@@ -12,10 +12,14 @@ type SettingsStore = {
   issuerSettings?: IssuerSettings;
   session?: GetSessionResponse;
   isAdmin: boolean;
+  totalAgenticServices: number;
+  totalPolicies: number;
   setIsAdmin: (value: boolean) => void;
   setSession: (session: GetSessionResponse) => void;
   setIsEmptyIdp: (value: boolean) => void;
   setIssuerSettings: (issuerSettings?: IssuerSettings) => void;
+  setTotalAgenticServices: (total: number) => void;
+  setTotalPolicies: (total: number) => void;
 };
 
 export const useSettingsStore = create<SettingsStore>(
@@ -24,6 +28,10 @@ export const useSettingsStore = create<SettingsStore>(
     issuerSettings: undefined,
     session: undefined,
     isAdmin: false,
+    totalAgenticServices: 0,
+    totalPolicies: 0,
+    setTotalAgenticServices: (total: number) => set(() => ({totalAgenticServices: total})),
+    setTotalPolicies: (total: number) => set(() => ({totalPolicies: total})),
     setIssuerSettings: (issuerSettings?: IssuerSettings) => set(() => ({issuerSettings})),
     setIsAdmin: (value: boolean) => set(() => ({isAdmin: value})),
     setSession: (session: GetSessionResponse) => set(() => ({session})),
