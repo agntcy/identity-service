@@ -17,7 +17,8 @@ vi.mock('@/hooks', () => ({
 
 // Mock store
 vi.mock('@/store', () => ({
-  useLocalStore: vi.fn()
+  useLocalStore: vi.fn(),
+  useSettingsStore: vi.fn()
 }));
 
 // Mock zustand
@@ -30,10 +31,16 @@ vi.mock('@/components/dashboard/content-dashboard', () => ({
   ContentDashboard: () => <div data-testid="content-dashboard">ContentDashboard</div>
 }));
 
+// Mock StatsDashboard component
+vi.mock('@/components/dashboard/stats-dashboard', () => ({
+  StatsDashboard: () => <div data-testid="stats-dashboard">StatsDashboard</div>
+}));
+
 // Mock CSS import
 vi.mock('@/styles/dashboard.css', () => ({}));
 
 const mockUseLocalStore = vi.mocked(await import('@/store')).useLocalStore;
+const mockUseSettingsStore = vi.mocked(await import('@/store')).useSettingsStore;
 
 describe('Dashboard', () => {
   beforeEach(() => {
@@ -49,6 +56,11 @@ describe('Dashboard', () => {
       setCreateBadge: vi.fn(),
       createPolicy: false,
       setCreatePolicy: vi.fn()
+    });
+
+    // Mock useSettingsStore with default values
+    mockUseSettingsStore.mockReturnValue({
+      isEmptyIdp: false
     });
   });
 
