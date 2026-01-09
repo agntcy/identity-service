@@ -1,0 +1,18 @@
+authn and authZ-Proxy 
+Requirements:
+  Issue Access tokens for DCR 
+  Publish endpoints for client registration
+  Authenticate registration using access tokem 
+  Once DCR done 
+   Use URL
+   run oauth flow 
+   Get attributes of client/agent
+   Apply authorization policy based on atrributes  - contact upstream policy control-plane if cached policy invalidated
+   Apply authorization DP enforcement via a local or remote service on K8s - chhose service based on latency
+  Implemet illustrative use-case
+
+Infra requirements
+    Easy plug-n-play
+    Easy plug-in of custom logic via ext-proc or WASM plug-in
+    
+    
