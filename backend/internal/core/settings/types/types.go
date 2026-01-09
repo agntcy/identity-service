@@ -28,6 +28,9 @@ const (
 
 	// Idp Type Keycloak.
 	IDP_TYPE_KEYCLOAK
+
+	// Idp Type Entra ID
+	IDP_TYPE_ENTRA_ID
 )
 
 func (t *IdpType) UnmarshalText(text []byte) error {
@@ -40,6 +43,8 @@ func (t *IdpType) UnmarshalText(text []byte) error {
 		*t = IDP_TYPE_ORY
 	case IDP_TYPE_KEYCLOAK.String():
 		*t = IDP_TYPE_KEYCLOAK
+	case IDP_TYPE_ENTRA_ID.String():
+		*t = IDP_TYPE_ENTRA_ID
 	default:
 		*t = IDP_TYPE_UNSPECIFIED
 	}
@@ -84,6 +89,13 @@ type KeycloakIdpSettings struct {
 	ClientSecret string `json:"client_secret,omitempty" protobuf:"bytes,4,opt,name=client_secret"`
 }
 
+// Entra ID (Azure AD) IdP Settings
+type EntraIdpSettings struct {
+	TenantID     string `json:"tenant_id,omitempty"     protobuf:"bytes,1,opt,name=tenant_id"`
+	ClientID     string `json:"client_id,omitempty"     protobuf:"bytes,2,opt,name=client_id"`
+	ClientSecret string `json:"client_secret,omitempty" protobuf:"bytes,3,opt,name=client_secret"`
+}
+
 // Issuer Settings
 type IssuerSettings struct {
 	// A unique identifier for the Issuer.
@@ -118,13 +130,17 @@ type IssuerSettings struct {
 	// +field_behavior:OPTIONAL
 	KeycloakIdpSettings *KeycloakIdpSettings `json:"keycloak_idp_settings,omitempty" protobuf:"bytes,7,opt,name=keycloak_idp_settings"` //nolint:lll // struct tags exceed line length
 
+	// Settings for the Entra ID Identity Provider.
+	// +field_behavior:OPTIONAL
+	EntraIdpSettings *EntraIdpSettings `json:"entra_idp_settings,omitempty" protobuf:"bytes,8,opt,name=entra_idp_settings"`
+
 	// CreatedAt records the timestamp of when the IssuerSettings was initially created
 	// +field_behavior:OUTPUT_ONLY
-	CreatedAt time.Time `json:"created_at" protobuf:"google.protobuf.Timestamp,8,opt,name=created_at"`
+	CreatedAt time.Time `json:"created_at" protobuf:"google.protobuf.Timestamp,9,opt,name=created_at"`
 
 	// UpdatedAt records the timestamp of the last update to the IssuerSettings
 	// +field_behavior:OUTPUT_ONLY
-	UpdatedAt *time.Time `json:"updated_at,omitempty" protobuf:"google.protobuf.Timestamp,9,opt,name=updated_at"`
+	UpdatedAt *time.Time `json:"updated_at,omitempty" protobuf:"google.protobuf.Timestamp,10,opt,name=updated_at"`
 }
 
 // Identity Settings
