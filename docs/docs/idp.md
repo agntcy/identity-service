@@ -180,3 +180,65 @@ Follow these steps to configure and register your Identity Provider:
    - If you need to discard the entered information and cancel the creation process, click the **Cancel** button.
 
 ![Register Issuer With Ory Success](/img/register-issuer-ory-done.png)
+
+## Connecting Ping Identity as an Identity Provider
+
+This guide specifically details the process for configuring [Ping Identity](https://www.pingidentity.com/) (PingOne) as an Identity Provider.
+
+### Prerequisites
+
+Before you begin the Identity Provider connection process, ensure you have the following:
+
+- **Access to AGNTCY Identity Service:** You must have an administrator role or sufficient permissions within the AGNTCY Identity Service application to access the Settings and connect Identity Providers.
+- **PingOne Account:** An active [PingOne](https://www.pingidentity.com/en/platform/pingone.html) account is required.
+- **PingOne Application Details:** You must have a worker application configured within your PingOne environment. From this application, you will need to retrieve:
+  - Your PingOne **Environment ID**
+  - The **Client ID** for your worker application
+  - The **Client Secret** for your worker application
+  - The **Region** where your PingOne environment is hosted (e.g., `com`, `eu`, `asia`)
+
+:::tip[NOTE]
+You can follow the [PingOne documentation](https://docs.pingidentity.com/r/en-us/pingone/p1_add_app_worker) for detailed instructions on how to create and manage worker applications within PingOne.
+
+Worker applications in PingOne are designed for server-to-server authentication using the OAuth 2.0 client credentials grant type, which is ideal for the AGNTCY Identity Service integration.
+:::
+
+### Identity Provider Connection Steps
+
+Follow these steps to configure and register your Identity Provider:
+
+1. **Select Identity Provider:**
+
+   - On the "Identity Provider Connection" page, you will be presented with a selection of supported Identity Providers.
+   - Carefully choose the provider you intend to integrate:
+     - **Ping** (for Ping Identity PingOne integration)
+   - **Critical Note:** The selection of an Identity Provider is a **one-time** action. Once saved, this choice cannot be modified later. Ensure you select the correct provider before proceeding.
+
+2. **Enter Provider Details:**
+
+   - After selecting your desired Identity Provider (Ping Identity), the "Provider details" section will become active, prompting you for specific configuration parameters.
+   - **Environment ID:** Enter the Environment ID from your PingOne console. This uniquely identifies your PingOne environment.
+     - _Example:_ `abc123-def4-5678-90ab-cdef12345678`
+   - **Region:** Specify the region where your PingOne environment is hosted. Common values are:
+     - `com` for North America (https://auth.pingone.com)
+     - `eu` for Europe (https://auth.pingone.eu)
+     - `asia` for Asia Pacific (https://auth.pingone.asia)
+   - **Client ID:** Input the Client ID from your worker application. This uniquely identifies your application within PingOne.
+     - _Example:_ `a1b2c3d4-e5f6-7890-abcd-ef1234567890`
+   - **Client Secret:** Provide the Client Secret from your worker application. This is a sensitive credential used for authenticating API requests. For security purposes, the input in this field will be masked (displayed as asterisks).
+
+3. **Save Configuration:**
+   - Once all required details (Environment ID, Region, Client ID, and Client Secret) have been accurately entered, click the **Save** button.
+   - Upon successful saving, your Ping Identity provider will be registered and configured within AGNTCY Identity Service.
+   - If you need to discard the entered information and cancel the creation process, click the **Cancel** button.
+
+### PingOne Application Configuration
+
+When creating your worker application in PingOne, ensure the following:
+
+1. **Application Type:** Select "Worker" as the application type
+2. **Grant Type:** Ensure "Client Credentials" is enabled
+3. **Scopes:** Grant the necessary scopes for the application to manage other applications (typically administrative scopes)
+4. **Token Endpoint Authentication Method:** Use "Client Secret Basic" or "Client Secret Post"
+
+The AGNTCY Identity Service will use this worker application to create and manage OAuth client credentials for your agentic services automatically.
