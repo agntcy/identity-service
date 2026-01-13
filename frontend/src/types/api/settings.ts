@@ -13,7 +13,8 @@ import {
   V1Alpha1OryIdpSettings,
   V1Alpha1PingIdpSettings,
   V1Alpha1SetIssuerRequest,
-  V1Alpha1Settings
+  V1Alpha1Settings,
+  V1Alpha1EntraIdpSettings
 } from '@/api/generated/identity/settings_service.swagger.api';
 
 export type {
@@ -25,7 +26,8 @@ export type {
   V1Alpha1Settings as Settings,
   V1Alpha1KeycloakIdpSettings as KeycloakIdpSettings,
   V1Alpha1OryIdpSettings as OryIdpSettings,
-  V1Alpha1PingIdpSettings as PingIdpSettings
+  V1Alpha1PingIdpSettings as PingIdpSettings,
+  V1Alpha1EntraIdpSettings as EntraIdpSettings
 };
 
 export {V1Alpha1IdpType as IdpType};

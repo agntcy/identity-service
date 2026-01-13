@@ -18,6 +18,7 @@ import OasfLogo from '@/assets/oasf.svg?react';
 import OryLogo from '@/assets/ory.svg?react';
 import PingLogo from '@/assets/ping.svg?react';
 import KeycloakLogo from '@/assets/keycloak.png';
+import EntraLogo from '@/assets/entra.svg?react';
 import {IdpType} from '@/types/api/settings';
 import {docs} from '@/utils/docs';
 import {useAnalytics} from '@/hooks';
@@ -55,6 +56,13 @@ export const IdentityProviderForm = ({isLoading = false}: {isLoading?: boolean})
       type: IdpType.IDP_TYPE_ORY,
       title: 'Ory',
       imgURI: <OryLogo />,
+      isDisabled: isLoading || !isEmptyIdp,
+      useTooltip: isEmptyIdp
+    },
+    {
+      type: IdpType.IDP_TYPE_ENTRA_ID,
+      title: 'Microsoft Entra ID',
+      imgURI: <EntraLogo />,
       isDisabled: isLoading || !isEmptyIdp,
       useTooltip: isEmptyIdp
     },
@@ -273,6 +281,55 @@ export const IdentityProviderForm = ({isLoading = false}: {isLoading?: boolean})
                   </FormItem>
                 )}
               />
+            </div>
+          </div>
+        )}
+        {idpType === IdpType.IDP_TYPE_ENTRA_ID && (
+          <div className="space-y-4">
+            <div>
+              <Typography variant="subtitle1" fontWeight={600}>
+                Provider details
+              </Typography>
+            </div>
+            <div className="space-y-2">
+              <FormField
+                control={control}
+                name="tenantIdEntra"
+                render={({field}) => (
+                  <FormItem className="w-[50%] pr-2">
+                    <FormLabel className="form-label">Tenant ID</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Type tenant ID..." {...field} disabled={isLoading || !isEmptyIdp} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <div className="flex gap-4 items-start pt-2">
+                <FormField
+                  control={control}
+                  name="clientIdEntra"
+                  render={({field}) => (
+                    <FormItem className="w-[50%]">
+                      <FormLabel className="form-label">Client ID</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Type client ID..." {...field} disabled={isLoading || !isEmptyIdp} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={control}
+                  name="clientSecretEntra"
+                  render={({field}) => (
+                    <FormItem className="w-[50%]">
+                      <FormLabel className="form-label">Client Secret</FormLabel>
+                      <FormControl>
+                        <PasswordInput placeholder="Type client secret..." {...field} disabled={isLoading} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
             </div>
           </div>
         )}
