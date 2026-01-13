@@ -45,6 +45,9 @@ message IssuerSettings {
   // Settings for the Keycloak Identity Provider.
   optional KeycloakIdpSettings keycloak_idp_settings = 7 [(.google.api.field_behavior) = OPTIONAL];
 
+  // Settings for the Ping Identity Provider.
+  optional PingIdpSettings ping_idp_settings = 10 [(.google.api.field_behavior) = OPTIONAL];
+
   // CreatedAt records the timestamp of when the IssuerSettings was initially created
   optional .google.protobuf.Timestamp created_at = 8 [(.google.api.field_behavior) = OUTPUT_ONLY];
 
@@ -61,6 +64,17 @@ message KeycloakIdpSettings {
   optional string client_id = 3;
 
   optional string client_secret = 4;
+}
+
+// Ping IdP Settings
+message PingIdpSettings {
+  optional string environment_id = 1;
+
+  optional string client_id = 2;
+
+  optional string client_secret = 3;
+
+  optional string region = 4;
 }
 
 // Okta IdP Settings
@@ -102,4 +116,6 @@ enum IdpType {
   IDP_TYPE_SELF = 4;
   // Idp Type Keycloak.
   IDP_TYPE_KEYCLOAK = 5;
+  // Idp Type Ping.
+  IDP_TYPE_PING = 6;
 }
