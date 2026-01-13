@@ -24,6 +24,15 @@ message DuoIdpSettings {
   optional string secret_key = 3;
 }
 
+// Entra ID (Azure AD) IdP Settings
+message EntraIdpSettings {
+  optional string tenant_id = 1;
+
+  optional string client_id = 2;
+
+  optional string client_secret = 3;
+}
+
 // Issuer Settings
 message IssuerSettings {
   // A unique identifier for the Issuer.
@@ -47,6 +56,9 @@ message IssuerSettings {
 
   // Settings for the Ping Identity Provider.
   optional PingIdpSettings ping_idp_settings = 10 [(.google.api.field_behavior) = OPTIONAL];
+
+  // Settings for the Entra ID Identity Provider.
+  optional EntraIdpSettings entra_idp_settings = 11 [(.google.api.field_behavior) = OPTIONAL];
 
   // CreatedAt records the timestamp of when the IssuerSettings was initially created
   optional .google.protobuf.Timestamp created_at = 8 [(.google.api.field_behavior) = OUTPUT_ONLY];
@@ -118,4 +130,6 @@ enum IdpType {
   IDP_TYPE_KEYCLOAK = 5;
   // Idp Type Ping.
   IDP_TYPE_PING = 6;
+  // Idp Type Entra ID
+  IDP_TYPE_ENTRA_ID = 7;
 }

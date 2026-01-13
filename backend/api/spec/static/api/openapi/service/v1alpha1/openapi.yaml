@@ -1278,6 +1278,16 @@ components:
                 secretKey:
                     type: string
             description: Duo IdP Settings
+        EntraIdpSettings:
+            type: object
+            properties:
+                tenantId:
+                    type: string
+                clientId:
+                    type: string
+                clientSecret:
+                    type: string
+            description: Entra ID (Azure AD) IdP Settings
         ErrorInfo:
             type: object
             properties:
@@ -1399,6 +1409,7 @@ components:
                         - IDP_TYPE_SELF
                         - IDP_TYPE_KEYCLOAK
                         - IDP_TYPE_PING
+                        - IDP_TYPE_ENTRA_ID
                     type: string
                     description: The type of the IdP.
                     format: enum
@@ -1422,6 +1433,10 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/PingIdpSettings'
                     description: Settings for the Ping Identity Provider.
+                entraIdpSettings:
+                    allOf:
+                        - $ref: '#/components/schemas/EntraIdpSettings'
+                    description: Settings for the Entra ID Identity Provider.
                 createdAt:
                     readOnly: true
                     type: string

@@ -39,10 +39,10 @@ RUN go install github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc@latest
 RUN go install github.com/bufbuild/protoschema-plugins/cmd/protoc-gen-jsonschema@latest
 
 # Go to Protobuf
-RUN go install k8s.io/code-generator/cmd/go-to-protobuf@latest
-RUN go install k8s.io/code-generator/cmd/go-to-protobuf/protoc-gen-gogo@latest
+RUN go install k8s.io/code-generator/cmd/go-to-protobuf@v0.34.3
+RUN go install k8s.io/code-generator/cmd/go-to-protobuf/protoc-gen-gogo@v0.34.3
 RUN go install golang.org/x/tools/cmd/goimports@latest
-RUN go get k8s.io/apimachinery
+RUN go get k8s.io/apimachinery@v0.34.3
 
 # Custom tools
 WORKDIR /identity/proto-enum-generator
