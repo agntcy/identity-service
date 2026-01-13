@@ -47,6 +47,19 @@ describe('IdentityProvidersSchema', () => {
       expect(result.success).toBe(true);
     });
 
+    it('accepts valid Ping provider configuration', () => {
+      const validData = {
+        provider: IdpType.IDP_TYPE_PING,
+        environmentId: 'abc123-env-id',
+        clientId: 'ping-client-id',
+        clientSecret: 'ping-client-secret',
+        region: 'com'
+      };
+
+      const result = IdentityProvidersSchema.safeParse(validData);
+      expect(result.success).toBe(true);
+    });
+
     it('accepts configuration with all optional fields for Duo', () => {
       const validData = {
         provider: IdpType.IDP_TYPE_DUO,
@@ -267,6 +280,87 @@ describe('IdentityProvidersSchema', () => {
     });
   });
 
+  describe('Ping provider validation', () => {
+    it('rejects Ping provider without environmentId', () => {
+      const invalidData = {
+        provider: IdpType.IDP_TYPE_PING,
+        clientId: 'ping-client-id',
+        clientSecret: 'ping-client-secret',
+        region: 'com'
+      };
+
+      const result = IdentityProvidersSchema.safeParse(invalidData);
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.issues.some((issue) => issue.message === 'Environment ID is required for Ping')).toBe(true);
+      }
+    });
+
+    it('rejects Ping provider without clientId', () => {
+      const invalidData = {
+        provider: IdpType.IDP_TYPE_PING,
+        environmentId: 'abc123-env-id',
+        clientSecret: 'ping-client-secret',
+        region: 'com'
+      };
+
+      const result = IdentityProvidersSchema.safeParse(invalidData);
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.issues.some((issue) => issue.message === 'Client ID is required for Ping')).toBe(true);
+      }
+    });
+
+    it('rejects Ping provider without clientSecret', () => {
+      const invalidData = {
+        provider: IdpType.IDP_TYPE_PING,
+        environmentId: 'abc123-env-id',
+        clientId: 'ping-client-id',
+        region: 'com'
+      };
+
+      const result = IdentityProvidersSchema.safeParse(invalidData);
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.issues.some((issue) => issue.message === 'Client Secret is required for Ping')).toBe(true);
+      }
+    });
+
+    it('rejects Ping provider without region', () => {
+      const invalidData = {
+        provider: IdpType.IDP_TYPE_PING,
+        environmentId: 'abc123-env-id',
+        clientId: 'ping-client-id',
+        clientSecret: 'ping-client-secret'
+      };
+
+      const result = IdentityProvidersSchema.safeParse(invalidData);
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.issues.some((issue) => issue.message === 'Region is required for Ping')).toBe(true);
+      }
+    });
+
+    it('rejects Ping provider with empty required fields', () => {
+      const invalidData = {
+        provider: IdpType.IDP_TYPE_PING,
+        environmentId: '',
+        clientId: '',
+        clientSecret: '',
+        region: ''
+      };
+
+      const result = IdentityProvidersSchema.safeParse(invalidData);
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.issues.some((issue) => issue.message === 'Environment ID is required for Ping')).toBe(true);
+        expect(result.error.issues.some((issue) => issue.message === 'Client ID is required for Ping')).toBe(true);
+        expect(result.error.issues.some((issue) => issue.message === 'Client Secret is required for Ping')).toBe(true);
+        expect(result.error.issues.some((issue) => issue.message === 'Region is required for Ping')).toBe(true);
+      }
+    });
+  });
+
   describe('type inference', () => {
     it('correctly infers the TypeScript type', () => {
       const data: IdentityProvidersFormValues = {
@@ -278,7 +372,9 @@ describe('IdentityProvidersSchema', () => {
         integrationKey: 'integration-key',
         secretKey: 'secret-key',
         projectSlug: 'project-slug',
-        apiKey: 'api-key'
+        apiKey: 'api-key',
+        environmentId: 'env-id',
+        region: 'com'
       };
 
       expect(data).toBeDefined();

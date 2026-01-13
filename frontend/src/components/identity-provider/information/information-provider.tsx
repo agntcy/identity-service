@@ -22,6 +22,10 @@ export const InformationProvider = ({idpSettings}: {idpSettings?: IssuerSettings
   const privateKey = idpSettings?.oktaIdpSettings?.privateKey;
   const apiKey = idpSettings?.oryIdpSettings?.apiKey;
   const projectSlug = idpSettings?.oryIdpSettings?.projectSlug;
+  const environmentId = idpSettings?.pingIdpSettings?.environmentId;
+  const pingClientId = idpSettings?.pingIdpSettings?.clientId;
+  const pingClientSecret = idpSettings?.pingIdpSettings?.clientSecret;
+  const pingRegion = idpSettings?.pingIdpSettings?.region;
 
   const keyValuePairs = useMemo(() => {
     const temp: KeyValuePair[] = [];
@@ -83,6 +87,24 @@ export const InformationProvider = ({idpSettings}: {idpSettings?: IssuerSettings
           : 'Not provided'
       });
     }
+    if (provider === IdpType.IDP_TYPE_PING) {
+      temp.push({
+        keyProp: 'Environment ID',
+        value: environmentId || 'Not provided'
+      });
+      temp.push({
+        keyProp: 'Region',
+        value: pingRegion || 'Not provided'
+      });
+      temp.push({
+        keyProp: 'Client ID',
+        value: pingClientId || 'Not provided'
+      });
+      temp.push({
+        keyProp: 'Client Secret',
+        value: pingClientSecret ? `${'*'.repeat(15)}${pingClientSecret.slice(-5)}` : 'Not provided'
+      });
+    }
     temp.push({
       keyProp: 'Type',
       value: <ProviderType type={provider} />
@@ -101,7 +123,11 @@ export const InformationProvider = ({idpSettings}: {idpSettings?: IssuerSettings
     privateKey,
     projectSlug,
     provider,
-    secretKey
+    secretKey,
+    environmentId,
+    pingClientId,
+    pingClientSecret,
+    pingRegion
   ]);
 
   return (

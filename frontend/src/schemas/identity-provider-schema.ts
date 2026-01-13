@@ -20,7 +20,9 @@ export const IdentityProvidersSchema = z
     baseUrl: z.string().optional(),
     realm: z.string().optional(),
     client: z.string().optional(),
-    clientSecret: z.string().optional()
+    clientSecret: z.string().optional(),
+    environmentId: z.string().optional(),
+    region: z.string().optional()
   })
   .superRefine((data, ctx) => {
     if (data.provider === IdpType.IDP_TYPE_DUO) {
@@ -97,6 +99,31 @@ export const IdentityProvidersSchema = z
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: 'Client Secret is required for Keycloak'
+        });
+      }
+    } else if (data.provider === IdpType.IDP_TYPE_PING) {
+      if (!data.environmentId) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Environment ID is required for Ping'
+        });
+      }
+      if (!data.clientId) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Client ID is required for Ping'
+        });
+      }
+      if (!data.clientSecret) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Client Secret is required for Ping'
+        });
+      }
+      if (!data.region) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Region is required for Ping'
         });
       }
     }

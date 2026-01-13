@@ -16,6 +16,7 @@ import DuoLogo from '@/assets/duo.svg?react';
 import OktaLogo from '@/assets/okta.svg?react';
 import OasfLogo from '@/assets/oasf.svg?react';
 import OryLogo from '@/assets/ory.svg?react';
+import PingLogo from '@/assets/ping.svg?react';
 import KeycloakLogo from '@/assets/keycloak.png';
 import {IdpType} from '@/types/api/settings';
 import {docs} from '@/utils/docs';
@@ -61,6 +62,13 @@ export const IdentityProviderForm = ({isLoading = false}: {isLoading?: boolean})
       type: IdpType.IDP_TYPE_KEYCLOAK,
       title: 'Keycloak',
       imgURI: <img src={KeycloakLogo} alt="Keycloak Logo" className="w-6 h-6" />,
+      isDisabled: isLoading || !isEmptyIdp,
+      useTooltip: isEmptyIdp
+    },
+    {
+      type: IdpType.IDP_TYPE_PING,
+      title: 'Ping',
+      imgURI: <PingLogo />,
       isDisabled: isLoading || !isEmptyIdp,
       useTooltip: isEmptyIdp
     },
@@ -311,6 +319,69 @@ export const IdentityProviderForm = ({isLoading = false}: {isLoading?: boolean})
                       <FormLabel className="form-label">Client ID</FormLabel>
                       <FormControl>
                         <Input placeholder="Type client id..." {...field} disabled={isLoading || !isEmptyIdp} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={control}
+                  name="clientSecret"
+                  render={({field}) => (
+                    <FormItem className="w-[50%]">
+                      <FormLabel className="form-label">Client Secret</FormLabel>
+                      <FormControl>
+                        <PasswordInput placeholder="Type client secret..." {...field} disabled={isLoading} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+        {idpType === IdpType.IDP_TYPE_PING && (
+          <div className="space-y-4">
+            <div>
+              <Typography variant="subtitle1" fontWeight={600}>
+                Provider details
+              </Typography>
+            </div>
+            <div className="space-y-2">
+              <div className="flex gap-4 items-start">
+                <FormField
+                  control={control}
+                  name="environmentId"
+                  render={({field}) => (
+                    <FormItem className="w-[50%]">
+                      <FormLabel className="form-label">Environment ID</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Type environment ID..." {...field} disabled={isLoading || !isEmptyIdp} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={control}
+                  name="region"
+                  render={({field}) => (
+                    <FormItem className="w-[50%]">
+                      <FormLabel className="form-label">Region</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Type region (e.g., com, eu, asia)..." {...field} disabled={isLoading || !isEmptyIdp} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="flex gap-4 items-start pt-2">
+                <FormField
+                  control={control}
+                  name="clientId"
+                  render={({field}) => (
+                    <FormItem className="w-[50%]">
+                      <FormLabel className="form-label">Client ID</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Type client ID..." {...field} disabled={isLoading || !isEmptyIdp} />
                       </FormControl>
                     </FormItem>
                   )}

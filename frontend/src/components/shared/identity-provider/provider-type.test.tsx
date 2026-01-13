@@ -55,6 +55,14 @@ vi.mock('@/assets/ory.svg?react', () => ({
   ))
 }));
 
+vi.mock('@/assets/ping.svg?react', () => ({
+  default: vi.fn((props) => (
+    <svg data-testid="ping-logo" {...props}>
+      <title>Ping Logo</title>
+    </svg>
+  ))
+}));
+
 // Mock constants - use string literals instead of enum references
 vi.mock('@/constants/labels', () => ({
   labels: {
@@ -62,7 +70,8 @@ vi.mock('@/constants/labels', () => ({
       IDP_TYPE_DUO: 'Cisco Duo',
       IDP_TYPE_OKTA: 'Okta',
       IDP_TYPE_SELF: 'Self-Managed',
-      IDP_TYPE_ORY: 'Ory'
+      IDP_TYPE_ORY: 'Ory',
+      IDP_TYPE_PING: 'Ping Identity'
     }
   }
 }));
@@ -73,7 +82,8 @@ vi.mock('@/types/api/settings', () => ({
     IDP_TYPE_DUO: 'IDP_TYPE_DUO',
     IDP_TYPE_OKTA: 'IDP_TYPE_OKTA',
     IDP_TYPE_SELF: 'IDP_TYPE_SELF',
-    IDP_TYPE_ORY: 'IDP_TYPE_ORY'
+    IDP_TYPE_ORY: 'IDP_TYPE_ORY',
+    IDP_TYPE_PING: 'IDP_TYPE_PING'
   }
 }));
 
@@ -120,6 +130,7 @@ describe('ProviderType', () => {
       expect(screen.queryByTestId('okta-logo')).not.toBeInTheDocument();
       expect(screen.queryByTestId('oasf-logo')).not.toBeInTheDocument();
       expect(screen.queryByTestId('ory-logo')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('ping-logo')).not.toBeInTheDocument();
     });
   });
 
@@ -135,6 +146,7 @@ describe('ProviderType', () => {
       expect(screen.queryByTestId('duo-logo')).not.toBeInTheDocument();
       expect(screen.queryByTestId('oasf-logo')).not.toBeInTheDocument();
       expect(screen.queryByTestId('ory-logo')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('ping-logo')).not.toBeInTheDocument();
     });
   });
 
@@ -150,6 +162,7 @@ describe('ProviderType', () => {
       expect(screen.queryByTestId('duo-logo')).not.toBeInTheDocument();
       expect(screen.queryByTestId('okta-logo')).not.toBeInTheDocument();
       expect(screen.queryByTestId('ory-logo')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('ping-logo')).not.toBeInTheDocument();
     });
   });
 
@@ -165,6 +178,23 @@ describe('ProviderType', () => {
       expect(screen.queryByTestId('duo-logo')).not.toBeInTheDocument();
       expect(screen.queryByTestId('okta-logo')).not.toBeInTheDocument();
       expect(screen.queryByTestId('oasf-logo')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('ping-logo')).not.toBeInTheDocument();
+    });
+  });
+
+  describe('Ping provider type', () => {
+    it('renders Ping logo and label', () => {
+      render(<ProviderType type={IdpType.IDP_TYPE_PING} />);
+
+      const pingLogo = screen.getByTestId('ping-logo');
+      expect(pingLogo).toBeInTheDocument();
+      expect(pingLogo).toHaveClass('h-[22px] w-[22px]');
+
+      expect(screen.getByText('Ping Identity')).toBeInTheDocument();
+      expect(screen.queryByTestId('duo-logo')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('okta-logo')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('oasf-logo')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('ory-logo')).not.toBeInTheDocument();
     });
   });
 
@@ -177,6 +207,7 @@ describe('ProviderType', () => {
       expect(screen.queryByTestId('okta-logo')).not.toBeInTheDocument();
       expect(screen.queryByTestId('oasf-logo')).not.toBeInTheDocument();
       expect(screen.queryByTestId('ory-logo')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('ping-logo')).not.toBeInTheDocument();
     });
 
     it('shows fallback text for invalid type', () => {
@@ -187,6 +218,7 @@ describe('ProviderType', () => {
       expect(screen.queryByTestId('okta-logo')).not.toBeInTheDocument();
       expect(screen.queryByTestId('oasf-logo')).not.toBeInTheDocument();
       expect(screen.queryByTestId('ory-logo')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('ping-logo')).not.toBeInTheDocument();
     });
   });
 
@@ -265,6 +297,12 @@ describe('ProviderType', () => {
         expectedLabel: 'Ory',
         expectedLogo: 'ory-logo',
         expectedClasses: 'h-[22px] w-[22px]'
+      },
+      {
+        type: IdpType.IDP_TYPE_PING,
+        expectedLabel: 'Ping Identity',
+        expectedLogo: 'ping-logo',
+        expectedClasses: 'h-[22px] w-[22px]'
       }
     ];
 
@@ -281,7 +319,7 @@ describe('ProviderType', () => {
         expect(logo).toHaveClass(expectedClasses);
 
         // Check that only the correct logo is rendered
-        const allLogos = ['duo-logo', 'okta-logo', 'oasf-logo', 'ory-logo'];
+        const allLogos = ['duo-logo', 'okta-logo', 'oasf-logo', 'ory-logo', 'ping-logo'];
         allLogos.forEach((logoTestId) => {
           if (logoTestId === expectedLogo) {
             expect(screen.getByTestId(logoTestId)).toBeInTheDocument();

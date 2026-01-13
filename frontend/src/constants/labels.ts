@@ -18,7 +18,8 @@ export const labels = {
     [IdpType.IDP_TYPE_DUO]: 'Duo',
     [IdpType.IDP_TYPE_SELF]: 'OASF (AGNTCY)',
     [IdpType.IDP_TYPE_ORY]: 'Ory',
-    [IdpType.IDP_TYPE_KEYCLOAK]: 'Keycloak'
+    [IdpType.IDP_TYPE_KEYCLOAK]: 'Keycloak',
+    [IdpType.IDP_TYPE_PING]: 'Ping Identity'
   },
   rulesActions: {
     [RuleAction.RULE_ACTION_UNSPECIFIED]: 'Unspecified',
