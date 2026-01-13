@@ -14,16 +14,16 @@ func _() {
 	_ = x[IDP_TYPE_ORY-3]
 	_ = x[IDP_TYPE_SELF-4]
 	_ = x[IDP_TYPE_KEYCLOAK-5]
+	_ = x[IDP_TYPE_PING-6]
 }
 
-const _IdpType_name = "IDP_TYPE_UNSPECIFIEDIDP_TYPE_DUOIDP_TYPE_OKTAIDP_TYPE_ORYIDP_TYPE_SELFIDP_TYPE_KEYCLOAK"
+const _IdpType_name = "IDP_TYPE_UNSPECIFIEDIDP_TYPE_DUOIDP_TYPE_OKTAIDP_TYPE_ORYIDP_TYPE_SELFIDP_TYPE_KEYCLOAKIDP_TYPE_PING"
 
-var _IdpType_index = [...]uint8{0, 20, 32, 45, 57, 70, 87}
+var _IdpType_index = [...]uint8{0, 20, 32, 45, 57, 70, 87, 100}
 
 func (i IdpType) String() string {
-	idx := int(i) - 0
-	if i < 0 || idx >= len(_IdpType_index)-1 {
+	if i < 0 || i >= IdpType(len(_IdpType_index)-1) {
 		return "IdpType(" + strconv.FormatInt(int64(i), 10) + ")"
 	}
-	return _IdpType_name[_IdpType_index[idx]:_IdpType_index[idx+1]]
+	return _IdpType_name[_IdpType_index[i]:_IdpType_index[i+1]]
 }

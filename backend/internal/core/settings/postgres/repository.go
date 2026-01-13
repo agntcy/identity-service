@@ -72,6 +72,10 @@ func (r *repository) UpdateIssuerSettings(
 			existingSettings.KeycloakIdpSettings = model.KeycloakIdpSettings
 			previousIdpSettingsID = ptrutil.Derefrence(existingSettings.KeycloakIdpSettingsID, uuid.UUID{})
 			emptyIdpSettings = &KeycloakIdpSettings{}
+		case types.IDP_TYPE_PING:
+			existingSettings.PingIdpSettings = model.PingIdpSettings
+			previousIdpSettingsID = ptrutil.Derefrence(existingSettings.PingIdpSettingsID, uuid.UUID{})
+			emptyIdpSettings = &PingIdpSettings{}
 		}
 
 		updated := tx.

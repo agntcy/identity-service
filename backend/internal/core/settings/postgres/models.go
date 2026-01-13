@@ -29,6 +29,8 @@ type IssuerSettings struct {
 	OryIdpSettings        *OryIdpSettings
 	KeycloakIdpSettingsID *uuid.UUID `gorm:"foreignKey:ID"`
 	KeycloakIdpSettings   *KeycloakIdpSettings
+	PingIdpSettingsID     *uuid.UUID `gorm:"foreignKey:ID"`
+	PingIdpSettings       *PingIdpSettings
 	CreatedAt             time.Time
 	UpdatedAt             sql.NullTime
 }
@@ -59,6 +61,14 @@ type KeycloakIdpSettings struct {
 	Realm        string                   `gorm:"not null;type:varchar(256);"`
 	ClientID     string                   `gorm:"not null;type:varchar(256);"`
 	ClientSecret *secrets.EncryptedString `gorm:"type:varchar(4096);"`
+}
+
+type PingIdpSettings struct {
+	ID            uuid.UUID                `gorm:"primaryKey;default:gen_random_uuid()"`
+	EnvironmentID string                   `gorm:"not null;type:varchar(256);"`
+	ClientID      string                   `gorm:"not null;type:varchar(256);"`
+	ClientSecret  *secrets.EncryptedString `gorm:"type:varchar(4096);"`
+	Region        string                   `gorm:"not null;type:varchar(64);"`
 }
 
 type Device struct {
@@ -115,6 +125,20 @@ func (i *KeycloakIdpSettings) ToCoreType(crypter secrets.Crypter) *types.Keycloa
 		ClientSecret: ptrutil.DerefStr(secrets.EncryptedStringToRaw(i.ClientSecret, crypter)),
 	}
 }
+
+func (i *PingIdpSettings) ToCoreType(crypter secrets.Crypter) *types.PingIdpSettings {
+	if i == nil {
+		return nil
+	}
+
+	return &types.PingIdpSettings{
+		EnvironmentID: i.EnvironmentID,
+		ClientID:      i.ClientID,
+		ClientSecret:  ptrutil.DerefStr(secrets.EncryptedStringToRaw(i.ClientSecret, crypter)),
+		Region:        i.Region,
+	}
+}
+
 func (i *IssuerSettings) ToCoreType(crypter secrets.Crypter) *types.IssuerSettings {
 	if i == nil {
 		return nil
@@ -129,6 +153,7 @@ func (i *IssuerSettings) ToCoreType(crypter secrets.Crypter) *types.IssuerSettin
 		OktaIdpSettings:     i.OktaIdpSettings.ToCoreType(crypter),
 		OryIdpSettings:      i.OryIdpSettings.ToCoreType(crypter),
 		KeycloakIdpSettings: i.KeycloakIdpSettings.ToCoreType(crypter),
+		PingIdpSettings:     i.PingIdpSettings.ToCoreType(crypter),
 		CreatedAt:           i.CreatedAt,
 		UpdatedAt:           pgutil.SqlNullTimeToTime(i.UpdatedAt),
 	}
@@ -182,6 +207,19 @@ func newKeycloakIdpSettingsModel(src *types.KeycloakIdpSettings, crypter secrets
 	}
 }
 
+func newPingIdpSettingsModel(src *types.PingIdpSettings, crypter secrets.Crypter) *PingIdpSettings {
+	if src == nil {
+		return nil
+	}
+
+	return &PingIdpSettings{
+		EnvironmentID: src.EnvironmentID,
+		ClientID:      src.ClientID,
+		ClientSecret:  secrets.NewEncryptedString(&src.ClientSecret, crypter),
+		Region:        src.Region,
+	}
+}
+
 func newIssuerSettingsModel(src *types.IssuerSettings, crypter secrets.Crypter) *IssuerSettings {
 	return &IssuerSettings{
 		IssuerID:            &src.IssuerID,
@@ -192,6 +230,7 @@ func newIssuerSettingsModel(src *types.IssuerSettings, crypter secrets.Crypter) 
 		OktaIdpSettings:     newOktaIdpSettingsModel(src.OktaIdpSettings, crypter),
 		OryIdpSettings:      newOryIdpSettingsModel(src.OryIdpSettings, crypter),
 		KeycloakIdpSettings: newKeycloakIdpSettingsModel(src.KeycloakIdpSettings, crypter),
+		PingIdpSettings:     newPingIdpSettingsModel(src.PingIdpSettings, crypter),
 		CreatedAt:           src.CreatedAt,
 		UpdatedAt:           pgutil.TimeToSqlNullTime(src.UpdatedAt),
 	}

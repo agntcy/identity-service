@@ -28,6 +28,9 @@ const (
 
 	// Idp Type Keycloak.
 	IDP_TYPE_KEYCLOAK
+
+	// Idp Type Ping.
+	IDP_TYPE_PING
 )
 
 func (t *IdpType) UnmarshalText(text []byte) error {
@@ -40,6 +43,8 @@ func (t *IdpType) UnmarshalText(text []byte) error {
 		*t = IDP_TYPE_ORY
 	case IDP_TYPE_KEYCLOAK.String():
 		*t = IDP_TYPE_KEYCLOAK
+	case IDP_TYPE_PING.String():
+		*t = IDP_TYPE_PING
 	default:
 		*t = IDP_TYPE_UNSPECIFIED
 	}
@@ -84,6 +89,14 @@ type KeycloakIdpSettings struct {
 	ClientSecret string `json:"client_secret,omitempty" protobuf:"bytes,4,opt,name=client_secret"`
 }
 
+// Ping IdP Settings
+type PingIdpSettings struct {
+	EnvironmentID string `json:"environment_id,omitempty" protobuf:"bytes,1,opt,name=environment_id"`
+	ClientID      string `json:"client_id,omitempty"      protobuf:"bytes,2,opt,name=client_id"`
+	ClientSecret  string `json:"client_secret,omitempty"  protobuf:"bytes,3,opt,name=client_secret"`
+	Region        string `json:"region,omitempty"         protobuf:"bytes,4,opt,name=region"`
+}
+
 // Issuer Settings
 type IssuerSettings struct {
 	// A unique identifier for the Issuer.
@@ -117,6 +130,10 @@ type IssuerSettings struct {
 	// Settings for the Keycloak Identity Provider.
 	// +field_behavior:OPTIONAL
 	KeycloakIdpSettings *KeycloakIdpSettings `json:"keycloak_idp_settings,omitempty" protobuf:"bytes,7,opt,name=keycloak_idp_settings"` //nolint:lll // struct tags exceed line length
+
+	// Settings for the Ping Identity Provider.
+	// +field_behavior:OPTIONAL
+	PingIdpSettings *PingIdpSettings `json:"ping_idp_settings,omitempty" protobuf:"bytes,10,opt,name=ping_idp_settings"`
 
 	// CreatedAt records the timestamp of when the IssuerSettings was initially created
 	// +field_behavior:OUTPUT_ONLY
