@@ -74,7 +74,9 @@ export const CreateIdentityProvider = () => {
       baseUrl: undefined,
       realm: undefined,
       client: undefined,
-      clientSecret: undefined
+      clientSecret: undefined,
+      environmentId: undefined,
+      region: undefined
     });
   }, [form]);
 
@@ -115,6 +117,13 @@ export const CreateIdentityProvider = () => {
         clientId: values.client,
         clientSecret: values.clientSecret
       };
+    } else if (values.provider === IdpType.IDP_TYPE_PING) {
+      data.pingIdpSettings = {
+        environmentId: values.environmentId,
+        clientId: values.clientId,
+        clientSecret: values.clientSecret,
+        region: values.region
+      };
     }
     analyticsTrack('CLICK_SAVE_NEW_IDENTITY_PROVIDER', {
       type: values.provider
@@ -149,7 +158,10 @@ export const CreateIdentityProvider = () => {
         baseUrl: issuerSettings.keycloakIdpSettings?.baseUrl,
         realm: issuerSettings.keycloakIdpSettings?.realm,
         client: issuerSettings.keycloakIdpSettings?.clientId,
-        clientSecret: undefined
+        clientSecret: undefined,
+        // ping
+        environmentId: issuerSettings.pingIdpSettings?.environmentId,
+        region: issuerSettings.pingIdpSettings?.region
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

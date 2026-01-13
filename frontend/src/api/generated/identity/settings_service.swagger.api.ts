@@ -23,6 +23,7 @@
  *  - IDP_TYPE_ORY: Idp Type Ory.
  *  - IDP_TYPE_SELF: Idp Type Self.
  *  - IDP_TYPE_KEYCLOAK: Idp Type Keycloak.
+ *  - IDP_TYPE_PING: Idp Type Ping.
  * @default "IDP_TYPE_UNSPECIFIED"
  */
 export enum V1Alpha1IdpType {
@@ -31,7 +32,8 @@ export enum V1Alpha1IdpType {
   IDP_TYPE_OKTA = 'IDP_TYPE_OKTA',
   IDP_TYPE_ORY = 'IDP_TYPE_ORY',
   IDP_TYPE_SELF = 'IDP_TYPE_SELF',
-  IDP_TYPE_KEYCLOAK = 'IDP_TYPE_KEYCLOAK'
+  IDP_TYPE_KEYCLOAK = 'IDP_TYPE_KEYCLOAK',
+  IDP_TYPE_PING = 'IDP_TYPE_PING'
 }
 
 /**
@@ -192,6 +194,8 @@ export interface V1Alpha1IssuerSettings {
   oryIdpSettings?: V1Alpha1OryIdpSettings;
   /** Settings for the Keycloak Identity Provider. */
   keycloakIdpSettings?: V1Alpha1KeycloakIdpSettings;
+  /** Settings for the Ping Identity Provider. */
+  pingIdpSettings?: V1Alpha1PingIdpSettings;
   /**
    * CreatedAt records the timestamp of when the IssuerSettings was initially created
    * @format date-time
@@ -223,6 +227,14 @@ export interface V1Alpha1OktaIdpSettings {
 export interface V1Alpha1OryIdpSettings {
   projectSlug?: string;
   apiKey?: string;
+}
+
+/** Ping IdP Settings */
+export interface V1Alpha1PingIdpSettings {
+  environmentId?: string;
+  clientId?: string;
+  clientSecret?: string;
+  region?: string;
 }
 
 export interface V1Alpha1SetIssuerRequest {
