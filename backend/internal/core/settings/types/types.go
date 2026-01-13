@@ -149,15 +149,15 @@ type IssuerSettings struct {
 
 	// Settings for the Entra ID Identity Provider.
 	// +field_behavior:OPTIONAL
-	EntraIdpSettings *EntraIdpSettings `json:"entra_idp_settings,omitempty" protobuf:"bytes,8,opt,name=entra_idp_settings"`
+	EntraIdpSettings *EntraIdpSettings `json:"entra_idp_settings,omitempty" protobuf:"bytes,11,opt,name=entra_idp_settings"`
 
 	// CreatedAt records the timestamp of when the IssuerSettings was initially created
 	// +field_behavior:OUTPUT_ONLY
-	CreatedAt time.Time `json:"created_at" protobuf:"google.protobuf.Timestamp,9,opt,name=created_at"`
+	CreatedAt time.Time `json:"created_at" protobuf:"google.protobuf.Timestamp,8,opt,name=created_at"`
 
 	// UpdatedAt records the timestamp of the last update to the IssuerSettings
 	// +field_behavior:OUTPUT_ONLY
-	UpdatedAt *time.Time `json:"updated_at,omitempty" protobuf:"google.protobuf.Timestamp,10,opt,name=updated_at"`
+	UpdatedAt *time.Time `json:"updated_at,omitempty" protobuf:"google.protobuf.Timestamp,9,opt,name=updated_at"`
 }
 
 // Identity Settings

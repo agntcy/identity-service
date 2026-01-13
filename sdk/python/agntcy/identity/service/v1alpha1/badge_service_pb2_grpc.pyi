@@ -5,19 +5,25 @@ Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
 SPDX-License-Identifier: Apache-2.0
 """
 
-import abc
-import agntcy.identity.service.v1alpha1.badge_pb2
-import agntcy.identity.service.v1alpha1.badge_service_pb2
-import collections.abc
-import grpc
-import grpc.aio
-import typing
+from agntcy.identity.service.v1alpha1 import badge_pb2 as _badge_pb2
+from agntcy.identity.service.v1alpha1 import badge_service_pb2 as _badge_service_pb2
+from collections import abc as _abc
+from grpc import aio as _aio
+import abc as _abc_1
+import grpc as _grpc
+import sys
+import typing as _typing
 
-_T = typing.TypeVar("_T")
+if sys.version_info >= (3, 11):
+    from typing import Self as _Self
+else:
+    from typing_extensions import Self as _Self
 
-class _MaybeAsyncIterator(collections.abc.AsyncIterator[_T], collections.abc.Iterator[_T], metaclass=abc.ABCMeta): ...
+_T = _typing.TypeVar("_T")
 
-class _ServicerContext(grpc.ServicerContext, grpc.aio.ServicerContext):  # type: ignore[misc, type-arg]
+class _MaybeAsyncIterator(_abc.AsyncIterator[_T], _abc.Iterator[_T], metaclass=_abc_1.ABCMeta): ...
+
+class _ServicerContext(_grpc.ServicerContext, _aio.ServicerContext):  # type: ignore[misc, type-arg]
     ...
 
 GRPC_GENERATED_VERSION: str
@@ -26,42 +32,42 @@ GRPC_VERSION: str
 class BadgeServiceStub:
     """BadgeService manages badges."""
 
-    @typing.overload
-    def __new__(cls, channel: grpc.Channel) -> BadgeServiceStub: ...
-    @typing.overload
-    def __new__(cls, channel: grpc.aio.Channel) -> BadgeServiceAsyncStub: ...
-    IssueBadge: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.badge_service_pb2.IssueBadgeRequest, agntcy.identity.service.v1alpha1.badge_pb2.Badge]
+    @_typing.overload
+    def __new__(cls, channel: _grpc.Channel) -> _Self: ...
+    @_typing.overload
+    def __new__(cls, channel: _aio.Channel) -> BadgeServiceAsyncStub: ...
+    IssueBadge: _grpc.UnaryUnaryMultiCallable[_badge_service_pb2.IssueBadgeRequest, _badge_pb2.Badge]
     """Create a new Badge."""
-    VerifyBadge: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.badge_service_pb2.VerifyBadgeRequest, agntcy.identity.service.v1alpha1.badge_pb2.VerificationResult]
+    VerifyBadge: _grpc.UnaryUnaryMultiCallable[_badge_service_pb2.VerifyBadgeRequest, _badge_pb2.VerificationResult]
     """Verify a badge."""
 
-@typing.type_check_only
+@_typing.type_check_only
 class BadgeServiceAsyncStub(BadgeServiceStub):
     """BadgeService manages badges."""
 
-    def __init__(self, channel: grpc.aio.Channel) -> None: ...
-    IssueBadge: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.badge_service_pb2.IssueBadgeRequest, agntcy.identity.service.v1alpha1.badge_pb2.Badge]  # type: ignore[assignment]
+    def __init__(self, channel: _aio.Channel) -> None: ...
+    IssueBadge: _aio.UnaryUnaryMultiCallable[_badge_service_pb2.IssueBadgeRequest, _badge_pb2.Badge]  # type: ignore[assignment]
     """Create a new Badge."""
-    VerifyBadge: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.badge_service_pb2.VerifyBadgeRequest, agntcy.identity.service.v1alpha1.badge_pb2.VerificationResult]  # type: ignore[assignment]
+    VerifyBadge: _aio.UnaryUnaryMultiCallable[_badge_service_pb2.VerifyBadgeRequest, _badge_pb2.VerificationResult]  # type: ignore[assignment]
     """Verify a badge."""
 
-class BadgeServiceServicer(metaclass=abc.ABCMeta):
+class BadgeServiceServicer(metaclass=_abc_1.ABCMeta):
     """BadgeService manages badges."""
 
-    @abc.abstractmethod
+    @_abc_1.abstractmethod
     def IssueBadge(
         self,
-        request: agntcy.identity.service.v1alpha1.badge_service_pb2.IssueBadgeRequest,
+        request: _badge_service_pb2.IssueBadgeRequest,
         context: _ServicerContext,
-    ) -> typing.Union[agntcy.identity.service.v1alpha1.badge_pb2.Badge, collections.abc.Awaitable[agntcy.identity.service.v1alpha1.badge_pb2.Badge]]:
+    ) -> _typing.Union[_badge_pb2.Badge, _abc.Awaitable[_badge_pb2.Badge]]:
         """Create a new Badge."""
 
-    @abc.abstractmethod
+    @_abc_1.abstractmethod
     def VerifyBadge(
         self,
-        request: agntcy.identity.service.v1alpha1.badge_service_pb2.VerifyBadgeRequest,
+        request: _badge_service_pb2.VerifyBadgeRequest,
         context: _ServicerContext,
-    ) -> typing.Union[agntcy.identity.service.v1alpha1.badge_pb2.VerificationResult, collections.abc.Awaitable[agntcy.identity.service.v1alpha1.badge_pb2.VerificationResult]]:
+    ) -> _typing.Union[_badge_pb2.VerificationResult, _abc.Awaitable[_badge_pb2.VerificationResult]]:
         """Verify a badge."""
 
-def add_BadgeServiceServicer_to_server(servicer: BadgeServiceServicer, server: typing.Union[grpc.Server, grpc.aio.Server]) -> None: ...
+def add_BadgeServiceServicer_to_server(servicer: BadgeServiceServicer, server: _typing.Union[_grpc.Server, _aio.Server]) -> None: ...

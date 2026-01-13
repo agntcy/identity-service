@@ -5,19 +5,25 @@ Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
 SPDX-License-Identifier: Apache-2.0
 """
 
-import abc
-import agntcy.identity.service.v1alpha1.auth_service_pb2
-import collections.abc
-import google.protobuf.empty_pb2
-import grpc
-import grpc.aio
-import typing
+from agntcy.identity.service.v1alpha1 import auth_service_pb2 as _auth_service_pb2
+from collections import abc as _abc
+from google.protobuf import empty_pb2 as _empty_pb2
+from grpc import aio as _aio
+import abc as _abc_1
+import grpc as _grpc
+import sys
+import typing as _typing
 
-_T = typing.TypeVar("_T")
+if sys.version_info >= (3, 11):
+    from typing import Self as _Self
+else:
+    from typing_extensions import Self as _Self
 
-class _MaybeAsyncIterator(collections.abc.AsyncIterator[_T], collections.abc.Iterator[_T], metaclass=abc.ABCMeta): ...
+_T = _typing.TypeVar("_T")
 
-class _ServicerContext(grpc.ServicerContext, grpc.aio.ServicerContext):  # type: ignore[misc, type-arg]
+class _MaybeAsyncIterator(_abc.AsyncIterator[_T], _abc.Iterator[_T], metaclass=_abc_1.ABCMeta): ...
+
+class _ServicerContext(_grpc.ServicerContext, _aio.ServicerContext):  # type: ignore[misc, type-arg]
     ...
 
 GRPC_GENERATED_VERSION: str
@@ -26,78 +32,78 @@ GRPC_VERSION: str
 class AuthServiceStub:
     """AuthService manages auth."""
 
-    @typing.overload
-    def __new__(cls, channel: grpc.Channel) -> AuthServiceStub: ...
-    @typing.overload
-    def __new__(cls, channel: grpc.aio.Channel) -> AuthServiceAsyncStub: ...
-    AppInfo: grpc.UnaryUnaryMultiCallable[google.protobuf.empty_pb2.Empty, agntcy.identity.service.v1alpha1.auth_service_pb2.AppInfoResponse]
+    @_typing.overload
+    def __new__(cls, channel: _grpc.Channel) -> _Self: ...
+    @_typing.overload
+    def __new__(cls, channel: _aio.Channel) -> AuthServiceAsyncStub: ...
+    AppInfo: _grpc.UnaryUnaryMultiCallable[_empty_pb2.Empty, _auth_service_pb2.AppInfoResponse]
     """App info endpoint"""
-    Authorize: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.auth_service_pb2.AuthorizeRequest, agntcy.identity.service.v1alpha1.auth_service_pb2.AuthorizeResponse]
+    Authorize: _grpc.UnaryUnaryMultiCallable[_auth_service_pb2.AuthorizeRequest, _auth_service_pb2.AuthorizeResponse]
     """Authorize a request from an Agent or MCP Server"""
-    Token: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.auth_service_pb2.TokenRequest, agntcy.identity.service.v1alpha1.auth_service_pb2.TokenResponse]
+    Token: _grpc.UnaryUnaryMultiCallable[_auth_service_pb2.TokenRequest, _auth_service_pb2.TokenResponse]
     """Request token for an Agent or MCP Server"""
-    ExtAuthz: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.auth_service_pb2.ExtAuthzRequest, google.protobuf.empty_pb2.Empty]
+    ExtAuthz: _grpc.UnaryUnaryMultiCallable[_auth_service_pb2.ExtAuthzRequest, _empty_pb2.Empty]
     """Handle external authorization requests"""
-    ApproveToken: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.auth_service_pb2.ApproveTokenRequest, google.protobuf.empty_pb2.Empty]
+    ApproveToken: _grpc.UnaryUnaryMultiCallable[_auth_service_pb2.ApproveTokenRequest, _empty_pb2.Empty]
     """Handle manual approval of external authorization requets"""
 
-@typing.type_check_only
+@_typing.type_check_only
 class AuthServiceAsyncStub(AuthServiceStub):
     """AuthService manages auth."""
 
-    def __init__(self, channel: grpc.aio.Channel) -> None: ...
-    AppInfo: grpc.aio.UnaryUnaryMultiCallable[google.protobuf.empty_pb2.Empty, agntcy.identity.service.v1alpha1.auth_service_pb2.AppInfoResponse]  # type: ignore[assignment]
+    def __init__(self, channel: _aio.Channel) -> None: ...
+    AppInfo: _aio.UnaryUnaryMultiCallable[_empty_pb2.Empty, _auth_service_pb2.AppInfoResponse]  # type: ignore[assignment]
     """App info endpoint"""
-    Authorize: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.auth_service_pb2.AuthorizeRequest, agntcy.identity.service.v1alpha1.auth_service_pb2.AuthorizeResponse]  # type: ignore[assignment]
+    Authorize: _aio.UnaryUnaryMultiCallable[_auth_service_pb2.AuthorizeRequest, _auth_service_pb2.AuthorizeResponse]  # type: ignore[assignment]
     """Authorize a request from an Agent or MCP Server"""
-    Token: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.auth_service_pb2.TokenRequest, agntcy.identity.service.v1alpha1.auth_service_pb2.TokenResponse]  # type: ignore[assignment]
+    Token: _aio.UnaryUnaryMultiCallable[_auth_service_pb2.TokenRequest, _auth_service_pb2.TokenResponse]  # type: ignore[assignment]
     """Request token for an Agent or MCP Server"""
-    ExtAuthz: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.auth_service_pb2.ExtAuthzRequest, google.protobuf.empty_pb2.Empty]  # type: ignore[assignment]
+    ExtAuthz: _aio.UnaryUnaryMultiCallable[_auth_service_pb2.ExtAuthzRequest, _empty_pb2.Empty]  # type: ignore[assignment]
     """Handle external authorization requests"""
-    ApproveToken: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.auth_service_pb2.ApproveTokenRequest, google.protobuf.empty_pb2.Empty]  # type: ignore[assignment]
+    ApproveToken: _aio.UnaryUnaryMultiCallable[_auth_service_pb2.ApproveTokenRequest, _empty_pb2.Empty]  # type: ignore[assignment]
     """Handle manual approval of external authorization requets"""
 
-class AuthServiceServicer(metaclass=abc.ABCMeta):
+class AuthServiceServicer(metaclass=_abc_1.ABCMeta):
     """AuthService manages auth."""
 
-    @abc.abstractmethod
+    @_abc_1.abstractmethod
     def AppInfo(
         self,
-        request: google.protobuf.empty_pb2.Empty,
+        request: _empty_pb2.Empty,
         context: _ServicerContext,
-    ) -> typing.Union[agntcy.identity.service.v1alpha1.auth_service_pb2.AppInfoResponse, collections.abc.Awaitable[agntcy.identity.service.v1alpha1.auth_service_pb2.AppInfoResponse]]:
+    ) -> _typing.Union[_auth_service_pb2.AppInfoResponse, _abc.Awaitable[_auth_service_pb2.AppInfoResponse]]:
         """App info endpoint"""
 
-    @abc.abstractmethod
+    @_abc_1.abstractmethod
     def Authorize(
         self,
-        request: agntcy.identity.service.v1alpha1.auth_service_pb2.AuthorizeRequest,
+        request: _auth_service_pb2.AuthorizeRequest,
         context: _ServicerContext,
-    ) -> typing.Union[agntcy.identity.service.v1alpha1.auth_service_pb2.AuthorizeResponse, collections.abc.Awaitable[agntcy.identity.service.v1alpha1.auth_service_pb2.AuthorizeResponse]]:
+    ) -> _typing.Union[_auth_service_pb2.AuthorizeResponse, _abc.Awaitable[_auth_service_pb2.AuthorizeResponse]]:
         """Authorize a request from an Agent or MCP Server"""
 
-    @abc.abstractmethod
+    @_abc_1.abstractmethod
     def Token(
         self,
-        request: agntcy.identity.service.v1alpha1.auth_service_pb2.TokenRequest,
+        request: _auth_service_pb2.TokenRequest,
         context: _ServicerContext,
-    ) -> typing.Union[agntcy.identity.service.v1alpha1.auth_service_pb2.TokenResponse, collections.abc.Awaitable[agntcy.identity.service.v1alpha1.auth_service_pb2.TokenResponse]]:
+    ) -> _typing.Union[_auth_service_pb2.TokenResponse, _abc.Awaitable[_auth_service_pb2.TokenResponse]]:
         """Request token for an Agent or MCP Server"""
 
-    @abc.abstractmethod
+    @_abc_1.abstractmethod
     def ExtAuthz(
         self,
-        request: agntcy.identity.service.v1alpha1.auth_service_pb2.ExtAuthzRequest,
+        request: _auth_service_pb2.ExtAuthzRequest,
         context: _ServicerContext,
-    ) -> typing.Union[google.protobuf.empty_pb2.Empty, collections.abc.Awaitable[google.protobuf.empty_pb2.Empty]]:
+    ) -> _typing.Union[_empty_pb2.Empty, _abc.Awaitable[_empty_pb2.Empty]]:
         """Handle external authorization requests"""
 
-    @abc.abstractmethod
+    @_abc_1.abstractmethod
     def ApproveToken(
         self,
-        request: agntcy.identity.service.v1alpha1.auth_service_pb2.ApproveTokenRequest,
+        request: _auth_service_pb2.ApproveTokenRequest,
         context: _ServicerContext,
-    ) -> typing.Union[google.protobuf.empty_pb2.Empty, collections.abc.Awaitable[google.protobuf.empty_pb2.Empty]]:
+    ) -> _typing.Union[_empty_pb2.Empty, _abc.Awaitable[_empty_pb2.Empty]]:
         """Handle manual approval of external authorization requets"""
 
-def add_AuthServiceServicer_to_server(servicer: AuthServiceServicer, server: typing.Union[grpc.Server, grpc.aio.Server]) -> None: ...
+def add_AuthServiceServicer_to_server(servicer: AuthServiceServicer, server: _typing.Union[_grpc.Server, _aio.Server]) -> None: ...
