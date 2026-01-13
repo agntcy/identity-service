@@ -1,5 +1,5 @@
 /**
- * Copyright 2025 Copyright AGNTCY Contributors (https://github.com/agntcy)
+ * Copyright 2026 Copyright AGNTCY Contributors (https://github.com/agntcy)
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -24,6 +24,7 @@
  *  - IDP_TYPE_SELF: Idp Type Self.
  *  - IDP_TYPE_KEYCLOAK: Idp Type Keycloak.
  *  - IDP_TYPE_PING: Idp Type Ping.
+ *  - IDP_TYPE_ENTRA_ID: Idp Type Entra ID
  * @default "IDP_TYPE_UNSPECIFIED"
  */
 export enum V1Alpha1IdpType {
@@ -33,7 +34,8 @@ export enum V1Alpha1IdpType {
   IDP_TYPE_ORY = 'IDP_TYPE_ORY',
   IDP_TYPE_SELF = 'IDP_TYPE_SELF',
   IDP_TYPE_KEYCLOAK = 'IDP_TYPE_KEYCLOAK',
-  IDP_TYPE_PING = 'IDP_TYPE_PING'
+  IDP_TYPE_PING = 'IDP_TYPE_PING',
+  IDP_TYPE_ENTRA_ID = 'IDP_TYPE_ENTRA_ID'
 }
 
 /**
@@ -177,6 +179,13 @@ export interface V1Alpha1DuoIdpSettings {
   secretKey?: string;
 }
 
+/** Entra ID (Azure AD) IdP Settings */
+export interface V1Alpha1EntraIdpSettings {
+  tenantId?: string;
+  clientId?: string;
+  clientSecret?: string;
+}
+
 /** Issuer Settings */
 export interface V1Alpha1IssuerSettings {
   /**
@@ -196,6 +205,8 @@ export interface V1Alpha1IssuerSettings {
   keycloakIdpSettings?: V1Alpha1KeycloakIdpSettings;
   /** Settings for the Ping Identity Provider. */
   pingIdpSettings?: V1Alpha1PingIdpSettings;
+  /** Settings for the Entra ID Identity Provider. */
+  entraIdpSettings?: V1Alpha1EntraIdpSettings;
   /**
    * CreatedAt records the timestamp of when the IssuerSettings was initially created
    * @format date-time
