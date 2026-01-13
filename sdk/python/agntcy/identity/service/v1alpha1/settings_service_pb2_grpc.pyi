@@ -20,47 +20,33 @@ class _MaybeAsyncIterator(collections.abc.AsyncIterator[_T], collections.abc.Ite
 class _ServicerContext(grpc.ServicerContext, grpc.aio.ServicerContext):  # type: ignore[misc, type-arg]
     ...
 
+GRPC_GENERATED_VERSION: str
+GRPC_VERSION: str
+
 class SettingsServiceStub:
     """SettingsService manages settings."""
 
-    def __init__(self, channel: typing.Union[grpc.Channel, grpc.aio.Channel]) -> None: ...
-    GetSettings: grpc.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.settings_service_pb2.GetSettingsRequest,
-        agntcy.identity.service.v1alpha1.settings_pb2.Settings,
-    ]
+    @typing.overload
+    def __new__(cls, channel: grpc.Channel) -> SettingsServiceStub: ...
+    @typing.overload
+    def __new__(cls, channel: grpc.aio.Channel) -> SettingsServiceAsyncStub: ...
+    GetSettings: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.settings_service_pb2.GetSettingsRequest, agntcy.identity.service.v1alpha1.settings_pb2.Settings]
     """Get Settings"""
-
-    SetApiKey: grpc.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.settings_service_pb2.SetApiKeyRequest,
-        agntcy.identity.service.v1alpha1.settings_pb2.ApiKey,
-    ]
+    SetApiKey: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.settings_service_pb2.SetApiKeyRequest, agntcy.identity.service.v1alpha1.settings_pb2.ApiKey]
     """Set up API Key"""
-
-    SetIssuer: grpc.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.settings_service_pb2.SetIssuerRequest,
-        agntcy.identity.service.v1alpha1.settings_pb2.IssuerSettings,
-    ]
+    SetIssuer: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.settings_service_pb2.SetIssuerRequest, agntcy.identity.service.v1alpha1.settings_pb2.IssuerSettings]
     """Set up Issuer"""
 
-class SettingsServiceAsyncStub:
+@typing.type_check_only
+class SettingsServiceAsyncStub(SettingsServiceStub):
     """SettingsService manages settings."""
 
-    GetSettings: grpc.aio.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.settings_service_pb2.GetSettingsRequest,
-        agntcy.identity.service.v1alpha1.settings_pb2.Settings,
-    ]
+    def __init__(self, channel: grpc.aio.Channel) -> None: ...
+    GetSettings: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.settings_service_pb2.GetSettingsRequest, agntcy.identity.service.v1alpha1.settings_pb2.Settings]  # type: ignore[assignment]
     """Get Settings"""
-
-    SetApiKey: grpc.aio.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.settings_service_pb2.SetApiKeyRequest,
-        agntcy.identity.service.v1alpha1.settings_pb2.ApiKey,
-    ]
+    SetApiKey: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.settings_service_pb2.SetApiKeyRequest, agntcy.identity.service.v1alpha1.settings_pb2.ApiKey]  # type: ignore[assignment]
     """Set up API Key"""
-
-    SetIssuer: grpc.aio.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.settings_service_pb2.SetIssuerRequest,
-        agntcy.identity.service.v1alpha1.settings_pb2.IssuerSettings,
-    ]
+    SetIssuer: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.settings_service_pb2.SetIssuerRequest, agntcy.identity.service.v1alpha1.settings_pb2.IssuerSettings]  # type: ignore[assignment]
     """Set up Issuer"""
 
 class SettingsServiceServicer(metaclass=abc.ABCMeta):

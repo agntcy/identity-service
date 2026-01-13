@@ -4141,6 +4141,11 @@
               "name": "IDP_TYPE_KEYCLOAK",
               "number": "5",
               "description": "Idp Type Keycloak."
+            },
+            {
+              "name": "IDP_TYPE_PING",
+              "number": "6",
+              "description": "Idp Type Ping."
             }
           ]
         }
@@ -4299,6 +4304,18 @@
               "ismap": false,
               "isoneof": true,
               "oneofdecl": "_keycloak_idp_settings",
+              "defaultValue": ""
+            },
+            {
+              "name": "ping_idp_settings",
+              "description": "Settings for the Ping Identity Provider.",
+              "label": "optional",
+              "type": "PingIdpSettings",
+              "longType": "PingIdpSettings",
+              "fullType": "agntcy.identity.service.v1alpha1.PingIdpSettings",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_ping_idp_settings",
               "defaultValue": ""
             },
             {
@@ -4467,6 +4484,66 @@
               "ismap": false,
               "isoneof": true,
               "oneofdecl": "_api_key",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "PingIdpSettings",
+          "longName": "PingIdpSettings",
+          "fullName": "agntcy.identity.service.v1alpha1.PingIdpSettings",
+          "description": "Ping IdP Settings",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "environment_id",
+              "description": "",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_environment_id",
+              "defaultValue": ""
+            },
+            {
+              "name": "client_id",
+              "description": "",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_client_id",
+              "defaultValue": ""
+            },
+            {
+              "name": "client_secret",
+              "description": "",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_client_secret",
+              "defaultValue": ""
+            },
+            {
+              "name": "region",
+              "description": "",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_region",
               "defaultValue": ""
             }
           ]

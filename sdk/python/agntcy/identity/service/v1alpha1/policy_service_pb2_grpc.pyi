@@ -21,143 +21,65 @@ class _MaybeAsyncIterator(collections.abc.AsyncIterator[_T], collections.abc.Ite
 class _ServicerContext(grpc.ServicerContext, grpc.aio.ServicerContext):  # type: ignore[misc, type-arg]
     ...
 
+GRPC_GENERATED_VERSION: str
+GRPC_VERSION: str
+
 class PolicyServiceStub:
     """PolicyService manages policy."""
 
-    def __init__(self, channel: typing.Union[grpc.Channel, grpc.aio.Channel]) -> None: ...
-    ListPolicies: grpc.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.policy_service_pb2.ListPoliciesRequest,
-        agntcy.identity.service.v1alpha1.policy_service_pb2.ListPoliciesResponse,
-    ]
+    @typing.overload
+    def __new__(cls, channel: grpc.Channel) -> PolicyServiceStub: ...
+    @typing.overload
+    def __new__(cls, channel: grpc.aio.Channel) -> PolicyServiceAsyncStub: ...
+    ListPolicies: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.policy_service_pb2.ListPoliciesRequest, agntcy.identity.service.v1alpha1.policy_service_pb2.ListPoliciesResponse]
     """List Policies."""
-
-    GetPoliciesCount: grpc.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.policy_service_pb2.GetPoliciesCountRequest,
-        agntcy.identity.service.v1alpha1.policy_service_pb2.GetPoliciesCountResponse,
-    ]
+    GetPoliciesCount: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.policy_service_pb2.GetPoliciesCountRequest, agntcy.identity.service.v1alpha1.policy_service_pb2.GetPoliciesCountResponse]
     """Get policies total count."""
-
-    GetPolicy: grpc.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.policy_service_pb2.GetPolicyRequest,
-        agntcy.identity.service.v1alpha1.policy_pb2.Policy,
-    ]
+    GetPolicy: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.policy_service_pb2.GetPolicyRequest, agntcy.identity.service.v1alpha1.policy_pb2.Policy]
     """Get Policy by id"""
-
-    CreatePolicy: grpc.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.policy_service_pb2.CreatePolicyRequest,
-        agntcy.identity.service.v1alpha1.policy_pb2.Policy,
-    ]
+    CreatePolicy: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.policy_service_pb2.CreatePolicyRequest, agntcy.identity.service.v1alpha1.policy_pb2.Policy]
     """Create a new Policy."""
-
-    UpdatePolicy: grpc.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.policy_service_pb2.UpdatePolicyRequest,
-        agntcy.identity.service.v1alpha1.policy_pb2.Policy,
-    ]
+    UpdatePolicy: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.policy_service_pb2.UpdatePolicyRequest, agntcy.identity.service.v1alpha1.policy_pb2.Policy]
     """Update a Policy."""
-
-    DeletePolicy: grpc.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.policy_service_pb2.DeletePolicyRequest,
-        google.protobuf.empty_pb2.Empty,
-    ]
+    DeletePolicy: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.policy_service_pb2.DeletePolicyRequest, google.protobuf.empty_pb2.Empty]
     """Delete an existing Policy."""
-
-    ListRules: grpc.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.policy_service_pb2.ListRulesRequest,
-        agntcy.identity.service.v1alpha1.policy_service_pb2.ListRulesResponse,
-    ]
+    ListRules: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.policy_service_pb2.ListRulesRequest, agntcy.identity.service.v1alpha1.policy_service_pb2.ListRulesResponse]
     """List Rules."""
-
-    GetRule: grpc.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.policy_service_pb2.GetRuleRequest,
-        agntcy.identity.service.v1alpha1.policy_pb2.Rule,
-    ]
+    GetRule: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.policy_service_pb2.GetRuleRequest, agntcy.identity.service.v1alpha1.policy_pb2.Rule]
     """Get Rule by id"""
-
-    CreateRule: grpc.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.policy_service_pb2.CreateRuleRequest,
-        agntcy.identity.service.v1alpha1.policy_pb2.Rule,
-    ]
+    CreateRule: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.policy_service_pb2.CreateRuleRequest, agntcy.identity.service.v1alpha1.policy_pb2.Rule]
     """Create a new Rule."""
-
-    UpdateRule: grpc.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.policy_service_pb2.UpdateRuleRequest,
-        agntcy.identity.service.v1alpha1.policy_pb2.Rule,
-    ]
+    UpdateRule: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.policy_service_pb2.UpdateRuleRequest, agntcy.identity.service.v1alpha1.policy_pb2.Rule]
     """Update a Rule."""
-
-    DeleteRule: grpc.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.policy_service_pb2.DeleteRuleRequest,
-        google.protobuf.empty_pb2.Empty,
-    ]
+    DeleteRule: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.policy_service_pb2.DeleteRuleRequest, google.protobuf.empty_pb2.Empty]
     """Delete an existing Rule."""
 
-class PolicyServiceAsyncStub:
+@typing.type_check_only
+class PolicyServiceAsyncStub(PolicyServiceStub):
     """PolicyService manages policy."""
 
-    ListPolicies: grpc.aio.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.policy_service_pb2.ListPoliciesRequest,
-        agntcy.identity.service.v1alpha1.policy_service_pb2.ListPoliciesResponse,
-    ]
+    def __init__(self, channel: grpc.aio.Channel) -> None: ...
+    ListPolicies: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.policy_service_pb2.ListPoliciesRequest, agntcy.identity.service.v1alpha1.policy_service_pb2.ListPoliciesResponse]  # type: ignore[assignment]
     """List Policies."""
-
-    GetPoliciesCount: grpc.aio.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.policy_service_pb2.GetPoliciesCountRequest,
-        agntcy.identity.service.v1alpha1.policy_service_pb2.GetPoliciesCountResponse,
-    ]
+    GetPoliciesCount: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.policy_service_pb2.GetPoliciesCountRequest, agntcy.identity.service.v1alpha1.policy_service_pb2.GetPoliciesCountResponse]  # type: ignore[assignment]
     """Get policies total count."""
-
-    GetPolicy: grpc.aio.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.policy_service_pb2.GetPolicyRequest,
-        agntcy.identity.service.v1alpha1.policy_pb2.Policy,
-    ]
+    GetPolicy: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.policy_service_pb2.GetPolicyRequest, agntcy.identity.service.v1alpha1.policy_pb2.Policy]  # type: ignore[assignment]
     """Get Policy by id"""
-
-    CreatePolicy: grpc.aio.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.policy_service_pb2.CreatePolicyRequest,
-        agntcy.identity.service.v1alpha1.policy_pb2.Policy,
-    ]
+    CreatePolicy: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.policy_service_pb2.CreatePolicyRequest, agntcy.identity.service.v1alpha1.policy_pb2.Policy]  # type: ignore[assignment]
     """Create a new Policy."""
-
-    UpdatePolicy: grpc.aio.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.policy_service_pb2.UpdatePolicyRequest,
-        agntcy.identity.service.v1alpha1.policy_pb2.Policy,
-    ]
+    UpdatePolicy: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.policy_service_pb2.UpdatePolicyRequest, agntcy.identity.service.v1alpha1.policy_pb2.Policy]  # type: ignore[assignment]
     """Update a Policy."""
-
-    DeletePolicy: grpc.aio.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.policy_service_pb2.DeletePolicyRequest,
-        google.protobuf.empty_pb2.Empty,
-    ]
+    DeletePolicy: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.policy_service_pb2.DeletePolicyRequest, google.protobuf.empty_pb2.Empty]  # type: ignore[assignment]
     """Delete an existing Policy."""
-
-    ListRules: grpc.aio.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.policy_service_pb2.ListRulesRequest,
-        agntcy.identity.service.v1alpha1.policy_service_pb2.ListRulesResponse,
-    ]
+    ListRules: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.policy_service_pb2.ListRulesRequest, agntcy.identity.service.v1alpha1.policy_service_pb2.ListRulesResponse]  # type: ignore[assignment]
     """List Rules."""
-
-    GetRule: grpc.aio.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.policy_service_pb2.GetRuleRequest,
-        agntcy.identity.service.v1alpha1.policy_pb2.Rule,
-    ]
+    GetRule: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.policy_service_pb2.GetRuleRequest, agntcy.identity.service.v1alpha1.policy_pb2.Rule]  # type: ignore[assignment]
     """Get Rule by id"""
-
-    CreateRule: grpc.aio.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.policy_service_pb2.CreateRuleRequest,
-        agntcy.identity.service.v1alpha1.policy_pb2.Rule,
-    ]
+    CreateRule: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.policy_service_pb2.CreateRuleRequest, agntcy.identity.service.v1alpha1.policy_pb2.Rule]  # type: ignore[assignment]
     """Create a new Rule."""
-
-    UpdateRule: grpc.aio.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.policy_service_pb2.UpdateRuleRequest,
-        agntcy.identity.service.v1alpha1.policy_pb2.Rule,
-    ]
+    UpdateRule: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.policy_service_pb2.UpdateRuleRequest, agntcy.identity.service.v1alpha1.policy_pb2.Rule]  # type: ignore[assignment]
     """Update a Rule."""
-
-    DeleteRule: grpc.aio.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.policy_service_pb2.DeleteRuleRequest,
-        google.protobuf.empty_pb2.Empty,
-    ]
+    DeleteRule: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.policy_service_pb2.DeleteRuleRequest, google.protobuf.empty_pb2.Empty]  # type: ignore[assignment]
     """Delete an existing Rule."""
 
 class PolicyServiceServicer(metaclass=abc.ABCMeta):

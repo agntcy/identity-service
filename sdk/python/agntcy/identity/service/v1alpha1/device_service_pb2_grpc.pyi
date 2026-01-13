@@ -21,71 +21,41 @@ class _MaybeAsyncIterator(collections.abc.AsyncIterator[_T], collections.abc.Ite
 class _ServicerContext(grpc.ServicerContext, grpc.aio.ServicerContext):  # type: ignore[misc, type-arg]
     ...
 
+GRPC_GENERATED_VERSION: str
+GRPC_VERSION: str
+
 class DeviceServiceStub:
     """DeviceService manages device."""
 
-    def __init__(self, channel: typing.Union[grpc.Channel, grpc.aio.Channel]) -> None: ...
-    AddDevice: grpc.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.device_service_pb2.AddDeviceRequest,
-        agntcy.identity.service.v1alpha1.device_pb2.Device,
-    ]
+    @typing.overload
+    def __new__(cls, channel: grpc.Channel) -> DeviceServiceStub: ...
+    @typing.overload
+    def __new__(cls, channel: grpc.aio.Channel) -> DeviceServiceAsyncStub: ...
+    AddDevice: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.device_service_pb2.AddDeviceRequest, agntcy.identity.service.v1alpha1.device_pb2.Device]
     """Add new device for approval flow"""
-
-    RegisterDevice: grpc.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.device_service_pb2.RegisterDeviceRequest,
-        google.protobuf.empty_pb2.Empty,
-    ]
+    RegisterDevice: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.device_service_pb2.RegisterDeviceRequest, google.protobuf.empty_pb2.Empty]
     """Add new device for approval flow"""
-
-    ListDevices: grpc.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.device_service_pb2.ListDevicesRequest,
-        agntcy.identity.service.v1alpha1.device_service_pb2.ListDevicesResponse,
-    ]
+    ListDevices: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.device_service_pb2.ListDevicesRequest, agntcy.identity.service.v1alpha1.device_service_pb2.ListDevicesResponse]
     """List all registered devices"""
-
-    DeleteDevice: grpc.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.device_service_pb2.DeleteDeviceRequest,
-        google.protobuf.empty_pb2.Empty,
-    ]
+    DeleteDevice: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.device_service_pb2.DeleteDeviceRequest, google.protobuf.empty_pb2.Empty]
     """Delete a registered Device."""
-
-    TestDevice: grpc.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.device_service_pb2.TestDeviceRequest,
-        google.protobuf.empty_pb2.Empty,
-    ]
+    TestDevice: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.device_service_pb2.TestDeviceRequest, google.protobuf.empty_pb2.Empty]
     """Send a test notification to a registered device to see if it's well configured."""
 
-class DeviceServiceAsyncStub:
+@typing.type_check_only
+class DeviceServiceAsyncStub(DeviceServiceStub):
     """DeviceService manages device."""
 
-    AddDevice: grpc.aio.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.device_service_pb2.AddDeviceRequest,
-        agntcy.identity.service.v1alpha1.device_pb2.Device,
-    ]
+    def __init__(self, channel: grpc.aio.Channel) -> None: ...
+    AddDevice: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.device_service_pb2.AddDeviceRequest, agntcy.identity.service.v1alpha1.device_pb2.Device]  # type: ignore[assignment]
     """Add new device for approval flow"""
-
-    RegisterDevice: grpc.aio.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.device_service_pb2.RegisterDeviceRequest,
-        google.protobuf.empty_pb2.Empty,
-    ]
+    RegisterDevice: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.device_service_pb2.RegisterDeviceRequest, google.protobuf.empty_pb2.Empty]  # type: ignore[assignment]
     """Add new device for approval flow"""
-
-    ListDevices: grpc.aio.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.device_service_pb2.ListDevicesRequest,
-        agntcy.identity.service.v1alpha1.device_service_pb2.ListDevicesResponse,
-    ]
+    ListDevices: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.device_service_pb2.ListDevicesRequest, agntcy.identity.service.v1alpha1.device_service_pb2.ListDevicesResponse]  # type: ignore[assignment]
     """List all registered devices"""
-
-    DeleteDevice: grpc.aio.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.device_service_pb2.DeleteDeviceRequest,
-        google.protobuf.empty_pb2.Empty,
-    ]
+    DeleteDevice: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.device_service_pb2.DeleteDeviceRequest, google.protobuf.empty_pb2.Empty]  # type: ignore[assignment]
     """Delete a registered Device."""
-
-    TestDevice: grpc.aio.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.device_service_pb2.TestDeviceRequest,
-        google.protobuf.empty_pb2.Empty,
-    ]
+    TestDevice: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.device_service_pb2.TestDeviceRequest, google.protobuf.empty_pb2.Empty]  # type: ignore[assignment]
     """Send a test notification to a registered device to see if it's well configured."""
 
 class DeviceServiceServicer(metaclass=abc.ABCMeta):
