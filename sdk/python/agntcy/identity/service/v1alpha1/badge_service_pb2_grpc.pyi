@@ -20,35 +20,29 @@ class _MaybeAsyncIterator(collections.abc.AsyncIterator[_T], collections.abc.Ite
 class _ServicerContext(grpc.ServicerContext, grpc.aio.ServicerContext):  # type: ignore[misc, type-arg]
     ...
 
+GRPC_GENERATED_VERSION: str
+GRPC_VERSION: str
+
 class BadgeServiceStub:
     """BadgeService manages badges."""
 
-    def __init__(self, channel: typing.Union[grpc.Channel, grpc.aio.Channel]) -> None: ...
-    IssueBadge: grpc.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.badge_service_pb2.IssueBadgeRequest,
-        agntcy.identity.service.v1alpha1.badge_pb2.Badge,
-    ]
+    @typing.overload
+    def __new__(cls, channel: grpc.Channel) -> BadgeServiceStub: ...
+    @typing.overload
+    def __new__(cls, channel: grpc.aio.Channel) -> BadgeServiceAsyncStub: ...
+    IssueBadge: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.badge_service_pb2.IssueBadgeRequest, agntcy.identity.service.v1alpha1.badge_pb2.Badge]
     """Create a new Badge."""
-
-    VerifyBadge: grpc.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.badge_service_pb2.VerifyBadgeRequest,
-        agntcy.identity.service.v1alpha1.badge_pb2.VerificationResult,
-    ]
+    VerifyBadge: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.badge_service_pb2.VerifyBadgeRequest, agntcy.identity.service.v1alpha1.badge_pb2.VerificationResult]
     """Verify a badge."""
 
-class BadgeServiceAsyncStub:
+@typing.type_check_only
+class BadgeServiceAsyncStub(BadgeServiceStub):
     """BadgeService manages badges."""
 
-    IssueBadge: grpc.aio.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.badge_service_pb2.IssueBadgeRequest,
-        agntcy.identity.service.v1alpha1.badge_pb2.Badge,
-    ]
+    def __init__(self, channel: grpc.aio.Channel) -> None: ...
+    IssueBadge: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.badge_service_pb2.IssueBadgeRequest, agntcy.identity.service.v1alpha1.badge_pb2.Badge]  # type: ignore[assignment]
     """Create a new Badge."""
-
-    VerifyBadge: grpc.aio.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.badge_service_pb2.VerifyBadgeRequest,
-        agntcy.identity.service.v1alpha1.badge_pb2.VerificationResult,
-    ]
+    VerifyBadge: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.badge_service_pb2.VerifyBadgeRequest, agntcy.identity.service.v1alpha1.badge_pb2.VerificationResult]  # type: ignore[assignment]
     """Verify a badge."""
 
 class BadgeServiceServicer(metaclass=abc.ABCMeta):

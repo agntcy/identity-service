@@ -66,17 +66,6 @@ message KeycloakIdpSettings {
   optional string client_secret = 4;
 }
 
-// Ping IdP Settings
-message PingIdpSettings {
-  optional string environment_id = 1;
-
-  optional string client_id = 2;
-
-  optional string client_secret = 3;
-
-  optional string region = 4;
-}
-
 // Okta IdP Settings
 message OktaIdpSettings {
   optional string org_url = 1;
@@ -91,6 +80,17 @@ message OryIdpSettings {
   optional string project_slug = 1;
 
   optional string api_key = 2;
+}
+
+// Ping IdP Settings
+message PingIdpSettings {
+  optional string environment_id = 1;
+
+  optional string client_id = 2;
+
+  optional string client_secret = 3;
+
+  optional string region = 4;
 }
 
 // Identity Settings

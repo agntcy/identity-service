@@ -18,12 +18,14 @@ class IdpType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     IDP_TYPE_ORY: _ClassVar[IdpType]
     IDP_TYPE_SELF: _ClassVar[IdpType]
     IDP_TYPE_KEYCLOAK: _ClassVar[IdpType]
+    IDP_TYPE_PING: _ClassVar[IdpType]
 IDP_TYPE_UNSPECIFIED: IdpType
 IDP_TYPE_DUO: IdpType
 IDP_TYPE_OKTA: IdpType
 IDP_TYPE_ORY: IdpType
 IDP_TYPE_SELF: IdpType
 IDP_TYPE_KEYCLOAK: IdpType
+IDP_TYPE_PING: IdpType
 
 class ApiKey(_message.Message):
     __slots__ = ("api_key",)
@@ -42,13 +44,14 @@ class DuoIdpSettings(_message.Message):
     def __init__(self, hostname: _Optional[str] = ..., integration_key: _Optional[str] = ..., secret_key: _Optional[str] = ...) -> None: ...
 
 class IssuerSettings(_message.Message):
-    __slots__ = ("issuer_id", "idp_type", "duo_idp_settings", "okta_idp_settings", "ory_idp_settings", "keycloak_idp_settings", "created_at", "updated_at")
+    __slots__ = ("issuer_id", "idp_type", "duo_idp_settings", "okta_idp_settings", "ory_idp_settings", "keycloak_idp_settings", "ping_idp_settings", "created_at", "updated_at")
     ISSUER_ID_FIELD_NUMBER: _ClassVar[int]
     IDP_TYPE_FIELD_NUMBER: _ClassVar[int]
     DUO_IDP_SETTINGS_FIELD_NUMBER: _ClassVar[int]
     OKTA_IDP_SETTINGS_FIELD_NUMBER: _ClassVar[int]
     ORY_IDP_SETTINGS_FIELD_NUMBER: _ClassVar[int]
     KEYCLOAK_IDP_SETTINGS_FIELD_NUMBER: _ClassVar[int]
+    PING_IDP_SETTINGS_FIELD_NUMBER: _ClassVar[int]
     CREATED_AT_FIELD_NUMBER: _ClassVar[int]
     UPDATED_AT_FIELD_NUMBER: _ClassVar[int]
     issuer_id: str
@@ -57,9 +60,10 @@ class IssuerSettings(_message.Message):
     okta_idp_settings: OktaIdpSettings
     ory_idp_settings: OryIdpSettings
     keycloak_idp_settings: KeycloakIdpSettings
+    ping_idp_settings: PingIdpSettings
     created_at: _timestamp_pb2.Timestamp
     updated_at: _timestamp_pb2.Timestamp
-    def __init__(self, issuer_id: _Optional[str] = ..., idp_type: _Optional[_Union[IdpType, str]] = ..., duo_idp_settings: _Optional[_Union[DuoIdpSettings, _Mapping]] = ..., okta_idp_settings: _Optional[_Union[OktaIdpSettings, _Mapping]] = ..., ory_idp_settings: _Optional[_Union[OryIdpSettings, _Mapping]] = ..., keycloak_idp_settings: _Optional[_Union[KeycloakIdpSettings, _Mapping]] = ..., created_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
+    def __init__(self, issuer_id: _Optional[str] = ..., idp_type: _Optional[_Union[IdpType, str]] = ..., duo_idp_settings: _Optional[_Union[DuoIdpSettings, _Mapping]] = ..., okta_idp_settings: _Optional[_Union[OktaIdpSettings, _Mapping]] = ..., ory_idp_settings: _Optional[_Union[OryIdpSettings, _Mapping]] = ..., keycloak_idp_settings: _Optional[_Union[KeycloakIdpSettings, _Mapping]] = ..., ping_idp_settings: _Optional[_Union[PingIdpSettings, _Mapping]] = ..., created_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
 
 class KeycloakIdpSettings(_message.Message):
     __slots__ = ("base_url", "realm", "client_id", "client_secret")
@@ -90,6 +94,18 @@ class OryIdpSettings(_message.Message):
     project_slug: str
     api_key: str
     def __init__(self, project_slug: _Optional[str] = ..., api_key: _Optional[str] = ...) -> None: ...
+
+class PingIdpSettings(_message.Message):
+    __slots__ = ("environment_id", "client_id", "client_secret", "region")
+    ENVIRONMENT_ID_FIELD_NUMBER: _ClassVar[int]
+    CLIENT_ID_FIELD_NUMBER: _ClassVar[int]
+    CLIENT_SECRET_FIELD_NUMBER: _ClassVar[int]
+    REGION_FIELD_NUMBER: _ClassVar[int]
+    environment_id: str
+    client_id: str
+    client_secret: str
+    region: str
+    def __init__(self, environment_id: _Optional[str] = ..., client_id: _Optional[str] = ..., client_secret: _Optional[str] = ..., region: _Optional[str] = ...) -> None: ...
 
 class Settings(_message.Message):
     __slots__ = ("api_key", "issuer_settings")

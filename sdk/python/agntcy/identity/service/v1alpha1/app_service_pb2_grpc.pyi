@@ -22,129 +22,59 @@ class _MaybeAsyncIterator(collections.abc.AsyncIterator[_T], collections.abc.Ite
 class _ServicerContext(grpc.ServicerContext, grpc.aio.ServicerContext):  # type: ignore[misc, type-arg]
     ...
 
+GRPC_GENERATED_VERSION: str
+GRPC_VERSION: str
+
 class AppServiceStub:
     """AppService manages apps."""
 
-    def __init__(self, channel: typing.Union[grpc.Channel, grpc.aio.Channel]) -> None: ...
-    ListApps: grpc.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.app_service_pb2.ListAppsRequest,
-        agntcy.identity.service.v1alpha1.app_service_pb2.ListAppsResponse,
-    ]
+    @typing.overload
+    def __new__(cls, channel: grpc.Channel) -> AppServiceStub: ...
+    @typing.overload
+    def __new__(cls, channel: grpc.aio.Channel) -> AppServiceAsyncStub: ...
+    ListApps: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.app_service_pb2.ListAppsRequest, agntcy.identity.service.v1alpha1.app_service_pb2.ListAppsResponse]
     """List Apps."""
-
-    GetAppsCount: grpc.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.app_service_pb2.GetAppsCountRequest,
-        agntcy.identity.service.v1alpha1.app_service_pb2.GetAppsCountResponse,
-    ]
+    GetAppsCount: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.app_service_pb2.GetAppsCountRequest, agntcy.identity.service.v1alpha1.app_service_pb2.GetAppsCountResponse]
     """Get apps count per type."""
-
-    GetApp: grpc.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.app_service_pb2.GetAppRequest,
-        agntcy.identity.service.v1alpha1.app_pb2.App,
-    ]
+    GetApp: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.app_service_pb2.GetAppRequest, agntcy.identity.service.v1alpha1.app_pb2.App]
     """Get App by id"""
-
-    CreateApp: grpc.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.app_service_pb2.CreateAppRequest,
-        agntcy.identity.service.v1alpha1.app_pb2.App,
-    ]
+    CreateApp: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.app_service_pb2.CreateAppRequest, agntcy.identity.service.v1alpha1.app_pb2.App]
     """Create a new App."""
-
-    CreateOasfApp: grpc.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.app_service_pb2.CreateOasfAppRequest,
-        agntcy.identity.service.v1alpha1.app_service_pb2.CreateOasfAppResponse,
-    ]
-
-    UpdateApp: grpc.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.app_service_pb2.UpdateAppRequest,
-        agntcy.identity.service.v1alpha1.app_pb2.App,
-    ]
+    CreateOasfApp: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.app_service_pb2.CreateOasfAppRequest, agntcy.identity.service.v1alpha1.app_service_pb2.CreateOasfAppResponse]
+    UpdateApp: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.app_service_pb2.UpdateAppRequest, agntcy.identity.service.v1alpha1.app_pb2.App]
     """Update an App."""
-
-    DeleteApp: grpc.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.app_service_pb2.DeleteAppRequest,
-        google.protobuf.empty_pb2.Empty,
-    ]
+    DeleteApp: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.app_service_pb2.DeleteAppRequest, google.protobuf.empty_pb2.Empty]
     """Delete an existing App."""
-
-    RefreshAppApiKey: grpc.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.app_service_pb2.RefreshAppApiKeyRequest,
-        agntcy.identity.service.v1alpha1.app_pb2.App,
-    ]
+    RefreshAppApiKey: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.app_service_pb2.RefreshAppApiKeyRequest, agntcy.identity.service.v1alpha1.app_pb2.App]
     """Refresh the api-key for an App."""
-
-    GetBadge: grpc.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.app_service_pb2.GetBadgeRequest,
-        agntcy.identity.service.v1alpha1.badge_pb2.Badge,
-    ]
+    GetBadge: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.app_service_pb2.GetBadgeRequest, agntcy.identity.service.v1alpha1.badge_pb2.Badge]
     """Get the current badge issued for the App."""
-
-    GetTasks: grpc.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.app_service_pb2.GetTasksRequest,
-        agntcy.identity.service.v1alpha1.app_service_pb2.GetTasksResponse,
-    ]
+    GetTasks: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.app_service_pb2.GetTasksRequest, agntcy.identity.service.v1alpha1.app_service_pb2.GetTasksResponse]
     """Get the list of tasks of all apps"""
 
-class AppServiceAsyncStub:
+@typing.type_check_only
+class AppServiceAsyncStub(AppServiceStub):
     """AppService manages apps."""
 
-    ListApps: grpc.aio.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.app_service_pb2.ListAppsRequest,
-        agntcy.identity.service.v1alpha1.app_service_pb2.ListAppsResponse,
-    ]
+    def __init__(self, channel: grpc.aio.Channel) -> None: ...
+    ListApps: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.app_service_pb2.ListAppsRequest, agntcy.identity.service.v1alpha1.app_service_pb2.ListAppsResponse]  # type: ignore[assignment]
     """List Apps."""
-
-    GetAppsCount: grpc.aio.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.app_service_pb2.GetAppsCountRequest,
-        agntcy.identity.service.v1alpha1.app_service_pb2.GetAppsCountResponse,
-    ]
+    GetAppsCount: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.app_service_pb2.GetAppsCountRequest, agntcy.identity.service.v1alpha1.app_service_pb2.GetAppsCountResponse]  # type: ignore[assignment]
     """Get apps count per type."""
-
-    GetApp: grpc.aio.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.app_service_pb2.GetAppRequest,
-        agntcy.identity.service.v1alpha1.app_pb2.App,
-    ]
+    GetApp: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.app_service_pb2.GetAppRequest, agntcy.identity.service.v1alpha1.app_pb2.App]  # type: ignore[assignment]
     """Get App by id"""
-
-    CreateApp: grpc.aio.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.app_service_pb2.CreateAppRequest,
-        agntcy.identity.service.v1alpha1.app_pb2.App,
-    ]
+    CreateApp: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.app_service_pb2.CreateAppRequest, agntcy.identity.service.v1alpha1.app_pb2.App]  # type: ignore[assignment]
     """Create a new App."""
-
-    CreateOasfApp: grpc.aio.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.app_service_pb2.CreateOasfAppRequest,
-        agntcy.identity.service.v1alpha1.app_service_pb2.CreateOasfAppResponse,
-    ]
-
-    UpdateApp: grpc.aio.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.app_service_pb2.UpdateAppRequest,
-        agntcy.identity.service.v1alpha1.app_pb2.App,
-    ]
+    CreateOasfApp: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.app_service_pb2.CreateOasfAppRequest, agntcy.identity.service.v1alpha1.app_service_pb2.CreateOasfAppResponse]  # type: ignore[assignment]
+    UpdateApp: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.app_service_pb2.UpdateAppRequest, agntcy.identity.service.v1alpha1.app_pb2.App]  # type: ignore[assignment]
     """Update an App."""
-
-    DeleteApp: grpc.aio.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.app_service_pb2.DeleteAppRequest,
-        google.protobuf.empty_pb2.Empty,
-    ]
+    DeleteApp: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.app_service_pb2.DeleteAppRequest, google.protobuf.empty_pb2.Empty]  # type: ignore[assignment]
     """Delete an existing App."""
-
-    RefreshAppApiKey: grpc.aio.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.app_service_pb2.RefreshAppApiKeyRequest,
-        agntcy.identity.service.v1alpha1.app_pb2.App,
-    ]
+    RefreshAppApiKey: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.app_service_pb2.RefreshAppApiKeyRequest, agntcy.identity.service.v1alpha1.app_pb2.App]  # type: ignore[assignment]
     """Refresh the api-key for an App."""
-
-    GetBadge: grpc.aio.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.app_service_pb2.GetBadgeRequest,
-        agntcy.identity.service.v1alpha1.badge_pb2.Badge,
-    ]
+    GetBadge: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.app_service_pb2.GetBadgeRequest, agntcy.identity.service.v1alpha1.badge_pb2.Badge]  # type: ignore[assignment]
     """Get the current badge issued for the App."""
-
-    GetTasks: grpc.aio.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.app_service_pb2.GetTasksRequest,
-        agntcy.identity.service.v1alpha1.app_service_pb2.GetTasksResponse,
-    ]
+    GetTasks: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.app_service_pb2.GetTasksRequest, agntcy.identity.service.v1alpha1.app_service_pb2.GetTasksResponse]  # type: ignore[assignment]
     """Get the list of tasks of all apps"""
 
 class AppServiceServicer(metaclass=abc.ABCMeta):

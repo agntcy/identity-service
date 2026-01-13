@@ -20,71 +20,41 @@ class _MaybeAsyncIterator(collections.abc.AsyncIterator[_T], collections.abc.Ite
 class _ServicerContext(grpc.ServicerContext, grpc.aio.ServicerContext):  # type: ignore[misc, type-arg]
     ...
 
+GRPC_GENERATED_VERSION: str
+GRPC_VERSION: str
+
 class AuthServiceStub:
     """AuthService manages auth."""
 
-    def __init__(self, channel: typing.Union[grpc.Channel, grpc.aio.Channel]) -> None: ...
-    AppInfo: grpc.UnaryUnaryMultiCallable[
-        google.protobuf.empty_pb2.Empty,
-        agntcy.identity.service.v1alpha1.auth_service_pb2.AppInfoResponse,
-    ]
+    @typing.overload
+    def __new__(cls, channel: grpc.Channel) -> AuthServiceStub: ...
+    @typing.overload
+    def __new__(cls, channel: grpc.aio.Channel) -> AuthServiceAsyncStub: ...
+    AppInfo: grpc.UnaryUnaryMultiCallable[google.protobuf.empty_pb2.Empty, agntcy.identity.service.v1alpha1.auth_service_pb2.AppInfoResponse]
     """App info endpoint"""
-
-    Authorize: grpc.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.auth_service_pb2.AuthorizeRequest,
-        agntcy.identity.service.v1alpha1.auth_service_pb2.AuthorizeResponse,
-    ]
+    Authorize: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.auth_service_pb2.AuthorizeRequest, agntcy.identity.service.v1alpha1.auth_service_pb2.AuthorizeResponse]
     """Authorize a request from an Agent or MCP Server"""
-
-    Token: grpc.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.auth_service_pb2.TokenRequest,
-        agntcy.identity.service.v1alpha1.auth_service_pb2.TokenResponse,
-    ]
+    Token: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.auth_service_pb2.TokenRequest, agntcy.identity.service.v1alpha1.auth_service_pb2.TokenResponse]
     """Request token for an Agent or MCP Server"""
-
-    ExtAuthz: grpc.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.auth_service_pb2.ExtAuthzRequest,
-        google.protobuf.empty_pb2.Empty,
-    ]
+    ExtAuthz: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.auth_service_pb2.ExtAuthzRequest, google.protobuf.empty_pb2.Empty]
     """Handle external authorization requests"""
-
-    ApproveToken: grpc.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.auth_service_pb2.ApproveTokenRequest,
-        google.protobuf.empty_pb2.Empty,
-    ]
+    ApproveToken: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.auth_service_pb2.ApproveTokenRequest, google.protobuf.empty_pb2.Empty]
     """Handle manual approval of external authorization requets"""
 
-class AuthServiceAsyncStub:
+@typing.type_check_only
+class AuthServiceAsyncStub(AuthServiceStub):
     """AuthService manages auth."""
 
-    AppInfo: grpc.aio.UnaryUnaryMultiCallable[
-        google.protobuf.empty_pb2.Empty,
-        agntcy.identity.service.v1alpha1.auth_service_pb2.AppInfoResponse,
-    ]
+    def __init__(self, channel: grpc.aio.Channel) -> None: ...
+    AppInfo: grpc.aio.UnaryUnaryMultiCallable[google.protobuf.empty_pb2.Empty, agntcy.identity.service.v1alpha1.auth_service_pb2.AppInfoResponse]  # type: ignore[assignment]
     """App info endpoint"""
-
-    Authorize: grpc.aio.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.auth_service_pb2.AuthorizeRequest,
-        agntcy.identity.service.v1alpha1.auth_service_pb2.AuthorizeResponse,
-    ]
+    Authorize: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.auth_service_pb2.AuthorizeRequest, agntcy.identity.service.v1alpha1.auth_service_pb2.AuthorizeResponse]  # type: ignore[assignment]
     """Authorize a request from an Agent or MCP Server"""
-
-    Token: grpc.aio.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.auth_service_pb2.TokenRequest,
-        agntcy.identity.service.v1alpha1.auth_service_pb2.TokenResponse,
-    ]
+    Token: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.auth_service_pb2.TokenRequest, agntcy.identity.service.v1alpha1.auth_service_pb2.TokenResponse]  # type: ignore[assignment]
     """Request token for an Agent or MCP Server"""
-
-    ExtAuthz: grpc.aio.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.auth_service_pb2.ExtAuthzRequest,
-        google.protobuf.empty_pb2.Empty,
-    ]
+    ExtAuthz: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.auth_service_pb2.ExtAuthzRequest, google.protobuf.empty_pb2.Empty]  # type: ignore[assignment]
     """Handle external authorization requests"""
-
-    ApproveToken: grpc.aio.UnaryUnaryMultiCallable[
-        agntcy.identity.service.v1alpha1.auth_service_pb2.ApproveTokenRequest,
-        google.protobuf.empty_pb2.Empty,
-    ]
+    ApproveToken: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.auth_service_pb2.ApproveTokenRequest, google.protobuf.empty_pb2.Empty]  # type: ignore[assignment]
     """Handle manual approval of external authorization requets"""
 
 class AuthServiceServicer(metaclass=abc.ABCMeta):

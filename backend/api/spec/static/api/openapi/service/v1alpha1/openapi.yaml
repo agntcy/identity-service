@@ -1398,6 +1398,7 @@ components:
                         - IDP_TYPE_ORY
                         - IDP_TYPE_SELF
                         - IDP_TYPE_KEYCLOAK
+                        - IDP_TYPE_PING
                     type: string
                     description: The type of the IdP.
                     format: enum
@@ -1417,6 +1418,10 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/KeycloakIdpSettings'
                     description: Settings for the Keycloak Identity Provider.
+                pingIdpSettings:
+                    allOf:
+                        - $ref: '#/components/schemas/PingIdpSettings'
+                    description: Settings for the Ping Identity Provider.
                 createdAt:
                     readOnly: true
                     type: string
@@ -1524,6 +1529,18 @@ components:
                     description: The size of the current page
                     format: int32
             description: Pagination response
+        PingIdpSettings:
+            type: object
+            properties:
+                environmentId:
+                    type: string
+                clientId:
+                    type: string
+                clientSecret:
+                    type: string
+                region:
+                    type: string
+            description: Ping IdP Settings
         Policy:
             required:
                 - name
