@@ -146,10 +146,14 @@ describe('useRoutes', () => {
       const mockState = {
         isEmptyIdp: false,
         isAdmin: true,
+        totalAgenticServices: 0,
+        totalPolicies: 0,
         setIsAdmin: vi.fn(),
         setSession: vi.fn(),
         setIsEmptyIdp: vi.fn(),
-        setIssuerSettings: vi.fn()
+        setIssuerSettings: vi.fn(),
+        setTotalAgenticServices: vi.fn(),
+        setTotalPolicies: vi.fn()
       };
       return selector ? selector(mockState) : mockState;
     });
@@ -174,10 +178,14 @@ describe('useRoutes', () => {
         const mockState = {
           isEmptyIdp: true,
           isAdmin: false,
+          totalAgenticServices: 0,
+          totalPolicies: 0,
           setIsAdmin: vi.fn(),
           setSession: vi.fn(),
           setIsEmptyIdp: vi.fn(),
           setIssuerSettings: vi.fn(),
+          setTotalAgenticServices: vi.fn(),
+          setTotalPolicies: vi.fn(),
           otherProperty: 'should not be selected'
         };
 
@@ -215,10 +223,14 @@ describe('useRoutes', () => {
         const mockState = {
           isEmptyIdp: false,
           isAdmin: true,
+          totalAgenticServices: 0,
+          totalPolicies: 0,
           setIsAdmin: vi.fn(),
           setSession: vi.fn(),
           setIsEmptyIdp: vi.fn(),
-          setIssuerSettings: vi.fn()
+          setIssuerSettings: vi.fn(),
+          setTotalAgenticServices: vi.fn(),
+          setTotalPolicies: vi.fn()
         };
         return selector ? selector(mockState) : mockState;
       });
@@ -235,10 +247,14 @@ describe('useRoutes', () => {
         const mockState = {
           isEmptyIdp: true,
           isAdmin: true,
+          totalAgenticServices: 0,
+          totalPolicies: 0,
           setIsAdmin: vi.fn(),
           setSession: vi.fn(),
           setIsEmptyIdp: vi.fn(),
-          setIssuerSettings: vi.fn()
+          setIssuerSettings: vi.fn(),
+          setTotalAgenticServices: vi.fn(),
+          setTotalPolicies: vi.fn()
         };
         return selector ? selector(mockState) : mockState;
       });
@@ -257,10 +273,14 @@ describe('useRoutes', () => {
         const mockState = {
           isEmptyIdp: false,
           isAdmin: true,
+          totalAgenticServices: 0,
+          totalPolicies: 0,
           setIsAdmin: vi.fn(),
           setSession: vi.fn(),
           setIsEmptyIdp: vi.fn(),
-          setIssuerSettings: vi.fn()
+          setIssuerSettings: vi.fn(),
+          setTotalAgenticServices: vi.fn(),
+          setTotalPolicies: vi.fn()
         };
         return selector ? selector(mockState) : mockState;
       });
@@ -277,10 +297,14 @@ describe('useRoutes', () => {
         const mockState = {
           isEmptyIdp: false,
           isAdmin: false,
+          totalAgenticServices: 0,
+          totalPolicies: 0,
           setIsAdmin: vi.fn(),
           setSession: vi.fn(),
           setIsEmptyIdp: vi.fn(),
-          setIssuerSettings: vi.fn()
+          setIssuerSettings: vi.fn(),
+          setTotalAgenticServices: vi.fn(),
+          setTotalPolicies: vi.fn()
         };
         return selector ? selector(mockState) : mockState;
       });
@@ -329,10 +353,14 @@ describe('useRoutes', () => {
         const mockState = {
           isEmptyIdp: true,
           isAdmin: true,
+          totalAgenticServices: 0,
+          totalPolicies: 0,
           setIsAdmin: vi.fn(),
           setSession: vi.fn(),
           setIsEmptyIdp: vi.fn(),
-          setIssuerSettings: vi.fn()
+          setIssuerSettings: vi.fn(),
+          setTotalAgenticServices: vi.fn(),
+          setTotalPolicies: vi.fn()
         };
         return selector ? selector(mockState) : mockState;
       });
@@ -349,10 +377,14 @@ describe('useRoutes', () => {
         const mockState = {
           isEmptyIdp: false,
           isAdmin: false,
+          totalAgenticServices: 0,
+          totalPolicies: 0,
           setIsAdmin: vi.fn(),
           setSession: vi.fn(),
           setIsEmptyIdp: vi.fn(),
-          setIssuerSettings: vi.fn()
+          setIssuerSettings: vi.fn(),
+          setTotalAgenticServices: vi.fn(),
+          setTotalPolicies: vi.fn()
         };
         return selector ? selector(mockState) : mockState;
       });
@@ -369,10 +401,14 @@ describe('useRoutes', () => {
         const mockState = {
           isEmptyIdp: true,
           isAdmin: false,
+          totalAgenticServices: 0,
+          totalPolicies: 0,
           setIsAdmin: vi.fn(),
           setSession: vi.fn(),
           setIsEmptyIdp: vi.fn(),
-          setIssuerSettings: vi.fn()
+          setIssuerSettings: vi.fn(),
+          setTotalAgenticServices: vi.fn(),
+          setTotalPolicies: vi.fn()
         };
         return selector ? selector(mockState) : mockState;
       });
@@ -422,10 +458,14 @@ describe('useRoutes', () => {
         const mockState = {
           isEmptyIdp: true,
           isAdmin: false,
+          totalAgenticServices: 0,
+          totalPolicies: 0,
           setIsAdmin: vi.fn(),
           setSession: vi.fn(),
           setIsEmptyIdp: vi.fn(),
-          setIssuerSettings: vi.fn()
+          setIssuerSettings: vi.fn(),
+          setTotalAgenticServices: vi.fn(),
+          setTotalPolicies: vi.fn()
         };
         return selector ? selector(mockState) : mockState;
       });
@@ -462,10 +502,14 @@ describe('useRoutes', () => {
         const mockState = {
           isEmptyIdp: true,
           isAdmin: false,
+          totalAgenticServices: 0,
+          totalPolicies: 0,
           setIsAdmin: vi.fn(),
           setSession: vi.fn(),
           setIsEmptyIdp: vi.fn(),
-          setIssuerSettings: vi.fn()
+          setIssuerSettings: vi.fn(),
+          setTotalAgenticServices: vi.fn(),
+          setTotalPolicies: vi.fn()
         };
         return selector ? selector(mockState) : mockState;
       });
