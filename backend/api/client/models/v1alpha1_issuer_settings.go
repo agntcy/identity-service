@@ -25,6 +25,9 @@ type V1alpha1IssuerSettings struct {
 	// Settings for the Duo Identity Provider.
 	DuoIdpSettings *V1alpha1DuoIdpSettings `json:"duoIdpSettings,omitempty"`
 
+	// Settings for the Entra ID Identity Provider.
+	EntraIdpSettings *V1alpha1EntraIdpSettings `json:"entraIdpSettings,omitempty"`
+
 	// The type of the IdP.
 	// Required: true
 	IdpType *V1alpha1IdpType `json:"idpType"`
@@ -58,6 +61,10 @@ func (m *V1alpha1IssuerSettings) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateDuoIdpSettings(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateEntraIdpSettings(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -113,6 +120,29 @@ func (m *V1alpha1IssuerSettings) validateDuoIdpSettings(formats strfmt.Registry)
 			ce := new(errors.CompositeError)
 			if stderrors.As(err, &ce) {
 				return ce.ValidateName("duoIdpSettings")
+			}
+
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *V1alpha1IssuerSettings) validateEntraIdpSettings(formats strfmt.Registry) error {
+	if swag.IsZero(m.EntraIdpSettings) { // not required
+		return nil
+	}
+
+	if m.EntraIdpSettings != nil {
+		if err := m.EntraIdpSettings.Validate(formats); err != nil {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
+				return ve.ValidateName("entraIdpSettings")
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
+				return ce.ValidateName("entraIdpSettings")
 			}
 
 			return err
@@ -243,6 +273,10 @@ func (m *V1alpha1IssuerSettings) ContextValidate(ctx context.Context, formats st
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateEntraIdpSettings(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateIdpType(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -298,6 +332,31 @@ func (m *V1alpha1IssuerSettings) contextValidateDuoIdpSettings(ctx context.Conte
 			ce := new(errors.CompositeError)
 			if stderrors.As(err, &ce) {
 				return ce.ValidateName("duoIdpSettings")
+			}
+
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *V1alpha1IssuerSettings) contextValidateEntraIdpSettings(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.EntraIdpSettings != nil {
+
+		if swag.IsZero(m.EntraIdpSettings) { // not required
+			return nil
+		}
+
+		if err := m.EntraIdpSettings.ContextValidate(ctx, formats); err != nil {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
+				return ve.ValidateName("entraIdpSettings")
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
+				return ce.ValidateName("entraIdpSettings")
 			}
 
 			return err

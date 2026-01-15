@@ -26,7 +26,6 @@ require (
 	github.com/aws/aws-sdk-go-v2/config v1.31.2
 	github.com/aws/aws-sdk-go-v2/service/secretsmanager v1.38.2
 	github.com/brianvoe/gofakeit/v7 v7.5.1
-	github.com/cisco-eti/iam-sdk-golang v0.0.0-20250904090120-9fef6353df52
 	github.com/coocood/freecache v1.2.4
 	github.com/duosecurity/duo_api_golang v0.0.0-20250430191550-ac36954387e7
 	github.com/eko/gocache/store/freecache/v4 v4.2.2

@@ -31,6 +31,8 @@ type IssuerSettings struct {
 	KeycloakIdpSettings   *KeycloakIdpSettings
 	PingIdpSettingsID     *uuid.UUID `gorm:"foreignKey:ID"`
 	PingIdpSettings       *PingIdpSettings
+	EntraIdpSettingsID    *uuid.UUID `gorm:"foreignKey:ID"`
+	EntraIdpSettings      *EntraIdpSettings
 	CreatedAt             time.Time
 	UpdatedAt             sql.NullTime
 }
@@ -69,6 +71,13 @@ type PingIdpSettings struct {
 	ClientID      string                   `gorm:"not null;type:varchar(256);"`
 	ClientSecret  *secrets.EncryptedString `gorm:"type:varchar(4096);"`
 	Region        string                   `gorm:"not null;type:varchar(64);"`
+}
+
+type EntraIdpSettings struct {
+	ID           uuid.UUID                `gorm:"primaryKey;default:gen_random_uuid()"`
+	TenantID     string                   `gorm:"not null;type:varchar(256);"`
+	ClientID     string                   `gorm:"not null;type:varchar(256);"`
+	ClientSecret *secrets.EncryptedString `gorm:"type:varchar(4096);"`
 }
 
 type Device struct {
@@ -139,6 +148,18 @@ func (i *PingIdpSettings) ToCoreType(crypter secrets.Crypter) *types.PingIdpSett
 	}
 }
 
+func (i *EntraIdpSettings) ToCoreType(crypter secrets.Crypter) *types.EntraIdpSettings {
+	if i == nil {
+		return nil
+	}
+
+	return &types.EntraIdpSettings{
+		TenantID:     i.TenantID,
+		ClientID:     i.ClientID,
+		ClientSecret: ptrutil.DerefStr(secrets.EncryptedStringToRaw(i.ClientSecret, crypter)),
+	}
+}
+
 func (i *IssuerSettings) ToCoreType(crypter secrets.Crypter) *types.IssuerSettings {
 	if i == nil {
 		return nil
@@ -154,6 +175,7 @@ func (i *IssuerSettings) ToCoreType(crypter secrets.Crypter) *types.IssuerSettin
 		OryIdpSettings:      i.OryIdpSettings.ToCoreType(crypter),
 		KeycloakIdpSettings: i.KeycloakIdpSettings.ToCoreType(crypter),
 		PingIdpSettings:     i.PingIdpSettings.ToCoreType(crypter),
+		EntraIdpSettings:    i.EntraIdpSettings.ToCoreType(crypter),
 		CreatedAt:           i.CreatedAt,
 		UpdatedAt:           pgutil.SqlNullTimeToTime(i.UpdatedAt),
 	}
@@ -220,6 +242,18 @@ func newPingIdpSettingsModel(src *types.PingIdpSettings, crypter secrets.Crypter
 	}
 }
 
+func newEntraIdpSettingsModel(src *types.EntraIdpSettings, crypter secrets.Crypter) *EntraIdpSettings {
+	if src == nil {
+		return nil
+	}
+
+	return &EntraIdpSettings{
+		TenantID:     src.TenantID,
+		ClientID:     src.ClientID,
+		ClientSecret: secrets.NewEncryptedString(&src.ClientSecret, crypter),
+	}
+}
+
 func newIssuerSettingsModel(src *types.IssuerSettings, crypter secrets.Crypter) *IssuerSettings {
 	return &IssuerSettings{
 		IssuerID:            &src.IssuerID,
@@ -231,6 +265,7 @@ func newIssuerSettingsModel(src *types.IssuerSettings, crypter secrets.Crypter) 
 		OryIdpSettings:      newOryIdpSettingsModel(src.OryIdpSettings, crypter),
 		KeycloakIdpSettings: newKeycloakIdpSettingsModel(src.KeycloakIdpSettings, crypter),
 		PingIdpSettings:     newPingIdpSettingsModel(src.PingIdpSettings, crypter),
+		EntraIdpSettings:    newEntraIdpSettingsModel(src.EntraIdpSettings, crypter),
 		CreatedAt:           src.CreatedAt,
 		UpdatedAt:           pgutil.TimeToSqlNullTime(src.UpdatedAt),
 	}
