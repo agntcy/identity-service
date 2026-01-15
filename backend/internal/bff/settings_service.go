@@ -164,6 +164,10 @@ func (s *settingsService) updateIssuerSettings(
 		}
 
 		issuerSettings.KeycloakIdpSettings.ClientSecret = updatePayload.KeycloakIdpSettings.ClientSecret
+	case settingstypes.IDP_TYPE_PING:
+		if err := s.validatePingUpdateSettings(updatePayload.PingIdpSettings); err != nil {
+			return nil, err
+		}
 	default:
 		return nil, errutil.InvalidRequest(
 			"settings.updateNotSupported",
@@ -232,6 +236,19 @@ func (s *settingsService) validateKeycloakUpdateSettings(
 		return errutil.ValidationFailed(
 			"settings.invalidKeycloakUpdatePayload",
 			"Invalid Keycloak settings payload. Make sure the client secret is not empty.",
+		)
+	}
+
+	return nil
+}
+
+func (*settingsService) validatePingUpdateSettings(
+	settings *settingstypes.PingIdpSettings,
+) error {
+	if settings == nil || settings.ClientSecret == "" {
+		return errutil.ValidationFailed(
+			"settings.invalidPingUpdatePayload",
+			"Invalid Ping settings payload.",
 		)
 	}
 

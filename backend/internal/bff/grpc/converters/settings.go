@@ -122,6 +122,36 @@ func ToKeycloakIdpSettings(
 	}
 }
 
+func FromPingIdpSettings(
+	src *settingstypes.PingIdpSettings,
+) *identity_service_sdk_go.PingIdpSettings {
+	if src == nil {
+		return nil
+	}
+
+	return &identity_service_sdk_go.PingIdpSettings{
+		EnvironmentId: ptrutil.Ptr(src.EnvironmentID),
+		ClientId:      ptrutil.Ptr(src.ClientID),
+		ClientSecret:  ptrutil.Ptr(strutil.Mask(src.ClientSecret)),
+		Region:        ptrutil.Ptr(src.Region),
+	}
+}
+
+func ToPingIdpSettings(
+	src *identity_service_sdk_go.PingIdpSettings,
+) *settingstypes.PingIdpSettings {
+	if src == nil {
+		return nil
+	}
+
+	return &settingstypes.PingIdpSettings{
+		EnvironmentID: src.GetEnvironmentId(),
+		ClientID:      src.GetClientId(),
+		ClientSecret:  src.GetClientSecret(),
+		Region:        src.GetRegion(),
+	}
+}
+
 func FromIssuerSettings(
 	src *settingstypes.IssuerSettings,
 ) *identity_service_sdk_go.IssuerSettings {
@@ -135,6 +165,7 @@ func FromIssuerSettings(
 		DuoIdpSettings:      FromDuoIdpSettings(src.DuoIdpSettings),
 		OryIdpSettings:      FromOryIdpSettings(src.OryIdpSettings),
 		KeycloakIdpSettings: FromKeycloakIdpSettings(src.KeycloakIdpSettings),
+		PingIdpSettings:     FromPingIdpSettings(src.PingIdpSettings),
 		CreatedAt:           newTimestamp(&src.CreatedAt),
 		UpdatedAt:           newTimestamp(src.UpdatedAt),
 	}
@@ -153,6 +184,7 @@ func ToIssuerSettings(
 		DuoIdpSettings:      ToDuoIdpSettings(src.GetDuoIdpSettings()),
 		OryIdpSettings:      ToOryIdpSettings(src.GetOryIdpSettings()),
 		KeycloakIdpSettings: ToKeycloakIdpSettings(src.GetKeycloakIdpSettings()),
+		PingIdpSettings:     ToPingIdpSettings(src.GetPingIdpSettings()),
 	}
 }
 
