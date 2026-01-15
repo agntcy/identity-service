@@ -81,14 +81,20 @@ func (e *EntraIdp) CreateClientCredentialsPair(ctx context.Context) (*ClientCred
 		return nil, errors.New("application response is missing appId")
 	}
 
-	if _, err := e.createServicePrincipal(ctx, client, *appID); err != nil {
-		return nil, fmt.Errorf("failed to create service principal: %w", err)
-	}
-
 	objectID := app.GetId()
 	if objectID == nil || *objectID == "" {
 		return nil, errors.New("application response is missing object id")
 	}
+
+	log.FromContext(ctx).Debugf("Created application with AppId: %s, ObjectId: %s", *appID, *objectID)
+
+	if _, err := e.createServicePrincipal(ctx, client, *appID); err != nil {
+		return nil, fmt.Errorf("failed to create service principal: %w", err)
+	}
+
+	// Add a small delay to ensure the application is fully provisioned in Microsoft Entra ID
+	// This helps prevent replication lag issues in Microsoft's distributed system
+	time.Sleep(2 * time.Second)
 
 	secret, err := e.addPasswordCredential(ctx, client, *objectID)
 	if err != nil {
@@ -236,9 +242,27 @@ func (e *EntraIdp) addPasswordCredential(ctx context.Context, client *msgraphsdk
 	requestBody := applications.NewItemAddPasswordPostRequestBody()
 	requestBody.SetPasswordCredential(passwordCredential)
 
-	response, err := client.Applications().ByApplicationId(applicationID).AddPassword().Post(ctx, requestBody, nil)
-	if err != nil {
-		return "", fmt.Errorf("graph addPassword post failed: %w", err)
+	// Retry mechanism for Microsoft Entra ID replication delays
+	var response models.PasswordCredentialable
+	var err error
+	maxRetries := 5
+	retryDelay := 2 * time.Second
+
+	for attempt := 0; attempt < maxRetries; attempt++ {
+		if attempt > 0 {
+			log.FromContext(ctx).Debugf("Retrying addPassword (attempt %d/%d) after %v", attempt+1, maxRetries, retryDelay)
+			time.Sleep(retryDelay)
+		}
+
+		response, err = client.Applications().ByApplicationId(applicationID).AddPassword().Post(ctx, requestBody, nil)
+		if err == nil {
+			break
+		}
+
+		// If this is the last attempt, return the error
+		if attempt == maxRetries-1 {
+			return "", fmt.Errorf("graph addPassword post failed after %d attempts: %w", maxRetries, err)
+		}
 	}
 
 	if response == nil || response.GetSecretText() == nil || *response.GetSecretText() == "" {

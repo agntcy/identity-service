@@ -137,6 +137,20 @@ func FromPingIdpSettings(
 	}
 }
 
+func FromEntraIdpSettings(
+	src *settingstypes.EntraIdpSettings,
+) *identity_service_sdk_go.EntraIdpSettings {
+	if src == nil {
+		return nil
+	}
+
+	return &identity_service_sdk_go.EntraIdpSettings{
+		TenantId:     ptrutil.Ptr(src.TenantID),
+		ClientId:     ptrutil.Ptr(src.ClientID),
+		ClientSecret: ptrutil.Ptr(strutil.Mask(src.ClientSecret)),
+	}
+}
+
 func ToPingIdpSettings(
 	src *identity_service_sdk_go.PingIdpSettings,
 ) *settingstypes.PingIdpSettings {
@@ -149,6 +163,20 @@ func ToPingIdpSettings(
 		ClientID:      src.GetClientId(),
 		ClientSecret:  src.GetClientSecret(),
 		Region:        src.GetRegion(),
+	}
+}
+
+func ToEntraIdpSettings(
+	src *identity_service_sdk_go.EntraIdpSettings,
+) *settingstypes.EntraIdpSettings {
+	if src == nil {
+		return nil
+	}
+
+	return &settingstypes.EntraIdpSettings{
+		TenantID:     src.GetTenantId(),
+		ClientID:     src.GetClientId(),
+		ClientSecret: src.GetClientSecret(),
 	}
 }
 
@@ -166,6 +194,7 @@ func FromIssuerSettings(
 		OryIdpSettings:      FromOryIdpSettings(src.OryIdpSettings),
 		KeycloakIdpSettings: FromKeycloakIdpSettings(src.KeycloakIdpSettings),
 		PingIdpSettings:     FromPingIdpSettings(src.PingIdpSettings),
+		EntraIdpSettings:    FromEntraIdpSettings(src.EntraIdpSettings),
 		CreatedAt:           newTimestamp(&src.CreatedAt),
 		UpdatedAt:           newTimestamp(src.UpdatedAt),
 	}
@@ -185,6 +214,7 @@ func ToIssuerSettings(
 		OryIdpSettings:      ToOryIdpSettings(src.GetOryIdpSettings()),
 		KeycloakIdpSettings: ToKeycloakIdpSettings(src.GetKeycloakIdpSettings()),
 		PingIdpSettings:     ToPingIdpSettings(src.GetPingIdpSettings()),
+		EntraIdpSettings:    ToEntraIdpSettings(src.GetEntraIdpSettings()),
 	}
 }
 
