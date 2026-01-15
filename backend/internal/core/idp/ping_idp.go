@@ -24,6 +24,7 @@ const (
 	pingTokenEndpoint   = "/as/token"
 	pingApplicationsAPI = "/environments/%s/applications"
 	pingProtocol        = "OPENID_CONNECT"
+	pingRegions         = "com,eu"
 )
 
 type PingIdp struct {
@@ -35,7 +36,8 @@ type PingIdp struct {
 
 func NewPingIdp(settings *types.PingIdpSettings) Idp {
 	region := "com"
-	if settings != nil && settings.Region != "" {
+	if settings != nil && settings.Region != "" &&
+		strings.Contains(pingRegions, settings.Region) {
 		region = settings.Region
 	}
 
