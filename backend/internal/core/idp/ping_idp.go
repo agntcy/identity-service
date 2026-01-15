@@ -112,10 +112,10 @@ func (p *PingIdp) CreateClientCredentialsPair(
 		fmt.Sprintf(pingApplicationsAPI, p.settings.EnvironmentID))
 
 	applicationData := map[string]interface{}{
-		"name":        clientName,
-		"type":        pingApplicationType,
-		"protocol":    pingProtocol,
-		"enabled":     true,
+		"name":                    clientName,
+		"type":                    pingApplicationType,
+		"protocol":                pingProtocol,
+		"enabled":                 true,
 		"tokenEndpointAuthMethod": "CLIENT_SECRET_BASIC",
 		"grantTypes": []string{
 			pingGrantType,
