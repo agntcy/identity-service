@@ -20,11 +20,12 @@ import (
 const (
 	pingTimeout         = 30 * time.Second
 	pingGrantType       = "client_credentials"
+	pingScopes          = "openid"
 	pingApplicationType = "WORKER"
 	pingTokenEndpoint   = "/as/token"
 	pingApplicationsAPI = "/environments/%s/applications"
 	pingProtocol        = "OPENID_CONNECT"
-	pingRegions         = "com,eu"
+	pingRegions         = "com,eu,com.au,ca"
 )
 
 type PingIdp struct {
@@ -44,7 +45,7 @@ func NewPingIdp(settings *types.PingIdpSettings) Idp {
 	return &PingIdp{
 		settings:   settings,
 		httpClient: &http.Client{Timeout: pingTimeout},
-		apiBaseURL: fmt.Sprintf("https://api.pingone.%s", region),
+		apiBaseURL: fmt.Sprintf("https://api.pingone.%s/v1", region),
 		authURL:    fmt.Sprintf("https://auth.pingone.%s", region),
 	}
 }
@@ -75,6 +76,8 @@ func (p *PingIdp) TestSettings(ctx context.Context) error {
 		p.apiBaseURL,
 		fmt.Sprintf(pingApplicationsAPI, p.settings.EnvironmentID))
 
+	log.Debug("Verifying PingOne connection by accessing applications at :", applicationsURL)
+
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, applicationsURL, http.NoBody)
 	if err != nil {
 		return fmt.Errorf("failed to create request: %w", err)
@@ -90,6 +93,7 @@ func (p *PingIdp) TestSettings(ctx context.Context) error {
 
 	if resp.StatusCode != http.StatusOK {
 		body, _ := io.ReadAll(resp.Body)
+
 		return fmt.Errorf("failed to verify PingOne connection: status %d, body: %s",
 			resp.StatusCode, string(body))
 	}
@@ -113,14 +117,14 @@ func (p *PingIdp) CreateClientCredentialsPair(
 		p.apiBaseURL,
 		fmt.Sprintf(pingApplicationsAPI, p.settings.EnvironmentID))
 
-	applicationData := map[string]interface{}{
+	applicationData := map[string]any{
 		"name":                    clientName,
 		"type":                    pingApplicationType,
 		"protocol":                pingProtocol,
 		"enabled":                 true,
 		"tokenEndpointAuthMethod": "CLIENT_SECRET_BASIC",
 		"grantTypes": []string{
-			pingGrantType,
+			strings.ToUpper(pingGrantType),
 		},
 	}
 
@@ -207,6 +211,7 @@ func (p *PingIdp) DeleteClientCredentialsPair(
 
 	if resp.StatusCode != http.StatusNoContent && resp.StatusCode != http.StatusOK {
 		body, _ := io.ReadAll(resp.Body)
+
 		return fmt.Errorf("failed to delete application: status %d, body: %s",
 			resp.StatusCode, string(body))
 	}
@@ -220,7 +225,7 @@ func (p *PingIdp) getAccessToken(ctx context.Context) (string, error) {
 		p.settings.EnvironmentID,
 		pingTokenEndpoint)
 
-	data := fmt.Sprintf("grant_type=%s", pingGrantType)
+	data := fmt.Sprintf("scope=%s&grant_type=%s", pingScopes, pingGrantType)
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, tokenURL,
 		strings.NewReader(data))
@@ -239,6 +244,7 @@ func (p *PingIdp) getAccessToken(ctx context.Context) (string, error) {
 
 	if resp.StatusCode != http.StatusOK {
 		body, _ := io.ReadAll(resp.Body)
+
 		return "", fmt.Errorf("failed to get token: status %d, body: %s",
 			resp.StatusCode, string(body))
 	}
@@ -260,8 +266,8 @@ func (p *PingIdp) getApplicationSecret(ctx context.Context, accessToken, applica
 		fmt.Sprintf(pingApplicationsAPI, p.settings.EnvironmentID),
 		applicationID)
 
-	secretData := map[string]interface{}{
-		"previous": map[string]interface{}{
+	secretData := map[string]any{
+		"previous": map[string]any{
 			"expiresAt": nil,
 		},
 	}
@@ -288,6 +294,7 @@ func (p *PingIdp) getApplicationSecret(ctx context.Context, accessToken, applica
 
 	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusCreated {
 		body, _ := io.ReadAll(resp.Body)
+
 		return "", fmt.Errorf("failed to get application secret: status %d, body: %s",
 			resp.StatusCode, string(body))
 	}
