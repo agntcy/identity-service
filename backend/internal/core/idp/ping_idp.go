@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"slices"
 	"strings"
 	"time"
 
@@ -38,7 +39,7 @@ type PingIdp struct {
 func NewPingIdp(settings *types.PingIdpSettings) Idp {
 	region := "com"
 	if settings != nil && settings.Region != "" &&
-		strings.Contains(pingRegions, settings.Region) {
+		slices.Contains(strings.Split(pingRegions, ","), settings.Region) {
 		region = settings.Region
 	}
 
