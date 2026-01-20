@@ -81,9 +81,11 @@ func (r *repository) UpdateIssuerSettings(
 			return fmt.Errorf("there was an error updating the settings: %w", updated.Error)
 		}
 
-		err = tx.Where("id = ?", previousIdpSettingsID).Delete(emptyIdpSettings).Error
-		if err != nil {
-			return err
+		if previousIdpSettingsID != uuid.Nil {
+			err = tx.Where("id = ?", previousIdpSettingsID).Delete(emptyIdpSettings).Error
+			if err != nil {
+				return err
+			}
 		}
 
 		return nil
