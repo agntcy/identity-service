@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { GetSessionResponse } from '@/types/api/iam';
-import { IssuerSettings } from '@/types/api/settings';
-import { create } from 'zustand';
+import {GetSessionResponse} from '@/types/api/iam';
+import {IssuerSettings} from '@/types/api/settings';
+import {create} from 'zustand';
 
 type SettingsStore = {
   isEmptyIdp: boolean;
@@ -30,11 +30,11 @@ export const useSettingsStore = create<SettingsStore>(
     isAdmin: false,
     totalAgenticServices: 0,
     totalPolicies: 0,
-    setTotalAgenticServices: (total: number) => set(() => ({ totalAgenticServices: total })),
-    setTotalPolicies: (total: number) => set(() => ({ totalPolicies: total })),
-    setIssuerSettings: (issuerSettings?: IssuerSettings) => set(() => ({ issuerSettings })),
-    setIsAdmin: (value: boolean) => set(() => ({ isAdmin: value })),
-    setSession: (session: GetSessionResponse) => set(() => ({ session })),
-    setIsEmptyIdp: (value: boolean) => set(() => ({ isEmptyIdp: value }))
+    setTotalAgenticServices: (total: number) => set(() => ({totalAgenticServices: total})),
+    setTotalPolicies: (total: number) => set(() => ({totalPolicies: total})),
+    setIssuerSettings: (issuerSettings?: IssuerSettings) => set(() => ({issuerSettings})),
+    setIsAdmin: (value: boolean) => set(() => ({isAdmin: value})),
+    setSession: (session: GetSessionResponse) => set(() => ({session})),
+    setIsEmptyIdp: (value: boolean) => set(() => ({isEmptyIdp: value}))
   })
 );
