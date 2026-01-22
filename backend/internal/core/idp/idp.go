@@ -24,6 +24,11 @@ type ClientCredentials struct {
 
 	// Issuer is the URL of the issuer.
 	Issuer string `json:"issuer"`
+
+	// Scopes is the optional list of scopes to request when
+	// obtaining tokens from the IdP. When empty, callers will
+	// fall back to the default token flow without explicit scopes.
+	Scopes []string `json:"scopes,omitempty"`
 }
 
 // Idp defines methods for interacting with identity providers (IdPs).

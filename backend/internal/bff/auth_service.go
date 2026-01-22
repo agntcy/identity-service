@@ -266,12 +266,27 @@ func (s *authService) issueAccessToken(
 ) (string, error) {
 	if issuer.IdpType != settingstypes.IDP_TYPE_SELF && clientCredentials.ClientSecret != "" {
 		// Issue a token from an IdP
-		accessToken, err := s.oidcAuthenticator.Token(
-			ctx,
-			clientCredentials.Issuer,
-			clientCredentials.ClientID,
-			clientCredentials.ClientSecret,
+		var (
+			accessToken string
+			err         error
 		)
+
+		if len(clientCredentials.Scopes) > 0 {
+			accessToken, err = s.oidcAuthenticator.TokenWithScopes(
+				ctx,
+				clientCredentials.Issuer,
+				clientCredentials.ClientID,
+				clientCredentials.ClientSecret,
+				clientCredentials.Scopes,
+			)
+		} else {
+			accessToken, err = s.oidcAuthenticator.Token(
+				ctx,
+				clientCredentials.Issuer,
+				clientCredentials.ClientID,
+				clientCredentials.ClientSecret,
+			)
+		}
 		if err != nil {
 			return "", fmt.Errorf("oidc authenticator failed to issue JWT: %w", err)
 		}

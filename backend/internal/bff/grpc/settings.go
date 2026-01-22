@@ -5,6 +5,7 @@ package grpc
 
 import (
 	"context"
+	"time"
 
 	identity_service_sdk_go "github.com/agntcy/identity-service/api/server/agntcy/identity/service/v1alpha1"
 	"github.com/agntcy/identity-service/internal/bff"
@@ -55,9 +56,17 @@ func (s *settingsService) SetIssuer(
 	ctx context.Context,
 	req *identity_service_sdk_go.SetIssuerRequest,
 ) (*identity_service_sdk_go.IssuerSettings, error) {
+	// For Microsoft Entra and other IdPs with propagation delays, this operation
+	// legitimately requires more time than a typical HTTP request.
+	// Create a new context detached from the HTTP request context to avoid premature cancellation,
+	// but preserve important values like request ID, logger, tenant, user, etc.
+	detachedCtx := context.WithoutCancel(ctx)
+	detachedCtx, cancel := context.WithTimeout(detachedCtx, 2*time.Minute)
+	defer cancel()
+
 	issuerSettings := converters.ToIssuerSettings(req.GetIssuerSettings())
 
-	updatedIssuerSettings, err := s.settingsSrv.SetIssuerSettings(ctx, issuerSettings)
+	updatedIssuerSettings, err := s.settingsSrv.SetIssuerSettings(detachedCtx, issuerSettings)
 	if err != nil {
 		return nil, grpcutil.Error(err)
 	}
