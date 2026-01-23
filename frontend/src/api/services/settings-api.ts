@@ -23,8 +23,15 @@ export class SettingsAPIClass extends SettingsApi.Api<Settings> {
   }) => void;
 
   public getSettings = this.v1Alpha1.getSettings;
-  public setUpIssuer = this.v1Alpha1.setUpIssuer;
   public settingsServiceSetApiKey = this.v1Alpha1.settingsServiceSetApiKey;
+
+  // Set up Issuer can take a long time (dynamic IdP provisioning
+  // and proof generation), so we override the default axios timeout
+  // for this specific call to avoid premature UI failures.
+  public setUpIssuer = (
+    body: SettingsApi.V1Alpha1SetIssuerRequest,
+    params: SettingsApi.RequestParams = {}
+  ) => this.v1Alpha1.setUpIssuer(body, {timeout: 120000, ...params});
 
   protected handleLogout = () => {
     this.logout?.({

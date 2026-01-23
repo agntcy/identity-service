@@ -23,7 +23,6 @@ import (
 const (
 	graphScope          = "https://graph.microsoft.com/.default"
 	passwordDisplayName = "identity-service"
-	passwordLifetime    = 365 * 24 * time.Hour
 )
 
 type EntraIdp struct {
@@ -61,33 +60,97 @@ func (e *EntraIdp) TestSettings(ctx context.Context) error {
 }
 
 func (e *EntraIdp) CreateClientCredentialsPair(ctx context.Context) (*ClientCredentials, error) {
-	log.FromContext(ctx).Debug("Creating client credentials pair for Entra ID using static settings (Graph scope)")
+	logger := log.FromContext(ctx)
+	logger.Debug("Creating client credentials pair for Entra ID using dynamic app provisioning")
 
 	if err := e.validateSettings(); err != nil {
 		return nil, err
 	}
 
-	issuer := fmt.Sprintf("https://login.microsoftonline.com/%s/v2.0", e.settings.TenantID)
+	client, err := e.graphClient()
+	if err != nil {
+		return nil, fmt.Errorf("failed to initialize Microsoft Graph client: %w", err)
+	}
 
-	log.FromContext(ctx).
-		WithField("client_id", e.settings.ClientID).
+	app, secret, err := e.createApplication(ctx, client)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create Entra application: %w", err)
+	}
+
+	if app == nil || app.GetId() == nil || app.GetAppId() == nil {
+		return nil, errors.New("application response is missing identifiers")
+	}
+
+	appObjectID := *app.GetId()
+	appID := *app.GetAppId()
+
+	issuer := fmt.Sprintf("https://login.microsoftonline.com/%s/v2.0", e.settings.TenantID)
+	scopes := []string{fmt.Sprintf("api://%s/.default", appID)}
+
+	logger.
+		WithField("app_id", appID).
+		WithField("app_object_id", appObjectID).
 		WithField("issuer", issuer).
-		WithField("scopes_count", len([]string{graphScope})).
-		Debug("Entra client credentials prepared from settings")
+		WithField("scopes_count", len(scopes)).
+		Info("Entra client credentials created via dynamic app provisioning")
 
 	return &ClientCredentials{
-		ClientID:     e.settings.ClientID,
-		ClientSecret: e.settings.ClientSecret,
+		ClientID:     appID,
+		ClientSecret: secret,
 		Issuer:       issuer,
-		Scopes:       []string{graphScope},
+		Scopes:       scopes,
 	}, nil
 }
 
 func (e *EntraIdp) DeleteClientCredentialsPair(ctx context.Context, clientCredentials *ClientCredentials) error {
-	// When using static client credentials from settings, there is nothing
-	// to clean up in Entra. Keep this a no-op to avoid accidentally
-	// deleting a manually managed application registration.
-	log.FromContext(ctx).Debug("DeleteClientCredentialsPair is a no-op for Entra ID static credentials")
+	logger := log.FromContext(ctx)
+	logger.Debug("Deleting client credentials pair for Entra ID")
+
+	if clientCredentials == nil || clientCredentials.ClientID == "" {
+		return errors.New("client credentials are not provided or client_id is empty")
+	}
+
+	if err := e.validateSettings(); err != nil {
+		return err
+	}
+
+	client, err := e.graphClient()
+	if err != nil {
+		return fmt.Errorf("failed to initialize Microsoft Graph client: %w", err)
+	}
+
+	// Best-effort delete: application first, then service principal. Missing
+	// resources are treated as successful deletion.
+	appObjectID, err := e.lookupApplicationObjectID(ctx, client, clientCredentials.ClientID)
+	if err != nil {
+		return fmt.Errorf("failed to lookup application object ID: %w", err)
+	}
+
+	if appObjectID != "" {
+		logger.WithField("app_object_id", appObjectID).Debug("Deleting Entra application")
+		if err := client.Applications().ByApplicationId(appObjectID).Delete(ctx, nil); err != nil {
+			if !isNotFoundError(err) {
+				return fmt.Errorf("failed to delete application: %w", err)
+			}
+			logger.WithError(err).WithField("app_object_id", appObjectID).Debug("Entra application already deleted")
+		}
+	}
+
+	spObjectID, err := e.lookupServicePrincipalObjectID(ctx, client, clientCredentials.ClientID)
+	if err != nil {
+		return fmt.Errorf("failed to lookup service principal object ID: %w", err)
+	}
+
+	if spObjectID != "" {
+		logger.WithField("service_principal_id", spObjectID).Debug("Deleting Entra service principal")
+		if err := client.ServicePrincipals().ByServicePrincipalId(spObjectID).Delete(ctx, nil); err != nil {
+			if !isNotFoundError(err) {
+				return fmt.Errorf("failed to delete service principal: %w", err)
+			}
+			logger.WithError(err).WithField("service_principal_id", spObjectID).Debug("Entra service principal already deleted")
+		}
+	}
+
 	return nil
 }
 
@@ -122,7 +185,7 @@ func (e *EntraIdp) graphClient() (*msgraphsdkgo.GraphServiceClient, error) {
 	return client, nil
 }
 
-func (e *EntraIdp) createApplication(ctx context.Context, client *msgraphsdkgo.GraphServiceClient) (models.Applicationable, error) {
+func (e *EntraIdp) createApplication(ctx context.Context, client *msgraphsdkgo.GraphServiceClient) (models.Applicationable, string, error) {
 	displayName := getName()
 	signInAudience := "AzureADMyOrg"
 	requestedAccessTokenVersion := int32(2)
@@ -135,6 +198,15 @@ func (e *EntraIdp) createApplication(ctx context.Context, client *msgraphsdkgo.G
 	apiConfig.SetRequestedAccessTokenVersion(&requestedAccessTokenVersion)
 	app.SetApi(apiConfig)
 
+	// Configure an initial password credential so that the application is
+	// immediately usable with client-credentials flow and the secret is
+	// returned in the create response (secretText).
+	passwordCredential := models.NewPasswordCredential()
+	passwordName := passwordDisplayName
+	passwordCredential.SetDisplayName(&passwordName)
+	passwordCredentials := []models.PasswordCredentialable{passwordCredential}
+	app.SetPasswordCredentials(passwordCredentials)
+
 	log.FromContext(ctx).
 		WithField("requested_access_token_version", requestedAccessTokenVersion).
 		WithField("display_name", displayName).
@@ -142,47 +214,26 @@ func (e *EntraIdp) createApplication(ctx context.Context, client *msgraphsdkgo.G
 
 	createdApp, err := client.Applications().Post(ctx, app, nil)
 	if err != nil {
-		return nil, fmt.Errorf("graph applications post failed: %w", err)
+		return nil, "", fmt.Errorf("graph applications post failed: %w", err)
 	}
 
 	if createdApp == nil || createdApp.GetId() == nil || createdApp.GetAppId() == nil {
-		return nil, errors.New("application response is missing identifiers")
+		return nil, "", errors.New("application response is missing identifiers")
 	}
 
-	// Update Application ID URI with the actual appId (needed for app-scoped tokens)
+	// Extract the generated secret from the password credentials.
+	creds := createdApp.GetPasswordCredentials()
+	if len(creds) == 0 || creds[0] == nil || creds[0].GetSecretText() == nil || *creds[0].GetSecretText() == "" {
+		return nil, "", errors.New("application response did not include password secret")
+	}
+
+	// Update Application ID URI with the actual appId (needed for app-scoped tokens).
 	appID := *createdApp.GetAppId()
 	objectID := *createdApp.GetId()
 
 	updateApp := models.NewApplication()
 	updateApp.SetIdentifierUris([]string{fmt.Sprintf("api://%s", appID)})
 
-	updatedApp, err := client.Applications().ByApplicationId(objectID).Patch(ctx, updateApp, nil)
-	if err != nil {
-		log.FromContext(ctx).WithError(err).Warn("Failed to set Application ID URI, continuing anyway")
-		return createdApp, nil
-	}
-
-	return updatedApp, nil
-}
-
-func (e *EntraIdp) addPasswordCredential(ctx context.Context, client *msgraphsdkgo.GraphServiceClient, applicationID string) (string, error) {
-	if applicationID == "" {
-		return "", errors.New("application object ID is empty")
-	}
-
-	now := time.Now().UTC()
-	end := now.Add(passwordLifetime)
-
-	passwordCredential := models.NewPasswordCredential()
-	displayName := passwordDisplayName
-	passwordCredential.SetDisplayName(&displayName)
-	passwordCredential.SetStartDateTime(&now)
-	passwordCredential.SetEndDateTime(&end)
-
-	requestBody := applications.NewItemAddPasswordPostRequestBody()
-	requestBody.SetPasswordCredential(passwordCredential)
-
-	// Keep retry window within extended gRPC deadline (30s) to handle Microsoft Entra replication lag
 	const (
 		maxAttempts = 8
 		delay       = 3 * time.Second
@@ -194,45 +245,50 @@ func (e *EntraIdp) addPasswordCredential(ctx context.Context, client *msgraphsdk
 		if attempt > 0 {
 			select {
 			case <-ctx.Done():
-				return "", ctx.Err()
+				return nil, "", ctx.Err()
 			case <-time.After(delay):
 			}
 		}
 
-		response, err := client.Applications().ByApplicationId(applicationID).AddPassword().Post(ctx, requestBody, nil)
+		updatedApp, err := client.Applications().ByApplicationId(objectID).Patch(ctx, updateApp, nil)
 		if err == nil {
-			if response == nil || response.GetSecretText() == nil || *response.GetSecretText() == "" {
-				return "", errors.New("password response did not include secret text")
+			log.FromContext(ctx).
+				WithField("application_id", objectID).
+				WithField("app_id_uri", fmt.Sprintf("api://%s", appID)).
+				WithField("attempt", attempt+1).
+				Info("Entra Application ID URI set successfully")
+
+			// Ensure a corresponding service principal exists for this
+			// application so that client-credentials flow can succeed
+			// without relying on implicit provisioning.
+			if err := e.ensureServicePrincipal(ctx, client, appID); err != nil {
+				return nil, "", fmt.Errorf("failed to ensure service principal: %w", err)
 			}
 
-			secretText := *response.GetSecretText()
-			log.FromContext(ctx).
-				WithField("attempt", attempt+1).
-				WithField("application_id", applicationID).
-				WithField("secret_length", len(secretText)).
-				Info("Entra addPassword succeeded")
-
-			return secretText, nil
+			// Return the originally created application object, which is
+			// guaranteed to have both Id and AppId populated.
+			_ = updatedApp // updatedApp is not used beyond confirming success.
+			return createdApp, *creds[0].GetSecretText(), nil
 		}
 
 		lastErr = err
 
 		log.FromContext(ctx).
 			WithError(err).
+			WithField("application_id", objectID).
 			WithField("attempt", attempt+1).
-			WithField("application_id", applicationID).
-			Warn("Entra addPassword attempt failed")
+			Warn("Failed to set Application ID URI, retrying if propagation pending")
 
 		if !isPropagationPendingError(err) {
-			return "", fmt.Errorf("graph addPassword post failed: %w", err)
+			break
 		}
 	}
 
-	if lastErr == nil {
-		return "", errors.New("password creation failed without error details")
+	if lastErr != nil {
+		return nil, "", fmt.Errorf("failed to set Application ID URI after %d attempts: %w", maxAttempts, lastErr)
 	}
 
-	return "", fmt.Errorf("graph addPassword post failed after %d attempts: %w", maxAttempts, lastErr)
+	return createdApp, *creds[0].GetSecretText(), nil
 }
 
 func isPropagationPendingError(err error) bool {
@@ -252,6 +308,97 @@ func isPropagationPendingError(err error) bool {
 	default:
 		return false
 	}
+}
+
+func isNotFoundError(err error) bool {
+	if err == nil {
+		return false
+	}
+
+	msg := err.Error()
+
+	if strings.Contains(msg, "does not exist") || strings.Contains(msg, "Request_ResourceNotFound") {
+		return true
+	}
+
+	return false
+}
+
+// ensureServicePrincipal guarantees that a service principal exists for the
+// given appID. This is required for the client-credentials flow to work,
+// otherwise Entra returns AADSTS7000229 (missing service principal) or
+// related invalid_client errors.
+func (e *EntraIdp) ensureServicePrincipal(
+	ctx context.Context,
+	client *msgraphsdkgo.GraphServiceClient,
+	appID string,
+) error {
+	logger := log.FromContext(ctx)
+
+	if appID == "" {
+		return errors.New("appID is empty when ensuring service principal")
+	}
+
+	// If a service principal already exists, nothing to do.
+	if existingID, err := e.lookupServicePrincipalObjectID(ctx, client, appID); err != nil {
+		return fmt.Errorf("failed to lookup existing service principal: %w", err)
+	} else if existingID != "" {
+		logger.WithField("service_principal_id", existingID).Debug("Service principal already exists for application")
+		return nil
+	}
+
+	sp := models.NewServicePrincipal()
+	sp.SetAppId(&appID)
+
+	const (
+		maxAttempts = 8
+		delay       = 3 * time.Second
+	)
+
+	var lastErr error
+
+	for attempt := 0; attempt < maxAttempts; attempt++ {
+		if attempt > 0 {
+			select {
+			case <-ctx.Done():
+				return ctx.Err()
+			case <-time.After(delay):
+			}
+		}
+
+		createdSp, err := client.ServicePrincipals().Post(ctx, sp, nil)
+		if err == nil {
+			id := ""
+			if createdSp != nil && createdSp.GetId() != nil {
+				id = *createdSp.GetId()
+			}
+
+			logger.
+				WithField("service_principal_id", id).
+				WithField("app_id", appID).
+				WithField("attempt", attempt+1).
+				Info("Service principal created for Entra application")
+			return nil
+		}
+
+		lastErr = err
+
+		logger.
+			WithError(err).
+			WithField("app_id", appID).
+			WithField("attempt", attempt+1).
+			Warn("Failed to create service principal, retrying if propagation pending")
+
+		if !isPropagationPendingError(err) {
+			break
+		}
+	}
+
+	if lastErr != nil {
+		return fmt.Errorf("failed to create service principal after %d attempts: %w", maxAttempts, lastErr)
+	}
+
+	return nil
 }
 
 func (e *EntraIdp) lookupApplicationObjectID(ctx context.Context, client *msgraphsdkgo.GraphServiceClient, clientID string) (string, error) {

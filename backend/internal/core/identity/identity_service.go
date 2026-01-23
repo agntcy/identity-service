@@ -314,7 +314,7 @@ func (s *service) generateProof(
 					// Respect context cancellation and cap total wait time.
 					select {
 					case <-ctx.Done():
-						return "", ctx.Err()
+						return nil, ctx.Err()
 					case <-time.After(delay):
 					}
 
