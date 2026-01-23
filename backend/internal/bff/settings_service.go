@@ -168,6 +168,8 @@ func (s *settingsService) updateIssuerSettings(
 		if err := s.validatePingUpdateSettings(updatePayload.PingIdpSettings); err != nil {
 			return nil, err
 		}
+
+		issuerSettings.PingIdpSettings.ClientSecret = updatePayload.PingIdpSettings.ClientSecret
 	default:
 		return nil, errutil.InvalidRequest(
 			"settings.updateNotSupported",
