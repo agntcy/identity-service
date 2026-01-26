@@ -27,7 +27,7 @@ jobs:
         uses: step-security/harden-runner@df199fb7be9f65074067a9eb93f12bb4c5547cf2 # v2.13.3
         with:
           egress-policy: audit
-      - uses: actions/checkout@v5.0.0
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: 🧹 Conventional Commits
