@@ -220,9 +220,10 @@ Follow these steps to configure and register your Identity Provider:
    - **Environment ID:** Enter the Environment ID from your PingOne console. This uniquely identifies your PingOne environment.
      - _Example:_ `abc123-def4-5678-90ab-cdef12345678`
    - **Region:** Specify the region where your PingOne environment is hosted. Common values are:
-     - `com` for North America (https://auth.pingone.com)
-     - `eu` for Europe (https://auth.pingone.eu)
-     - `asia` for Asia Pacific (https://auth.pingone.asia)
+     - `com` for North America (<https://auth.pingone.com>)
+     - `eu` for Europe (<https://auth.pingone.eu>)
+     - com.au for Australia (<https://auth.pingone.com.au>)
+     - ca for Canada (<https://auth.pingone.ca>)
    - **Client ID:** Input the Client ID from your worker application. This uniquely identifies your application within PingOne.
      - _Example:_ `a1b2c3d4-e5f6-7890-abcd-ef1234567890`
    - **Client Secret:** Provide the Client Secret from your worker application. This is a sensitive credential used for authenticating API requests. For security purposes, the input in this field will be masked (displayed as asterisks).
