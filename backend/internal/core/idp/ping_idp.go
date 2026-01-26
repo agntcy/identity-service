@@ -4,6 +4,7 @@
 package idp
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
@@ -135,7 +136,7 @@ func (p *PingIdp) CreateClientCredentialsPair(
 	}
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, applicationsURL,
-		strings.NewReader(string(jsonData)))
+		bytes.NewReader(jsonData))
 	if err != nil {
 		return nil, fmt.Errorf("failed to create application request: %w", err)
 	}
@@ -279,7 +280,7 @@ func (p *PingIdp) getApplicationSecret(ctx context.Context, accessToken, applica
 	}
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, secretURL,
-		strings.NewReader(string(jsonData)))
+		bytes.NewReader(jsonData))
 	if err != nil {
 		return "", fmt.Errorf("failed to create secret request: %w", err)
 	}
