@@ -488,6 +488,26 @@ func TestSettingsService_SetIssuerSettings_should_not_update_when_payload_is_emp
 				"Invalid Keycloak settings payload. Make sure the client secret is not empty.",
 			),
 		},
+		"nil Ping settings payload": {
+			input: &settingstypes.IssuerSettings{
+				IdpType:         settingstypes.IDP_TYPE_PING,
+				PingIdpSettings: nil,
+			},
+			err: errutil.ValidationFailed(
+				"settings.invalidPingUpdatePayload",
+				"Invalid Ping settings payload.",
+			),
+		},
+		"empty client secret in Ping settings payload": {
+			input: &settingstypes.IssuerSettings{
+				IdpType:         settingstypes.IDP_TYPE_PING,
+				PingIdpSettings: &settingstypes.PingIdpSettings{ClientSecret: ""},
+			},
+			err: errutil.ValidationFailed(
+				"settings.invalidPingUpdatePayload",
+				"Invalid Ping settings payload.",
+			),
+		},
 	}
 
 	for tn, tc := range testCases {
