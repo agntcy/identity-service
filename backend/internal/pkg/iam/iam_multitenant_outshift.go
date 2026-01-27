@@ -12,8 +12,8 @@ import (
 
 	"github.com/agntcy/identity-service/internal/core/iam/types"
 	"github.com/agntcy/identity-service/internal/pkg/ptrutil"
+	"github.com/agntcy/identity-service/pkg/cmd"
 	"github.com/agntcy/identity-service/pkg/log"
-	"github.com/agntcy/identity/pkg/cmd"
 	outshiftiam "github.com/cisco-eti/iam-sdk-golang/iam"
 )
 

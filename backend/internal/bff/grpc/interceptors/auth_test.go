@@ -47,6 +47,7 @@ func TestAuthInterceptor_Unary_should_allow_services_without_auth(t *testing.T) 
 			ctx := context.Background()
 			handler := mockHandler{}
 			handler.On("Handle", ctx, mock.Anything).Return(nil, nil)
+
 			sut := interceptors.NewAuthInterceptor(nil)
 
 			_, err := sut.Unary(ctx, nil, &grpc.UnaryServerInfo{

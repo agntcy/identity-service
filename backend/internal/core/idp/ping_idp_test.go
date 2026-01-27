@@ -13,6 +13,7 @@ import (
 
 	"github.com/agntcy/identity-service/internal/core/idp"
 	"github.com/agntcy/identity-service/internal/core/settings/types"
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -67,7 +68,7 @@ func TestPingIdp_TestSettings_Success(t *testing.T) {
 			// Mock token endpoint
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusOK)
-			json.NewEncoder(w).Encode(map[string]interface{}{
+			_ = json.NewEncoder(w).Encode(map[string]interface{}{
 				"access_token": "mock-access-token",
 				"token_type":   "Bearer",
 				"expires_in":   3600,
@@ -76,7 +77,7 @@ func TestPingIdp_TestSettings_Success(t *testing.T) {
 			// Mock applications list endpoint
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusOK)
-			json.NewEncoder(w).Encode(map[string]interface{}{
+			_ = json.NewEncoder(w).Encode(map[string]interface{}{
 				"_embedded": map[string]interface{}{
 					"applications": []interface{}{},
 				},
@@ -180,16 +181,18 @@ func TestPingIdp_CreateClientCredentialsPair_Integration(t *testing.T) {
 
 	// Mock server setup
 	var tokenCalls, createAppCalls, secretCalls int
+
 	mockAppID := "mock-app-id"
-	mockSecret := "mock-client-secret"
+	mockSecret := uuid.NewString()
 
 	mockServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch {
 		case r.URL.Path == "/test-env/as/token":
 			tokenCalls++
+
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusOK)
-			json.NewEncoder(w).Encode(map[string]interface{}{
+			_ = json.NewEncoder(w).Encode(map[string]interface{}{
 				"access_token": "mock-access-token",
 				"token_type":   "Bearer",
 				"expires_in":   3600,
@@ -197,18 +200,20 @@ func TestPingIdp_CreateClientCredentialsPair_Integration(t *testing.T) {
 
 		case r.URL.Path == "/environments/test-env/applications" && r.Method == http.MethodPost:
 			createAppCalls++
+
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusCreated)
-			json.NewEncoder(w).Encode(map[string]interface{}{
+			_ = json.NewEncoder(w).Encode(map[string]interface{}{
 				"id":   mockAppID,
 				"name": "test-app",
 			})
 
 		case r.URL.Path == fmt.Sprintf("/environments/test-env/applications/%s/secret", mockAppID):
 			secretCalls++
+
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusOK)
-			json.NewEncoder(w).Encode(map[string]interface{}{
+			_ = json.NewEncoder(w).Encode(map[string]interface{}{
 				"secret": mockSecret,
 			})
 

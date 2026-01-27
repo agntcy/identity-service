@@ -94,6 +94,17 @@ func createKeyStore(t *testing.T) (*identitymocks.KeyStore, *jwk.Jwk) {
 	return keyStore, priv
 }
 
+func createKeyStoreWriteOnly(t *testing.T) (*identitymocks.KeyStore, *jwk.Jwk) {
+	t.Helper()
+
+	priv, _ := joseutil.GenerateJWK("RS256", "sig", "keyId")
+
+	keyStore := identitymocks.NewKeyStore(t)
+	keyStore.EXPECT().GenerateAndSaveKey(t.Context()).Return(priv, nil)
+
+	return keyStore, priv
+}
+
 func createKeyStoreThatFails(t *testing.T) (*identitymocks.KeyStore, *jwk.Jwk) {
 	t.Helper()
 
@@ -154,7 +165,7 @@ func TestRegisterIssuer_should_return_err_when_key_generation_fails(t *testing.T
 
 	sut := identity.NewService("", "", keyStore, nil, false)
 
-	_, err := sut.RegisterIssuer(t.Context(), nil, "")
+	_, err := sut.RegisterIssuer(t.Context(), &idp.ClientCredentials{Issuer: uuid.NewString()}, "")
 
 	assert.Error(t, err)
 	assert.ErrorContains(t, err, "error generating and saving key for issuer")
@@ -210,6 +221,75 @@ func TestRegisterIssuer_should_handle_issuer_already_exists_err_based_on_unique_
 			}
 		})
 	}
+}
+
+func TestRegisterIssuer_should_parse_common_name(t *testing.T) {
+	t.Parallel()
+
+	testCases := map[string]struct {
+		issuer             string
+		clientSecret       string
+		expectedCommonName string
+	}{
+		"should parse the issuer when client secret is not empty": {
+			issuer:             "https://cisco.com/path",
+			clientSecret:       "present_secret",
+			expectedCommonName: "cisco.com",
+		},
+		"should take the full issuer as common name when client secret is empty": {
+			issuer:             "this_is_an_issuer",
+			clientSecret:       "",
+			expectedCommonName: "this_is_an_issuer",
+		},
+	}
+
+	for tn, tc := range testCases {
+		t.Run(tn, func(t *testing.T) {
+			t.Parallel()
+
+			clientCred := &idp.ClientCredentials{
+				Issuer:       tc.issuer,
+				ClientID:     uuid.NewString(),
+				ClientSecret: tc.clientSecret,
+			}
+
+			var keyStore identity.KeyStore
+
+			if tc.clientSecret == "" {
+				ks, priv := createKeyStore(t)
+				ks.EXPECT().GenerateAndSaveKey(t.Context()).Return(priv, nil)
+				keyStore = ks
+			} else {
+				keyStore, _ = createKeyStoreWriteOnly(t)
+			}
+
+			ts, host, port := createTestServerWithReqAssert[any](t, "", nil)
+			defer ts.Close()
+
+			idpAuthenticator := oidctesting.NewValidAuthenticator()
+
+			sut := identity.NewService(host, port, keyStore, idpAuthenticator, false)
+
+			issuer, err := sut.RegisterIssuer(t.Context(), clientCred, "")
+
+			assert.NoError(t, err)
+			assert.Equal(t, tc.expectedCommonName, issuer.CommonName)
+		})
+	}
+}
+
+func TestRegisterIssuer_should_return_error_when_common_name_fails_to_parse(t *testing.T) {
+	t.Parallel()
+
+	emptyIssuerURL := ""
+	sut := identity.NewService("", "", nil, nil, false)
+
+	_, err := sut.RegisterIssuer(t.Context(), &idp.ClientCredentials{
+		Issuer:       emptyIssuerURL,
+		ClientSecret: "secret",
+	}, "")
+
+	assert.ErrorContains(t, err, fmt.Sprintf("error parsing common name for issuer %s", emptyIssuerURL))
 }
 
 func TestGenerateID(t *testing.T) {
