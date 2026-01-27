@@ -16,6 +16,8 @@ github.com/agntcy/identity v0.0.16 h1:wcETszP6ZT+PWrikoe+S1QSrY6OrrAbrBcsnhUQsnS
 github.com/agntcy/identity v0.0.16/go.mod h1:zm7PjBID4Saen23vaRecrs6k50WOvgY9aATWB9hkUQM=
 github.com/agntcy/identity v0.0.21 h1:LhVJWFz/gn//M8z+vwbdMJAb2X+PLmCisVqq7jg4yss=
 github.com/agntcy/identity v0.0.21/go.mod h1:Zw4UYdHXrwnkwPgqwra9YGYGoR+N4t8bL4gyL2tMuSo=
+github.com/agntcy/identity v0.0.22 h1:LxjdR4Anl9Zf2cVN67tkOZ4YIoRZTWNRS8aIuKLOv0I=
+github.com/agntcy/identity v0.0.22/go.mod h1:Zw4UYdHXrwnkwPgqwra9YGYGoR+N4t8bL4gyL2tMuSo=
 github.com/agntcy/identity/api/client v0.0.0-20250729164130-011baf2c4074 h1:OYi1EsKK/eq5JhAYHdINWceCZSpZ6N9xro58IdpFxK8=
 github.com/agntcy/identity/api/client v0.0.0-20250729164130-011baf2c4074/go.mod h1:hpLI3UidcyPaOee9xtj7h4bsxUY7eEaX9E/DLLJKvGo=
 github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 h1:DklsrG3dyBCFEj5IhUbnKptjxatkF07cF2ak3yi77so=

@@ -20,7 +20,7 @@ require (
 require (
 	github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.13.1
 	github.com/SherClockHolmes/webpush-go v1.4.0
-	github.com/agntcy/identity v0.0.21
+	github.com/agntcy/identity v0.0.22
 	github.com/agntcy/identity/api/client v0.0.0-20250729164130-011baf2c4074
 	github.com/aws/aws-sdk-go-v2 v1.38.1
 	github.com/aws/aws-sdk-go-v2/config v1.31.2
