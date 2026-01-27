@@ -272,12 +272,12 @@ func (s *authService) issueAccessToken(
 		)
 
 		if len(clientCredentials.Scopes) > 0 {
-			accessToken, err = s.oidcAuthenticator.TokenWithScopes(
+			accessToken, err = s.oidcAuthenticator.Token(
 				ctx,
 				clientCredentials.Issuer,
 				clientCredentials.ClientID,
 				clientCredentials.ClientSecret,
-				clientCredentials.Scopes,
+				oidc.WithScopes(clientCredentials.Scopes),
 			)
 		} else {
 			accessToken, err = s.oidcAuthenticator.Token(

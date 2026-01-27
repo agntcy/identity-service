@@ -325,12 +325,12 @@ func (s *service) generateProof(
 				}
 
 				logger.WithField("attempt", attempt+1).Debug("generateProof calling TokenWithScopes")
-				proofValue, err = s.oidcAuthenticator.TokenWithScopes(
+				proofValue, err = s.oidcAuthenticator.Token(
 					ctx,
 					clientCredentials.Issuer,
 					clientCredentials.ClientID,
 					clientCredentials.ClientSecret,
-					clientCredentials.Scopes,
+					oidc.WithScopes(clientCredentials.Scopes),
 				)
 
 				if err == nil {
