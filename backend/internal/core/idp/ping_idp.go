@@ -152,6 +152,7 @@ func (p *PingIdp) CreateClientCredentialsPair(
 
 	if resp.StatusCode != http.StatusCreated {
 		body, _ := io.ReadAll(resp.Body)
+
 		return nil, fmt.Errorf("failed to create application: status %d, body: %s",
 			resp.StatusCode, string(body))
 	}

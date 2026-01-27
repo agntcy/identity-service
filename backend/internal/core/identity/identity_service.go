@@ -15,7 +15,6 @@ import (
 	badgetypes "github.com/agntcy/identity-service/internal/core/badge/types"
 	idpcore "github.com/agntcy/identity-service/internal/core/idp"
 	"github.com/agntcy/identity-service/internal/pkg/convertutil"
-	"github.com/agntcy/identity-service/internal/pkg/httputil"
 	"github.com/agntcy/identity-service/internal/pkg/ptrutil"
 	"github.com/agntcy/identity-service/pkg/log"
 	idsdk "github.com/agntcy/identity/api/client/client/id_service"
@@ -106,14 +105,17 @@ func (s *service) RegisterIssuer(
 	ctx context.Context,
 	clientCredentials *idpcore.ClientCredentials, organizationID string,
 ) (*Issuer, error) {
+	// Get common name for the issuer
+	commonName, err := s.getCommonName(clientCredentials)
+	if err != nil {
+		return nil, fmt.Errorf("error parsing common name for issuer %s: %w", clientCredentials.Issuer, err)
+	}
+
 	// Generate a new key for the issuer
 	key, err := s.keyStore.GenerateAndSaveKey(ctx)
 	if err != nil || key == nil {
 		return nil, fmt.Errorf("error generating and saving key for issuer: %w", err)
 	}
-
-	// Get common name for the issuer
-	commonName := s.getCommonName(clientCredentials)
 
 	// Prepare the issuer registration parameters
 	issuer := &identitymodels.V1alpha1Issuer{
@@ -257,12 +259,12 @@ func (s *service) PublishVerifiableCredential(
 
 func (s *service) getCommonName(
 	clientCredentials *idpcore.ClientCredentials,
-) string {
+) (string, error) {
 	if clientCredentials.ClientSecret != "" {
-		return httputil.Hostname(clientCredentials.Issuer)
+		return oidc.ParseCommonName(clientCredentials.Issuer)
 	}
 
-	return clientCredentials.Issuer
+	return clientCredentials.Issuer, nil
 }
 
 func (s *service) generateProof(
