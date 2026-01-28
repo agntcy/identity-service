@@ -70,7 +70,7 @@ export const ContentDashboard = () => {
                 <iframe
                   width="100%"
                   height="100%"
-                  src="https://www.youtube.com/embed/CO3YwjRXyQo?autoplay=1"
+                  src="https://www.youtube.com/embed/L30-AQ74EJE?autoplay=1"
                   title="Identity Service Setup Walkthrough"
                   frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
