@@ -26,6 +26,9 @@ export const InformationProvider = ({idpSettings}: {idpSettings?: IssuerSettings
   const pingClientId = idpSettings?.pingIdpSettings?.clientId;
   const pingClientSecret = idpSettings?.pingIdpSettings?.clientSecret;
   const pingRegion = idpSettings?.pingIdpSettings?.region;
+  const tenantIdEntra = idpSettings?.entraIdpSettings?.tenantId;
+  const clientIdEntra = idpSettings?.entraIdpSettings?.clientId;
+  const clientSecretEntra = idpSettings?.entraIdpSettings?.clientSecret;
 
   const keyValuePairs = useMemo(() => {
     const temp: KeyValuePair[] = [];
@@ -105,6 +108,20 @@ export const InformationProvider = ({idpSettings}: {idpSettings?: IssuerSettings
         value: pingClientSecret ? `${'*'.repeat(15)}${pingClientSecret.slice(-5)}` : 'Not provided'
       });
     }
+    if (provider === IdpType.IDP_TYPE_ENTRA_ID) {
+      temp.push({
+        keyProp: 'Tenant ID',
+        value: tenantIdEntra || 'Not provided'
+      });
+      temp.push({
+        keyProp: 'Client ID',
+        value: clientIdEntra || 'Not provided'
+      });
+      temp.push({
+        keyProp: 'Client Secret',
+        value: clientSecretEntra ? `${'*'.repeat(15)}${clientSecretEntra.slice(-5)}` : 'Not provided'
+      });
+    }
     temp.push({
       keyProp: 'Type',
       value: <ProviderType type={provider} />
@@ -113,6 +130,8 @@ export const InformationProvider = ({idpSettings}: {idpSettings?: IssuerSettings
   }, [
     apiKey,
     clientId,
+    clientIdEntra,
+    clientSecretEntra,
     hostname,
     idpSettings?.keycloakIdpSettings?.baseUrl,
     idpSettings?.keycloakIdpSettings?.clientId,
@@ -127,7 +146,8 @@ export const InformationProvider = ({idpSettings}: {idpSettings?: IssuerSettings
     environmentId,
     pingClientId,
     pingClientSecret,
-    pingRegion
+    pingRegion,
+    tenantIdEntra
   ]);
 
   return (

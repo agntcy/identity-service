@@ -43,6 +43,8 @@ const (
 	IdpType_IDP_TYPE_KEYCLOAK IdpType = 5
 	// Idp Type Ping.
 	IdpType_IDP_TYPE_PING IdpType = 6
+	// Idp Type Entra ID
+	IdpType_IDP_TYPE_ENTRA_ID IdpType = 7
 )
 
 // Enum value maps for IdpType.
@@ -55,6 +57,7 @@ var (
 		4: "IDP_TYPE_SELF",
 		5: "IDP_TYPE_KEYCLOAK",
 		6: "IDP_TYPE_PING",
+		7: "IDP_TYPE_ENTRA_ID",
 	}
 	IdpType_value = map[string]int32{
 		"IDP_TYPE_UNSPECIFIED": 0,
@@ -64,6 +67,7 @@ var (
 		"IDP_TYPE_SELF":        4,
 		"IDP_TYPE_KEYCLOAK":    5,
 		"IDP_TYPE_PING":        6,
+		"IDP_TYPE_ENTRA_ID":    7,
 	}
 )
 
@@ -200,6 +204,67 @@ func (x *DuoIdpSettings) GetSecretKey() string {
 	return ""
 }
 
+// Entra ID (Azure AD) IdP Settings
+type EntraIdpSettings struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	TenantId      *string                `protobuf:"bytes,1,opt,name=tenant_id,json=tenantId,proto3,oneof" json:"tenant_id,omitempty"`
+	ClientId      *string                `protobuf:"bytes,2,opt,name=client_id,json=clientId,proto3,oneof" json:"client_id,omitempty"`
+	ClientSecret  *string                `protobuf:"bytes,3,opt,name=client_secret,json=clientSecret,proto3,oneof" json:"client_secret,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *EntraIdpSettings) Reset() {
+	*x = EntraIdpSettings{}
+	mi := &file_agntcy_identity_service_v1alpha1_settings_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *EntraIdpSettings) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*EntraIdpSettings) ProtoMessage() {}
+
+func (x *EntraIdpSettings) ProtoReflect() protoreflect.Message {
+	mi := &file_agntcy_identity_service_v1alpha1_settings_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use EntraIdpSettings.ProtoReflect.Descriptor instead.
+func (*EntraIdpSettings) Descriptor() ([]byte, []int) {
+	return file_agntcy_identity_service_v1alpha1_settings_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *EntraIdpSettings) GetTenantId() string {
+	if x != nil && x.TenantId != nil {
+		return *x.TenantId
+	}
+	return ""
+}
+
+func (x *EntraIdpSettings) GetClientId() string {
+	if x != nil && x.ClientId != nil {
+		return *x.ClientId
+	}
+	return ""
+}
+
+func (x *EntraIdpSettings) GetClientSecret() string {
+	if x != nil && x.ClientSecret != nil {
+		return *x.ClientSecret
+	}
+	return ""
+}
+
 // Issuer Settings
 type IssuerSettings struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -218,6 +283,8 @@ type IssuerSettings struct {
 	KeycloakIdpSettings *KeycloakIdpSettings `protobuf:"bytes,7,opt,name=keycloak_idp_settings,json=keycloakIdpSettings,proto3,oneof" json:"keycloak_idp_settings,omitempty"`
 	// Settings for the Ping Identity Provider.
 	PingIdpSettings *PingIdpSettings `protobuf:"bytes,10,opt,name=ping_idp_settings,json=pingIdpSettings,proto3,oneof" json:"ping_idp_settings,omitempty"`
+	// Settings for the Entra ID Identity Provider.
+	EntraIdpSettings *EntraIdpSettings `protobuf:"bytes,11,opt,name=entra_idp_settings,json=entraIdpSettings,proto3,oneof" json:"entra_idp_settings,omitempty"`
 	// CreatedAt records the timestamp of when the IssuerSettings was initially created
 	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
 	// UpdatedAt records the timestamp of the last update to the IssuerSettings
@@ -228,7 +295,7 @@ type IssuerSettings struct {
 
 func (x *IssuerSettings) Reset() {
 	*x = IssuerSettings{}
-	mi := &file_agntcy_identity_service_v1alpha1_settings_proto_msgTypes[2]
+	mi := &file_agntcy_identity_service_v1alpha1_settings_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -240,7 +307,7 @@ func (x *IssuerSettings) String() string {
 func (*IssuerSettings) ProtoMessage() {}
 
 func (x *IssuerSettings) ProtoReflect() protoreflect.Message {
-	mi := &file_agntcy_identity_service_v1alpha1_settings_proto_msgTypes[2]
+	mi := &file_agntcy_identity_service_v1alpha1_settings_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -253,7 +320,7 @@ func (x *IssuerSettings) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IssuerSettings.ProtoReflect.Descriptor instead.
 func (*IssuerSettings) Descriptor() ([]byte, []int) {
-	return file_agntcy_identity_service_v1alpha1_settings_proto_rawDescGZIP(), []int{2}
+	return file_agntcy_identity_service_v1alpha1_settings_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *IssuerSettings) GetIssuerId() string {
@@ -305,6 +372,13 @@ func (x *IssuerSettings) GetPingIdpSettings() *PingIdpSettings {
 	return nil
 }
 
+func (x *IssuerSettings) GetEntraIdpSettings() *EntraIdpSettings {
+	if x != nil {
+		return x.EntraIdpSettings
+	}
+	return nil
+}
+
 func (x *IssuerSettings) GetCreatedAt() *timestamppb.Timestamp {
 	if x != nil {
 		return x.CreatedAt
@@ -332,7 +406,7 @@ type KeycloakIdpSettings struct {
 
 func (x *KeycloakIdpSettings) Reset() {
 	*x = KeycloakIdpSettings{}
-	mi := &file_agntcy_identity_service_v1alpha1_settings_proto_msgTypes[3]
+	mi := &file_agntcy_identity_service_v1alpha1_settings_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -344,7 +418,7 @@ func (x *KeycloakIdpSettings) String() string {
 func (*KeycloakIdpSettings) ProtoMessage() {}
 
 func (x *KeycloakIdpSettings) ProtoReflect() protoreflect.Message {
-	mi := &file_agntcy_identity_service_v1alpha1_settings_proto_msgTypes[3]
+	mi := &file_agntcy_identity_service_v1alpha1_settings_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -357,7 +431,7 @@ func (x *KeycloakIdpSettings) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use KeycloakIdpSettings.ProtoReflect.Descriptor instead.
 func (*KeycloakIdpSettings) Descriptor() ([]byte, []int) {
-	return file_agntcy_identity_service_v1alpha1_settings_proto_rawDescGZIP(), []int{3}
+	return file_agntcy_identity_service_v1alpha1_settings_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *KeycloakIdpSettings) GetBaseUrl() string {
@@ -400,7 +474,7 @@ type OktaIdpSettings struct {
 
 func (x *OktaIdpSettings) Reset() {
 	*x = OktaIdpSettings{}
-	mi := &file_agntcy_identity_service_v1alpha1_settings_proto_msgTypes[4]
+	mi := &file_agntcy_identity_service_v1alpha1_settings_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -412,7 +486,7 @@ func (x *OktaIdpSettings) String() string {
 func (*OktaIdpSettings) ProtoMessage() {}
 
 func (x *OktaIdpSettings) ProtoReflect() protoreflect.Message {
-	mi := &file_agntcy_identity_service_v1alpha1_settings_proto_msgTypes[4]
+	mi := &file_agntcy_identity_service_v1alpha1_settings_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -425,7 +499,7 @@ func (x *OktaIdpSettings) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OktaIdpSettings.ProtoReflect.Descriptor instead.
 func (*OktaIdpSettings) Descriptor() ([]byte, []int) {
-	return file_agntcy_identity_service_v1alpha1_settings_proto_rawDescGZIP(), []int{4}
+	return file_agntcy_identity_service_v1alpha1_settings_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *OktaIdpSettings) GetOrgUrl() string {
@@ -460,7 +534,7 @@ type OryIdpSettings struct {
 
 func (x *OryIdpSettings) Reset() {
 	*x = OryIdpSettings{}
-	mi := &file_agntcy_identity_service_v1alpha1_settings_proto_msgTypes[5]
+	mi := &file_agntcy_identity_service_v1alpha1_settings_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -472,7 +546,7 @@ func (x *OryIdpSettings) String() string {
 func (*OryIdpSettings) ProtoMessage() {}
 
 func (x *OryIdpSettings) ProtoReflect() protoreflect.Message {
-	mi := &file_agntcy_identity_service_v1alpha1_settings_proto_msgTypes[5]
+	mi := &file_agntcy_identity_service_v1alpha1_settings_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -485,7 +559,7 @@ func (x *OryIdpSettings) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OryIdpSettings.ProtoReflect.Descriptor instead.
 func (*OryIdpSettings) Descriptor() ([]byte, []int) {
-	return file_agntcy_identity_service_v1alpha1_settings_proto_rawDescGZIP(), []int{5}
+	return file_agntcy_identity_service_v1alpha1_settings_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *OryIdpSettings) GetProjectSlug() string {
@@ -515,7 +589,7 @@ type PingIdpSettings struct {
 
 func (x *PingIdpSettings) Reset() {
 	*x = PingIdpSettings{}
-	mi := &file_agntcy_identity_service_v1alpha1_settings_proto_msgTypes[6]
+	mi := &file_agntcy_identity_service_v1alpha1_settings_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -527,7 +601,7 @@ func (x *PingIdpSettings) String() string {
 func (*PingIdpSettings) ProtoMessage() {}
 
 func (x *PingIdpSettings) ProtoReflect() protoreflect.Message {
-	mi := &file_agntcy_identity_service_v1alpha1_settings_proto_msgTypes[6]
+	mi := &file_agntcy_identity_service_v1alpha1_settings_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -540,7 +614,7 @@ func (x *PingIdpSettings) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PingIdpSettings.ProtoReflect.Descriptor instead.
 func (*PingIdpSettings) Descriptor() ([]byte, []int) {
-	return file_agntcy_identity_service_v1alpha1_settings_proto_rawDescGZIP(), []int{6}
+	return file_agntcy_identity_service_v1alpha1_settings_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *PingIdpSettings) GetEnvironmentId() string {
@@ -584,7 +658,7 @@ type Settings struct {
 
 func (x *Settings) Reset() {
 	*x = Settings{}
-	mi := &file_agntcy_identity_service_v1alpha1_settings_proto_msgTypes[7]
+	mi := &file_agntcy_identity_service_v1alpha1_settings_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -596,7 +670,7 @@ func (x *Settings) String() string {
 func (*Settings) ProtoMessage() {}
 
 func (x *Settings) ProtoReflect() protoreflect.Message {
-	mi := &file_agntcy_identity_service_v1alpha1_settings_proto_msgTypes[7]
+	mi := &file_agntcy_identity_service_v1alpha1_settings_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -609,7 +683,7 @@ func (x *Settings) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Settings.ProtoReflect.Descriptor instead.
 func (*Settings) Descriptor() ([]byte, []int) {
-	return file_agntcy_identity_service_v1alpha1_settings_proto_rawDescGZIP(), []int{7}
+	return file_agntcy_identity_service_v1alpha1_settings_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *Settings) GetApiKey() *ApiKey {
@@ -642,7 +716,16 @@ const file_agntcy_identity_service_v1alpha1_settings_proto_rawDesc = "" +
 	"secret_key\x18\x03 \x01(\tH\x02R\tsecretKey\x88\x01\x01B\v\n" +
 	"\t_hostnameB\x12\n" +
 	"\x10_integration_keyB\r\n" +
-	"\v_secret_key\"\xcd\a\n" +
+	"\v_secret_key\"\xae\x01\n" +
+	"\x10EntraIdpSettings\x12 \n" +
+	"\ttenant_id\x18\x01 \x01(\tH\x00R\btenantId\x88\x01\x01\x12 \n" +
+	"\tclient_id\x18\x02 \x01(\tH\x01R\bclientId\x88\x01\x01\x12(\n" +
+	"\rclient_secret\x18\x03 \x01(\tH\x02R\fclientSecret\x88\x01\x01B\f\n" +
+	"\n" +
+	"_tenant_idB\f\n" +
+	"\n" +
+	"_client_idB\x10\n" +
+	"\x0e_client_secret\"\xd0\b\n" +
 	"\x0eIssuerSettings\x12%\n" +
 	"\tissuer_id\x18\x01 \x01(\tB\x03\xe0A\x03H\x00R\bissuerId\x88\x01\x01\x12N\n" +
 	"\bidp_type\x18\x03 \x01(\x0e2).agntcy.identity.service.v1alpha1.IdpTypeB\x03\xe0A\x02H\x01R\aidpType\x88\x01\x01\x12d\n" +
@@ -651,11 +734,12 @@ const file_agntcy_identity_service_v1alpha1_settings_proto_rawDesc = "" +
 	"\x10ory_idp_settings\x18\x06 \x01(\v20.agntcy.identity.service.v1alpha1.OryIdpSettingsB\x03\xe0A\x01H\x04R\x0eoryIdpSettings\x88\x01\x01\x12s\n" +
 	"\x15keycloak_idp_settings\x18\a \x01(\v25.agntcy.identity.service.v1alpha1.KeycloakIdpSettingsB\x03\xe0A\x01H\x05R\x13keycloakIdpSettings\x88\x01\x01\x12g\n" +
 	"\x11ping_idp_settings\x18\n" +
-	" \x01(\v21.agntcy.identity.service.v1alpha1.PingIdpSettingsB\x03\xe0A\x01H\x06R\x0fpingIdpSettings\x88\x01\x01\x12C\n" +
+	" \x01(\v21.agntcy.identity.service.v1alpha1.PingIdpSettingsB\x03\xe0A\x01H\x06R\x0fpingIdpSettings\x88\x01\x01\x12j\n" +
+	"\x12entra_idp_settings\x18\v \x01(\v22.agntcy.identity.service.v1alpha1.EntraIdpSettingsB\x03\xe0A\x01H\aR\x10entraIdpSettings\x88\x01\x01\x12C\n" +
 	"\n" +
-	"created_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampB\x03\xe0A\x03H\aR\tcreatedAt\x88\x01\x01\x12C\n" +
+	"created_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampB\x03\xe0A\x03H\bR\tcreatedAt\x88\x01\x01\x12C\n" +
 	"\n" +
-	"updated_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampB\x03\xe0A\x03H\bR\tupdatedAt\x88\x01\x01B\f\n" +
+	"updated_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampB\x03\xe0A\x03H\tR\tupdatedAt\x88\x01\x01B\f\n" +
 	"\n" +
 	"_issuer_idB\v\n" +
 	"\t_idp_typeB\x13\n" +
@@ -663,7 +747,8 @@ const file_agntcy_identity_service_v1alpha1_settings_proto_rawDesc = "" +
 	"\x12_okta_idp_settingsB\x13\n" +
 	"\x11_ory_idp_settingsB\x18\n" +
 	"\x16_keycloak_idp_settingsB\x14\n" +
-	"\x12_ping_idp_settingsB\r\n" +
+	"\x12_ping_idp_settingsB\x15\n" +
+	"\x13_entra_idp_settingsB\r\n" +
 	"\v_created_atB\r\n" +
 	"\v_updated_at\"\xd3\x01\n" +
 	"\x13KeycloakIdpSettings\x12\x1e\n" +
@@ -707,7 +792,7 @@ const file_agntcy_identity_service_v1alpha1_settings_proto_rawDesc = "" +
 	"\x0fissuer_settings\x18\x02 \x01(\v20.agntcy.identity.service.v1alpha1.IssuerSettingsB\x03\xe0A\x01H\x01R\x0eissuerSettings\x88\x01\x01B\n" +
 	"\n" +
 	"\b_api_keyB\x12\n" +
-	"\x10_issuer_settings*\x97\x01\n" +
+	"\x10_issuer_settings*\xae\x01\n" +
 	"\aIdpType\x12\x18\n" +
 	"\x14IDP_TYPE_UNSPECIFIED\x10\x00\x12\x10\n" +
 	"\fIDP_TYPE_DUO\x10\x01\x12\x11\n" +
@@ -715,7 +800,8 @@ const file_agntcy_identity_service_v1alpha1_settings_proto_rawDesc = "" +
 	"\fIDP_TYPE_ORY\x10\x03\x12\x11\n" +
 	"\rIDP_TYPE_SELF\x10\x04\x12\x15\n" +
 	"\x11IDP_TYPE_KEYCLOAK\x10\x05\x12\x11\n" +
-	"\rIDP_TYPE_PING\x10\x06BhZfgithub.com/agntcy/identity-service/api/server/agntcy/identity/service/v1alpha1;identity_service_sdk_gob\x06proto3"
+	"\rIDP_TYPE_PING\x10\x06\x12\x15\n" +
+	"\x11IDP_TYPE_ENTRA_ID\x10\aBhZfgithub.com/agntcy/identity-service/api/server/agntcy/identity/service/v1alpha1;identity_service_sdk_gob\x06proto3"
 
 var (
 	file_agntcy_identity_service_v1alpha1_settings_proto_rawDescOnce sync.Once
@@ -730,35 +816,37 @@ func file_agntcy_identity_service_v1alpha1_settings_proto_rawDescGZIP() []byte {
 }
 
 var file_agntcy_identity_service_v1alpha1_settings_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_agntcy_identity_service_v1alpha1_settings_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_agntcy_identity_service_v1alpha1_settings_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_agntcy_identity_service_v1alpha1_settings_proto_goTypes = []any{
 	(IdpType)(0),                  // 0: agntcy.identity.service.v1alpha1.IdpType
 	(*ApiKey)(nil),                // 1: agntcy.identity.service.v1alpha1.ApiKey
 	(*DuoIdpSettings)(nil),        // 2: agntcy.identity.service.v1alpha1.DuoIdpSettings
-	(*IssuerSettings)(nil),        // 3: agntcy.identity.service.v1alpha1.IssuerSettings
-	(*KeycloakIdpSettings)(nil),   // 4: agntcy.identity.service.v1alpha1.KeycloakIdpSettings
-	(*OktaIdpSettings)(nil),       // 5: agntcy.identity.service.v1alpha1.OktaIdpSettings
-	(*OryIdpSettings)(nil),        // 6: agntcy.identity.service.v1alpha1.OryIdpSettings
-	(*PingIdpSettings)(nil),       // 7: agntcy.identity.service.v1alpha1.PingIdpSettings
-	(*Settings)(nil),              // 8: agntcy.identity.service.v1alpha1.Settings
-	(*timestamppb.Timestamp)(nil), // 9: google.protobuf.Timestamp
+	(*EntraIdpSettings)(nil),      // 3: agntcy.identity.service.v1alpha1.EntraIdpSettings
+	(*IssuerSettings)(nil),        // 4: agntcy.identity.service.v1alpha1.IssuerSettings
+	(*KeycloakIdpSettings)(nil),   // 5: agntcy.identity.service.v1alpha1.KeycloakIdpSettings
+	(*OktaIdpSettings)(nil),       // 6: agntcy.identity.service.v1alpha1.OktaIdpSettings
+	(*OryIdpSettings)(nil),        // 7: agntcy.identity.service.v1alpha1.OryIdpSettings
+	(*PingIdpSettings)(nil),       // 8: agntcy.identity.service.v1alpha1.PingIdpSettings
+	(*Settings)(nil),              // 9: agntcy.identity.service.v1alpha1.Settings
+	(*timestamppb.Timestamp)(nil), // 10: google.protobuf.Timestamp
 }
 var file_agntcy_identity_service_v1alpha1_settings_proto_depIdxs = []int32{
 	0,  // 0: agntcy.identity.service.v1alpha1.IssuerSettings.idp_type:type_name -> agntcy.identity.service.v1alpha1.IdpType
 	2,  // 1: agntcy.identity.service.v1alpha1.IssuerSettings.duo_idp_settings:type_name -> agntcy.identity.service.v1alpha1.DuoIdpSettings
-	5,  // 2: agntcy.identity.service.v1alpha1.IssuerSettings.okta_idp_settings:type_name -> agntcy.identity.service.v1alpha1.OktaIdpSettings
-	6,  // 3: agntcy.identity.service.v1alpha1.IssuerSettings.ory_idp_settings:type_name -> agntcy.identity.service.v1alpha1.OryIdpSettings
-	4,  // 4: agntcy.identity.service.v1alpha1.IssuerSettings.keycloak_idp_settings:type_name -> agntcy.identity.service.v1alpha1.KeycloakIdpSettings
-	7,  // 5: agntcy.identity.service.v1alpha1.IssuerSettings.ping_idp_settings:type_name -> agntcy.identity.service.v1alpha1.PingIdpSettings
-	9,  // 6: agntcy.identity.service.v1alpha1.IssuerSettings.created_at:type_name -> google.protobuf.Timestamp
-	9,  // 7: agntcy.identity.service.v1alpha1.IssuerSettings.updated_at:type_name -> google.protobuf.Timestamp
-	1,  // 8: agntcy.identity.service.v1alpha1.Settings.api_key:type_name -> agntcy.identity.service.v1alpha1.ApiKey
-	3,  // 9: agntcy.identity.service.v1alpha1.Settings.issuer_settings:type_name -> agntcy.identity.service.v1alpha1.IssuerSettings
-	10, // [10:10] is the sub-list for method output_type
-	10, // [10:10] is the sub-list for method input_type
-	10, // [10:10] is the sub-list for extension type_name
-	10, // [10:10] is the sub-list for extension extendee
-	0,  // [0:10] is the sub-list for field type_name
+	6,  // 2: agntcy.identity.service.v1alpha1.IssuerSettings.okta_idp_settings:type_name -> agntcy.identity.service.v1alpha1.OktaIdpSettings
+	7,  // 3: agntcy.identity.service.v1alpha1.IssuerSettings.ory_idp_settings:type_name -> agntcy.identity.service.v1alpha1.OryIdpSettings
+	5,  // 4: agntcy.identity.service.v1alpha1.IssuerSettings.keycloak_idp_settings:type_name -> agntcy.identity.service.v1alpha1.KeycloakIdpSettings
+	8,  // 5: agntcy.identity.service.v1alpha1.IssuerSettings.ping_idp_settings:type_name -> agntcy.identity.service.v1alpha1.PingIdpSettings
+	3,  // 6: agntcy.identity.service.v1alpha1.IssuerSettings.entra_idp_settings:type_name -> agntcy.identity.service.v1alpha1.EntraIdpSettings
+	10, // 7: agntcy.identity.service.v1alpha1.IssuerSettings.created_at:type_name -> google.protobuf.Timestamp
+	10, // 8: agntcy.identity.service.v1alpha1.IssuerSettings.updated_at:type_name -> google.protobuf.Timestamp
+	1,  // 9: agntcy.identity.service.v1alpha1.Settings.api_key:type_name -> agntcy.identity.service.v1alpha1.ApiKey
+	4,  // 10: agntcy.identity.service.v1alpha1.Settings.issuer_settings:type_name -> agntcy.identity.service.v1alpha1.IssuerSettings
+	11, // [11:11] is the sub-list for method output_type
+	11, // [11:11] is the sub-list for method input_type
+	11, // [11:11] is the sub-list for extension type_name
+	11, // [11:11] is the sub-list for extension extendee
+	0,  // [0:11] is the sub-list for field type_name
 }
 
 func init() { file_agntcy_identity_service_v1alpha1_settings_proto_init() }
@@ -774,13 +862,14 @@ func file_agntcy_identity_service_v1alpha1_settings_proto_init() {
 	file_agntcy_identity_service_v1alpha1_settings_proto_msgTypes[5].OneofWrappers = []any{}
 	file_agntcy_identity_service_v1alpha1_settings_proto_msgTypes[6].OneofWrappers = []any{}
 	file_agntcy_identity_service_v1alpha1_settings_proto_msgTypes[7].OneofWrappers = []any{}
+	file_agntcy_identity_service_v1alpha1_settings_proto_msgTypes[8].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_agntcy_identity_service_v1alpha1_settings_proto_rawDesc), len(file_agntcy_identity_service_v1alpha1_settings_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   8,
+			NumMessages:   9,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

@@ -5,19 +5,25 @@ Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
 SPDX-License-Identifier: Apache-2.0
 """
 
-import abc
-import agntcy.identity.service.v1alpha1.settings_pb2
-import agntcy.identity.service.v1alpha1.settings_service_pb2
-import collections.abc
-import grpc
-import grpc.aio
-import typing
+from agntcy.identity.service.v1alpha1 import settings_pb2 as _settings_pb2
+from agntcy.identity.service.v1alpha1 import settings_service_pb2 as _settings_service_pb2
+from collections import abc as _abc
+from grpc import aio as _aio
+import abc as _abc_1
+import grpc as _grpc
+import sys
+import typing as _typing
 
-_T = typing.TypeVar("_T")
+if sys.version_info >= (3, 11):
+    from typing import Self as _Self
+else:
+    from typing_extensions import Self as _Self
 
-class _MaybeAsyncIterator(collections.abc.AsyncIterator[_T], collections.abc.Iterator[_T], metaclass=abc.ABCMeta): ...
+_T = _typing.TypeVar("_T")
 
-class _ServicerContext(grpc.ServicerContext, grpc.aio.ServicerContext):  # type: ignore[misc, type-arg]
+class _MaybeAsyncIterator(_abc.AsyncIterator[_T], _abc.Iterator[_T], metaclass=_abc_1.ABCMeta): ...
+
+class _ServicerContext(_grpc.ServicerContext, _aio.ServicerContext):  # type: ignore[misc, type-arg]
     ...
 
 GRPC_GENERATED_VERSION: str
@@ -26,54 +32,54 @@ GRPC_VERSION: str
 class SettingsServiceStub:
     """SettingsService manages settings."""
 
-    @typing.overload
-    def __new__(cls, channel: grpc.Channel) -> SettingsServiceStub: ...
-    @typing.overload
-    def __new__(cls, channel: grpc.aio.Channel) -> SettingsServiceAsyncStub: ...
-    GetSettings: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.settings_service_pb2.GetSettingsRequest, agntcy.identity.service.v1alpha1.settings_pb2.Settings]
+    @_typing.overload
+    def __new__(cls, channel: _grpc.Channel) -> _Self: ...
+    @_typing.overload
+    def __new__(cls, channel: _aio.Channel) -> SettingsServiceAsyncStub: ...
+    GetSettings: _grpc.UnaryUnaryMultiCallable[_settings_service_pb2.GetSettingsRequest, _settings_pb2.Settings]
     """Get Settings"""
-    SetApiKey: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.settings_service_pb2.SetApiKeyRequest, agntcy.identity.service.v1alpha1.settings_pb2.ApiKey]
+    SetApiKey: _grpc.UnaryUnaryMultiCallable[_settings_service_pb2.SetApiKeyRequest, _settings_pb2.ApiKey]
     """Set up API Key"""
-    SetIssuer: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.settings_service_pb2.SetIssuerRequest, agntcy.identity.service.v1alpha1.settings_pb2.IssuerSettings]
+    SetIssuer: _grpc.UnaryUnaryMultiCallable[_settings_service_pb2.SetIssuerRequest, _settings_pb2.IssuerSettings]
     """Set up Issuer"""
 
-@typing.type_check_only
+@_typing.type_check_only
 class SettingsServiceAsyncStub(SettingsServiceStub):
     """SettingsService manages settings."""
 
-    def __init__(self, channel: grpc.aio.Channel) -> None: ...
-    GetSettings: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.settings_service_pb2.GetSettingsRequest, agntcy.identity.service.v1alpha1.settings_pb2.Settings]  # type: ignore[assignment]
+    def __init__(self, channel: _aio.Channel) -> None: ...
+    GetSettings: _aio.UnaryUnaryMultiCallable[_settings_service_pb2.GetSettingsRequest, _settings_pb2.Settings]  # type: ignore[assignment]
     """Get Settings"""
-    SetApiKey: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.settings_service_pb2.SetApiKeyRequest, agntcy.identity.service.v1alpha1.settings_pb2.ApiKey]  # type: ignore[assignment]
+    SetApiKey: _aio.UnaryUnaryMultiCallable[_settings_service_pb2.SetApiKeyRequest, _settings_pb2.ApiKey]  # type: ignore[assignment]
     """Set up API Key"""
-    SetIssuer: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.settings_service_pb2.SetIssuerRequest, agntcy.identity.service.v1alpha1.settings_pb2.IssuerSettings]  # type: ignore[assignment]
+    SetIssuer: _aio.UnaryUnaryMultiCallable[_settings_service_pb2.SetIssuerRequest, _settings_pb2.IssuerSettings]  # type: ignore[assignment]
     """Set up Issuer"""
 
-class SettingsServiceServicer(metaclass=abc.ABCMeta):
+class SettingsServiceServicer(metaclass=_abc_1.ABCMeta):
     """SettingsService manages settings."""
 
-    @abc.abstractmethod
+    @_abc_1.abstractmethod
     def GetSettings(
         self,
-        request: agntcy.identity.service.v1alpha1.settings_service_pb2.GetSettingsRequest,
+        request: _settings_service_pb2.GetSettingsRequest,
         context: _ServicerContext,
-    ) -> typing.Union[agntcy.identity.service.v1alpha1.settings_pb2.Settings, collections.abc.Awaitable[agntcy.identity.service.v1alpha1.settings_pb2.Settings]]:
+    ) -> _typing.Union[_settings_pb2.Settings, _abc.Awaitable[_settings_pb2.Settings]]:
         """Get Settings"""
 
-    @abc.abstractmethod
+    @_abc_1.abstractmethod
     def SetApiKey(
         self,
-        request: agntcy.identity.service.v1alpha1.settings_service_pb2.SetApiKeyRequest,
+        request: _settings_service_pb2.SetApiKeyRequest,
         context: _ServicerContext,
-    ) -> typing.Union[agntcy.identity.service.v1alpha1.settings_pb2.ApiKey, collections.abc.Awaitable[agntcy.identity.service.v1alpha1.settings_pb2.ApiKey]]:
+    ) -> _typing.Union[_settings_pb2.ApiKey, _abc.Awaitable[_settings_pb2.ApiKey]]:
         """Set up API Key"""
 
-    @abc.abstractmethod
+    @_abc_1.abstractmethod
     def SetIssuer(
         self,
-        request: agntcy.identity.service.v1alpha1.settings_service_pb2.SetIssuerRequest,
+        request: _settings_service_pb2.SetIssuerRequest,
         context: _ServicerContext,
-    ) -> typing.Union[agntcy.identity.service.v1alpha1.settings_pb2.IssuerSettings, collections.abc.Awaitable[agntcy.identity.service.v1alpha1.settings_pb2.IssuerSettings]]:
+    ) -> _typing.Union[_settings_pb2.IssuerSettings, _abc.Awaitable[_settings_pb2.IssuerSettings]]:
         """Set up Issuer"""
 
-def add_SettingsServiceServicer_to_server(servicer: SettingsServiceServicer, server: typing.Union[grpc.Server, grpc.aio.Server]) -> None: ...
+def add_SettingsServiceServicer_to_server(servicer: SettingsServiceServicer, server: _typing.Union[_grpc.Server, _aio.Server]) -> None: ...

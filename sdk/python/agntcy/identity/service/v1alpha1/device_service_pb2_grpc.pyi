@@ -5,20 +5,26 @@ Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
 SPDX-License-Identifier: Apache-2.0
 """
 
-import abc
-import agntcy.identity.service.v1alpha1.device_pb2
-import agntcy.identity.service.v1alpha1.device_service_pb2
-import collections.abc
-import google.protobuf.empty_pb2
-import grpc
-import grpc.aio
-import typing
+from agntcy.identity.service.v1alpha1 import device_pb2 as _device_pb2
+from agntcy.identity.service.v1alpha1 import device_service_pb2 as _device_service_pb2
+from collections import abc as _abc
+from google.protobuf import empty_pb2 as _empty_pb2
+from grpc import aio as _aio
+import abc as _abc_1
+import grpc as _grpc
+import sys
+import typing as _typing
 
-_T = typing.TypeVar("_T")
+if sys.version_info >= (3, 11):
+    from typing import Self as _Self
+else:
+    from typing_extensions import Self as _Self
 
-class _MaybeAsyncIterator(collections.abc.AsyncIterator[_T], collections.abc.Iterator[_T], metaclass=abc.ABCMeta): ...
+_T = _typing.TypeVar("_T")
 
-class _ServicerContext(grpc.ServicerContext, grpc.aio.ServicerContext):  # type: ignore[misc, type-arg]
+class _MaybeAsyncIterator(_abc.AsyncIterator[_T], _abc.Iterator[_T], metaclass=_abc_1.ABCMeta): ...
+
+class _ServicerContext(_grpc.ServicerContext, _aio.ServicerContext):  # type: ignore[misc, type-arg]
     ...
 
 GRPC_GENERATED_VERSION: str
@@ -27,78 +33,78 @@ GRPC_VERSION: str
 class DeviceServiceStub:
     """DeviceService manages device."""
 
-    @typing.overload
-    def __new__(cls, channel: grpc.Channel) -> DeviceServiceStub: ...
-    @typing.overload
-    def __new__(cls, channel: grpc.aio.Channel) -> DeviceServiceAsyncStub: ...
-    AddDevice: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.device_service_pb2.AddDeviceRequest, agntcy.identity.service.v1alpha1.device_pb2.Device]
+    @_typing.overload
+    def __new__(cls, channel: _grpc.Channel) -> _Self: ...
+    @_typing.overload
+    def __new__(cls, channel: _aio.Channel) -> DeviceServiceAsyncStub: ...
+    AddDevice: _grpc.UnaryUnaryMultiCallable[_device_service_pb2.AddDeviceRequest, _device_pb2.Device]
     """Add new device for approval flow"""
-    RegisterDevice: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.device_service_pb2.RegisterDeviceRequest, google.protobuf.empty_pb2.Empty]
+    RegisterDevice: _grpc.UnaryUnaryMultiCallable[_device_service_pb2.RegisterDeviceRequest, _empty_pb2.Empty]
     """Add new device for approval flow"""
-    ListDevices: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.device_service_pb2.ListDevicesRequest, agntcy.identity.service.v1alpha1.device_service_pb2.ListDevicesResponse]
+    ListDevices: _grpc.UnaryUnaryMultiCallable[_device_service_pb2.ListDevicesRequest, _device_service_pb2.ListDevicesResponse]
     """List all registered devices"""
-    DeleteDevice: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.device_service_pb2.DeleteDeviceRequest, google.protobuf.empty_pb2.Empty]
+    DeleteDevice: _grpc.UnaryUnaryMultiCallable[_device_service_pb2.DeleteDeviceRequest, _empty_pb2.Empty]
     """Delete a registered Device."""
-    TestDevice: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.device_service_pb2.TestDeviceRequest, google.protobuf.empty_pb2.Empty]
+    TestDevice: _grpc.UnaryUnaryMultiCallable[_device_service_pb2.TestDeviceRequest, _empty_pb2.Empty]
     """Send a test notification to a registered device to see if it's well configured."""
 
-@typing.type_check_only
+@_typing.type_check_only
 class DeviceServiceAsyncStub(DeviceServiceStub):
     """DeviceService manages device."""
 
-    def __init__(self, channel: grpc.aio.Channel) -> None: ...
-    AddDevice: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.device_service_pb2.AddDeviceRequest, agntcy.identity.service.v1alpha1.device_pb2.Device]  # type: ignore[assignment]
+    def __init__(self, channel: _aio.Channel) -> None: ...
+    AddDevice: _aio.UnaryUnaryMultiCallable[_device_service_pb2.AddDeviceRequest, _device_pb2.Device]  # type: ignore[assignment]
     """Add new device for approval flow"""
-    RegisterDevice: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.device_service_pb2.RegisterDeviceRequest, google.protobuf.empty_pb2.Empty]  # type: ignore[assignment]
+    RegisterDevice: _aio.UnaryUnaryMultiCallable[_device_service_pb2.RegisterDeviceRequest, _empty_pb2.Empty]  # type: ignore[assignment]
     """Add new device for approval flow"""
-    ListDevices: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.device_service_pb2.ListDevicesRequest, agntcy.identity.service.v1alpha1.device_service_pb2.ListDevicesResponse]  # type: ignore[assignment]
+    ListDevices: _aio.UnaryUnaryMultiCallable[_device_service_pb2.ListDevicesRequest, _device_service_pb2.ListDevicesResponse]  # type: ignore[assignment]
     """List all registered devices"""
-    DeleteDevice: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.device_service_pb2.DeleteDeviceRequest, google.protobuf.empty_pb2.Empty]  # type: ignore[assignment]
+    DeleteDevice: _aio.UnaryUnaryMultiCallable[_device_service_pb2.DeleteDeviceRequest, _empty_pb2.Empty]  # type: ignore[assignment]
     """Delete a registered Device."""
-    TestDevice: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.device_service_pb2.TestDeviceRequest, google.protobuf.empty_pb2.Empty]  # type: ignore[assignment]
+    TestDevice: _aio.UnaryUnaryMultiCallable[_device_service_pb2.TestDeviceRequest, _empty_pb2.Empty]  # type: ignore[assignment]
     """Send a test notification to a registered device to see if it's well configured."""
 
-class DeviceServiceServicer(metaclass=abc.ABCMeta):
+class DeviceServiceServicer(metaclass=_abc_1.ABCMeta):
     """DeviceService manages device."""
 
-    @abc.abstractmethod
+    @_abc_1.abstractmethod
     def AddDevice(
         self,
-        request: agntcy.identity.service.v1alpha1.device_service_pb2.AddDeviceRequest,
+        request: _device_service_pb2.AddDeviceRequest,
         context: _ServicerContext,
-    ) -> typing.Union[agntcy.identity.service.v1alpha1.device_pb2.Device, collections.abc.Awaitable[agntcy.identity.service.v1alpha1.device_pb2.Device]]:
+    ) -> _typing.Union[_device_pb2.Device, _abc.Awaitable[_device_pb2.Device]]:
         """Add new device for approval flow"""
 
-    @abc.abstractmethod
+    @_abc_1.abstractmethod
     def RegisterDevice(
         self,
-        request: agntcy.identity.service.v1alpha1.device_service_pb2.RegisterDeviceRequest,
+        request: _device_service_pb2.RegisterDeviceRequest,
         context: _ServicerContext,
-    ) -> typing.Union[google.protobuf.empty_pb2.Empty, collections.abc.Awaitable[google.protobuf.empty_pb2.Empty]]:
+    ) -> _typing.Union[_empty_pb2.Empty, _abc.Awaitable[_empty_pb2.Empty]]:
         """Add new device for approval flow"""
 
-    @abc.abstractmethod
+    @_abc_1.abstractmethod
     def ListDevices(
         self,
-        request: agntcy.identity.service.v1alpha1.device_service_pb2.ListDevicesRequest,
+        request: _device_service_pb2.ListDevicesRequest,
         context: _ServicerContext,
-    ) -> typing.Union[agntcy.identity.service.v1alpha1.device_service_pb2.ListDevicesResponse, collections.abc.Awaitable[agntcy.identity.service.v1alpha1.device_service_pb2.ListDevicesResponse]]:
+    ) -> _typing.Union[_device_service_pb2.ListDevicesResponse, _abc.Awaitable[_device_service_pb2.ListDevicesResponse]]:
         """List all registered devices"""
 
-    @abc.abstractmethod
+    @_abc_1.abstractmethod
     def DeleteDevice(
         self,
-        request: agntcy.identity.service.v1alpha1.device_service_pb2.DeleteDeviceRequest,
+        request: _device_service_pb2.DeleteDeviceRequest,
         context: _ServicerContext,
-    ) -> typing.Union[google.protobuf.empty_pb2.Empty, collections.abc.Awaitable[google.protobuf.empty_pb2.Empty]]:
+    ) -> _typing.Union[_empty_pb2.Empty, _abc.Awaitable[_empty_pb2.Empty]]:
         """Delete a registered Device."""
 
-    @abc.abstractmethod
+    @_abc_1.abstractmethod
     def TestDevice(
         self,
-        request: agntcy.identity.service.v1alpha1.device_service_pb2.TestDeviceRequest,
+        request: _device_service_pb2.TestDeviceRequest,
         context: _ServicerContext,
-    ) -> typing.Union[google.protobuf.empty_pb2.Empty, collections.abc.Awaitable[google.protobuf.empty_pb2.Empty]]:
+    ) -> _typing.Union[_empty_pb2.Empty, _abc.Awaitable[_empty_pb2.Empty]]:
         """Send a test notification to a registered device to see if it's well configured."""
 
-def add_DeviceServiceServicer_to_server(servicer: DeviceServiceServicer, server: typing.Union[grpc.Server, grpc.aio.Server]) -> None: ...
+def add_DeviceServiceServicer_to_server(servicer: DeviceServiceServicer, server: _typing.Union[_grpc.Server, _aio.Server]) -> None: ...

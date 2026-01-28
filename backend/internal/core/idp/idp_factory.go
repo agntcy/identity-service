@@ -39,6 +39,8 @@ func (f *idpFactory) Create(
 		idp = NewKeycloakIdp(issuerSettings.KeycloakIdpSettings)
 	case types.IDP_TYPE_PING:
 		idp = NewPingIdp(issuerSettings.PingIdpSettings)
+	case types.IDP_TYPE_ENTRA_ID:
+		idp = NewEntraIdp(issuerSettings.EntraIdpSettings)
 	default:
 		return nil, fmt.Errorf("unknown IDP type %s", issuerSettings.IdpType)
 	}

@@ -4146,6 +4146,11 @@
               "name": "IDP_TYPE_PING",
               "number": "6",
               "description": "Idp Type Ping."
+            },
+            {
+              "name": "IDP_TYPE_ENTRA_ID",
+              "number": "7",
+              "description": "Idp Type Entra ID"
             }
           ]
         }
@@ -4220,6 +4225,54 @@
               "ismap": false,
               "isoneof": true,
               "oneofdecl": "_secret_key",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "EntraIdpSettings",
+          "longName": "EntraIdpSettings",
+          "fullName": "agntcy.identity.service.v1alpha1.EntraIdpSettings",
+          "description": "Entra ID (Azure AD) IdP Settings",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "tenant_id",
+              "description": "",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_tenant_id",
+              "defaultValue": ""
+            },
+            {
+              "name": "client_id",
+              "description": "",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_client_id",
+              "defaultValue": ""
+            },
+            {
+              "name": "client_secret",
+              "description": "",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_client_secret",
               "defaultValue": ""
             }
           ]
@@ -4316,6 +4369,18 @@
               "ismap": false,
               "isoneof": true,
               "oneofdecl": "_ping_idp_settings",
+              "defaultValue": ""
+            },
+            {
+              "name": "entra_idp_settings",
+              "description": "Settings for the Entra ID Identity Provider.",
+              "label": "optional",
+              "type": "EntraIdpSettings",
+              "longType": "EntraIdpSettings",
+              "fullType": "agntcy.identity.service.v1alpha1.EntraIdpSettings",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_entra_idp_settings",
               "defaultValue": ""
             },
             {

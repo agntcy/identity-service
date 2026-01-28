@@ -31,6 +31,9 @@ const (
 
 	// Idp Type Ping.
 	IDP_TYPE_PING
+
+	// Idp Type Entra ID
+	IDP_TYPE_ENTRA_ID
 )
 
 func (t *IdpType) UnmarshalText(text []byte) error {
@@ -45,6 +48,8 @@ func (t *IdpType) UnmarshalText(text []byte) error {
 		*t = IDP_TYPE_KEYCLOAK
 	case IDP_TYPE_PING.String():
 		*t = IDP_TYPE_PING
+	case IDP_TYPE_ENTRA_ID.String():
+		*t = IDP_TYPE_ENTRA_ID
 	default:
 		*t = IDP_TYPE_UNSPECIFIED
 	}
@@ -97,6 +102,13 @@ type PingIdpSettings struct {
 	Region        string `json:"region,omitempty"         protobuf:"bytes,4,opt,name=region"`
 }
 
+// Entra ID (Azure AD) IdP Settings
+type EntraIdpSettings struct {
+	TenantID     string `json:"tenant_id,omitempty"     protobuf:"bytes,1,opt,name=tenant_id"`
+	ClientID     string `json:"client_id,omitempty"     protobuf:"bytes,2,opt,name=client_id"`
+	ClientSecret string `json:"client_secret,omitempty" protobuf:"bytes,3,opt,name=client_secret"`
+}
+
 // Issuer Settings
 type IssuerSettings struct {
 	// A unique identifier for the Issuer.
@@ -134,6 +146,10 @@ type IssuerSettings struct {
 	// Settings for the Ping Identity Provider.
 	// +field_behavior:OPTIONAL
 	PingIdpSettings *PingIdpSettings `json:"ping_idp_settings,omitempty" protobuf:"bytes,10,opt,name=ping_idp_settings"`
+
+	// Settings for the Entra ID Identity Provider.
+	// +field_behavior:OPTIONAL
+	EntraIdpSettings *EntraIdpSettings `json:"entra_idp_settings,omitempty" protobuf:"bytes,11,opt,name=entra_idp_settings"`
 
 	// CreatedAt records the timestamp of when the IssuerSettings was initially created
 	// +field_behavior:OUTPUT_ONLY

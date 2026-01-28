@@ -15,11 +15,12 @@ func _() {
 	_ = x[IDP_TYPE_SELF-4]
 	_ = x[IDP_TYPE_KEYCLOAK-5]
 	_ = x[IDP_TYPE_PING-6]
+	_ = x[IDP_TYPE_ENTRA_ID-7]
 }
 
-const _IdpType_name = "IDP_TYPE_UNSPECIFIEDIDP_TYPE_DUOIDP_TYPE_OKTAIDP_TYPE_ORYIDP_TYPE_SELFIDP_TYPE_KEYCLOAKIDP_TYPE_PING"
+const _IdpType_name = "IDP_TYPE_UNSPECIFIEDIDP_TYPE_DUOIDP_TYPE_OKTAIDP_TYPE_ORYIDP_TYPE_SELFIDP_TYPE_KEYCLOAKIDP_TYPE_PINGIDP_TYPE_ENTRA_ID"
 
-var _IdpType_index = [...]uint8{0, 20, 32, 45, 57, 70, 87, 100}
+var _IdpType_index = [...]uint8{0, 20, 32, 45, 57, 70, 87, 100, 117}
 
 func (i IdpType) String() string {
 	if i < 0 || i >= IdpType(len(_IdpType_index)-1) {

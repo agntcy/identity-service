@@ -76,7 +76,10 @@ export const CreateIdentityProvider = () => {
       client: undefined,
       clientSecret: undefined,
       environmentId: undefined,
-      region: undefined
+      region: undefined,
+      tenantIdEntra: undefined,
+      clientIdEntra: undefined,
+      clientSecretEntra: undefined
     });
   }, [form]);
 
@@ -124,6 +127,12 @@ export const CreateIdentityProvider = () => {
         clientSecret: values.clientSecret,
         region: values.region
       };
+    } else if (values.provider === IdpType.IDP_TYPE_ENTRA_ID) {
+      data.entraIdpSettings = {
+        tenantId: values.tenantIdEntra,
+        clientId: values.clientIdEntra,
+        clientSecret: values.clientSecretEntra
+      };
     }
     analyticsTrack('CLICK_SAVE_NEW_IDENTITY_PROVIDER', {
       type: values.provider
@@ -161,7 +170,11 @@ export const CreateIdentityProvider = () => {
         clientSecret: undefined,
         // ping
         environmentId: issuerSettings.pingIdpSettings?.environmentId,
-        region: issuerSettings.pingIdpSettings?.region
+        region: issuerSettings.pingIdpSettings?.region,
+        // entra
+        tenantIdEntra: issuerSettings.entraIdpSettings?.tenantId,
+        clientIdEntra: issuerSettings.entraIdpSettings?.clientId,
+        clientSecretEntra: undefined
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

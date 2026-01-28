@@ -22,7 +22,10 @@ export const IdentityProvidersSchema = z
     client: z.string().optional(),
     clientSecret: z.string().optional(),
     environmentId: z.string().optional(),
-    region: z.string().optional()
+    region: z.string().optional(),
+    tenantIdEntra: z.string().optional(),
+    clientIdEntra: z.string().optional(),
+    clientSecretEntra: z.string().optional()
   })
   .superRefine((data, ctx) => {
     if (data.provider === IdpType.IDP_TYPE_DUO) {
@@ -124,6 +127,25 @@ export const IdentityProvidersSchema = z
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: 'Region is required for Ping'
+        });
+      }
+    } else if (data.provider === IdpType.IDP_TYPE_ENTRA_ID) {
+      if (!data.tenantIdEntra) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Tenant ID is required for Azure Entra'
+        });
+      }
+      if (!data.clientIdEntra) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Client ID is required for Azure Entra'
+        });
+      }
+      if (!data.clientSecretEntra) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Client Secret is required for Azure Entra'
         });
       }
     }

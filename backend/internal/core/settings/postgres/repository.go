@@ -76,6 +76,10 @@ func (r *repository) UpdateIssuerSettings(
 			existingSettings.PingIdpSettings = model.PingIdpSettings
 			previousIdpSettingsID = ptrutil.Derefrence(existingSettings.PingIdpSettingsID, uuid.UUID{})
 			emptyIdpSettings = &PingIdpSettings{}
+		case types.IDP_TYPE_ENTRA_ID:
+			existingSettings.EntraIdpSettings = model.EntraIdpSettings
+			previousIdpSettingsID = ptrutil.Derefrence(existingSettings.EntraIdpSettingsID, uuid.UUID{})
+			emptyIdpSettings = &EntraIdpSettings{}
 		}
 
 		updated := tx.

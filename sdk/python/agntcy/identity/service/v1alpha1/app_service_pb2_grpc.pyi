@@ -5,21 +5,27 @@ Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
 SPDX-License-Identifier: Apache-2.0
 """
 
-import abc
-import agntcy.identity.service.v1alpha1.app_pb2
-import agntcy.identity.service.v1alpha1.app_service_pb2
-import agntcy.identity.service.v1alpha1.badge_pb2
-import collections.abc
-import google.protobuf.empty_pb2
-import grpc
-import grpc.aio
-import typing
+from agntcy.identity.service.v1alpha1 import app_pb2 as _app_pb2
+from agntcy.identity.service.v1alpha1 import app_service_pb2 as _app_service_pb2
+from agntcy.identity.service.v1alpha1 import badge_pb2 as _badge_pb2
+from collections import abc as _abc
+from google.protobuf import empty_pb2 as _empty_pb2
+from grpc import aio as _aio
+import abc as _abc_1
+import grpc as _grpc
+import sys
+import typing as _typing
 
-_T = typing.TypeVar("_T")
+if sys.version_info >= (3, 11):
+    from typing import Self as _Self
+else:
+    from typing_extensions import Self as _Self
 
-class _MaybeAsyncIterator(collections.abc.AsyncIterator[_T], collections.abc.Iterator[_T], metaclass=abc.ABCMeta): ...
+_T = _typing.TypeVar("_T")
 
-class _ServicerContext(grpc.ServicerContext, grpc.aio.ServicerContext):  # type: ignore[misc, type-arg]
+class _MaybeAsyncIterator(_abc.AsyncIterator[_T], _abc.Iterator[_T], metaclass=_abc_1.ABCMeta): ...
+
+class _ServicerContext(_grpc.ServicerContext, _aio.ServicerContext):  # type: ignore[misc, type-arg]
     ...
 
 GRPC_GENERATED_VERSION: str
@@ -28,135 +34,135 @@ GRPC_VERSION: str
 class AppServiceStub:
     """AppService manages apps."""
 
-    @typing.overload
-    def __new__(cls, channel: grpc.Channel) -> AppServiceStub: ...
-    @typing.overload
-    def __new__(cls, channel: grpc.aio.Channel) -> AppServiceAsyncStub: ...
-    ListApps: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.app_service_pb2.ListAppsRequest, agntcy.identity.service.v1alpha1.app_service_pb2.ListAppsResponse]
+    @_typing.overload
+    def __new__(cls, channel: _grpc.Channel) -> _Self: ...
+    @_typing.overload
+    def __new__(cls, channel: _aio.Channel) -> AppServiceAsyncStub: ...
+    ListApps: _grpc.UnaryUnaryMultiCallable[_app_service_pb2.ListAppsRequest, _app_service_pb2.ListAppsResponse]
     """List Apps."""
-    GetAppsCount: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.app_service_pb2.GetAppsCountRequest, agntcy.identity.service.v1alpha1.app_service_pb2.GetAppsCountResponse]
+    GetAppsCount: _grpc.UnaryUnaryMultiCallable[_app_service_pb2.GetAppsCountRequest, _app_service_pb2.GetAppsCountResponse]
     """Get apps count per type."""
-    GetApp: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.app_service_pb2.GetAppRequest, agntcy.identity.service.v1alpha1.app_pb2.App]
+    GetApp: _grpc.UnaryUnaryMultiCallable[_app_service_pb2.GetAppRequest, _app_pb2.App]
     """Get App by id"""
-    CreateApp: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.app_service_pb2.CreateAppRequest, agntcy.identity.service.v1alpha1.app_pb2.App]
+    CreateApp: _grpc.UnaryUnaryMultiCallable[_app_service_pb2.CreateAppRequest, _app_pb2.App]
     """Create a new App."""
-    CreateOasfApp: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.app_service_pb2.CreateOasfAppRequest, agntcy.identity.service.v1alpha1.app_service_pb2.CreateOasfAppResponse]
-    UpdateApp: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.app_service_pb2.UpdateAppRequest, agntcy.identity.service.v1alpha1.app_pb2.App]
+    CreateOasfApp: _grpc.UnaryUnaryMultiCallable[_app_service_pb2.CreateOasfAppRequest, _app_service_pb2.CreateOasfAppResponse]
+    UpdateApp: _grpc.UnaryUnaryMultiCallable[_app_service_pb2.UpdateAppRequest, _app_pb2.App]
     """Update an App."""
-    DeleteApp: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.app_service_pb2.DeleteAppRequest, google.protobuf.empty_pb2.Empty]
+    DeleteApp: _grpc.UnaryUnaryMultiCallable[_app_service_pb2.DeleteAppRequest, _empty_pb2.Empty]
     """Delete an existing App."""
-    RefreshAppApiKey: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.app_service_pb2.RefreshAppApiKeyRequest, agntcy.identity.service.v1alpha1.app_pb2.App]
+    RefreshAppApiKey: _grpc.UnaryUnaryMultiCallable[_app_service_pb2.RefreshAppApiKeyRequest, _app_pb2.App]
     """Refresh the api-key for an App."""
-    GetBadge: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.app_service_pb2.GetBadgeRequest, agntcy.identity.service.v1alpha1.badge_pb2.Badge]
+    GetBadge: _grpc.UnaryUnaryMultiCallable[_app_service_pb2.GetBadgeRequest, _badge_pb2.Badge]
     """Get the current badge issued for the App."""
-    GetTasks: grpc.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.app_service_pb2.GetTasksRequest, agntcy.identity.service.v1alpha1.app_service_pb2.GetTasksResponse]
+    GetTasks: _grpc.UnaryUnaryMultiCallable[_app_service_pb2.GetTasksRequest, _app_service_pb2.GetTasksResponse]
     """Get the list of tasks of all apps"""
 
-@typing.type_check_only
+@_typing.type_check_only
 class AppServiceAsyncStub(AppServiceStub):
     """AppService manages apps."""
 
-    def __init__(self, channel: grpc.aio.Channel) -> None: ...
-    ListApps: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.app_service_pb2.ListAppsRequest, agntcy.identity.service.v1alpha1.app_service_pb2.ListAppsResponse]  # type: ignore[assignment]
+    def __init__(self, channel: _aio.Channel) -> None: ...
+    ListApps: _aio.UnaryUnaryMultiCallable[_app_service_pb2.ListAppsRequest, _app_service_pb2.ListAppsResponse]  # type: ignore[assignment]
     """List Apps."""
-    GetAppsCount: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.app_service_pb2.GetAppsCountRequest, agntcy.identity.service.v1alpha1.app_service_pb2.GetAppsCountResponse]  # type: ignore[assignment]
+    GetAppsCount: _aio.UnaryUnaryMultiCallable[_app_service_pb2.GetAppsCountRequest, _app_service_pb2.GetAppsCountResponse]  # type: ignore[assignment]
     """Get apps count per type."""
-    GetApp: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.app_service_pb2.GetAppRequest, agntcy.identity.service.v1alpha1.app_pb2.App]  # type: ignore[assignment]
+    GetApp: _aio.UnaryUnaryMultiCallable[_app_service_pb2.GetAppRequest, _app_pb2.App]  # type: ignore[assignment]
     """Get App by id"""
-    CreateApp: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.app_service_pb2.CreateAppRequest, agntcy.identity.service.v1alpha1.app_pb2.App]  # type: ignore[assignment]
+    CreateApp: _aio.UnaryUnaryMultiCallable[_app_service_pb2.CreateAppRequest, _app_pb2.App]  # type: ignore[assignment]
     """Create a new App."""
-    CreateOasfApp: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.app_service_pb2.CreateOasfAppRequest, agntcy.identity.service.v1alpha1.app_service_pb2.CreateOasfAppResponse]  # type: ignore[assignment]
-    UpdateApp: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.app_service_pb2.UpdateAppRequest, agntcy.identity.service.v1alpha1.app_pb2.App]  # type: ignore[assignment]
+    CreateOasfApp: _aio.UnaryUnaryMultiCallable[_app_service_pb2.CreateOasfAppRequest, _app_service_pb2.CreateOasfAppResponse]  # type: ignore[assignment]
+    UpdateApp: _aio.UnaryUnaryMultiCallable[_app_service_pb2.UpdateAppRequest, _app_pb2.App]  # type: ignore[assignment]
     """Update an App."""
-    DeleteApp: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.app_service_pb2.DeleteAppRequest, google.protobuf.empty_pb2.Empty]  # type: ignore[assignment]
+    DeleteApp: _aio.UnaryUnaryMultiCallable[_app_service_pb2.DeleteAppRequest, _empty_pb2.Empty]  # type: ignore[assignment]
     """Delete an existing App."""
-    RefreshAppApiKey: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.app_service_pb2.RefreshAppApiKeyRequest, agntcy.identity.service.v1alpha1.app_pb2.App]  # type: ignore[assignment]
+    RefreshAppApiKey: _aio.UnaryUnaryMultiCallable[_app_service_pb2.RefreshAppApiKeyRequest, _app_pb2.App]  # type: ignore[assignment]
     """Refresh the api-key for an App."""
-    GetBadge: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.app_service_pb2.GetBadgeRequest, agntcy.identity.service.v1alpha1.badge_pb2.Badge]  # type: ignore[assignment]
+    GetBadge: _aio.UnaryUnaryMultiCallable[_app_service_pb2.GetBadgeRequest, _badge_pb2.Badge]  # type: ignore[assignment]
     """Get the current badge issued for the App."""
-    GetTasks: grpc.aio.UnaryUnaryMultiCallable[agntcy.identity.service.v1alpha1.app_service_pb2.GetTasksRequest, agntcy.identity.service.v1alpha1.app_service_pb2.GetTasksResponse]  # type: ignore[assignment]
+    GetTasks: _aio.UnaryUnaryMultiCallable[_app_service_pb2.GetTasksRequest, _app_service_pb2.GetTasksResponse]  # type: ignore[assignment]
     """Get the list of tasks of all apps"""
 
-class AppServiceServicer(metaclass=abc.ABCMeta):
+class AppServiceServicer(metaclass=_abc_1.ABCMeta):
     """AppService manages apps."""
 
-    @abc.abstractmethod
+    @_abc_1.abstractmethod
     def ListApps(
         self,
-        request: agntcy.identity.service.v1alpha1.app_service_pb2.ListAppsRequest,
+        request: _app_service_pb2.ListAppsRequest,
         context: _ServicerContext,
-    ) -> typing.Union[agntcy.identity.service.v1alpha1.app_service_pb2.ListAppsResponse, collections.abc.Awaitable[agntcy.identity.service.v1alpha1.app_service_pb2.ListAppsResponse]]:
+    ) -> _typing.Union[_app_service_pb2.ListAppsResponse, _abc.Awaitable[_app_service_pb2.ListAppsResponse]]:
         """List Apps."""
 
-    @abc.abstractmethod
+    @_abc_1.abstractmethod
     def GetAppsCount(
         self,
-        request: agntcy.identity.service.v1alpha1.app_service_pb2.GetAppsCountRequest,
+        request: _app_service_pb2.GetAppsCountRequest,
         context: _ServicerContext,
-    ) -> typing.Union[agntcy.identity.service.v1alpha1.app_service_pb2.GetAppsCountResponse, collections.abc.Awaitable[agntcy.identity.service.v1alpha1.app_service_pb2.GetAppsCountResponse]]:
+    ) -> _typing.Union[_app_service_pb2.GetAppsCountResponse, _abc.Awaitable[_app_service_pb2.GetAppsCountResponse]]:
         """Get apps count per type."""
 
-    @abc.abstractmethod
+    @_abc_1.abstractmethod
     def GetApp(
         self,
-        request: agntcy.identity.service.v1alpha1.app_service_pb2.GetAppRequest,
+        request: _app_service_pb2.GetAppRequest,
         context: _ServicerContext,
-    ) -> typing.Union[agntcy.identity.service.v1alpha1.app_pb2.App, collections.abc.Awaitable[agntcy.identity.service.v1alpha1.app_pb2.App]]:
+    ) -> _typing.Union[_app_pb2.App, _abc.Awaitable[_app_pb2.App]]:
         """Get App by id"""
 
-    @abc.abstractmethod
+    @_abc_1.abstractmethod
     def CreateApp(
         self,
-        request: agntcy.identity.service.v1alpha1.app_service_pb2.CreateAppRequest,
+        request: _app_service_pb2.CreateAppRequest,
         context: _ServicerContext,
-    ) -> typing.Union[agntcy.identity.service.v1alpha1.app_pb2.App, collections.abc.Awaitable[agntcy.identity.service.v1alpha1.app_pb2.App]]:
+    ) -> _typing.Union[_app_pb2.App, _abc.Awaitable[_app_pb2.App]]:
         """Create a new App."""
 
-    @abc.abstractmethod
+    @_abc_1.abstractmethod
     def CreateOasfApp(
         self,
-        request: agntcy.identity.service.v1alpha1.app_service_pb2.CreateOasfAppRequest,
+        request: _app_service_pb2.CreateOasfAppRequest,
         context: _ServicerContext,
-    ) -> typing.Union[agntcy.identity.service.v1alpha1.app_service_pb2.CreateOasfAppResponse, collections.abc.Awaitable[agntcy.identity.service.v1alpha1.app_service_pb2.CreateOasfAppResponse]]: ...
+    ) -> _typing.Union[_app_service_pb2.CreateOasfAppResponse, _abc.Awaitable[_app_service_pb2.CreateOasfAppResponse]]: ...
 
-    @abc.abstractmethod
+    @_abc_1.abstractmethod
     def UpdateApp(
         self,
-        request: agntcy.identity.service.v1alpha1.app_service_pb2.UpdateAppRequest,
+        request: _app_service_pb2.UpdateAppRequest,
         context: _ServicerContext,
-    ) -> typing.Union[agntcy.identity.service.v1alpha1.app_pb2.App, collections.abc.Awaitable[agntcy.identity.service.v1alpha1.app_pb2.App]]:
+    ) -> _typing.Union[_app_pb2.App, _abc.Awaitable[_app_pb2.App]]:
         """Update an App."""
 
-    @abc.abstractmethod
+    @_abc_1.abstractmethod
     def DeleteApp(
         self,
-        request: agntcy.identity.service.v1alpha1.app_service_pb2.DeleteAppRequest,
+        request: _app_service_pb2.DeleteAppRequest,
         context: _ServicerContext,
-    ) -> typing.Union[google.protobuf.empty_pb2.Empty, collections.abc.Awaitable[google.protobuf.empty_pb2.Empty]]:
+    ) -> _typing.Union[_empty_pb2.Empty, _abc.Awaitable[_empty_pb2.Empty]]:
         """Delete an existing App."""
 
-    @abc.abstractmethod
+    @_abc_1.abstractmethod
     def RefreshAppApiKey(
         self,
-        request: agntcy.identity.service.v1alpha1.app_service_pb2.RefreshAppApiKeyRequest,
+        request: _app_service_pb2.RefreshAppApiKeyRequest,
         context: _ServicerContext,
-    ) -> typing.Union[agntcy.identity.service.v1alpha1.app_pb2.App, collections.abc.Awaitable[agntcy.identity.service.v1alpha1.app_pb2.App]]:
+    ) -> _typing.Union[_app_pb2.App, _abc.Awaitable[_app_pb2.App]]:
         """Refresh the api-key for an App."""
 
-    @abc.abstractmethod
+    @_abc_1.abstractmethod
     def GetBadge(
         self,
-        request: agntcy.identity.service.v1alpha1.app_service_pb2.GetBadgeRequest,
+        request: _app_service_pb2.GetBadgeRequest,
         context: _ServicerContext,
-    ) -> typing.Union[agntcy.identity.service.v1alpha1.badge_pb2.Badge, collections.abc.Awaitable[agntcy.identity.service.v1alpha1.badge_pb2.Badge]]:
+    ) -> _typing.Union[_badge_pb2.Badge, _abc.Awaitable[_badge_pb2.Badge]]:
         """Get the current badge issued for the App."""
 
-    @abc.abstractmethod
+    @_abc_1.abstractmethod
     def GetTasks(
         self,
-        request: agntcy.identity.service.v1alpha1.app_service_pb2.GetTasksRequest,
+        request: _app_service_pb2.GetTasksRequest,
         context: _ServicerContext,
-    ) -> typing.Union[agntcy.identity.service.v1alpha1.app_service_pb2.GetTasksResponse, collections.abc.Awaitable[agntcy.identity.service.v1alpha1.app_service_pb2.GetTasksResponse]]:
+    ) -> _typing.Union[_app_service_pb2.GetTasksResponse, _abc.Awaitable[_app_service_pb2.GetTasksResponse]]:
         """Get the list of tasks of all apps"""
 
-def add_AppServiceServicer_to_server(servicer: AppServiceServicer, server: typing.Union[grpc.Server, grpc.aio.Server]) -> None: ...
+def add_AppServiceServicer_to_server(servicer: AppServiceServicer, server: _typing.Union[_grpc.Server, _aio.Server]) -> None: ...
