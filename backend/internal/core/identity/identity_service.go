@@ -286,11 +286,6 @@ func (s *service) generateProof(
 	if clientCredentials.ClientSecret != "" {
 		proofValue, err = s.generateTokenWithRetry(ctx, clientCredentials)
 	} else {
-		log.FromContext(ctx).
-			WithField("issuer", clientCredentials.Issuer).
-			WithField("client_id", clientCredentials.ClientID).
-			Debug("generateProof using self-signed JWT (no client secret)")
-
 		privKey, keyErr := s.keyStore.RetrievePrivKey(ctx, keyId)
 		if keyErr != nil {
 			return nil, fmt.Errorf(
