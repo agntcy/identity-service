@@ -424,7 +424,11 @@ export const IdentityProviderForm = ({isLoading = false}: {isLoading?: boolean})
                     <FormItem className="w-[50%]">
                       <FormLabel className="form-label">Region</FormLabel>
                       <FormControl>
-                        <Input placeholder="Type region (e.g., com, eu, asia)..." {...field} disabled={isLoading || !isEmptyIdp} />
+                        <Input
+                          placeholder="Type region (e.g., com, eu, asia)..."
+                          {...field}
+                          disabled={isLoading || !isEmptyIdp}
+                        />
                       </FormControl>
                     </FormItem>
                   )}
