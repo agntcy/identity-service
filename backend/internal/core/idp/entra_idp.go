@@ -117,6 +117,7 @@ func (e *EntraIdp) CreateClientCredentialsPair(ctx context.Context) (*ClientCred
 
 	// Make sure everything is propagated across the different distributed data centers.
 	// The trick is to simply try to generate a token with the newely created credentials.
+	//nolint:lll // ignore long line
 	// https://learn.microsoft.com/en-us/troubleshoot/entra/entra-id/app-integration/404-not-found-error-manage-objects-microsoft-graph
 	err = e.validateClientCredentialsPairCreation(ctx, creds)
 	if err != nil {
@@ -175,7 +176,7 @@ func (e *EntraIdp) createApplication(ctx context.Context) (models.Applicationabl
 	app.SetSignInAudience(ptrutil.Ptr(defaultAudience))
 
 	apiConfig := models.NewApiApplication()
-	apiConfig.SetRequestedAccessTokenVersion(ptrutil.Ptr(int32(2)))
+	apiConfig.SetRequestedAccessTokenVersion(ptrutil.Ptr(int32(2))) //nolint:mnd // not a magic number
 	app.SetApi(apiConfig)
 
 	// Configure an initial password credential so that the application is
@@ -308,7 +309,7 @@ func (e *EntraIdp) executeWithRetry(
 	retryLogMsg *string,
 ) error {
 	return retry.New(
-		retry.Attempts(10),
+		retry.Attempts(10), //nolint:mnd // not a magic number
 		retry.Delay(1*time.Second),
 		retry.DelayType(retry.BackOffDelay),
 		retry.Context(ctx),
@@ -324,8 +325,8 @@ func (e *EntraIdp) executeWithRetry(
 
 func (e *EntraIdp) validateClientCredentialsPairCreation(ctx context.Context, creds *ClientCredentials) error {
 	err := retry.New(
-		retry.Attempts(8),
-		retry.Delay(2*time.Second),
+		retry.Attempts(8),          //nolint:mnd // not a magic number
+		retry.Delay(2*time.Second), //nolint:mnd // not a magic number
 		retry.DelayType(retry.BackOffDelay),
 		retry.Context(ctx),
 		retry.OnRetry(func(attempt uint, err error) {

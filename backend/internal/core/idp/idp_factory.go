@@ -25,6 +25,7 @@ func (f *idpFactory) Create(
 	issuerSettings *types.IssuerSettings,
 ) (Idp, error) {
 	var idp Idp
+
 	var err error
 
 	switch issuerSettings.IdpType {

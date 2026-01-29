@@ -149,7 +149,7 @@ type IssuerSettings struct {
 
 	// Settings for the Entra ID Identity Provider.
 	// +field_behavior:OPTIONAL
-	EntraIdpSettings *EntraIdpSettings `json:"entra_idp_settings,omitempty" protobuf:"bytes,11,opt,name=entra_idp_settings"`
+	EntraIdpSettings *EntraIdpSettings `json:"entra_idp_settings,omitempty" protobuf:"bytes,11,opt,name=entra_idp_settings"` //nolint:lll // struct tags exceed line length
 
 	// CreatedAt records the timestamp of when the IssuerSettings was initially created
 	// +field_behavior:OUTPUT_ONLY
