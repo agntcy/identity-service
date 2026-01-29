@@ -21,7 +21,7 @@ type RPCStatus struct {
 	Code int32 `json:"code,omitempty"`
 
 	// details
-	Details []*GoogleprotobufAny `json:"details"`
+	Details []*ProtobufAny `json:"details"`
 
 	// message
 	Message string `json:"message,omitempty"`

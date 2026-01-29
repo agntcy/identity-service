@@ -46,6 +46,9 @@ type V1alpha1IssuerSettings struct {
 	// Settings for the Ory Identity Provider.
 	OryIdpSettings *V1alpha1OryIdpSettings `json:"oryIdpSettings,omitempty"`
 
+	// Settings for the Ping Identity Provider.
+	PingIdpSettings *V1alpha1PingIdpSettings `json:"pingIdpSettings,omitempty"`
+
 	// UpdatedAt records the timestamp of the last update to the IssuerSettings
 	// Read Only: true
 	// Format: date-time
@@ -81,6 +84,10 @@ func (m *V1alpha1IssuerSettings) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateOryIdpSettings(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validatePingIdpSettings(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -249,6 +256,29 @@ func (m *V1alpha1IssuerSettings) validateOryIdpSettings(formats strfmt.Registry)
 	return nil
 }
 
+func (m *V1alpha1IssuerSettings) validatePingIdpSettings(formats strfmt.Registry) error {
+	if swag.IsZero(m.PingIdpSettings) { // not required
+		return nil
+	}
+
+	if m.PingIdpSettings != nil {
+		if err := m.PingIdpSettings.Validate(formats); err != nil {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
+				return ve.ValidateName("pingIdpSettings")
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
+				return ce.ValidateName("pingIdpSettings")
+			}
+
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (m *V1alpha1IssuerSettings) validateUpdatedAt(formats strfmt.Registry) error {
 	if swag.IsZero(m.UpdatedAt) { // not required
 		return nil
@@ -294,6 +324,10 @@ func (m *V1alpha1IssuerSettings) ContextValidate(ctx context.Context, formats st
 	}
 
 	if err := m.contextValidateOryIdpSettings(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidatePingIdpSettings(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -462,6 +496,31 @@ func (m *V1alpha1IssuerSettings) contextValidateOryIdpSettings(ctx context.Conte
 			ce := new(errors.CompositeError)
 			if stderrors.As(err, &ce) {
 				return ce.ValidateName("oryIdpSettings")
+			}
+
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *V1alpha1IssuerSettings) contextValidatePingIdpSettings(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.PingIdpSettings != nil {
+
+		if swag.IsZero(m.PingIdpSettings) { // not required
+			return nil
+		}
+
+		if err := m.PingIdpSettings.ContextValidate(ctx, formats); err != nil {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
+				return ve.ValidateName("pingIdpSettings")
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
+				return ce.ValidateName("pingIdpSettings")
 			}
 
 			return err

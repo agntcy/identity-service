@@ -19,6 +19,7 @@ import (
 //   - IDP_TYPE_ORY: Idp Type Ory.
 //   - IDP_TYPE_SELF: Idp Type Self.
 //   - IDP_TYPE_KEYCLOAK: Idp Type Keycloak.
+//   - IDP_TYPE_PING: Idp Type Ping.
 //   - IDP_TYPE_ENTRA_ID: Idp Type Entra ID
 //
 // swagger:model v1alpha1IdpType
@@ -53,6 +54,9 @@ const (
 	// V1alpha1IdpTypeIDPTYPEKEYCLOAK captures enum value "IDP_TYPE_KEYCLOAK"
 	V1alpha1IdpTypeIDPTYPEKEYCLOAK V1alpha1IdpType = "IDP_TYPE_KEYCLOAK"
 
+	// V1alpha1IdpTypeIDPTYPEPING captures enum value "IDP_TYPE_PING"
+	V1alpha1IdpTypeIDPTYPEPING V1alpha1IdpType = "IDP_TYPE_PING"
+
 	// V1alpha1IdpTypeIDPTYPEENTRAID captures enum value "IDP_TYPE_ENTRA_ID"
 	V1alpha1IdpTypeIDPTYPEENTRAID V1alpha1IdpType = "IDP_TYPE_ENTRA_ID"
 )
@@ -62,7 +66,7 @@ var v1alpha1IdpTypeEnum []any
 
 func init() {
 	var res []V1alpha1IdpType
-	if err := json.Unmarshal([]byte(`["IDP_TYPE_UNSPECIFIED","IDP_TYPE_DUO","IDP_TYPE_OKTA","IDP_TYPE_ORY","IDP_TYPE_SELF","IDP_TYPE_KEYCLOAK","IDP_TYPE_ENTRA_ID"]`), &res); err != nil {
+	if err := json.Unmarshal([]byte(`["IDP_TYPE_UNSPECIFIED","IDP_TYPE_DUO","IDP_TYPE_OKTA","IDP_TYPE_ORY","IDP_TYPE_SELF","IDP_TYPE_KEYCLOAK","IDP_TYPE_PING","IDP_TYPE_ENTRA_ID"]`), &res); err != nil {
 		panic(err)
 	}
 	for _, v := range res {
