@@ -315,10 +315,13 @@ func (s *service) generateProof(
 	return proof, nil
 }
 
-func (s *service) generateTokenWithRetry(ctx context.Context, clientCredentials *idpcore.ClientCredentials) (string, error) {
+func (s *service) generateTokenWithRetry(
+	ctx context.Context,
+	clientCredentials *idpcore.ClientCredentials,
+) (string, error) {
 	return retry.NewWithData[string](
-		retry.Attempts(5),
-		retry.Delay(2*time.Second),
+		retry.Attempts(5),          //nolint:mnd // not a magic number
+		retry.Delay(2*time.Second), //nolint:mnd // not a magic number
 		retry.DelayType(retry.BackOffDelay),
 		retry.Context(ctx),
 		retry.OnRetry(func(attempt uint, err error) {
