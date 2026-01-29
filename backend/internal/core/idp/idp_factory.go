@@ -25,6 +25,7 @@ func (f *idpFactory) Create(
 	issuerSettings *types.IssuerSettings,
 ) (Idp, error) {
 	var idp Idp
+	var err error
 
 	switch issuerSettings.IdpType {
 	case types.IDP_TYPE_DUO:
@@ -40,12 +41,16 @@ func (f *idpFactory) Create(
 	case types.IDP_TYPE_PING:
 		idp = NewPingIdp(issuerSettings.PingIdpSettings)
 	case types.IDP_TYPE_ENTRA_ID:
-		idp = NewEntraIdp(issuerSettings.EntraIdpSettings)
+		idp, err = NewEntraIdp(issuerSettings.EntraIdpSettings)
 	default:
 		return nil, fmt.Errorf("unknown IDP type %s", issuerSettings.IdpType)
 	}
 
-	err := idp.TestSettings(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("unable to create IDP instance: %w", err)
+	}
+
+	err = idp.TestSettings(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("failed to test IDP settings: %w", err)
 	}

@@ -22,6 +22,7 @@ import (
 	vcsdk "github.com/agntcy/identity/api/client/client/vc_service"
 	identitymodels "github.com/agntcy/identity/api/client/models"
 	"github.com/agntcy/identity/pkg/oidc"
+	"github.com/avast/retry-go/v5"
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 )
@@ -282,93 +283,8 @@ func (s *service) generateProof(
 	)
 
 	// If client credentials are provided, use them to generate the proof
-	// via the external OIDC authenticator. When scopes are present, use
-	// TokenWithScopes; otherwise fall back to Token.
 	if clientCredentials.ClientSecret != "" {
-		logger := log.FromContext(ctx).
-			WithField("issuer", clientCredentials.Issuer).
-			WithField("client_id", clientCredentials.ClientID).
-			WithField("scopes_count", len(clientCredentials.Scopes))
-
-		logger.Debug("generateProof using OIDC authenticator with client secret")
-
-		if len(clientCredentials.Scopes) > 0 {
-			// For scoped OAuth (e.g., Entra), use exponential backoff to handle
-			// secret activation and Application ID URI propagation delays.
-			const (
-				maxAttempts      = 10
-				initialDelay     = 2 * time.Second
-				maxDelay         = 15 * time.Second
-				maxTotalDuration = 90 * time.Second
-			)
-
-			start := time.Now()
-			delay := initialDelay
-
-			for attempt := 0; attempt < maxAttempts; attempt++ {
-				if attempt > 0 {
-					logger.WithField("attempt", attempt+1).
-						WithField("sleep", delay.String()).
-						Debug("Retrying TokenWithScopes after delay")
-
-					// Respect context cancellation and cap total wait time.
-					select {
-					case <-ctx.Done():
-						return nil, ctx.Err()
-					case <-time.After(delay):
-					}
-
-					if time.Since(start) > maxTotalDuration {
-						logger.WithField("duration", time.Since(start).String()).Warn("TokenWithScopes retry window exceeded")
-						break
-					}
-				}
-
-				logger.WithField("attempt", attempt+1).Debug("generateProof calling TokenWithScopes")
-				proofValue, err = s.oidcAuthenticator.Token(
-					ctx,
-					clientCredentials.Issuer,
-					clientCredentials.ClientID,
-					clientCredentials.ClientSecret,
-					oidc.WithScopes(clientCredentials.Scopes),
-				)
-
-				if err == nil {
-					logger.WithField("attempt", attempt+1).Info("TokenWithScopes succeeded")
-					break
-				}
-
-				// Check if this is a retryable error (secret propagation or Application ID URI propagation)
-				errMsg := err.Error()
-				isRetryable := strings.Contains(errMsg, "invalid_client") ||
-					strings.Contains(errMsg, "AADSTS7000215") ||
-					strings.Contains(errMsg, "AADSTS500011") // Resource principal not found (Application ID URI propagation)
-
-				logger.
-					WithError(err).
-					WithField("attempt", attempt+1).
-					WithField("retryable", isRetryable).
-					Warn("TokenWithScopes attempt failed")
-
-				if !isRetryable {
-					break
-				}
-
-				// Exponential backoff with cap.
-				delay *= 2
-				if delay > maxDelay {
-					delay = maxDelay
-				}
-			}
-		} else {
-			logger.Debug("generateProof calling Token (no scopes)")
-			proofValue, err = s.oidcAuthenticator.Token(
-				ctx,
-				clientCredentials.Issuer,
-				clientCredentials.ClientID,
-				clientCredentials.ClientSecret,
-			)
-		}
+		proofValue, err = s.generateTokenWithRetry(ctx, clientCredentials)
 	} else {
 		log.FromContext(ctx).
 			WithField("issuer", clientCredentials.Issuer).
@@ -402,6 +318,28 @@ func (s *service) generateProof(
 	proof.ProofValue = proofValue
 
 	return proof, nil
+}
+
+func (s *service) generateTokenWithRetry(ctx context.Context, clientCredentials *idpcore.ClientCredentials) (string, error) {
+	return retry.NewWithData[string](
+		retry.Attempts(5),
+		retry.Delay(2*time.Second),
+		retry.DelayType(retry.BackOffDelay),
+		retry.Context(ctx),
+		retry.OnRetry(func(attempt uint, err error) {
+			log.FromContext(ctx).
+				WithField("attempt", attempt).
+				Debugf("Re-try generating token with issuer %s", clientCredentials.Issuer)
+		}),
+	).Do(func() (string, error) {
+		return s.oidcAuthenticator.Token(
+			ctx,
+			clientCredentials.Issuer,
+			clientCredentials.ClientID,
+			clientCredentials.ClientSecret,
+			oidc.WithScopes(clientCredentials.Scopes),
+		)
+	})
 }
 
 func (s *service) VerifyVerifiableCredential(
