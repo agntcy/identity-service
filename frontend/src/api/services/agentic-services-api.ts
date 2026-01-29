@@ -94,7 +94,7 @@ export class AgenticServicesAPIClass extends AgenticServiceApi.Api<App> {
   };
 
   public setAuthInfo = (authInfo?: AuthInfo) => {
-    this.instance.defaults.timeout = 15000; // Set a default timeout of 15 seconds
+    this.instance.defaults.timeout = 120000; // Set a default timeout of 2 minutes, some IdPs take time to provision resources.
     this.authInfo = authInfo;
     this.instance.interceptors.request.use(this.reqResInterceptor, this.reqErrInterceptor);
     this.instance.interceptors.response.use(this.resResInterceptor, this.resErrInterceptor);

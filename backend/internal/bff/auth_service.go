@@ -271,22 +271,13 @@ func (s *authService) issueAccessToken(
 			err         error
 		)
 
-		if len(clientCredentials.Scopes) > 0 {
-			accessToken, err = s.oidcAuthenticator.Token(
-				ctx,
-				clientCredentials.Issuer,
-				clientCredentials.ClientID,
-				clientCredentials.ClientSecret,
-				oidc.WithScopes(clientCredentials.Scopes),
-			)
-		} else {
-			accessToken, err = s.oidcAuthenticator.Token(
-				ctx,
-				clientCredentials.Issuer,
-				clientCredentials.ClientID,
-				clientCredentials.ClientSecret,
-			)
-		}
+		accessToken, err = s.oidcAuthenticator.Token(
+			ctx,
+			clientCredentials.Issuer,
+			clientCredentials.ClientID,
+			clientCredentials.ClientSecret,
+			oidc.WithScopes(clientCredentials.Scopes),
+		)
 		if err != nil {
 			return "", fmt.Errorf("oidc authenticator failed to issue JWT: %w", err)
 		}
