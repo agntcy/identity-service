@@ -266,12 +266,7 @@ func (s *authService) issueAccessToken(
 ) (string, error) {
 	if issuer.IdpType != settingstypes.IDP_TYPE_SELF && clientCredentials.ClientSecret != "" {
 		// Issue a token from an IdP
-		var (
-			accessToken string
-			err         error
-		)
-
-		accessToken, err = s.oidcAuthenticator.Token(
+		accessToken, err := s.oidcAuthenticator.Token(
 			ctx,
 			clientCredentials.Issuer,
 			clientCredentials.ClientID,

@@ -30,16 +30,6 @@ func (ValidAuthenticator) Token(
 	return ValidAccessToken, nil
 }
 
-func (ValidAuthenticator) TokenWithScopes(
-	ctx context.Context,
-	issuer string,
-	clientID string,
-	clientSecret string,
-	scopes []string,
-) (string, error) {
-	return ValidAccessToken, nil
-}
-
 type ErroneousAuthenticator struct{}
 
 func NewErroneousAuthenticator() oidc.Authenticator {
@@ -52,16 +42,6 @@ func (ErroneousAuthenticator) Token(
 	clientID string,
 	clientSecret string,
 	options ...oidc.AuthenticatorTokenOption,
-) (string, error) {
-	return "", errors.New("invalid authentication")
-}
-
-func (ErroneousAuthenticator) TokenWithScopes(
-	ctx context.Context,
-	issuer string,
-	clientID string,
-	clientSecret string,
-	scopes []string,
 ) (string, error) {
 	return "", errors.New("invalid authentication")
 }
