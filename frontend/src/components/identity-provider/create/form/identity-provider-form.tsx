@@ -16,7 +16,7 @@ import DuoLogo from '@/assets/duo.svg?react';
 import OktaLogo from '@/assets/okta.svg?react';
 import OasfLogo from '@/assets/oasf.svg?react';
 import OryLogo from '@/assets/ory.svg?react';
-import PingLogo from '@/assets/ping.svg?react';
+import PingLogo from '@/assets/ping.jpg';
 import KeycloakLogo from '@/assets/keycloak.png';
 import EntraLogo from '@/assets/entra.svg?react';
 import {IdpType} from '@/types/api/settings';
@@ -76,7 +76,7 @@ export const IdentityProviderForm = ({isLoading = false}: {isLoading?: boolean})
     {
       type: IdpType.IDP_TYPE_PING,
       title: 'Ping',
-      imgURI: <PingLogo />,
+      imgURI: <img src={PingLogo} alt="Ping Logo" className="w-6 h-6" />,
       isDisabled: isLoading || !isEmptyIdp,
       useTooltip: isEmptyIdp
     },

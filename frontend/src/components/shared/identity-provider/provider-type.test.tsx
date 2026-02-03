@@ -55,12 +55,8 @@ vi.mock('@/assets/ory.svg?react', () => ({
   ))
 }));
 
-vi.mock('@/assets/ping.svg?react', () => ({
-  default: vi.fn((props) => (
-    <svg data-testid="ping-logo" {...props}>
-      <title>Ping Logo</title>
-    </svg>
-  ))
+vi.mock('@/assets/ping.jpg', () => ({
+  default: 'ping-logo.jpg'
 }));
 
 // Mock constants - use string literals instead of enum references
@@ -186,7 +182,7 @@ describe('ProviderType', () => {
     it('renders Ping logo and label', () => {
       render(<ProviderType type={IdpType.IDP_TYPE_PING} />);
 
-      const pingLogo = screen.getByTestId('ping-logo');
+      const pingLogo = screen.getByAltText('Ping');
       expect(pingLogo).toBeInTheDocument();
       expect(pingLogo).toHaveClass('h-[22px] w-[22px]');
 
