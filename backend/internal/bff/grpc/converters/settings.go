@@ -38,6 +38,21 @@ func ToOktaIdpSettings(
 	}
 }
 
+func ToThalesIdpSettings(
+	src *identity_service_sdk_go.ThalesIdpSettings,
+) *settingstypes.ThalesIdpSettings {
+	if src == nil {
+		return nil
+	}
+
+	return &settingstypes.ThalesIdpSettings{
+		IssuerUrl:       src.GetIssuerUrl(),
+		SecretID:        src.GetSecret_Id(),
+		SecretKeyValue:  src.GetSecretKeyValue(),
+		RegistrationUrl: src.GetRegistrationUrl(),
+	}
+}
+
 func FromDuoIdpSettings(
 	src *settingstypes.DuoIdpSettings,
 ) *identity_service_sdk_go.DuoIdpSettings {
@@ -215,6 +230,7 @@ func ToIssuerSettings(
 		KeycloakIdpSettings: ToKeycloakIdpSettings(src.GetKeycloakIdpSettings()),
 		PingIdpSettings:     ToPingIdpSettings(src.GetPingIdpSettings()),
 		EntraIdpSettings:    ToEntraIdpSettings(src.GetEntraIdpSettings()),
+		ThalesIdpSettings:   ToThalesIdpSettings(src.GetThalesIdpSettings()),
 	}
 }
 
