@@ -25,7 +25,11 @@ export const IdentityProvidersSchema = z
     region: z.string().optional(),
     tenantIdEntra: z.string().optional(),
     clientIdEntra: z.string().optional(),
-    clientSecretEntra: z.string().optional()
+    clientSecretEntra: z.string().optional(),
+    issuerUrl: z.string().optional(),
+    registrationUrl: z.string().optional(),
+    secretId: z.string().optional(),
+    secretKeyValue: z.string().optional()
   })
   .superRefine((data, ctx) => {
     if (data.provider === IdpType.IDP_TYPE_DUO) {

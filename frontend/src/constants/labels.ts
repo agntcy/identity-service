@@ -20,7 +20,8 @@ export const labels = {
     [IdpType.IDP_TYPE_ORY]: 'Ory',
     [IdpType.IDP_TYPE_KEYCLOAK]: 'Keycloak',
     [IdpType.IDP_TYPE_PING]: 'Ping Identity',
-    [IdpType.IDP_TYPE_ENTRA_ID]: 'Microsoft Entra ID'
+    [IdpType.IDP_TYPE_ENTRA_ID]: 'Microsoft Entra ID',
+    [IdpType.IDP_TYPE_THALES]: 'Thales'
   },
   rulesActions: {
     [RuleAction.RULE_ACTION_UNSPECIFIED]: 'Unspecified',

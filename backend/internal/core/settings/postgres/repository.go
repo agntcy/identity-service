@@ -80,6 +80,12 @@ func (r *repository) UpdateIssuerSettings(
 			existingSettings.EntraIdpSettings = model.EntraIdpSettings
 			previousIdpSettingsID = ptrutil.Derefrence(existingSettings.EntraIdpSettingsID, uuid.UUID{})
 			emptyIdpSettings = &EntraIdpSettings{}
+
+		case types.IDP_TYPE_THALES:
+			existingSettings.ThalesIdpSettings = model.ThalesIdpSettings
+			previousIdpSettingsID = ptrutil.Derefrence(existingSettings.ThalesIdpSettingsID, uuid.UUID{})
+			emptyIdpSettings = &ThalesIdpSettings{}
+
 		}
 
 		updated := tx.
