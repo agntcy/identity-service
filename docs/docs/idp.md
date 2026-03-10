@@ -262,7 +262,7 @@ Before you begin the Identity Provider connection process, ensure you have the f
 :::tip[NOTE]
 You can follow the [Microsoft Entra ID App Registration documentation](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app) for detailed instructions on how to register and configure applications within Microsoft Entra ID.
 
-The application requires Microsoft Graph API permissions with administrative consent to manage other applications and service principals. Specifically, you need the `Application.ReadWrite.All` permission granted as an application permission (not delegated).
+The application requires Microsoft Graph API permissions with administrative consent to manage other applications and service principals. Specifically, you need the [`Application.ReadWrite.All`](https://learn.microsoft.com/en-us/graph/permissions-reference#applicationreadwriteall) permission granted as an application permission (not delegated).
 :::
 
 :::warning[Important: Replication Delay]
@@ -307,9 +307,7 @@ When creating your app registration in Microsoft Entra ID, ensure the following:
 
 1. **Application Type:** Register as a "Web" application (though any type supporting client credentials will work)
 2. **Authentication:** Configure for OAuth 2.0 client credentials flow
-3. **API Permissions:** Grant the following Microsoft Graph API permissions:
-   - `Application.ReadWrite.All` (Application permission, requires admin consent)
-   - This permission allows the AGNTCY Identity Service to create and manage application registrations and service principals on your behalf
+3. **API Permissions:** Grant the Microsoft Graph API [`Application.ReadWrite.All`](https://learn.microsoft.com/en-us/graph/permissions-reference#applicationreadwriteall) permission as an Application permission (not Delegated), with admin consent. This allows the AGNTCY Identity Service to create and manage application registrations and service principals on your behalf.
 4. **Client Secret:** Create a client secret and securely store the value (it will only be shown once). Follow the [Microsoft documentation on adding credentials](https://learn.microsoft.com/en-us/entra/identity-platform/how-to-add-credentials?tabs=client-secret) for step-by-step instructions.
 5. **Admin Consent:** Ensure an administrator has granted consent for the API permissions
 
