@@ -283,6 +283,17 @@ You can follow the [PingOne documentation](https://docs.pingidentity.com/r/en-us
 Worker applications in PingOne are designed for server-to-server authentication using the OAuth 2.0 client credentials grant type, which is ideal for the AGNTCY Identity Service integration.
 :::
 
+### PingOne Application Configuration
+
+When creating your worker application in PingOne, ensure the following:
+
+1. **Application Type:** Select "Worker" as the application type
+2. **Grant Type:** Ensure "Client Credentials" is enabled
+3. **Scopes:** Grant the necessary scopes for the application to manage other applications (typically administrative scopes)
+4. **Token Endpoint Authentication Method:** Use "Client Secret Basic" or "Client Secret Post"
+
+The AGNTCY Identity Service will use this worker application to create and manage OAuth client credentials for your agentic services automatically.
+
 ### Identity Provider Connection Steps
 
 Follow these steps to configure and register your Identity Provider:
@@ -312,14 +323,3 @@ Follow these steps to configure and register your Identity Provider:
    - Once all required details (Environment ID, Region, Client ID, and Client Secret) have been accurately entered, click the **Save** button.
    - Upon successful saving, your Ping Identity provider will be registered and configured within AGNTCY Identity Service.
    - If you need to discard the entered information and cancel the creation process, click the **Cancel** button.
-
-### PingOne Application Configuration
-
-When creating your worker application in PingOne, ensure the following:
-
-1. **Application Type:** Select "Worker" as the application type
-2. **Grant Type:** Ensure "Client Credentials" is enabled
-3. **Scopes:** Grant the necessary scopes for the application to manage other applications (typically administrative scopes)
-4. **Token Endpoint Authentication Method:** Use "Client Secret Basic" or "Client Secret Post"
-
-The AGNTCY Identity Service will use this worker application to create and manage OAuth client credentials for your agentic services automatically.
