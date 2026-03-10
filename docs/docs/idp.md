@@ -220,10 +220,10 @@ Follow these steps to configure and register your Identity Provider:
    - **Environment ID:** Enter the Environment ID from your PingOne console. This uniquely identifies your PingOne environment.
      - _Example:_ `abc123-def4-5678-90ab-cdef12345678`
    - **Region:** Specify the region where your PingOne environment is hosted. Common values are:
-     - `com` for North America (<https://auth.pingone.com>)
-     - `eu` for Europe (<https://auth.pingone.eu>)
-     - `com.au` for Australia (<https://auth.pingone.com.au>)
-     - `ca` for Canada (<https://auth.pingone.ca>)
+     - `com` for North America (https://auth.pingone.com)
+     - `eu` for Europe (https://auth.pingone.eu)
+     - `com.au` for Australia (https://auth.pingone.com.au)
+     - `ca` for Canada (https://auth.pingone.ca)
    - **Client ID:** Input the Client ID from your worker application. This uniquely identifies your application within PingOne.
      - _Example:_ `a1b2c3d4-e5f6-7890-abcd-ef1234567890`
    - **Client Secret:** Provide the Client Secret from your worker application. This is a sensitive credential used for authenticating API requests. For security purposes, the input in this field will be masked (displayed as asterisks).
@@ -243,3 +243,74 @@ When creating your worker application in PingOne, ensure the following:
 4. **Token Endpoint Authentication Method:** Use "Client Secret Basic" or "Client Secret Post"
 
 The AGNTCY Identity Service will use this worker application to create and manage OAuth client credentials for your agentic services automatically.
+
+## Connecting Microsoft Entra ID as an Identity Provider
+
+This guide specifically details the process for configuring [Microsoft Entra ID](https://www.microsoft.com/en-us/security/business/identity-access/microsoft-entra-id) (formerly Azure Active Directory) as an Identity Provider.
+
+### Prerequisites
+
+Before you begin the Identity Provider connection process, ensure you have the following:
+
+- **Access to AGNTCY Identity Service:** You must have an administrator role or sufficient permissions within the AGNTCY Identity Service application to access the Settings and connect Identity Providers.
+- **Microsoft Azure Account:** An active [Microsoft Azure](https://portal.azure.com/) account with access to Microsoft Entra ID (formerly Azure Active Directory).
+- **App Registration Details:** You must have an application registered in Microsoft Entra ID. From this app registration, you will need to retrieve:
+  - Your **Tenant ID** (also known as Directory ID)
+  - The **Client ID** (also known as Application ID)
+  - A **Client Secret** (application secret value) - see [how to add credentials](https://learn.microsoft.com/en-us/entra/identity-platform/how-to-add-credentials?tabs=client-secret)
+
+:::tip[NOTE]
+You can follow the [Microsoft Entra ID App Registration documentation](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app) for detailed instructions on how to register and configure applications within Microsoft Entra ID.
+
+The application requires Microsoft Graph API permissions with administrative consent to manage other applications and service principals. Specifically, you need the `Application.ReadWrite.All` permission granted as an application permission (not delegated).
+:::
+
+:::warning[Important: Replication Delay]
+Microsoft Entra ID uses a globally distributed architecture. After creating applications or service principals, there may be a brief replication delay (typically seconds to a couple of minutes) before the resources are available across all data centers. The AGNTCY Identity Service automatically handles this with built-in retry mechanisms.
+
+For more information, see the [Microsoft documentation on 404 errors](https://learn.microsoft.com/en-us/troubleshoot/entra/entra-id/app-integration/404-not-found-error-manage-objects-microsoft-graph).
+:::
+
+### Identity Provider Connection Steps
+
+Follow these steps to configure and register your Identity Provider:
+
+1. **Select Identity Provider:**
+
+   - On the "Identity Provider Connection" page, you will be presented with a selection of supported Identity Providers.
+   - Carefully choose the provider you intend to integrate:
+     - **Microsoft Entra ID** (for Microsoft Azure Active Directory integration)
+   - **Critical Note:** The selection of an Identity Provider is a **one-time** action. Once saved, this choice cannot be modified later. Ensure you select the correct provider before proceeding.
+
+2. **Enter Provider Details:**
+
+   - After selecting your desired Identity Provider (Microsoft Entra ID), the "Provider details" section will become active, prompting you for specific configuration parameters.
+   - **Tenant ID:** Enter the Tenant ID (Directory ID) from your Microsoft Entra ID. This uniquely identifies your Azure AD tenant and can be found in the Azure Portal under Microsoft Entra ID > Overview.
+     - _Example:_ `12345678-1234-1234-1234-123456789abc`
+   - **Client ID:** Input the Client ID (Application ID) from your app registration. This uniquely identifies your application within Microsoft Entra ID.
+     - _Example:_ `abcdef12-3456-7890-abcd-ef1234567890`
+   - **Client Secret:** Provide the Client Secret value from your app registration. This is a sensitive credential used for authenticating API requests. For security purposes, the input in this field will be masked (displayed as asterisks).
+     - Note: Client secrets have an expiration date. Ensure you track the expiration and rotate the secret before it expires.
+
+   ![Register Issuer With Microsoft Entra ID](/img/register-issuer-entra.png)
+
+3. **Save Configuration:**
+   - Once all required details (Tenant ID, Client ID, and Client Secret) have been accurately entered, click the **Save** button.
+   - Upon successful saving, your Microsoft Entra ID provider will be registered and configured within AGNTCY Identity Service.
+   - If you need to discard the entered information and cancel the creation process, click the **Cancel** button.
+
+![Register Issuer With Microsoft Entra ID Success](/img/register-issuer-entra-done.png)
+
+### Microsoft Entra ID Application Configuration
+
+When creating your app registration in Microsoft Entra ID, ensure the following:
+
+1. **Application Type:** Register as a "Web" application (though any type supporting client credentials will work)
+2. **Authentication:** Configure for OAuth 2.0 client credentials flow
+3. **API Permissions:** Grant the following Microsoft Graph API permissions:
+   - `Application.ReadWrite.All` (Application permission, requires admin consent)
+   - This permission allows the AGNTCY Identity Service to create and manage application registrations and service principals on your behalf
+4. **Client Secret:** Create a client secret and securely store the value (it will only be shown once). Follow the [Microsoft documentation on adding credentials](https://learn.microsoft.com/en-us/entra/identity-platform/how-to-add-credentials?tabs=client-secret) for step-by-step instructions.
+5. **Admin Consent:** Ensure an administrator has granted consent for the API permissions
+
+The AGNTCY Identity Service will use this app registration to dynamically create and manage OAuth client credentials for your agentic services. Each agentic service will receive its own dedicated app registration with isolated credentials, following the principle of least privilege.
