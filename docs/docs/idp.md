@@ -73,6 +73,86 @@ Follow these steps to configure and register your Identity Provider:
 
 ![Register Issuer With Duo Success](/img/register-issuer-duo-done.png)
 
+## Connecting Microsoft Entra ID as an Identity Provider
+
+This guide specifically details the process for configuring [Microsoft Entra ID](https://www.microsoft.com/en-us/security/business/identity-access/microsoft-entra-id) (formerly Azure Active Directory) as an Identity Provider.
+
+### Prerequisites
+
+Before you begin the Identity Provider connection process, ensure you have the following:
+
+- **Access to AGNTCY Identity Service:** You must have an administrator role or sufficient permissions within the AGNTCY Identity Service application to access the Settings and connect Identity Providers.
+- **Microsoft Azure Account:** An active [Microsoft Azure](https://portal.azure.com/) account with access to Microsoft Entra ID (formerly Azure Active Directory).
+- **Entra ID Application Details:** You must have an application registered in Microsoft Entra ID with the Microsoft Graph API [`Application.ReadWrite.All`](https://learn.microsoft.com/en-us/graph/permissions-reference#applicationreadwriteall) permission (granted as Application permission with admin consent). From this app registration, you will need to retrieve:
+  - Your **Tenant ID** (Directory ID)
+  - The **Client ID** (Application ID)
+  - A **Client Secret** (application secret value)
+
+  If you need to set up your application, follow the [Entra ID Application Configuration](#entra-id-application-configuration) steps below. If your application is already configured, jump directly to [Identity Provider Connection Steps](#identity-provider-connection-steps-1).
+
+### Entra ID Application Configuration
+
+If you already have your Entra ID Application Details, you can skip this section and jump directly to [Identity Provider Connection Steps](#identity-provider-connection-steps-1).
+
+If you need to set up your Entra ID application from scratch, follow these steps:
+
+1. **Create App Registration:** Follow the [Microsoft Entra ID App Registration documentation](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app) to register a new "Web" application (though any type supporting client credentials will work).
+
+2. **Configure Microsoft Graph API Permissions:**
+   - Navigate to **API permissions** in your app registration
+   - Click **Add a permission** → **Microsoft Graph** → **Application permissions**
+   - Search for and add [`Application.ReadWrite.All`](https://learn.microsoft.com/en-us/graph/permissions-reference#applicationreadwriteall)
+   - Click **Grant admin consent for [Your Organization]** (requires administrator role)
+   - Verify the permission shows "Granted" status
+   - This allows AGNTCY Identity Service to create and manage application registrations for your agentic services
+
+3. **Create Client Secret:** Follow the [Microsoft documentation on adding credentials](https://learn.microsoft.com/en-us/entra/identity-platform/how-to-add-credentials?tabs=client-secret) to create a client secret. Save the value securely (it will only be shown once).
+
+4. **Gather Required Information:**
+   - **Tenant ID** (Directory ID) - found in your app registration overview
+   - **Client ID** (Application ID) - found in your app registration overview
+   - **Client Secret** - the value you created in step 3
+
+![Entra ID App Configuration](/img/entra-app-configuration.png)
+
+:::warning[Important: Replication Delay]
+Microsoft Entra ID uses a globally distributed architecture. After creating applications or service principals, there may be a brief replication delay (typically seconds to a couple of minutes) before the resources are available across all data centers. The AGNTCY Identity Service automatically handles this with built-in retry mechanisms.
+
+For more information, see the [Microsoft documentation on 404 errors](https://learn.microsoft.com/en-us/troubleshoot/entra/entra-id/app-integration/404-not-found-error-manage-objects-microsoft-graph).
+:::
+
+### Identity Provider Connection Steps
+
+Follow these steps to configure and register your Identity Provider:
+
+1. **Select Identity Provider:**
+
+   - On the "Identity Provider Connection" page, you will be presented with a selection of supported Identity Providers.
+   - Carefully choose the provider you intend to integrate:
+     - **Microsoft Entra ID** (for Microsoft Azure Active Directory integration)
+   - **Critical Note:** The selection of an Identity Provider is a **one-time** action. Once saved, this choice cannot be modified later. Ensure you select the correct provider before proceeding.
+
+2. **Enter Provider Details:**
+
+   After selecting Microsoft Entra ID, the "Provider details" section will become active. Enter the values you gathered from the Prerequisites section:
+
+   - **Tenant ID:** Your Azure AD Tenant ID (Directory ID)
+     - _Example:_ `12345678-1234-1234-1234-123456789abc`
+   - **Client ID:** Your Application ID from the app registration
+     - _Example:_ `abcdef12-3456-7890-abcd-ef1234567890`
+   - **Client Secret:** The client secret value you created (will be masked for security)
+
+   ![Register Issuer With Microsoft Entra ID](/img/register-issuer-entra.png)
+
+3. **Save Configuration:**
+   - Click the **Save** button to register your Microsoft Entra ID provider.
+   - Upon successful saving, AGNTCY Identity Service will verify the connection and register the provider.
+   - Click **Cancel** to discard changes if needed.
+
+![Register Issuer With Microsoft Entra ID Success](/img/register-issuer-entra-done.png)
+
+The AGNTCY Identity Service will use this app registration to dynamically create and manage OAuth client credentials for your agentic services. Each agentic service will receive its own dedicated app registration with isolated credentials, following the principle of least privilege.
+
 ## Connecting Okta as an Identity Provider
 
 This guide specifically details the process for configuring Okta as an Identity Provider.
@@ -243,72 +323,3 @@ When creating your worker application in PingOne, ensure the following:
 4. **Token Endpoint Authentication Method:** Use "Client Secret Basic" or "Client Secret Post"
 
 The AGNTCY Identity Service will use this worker application to create and manage OAuth client credentials for your agentic services automatically.
-
-## Connecting Microsoft Entra ID as an Identity Provider
-
-This guide specifically details the process for configuring [Microsoft Entra ID](https://www.microsoft.com/en-us/security/business/identity-access/microsoft-entra-id) (formerly Azure Active Directory) as an Identity Provider.
-
-### Prerequisites
-
-Before you begin the Identity Provider connection process, ensure you have the following:
-
-- **Access to AGNTCY Identity Service:** You must have an administrator role or sufficient permissions within the AGNTCY Identity Service application to access the Settings and connect Identity Providers.
-- **Microsoft Azure Account:** An active [Microsoft Azure](https://portal.azure.com/) account with access to Microsoft Entra ID (formerly Azure Active Directory).
-- **App Registration Details:** You must have an application registered in Microsoft Entra ID. From this app registration, you will need to retrieve:
-  - Your **Tenant ID** (also known as Directory ID)
-  - The **Client ID** (also known as Application ID)
-  - A **Client Secret** (application secret value) - see [how to add credentials](https://learn.microsoft.com/en-us/entra/identity-platform/how-to-add-credentials?tabs=client-secret)
-
-:::tip[NOTE]
-You can follow the [Microsoft Entra ID App Registration documentation](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app) for detailed instructions on how to register and configure applications within Microsoft Entra ID.
-
-The application requires Microsoft Graph API permissions with administrative consent to manage other applications and service principals. Specifically, you need the [`Application.ReadWrite.All`](https://learn.microsoft.com/en-us/graph/permissions-reference#applicationreadwriteall) permission granted as an application permission (not delegated).
-:::
-
-:::warning[Important: Replication Delay]
-Microsoft Entra ID uses a globally distributed architecture. After creating applications or service principals, there may be a brief replication delay (typically seconds to a couple of minutes) before the resources are available across all data centers. The AGNTCY Identity Service automatically handles this with built-in retry mechanisms.
-
-For more information, see the [Microsoft documentation on 404 errors](https://learn.microsoft.com/en-us/troubleshoot/entra/entra-id/app-integration/404-not-found-error-manage-objects-microsoft-graph).
-:::
-
-### Identity Provider Connection Steps
-
-Follow these steps to configure and register your Identity Provider:
-
-1. **Select Identity Provider:**
-
-   - On the "Identity Provider Connection" page, you will be presented with a selection of supported Identity Providers.
-   - Carefully choose the provider you intend to integrate:
-     - **Microsoft Entra ID** (for Microsoft Azure Active Directory integration)
-   - **Critical Note:** The selection of an Identity Provider is a **one-time** action. Once saved, this choice cannot be modified later. Ensure you select the correct provider before proceeding.
-
-2. **Enter Provider Details:**
-
-   - After selecting your desired Identity Provider (Microsoft Entra ID), the "Provider details" section will become active, prompting you for specific configuration parameters.
-   - **Tenant ID:** Enter the Tenant ID (Directory ID) from your Microsoft Entra ID. This uniquely identifies your Azure AD tenant and can be found in the Azure Portal under Microsoft Entra ID > Overview.
-     - _Example:_ `12345678-1234-1234-1234-123456789abc`
-   - **Client ID:** Input the Client ID (Application ID) from your app registration. This uniquely identifies your application within Microsoft Entra ID.
-     - _Example:_ `abcdef12-3456-7890-abcd-ef1234567890`
-   - **Client Secret:** Provide the Client Secret value from your app registration. This is a sensitive credential used for authenticating API requests. For security purposes, the input in this field will be masked (displayed as asterisks).
-     - Note: Client secrets have an expiration date. Ensure you track the expiration and rotate the secret before it expires.
-
-   ![Register Issuer With Microsoft Entra ID](/img/register-issuer-entra.png)
-
-3. **Save Configuration:**
-   - Once all required details (Tenant ID, Client ID, and Client Secret) have been accurately entered, click the **Save** button.
-   - Upon successful saving, your Microsoft Entra ID provider will be registered and configured within AGNTCY Identity Service.
-   - If you need to discard the entered information and cancel the creation process, click the **Cancel** button.
-
-![Register Issuer With Microsoft Entra ID Success](/img/register-issuer-entra-done.png)
-
-### Microsoft Entra ID Application Configuration
-
-When creating your app registration in Microsoft Entra ID, ensure the following:
-
-1. **Application Type:** Register as a "Web" application (though any type supporting client credentials will work)
-2. **Authentication:** Configure for OAuth 2.0 client credentials flow
-3. **API Permissions:** Grant the Microsoft Graph API [`Application.ReadWrite.All`](https://learn.microsoft.com/en-us/graph/permissions-reference#applicationreadwriteall) permission as an Application permission (not Delegated), with admin consent. This allows the AGNTCY Identity Service to create and manage application registrations and service principals on your behalf.
-4. **Client Secret:** Create a client secret and securely store the value (it will only be shown once). Follow the [Microsoft documentation on adding credentials](https://learn.microsoft.com/en-us/entra/identity-platform/how-to-add-credentials?tabs=client-secret) for step-by-step instructions.
-5. **Admin Consent:** Ensure an administrator has granted consent for the API permissions
-
-The AGNTCY Identity Service will use this app registration to dynamically create and manage OAuth client credentials for your agentic services. Each agentic service will receive its own dedicated app registration with isolated credentials, following the principle of least privilege.
