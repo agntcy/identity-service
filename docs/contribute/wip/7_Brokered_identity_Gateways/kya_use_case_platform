@@ -1,0 +1,91 @@
+—---With KYA —----  
+Agent Client with KYA Registration and Policy-Based Authorization
+
+```
+\+-------------------------------------------+
+| START: Agent (Github action, claude, cursor|
+\+-------------------------------------------+
+             |
+             v
+\+--------------------------+
+| AI Gateway (Envoy)       |
+| (mcp.prod.env.corp.net)
+\+--------------------------+
+             |
+             v
+\+--------------------------+
+| KYA Registration/Attestation|
+| 1. Agent registers with attributes/proves identity (KYA credential/VC)
+\+--------------------------+
+             | Token Request (KYA Proof, Location, Time Context)
+             v
+\+--------------------------+
+| Authorization Service    |
+| (Policy Evaluation)      |
+| 1. Validate KYA Attestation
+| 2. Evaluate Policy (based on Location, Time, etc.)
+| 3. Issue Initial Token (e.g., JWT with claims)
+\+--------------------------+
+             | Initial Token Issued
+             |
+\+--------------------------+
+| Agent Client (Send Request)|
+\+--------------------------+
+             | Request sent with Initial Token (e.g., JWT)
+             v
+\+--------------------------+
+| AI Gateway (Envoy)       |
+| (mcp.staging/prod.env.corp.net)
+\+--------------------------+
+             | MCPRoute intercepts request
+             v
+\+--------------------------+
+| Initial Token Validation |
+| 1. Extract Initial Token
+| 2. Validate Token (domain, org, signature, claims, expiration)
+\+--------------------------+
+             |
+             +--\[Validation Fails\]---\> Request Rejected (END)
+             |
+             +--\[Validation Success\]--\> Token Exchange Request
+             v
+\+--------------------------+
+| Token Exchange Service                                 |
+| 1. Exchanges Initial Token for                         |
+|    API/Domain specific Token                           |
+|   after Caller/Callee badge/cert verification          |
+\+--------------------------+
+             | New Token attached to request
+             v
+\+--------------------------+
+| Routing                  |
+\+--------------------------+
+        /              \
+       /                \
+      v                  v
+\+-----------------+  +----------------------+
+| Flux MCP Server |  | Victoria Metrics MCP |
+| (:9090/mcp) |  | (:8080/mcp) |
+\+-----------------+  \+----------------------+
+       | Remote or local origin access |
+       v                v
+\+-------------------------------------------+
+| connects to API/tool( eg read-only mode) using|
+| API/domain specific Token              |
+\+--------------------------------------------+
+             |
+             v
+         +-------+
+         |  END  |
+         +-------+
+   +------------------------------+
+   | Connects to \`vmselect\` service |
+   | in telemetry-system namespace |
+   | using API/domain specific Token |
+   +------------------------------+
+                    |
+                    v
+                +-------+
+                |  END  |
+                +-------+
+```
