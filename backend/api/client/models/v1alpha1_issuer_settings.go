@@ -49,6 +49,9 @@ type V1alpha1IssuerSettings struct {
 	// Settings for the Ping Identity Provider.
 	PingIdpSettings *V1alpha1PingIdpSettings `json:"pingIdpSettings,omitempty"`
 
+	// Settings for the Thales Onewelcome Identity Provider.
+	ThalesIdpSettings *V1alpha1ThalesIdpSettings `json:"thalesIdpSettings,omitempty"`
+
 	// UpdatedAt records the timestamp of the last update to the IssuerSettings
 	// Read Only: true
 	// Format: date-time
@@ -88,6 +91,10 @@ func (m *V1alpha1IssuerSettings) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validatePingIdpSettings(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateThalesIdpSettings(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -279,6 +286,29 @@ func (m *V1alpha1IssuerSettings) validatePingIdpSettings(formats strfmt.Registry
 	return nil
 }
 
+func (m *V1alpha1IssuerSettings) validateThalesIdpSettings(formats strfmt.Registry) error {
+	if swag.IsZero(m.ThalesIdpSettings) { // not required
+		return nil
+	}
+
+	if m.ThalesIdpSettings != nil {
+		if err := m.ThalesIdpSettings.Validate(formats); err != nil {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
+				return ve.ValidateName("thalesIdpSettings")
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
+				return ce.ValidateName("thalesIdpSettings")
+			}
+
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (m *V1alpha1IssuerSettings) validateUpdatedAt(formats strfmt.Registry) error {
 	if swag.IsZero(m.UpdatedAt) { // not required
 		return nil
@@ -328,6 +358,10 @@ func (m *V1alpha1IssuerSettings) ContextValidate(ctx context.Context, formats st
 	}
 
 	if err := m.contextValidatePingIdpSettings(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateThalesIdpSettings(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -521,6 +555,31 @@ func (m *V1alpha1IssuerSettings) contextValidatePingIdpSettings(ctx context.Cont
 			ce := new(errors.CompositeError)
 			if stderrors.As(err, &ce) {
 				return ce.ValidateName("pingIdpSettings")
+			}
+
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *V1alpha1IssuerSettings) contextValidateThalesIdpSettings(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.ThalesIdpSettings != nil {
+
+		if swag.IsZero(m.ThalesIdpSettings) { // not required
+			return nil
+		}
+
+		if err := m.ThalesIdpSettings.ContextValidate(ctx, formats); err != nil {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
+				return ve.ValidateName("thalesIdpSettings")
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
+				return ce.ValidateName("thalesIdpSettings")
 			}
 
 			return err

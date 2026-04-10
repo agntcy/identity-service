@@ -15,6 +15,7 @@ import {ExternalLinkIcon, InfoIcon} from 'lucide-react';
 import DuoLogo from '@/assets/duo.svg?react';
 import OktaLogo from '@/assets/okta.svg?react';
 import OasfLogo from '@/assets/oasf.svg?react';
+import ThaleLogo from '@/assets/thales.svg?react';
 import OryLogo from '@/assets/ory.svg?react';
 import PingLogo from '@/assets/ping.jpg';
 import KeycloakLogo from '@/assets/keycloak.png';
@@ -77,6 +78,13 @@ export const IdentityProviderForm = ({isLoading = false}: {isLoading?: boolean})
       type: IdpType.IDP_TYPE_PING,
       title: 'Ping',
       imgURI: <img src={PingLogo} alt="Ping Logo" className="w-6 h-6" />,
+      isDisabled: isLoading || !isEmptyIdp,
+      useTooltip: isEmptyIdp
+    },
+    {
+      type: IdpType.IDP_TYPE_THALES,
+      title: 'Onewelcome',
+      imgURI: <ThaleLogo />,
       isDisabled: isLoading || !isEmptyIdp,
       useTooltip: isEmptyIdp
     },
@@ -388,6 +396,69 @@ export const IdentityProviderForm = ({isLoading = false}: {isLoading?: boolean})
                       <FormLabel className="form-label">Client Secret</FormLabel>
                       <FormControl>
                         <PasswordInput placeholder="Type client secret..." {...field} disabled={isLoading} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+         {idpType === IdpType.IDP_TYPE_THALES && (
+          <div className="space-y-4">
+            <div>
+              <Typography variant="subtitle1" fontWeight={600}>
+                Provider details
+              </Typography>
+            </div>
+            <div className="space-y-2">
+              <div className="flex gap-4 items-start">
+                <FormField
+                  control={control}
+                  name="issuerUrl"
+                  render={({field}) => (
+                    <FormItem className="w-[50%]">
+                      <FormLabel className="form-label">Issuer URL</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Type Issuer URL..." {...field} disabled={isLoading || !isEmptyIdp} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={control}
+                  name="registrationUrl"
+                  render={({field}) => (
+                    <FormItem className="w-[50%]">
+                      <FormLabel className="form-label">Registration URL</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Type registration url" {...field} disabled={isLoading || !isEmptyIdp} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="flex gap-4 items-start pt-2">
+                <FormField
+                  control={control}
+                  name="secretId"
+                  render={({field}) => (
+                    <FormItem className="w-[50%]">
+                      <FormLabel className="form-label">Secret ID</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Type secret id" {...field} disabled={isLoading || !isEmptyIdp} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={control}
+                  name="secretKeyValue"
+                  render={({field}) => (
+                    <FormItem className="w-[50%]">
+                      <FormLabel className="form-label">Secret Key</FormLabel>
+                      <FormControl>
+                        <PasswordInput placeholder="Type secret key" {...field} disabled={isLoading} />
                       </FormControl>
                     </FormItem>
                   )}
