@@ -18,7 +18,7 @@
   ],
   "paths": {},
   "definitions": {
-    "googleprotobufAny": {
+    "protobufAny": {
       "type": "object",
       "properties": {
         "@type": {
@@ -43,7 +43,7 @@
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/googleprotobufAny"
+            "$ref": "#/definitions/protobufAny"
           }
         }
       }

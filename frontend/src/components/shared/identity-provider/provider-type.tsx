@@ -12,6 +12,7 @@ import OasfLogo from '@/assets/oasf.svg?react';
 import OryLogo from '@/assets/ory.svg?react';
 import PingLogo from '@/assets/ping.jpg';
 import EntraLogo from '@/assets/entra.svg?react';
+import ThalesLogo from '@/assets/thales.svg?react';
 import {IdpType} from '@/types/api/settings';
 import KeycloakLogo from '@/assets/keycloak.png';
 
@@ -23,6 +24,7 @@ export const ProviderType = ({type, className}: {type?: IdpType; className?: str
       {type === IdpType.IDP_TYPE_SELF && <OasfLogo className="h-[20px] w-[20px]" />}
       {type === IdpType.IDP_TYPE_ORY && <OryLogo className="h-[22px] w-[22px]" />}
       {type === IdpType.IDP_TYPE_ENTRA_ID && <EntraLogo className="h-[20px] w-[20px]" />}
+      {type === IdpType.IDP_TYPE_THALES && <ThalesLogo className="h-[20px] w-[20px]" />}
       {type === IdpType.IDP_TYPE_KEYCLOAK && <img src={KeycloakLogo} alt="Keycloak" className="h-[20px] w-[20px]" />}
       {type === IdpType.IDP_TYPE_PING && <img src={PingLogo} alt="Ping" className="h-[22px] w-[22px]" />}
       <Typography

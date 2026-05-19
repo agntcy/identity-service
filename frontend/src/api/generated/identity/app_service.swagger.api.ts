@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Copyright AGNTCY Contributors (https://github.com/agntcy)
- * SPDX-License-Identifier: Apache-2.0
- */
-
 /* eslint-disable */
 /* tslint:disable */
 // @ts-nocheck
@@ -147,7 +142,7 @@ export interface GetTasksResponseTaskList {
  *       "value": "1.212s"
  *     }
  */
-export interface GoogleprotobufAny {
+export interface ProtobufAny {
   /**
    * A URL/resource name that uniquely identifies the type of the serialized
    * protocol buffer message. This string must contain at least
@@ -186,7 +181,7 @@ export interface RpcStatus {
   /** @format int32 */
   code?: number;
   message?: string;
-  details?: GoogleprotobufAny[];
+  details?: ProtobufAny[];
 }
 
 /** Identity Service App. */
@@ -229,18 +224,19 @@ export interface V1Alpha1AppTypeCountEntry {
 }
 
 export interface V1Alpha1Badge {
-  /** [here]: https://www.w3.org/TR/vc-data-model/ */
   verifiableCredential?: V1Alpha1VerifiableCredential;
   appId?: string;
 }
 
 /**
  * BadgeClaims represents the content of a Badge VC defined [here]
+ *
  * [here]: https://spec.identity.agntcy.org/docs/vc/intro/
  */
 export interface V1Alpha1BadgeClaims {
   /**
    * The ID as defined [here]
+   *
    * [here]: https://www.w3.org/TR/vc-data-model/#credential-subject
    */
   id?: string;
@@ -263,6 +259,7 @@ export interface V1Alpha1CreateOasfAppResponse {
 /**
  * CredentialSchema represents the credentialSchema property of a Verifiable Credential.
  * more information can be found [here]
+ *
  * [here]: https://www.w3.org/TR/vc-data-model-2.0/#data-schemas
  */
 export interface V1Alpha1CredentialSchema {
@@ -275,6 +272,7 @@ export interface V1Alpha1CredentialSchema {
 /**
  * CredentialStatus represents the credentialStatus property of a Verifiable Credential.
  * more information can be found [here]
+ *
  * [here]: https://www.w3.org/TR/vc-data-model-2.0/#status
  */
 export interface V1Alpha1CredentialStatus {
@@ -368,6 +366,7 @@ export interface V1Alpha1Task {
 
 /**
  * DataModel represents the W3C Verifiable Credential Data Model defined [here]
+ *
  * [here]: https://www.w3.org/TR/vc-data-model/
  */
 export interface V1Alpha1VerifiableCredential {
@@ -377,10 +376,7 @@ export interface V1Alpha1VerifiableCredential {
   type?: string[];
   /** https://www.w3.org/TR/vc-data-model/#issuer */
   issuer?: string;
-  /**
-   * https://www.w3.org/TR/vc-data-model/#credential-subject
-   * [here]: https://spec.identity.agntcy.org/docs/vc/intro/
-   */
+  /** https://www.w3.org/TR/vc-data-model/#credential-subject */
   credentialSubject?: V1Alpha1BadgeClaims;
   /** https://www.w3.org/TR/vc-data-model/#identifiers */
   id?: string;

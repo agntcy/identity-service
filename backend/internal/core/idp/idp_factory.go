@@ -43,6 +43,8 @@ func (f *idpFactory) Create(
 		idp = NewPingIdp(issuerSettings.PingIdpSettings)
 	case types.IDP_TYPE_ENTRA_ID:
 		idp, err = NewEntraIdp(issuerSettings.EntraIdpSettings)
+	case types.IDP_TYPE_THALES:
+		idp = NewThalesIdp(issuerSettings.ThalesIdpSettings)
 	default:
 		return nil, fmt.Errorf("unknown IDP type %s", issuerSettings.IdpType)
 	}

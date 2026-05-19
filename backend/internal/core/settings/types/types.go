@@ -34,6 +34,9 @@ const (
 
 	// Idp Type Entra ID
 	IDP_TYPE_ENTRA_ID
+
+	// Idp Type Thales.
+	IDP_TYPE_THALES
 )
 
 func (t *IdpType) UnmarshalText(text []byte) error {
@@ -50,6 +53,8 @@ func (t *IdpType) UnmarshalText(text []byte) error {
 		*t = IDP_TYPE_PING
 	case IDP_TYPE_ENTRA_ID.String():
 		*t = IDP_TYPE_ENTRA_ID
+	case IDP_TYPE_THALES.String():
+		*t = IDP_TYPE_THALES
 	default:
 		*t = IDP_TYPE_UNSPECIFIED
 	}
@@ -109,6 +114,14 @@ type EntraIdpSettings struct {
 	ClientSecret string `json:"client_secret,omitempty" protobuf:"bytes,3,opt,name=client_secret"`
 }
 
+// Thales IdP Settings
+type ThalesIdpSettings struct {
+	IssuerUrl       string `json:"issuer_url,omitempty"     protobuf:"bytes,1,opt,name=issuer_url"`
+	RegistrationUrl string `json:"registration_url,omitempty"   protobuf:"bytes,2,opt,name=registration_url"`
+	SecretID        string `json:"secret_Id,omitempty" protobuf:"bytes,3,opt,name=secret_Id"`
+	SecretKeyValue  string `json:"secret_key_value,omitempty" protobuf:"bytes,4,opt,name=secret_key_value"`
+}
+
 // Issuer Settings
 type IssuerSettings struct {
 	// A unique identifier for the Issuer.
@@ -150,6 +163,9 @@ type IssuerSettings struct {
 	// Settings for the Entra ID Identity Provider.
 	// +field_behavior:OPTIONAL
 	EntraIdpSettings *EntraIdpSettings `json:"entra_idp_settings,omitempty" protobuf:"bytes,11,opt,name=entra_idp_settings"` //nolint:lll // struct tags exceed line length
+
+	// Settings for the Thales Onewelcome Identity Provider.
+	ThalesIdpSettings *ThalesIdpSettings `json:"thales_idp_settings,omitempty" protobuf:"bytes,12,opt,name=thales_idp_settings"`
 
 	// CreatedAt records the timestamp of when the IssuerSettings was initially created
 	// +field_behavior:OUTPUT_ONLY

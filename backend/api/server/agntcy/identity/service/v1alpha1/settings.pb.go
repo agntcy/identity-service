@@ -45,6 +45,8 @@ const (
 	IdpType_IDP_TYPE_PING IdpType = 6
 	// Idp Type Entra ID
 	IdpType_IDP_TYPE_ENTRA_ID IdpType = 7
+	// Idp Type Thales.
+	IdpType_IDP_TYPE_THALES IdpType = 8
 )
 
 // Enum value maps for IdpType.
@@ -58,6 +60,7 @@ var (
 		5: "IDP_TYPE_KEYCLOAK",
 		6: "IDP_TYPE_PING",
 		7: "IDP_TYPE_ENTRA_ID",
+		8: "IDP_TYPE_THALES",
 	}
 	IdpType_value = map[string]int32{
 		"IDP_TYPE_UNSPECIFIED": 0,
@@ -68,6 +71,7 @@ var (
 		"IDP_TYPE_KEYCLOAK":    5,
 		"IDP_TYPE_PING":        6,
 		"IDP_TYPE_ENTRA_ID":    7,
+		"IDP_TYPE_THALES":      8,
 	}
 )
 
@@ -285,6 +289,8 @@ type IssuerSettings struct {
 	PingIdpSettings *PingIdpSettings `protobuf:"bytes,10,opt,name=ping_idp_settings,json=pingIdpSettings,proto3,oneof" json:"ping_idp_settings,omitempty"`
 	// Settings for the Entra ID Identity Provider.
 	EntraIdpSettings *EntraIdpSettings `protobuf:"bytes,11,opt,name=entra_idp_settings,json=entraIdpSettings,proto3,oneof" json:"entra_idp_settings,omitempty"`
+	// Settings for the Thales Onewelcome Identity Provider.
+	ThalesIdpSettings *ThalesIdpSettings `protobuf:"bytes,12,opt,name=thales_idp_settings,json=thalesIdpSettings,proto3,oneof" json:"thales_idp_settings,omitempty"`
 	// CreatedAt records the timestamp of when the IssuerSettings was initially created
 	CreatedAt *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=created_at,json=createdAt,proto3,oneof" json:"created_at,omitempty"`
 	// UpdatedAt records the timestamp of the last update to the IssuerSettings
@@ -375,6 +381,13 @@ func (x *IssuerSettings) GetPingIdpSettings() *PingIdpSettings {
 func (x *IssuerSettings) GetEntraIdpSettings() *EntraIdpSettings {
 	if x != nil {
 		return x.EntraIdpSettings
+	}
+	return nil
+}
+
+func (x *IssuerSettings) GetThalesIdpSettings() *ThalesIdpSettings {
+	if x != nil {
+		return x.ThalesIdpSettings
 	}
 	return nil
 }
@@ -700,6 +713,75 @@ func (x *Settings) GetIssuerSettings() *IssuerSettings {
 	return nil
 }
 
+// Thales IdP Settings
+type ThalesIdpSettings struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	IssuerUrl       *string                `protobuf:"bytes,1,opt,name=issuer_url,json=issuerUrl,proto3,oneof" json:"issuer_url,omitempty"`
+	RegistrationUrl *string                `protobuf:"bytes,2,opt,name=registration_url,json=registrationUrl,proto3,oneof" json:"registration_url,omitempty"`
+	Secret_Id       *string                `protobuf:"bytes,3,opt,name=secret_Id,json=secretId,proto3,oneof" json:"secret_Id,omitempty"`
+	SecretKeyValue  *string                `protobuf:"bytes,4,opt,name=secret_key_value,json=secretKeyValue,proto3,oneof" json:"secret_key_value,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *ThalesIdpSettings) Reset() {
+	*x = ThalesIdpSettings{}
+	mi := &file_agntcy_identity_service_v1alpha1_settings_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ThalesIdpSettings) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ThalesIdpSettings) ProtoMessage() {}
+
+func (x *ThalesIdpSettings) ProtoReflect() protoreflect.Message {
+	mi := &file_agntcy_identity_service_v1alpha1_settings_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ThalesIdpSettings.ProtoReflect.Descriptor instead.
+func (*ThalesIdpSettings) Descriptor() ([]byte, []int) {
+	return file_agntcy_identity_service_v1alpha1_settings_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *ThalesIdpSettings) GetIssuerUrl() string {
+	if x != nil && x.IssuerUrl != nil {
+		return *x.IssuerUrl
+	}
+	return ""
+}
+
+func (x *ThalesIdpSettings) GetRegistrationUrl() string {
+	if x != nil && x.RegistrationUrl != nil {
+		return *x.RegistrationUrl
+	}
+	return ""
+}
+
+func (x *ThalesIdpSettings) GetSecret_Id() string {
+	if x != nil && x.Secret_Id != nil {
+		return *x.Secret_Id
+	}
+	return ""
+}
+
+func (x *ThalesIdpSettings) GetSecretKeyValue() string {
+	if x != nil && x.SecretKeyValue != nil {
+		return *x.SecretKeyValue
+	}
+	return ""
+}
+
 var File_agntcy_identity_service_v1alpha1_settings_proto protoreflect.FileDescriptor
 
 const file_agntcy_identity_service_v1alpha1_settings_proto_rawDesc = "" +
@@ -725,7 +807,7 @@ const file_agntcy_identity_service_v1alpha1_settings_proto_rawDesc = "" +
 	"_tenant_idB\f\n" +
 	"\n" +
 	"_client_idB\x10\n" +
-	"\x0e_client_secret\"\xd0\b\n" +
+	"\x0e_client_secret\"\xd2\t\n" +
 	"\x0eIssuerSettings\x12%\n" +
 	"\tissuer_id\x18\x01 \x01(\tB\x03\xe0A\x03H\x00R\bissuerId\x88\x01\x01\x12N\n" +
 	"\bidp_type\x18\x03 \x01(\x0e2).agntcy.identity.service.v1alpha1.IdpTypeB\x03\xe0A\x02H\x01R\aidpType\x88\x01\x01\x12d\n" +
@@ -735,11 +817,13 @@ const file_agntcy_identity_service_v1alpha1_settings_proto_rawDesc = "" +
 	"\x15keycloak_idp_settings\x18\a \x01(\v25.agntcy.identity.service.v1alpha1.KeycloakIdpSettingsB\x03\xe0A\x01H\x05R\x13keycloakIdpSettings\x88\x01\x01\x12g\n" +
 	"\x11ping_idp_settings\x18\n" +
 	" \x01(\v21.agntcy.identity.service.v1alpha1.PingIdpSettingsB\x03\xe0A\x01H\x06R\x0fpingIdpSettings\x88\x01\x01\x12j\n" +
-	"\x12entra_idp_settings\x18\v \x01(\v22.agntcy.identity.service.v1alpha1.EntraIdpSettingsB\x03\xe0A\x01H\aR\x10entraIdpSettings\x88\x01\x01\x12C\n" +
+	"\x12entra_idp_settings\x18\v \x01(\v22.agntcy.identity.service.v1alpha1.EntraIdpSettingsB\x03\xe0A\x01H\aR\x10entraIdpSettings\x88\x01\x01\x12h\n" +
+	"\x13thales_idp_settings\x18\f \x01(\v23.agntcy.identity.service.v1alpha1.ThalesIdpSettingsH\bR\x11thalesIdpSettings\x88\x01\x01\x12C\n" +
 	"\n" +
-	"created_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampB\x03\xe0A\x03H\bR\tcreatedAt\x88\x01\x01\x12C\n" +
+	"created_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampB\x03\xe0A\x03H\tR\tcreatedAt\x88\x01\x01\x12C\n" +
 	"\n" +
-	"updated_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampB\x03\xe0A\x03H\tR\tupdatedAt\x88\x01\x01B\f\n" +
+	"updated_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampB\x03\xe0A\x03H\n" +
+	"R\tupdatedAt\x88\x01\x01B\f\n" +
 	"\n" +
 	"_issuer_idB\v\n" +
 	"\t_idp_typeB\x13\n" +
@@ -748,7 +832,8 @@ const file_agntcy_identity_service_v1alpha1_settings_proto_rawDesc = "" +
 	"\x11_ory_idp_settingsB\x18\n" +
 	"\x16_keycloak_idp_settingsB\x14\n" +
 	"\x12_ping_idp_settingsB\x15\n" +
-	"\x13_entra_idp_settingsB\r\n" +
+	"\x13_entra_idp_settingsB\x16\n" +
+	"\x14_thales_idp_settingsB\r\n" +
 	"\v_created_atB\r\n" +
 	"\v_updated_at\"\xd3\x01\n" +
 	"\x13KeycloakIdpSettings\x12\x1e\n" +
@@ -792,7 +877,18 @@ const file_agntcy_identity_service_v1alpha1_settings_proto_rawDesc = "" +
 	"\x0fissuer_settings\x18\x02 \x01(\v20.agntcy.identity.service.v1alpha1.IssuerSettingsB\x03\xe0A\x01H\x01R\x0eissuerSettings\x88\x01\x01B\n" +
 	"\n" +
 	"\b_api_keyB\x12\n" +
-	"\x10_issuer_settings*\xae\x01\n" +
+	"\x10_issuer_settings\"\xff\x01\n" +
+	"\x11ThalesIdpSettings\x12\"\n" +
+	"\n" +
+	"issuer_url\x18\x01 \x01(\tH\x00R\tissuerUrl\x88\x01\x01\x12.\n" +
+	"\x10registration_url\x18\x02 \x01(\tH\x01R\x0fregistrationUrl\x88\x01\x01\x12 \n" +
+	"\tsecret_Id\x18\x03 \x01(\tH\x02R\bsecretId\x88\x01\x01\x12-\n" +
+	"\x10secret_key_value\x18\x04 \x01(\tH\x03R\x0esecretKeyValue\x88\x01\x01B\r\n" +
+	"\v_issuer_urlB\x13\n" +
+	"\x11_registration_urlB\f\n" +
+	"\n" +
+	"_secret_IdB\x13\n" +
+	"\x11_secret_key_value*\xc3\x01\n" +
 	"\aIdpType\x12\x18\n" +
 	"\x14IDP_TYPE_UNSPECIFIED\x10\x00\x12\x10\n" +
 	"\fIDP_TYPE_DUO\x10\x01\x12\x11\n" +
@@ -801,7 +897,8 @@ const file_agntcy_identity_service_v1alpha1_settings_proto_rawDesc = "" +
 	"\rIDP_TYPE_SELF\x10\x04\x12\x15\n" +
 	"\x11IDP_TYPE_KEYCLOAK\x10\x05\x12\x11\n" +
 	"\rIDP_TYPE_PING\x10\x06\x12\x15\n" +
-	"\x11IDP_TYPE_ENTRA_ID\x10\aBhZfgithub.com/agntcy/identity-service/api/server/agntcy/identity/service/v1alpha1;identity_service_sdk_gob\x06proto3"
+	"\x11IDP_TYPE_ENTRA_ID\x10\a\x12\x13\n" +
+	"\x0fIDP_TYPE_THALES\x10\bBhZfgithub.com/agntcy/identity-service/api/server/agntcy/identity/service/v1alpha1;identity_service_sdk_gob\x06proto3"
 
 var (
 	file_agntcy_identity_service_v1alpha1_settings_proto_rawDescOnce sync.Once
@@ -816,7 +913,7 @@ func file_agntcy_identity_service_v1alpha1_settings_proto_rawDescGZIP() []byte {
 }
 
 var file_agntcy_identity_service_v1alpha1_settings_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_agntcy_identity_service_v1alpha1_settings_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_agntcy_identity_service_v1alpha1_settings_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_agntcy_identity_service_v1alpha1_settings_proto_goTypes = []any{
 	(IdpType)(0),                  // 0: agntcy.identity.service.v1alpha1.IdpType
 	(*ApiKey)(nil),                // 1: agntcy.identity.service.v1alpha1.ApiKey
@@ -828,7 +925,8 @@ var file_agntcy_identity_service_v1alpha1_settings_proto_goTypes = []any{
 	(*OryIdpSettings)(nil),        // 7: agntcy.identity.service.v1alpha1.OryIdpSettings
 	(*PingIdpSettings)(nil),       // 8: agntcy.identity.service.v1alpha1.PingIdpSettings
 	(*Settings)(nil),              // 9: agntcy.identity.service.v1alpha1.Settings
-	(*timestamppb.Timestamp)(nil), // 10: google.protobuf.Timestamp
+	(*ThalesIdpSettings)(nil),     // 10: agntcy.identity.service.v1alpha1.ThalesIdpSettings
+	(*timestamppb.Timestamp)(nil), // 11: google.protobuf.Timestamp
 }
 var file_agntcy_identity_service_v1alpha1_settings_proto_depIdxs = []int32{
 	0,  // 0: agntcy.identity.service.v1alpha1.IssuerSettings.idp_type:type_name -> agntcy.identity.service.v1alpha1.IdpType
@@ -838,15 +936,16 @@ var file_agntcy_identity_service_v1alpha1_settings_proto_depIdxs = []int32{
 	5,  // 4: agntcy.identity.service.v1alpha1.IssuerSettings.keycloak_idp_settings:type_name -> agntcy.identity.service.v1alpha1.KeycloakIdpSettings
 	8,  // 5: agntcy.identity.service.v1alpha1.IssuerSettings.ping_idp_settings:type_name -> agntcy.identity.service.v1alpha1.PingIdpSettings
 	3,  // 6: agntcy.identity.service.v1alpha1.IssuerSettings.entra_idp_settings:type_name -> agntcy.identity.service.v1alpha1.EntraIdpSettings
-	10, // 7: agntcy.identity.service.v1alpha1.IssuerSettings.created_at:type_name -> google.protobuf.Timestamp
-	10, // 8: agntcy.identity.service.v1alpha1.IssuerSettings.updated_at:type_name -> google.protobuf.Timestamp
-	1,  // 9: agntcy.identity.service.v1alpha1.Settings.api_key:type_name -> agntcy.identity.service.v1alpha1.ApiKey
-	4,  // 10: agntcy.identity.service.v1alpha1.Settings.issuer_settings:type_name -> agntcy.identity.service.v1alpha1.IssuerSettings
-	11, // [11:11] is the sub-list for method output_type
-	11, // [11:11] is the sub-list for method input_type
-	11, // [11:11] is the sub-list for extension type_name
-	11, // [11:11] is the sub-list for extension extendee
-	0,  // [0:11] is the sub-list for field type_name
+	10, // 7: agntcy.identity.service.v1alpha1.IssuerSettings.thales_idp_settings:type_name -> agntcy.identity.service.v1alpha1.ThalesIdpSettings
+	11, // 8: agntcy.identity.service.v1alpha1.IssuerSettings.created_at:type_name -> google.protobuf.Timestamp
+	11, // 9: agntcy.identity.service.v1alpha1.IssuerSettings.updated_at:type_name -> google.protobuf.Timestamp
+	1,  // 10: agntcy.identity.service.v1alpha1.Settings.api_key:type_name -> agntcy.identity.service.v1alpha1.ApiKey
+	4,  // 11: agntcy.identity.service.v1alpha1.Settings.issuer_settings:type_name -> agntcy.identity.service.v1alpha1.IssuerSettings
+	12, // [12:12] is the sub-list for method output_type
+	12, // [12:12] is the sub-list for method input_type
+	12, // [12:12] is the sub-list for extension type_name
+	12, // [12:12] is the sub-list for extension extendee
+	0,  // [0:12] is the sub-list for field type_name
 }
 
 func init() { file_agntcy_identity_service_v1alpha1_settings_proto_init() }
@@ -863,13 +962,14 @@ func file_agntcy_identity_service_v1alpha1_settings_proto_init() {
 	file_agntcy_identity_service_v1alpha1_settings_proto_msgTypes[6].OneofWrappers = []any{}
 	file_agntcy_identity_service_v1alpha1_settings_proto_msgTypes[7].OneofWrappers = []any{}
 	file_agntcy_identity_service_v1alpha1_settings_proto_msgTypes[8].OneofWrappers = []any{}
+	file_agntcy_identity_service_v1alpha1_settings_proto_msgTypes[9].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_agntcy_identity_service_v1alpha1_settings_proto_rawDesc), len(file_agntcy_identity_service_v1alpha1_settings_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   9,
+			NumMessages:   10,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

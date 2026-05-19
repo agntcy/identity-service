@@ -33,6 +33,8 @@ type IssuerSettings struct {
 	PingIdpSettings       *PingIdpSettings
 	EntraIdpSettingsID    *uuid.UUID `gorm:"foreignKey:ID"`
 	EntraIdpSettings      *EntraIdpSettings
+	ThalesIdpSettingsID   *uuid.UUID `gorm:"foreignKey:ID"`
+	ThalesIdpSettings     *ThalesIdpSettings
 	CreatedAt             time.Time
 	UpdatedAt             sql.NullTime
 }
@@ -78,6 +80,14 @@ type EntraIdpSettings struct {
 	TenantID     string                   `gorm:"not null;type:varchar(256);"`
 	ClientID     string                   `gorm:"not null;type:varchar(256);"`
 	ClientSecret *secrets.EncryptedString `gorm:"type:varchar(4096);"`
+}
+
+type ThalesIdpSettings struct {
+	ID              uuid.UUID                `gorm:"primaryKey;default:gen_random_uuid()"`
+	IssuerUrl       string                   `gorm:"type:varchar(256);"`
+	RegistrationUrl string                   `gorm:"type:varchar(256);"`
+	SecretID        string                   `gorm:"type:varchar(256);"`
+	SecretKeyValue  *secrets.EncryptedString `gorm:"type:varchar(4096);"`
 }
 
 type Device struct {
@@ -160,6 +170,19 @@ func (i *EntraIdpSettings) ToCoreType(crypter secrets.Crypter) *types.EntraIdpSe
 	}
 }
 
+func (i *ThalesIdpSettings) ToCoreType(crypter secrets.Crypter) *types.ThalesIdpSettings {
+	if i == nil {
+		return nil
+	}
+
+	return &types.ThalesIdpSettings{
+		IssuerUrl:       i.IssuerUrl,
+		RegistrationUrl: i.RegistrationUrl,
+		SecretID:        i.SecretID,
+		SecretKeyValue:  ptrutil.DerefStr(secrets.EncryptedStringToRaw(i.SecretKeyValue, crypter)),
+	}
+}
+
 func (i *IssuerSettings) ToCoreType(crypter secrets.Crypter) *types.IssuerSettings {
 	if i == nil {
 		return nil
@@ -176,6 +199,7 @@ func (i *IssuerSettings) ToCoreType(crypter secrets.Crypter) *types.IssuerSettin
 		KeycloakIdpSettings: i.KeycloakIdpSettings.ToCoreType(crypter),
 		PingIdpSettings:     i.PingIdpSettings.ToCoreType(crypter),
 		EntraIdpSettings:    i.EntraIdpSettings.ToCoreType(crypter),
+		ThalesIdpSettings:   i.ThalesIdpSettings.ToCoreType(crypter),
 		CreatedAt:           i.CreatedAt,
 		UpdatedAt:           pgutil.SqlNullTimeToTime(i.UpdatedAt),
 	}
@@ -254,6 +278,19 @@ func newEntraIdpSettingsModel(src *types.EntraIdpSettings, crypter secrets.Crypt
 	}
 }
 
+func newThalesIdpSettingsModel(src *types.ThalesIdpSettings, crypter secrets.Crypter) *ThalesIdpSettings {
+	if src == nil {
+		return nil
+	}
+
+	return &ThalesIdpSettings{
+		IssuerUrl:       src.IssuerUrl,
+		RegistrationUrl: src.RegistrationUrl,
+		SecretID:        src.SecretID,
+		SecretKeyValue:  secrets.NewEncryptedString(&src.SecretKeyValue, crypter),
+	}
+}
+
 func newIssuerSettingsModel(src *types.IssuerSettings, crypter secrets.Crypter) *IssuerSettings {
 	return &IssuerSettings{
 		IssuerID:            &src.IssuerID,
@@ -266,6 +303,7 @@ func newIssuerSettingsModel(src *types.IssuerSettings, crypter secrets.Crypter) 
 		KeycloakIdpSettings: newKeycloakIdpSettingsModel(src.KeycloakIdpSettings, crypter),
 		PingIdpSettings:     newPingIdpSettingsModel(src.PingIdpSettings, crypter),
 		EntraIdpSettings:    newEntraIdpSettingsModel(src.EntraIdpSettings, crypter),
+		ThalesIdpSettings:   newThalesIdpSettingsModel(src.ThalesIdpSettings, crypter),
 		CreatedAt:           src.CreatedAt,
 		UpdatedAt:           pgutil.TimeToSqlNullTime(src.UpdatedAt),
 	}

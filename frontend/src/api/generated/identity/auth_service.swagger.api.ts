@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Copyright AGNTCY Contributors (https://github.com/agntcy)
- * SPDX-License-Identifier: Apache-2.0
- */
-
 /* eslint-disable */
 /* tslint:disable */
 // @ts-nocheck
@@ -131,7 +126,7 @@ export enum V1Alpha1AppStatus {
  *       "value": "1.212s"
  *     }
  */
-export interface GoogleprotobufAny {
+export interface ProtobufAny {
   /**
    * A URL/resource name that uniquely identifies the type of the serialized
    * protocol buffer message. This string must contain at least
@@ -170,7 +165,7 @@ export interface RpcStatus {
   /** @format int32 */
   code?: number;
   message?: string;
-  details?: GoogleprotobufAny[];
+  details?: ProtobufAny[];
 }
 
 /** Identity Service App. */

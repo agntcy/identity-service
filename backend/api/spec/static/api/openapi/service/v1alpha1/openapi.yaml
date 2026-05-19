@@ -1410,6 +1410,7 @@ components:
                         - IDP_TYPE_KEYCLOAK
                         - IDP_TYPE_PING
                         - IDP_TYPE_ENTRA_ID
+                        - IDP_TYPE_THALES
                     type: string
                     description: The type of the IdP.
                     format: enum
@@ -1437,6 +1438,10 @@ components:
                     allOf:
                         - $ref: '#/components/schemas/EntraIdpSettings'
                     description: Settings for the Entra ID Identity Provider.
+                thalesIdpSettings:
+                    allOf:
+                        - $ref: '#/components/schemas/ThalesIdpSettings'
+                    description: Settings for the Thales Onewelcome Identity Provider.
                 createdAt:
                     readOnly: true
                     type: string
@@ -1707,6 +1712,18 @@ components:
                     type: string
                     description: A tool name for the Task.
             description: Identity Service Policy Task
+        ThalesIdpSettings:
+            type: object
+            properties:
+                issuerUrl:
+                    type: string
+                registrationUrl:
+                    type: string
+                secretId:
+                    type: string
+                secretKeyValue:
+                    type: string
+            description: Thales IdP Settings
         TokenRequest:
             type: object
             properties:

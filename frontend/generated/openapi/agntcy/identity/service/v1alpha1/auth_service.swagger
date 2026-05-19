@@ -175,7 +175,7 @@
     }
   },
   "definitions": {
-    "googleprotobufAny": {
+    "protobufAny": {
       "type": "object",
       "properties": {
         "@type": {
@@ -200,7 +200,7 @@
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/googleprotobufAny"
+            "$ref": "#/definitions/protobufAny"
           }
         }
       }
@@ -319,7 +319,7 @@
         },
         "userToken": {
           "type": "string",
-          "description": "The User context in the form of an id or access token.\nMandatory for User Approval Flows."
+          "description": "The User context in the form of an id or access token.\r\nMandatory for User Approval Flows."
         }
       }
     },
@@ -328,7 +328,7 @@
       "properties": {
         "authorizationCode": {
           "type": "string",
-          "description": "If authorization is successful, return a code to be used for\nthe token endpoint."
+          "description": "If authorization is successful, return a code to be used for\r\nthe token endpoint."
         }
       }
     },

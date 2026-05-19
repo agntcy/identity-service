@@ -108,7 +108,7 @@
         }
       }
     },
-    "googleprotobufAny": {
+    "protobufAny": {
       "type": "object",
       "properties": {
         "@type": {
@@ -133,7 +133,7 @@
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/googleprotobufAny"
+            "$ref": "#/definitions/protobufAny"
           }
         }
       }
@@ -154,16 +154,14 @@
       "properties": {
         "id": {
           "type": "string",
-          "description": "[here]: https://www.w3.org/TR/vc-data-model/#credential-subject",
-          "title": "The ID as defined [here]"
+          "title": "The ID as defined [here]\r\n\r\n[here]: https://www.w3.org/TR/vc-data-model/#credential-subject"
         },
         "badge": {
           "type": "string",
           "title": "The content of the badge"
         }
       },
-      "description": "[here]: https://spec.identity.agntcy.org/docs/vc/intro/",
-      "title": "BadgeClaims represents the content of a Badge VC defined [here]"
+      "title": "BadgeClaims represents the content of a Badge VC defined [here]\r\n\r\n[here]: https://spec.identity.agntcy.org/docs/vc/intro/"
     },
     "v1alpha1CredentialSchema": {
       "type": "object",
@@ -177,8 +175,7 @@
           "title": "The URL identifying the schema file"
         }
       },
-      "description": "[here]: https://www.w3.org/TR/vc-data-model-2.0/#data-schemas",
-      "title": "CredentialSchema represents the credentialSchema property of a Verifiable Credential.\nmore information can be found [here]"
+      "title": "CredentialSchema represents the credentialSchema property of a Verifiable Credential.\r\nmore information can be found [here]\r\n\r\n[here]: https://www.w3.org/TR/vc-data-model-2.0/#data-schemas"
     },
     "v1alpha1CredentialStatus": {
       "type": "object",
@@ -201,8 +198,7 @@
           "title": "The value of the purpose for the status entry"
         }
       },
-      "description": "[here]: https://www.w3.org/TR/vc-data-model-2.0/#status",
-      "title": "CredentialStatus represents the credentialStatus property of a Verifiable Credential.\nmore information can be found [here]"
+      "title": "CredentialStatus represents the credentialStatus property of a Verifiable Credential.\r\nmore information can be found [here]\r\n\r\n[here]: https://www.w3.org/TR/vc-data-model-2.0/#status"
     },
     "v1alpha1CredentialStatusPurpose": {
       "type": "string",
@@ -211,7 +207,7 @@
         "CREDENTIAL_STATUS_PURPOSE_REVOCATION"
       ],
       "default": "CREDENTIAL_STATUS_PURPOSE_UNSPECIFIED",
-      "description": "- CREDENTIAL_STATUS_PURPOSE_UNSPECIFIED: Unspecified status purpose\n - CREDENTIAL_STATUS_PURPOSE_REVOCATION: Used to cancel the validity of a verifiable credential.\nThis status is not reversible.",
+      "description": "- CREDENTIAL_STATUS_PURPOSE_UNSPECIFIED: Unspecified status purpose\n - CREDENTIAL_STATUS_PURPOSE_REVOCATION: Used to cancel the validity of a verifiable credential.\r\nThis status is not reversible.",
       "title": "The purpose of the status entry"
     },
     "v1alpha1ErrorInfo": {
@@ -280,7 +276,7 @@
           "title": "The proof value"
         }
       },
-      "description": "A data integrity proof provides information about the proof mechanism,\nparameters required to verify that proof, and the proof value itself."
+      "description": "A data integrity proof provides information about the proof mechanism,\r\nparameters required to verify that proof, and the proof value itself."
     },
     "v1alpha1VerifiableCredential": {
       "type": "object",
@@ -340,8 +336,7 @@
           "title": "https://w3id.org/security#proof"
         }
       },
-      "description": "[here]: https://www.w3.org/TR/vc-data-model/",
-      "title": "DataModel represents the W3C Verifiable Credential Data Model defined [here]"
+      "title": "DataModel represents the W3C Verifiable Credential Data Model defined [here]\r\n\r\n[here]: https://www.w3.org/TR/vc-data-model/"
     },
     "v1alpha1VerificationResult": {
       "type": "object",
@@ -360,11 +355,11 @@
         },
         "controller": {
           "type": "string",
-          "description": "The controller of the verification method associated with the securing mechanism,\nusually it represents the issuer."
+          "description": "The controller of the verification method associated with the securing mechanism,\r\nusually it represents the issuer."
         },
         "controlledIdentifierDocument": {
           "type": "string",
-          "title": "A controlled identifier document that is associated with the verification method\nused to verify the securing mechanism (i,e the DID)"
+          "title": "A controlled identifier document that is associated with the verification method\r\nused to verify the securing mechanism (i,e the DID)"
         },
         "warnings": {
           "type": "array",
@@ -383,8 +378,7 @@
           "title": "A list represents zero or more errors generated by the verification process"
         }
       },
-      "description": "[here]: https://www.w3.org/TR/vc-data-model-2.0/#verification",
-      "title": "The result returned from the verification process defined [here]"
+      "title": "The result returned from the verification process defined [here]\r\n\r\n[here]: https://www.w3.org/TR/vc-data-model-2.0/#verification"
     },
     "v1alpha1VerifyBadgeRequest": {
       "type": "object",

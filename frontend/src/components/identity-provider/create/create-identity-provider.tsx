@@ -133,6 +133,13 @@ export const CreateIdentityProvider = () => {
         clientId: values.clientIdEntra,
         clientSecret: values.clientSecretEntra
       };
+    } else if (values.provider === IdpType.IDP_TYPE_THALES) {
+      data.thalesIdpSettings = {
+        issuerUrl: values.issuerUrl,
+        registrationUrl: values.registrationUrl,
+        secretId: values.secretId,
+        secretKeyValue: values.secretKeyValue
+      };
     }
     analyticsTrack('CLICK_SAVE_NEW_IDENTITY_PROVIDER', {
       type: values.provider
@@ -174,7 +181,13 @@ export const CreateIdentityProvider = () => {
         // entra
         tenantIdEntra: issuerSettings.entraIdpSettings?.tenantId,
         clientIdEntra: issuerSettings.entraIdpSettings?.clientId,
-        clientSecretEntra: undefined
+        clientSecretEntra: undefined,
+
+        //Thales
+        issuerUrl: issuerSettings.thalesIdpSettings?.issuerUrl,
+        registrationUrl: issuerSettings.thalesIdpSettings?.registrationUrl,
+        secretId: issuerSettings.thalesIdpSettings?.secretId,
+        secretKeyValue: issuerSettings.thalesIdpSettings?.secretKeyValue
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

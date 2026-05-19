@@ -88,6 +88,7 @@ func main() {
 		&settingspg.OryIdpSettings{},
 		&settingspg.KeycloakIdpSettings{},
 		&settingspg.PingIdpSettings{},
+		&settingspg.ThalesIdpSettings{},
 		&badgepg.Badge{},
 		&badgepg.CredentialSchema{},
 		&badgepg.CredentialStatus{},

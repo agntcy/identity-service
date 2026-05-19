@@ -4151,6 +4151,11 @@
               "name": "IDP_TYPE_ENTRA_ID",
               "number": "7",
               "description": "Idp Type Entra ID"
+            },
+            {
+              "name": "IDP_TYPE_THALES",
+              "number": "8",
+              "description": "Idp Type Thales."
             }
           ]
         }
@@ -4381,6 +4386,18 @@
               "ismap": false,
               "isoneof": true,
               "oneofdecl": "_entra_idp_settings",
+              "defaultValue": ""
+            },
+            {
+              "name": "thales_idp_settings",
+              "description": "Settings for the Thales Onewelcome Identity Provider.",
+              "label": "optional",
+              "type": "ThalesIdpSettings",
+              "longType": "ThalesIdpSettings",
+              "fullType": "agntcy.identity.service.v1alpha1.ThalesIdpSettings",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_thales_idp_settings",
               "defaultValue": ""
             },
             {
@@ -4645,6 +4662,66 @@
               "ismap": false,
               "isoneof": true,
               "oneofdecl": "_issuer_settings",
+              "defaultValue": ""
+            }
+          ]
+        },
+        {
+          "name": "ThalesIdpSettings",
+          "longName": "ThalesIdpSettings",
+          "fullName": "agntcy.identity.service.v1alpha1.ThalesIdpSettings",
+          "description": "Thales IdP Settings",
+          "hasExtensions": false,
+          "hasFields": true,
+          "hasOneofs": true,
+          "extensions": [],
+          "fields": [
+            {
+              "name": "issuer_url",
+              "description": "",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_issuer_url",
+              "defaultValue": ""
+            },
+            {
+              "name": "registration_url",
+              "description": "",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_registration_url",
+              "defaultValue": ""
+            },
+            {
+              "name": "secret_Id",
+              "description": "",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_secret_Id",
+              "defaultValue": ""
+            },
+            {
+              "name": "secret_key_value",
+              "description": "",
+              "label": "optional",
+              "type": "string",
+              "longType": "string",
+              "fullType": "string",
+              "ismap": false,
+              "isoneof": true,
+              "oneofdecl": "_secret_key_value",
               "defaultValue": ""
             }
           ]

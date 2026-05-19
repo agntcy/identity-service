@@ -20,6 +20,7 @@ class IdpType(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     IDP_TYPE_KEYCLOAK: _ClassVar[IdpType]
     IDP_TYPE_PING: _ClassVar[IdpType]
     IDP_TYPE_ENTRA_ID: _ClassVar[IdpType]
+    IDP_TYPE_THALES: _ClassVar[IdpType]
 IDP_TYPE_UNSPECIFIED: IdpType
 IDP_TYPE_DUO: IdpType
 IDP_TYPE_OKTA: IdpType
@@ -28,6 +29,7 @@ IDP_TYPE_SELF: IdpType
 IDP_TYPE_KEYCLOAK: IdpType
 IDP_TYPE_PING: IdpType
 IDP_TYPE_ENTRA_ID: IdpType
+IDP_TYPE_THALES: IdpType
 
 class ApiKey(_message.Message):
     __slots__ = ("api_key",)
@@ -56,7 +58,7 @@ class EntraIdpSettings(_message.Message):
     def __init__(self, tenant_id: _Optional[str] = ..., client_id: _Optional[str] = ..., client_secret: _Optional[str] = ...) -> None: ...
 
 class IssuerSettings(_message.Message):
-    __slots__ = ("issuer_id", "idp_type", "duo_idp_settings", "okta_idp_settings", "ory_idp_settings", "keycloak_idp_settings", "ping_idp_settings", "entra_idp_settings", "created_at", "updated_at")
+    __slots__ = ("issuer_id", "idp_type", "duo_idp_settings", "okta_idp_settings", "ory_idp_settings", "keycloak_idp_settings", "ping_idp_settings", "entra_idp_settings", "thales_idp_settings", "created_at", "updated_at")
     ISSUER_ID_FIELD_NUMBER: _ClassVar[int]
     IDP_TYPE_FIELD_NUMBER: _ClassVar[int]
     DUO_IDP_SETTINGS_FIELD_NUMBER: _ClassVar[int]
@@ -65,6 +67,7 @@ class IssuerSettings(_message.Message):
     KEYCLOAK_IDP_SETTINGS_FIELD_NUMBER: _ClassVar[int]
     PING_IDP_SETTINGS_FIELD_NUMBER: _ClassVar[int]
     ENTRA_IDP_SETTINGS_FIELD_NUMBER: _ClassVar[int]
+    THALES_IDP_SETTINGS_FIELD_NUMBER: _ClassVar[int]
     CREATED_AT_FIELD_NUMBER: _ClassVar[int]
     UPDATED_AT_FIELD_NUMBER: _ClassVar[int]
     issuer_id: str
@@ -75,9 +78,10 @@ class IssuerSettings(_message.Message):
     keycloak_idp_settings: KeycloakIdpSettings
     ping_idp_settings: PingIdpSettings
     entra_idp_settings: EntraIdpSettings
+    thales_idp_settings: ThalesIdpSettings
     created_at: _timestamp_pb2.Timestamp
     updated_at: _timestamp_pb2.Timestamp
-    def __init__(self, issuer_id: _Optional[str] = ..., idp_type: _Optional[_Union[IdpType, str]] = ..., duo_idp_settings: _Optional[_Union[DuoIdpSettings, _Mapping]] = ..., okta_idp_settings: _Optional[_Union[OktaIdpSettings, _Mapping]] = ..., ory_idp_settings: _Optional[_Union[OryIdpSettings, _Mapping]] = ..., keycloak_idp_settings: _Optional[_Union[KeycloakIdpSettings, _Mapping]] = ..., ping_idp_settings: _Optional[_Union[PingIdpSettings, _Mapping]] = ..., entra_idp_settings: _Optional[_Union[EntraIdpSettings, _Mapping]] = ..., created_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
+    def __init__(self, issuer_id: _Optional[str] = ..., idp_type: _Optional[_Union[IdpType, str]] = ..., duo_idp_settings: _Optional[_Union[DuoIdpSettings, _Mapping]] = ..., okta_idp_settings: _Optional[_Union[OktaIdpSettings, _Mapping]] = ..., ory_idp_settings: _Optional[_Union[OryIdpSettings, _Mapping]] = ..., keycloak_idp_settings: _Optional[_Union[KeycloakIdpSettings, _Mapping]] = ..., ping_idp_settings: _Optional[_Union[PingIdpSettings, _Mapping]] = ..., entra_idp_settings: _Optional[_Union[EntraIdpSettings, _Mapping]] = ..., thales_idp_settings: _Optional[_Union[ThalesIdpSettings, _Mapping]] = ..., created_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ..., updated_at: _Optional[_Union[datetime.datetime, _timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
 
 class KeycloakIdpSettings(_message.Message):
     __slots__ = ("base_url", "realm", "client_id", "client_secret")
@@ -128,3 +132,15 @@ class Settings(_message.Message):
     api_key: ApiKey
     issuer_settings: IssuerSettings
     def __init__(self, api_key: _Optional[_Union[ApiKey, _Mapping]] = ..., issuer_settings: _Optional[_Union[IssuerSettings, _Mapping]] = ...) -> None: ...
+
+class ThalesIdpSettings(_message.Message):
+    __slots__ = ("issuer_url", "registration_url", "secret_Id", "secret_key_value")
+    ISSUER_URL_FIELD_NUMBER: _ClassVar[int]
+    REGISTRATION_URL_FIELD_NUMBER: _ClassVar[int]
+    SECRET_ID_FIELD_NUMBER: _ClassVar[int]
+    SECRET_KEY_VALUE_FIELD_NUMBER: _ClassVar[int]
+    issuer_url: str
+    registration_url: str
+    secret_Id: str
+    secret_key_value: str
+    def __init__(self, issuer_url: _Optional[str] = ..., registration_url: _Optional[str] = ..., secret_Id: _Optional[str] = ..., secret_key_value: _Optional[str] = ...) -> None: ...

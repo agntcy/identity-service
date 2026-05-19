@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Copyright AGNTCY Contributors (https://github.com/agntcy)
- * SPDX-License-Identifier: Apache-2.0
- */
-
 /* eslint-disable */
 /* tslint:disable */
 // @ts-nocheck
@@ -25,6 +20,7 @@
  *  - IDP_TYPE_KEYCLOAK: Idp Type Keycloak.
  *  - IDP_TYPE_PING: Idp Type Ping.
  *  - IDP_TYPE_ENTRA_ID: Idp Type Entra ID
+ *  - IDP_TYPE_THALES: Idp Type Thales.
  * @default "IDP_TYPE_UNSPECIFIED"
  */
 export enum V1Alpha1IdpType {
@@ -35,7 +31,8 @@ export enum V1Alpha1IdpType {
   IDP_TYPE_SELF = 'IDP_TYPE_SELF',
   IDP_TYPE_KEYCLOAK = 'IDP_TYPE_KEYCLOAK',
   IDP_TYPE_PING = 'IDP_TYPE_PING',
-  IDP_TYPE_ENTRA_ID = 'IDP_TYPE_ENTRA_ID'
+  IDP_TYPE_ENTRA_ID = 'IDP_TYPE_ENTRA_ID',
+  IDP_TYPE_THALES = 'IDP_TYPE_THALES'
 }
 
 /**
@@ -125,7 +122,7 @@ export enum V1Alpha1IdpType {
  *       "value": "1.212s"
  *     }
  */
-export interface GoogleprotobufAny {
+export interface ProtobufAny {
   /**
    * A URL/resource name that uniquely identifies the type of the serialized
    * protocol buffer message. This string must contain at least
@@ -164,7 +161,7 @@ export interface RpcStatus {
   /** @format int32 */
   code?: number;
   message?: string;
-  details?: GoogleprotobufAny[];
+  details?: ProtobufAny[];
 }
 
 /** An Identity API Key. */
@@ -207,6 +204,8 @@ export interface V1Alpha1IssuerSettings {
   pingIdpSettings?: V1Alpha1PingIdpSettings;
   /** Settings for the Entra ID Identity Provider. */
   entraIdpSettings?: V1Alpha1EntraIdpSettings;
+  /** Settings for the Thales Identity Provider. */
+  thalesIdpSettings?: V1Alpha1ThalesIdpSettings;
   /**
    * CreatedAt records the timestamp of when the IssuerSettings was initially created
    * @format date-time
@@ -259,6 +258,14 @@ export interface V1Alpha1Settings {
   apiKey?: V1Alpha1ApiKey;
   /** Settings for the Issuer. */
   issuerSettings?: V1Alpha1IssuerSettings;
+}
+
+/** Thales IdP Settings */
+export interface V1Alpha1ThalesIdpSettings {
+  issuerUrl?: string;
+  registrationUrl?: string;
+  secretId?: string;
+  secretKeyValue?: string;
 }
 
 import type {AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType} from 'axios';
