@@ -88,7 +88,7 @@ export default defineConfig(({mode}) => {
         includeAssets: ['favicon.svg', 'apple-touch-icon-180x180.png', 'maskable-icon-512x512.png'],
         srcDir: 'src/lib',
         filename: 'sw.ts',
-        injectRegister: 'inline',
+        injectRegister: 'script',
         base: '/',
         strategies: 'injectManifest',
         injectManifest: {
