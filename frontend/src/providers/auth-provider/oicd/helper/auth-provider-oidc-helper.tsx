@@ -150,7 +150,7 @@ const AuthProviderOIDCHelper: React.FC<React.PropsWithChildren<AuthProviderProps
           cleanCredentials();
           return;
         } else if (auth.isAuthenticated && auth.user) {
-          auth.startSilentRenew(); // start silent renew
+          auth.startSilentRenew();
           await setCredentials();
           return;
         } else {

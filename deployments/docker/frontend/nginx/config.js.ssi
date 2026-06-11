@@ -1,0 +1,19 @@
+// Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+// SPDX-License-Identifier: Apache-2.0
+
+window.apiUrl=`<!--#echo var="apiUrl"-->`;
+window.logLevel=`<!--#echo var="logLevel"-->`;
+window.authType=`<!--#echo var="authType"-->`;
+window.segmentId=`<!--#echo var="segmentId"-->`;
+window.iamProductId=`<!--#echo var="iamProductId"-->`;
+window.iamUi=`<!--#echo var="iamUi"-->`;
+window.iamApi=`<!--#echo var="iamApi"-->`;
+window.iamOidcClientId=`<!--#echo var="iamOidcClientId"-->`;
+window.iamOidcIssuer=`<!--#echo var="iamOidcIssuer"-->`;
+window.oidcUi=`<!--#echo var="oidcUi"-->`;
+window.oidcClientId=`<!--#echo var="oidcClientId"-->`;
+window.oidcIssuer=`<!--#echo var="oidcIssuer"-->`;
+window.docsUrl=`<!--#echo var="docsUrl"-->`;
+window.mazeId=`<!--#echo var="mazeId"-->`;
+window.iamMultiTenant=`<!--#echo var="iamMultiTenant"-->`;
+window.appBaseName=`<!--#echo var="appBaseName"-->`;

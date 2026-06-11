@@ -18,7 +18,6 @@ import {globalConfig} from '@/config/global';
 const ICON_PATH = '/pwa-192x192.png';
 const BADGE_PATH = '/pwa-64x64.png';
 
-// NOTE: pay attention to the API endpoint
 const API_ENDPOINT = `${config.API_HOST}/v1alpha1/auth/approve_token`;
 
 declare let self: ServiceWorkerGlobalScope;
@@ -169,7 +168,6 @@ self.addEventListener('push', async (event) => {
           return;
         }
 
-        // Add error handling for IndexedDB operations
         try {
           await notificationUtils.addNotification({
             ...notificationData,
@@ -257,19 +255,15 @@ self.addEventListener('notificationclick', (event) => {
   }
 });
 
-// Disable Workbox dev logs in production
 self.__WB_DISABLE_DEV_LOGS = true;
 
 void self.skipWaiting();
 clientsClaim();
 
-// Skip Maze analytics script - let it handle its own requests
 registerRoute(({url}) => url.hostname === 'snippet.maze.co', new NetworkOnly());
 
-// Skip caching for v1alpha1 API endpoints - always go to network
 registerRoute(({url}) => url.pathname.includes('v1alpha1'), new NetworkOnly());
 
-// Avoid caching, force always go to the server (but exclude v1alpha1)
 registerRoute(
   ({url}) => !url.pathname.includes('v1alpha1'),
   new NetworkFirst({
@@ -278,7 +272,6 @@ registerRoute(
   })
 );
 
-// Cache CSS, JS, and Web Worker requests with a Stale While Revalidate strategy
 registerRoute(
   ({request}) =>
     request.destination === 'style' ||
@@ -291,14 +284,12 @@ registerRoute(
   })
 );
 
-// Cache images with a Cache First strategy
 registerRoute(
   ({request}) => request.destination === 'image',
   new CacheFirst({
     cacheName: 'images',
     plugins: [
       new CacheableResponsePlugin({statuses: [200]}),
-      // 50 entries max, 30 days max
       new ExpirationPlugin({maxEntries: 50, maxAgeSeconds: 60 * 60 * 24 * 30})
     ]
   })

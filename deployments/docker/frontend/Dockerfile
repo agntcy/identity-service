@@ -4,7 +4,8 @@
 FROM node:22-alpine AS build
 
 # Install packages
-RUN apk add --update \
+RUN apk upgrade --no-cache openssl && \
+  apk add --update \
   libpng-dev \
   build-base \
   nodejs \
@@ -24,7 +25,8 @@ RUN yarn build
 FROM alpine:3.22
 
 # Install packages
-RUN apk add --update \
+RUN apk upgrade --no-cache openssl && \
+  apk add --update \
   gettext \
   nginx
 
@@ -38,16 +40,14 @@ COPY --from=build /home/web/dist ./dist
 COPY --chown=web:web ./deployments/docker/frontend/nginx/entrypoint.sh .
 COPY --chown=web:web ./deployments/docker/frontend/nginx/nginx.conf ./nginx/nginx.env.conf
 COPY --chown=web:web ./deployments/docker/frontend/nginx/csp-header.env.conf ./nginx/csp-header.env.conf
+COPY --chown=web:web ./deployments/docker/frontend/nginx/config.js.ssi ./dist/config.js
 RUN mkdir ./nginx/logs && \
   mkdir ./nginx/tmp && \
   chown web:web ./nginx/logs && \
   chown web:web ./nginx/tmp
 
-# Add nonce to the script with id "vite-plugin-pwa:inline-sw"
-RUN sed -i 's/<script id="vite-plugin-pwa:inline-sw">/<script id="vite-plugin-pwa:inline-sw" nonce="c28133ca-0587-459b-9d44-7015cde0ef83">/g' ./dist/index.html
-
-# Add SSI vars
-RUN sed -i 's/<head>/<head>\<script nonce="111dd4a0-4c4e-43a9-8eb4-6446ad2e10c7" language="javascript"\>window.apiUrl=`\<!--#echo var="apiUrl"--\>`;window.logLevel=`\<!--#echo var="logLevel"--\>`;window.authType=`\<!--#echo var="authType"--\>`;window.segmentId=`\<!--#echo var="segmentId"--\>`;window.iamProductId=`\<!--#echo var="iamProductId"--\>`;window.iamUi=`\<!--#echo var="iamUi"--\>`;window.iamApi=`\<!--#echo var="iamApi"--\>`;window.iamOidcClientId=`\<!--#echo var="iamOidcClientId"--\>`;window.iamOidcIssuer=`\<!--#echo var="iamOidcIssuer"--\>`;window.oidcUi=`\<!--#echo var="oidcUi"--\>`;window.oidcClientId=`\<!--#echo var="oidcClientId"--\>`;window.oidcIssuer=`\<!--#echo var="oidcIssuer"--\>`;window.docsUrl=`\<!--#echo var="docsUrl"--\>`;window.mazeId=`\<!--#echo var="mazeId"--\>`;window.iamMultiTenant=`\<!--#echo var="iamMultiTenant"--\>`;window.appBaseName=`\<!--#echo var="appBaseName"--\>`;<\/script>/g' ./dist/index.html
+# Inject config.js as an external script instead of an inline script block
+RUN sed -i 's|<head>|<head><script src="/config.js"></script>|g' ./dist/index.html
 
 # Set non root user
 USER web
