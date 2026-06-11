@@ -5,11 +5,13 @@ WORKDIR /build
 COPY ./backend .
 RUN cd ./cmd/bff && go build -o ../../identity-bff
 
-RUN apk update \
-    &&  apk add ca-certificates wget \
-    &&  update-ca-certificates
+RUN apk upgrade --no-cache openssl && \
+    apk add --no-cache ca-certificates wget && \
+    update-ca-certificates
 
 FROM golang:1.24.5-alpine
+
+RUN apk upgrade --no-cache openssl
 
 # Create a group and user
 RUN addgroup -S web && adduser -u 1999 -S -G web web

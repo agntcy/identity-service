@@ -13,10 +13,9 @@ export const transformAuthState = async (oktaAuth: OktaAuth, authState: AuthStat
     if (!authState.isAuthenticated) {
       return authState;
     }
-    // extra requirement: user must have valid Okta SSO session
     const user = await oktaAuth.token.getUserInfo();
-    authState.isAuthenticated = !!user; // convert to boolean
-    authState.userAuthInfo = user; // also store userAuthInfo object on authState
+    authState.isAuthenticated = !!user;
+    authState.userAuthInfo = user;
     return authState;
   } catch (error) {
     console.debug(error);
