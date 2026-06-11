@@ -21,7 +21,7 @@ export const Maze = () => {
 
   return (
     <Helmet>
-      <script src="/maze-loader.js" async></script>
+      <script src={`${import.meta.env.BASE_URL}maze-loader.js`} async></script>
     </Helmet>
   );
 };
