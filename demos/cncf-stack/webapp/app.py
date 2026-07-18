@@ -1,12 +1,16 @@
 """CNCF demo web app — drives the ID-JAG (Cross-App Access) sequence.
 
+Cross-App Access lets the **Requesting App** obtain access to the
+**Receiving App** on behalf of a signed-in user, without the Receiving App
+ever seeing the user's password.
+
 All three hops run server-side so the browser never talks to Keycloak or the
 issuer directly (no CORS):
 
-  1. User login       — OIDC password grant against Keycloak (cncf-demo realm)
-  2. Mint ID-JAG       — request a signed assertion from the local issuer
-  3. Receiver exchange — present the assertion to Keycloak's backend-client
-                         token endpoint via the jwt-bearer grant -> access token
+  1. Requesting App login — OIDC password grant against Keycloak (cncf-demo realm)
+  2. Mint ID-JAG          — request a signed assertion (for the Receiving App) from the issuer
+  3. Receiving App exchange — present the assertion to Keycloak's receiving-app token
+                          endpoint via the jwt-bearer grant -> access token
 
 The UI shows each hop's status and the decoded token/assertion claims.
 """
@@ -23,13 +27,13 @@ from fastapi.staticfiles import StaticFiles
 
 KEYCLOAK_URL = os.environ.get("KEYCLOAK_URL", "http://keycloak:8080").rstrip("/")
 REALM = os.environ.get("KEYCLOAK_REALM", "cncf-demo")
-USER_CLIENT_ID = os.environ.get("USER_CLIENT_ID", "cncf-demo-client")
+USER_CLIENT_ID = os.environ.get("USER_CLIENT_ID", "requesting-app")
 USER_CLIENT_SECRET = os.environ.get("USER_CLIENT_SECRET", "")
-BACKEND_CLIENT_ID = os.environ.get("BACKEND_CLIENT_ID", "backend-client")
+BACKEND_CLIENT_ID = os.environ.get("BACKEND_CLIENT_ID", "receiving-app")
 BACKEND_CLIENT_SECRET = os.environ.get("BACKEND_CLIENT_SECRET", "")
-DEMO_USER = os.environ.get("DEMO_USER", "sarah")
+DEMO_USER = os.environ.get("DEMO_USER", "user")
 DEMO_PASSWORD = os.environ.get("DEMO_PASSWORD", "")
-SUBJECT = os.environ.get("IDJAG_SUBJECT", "sarah@enterprisex.com")
+SUBJECT = os.environ.get("IDJAG_SUBJECT", "user@example.com")
 ISSUER_URL = os.environ.get("IDJAG_ISSUER_URL", "http://idjag-issuer:9000").rstrip("/")
 
 TOKEN_ENDPOINT = f"{KEYCLOAK_URL}/realms/{REALM}/protocol/openid-connect/token"
@@ -74,7 +78,7 @@ async def run():
         # --- Step 1: user login (password grant) ---
         step = {
             "id": "login",
-            "title": "1. User login (OIDC password grant)",
+            "title": "1. Requesting App — user sign-in (OIDC password grant)",
             "detail": f"POST {TOKEN_ENDPOINT}  (client={USER_CLIENT_ID}, user={DEMO_USER})",
         }
         try:
@@ -104,7 +108,7 @@ async def run():
         # --- Step 2: mint ID-JAG assertion at the issuer ---
         step = {
             "id": "mint",
-            "title": "2. Mint ID-JAG assertion (external issuer)",
+            "title": "2. Mint ID-JAG assertion (for the Receiving App)",
             "detail": f"POST {ISSUER_URL}/mint  (sub={SUBJECT}, aud={REALM_ISSUER})",
         }
         try:
@@ -133,7 +137,7 @@ async def run():
         # --- Step 3: receiver exchange (jwt-bearer) ---
         step = {
             "id": "exchange",
-            "title": "3. Receiver exchange (Keycloak ID-JAG / jwt-bearer)",
+            "title": "3. Receiving App — exchange (Keycloak ID-JAG / jwt-bearer)",
             "detail": f"POST {TOKEN_ENDPOINT}  (grant_type=jwt-bearer, client={BACKEND_CLIENT_ID})",
         }
         try:

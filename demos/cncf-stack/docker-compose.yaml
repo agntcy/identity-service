@@ -158,7 +158,7 @@ services:
       SECRETS_CRYPTO_KEY: ${SECRETS_CRYPTO_KEY:?set SECRETS_CRYPTO_KEY in .env}
       # Keycloak OIDC issuer — realm is provisioned separately after startup.
       IAM_ISSUER: ${IAM_ISSUER:-http://keycloak:8080/realms/cncf-demo}
-      IAM_USER_CID: ${IAM_USER_CID:-cncf-demo-client}
+      IAM_USER_CID: ${IAM_USER_CID:-requesting-app}
       IAM_USER_CID_CLAIM_NAME: azp
     networks:
       - cncf-net
@@ -187,13 +187,13 @@ services:
     environment:
       KEYCLOAK_URL: http://keycloak:8080
       KEYCLOAK_REALM: cncf-demo
-      USER_CLIENT_ID: cncf-demo-client
-      USER_CLIENT_SECRET: ${CNCF_CLIENT_SECRET:-demo-client-secret-change-me}
-      BACKEND_CLIENT_ID: backend-client
-      BACKEND_CLIENT_SECRET: ${CNCF_BACKEND_SECRET:-demo-backend-secret-change-me}
-      DEMO_USER: ${CNCF_DEMO_USER:-sarah}
+      USER_CLIENT_ID: requesting-app
+      USER_CLIENT_SECRET: ${CNCF_REQUESTING_SECRET:-demo-requesting-secret-change-me}
+      BACKEND_CLIENT_ID: receiving-app
+      BACKEND_CLIENT_SECRET: ${CNCF_RECEIVING_SECRET:-demo-receiving-secret-change-me}
+      DEMO_USER: ${CNCF_DEMO_USER:-user}
       DEMO_PASSWORD: ${CNCF_DEMO_PASSWORD:-demo-password-change-me}
-      IDJAG_SUBJECT: ${CNCF_IDJAG_SUBJECT:-sarah@enterprisex.com}
+      IDJAG_SUBJECT: ${CNCF_IDJAG_SUBJECT:-user@example.com}
       IDJAG_ISSUER_URL: http://idjag-issuer:9000
     networks:
       - cncf-net

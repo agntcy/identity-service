@@ -42,16 +42,18 @@ docker compose ps
 ## Testing the ID-JAG (Cross-App Access) sequence
 
 Open the web app at <http://localhost:8000> and click **Run ID-JAG sequence**.
-Everything runs server-side (no browser CORS) across three hops:
+The demo shows the **Requesting App** obtaining access to the **Receiving App**
+on behalf of the signed-in user. Everything runs server-side (no browser CORS)
+across three hops:
 
-1. **User login** — OIDC password grant against Keycloak (`cncf-demo` realm,
-   `cncf-demo-client`) for the demo user `sarah`.
+1. **Requesting App — user sign-in** — OIDC password grant against Keycloak
+   (`cncf-demo` realm, `requesting-app`) for the demo user `user`.
 2. **Mint ID-JAG** — the `idjag-issuer` service signs an Identity Assertion JWT
-   (`iss` = issuer, `sub` = `sarah@enterprisex.com`, `aud` = the realm issuer,
-   `client_id`/`azp` = `backend-client`).
-3. **Receiver exchange** — the assertion is presented to Keycloak's token
+   (`iss` = issuer, `sub` = `user@example.com`, `aud` = the realm issuer,
+   `client_id`/`azp` = `receiving-app`).
+3. **Receiving App — exchange** — the assertion is presented to Keycloak's token
    endpoint with `grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer` and
-   `client_id=backend-client`; Keycloak validates it against the `id-jag`
+   `client_id=receiving-app`; Keycloak validates it against the `id-jag`
    identity provider (JWKS from the issuer), maps `sub` to the local user via
    its federated identity link, and returns a **local access token**.
 
@@ -84,10 +86,10 @@ automatically on startup (`start-dev --import-realm`, mounted at
 
 | Object | Name | Purpose |
 | --- | --- | --- |
-| Client | `cncf-demo-client` | Confidential client: standard flow, direct access grants, service accounts, **standard token exchange** enabled. |
-| Client | `backend-client` | **ID-JAG receiver** — exchanges an incoming assertion (`jwt-bearer` grant) for a local access token (`oauth2.jwt.authorization.grant.*`). |
+| Client | `requesting-app` | **Requesting App** — confidential client: standard flow, direct access grants, service accounts, **standard token exchange** enabled. Signs the user in and initiates cross-app access. |
+| Client | `receiving-app` | **Receiving App (ID-JAG receiver)** — exchanges an incoming assertion (`jwt-bearer` grant) for a local access token (`oauth2.jwt.authorization.grant.*`). |
 | Identity provider | `id-jag` | External ID-JAG issuer (OIDC), `jwtAuthorizationGrantEnabled=true`. Issuer URLs are **placeholders** — point them at your real IdP. |
-| Users | `sarah`, `alice` | Demo users. |
+| Users | `user` | Demo user (`user@example.com`), federated to the `id-jag` issuer. |
 
 > **Demo credentials only.** The client secrets and user passwords in the realm
 > file are obvious `*-change-me` placeholders for local use. Change them (and the
