@@ -55,14 +55,14 @@
 <body>
   <header>
     <div>
-      <h1>CNCF Demo &mdash; ID-JAG (Cross-App Access)</h1>
-      <div class="sub">External issuer &rarr; Keycloak 26.7 receiver (<code>jwt-bearer</code>) &rarr; local access token</div>
+      <h1>Cross-App Access &mdash; Requesting App &rarr; Receiving App</h1>
+      <div class="sub">ID-JAG issuer &rarr; Keycloak 26.7 receiver (<code>jwt-bearer</code>) &rarr; local access token</div>
     </div>
     <button id="run">Run ID-JAG sequence</button>
   </header>
   <main>
     <div class="config" id="config"></div>
-    <div class="flow">Three server-side hops. Each card shows the decoded JWT header + claims.</div>
+    <div class="flow">The Requesting App gets access to the Receiving App on the user's behalf. Three server-side hops &mdash; each card shows the decoded JWT header + claims.</div>
     <div id="steps"></div>
   </main>
 
@@ -71,9 +71,9 @@
     const runBtn = document.getElementById('run');
 
     const TEMPLATE = [
-      { id: 'login',    title: '1. User login (OIDC password grant)' },
-      { id: 'mint',     title: '2. Mint ID-JAG assertion (external issuer)' },
-      { id: 'exchange', title: '3. Receiver exchange (Keycloak jwt-bearer)' },
+      { id: 'login',    title: '1. Requesting App — user sign-in (OIDC password grant)' },
+      { id: 'mint',     title: '2. Mint ID-JAG assertion (for the Receiving App)' },
+      { id: 'exchange', title: '3. Receiving App — exchange (Keycloak jwt-bearer)' },
     ];
 
     function render(steps) {
@@ -105,8 +105,8 @@
         document.getElementById('config').innerHTML =
           `<div><b>Keycloak:</b> ${escapeHtml(c.keycloak)}</div>
            <div><b>Realm:</b> ${escapeHtml(c.realm)}</div>
-           <div><b>User client:</b> ${escapeHtml(c.user_client)}</div>
-           <div><b>Backend client:</b> ${escapeHtml(c.backend_client)}</div>
+           <div><b>Requesting App:</b> ${escapeHtml(c.user_client)}</div>
+           <div><b>Receiving App:</b> ${escapeHtml(c.backend_client)}</div>
            <div><b>Demo user:</b> ${escapeHtml(c.demo_user)}</div>
            <div><b>ID-JAG issuer:</b> ${escapeHtml(c.issuer)}</div>`;
       } catch (e) { /* ignore */ }
