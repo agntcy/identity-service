@@ -1,0 +1,4 @@
+-r requirements.txt
+pytest
+# Mocks the outbound httpx calls to Gitea.
+respx

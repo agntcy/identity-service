@@ -50,13 +50,11 @@ def test_decode_valid_and_invalid():
     assert "error" in webapp._decode("not-a-jwt")
 
 
-@respx.mock
-def test_run_happy_path():
-    login = _jwt(sub="uid-123", azp="requesting-app", preferred_username="user")
-    exchanged = _jwt(sub="uid-123", azp="receiving-app", preferred_username="user")
+def _mock_core(login_azp="requesting-app", exchange_azp="receiving-app"):
+    """Mock the login, mint and exchange hops (token endpoint + issuer)."""
+    login = _jwt(sub="uid-123", azp=login_azp, preferred_username="user")
+    exchanged = _jwt(sub="uid-123", azp=exchange_azp, preferred_username="user")
     mint_assertion = _jwt(sub="user@example.com", aud=webapp.REALM_ISSUER, azp="receiving-app")
-
-    # Steps 1 and 3 both POST the token endpoint (password grant, then jwt-bearer).
     respx.post(webapp.TOKEN_ENDPOINT).mock(
         side_effect=[
             httpx.Response(200, json={"access_token": login}),
@@ -67,11 +65,41 @@ def test_run_happy_path():
         return_value=httpx.Response(200, json={"assertion": mint_assertion, "claims": {}})
     )
 
-    data = client.post("/api/run").json()
+
+@respx.mock
+def test_run_happy_path_read_write():
+    _mock_core()
+    respx.get(f"{webapp.GATEWAY_URL}/api/gitea/repos").mock(
+        return_value=httpx.Response(200, json={"repos": [{"full_name": "demo/x"}], "scope": ["gitea:read", "gitea:write"]})
+    )
+    respx.post(f"{webapp.GATEWAY_URL}/api/gitea/repos").mock(
+        return_value=httpx.Response(201, json={"created": {"full_name": "demo/new"}})
+    )
+
+    data = client.post("/api/run", json={"scope": "openid gitea:read gitea:write"}).json()
     assert data["ok"] is True
-    assert [s["id"] for s in data["steps"]] == ["login", "mint", "exchange"]
+    assert [s["id"] for s in data["steps"]] == ["login", "mint", "exchange", "gitea-list", "gitea-create"]
     assert all(s["status"] == "ok" for s in data["steps"])
     assert data["steps"][2]["decoded"]["claims"]["azp"] == "receiving-app"
+
+
+@respx.mock
+def test_run_readonly_denies_write():
+    """Narrow scoping: read-only token lists repos but is denied the create."""
+    _mock_core()
+    respx.get(f"{webapp.GATEWAY_URL}/api/gitea/repos").mock(
+        return_value=httpx.Response(200, json={"repos": [], "scope": ["gitea:read"]})
+    )
+    respx.post(f"{webapp.GATEWAY_URL}/api/gitea/repos").mock(
+        return_value=httpx.Response(403, json={"detail": {"error": "insufficient_scope", "required": "gitea:write"}})
+    )
+
+    data = client.post("/api/run", json={"scope": "openid gitea:read"}).json()
+    # "denied" is an expected outcome, so the run is still considered ok.
+    assert data["ok"] is True
+    statuses = {s["id"]: s["status"] for s in data["steps"]}
+    assert statuses["gitea-list"] == "ok"
+    assert statuses["gitea-create"] == "denied"
 
 
 @respx.mock
@@ -159,3 +187,39 @@ def test_step_exchange_uses_supplied_assertion():
 def test_step_exchange_requires_assertion_field():
     # Missing the required body field -> 422 from FastAPI validation.
     assert client.post("/api/step/exchange", json={}).status_code == 422
+
+
+@respx.mock
+def test_step_gitea_list_forwards_bearer_token():
+    route = respx.get(f"{webapp.GATEWAY_URL}/api/gitea/repos").mock(
+        return_value=httpx.Response(200, json={"repos": [{"full_name": "demo/x"}], "scope": ["gitea:read"]})
+    )
+    data = client.post("/api/step/gitea-list", json={"access_token": "abc.def.ghi"}).json()
+    assert data["ok"] is True
+    assert data["step"]["status"] == "ok"
+    assert route.calls.last.request.headers["authorization"] == "Bearer abc.def.ghi"
+
+
+@respx.mock
+def test_step_gitea_create_denied_maps_to_denied_status():
+    respx.post(f"{webapp.GATEWAY_URL}/api/gitea/repos").mock(
+        return_value=httpx.Response(403, json={"detail": {"required": "gitea:write"}})
+    )
+    data = client.post("/api/step/gitea-create", json={"access_token": "abc.def.ghi"}).json()
+    # 403 is a valid demo outcome -> "denied", and ok stays True.
+    assert data["ok"] is True
+    assert data["step"]["status"] == "denied"
+
+
+@respx.mock
+def test_step_gitea_create_success():
+    respx.post(f"{webapp.GATEWAY_URL}/api/gitea/repos").mock(
+        return_value=httpx.Response(201, json={"created": {"full_name": "demo/new"}})
+    )
+    data = client.post("/api/step/gitea-create", json={"access_token": "t", "repo_name": "my-repo"}).json()
+    assert data["ok"] is True
+    assert data["step"]["status"] == "ok"
+
+
+def test_step_gitea_requires_access_token_field():
+    assert client.post("/api/step/gitea-list", json={}).status_code == 422

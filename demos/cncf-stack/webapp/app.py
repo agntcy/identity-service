@@ -11,15 +11,22 @@ issuer directly (no CORS):
   2. Mint ID-JAG          — request a signed assertion (for the Receiving App) from the issuer
   3. Receiving App exchange — present the assertion to Keycloak's receiving-app token
                           endpoint via the jwt-bearer grant -> access token
+  4. Read Gitea           — call the gitea-gateway to LIST repos (needs gitea:read)
+  5. Write Gitea          — call the gitea-gateway to CREATE a repo (needs gitea:write)
 
-Each hop is exposed both as part of /api/run (all three at once) and as an
-individual /api/step/<id> endpoint, so the UI can either animate the sequence
-or let the presenter step through it one hop at a time.
+The requested scope is chosen by the caller. With a read-only scope the write
+hop is *correctly refused* (HTTP 403) by the gateway — that is the narrow
+scoping payoff.
+
+Each hop is exposed both as part of /api/run (the whole sequence at once) and
+as an individual /api/step/<id> endpoint, so the UI can either animate the
+sequence or let the presenter step through it one hop at a time.
 """
 
 from __future__ import annotations
 
 import os
+import secrets
 
 import httpx
 import jwt as pyjwt
@@ -38,9 +45,19 @@ DEMO_USER = os.environ.get("DEMO_USER", "user")
 DEMO_PASSWORD = os.environ.get("DEMO_PASSWORD", "")
 SUBJECT = os.environ.get("IDJAG_SUBJECT", "user@example.com")
 ISSUER_URL = os.environ.get("IDJAG_ISSUER_URL", "http://idjag-issuer:9000").rstrip("/")
+GATEWAY_URL = os.environ.get("GITEA_GATEWAY_URL", "http://gitea-gateway:9100").rstrip("/")
 
 TOKEN_ENDPOINT = f"{KEYCLOAK_URL}/realms/{REALM}/protocol/openid-connect/token"
 REALM_ISSUER = f"{KEYCLOAK_URL}/realms/{REALM}"
+
+# The scope requested through the whole chain. Read-only is the default so the
+# write hop demonstrates the gateway refusing an out-of-scope operation.
+DEFAULT_SCOPE = "openid gitea:read"
+
+
+def _default_repo_name() -> str:
+    # Unique per call so repeated demo runs don't collide on an existing repo.
+    return f"created-by-idjag-{secrets.token_hex(3)}"
 
 app = FastAPI(title="CNCF Demo — ID-JAG", version="0.1.0")
 
@@ -90,11 +107,11 @@ async def _login(client: httpx.AsyncClient) -> dict:
     return step
 
 
-async def _mint(client: httpx.AsyncClient) -> dict:
+async def _mint(client: httpx.AsyncClient, scope: str = DEFAULT_SCOPE) -> dict:
     step = {
         "id": "mint",
         "title": "2. Mint ID-JAG assertion (for the Receiving App)",
-        "detail": f"POST {ISSUER_URL}/mint  (sub={SUBJECT}, aud={REALM_ISSUER})",
+        "detail": f"POST {ISSUER_URL}/mint  (sub={SUBJECT}, aud={REALM_ISSUER}, scope={scope})",
     }
     try:
         r = await client.post(
@@ -107,7 +124,7 @@ async def _mint(client: httpx.AsyncClient) -> dict:
                 "aud": REALM_ISSUER,
                 "client_id": BACKEND_CLIENT_ID,
                 "act_chain": [USER_CLIENT_ID],
-                "scope": "openid",
+                "scope": scope,
             },
         )
         if r.status_code != 200:
@@ -120,11 +137,11 @@ async def _mint(client: httpx.AsyncClient) -> dict:
     return step
 
 
-async def _exchange(client: httpx.AsyncClient, assertion: str) -> dict:
+async def _exchange(client: httpx.AsyncClient, assertion: str, scope: str = DEFAULT_SCOPE) -> dict:
     step = {
         "id": "exchange",
         "title": "3. Receiving App — exchange (Keycloak ID-JAG / jwt-bearer)",
-        "detail": f"POST {TOKEN_ENDPOINT}  (grant_type=jwt-bearer, client={BACKEND_CLIENT_ID})",
+        "detail": f"POST {TOKEN_ENDPOINT}  (grant_type=jwt-bearer, client={BACKEND_CLIENT_ID}, scope={scope})",
     }
     if not assertion:
         step.update(status="error", error="no assertion provided (run the mint step first)")
@@ -137,7 +154,7 @@ async def _exchange(client: httpx.AsyncClient, assertion: str) -> dict:
                 "assertion": assertion,
                 "client_id": BACKEND_CLIENT_ID,
                 "client_secret": BACKEND_CLIENT_SECRET,
-                "scope": "openid",
+                "scope": scope,
             },
         )
         if r.status_code != 200:
@@ -145,6 +162,58 @@ async def _exchange(client: httpx.AsyncClient, assertion: str) -> dict:
             return step
         token = r.json()["access_token"]
         step.update(status="ok", token=token, decoded=_decode(token))
+    except Exception as exc:  # noqa: BLE001
+        step.update(status="error", error=str(exc))
+    return step
+
+
+async def _gitea_list(client: httpx.AsyncClient, access_token: str) -> dict:
+    step = {
+        "id": "gitea-list",
+        "title": "4. Receiving App reads Gitea (needs gitea:read)",
+        "detail": f"GET {GATEWAY_URL}/api/gitea/repos  (Bearer access token)",
+    }
+    if not access_token:
+        step.update(status="error", error="no access token (run the exchange step first)")
+        return step
+    try:
+        r = await client.get(
+            f"{GATEWAY_URL}/api/gitea/repos",
+            headers={"Authorization": f"Bearer {access_token}"},
+        )
+        if r.status_code == 200:
+            step.update(status="ok", result=r.json())
+        elif r.status_code == 403:
+            step.update(status="denied", result=r.json())
+        else:
+            step.update(status="error", error=f"HTTP {r.status_code}: {r.text[:300]}")
+    except Exception as exc:  # noqa: BLE001
+        step.update(status="error", error=str(exc))
+    return step
+
+
+async def _gitea_create(client: httpx.AsyncClient, access_token: str, name: str) -> dict:
+    step = {
+        "id": "gitea-create",
+        "title": "5. Receiving App writes to Gitea (needs gitea:write)",
+        "detail": f"POST {GATEWAY_URL}/api/gitea/repos  name={name}  (Bearer access token)",
+    }
+    if not access_token:
+        step.update(status="error", error="no access token (run the exchange step first)")
+        return step
+    try:
+        r = await client.post(
+            f"{GATEWAY_URL}/api/gitea/repos",
+            headers={"Authorization": f"Bearer {access_token}"},
+            json={"name": name},
+        )
+        if r.status_code in (200, 201):
+            step.update(status="ok", result=r.json())
+        elif r.status_code == 403:
+            # Narrow scoping payoff: a read-only token is refused here.
+            step.update(status="denied", result=r.json())
+        else:
+            step.update(status="error", error=f"HTTP {r.status_code}: {r.text[:300]}")
     except Exception as exc:  # noqa: BLE001
         step.update(status="error", error=str(exc))
     return step
@@ -165,12 +234,27 @@ def config():
         "demo_user": DEMO_USER,
         "subject": SUBJECT,
         "issuer": ISSUER_URL,
+        "gateway": GATEWAY_URL,
+        "default_scope": DEFAULT_SCOPE,
     }
 
 
+def _ok(status: str) -> bool:
+    # "denied" (a 403 from the gateway) is an expected outcome for narrow
+    # scoping, not a failure of the sequence.
+    return status in ("ok", "denied")
+
+
+class RunRequest(BaseModel):
+    scope: str = DEFAULT_SCOPE
+    repo_name: str = ""
+
+
 @app.post("/api/run")
-async def run():
-    """Run all three hops in sequence, stopping at the first failure."""
+async def run(body: RunRequest | None = None):
+    """Run the full sequence, stopping only at an unexpected failure."""
+    scope = body.scope if body else DEFAULT_SCOPE
+    repo_name = (body.repo_name if body else "") or _default_repo_name()
     steps: list[dict] = []
     async with httpx.AsyncClient(timeout=15) as client:
         login = await _login(client)
@@ -178,14 +262,38 @@ async def run():
         if login["status"] != "ok":
             return JSONResponse({"ok": False, "steps": steps})
 
-        mint = await _mint(client)
+        mint = await _mint(client, scope)
         steps.append(mint)
         if mint["status"] != "ok":
             return JSONResponse({"ok": False, "steps": steps})
 
-        exchange = await _exchange(client, mint.get("token", ""))
+        exchange = await _exchange(client, mint.get("token", ""), scope)
         steps.append(exchange)
-        return JSONResponse({"ok": exchange["status"] == "ok", "steps": steps})
+        if exchange["status"] != "ok":
+            return JSONResponse({"ok": False, "steps": steps})
+
+        access_token = exchange.get("token", "")
+        gitea_list = await _gitea_list(client, access_token)
+        steps.append(gitea_list)
+
+        gitea_create = await _gitea_create(client, access_token, repo_name)
+        steps.append(gitea_create)
+
+        return JSONResponse({"ok": all(_ok(s["status"]) for s in steps), "steps": steps})
+
+
+class MintRequest(BaseModel):
+    scope: str = DEFAULT_SCOPE
+
+
+class ExchangeRequest(BaseModel):
+    assertion: str
+    scope: str = DEFAULT_SCOPE
+
+
+class GiteaRequest(BaseModel):
+    access_token: str
+    repo_name: str = ""
 
 
 @app.post("/api/step/login")
@@ -196,21 +304,33 @@ async def step_login():
 
 
 @app.post("/api/step/mint")
-async def step_mint():
+async def step_mint(body: MintRequest | None = None):
+    scope = body.scope if body else DEFAULT_SCOPE
     async with httpx.AsyncClient(timeout=15) as client:
-        step = await _mint(client)
+        step = await _mint(client, scope)
     return JSONResponse({"ok": step["status"] == "ok", "step": step})
-
-
-class ExchangeRequest(BaseModel):
-    assertion: str
 
 
 @app.post("/api/step/exchange")
 async def step_exchange(body: ExchangeRequest):
     async with httpx.AsyncClient(timeout=15) as client:
-        step = await _exchange(client, body.assertion)
+        step = await _exchange(client, body.assertion, body.scope)
     return JSONResponse({"ok": step["status"] == "ok", "step": step})
+
+
+@app.post("/api/step/gitea-list")
+async def step_gitea_list(body: GiteaRequest):
+    async with httpx.AsyncClient(timeout=15) as client:
+        step = await _gitea_list(client, body.access_token)
+    return JSONResponse({"ok": _ok(step["status"]), "step": step})
+
+
+@app.post("/api/step/gitea-create")
+async def step_gitea_create(body: GiteaRequest):
+    name = body.repo_name or _default_repo_name()
+    async with httpx.AsyncClient(timeout=15) as client:
+        step = await _gitea_create(client, body.access_token, name)
+    return JSONResponse({"ok": _ok(step["status"]), "step": step})
 
 
 @app.get("/")
