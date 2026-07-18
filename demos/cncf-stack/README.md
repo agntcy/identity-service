@@ -45,6 +45,30 @@ Postgres password, the Vault dev root token, and the identity node crypto key.
 > The values in `.env.example` are **local demo placeholders only**. Never reuse
 > them in any shared or production environment.
 
+## Realm configuration
+
+The `cncf-demo` realm is version-controlled at
+[`keycloak/cncf-demo-realm.json`](./keycloak/cncf-demo-realm.json) and imported
+automatically on startup (`start-dev --import-realm`, mounted at
+`/opt/keycloak/data/import`). It provisions:
+
+| Object | Name | Purpose |
+| --- | --- | --- |
+| Client | `cncf-demo-client` | Confidential client: standard flow, direct access grants, service accounts, **standard token exchange** enabled. |
+| Client | `backend-client` | **ID-JAG receiver** — exchanges an incoming assertion (`jwt-bearer` grant) for a local access token (`oauth2.jwt.authorization.grant.*`). |
+| Identity provider | `id-jag` | External ID-JAG issuer (OIDC), `jwtAuthorizationGrantEnabled=true`. Issuer URLs are **placeholders** — point them at your real IdP. |
+| Users | `sarah`, `alice` | Demo users. |
+
+> **Demo credentials only.** The client secrets and user passwords in the realm
+> file are obvious `*-change-me` placeholders for local use. Change them (and the
+> `id-jag` issuer URLs / client secret) before using this beyond a laptop. To
+> regenerate/extend the realm, edit the JSON or reconfigure a running instance
+> and re-export.
+
+To edit the realm and re-import cleanly, remove the Keycloak container/volume
+first (`docker compose down`), since `--import-realm` skips realms that already
+exist.
+
 ## Cross-App Access (ID-JAG) & Token Exchange
 
 Keycloak is started with two **experimental** feature flags (see the
