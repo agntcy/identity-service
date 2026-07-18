@@ -48,7 +48,7 @@
     {
       "clientId": "receiving-app",
       "name": "Receiving App (ID-JAG receiver)",
-      "description": "Receiving application. Exchanges an incoming ID-JAG assertion (jwt-bearer grant) for a local access token.",
+      "description": "Receiving application. Exchanges an incoming ID-JAG assertion (jwt-bearer grant) for a local access token, then calls Gitea with it.",
       "enabled": true,
       "publicClient": false,
       "secret": "demo-receiving-secret-change-me",

@@ -7,12 +7,15 @@ Docker Compose stack for the CNCF conference demo of the AGNTCY Identity Service
 | Service             | Image                                | Host port(s)        | Purpose                                  |
 | ------------------- | ------------------------------------ | ------------------- | ---------------------------------------- |
 | `keycloak`          | `quay.io/keycloak/keycloak:26.7`     | `8080`              | OIDC provider + ID-JAG receiver          |
-| `gitea`             | `gitea/gitea:1.22`                   | `3000` (HTTP), `2222` (SSH) | Self-hosted git hosting          |
+| `kc-init`           | `quay.io/keycloak/keycloak:26.7`     | _(one-shot)_        | Registers the `gitea:read`/`gitea:write` scopes |
+| `gitea`             | `gitea/gitea:1.22`                   | `3000` (HTTP), `2222` (SSH) | Self-hosted git hosting (the protected resource) |
+| `gitea-init`        | `gitea/gitea:1.22`                   | _(one-shot)_        | Seeds the Gitea admin + demo repos       |
+| `gitea-gateway`     | built from `./gitea-gateway`         | `9100`              | Enforces the narrow ID-JAG scope in front of Gitea |
 | `identity-postgres` | `postgres:16`                        | _(internal)_        | Database for the identity node           |
 | `identity-vault`    | `hashicorp/vault:1.17`               | _(internal)_        | Key material storage (Vault dev mode)    |
 | `identity-node`     | `ghcr.io/agntcy/identity/node:0.0.23`| `4003` (REST), `4004` (gRPC) | AGNTCY identity node             |
 | `idjag-issuer`      | built from `./idjag-issuer`          | _(internal)_        | Mints ID-JAG assertions (stand-in issuer) |
-| `webapp`            | built from `./webapp`                | `8000`              | ID-JAG Cross-App Access demo UI          |
+| `webapp`            | built from `./webapp`                | `8000`              | ID-JAG Cross-App Access + narrow-scoping demo UI |
 
 All image versions are pinned (no `latest`). All credentials are supplied via
 environment variables — none are hardcoded in `docker-compose.yaml`.
@@ -48,8 +51,11 @@ name: cncf-stack
 #
 # Services:
 #   - keycloak          OIDC provider + ID-JAG (Cross-App Access) receiver
+#   - kc-init           registers the gitea:read/gitea:write scopes (one-shot)
 #   - idjag-issuer      mints ID-JAG assertions (stand-in enterprise IdP)
-#   - gitea             self-hosted git hosting
+#   - gitea             self-hosted git hosting (the protected resource)
+#   - gitea-init        seeds the Gitea admin + demo repos (one-shot)
+#   - gitea-gateway     enforces the narrow ID-JAG scope in front of Gitea
 #   - identity-postgres Postgres DB backing the AGNTCY identity node
 #   - identity-vault    Vault (dev mode) for the identity node key material
 #   - identity-node     AGNTCY identity node (REST + gRPC)
@@ -89,6 +95,29 @@ services:
       timeout: 3s
       retries: 30
       start_period: 20s
+
+  # ---------------------------------------------------------------------------
+  # kc-init — registers the narrow gitea:read / gitea:write client scopes and
+  # assigns them (optional) to the Receiving App. One-shot; safe to re-run.
+  # ---------------------------------------------------------------------------
+  kc-init:
+    image: quay.io/keycloak/keycloak:26.7
+    container_name: cncf-kc-init
+    depends_on:
+      keycloak:
+        condition: service_healthy
+    entrypoint: ["bash", "/bootstrap-scopes.sh"]
+    environment:
+      KC_URL: http://keycloak:8080
+      KC_REALM: cncf-demo
+      KC_ADMIN: ${KEYCLOAK_ADMIN:-admin}
+      KC_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:?set KEYCLOAK_ADMIN_PASSWORD in .env}
+      RECEIVER_CLIENT: receiving-app
+    volumes:
+      - ./keycloak/bootstrap-scopes.sh:/bootstrap-scopes.sh:ro
+    networks:
+      - cncf-net
+    restart: "no"
 
   # ---------------------------------------------------------------------------
   # ID-JAG issuer — mints Identity Assertion JWTs (stands in for the central
@@ -135,6 +164,62 @@ services:
       timeout: 5s
       retries: 20
       start_period: 15s
+
+  # ---------------------------------------------------------------------------
+  # gitea-init — creates the Gitea admin user and seeds demo repos. One-shot.
+  # ---------------------------------------------------------------------------
+  gitea-init:
+    image: gitea/gitea:1.22
+    container_name: cncf-gitea-init
+    depends_on:
+      gitea:
+        condition: service_healthy
+    entrypoint: ["sh", "/init.sh"]
+    user: git
+    environment:
+      GITEA_INTERNAL_URL: http://gitea:3000
+      GITEA_ADMIN_USER: ${GITEA_ADMIN_USER:-demo-admin}
+      GITEA_ADMIN_PASSWORD: ${GITEA_ADMIN_PASSWORD:?set GITEA_ADMIN_PASSWORD in .env}
+      GITEA_ADMIN_EMAIL: ${GITEA_ADMIN_EMAIL:-admin@example.com}
+      GITEA_WORK_DIR: /data
+    volumes:
+      - gitea-data:/data
+      - ./gitea/init.sh:/init.sh:ro
+    networks:
+      - cncf-net
+    restart: "no"
+
+  # ---------------------------------------------------------------------------
+  # gitea-gateway — validates the Receiving App's access token and enforces the
+  # narrow ID-JAG scope (gitea:read to list, gitea:write to create) before
+  # proxying to Gitea. This is where narrow scoping is actually applied.
+  # ---------------------------------------------------------------------------
+  gitea-gateway:
+    build: ./gitea-gateway
+    container_name: cncf-gitea-gateway
+    depends_on:
+      keycloak:
+        condition: service_healthy
+      gitea:
+        condition: service_healthy
+    ports:
+      - "${GITEA_GATEWAY_PORT:-9100}:9100"
+    environment:
+      KEYCLOAK_URL: http://keycloak:8080
+      KEYCLOAK_REALM: cncf-demo
+      GITEA_URL: http://gitea:3000
+      GITEA_ADMIN_USER: ${GITEA_ADMIN_USER:-demo-admin}
+      GITEA_ADMIN_PASSWORD: ${GITEA_ADMIN_PASSWORD:?set GITEA_ADMIN_PASSWORD in .env}
+      GITEA_READ_SCOPE: gitea:read
+      GITEA_WRITE_SCOPE: gitea:write
+    networks:
+      - cncf-net
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:9100/healthz').status==200 else 1)\""]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
 
   # ---------------------------------------------------------------------------
   # Postgres — AGNTCY identity node DB
@@ -228,6 +313,8 @@ services:
         condition: service_healthy
       idjag-issuer:
         condition: service_healthy
+      gitea-gateway:
+        condition: service_healthy
     ports:
       - "${WEBAPP_PORT:-8000}:8000"
     environment:
@@ -241,6 +328,7 @@ services:
       DEMO_PASSWORD: ${CNCF_DEMO_PASSWORD:-demo-password-change-me}
       IDJAG_SUBJECT: ${CNCF_IDJAG_SUBJECT:-user@example.com}
       IDJAG_ISSUER_URL: http://idjag-issuer:9000
+      GITEA_GATEWAY_URL: http://gitea-gateway:9100
     networks:
       - cncf-net
     healthcheck:
@@ -266,6 +354,7 @@ volumes:
 - **ID-JAG demo web app: <http://localhost:8000>**
 - Keycloak admin console: <http://localhost:8080> (user/password from `.env`)
 - Gitea: <http://localhost:3000>
+- Gitea gateway (scope-enforcing proxy): <http://localhost:9100>
 - Identity node REST API: <http://localhost:4003>
 - Identity node gRPC: `localhost:4004`
 
@@ -273,35 +362,74 @@ volumes:
 
 Open the web app at <http://localhost:8000>. The demo shows the **Requesting
 App** obtaining access to the **Receiving App** on behalf of the signed-in
-user. Two playback modes are available:
+user, and the Receiving App then calling **Gitea** with the exchanged token.
 
-- **Run (animated)** — plays all three hops automatically with a short pause
+At the top of the page a **scope selector** chooses what the ID-JAG assertion
+requests: read-only (`gitea:read`) or read + write (`gitea:read gitea:write`).
+Two playback modes are available:
+
+- **Run (animated)** — plays all hops automatically with a short pause
   between each, highlighting the sequence diagram as it goes.
 - **Next step** — executes one hop per click, so you can narrate each step
   during a presentation.
 
-Each hop is a real, live call (backed by `POST /api/step/<login|mint|exchange>`;
-`POST /api/run` runs all three at once). Everything runs server-side (no browser
-CORS) across three hops:
+Each hop is a real, live call (backed by
+`POST /api/step/<login|mint|exchange|gitea-list|gitea-create>`; `POST /api/run`
+runs the whole sequence at once). Everything runs server-side (no browser CORS):
 
 1. **Requesting App — user sign-in** — OIDC password grant against Keycloak
    (`cncf-demo` realm, `requesting-app`) for the demo user `user`.
 2. **Mint ID-JAG** — the `idjag-issuer` service signs an Identity Assertion JWT
    (`iss` = issuer, `sub` = `user@example.com`, `aud` = the realm issuer,
-   `client_id`/`azp` = `receiving-app`). It also carries an **actor** claim
-   (`act`) identifying the Requesting App acting on the user's behalf.
+   `client_id`/`azp` = `receiving-app`, `scope` = the requested scope). It also
+   carries an **actor** claim (`act`) identifying the Requesting App acting on
+   the user's behalf.
 3. **Receiving App — exchange** — the assertion is presented to Keycloak's token
    endpoint with `grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer` and
    `client_id=receiving-app`; Keycloak validates it against the `id-jag`
    identity provider (JWKS from the issuer), maps `sub` to the local user via
-   its federated identity link, and returns a **local access token**.
+   its federated identity link, and returns a **downscoped local access token**
+   whose `scope` reflects the requested `gitea:*` scope(s).
+4. **Read Gitea** — the Receiving App calls `GET /api/gitea/repos` on the
+   `gitea-gateway` with the access token. The gateway verifies the token and
+   requires `gitea:read`, then lists repositories from Gitea.
+5. **Write Gitea** — the Receiving App calls `POST /api/gitea/repos`. The
+   gateway requires `gitea:write`. **With a read-only scope this is refused
+   (HTTP 403)** — the narrow-scoping payoff — while a read + write token
+   creates the repo.
 
 > **Subject vs. actor:** the ID-JAG assertion carries both the `sub` (the end
 > user) and the `act` (actor = Requesting App) claims. Keycloak's ID-JAG
 > receiver maps `sub` to the local user but does **not** propagate the `act`
 > claim into the access token it issues today.
 
-The UI shows the decoded header + claims for each token.
+The UI shows the decoded header + claims for each token, and the gateway's JSON
+response for the Gitea hops.
+
+### Narrow scoping with Gitea
+
+Gitea is the demo's **protected resource**, fronted by the `gitea-gateway`. The
+gateway is a small OAuth resource server: it verifies the Receiving App's access
+token (RS256 signature via Keycloak's JWKS, issuer, expiry) and enforces the
+scope required for each operation before proxying to Gitea with a server-side
+admin credential the caller never sees:
+
+| Operation | Endpoint | Required scope |
+| --- | --- | --- |
+| List repositories | `GET /api/gitea/repos` | `gitea:read` |
+| Create a repository | `POST /api/gitea/repos` | `gitea:write` |
+
+Because the ID-JAG assertion only requests the scope the task needs, the token
+Keycloak issues is **downscoped**. A read-only assertion yields a token that can
+list repos but is rejected by the gateway when it attempts a write — least
+privilege enforced end to end, without the Receiving App ever holding broad
+Gitea credentials.
+
+The `gitea:read` / `gitea:write` client scopes are registered in the realm by
+the one-shot `kc-init` service (via `keycloak/bootstrap-scopes.sh`) and assigned
+as **optional** scopes on `receiving-app`, so they are only granted when
+explicitly requested. The demo repos are seeded by `gitea-init`
+(`gitea/init.sh`).
 
 ### Why the separate issuer?
 
@@ -334,6 +462,7 @@ automatically on startup (`start-dev --import-realm`, mounted at
 | Client | `receiving-app` | **Receiving App (ID-JAG receiver)** — exchanges an incoming assertion (`jwt-bearer` grant) for a local access token (`oauth2.jwt.authorization.grant.*`). |
 | Identity provider | `id-jag` | External ID-JAG issuer (OIDC), `jwtAuthorizationGrantEnabled=true`. Issuer URLs are **placeholders** — point them at your real IdP. |
 | Users | `user` | Demo user (`user@example.com`), federated to the `id-jag` issuer. |
+| Client scopes | `gitea:read`, `gitea:write` | Narrow Gitea scopes registered by `kc-init` and assigned as **optional** scopes on `receiving-app`. |
 
 > **Demo credentials only.** The client secrets and user passwords in the realm
 > file are obvious `*-change-me` placeholders for local use. Change them (and the
@@ -374,15 +503,17 @@ the web UI.
 ### Unit tests (pytest)
 
 Each Python service has its own tests. They mock all outbound calls, so no
-running stack is required. The two services both define a top-level `app`
-module, so run them in **separate** invocations:
+running stack is required. The services each define a top-level `app` module, so
+run them in **separate** invocations:
 
 ```bash
 python3 -m venv .venv
-./.venv/bin/pip install -r idjag-issuer/requirements-dev.txt -r webapp/requirements-dev.txt
+./.venv/bin/pip install -r idjag-issuer/requirements-dev.txt \
+  -r webapp/requirements-dev.txt -r gitea-gateway/requirements-dev.txt
 
-./.venv/bin/python -m pytest idjag-issuer/tests -q   # ID-JAG issuer: JWKS, discovery, /mint contract
-./.venv/bin/python -m pytest webapp/tests -q         # web app: /api/config + 3-hop /api/run (respx-mocked)
+./.venv/bin/python -m pytest idjag-issuer/tests -q    # ID-JAG issuer: JWKS, discovery, /mint contract
+./.venv/bin/python -m pytest webapp/tests -q          # web app: /api/config + full /api/run (respx-mocked)
+./.venv/bin/python -m pytest gitea-gateway/tests -q   # gateway: token verify + scope enforcement
 ```
 
 ### E2E tests (Playwright)
@@ -397,15 +528,21 @@ npm run install-browsers          # one-time: downloads chromium
 WEBAPP_URL=http://localhost:8000 npm test   # omit WEBAPP_URL to use the default :18000
 ```
 
-The E2E suite verifies the logical app names render, the sequence diagram is
-shown, and the full ID-JAG sequence completes with all three hops green.
+The E2E suite verifies the logical app names render, the five-step sequence
+diagram is shown, that a **read-only** run lists repos but is **denied** the
+write (narrow scoping), and that a **read + write** run creates the repo.
 
 ## Notes
 
 - Keycloak runs in `start-dev` mode (in-memory H2) — suitable for demos only.
+- `kc-init` and `gitea-init` are **one-shot** containers: they run to completion
+  on `up`, are idempotent, and exit 0 (they show as `Exited (0)` in
+  `docker compose ps`).
 - Vault runs in dev mode; its data is not persisted across restarts.
 - Gitea and Postgres persist data via named volumes (`gitea-data`,
-  `identity-postgres-data`).
+  `identity-postgres-data`). Because Gitea's admin/repos live in `gitea-data`,
+  `gitea-init` skips work that already exists; wipe the volume
+  (`docker compose down -v`) to re-seed from scratch.
 - The identity node expects a Keycloak realm/client (`cncf-demo`) to be
   provisioned. Realm bootstrap and the Envoy + `ext_authz` layer are tracked
   separately in [#228](https://github.com/agntcy/identity-service/issues/228).

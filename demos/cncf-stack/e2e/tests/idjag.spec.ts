@@ -1,8 +1,9 @@
 import { test, expect } from '@playwright/test';
 
-const STEPS = ['login', 'mint', 'exchange'] as const;
+const STEPS = ['login', 'mint', 'exchange', 'gitea-list', 'gitea-create'] as const;
+const READ_WRITE = 'input[name="scope"][value="openid gitea:read gitea:write"]';
 
-test.describe('CNCF ID-JAG cross-app access demo', () => {
+test.describe('CNCF ID-JAG cross-app access + Gitea narrow-scoping demo', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
   });
@@ -10,58 +11,72 @@ test.describe('CNCF ID-JAG cross-app access demo', () => {
   test('renders the cross-app access UI with logical app names', async ({ page }) => {
     await expect(page.locator('h1')).toContainText('Cross-App Access');
     await expect(page.locator('h1')).toContainText('Requesting App');
-    await expect(page.locator('h1')).toContainText('Receiving App');
+    await expect(page.locator('h1')).toContainText('Gitea');
 
     const config = page.locator('#config');
     await expect(config).toContainText('requesting-app');
     await expect(config).toContainText('receiving-app');
     await expect(config).toContainText('user@example.com');
+    await expect(config).toContainText('gitea-gateway');
+
+    // The scope selector defaults to read-only.
+    await expect(page.locator('input[name="scope"]:checked')).toHaveValue('openid gitea:read');
   });
 
-  test('shows a sequence diagram with three message steps', async ({ page }) => {
+  test('shows a sequence diagram with five message steps and Gitea', async ({ page }) => {
     await expect(page.locator('.diagram svg')).toBeVisible();
     for (const id of STEPS) {
       await expect(page.locator(`[data-step="${id}"]`)).toBeVisible();
-      // Before running, each step is in the pending state.
       await expect(page.locator(`[data-step="${id}"]`)).toHaveClass(/pending/);
     }
     await expect(page.locator('.diagram')).toContainText('Mint ID-JAG');
+    await expect(page.locator('.diagram')).toContainText('gitea:write');
   });
 
-  test('runs the full ID-JAG sequence end to end (animated)', async ({ page }) => {
+  test('read-only run: lists repos but is denied the write (narrow scoping)', async ({ page }) => {
     await page.locator('#run').click();
 
-    // All three step cards must reach the "ok" state.
-    await expect(page.locator('.badge.ok')).toHaveCount(3, { timeout: 30_000 });
+    // login + mint + exchange + gitea-list succeed; gitea-create is denied.
+    await expect(page.locator('.badge.ok')).toHaveCount(4, { timeout: 45_000 });
+    await expect(page.locator('.badge.denied')).toHaveCount(1, { timeout: 45_000 });
 
-    // The sequence diagram reflects success for every hop.
+    await expect(page.locator('[data-step="gitea-list"]')).toHaveClass(/\bok\b/);
+    await expect(page.locator('[data-step="gitea-create"]')).toHaveClass(/\bdenied\b/);
+
+    const steps = page.locator('#steps');
+    await expect(steps).toContainText('gitea:write');
+  });
+
+  test('read+write run: creates the repo', async ({ page }) => {
+    await page.locator(READ_WRITE).check();
+    await page.locator('#run').click();
+
+    await expect(page.locator('.badge.ok')).toHaveCount(5, { timeout: 45_000 });
     for (const id of STEPS) {
       await expect(page.locator(`[data-step="${id}"]`)).toHaveClass(/\bok\b/);
     }
-
-    // Decoded tokens are shown, and the actor is the Requesting App.
     const steps = page.locator('#steps');
-    await expect(steps.locator('pre').first()).toContainText('"sub"');
-    await expect(steps).toContainText('requesting-app');
+    await expect(steps).toContainText('created');
   });
 
-  test('steps through the sequence one hop at a time', async ({ page }) => {
+  test('steps through all five hops one at a time', async ({ page }) => {
     const step = page.locator('#step');
 
-    // Hop 1 — only the login card should be green.
-    await step.click();
-    await expect(page.locator('.badge.ok')).toHaveCount(1, { timeout: 15_000 });
+    await step.click(); // login
+    await expect(page.locator('.badge.ok')).toHaveCount(1, { timeout: 20_000 });
     await expect(page.locator('[data-step="login"]')).toHaveClass(/\bok\b/);
-    await expect(page.locator('[data-step="mint"]')).toHaveClass(/pending/);
 
-    // Hop 2 — mint.
-    await step.click();
-    await expect(page.locator('.badge.ok')).toHaveCount(2, { timeout: 15_000 });
-    await expect(page.locator('[data-step="mint"]')).toHaveClass(/\bok\b/);
+    await step.click(); // mint
+    await expect(page.locator('.badge.ok')).toHaveCount(2, { timeout: 20_000 });
 
-    // Hop 3 — exchange; the Next button becomes "Done".
-    await step.click();
-    await expect(page.locator('.badge.ok')).toHaveCount(3, { timeout: 15_000 });
+    await step.click(); // exchange
+    await expect(page.locator('.badge.ok')).toHaveCount(3, { timeout: 20_000 });
+
+    await step.click(); // gitea-list (read)
+    await expect(page.locator('[data-step="gitea-list"]')).toHaveClass(/\bok\b/, { timeout: 20_000 });
+
+    await step.click(); // gitea-create -> denied under read-only
+    await expect(page.locator('[data-step="gitea-create"]')).toHaveClass(/\bdenied\b/, { timeout: 20_000 });
     await expect(step).toBeDisabled();
     await expect(step).toHaveText(/Done/);
   });
