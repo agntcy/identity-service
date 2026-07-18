@@ -50,6 +50,22 @@
     }
     .err-msg { color: var(--err); padding: 0 16px 14px; font-family: ui-monospace, monospace; font-size: 12px; }
     .flow { color: var(--muted); font-size: 13px; margin-bottom: 8px; }
+    .diagram {
+      background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+      padding: 16px; margin-bottom: 20px; overflow-x: auto;
+    }
+    .diagram svg { width: 100%; min-width: 620px; height: auto; display: block; }
+    .seq-actor-box { fill: #21262d; stroke: var(--border); }
+    .seq-actor { fill: var(--text); font-size: 13px; font-weight: 600; }
+    .seq-life { stroke: var(--border); stroke-dasharray: 4 4; }
+    /* message groups — colored by step status */
+    .g .seq-msg { stroke: var(--muted); stroke-width: 1.6; }
+    .g .seq-msg.ret { stroke-dasharray: 6 4; }
+    .g .seq-label { fill: var(--muted); font-size: 12px; }
+    .g .seq-num { fill: var(--muted); font-size: 12px; font-weight: 700; }
+    .g.running .seq-msg { stroke: var(--run); } .g.running .seq-label, .g.running .seq-num { fill: var(--run); }
+    .g.ok .seq-msg { stroke: var(--ok); } .g.ok .seq-label, .g.ok .seq-num { fill: var(--ok); }
+    .g.error .seq-msg { stroke: var(--err); } .g.error .seq-label, .g.error .seq-num { fill: var(--err); }
   </style>
 </head>
 <body>
@@ -63,6 +79,58 @@
   <main>
     <div class="config" id="config"></div>
     <div class="flow">The Requesting App gets access to the Receiving App on the user's behalf. Three server-side hops &mdash; each card shows the decoded JWT header + claims.</div>
+
+    <div class="diagram">
+      <svg viewBox="0 0 860 340" role="img" aria-label="ID-JAG cross-app access sequence diagram">
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="context-stroke" />
+          </marker>
+        </defs>
+
+        <!-- actors -->
+        <g>
+          <rect class="seq-actor-box" x="60"  y="10" width="160" height="30" rx="5" />
+          <text class="seq-actor" x="140" y="30" text-anchor="middle">Requesting App</text>
+          <rect class="seq-actor-box" x="350" y="10" width="160" height="30" rx="5" />
+          <text class="seq-actor" x="430" y="30" text-anchor="middle">ID-JAG Issuer</text>
+          <rect class="seq-actor-box" x="640" y="10" width="180" height="30" rx="5" />
+          <text class="seq-actor" x="730" y="30" text-anchor="middle">Keycloak / Receiving App</text>
+          <!-- lifelines -->
+          <line class="seq-life" x1="140" y1="40" x2="140" y2="330" />
+          <line class="seq-life" x1="430" y1="40" x2="430" y2="330" />
+          <line class="seq-life" x1="730" y1="40" x2="730" y2="330" />
+        </g>
+
+        <!-- 1. sign in -->
+        <g data-step="login" class="g">
+          <text class="seq-num"   x="150" y="82">1</text>
+          <text class="seq-label" x="168" y="82">User sign-in — password grant</text>
+          <line class="seq-msg"      x1="140" y1="90"  x2="730" y2="90"  marker-end="url(#arrow)" />
+          <text class="seq-label" x="722" y="118" text-anchor="end">user access token</text>
+          <line class="seq-msg ret"  x1="730" y1="126" x2="140" y2="126" marker-end="url(#arrow)" />
+        </g>
+
+        <!-- 2. mint -->
+        <g data-step="mint" class="g">
+          <text class="seq-num"   x="150" y="162">2</text>
+          <text class="seq-label" x="168" y="162">Mint ID-JAG (sub = user, act = Requesting App)</text>
+          <line class="seq-msg"      x1="140" y1="170" x2="430" y2="170" marker-end="url(#arrow)" />
+          <text class="seq-label" x="422" y="198" text-anchor="end">signed assertion</text>
+          <line class="seq-msg ret"  x1="430" y1="206" x2="140" y2="206" marker-end="url(#arrow)" />
+        </g>
+
+        <!-- 3. exchange -->
+        <g data-step="exchange" class="g">
+          <text class="seq-num"   x="150" y="242">3</text>
+          <text class="seq-label" x="168" y="242">jwt-bearer exchange (assertion)</text>
+          <line class="seq-msg"      x1="140" y1="250" x2="730" y2="250" marker-end="url(#arrow)" />
+          <text class="seq-label" x="722" y="278" text-anchor="end">Receiving App access token</text>
+          <line class="seq-msg ret"  x1="730" y1="286" x2="140" y2="286" marker-end="url(#arrow)" />
+        </g>
+      </svg>
+    </div>
+
     <div id="steps"></div>
   </main>
 
@@ -99,6 +167,16 @@
       return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
     }
 
+    function updateDiagram(steps) {
+      const byId = Object.fromEntries(steps.map(s => [s.id, s]));
+      TEMPLATE.forEach(t => {
+        const g = document.querySelector(`[data-step="${t.id}"]`);
+        if (g) g.setAttribute('class', 'g ' + ((byId[t.id] && byId[t.id].status) || 'pending'));
+      });
+    }
+
+    function setStates(steps) { render(steps); updateDiagram(steps); }
+
     async function loadConfig() {
       try {
         const c = await (await fetch('/api/config')).json();
@@ -108,26 +186,27 @@
            <div><b>Requesting App:</b> ${escapeHtml(c.user_client)}</div>
            <div><b>Receiving App:</b> ${escapeHtml(c.backend_client)}</div>
            <div><b>Demo user:</b> ${escapeHtml(c.demo_user)}</div>
+           <div><b>Subject:</b> ${escapeHtml(c.subject)}</div>
            <div><b>ID-JAG issuer:</b> ${escapeHtml(c.issuer)}</div>`;
       } catch (e) { /* ignore */ }
     }
 
     runBtn.addEventListener('click', async () => {
       runBtn.disabled = true;
-      render(TEMPLATE.map(t => ({ id: t.id, status: 'running' })));
+      setStates(TEMPLATE.map(t => ({ id: t.id, status: 'running' })));
       try {
         const res = await fetch('/api/run', { method: 'POST' });
         const data = await res.json();
-        render(data.steps);
+        setStates(data.steps);
       } catch (e) {
-        render([{ id: 'login', status: 'error', error: String(e) }]);
+        setStates([{ id: 'login', status: 'error', error: String(e) }]);
       } finally {
         runBtn.disabled = false;
       }
     });
 
     loadConfig();
-    render(TEMPLATE.map(t => ({ id: t.id, status: 'pending' })));
+    setStates(TEMPLATE.map(t => ({ id: t.id, status: 'pending' })));
   </script>
 </body>
 </html>

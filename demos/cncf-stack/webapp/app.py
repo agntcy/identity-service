@@ -115,10 +115,13 @@ async def run():
             r = await client.post(
                 f"{ISSUER_URL}/mint",
                 json={
+                    # Subject = the end user; actor = the Requesting App acting
+                    # on the user's behalf (RFC 8693 `act`). client_id must match
+                    # the client that presents the assertion (the Receiving App).
                     "sub": SUBJECT,
                     "aud": REALM_ISSUER,
                     "client_id": BACKEND_CLIENT_ID,
-                    "act_chain": [DEMO_USER, BACKEND_CLIENT_ID],
+                    "act_chain": [USER_CLIENT_ID],
                     "scope": "openid",
                 },
             )

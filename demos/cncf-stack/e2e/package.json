@@ -1,0 +1,13 @@
+{
+  "name": "cncf-stack-e2e",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Playwright E2E tests for the CNCF ID-JAG demo web app.",
+  "scripts": {
+    "test": "playwright test",
+    "install-browsers": "playwright install chromium"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.48.0"
+  }
+}

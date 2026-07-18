@@ -1,0 +1,4 @@
+-r requirements.txt
+pytest
+# FastAPI's TestClient is backed by httpx/starlette.
+httpx

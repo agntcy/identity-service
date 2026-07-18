@@ -50,12 +50,18 @@ across three hops:
    (`cncf-demo` realm, `requesting-app`) for the demo user `user`.
 2. **Mint ID-JAG** — the `idjag-issuer` service signs an Identity Assertion JWT
    (`iss` = issuer, `sub` = `user@example.com`, `aud` = the realm issuer,
-   `client_id`/`azp` = `receiving-app`).
+   `client_id`/`azp` = `receiving-app`). It also carries an **actor** claim
+   (`act`) identifying the Requesting App acting on the user's behalf.
 3. **Receiving App — exchange** — the assertion is presented to Keycloak's token
    endpoint with `grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer` and
    `client_id=receiving-app`; Keycloak validates it against the `id-jag`
    identity provider (JWKS from the issuer), maps `sub` to the local user via
    its federated identity link, and returns a **local access token**.
+
+> **Subject vs. actor:** the ID-JAG assertion carries both the `sub` (the end
+> user) and the `act` (actor = Requesting App) claims. Keycloak's ID-JAG
+> receiver maps `sub` to the local user but does **not** propagate the `act`
+> claim into the access token it issues today.
 
 The UI shows the decoded header + claims for each token.
 
@@ -121,6 +127,40 @@ start-dev --features=identity-assertion-jwt,token-exchange-delegation
 > issues a local access token. It cannot yet **issue** ID-JAG assertions, so a
 > full end-to-end flow with Keycloak on both ends is not possible today. These
 > features are experimental and not for production.
+
+## Running the tests
+
+The demo ships with unit tests (per service) and Playwright E2E tests that drive
+the web UI.
+
+### Unit tests (pytest)
+
+Each Python service has its own tests. They mock all outbound calls, so no
+running stack is required. The two services both define a top-level `app`
+module, so run them in **separate** invocations:
+
+```bash
+python3 -m venv .venv
+./.venv/bin/pip install -r idjag-issuer/requirements-dev.txt -r webapp/requirements-dev.txt
+
+./.venv/bin/python -m pytest idjag-issuer/tests -q   # ID-JAG issuer: JWKS, discovery, /mint contract
+./.venv/bin/python -m pytest webapp/tests -q         # web app: /api/config + 3-hop /api/run (respx-mocked)
+```
+
+### E2E tests (Playwright)
+
+These drive the real web UI against the **running** stack. Bring the stack up
+first (`docker compose up -d`), then:
+
+```bash
+cd e2e
+npm install
+npm run install-browsers          # one-time: downloads chromium
+WEBAPP_URL=http://localhost:8000 npm test   # omit WEBAPP_URL to use the default :18000
+```
+
+The E2E suite verifies the logical app names render, the sequence diagram is
+shown, and the full ID-JAG sequence completes with all three hops green.
 
 ## Notes
 
