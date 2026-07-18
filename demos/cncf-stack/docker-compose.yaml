@@ -3,11 +3,13 @@ name: cncf-stack
 # CNCF conference demo stack for AGNTCY Identity Service.
 #
 # Services:
-#   - keycloak          OIDC provider (identity provider for the identity node)
+#   - keycloak          OIDC provider + ID-JAG (Cross-App Access) receiver
+#   - idjag-issuer      mints ID-JAG assertions (stand-in enterprise IdP)
 #   - gitea             self-hosted git hosting
 #   - identity-postgres Postgres DB backing the AGNTCY identity node
 #   - identity-vault    Vault (dev mode) for the identity node key material
 #   - identity-node     AGNTCY identity node (REST + gRPC)
+#   - webapp            ID-JAG Cross-App Access demo UI
 #
 # All credentials are provided via environment variables (see .env.example).
 # Copy .env.example to .env and adjust before running:
