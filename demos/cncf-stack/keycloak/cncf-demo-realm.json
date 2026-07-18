@@ -1,0 +1,87 @@
+{
+  "realm": "cncf-demo",
+  "enabled": true,
+  "registrationAllowed": false,
+  "resetPasswordAllowed": false,
+  "sslRequired": "external",
+  "identityProviders": [
+    {
+      "alias": "id-jag",
+      "displayName": "ID-JAG Issuer",
+      "providerId": "keycloak-oidc",
+      "enabled": true,
+      "trustEmail": true,
+      "storeToken": false,
+      "addReadTokenRoleOnCreate": false,
+      "config": {
+        "issuer": "https://issuer.example.com/realms/enterprise",
+        "authorizationUrl": "https://issuer.example.com/realms/enterprise/protocol/openid-connect/auth",
+        "tokenUrl": "https://issuer.example.com/realms/enterprise/protocol/openid-connect/token",
+        "jwksUrl": "https://issuer.example.com/realms/enterprise/protocol/openid-connect/certs",
+        "useJwksUrl": "true",
+        "clientId": "cncf-demo-receiver",
+        "clientSecret": "demo-idjag-secret-change-me",
+        "jwtAuthorizationGrantEnabled": "true",
+        "jwtAuthorizationGrantAssertionReuseAllowed": "false",
+        "jwtAuthorizationGrantMaxAllowedAssertionExpiration": "300"
+      }
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "cncf-demo-client",
+      "name": "CNCF Demo Client",
+      "description": "Primary confidential client (standard flow, direct grants, standard token exchange).",
+      "enabled": true,
+      "publicClient": false,
+      "secret": "demo-client-secret-change-me",
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": true,
+      "redirectUris": ["http://localhost:8080/callback", "*"],
+      "webOrigins": ["+"],
+      "attributes": {
+        "standard.token.exchange.enabled": "true",
+        "post.logout.redirect.uris": "+"
+      }
+    },
+    {
+      "clientId": "backend-client",
+      "name": "Backend Client (ID-JAG receiver)",
+      "description": "Exchanges an incoming ID-JAG assertion (jwt-bearer grant) for a local access token.",
+      "enabled": true,
+      "publicClient": false,
+      "secret": "demo-backend-secret-change-me",
+      "serviceAccountsEnabled": true,
+      "consentRequired": false,
+      "attributes": {
+        "oauth2.jwt.authorization.grant.enabled": "true",
+        "oauth2.jwt.authorization.grant.idp": "id-jag"
+      }
+    }
+  ],
+  "users": [
+    {
+      "username": "sarah",
+      "email": "sarah@enterprisex.com",
+      "firstName": "Sarah",
+      "lastName": "Demo",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        { "type": "password", "value": "demo-password-change-me", "temporary": false }
+      ]
+    },
+    {
+      "username": "alice",
+      "email": "alice@enterprisex.com",
+      "firstName": "Alice",
+      "lastName": "Demo",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        { "type": "password", "value": "demo-password-change-me", "temporary": false }
+      ]
+    }
+  ]
+}
