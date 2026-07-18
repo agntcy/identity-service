@@ -31,6 +31,236 @@ Check status:
 docker compose ps
 ```
 
+## Stack definition
+
+The canonical definition lives in
+[`docker-compose.yaml`](./docker-compose.yaml). It is reproduced here for
+reference (the file is the source of truth — if the two ever diverge, trust the
+file):
+
+<details>
+<summary>Full <code>docker-compose.yaml</code></summary>
+
+```yaml
+name: cncf-stack
+
+# CNCF conference demo stack for AGNTCY Identity Service.
+#
+# Services:
+#   - keycloak          OIDC provider + ID-JAG (Cross-App Access) receiver
+#   - idjag-issuer      mints ID-JAG assertions (stand-in enterprise IdP)
+#   - gitea             self-hosted git hosting
+#   - identity-postgres Postgres DB backing the AGNTCY identity node
+#   - identity-vault    Vault (dev mode) for the identity node key material
+#   - identity-node     AGNTCY identity node (REST + gRPC)
+#   - webapp            ID-JAG Cross-App Access demo UI
+#
+# All credentials are provided via environment variables (see .env.example).
+# Copy .env.example to .env and adjust before running:
+#   cp .env.example .env
+#   docker compose up -d
+
+services:
+  # ---------------------------------------------------------------------------
+  # Keycloak — OIDC provider
+  # ---------------------------------------------------------------------------
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.7
+    container_name: cncf-keycloak
+    # ID-JAG (Cross-App Access) receiver + token exchange delegation are
+    # experimental features and must be enabled explicitly. Requires Keycloak
+    # 26.7+. See:
+    # https://www.keycloak.org/securing-apps/identity-assertion-jwt-authorization-grant
+    command: start-dev --import-realm --features=identity-assertion-jwt,token-exchange-delegation,parameterized-scopes
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN:-admin}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:?set KEYCLOAK_ADMIN_PASSWORD in .env}
+      KC_HTTP_PORT: 8080
+    ports:
+      - "${KEYCLOAK_HTTP_PORT:-8080}:8080"
+    volumes:
+      # Realm config imported on startup (see ./keycloak/cncf-demo-realm.json).
+      - ./keycloak:/opt/keycloak/data/import:ro
+    networks:
+      - cncf-net
+    healthcheck:
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/8080 && echo OK || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 20s
+
+  # ---------------------------------------------------------------------------
+  # ID-JAG issuer — mints Identity Assertion JWTs (stands in for the central
+  # enterprise IdP, since Keycloak can only *receive* ID-JAG today).
+  # ---------------------------------------------------------------------------
+  idjag-issuer:
+    build: ./idjag-issuer
+    container_name: cncf-idjag-issuer
+    environment:
+      ISSUER_URL: http://idjag-issuer:9000
+    networks:
+      - cncf-net
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:9000/healthz').status==200 else 1)\""]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+
+  # ---------------------------------------------------------------------------
+  # Gitea — self-hosted git hosting
+  # ---------------------------------------------------------------------------
+  gitea:
+    image: gitea/gitea:1.22
+    container_name: cncf-gitea
+    environment:
+      USER_UID: "1000"
+      USER_GID: "1000"
+      GITEA__database__DB_TYPE: sqlite3
+      GITEA__server__ROOT_URL: ${GITEA_ROOT_URL:-http://localhost:3000/}
+      GITEA__server__SSH_PORT: ${GITEA_SSH_PORT:-2222}
+      GITEA__security__INSTALL_LOCK: "true"
+      GITEA__service__DISABLE_REGISTRATION: "true"
+    ports:
+      - "${GITEA_HTTP_PORT:-3000}:3000"
+      - "${GITEA_SSH_PORT:-2222}:22"
+    volumes:
+      - gitea-data:/data
+    networks:
+      - cncf-net
+    healthcheck:
+      test: ["CMD-SHELL", "wget --spider -q http://127.0.0.1:3000/api/healthz || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 15s
+
+  # ---------------------------------------------------------------------------
+  # Postgres — AGNTCY identity node DB
+  # ---------------------------------------------------------------------------
+  identity-postgres:
+    image: postgres:16
+    container_name: cncf-identity-postgres
+    environment:
+      POSTGRES_USER: ${DB_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?set DB_PASSWORD in .env}
+      POSTGRES_DB: ${DB_NAME:-identity}
+    volumes:
+      - identity-postgres-data:/var/lib/postgresql/data
+    networks:
+      - cncf-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-postgres}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # ---------------------------------------------------------------------------
+  # Vault (dev mode) — AGNTCY identity node key storage
+  # ---------------------------------------------------------------------------
+  identity-vault:
+    image: hashicorp/vault:1.17
+    container_name: cncf-identity-vault
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: ${VAULT_DEV_ROOT_TOKEN:?set VAULT_DEV_ROOT_TOKEN in .env}
+      VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8200
+    cap_add:
+      - IPC_LOCK
+    networks:
+      - cncf-net
+    healthcheck:
+      test: ["CMD-SHELL", "vault status -address=http://127.0.0.1:8200 || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # ---------------------------------------------------------------------------
+  # AGNTCY Identity Node
+  # ---------------------------------------------------------------------------
+  identity-node:
+    image: ghcr.io/agntcy/identity/node:0.0.23
+    container_name: cncf-identity-node
+    pull_policy: always
+    depends_on:
+      identity-postgres:
+        condition: service_healthy
+      identity-vault:
+        condition: service_healthy
+    ports:
+      - "${IDENTITY_NODE_REST_PORT:-4003}:4000"   # REST API
+      - "${IDENTITY_NODE_GRPC_PORT:-4004}:4001"   # gRPC
+    environment:
+      DB_HOST: identity-postgres
+      DB_PORT: 5432
+      DB_USERNAME: ${DB_USERNAME:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:?set DB_PASSWORD in .env}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?set DB_PASSWORD in .env}
+      POSTGRES_DB: ${DB_NAME:-identity}
+      VAULT_HOST: identity-vault
+      VAULT_DEV_ROOT_TOKEN: ${VAULT_DEV_ROOT_TOKEN:?set VAULT_DEV_ROOT_TOKEN in .env}
+      GO_ENV: development
+      IAM_ORGANIZATION: ${IAM_ORGANIZATION:-cncf-demo}
+      SECRETS_CRYPTO_KEY: ${SECRETS_CRYPTO_KEY:?set SECRETS_CRYPTO_KEY in .env}
+      # Keycloak OIDC issuer — realm is provisioned separately after startup.
+      IAM_ISSUER: ${IAM_ISSUER:-http://keycloak:8080/realms/cncf-demo}
+      IAM_USER_CID: ${IAM_USER_CID:-requesting-app}
+      IAM_USER_CID_CLAIM_NAME: azp
+    networks:
+      - cncf-net
+    healthcheck:
+      # The node image has no HTTP health endpoint; verify the REST (4000) and
+      # gRPC (4001) ports are accepting connections instead.
+      test: ["CMD-SHELL", "nc -z 127.0.0.1 4000 && nc -z 127.0.0.1 4001 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+
+  # ---------------------------------------------------------------------------
+  # Web app — drives the ID-JAG (Cross-App Access) sequence end to end
+  # ---------------------------------------------------------------------------
+  webapp:
+    build: ./webapp
+    container_name: cncf-webapp
+    depends_on:
+      keycloak:
+        condition: service_healthy
+      idjag-issuer:
+        condition: service_healthy
+    ports:
+      - "${WEBAPP_PORT:-8000}:8000"
+    environment:
+      KEYCLOAK_URL: http://keycloak:8080
+      KEYCLOAK_REALM: cncf-demo
+      USER_CLIENT_ID: requesting-app
+      USER_CLIENT_SECRET: ${CNCF_REQUESTING_SECRET:-demo-requesting-secret-change-me}
+      BACKEND_CLIENT_ID: receiving-app
+      BACKEND_CLIENT_SECRET: ${CNCF_RECEIVING_SECRET:-demo-receiving-secret-change-me}
+      DEMO_USER: ${CNCF_DEMO_USER:-user}
+      DEMO_PASSWORD: ${CNCF_DEMO_PASSWORD:-demo-password-change-me}
+      IDJAG_SUBJECT: ${CNCF_IDJAG_SUBJECT:-user@example.com}
+      IDJAG_ISSUER_URL: http://idjag-issuer:9000
+    networks:
+      - cncf-net
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/api/health').status==200 else 1)\""]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+
+networks:
+  cncf-net:
+    driver: bridge
+
+volumes:
+  gitea-data:
+  identity-postgres-data:
+```
+
+</details>
+
 ## Default URLs
 
 - **ID-JAG demo web app: <http://localhost:8000>**
