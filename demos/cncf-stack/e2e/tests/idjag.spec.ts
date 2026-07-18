@@ -28,7 +28,7 @@ test.describe('CNCF ID-JAG cross-app access demo', () => {
     await expect(page.locator('.diagram')).toContainText('Mint ID-JAG');
   });
 
-  test('runs the full ID-JAG sequence end to end', async ({ page }) => {
+  test('runs the full ID-JAG sequence end to end (animated)', async ({ page }) => {
     await page.locator('#run').click();
 
     // All three step cards must reach the "ok" state.
@@ -43,5 +43,26 @@ test.describe('CNCF ID-JAG cross-app access demo', () => {
     const steps = page.locator('#steps');
     await expect(steps.locator('pre').first()).toContainText('"sub"');
     await expect(steps).toContainText('requesting-app');
+  });
+
+  test('steps through the sequence one hop at a time', async ({ page }) => {
+    const step = page.locator('#step');
+
+    // Hop 1 — only the login card should be green.
+    await step.click();
+    await expect(page.locator('.badge.ok')).toHaveCount(1, { timeout: 15_000 });
+    await expect(page.locator('[data-step="login"]')).toHaveClass(/\bok\b/);
+    await expect(page.locator('[data-step="mint"]')).toHaveClass(/pending/);
+
+    // Hop 2 — mint.
+    await step.click();
+    await expect(page.locator('.badge.ok')).toHaveCount(2, { timeout: 15_000 });
+    await expect(page.locator('[data-step="mint"]')).toHaveClass(/\bok\b/);
+
+    // Hop 3 — exchange; the Next button becomes "Done".
+    await step.click();
+    await expect(page.locator('.badge.ok')).toHaveCount(3, { timeout: 15_000 });
+    await expect(step).toBeDisabled();
+    await expect(step).toHaveText(/Done/);
   });
 });

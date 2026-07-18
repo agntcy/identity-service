@@ -26,15 +26,19 @@
       border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; margin-bottom: 20px;
       display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 4px 20px; }
     .config b { color: var(--text); font-weight: 600; }
+    .controls { display: flex; gap: 8px; flex-wrap: wrap; }
     button {
       background: var(--accent); color: white; border: 0; border-radius: 6px;
       padding: 10px 18px; font-size: 14px; font-weight: 600; cursor: pointer;
     }
+    button.secondary { background: #21262d; color: var(--text); border: 1px solid var(--border); }
     button:disabled { opacity: 0.55; cursor: default; }
     .step {
       background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
       margin: 14px 0; overflow: hidden;
     }
+    .step.reveal { animation: fade-in .45s ease both; }
+    @keyframes fade-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
     .step-head { padding: 14px 16px; display: flex; align-items: center; gap: 10px; }
     .step-title { font-weight: 600; flex: 1; }
     .step-detail { color: var(--muted); font-size: 12px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -74,11 +78,15 @@
       <h1>Cross-App Access &mdash; Requesting App &rarr; Receiving App</h1>
       <div class="sub">ID-JAG issuer &rarr; Keycloak 26.7 receiver (<code>jwt-bearer</code>) &rarr; local access token</div>
     </div>
-    <button id="run">Run ID-JAG sequence</button>
+    <div class="controls">
+      <button id="run">Run (animated)</button>
+      <button id="step" class="secondary">Next step &#9654;</button>
+      <button id="reset" class="secondary" disabled>Reset</button>
+    </div>
   </header>
   <main>
     <div class="config" id="config"></div>
-    <div class="flow">The Requesting App gets access to the Receiving App on the user's behalf. Three server-side hops &mdash; each card shows the decoded JWT header + claims.</div>
+    <div class="flow">The Requesting App gets access to the Receiving App on the user's behalf. <b>Run (animated)</b> plays all three hops with a pause between each; <b>Next step</b> lets you execute them one at a time. Each card shows the decoded JWT header + claims.</div>
 
     <div class="diagram">
       <svg viewBox="0 0 860 340" role="img" aria-label="ID-JAG cross-app access sequence diagram">
@@ -137,45 +145,132 @@
   <script>
     const stepsEl = document.getElementById('steps');
     const runBtn = document.getElementById('run');
+    const stepBtn = document.getElementById('step');
+    const resetBtn = document.getElementById('reset');
 
-    const TEMPLATE = [
-      { id: 'login',    title: '1. Requesting App — user sign-in (OIDC password grant)' },
-      { id: 'mint',     title: '2. Mint ID-JAG assertion (for the Receiving App)' },
-      { id: 'exchange', title: '3. Receiving App — exchange (Keycloak jwt-bearer)' },
-    ];
+    // Delay (ms) between hops in animated mode — enough to follow along.
+    const STEP_DELAY = 900;
 
-    function render(steps) {
-      const byId = Object.fromEntries(steps.map(s => [s.id, s]));
-      stepsEl.innerHTML = TEMPLATE.map(t => {
-        const s = byId[t.id] || {};
-        const status = s.status || 'pending';
-        const detail = s.detail ? `<div class="step-detail">${escapeHtml(s.detail)}</div>` : '';
-        let body = '';
-        if (s.status === 'error') body = `<div class="err-msg">${escapeHtml(s.error || 'error')}</div>`;
-        else if (s.decoded) body = `<pre>${escapeHtml(JSON.stringify(s.decoded, null, 2))}</pre>`;
-        return `<div class="step">
-          <div class="step-head">
-            <span class="step-title">${escapeHtml(t.title)}</span>
-            <span class="badge ${status}">${status}</span>
-          </div>
-          ${detail}${body}
-        </div>`;
-      }).join('');
-    }
+    const ORDER = ['login', 'mint', 'exchange'];
+    const TITLES = {
+      login:    '1. Requesting App — user sign-in (OIDC password grant)',
+      mint:     '2. Mint ID-JAG assertion (for the Receiving App)',
+      exchange: '3. Receiving App — exchange (Keycloak jwt-bearer)',
+    };
+
+    let shown = {};          // id -> step object (status/decoded/error/...)
+    let assertion = null;    // carried from the mint hop into the exchange hop
+    let cursor = 0;          // index of the next hop to run
+    let busy = false;
+    const animated = new Set();
+
+    const sleep = ms => new Promise(r => setTimeout(r, ms));
 
     function escapeHtml(s) {
       return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
     }
 
-    function updateDiagram(steps) {
-      const byId = Object.fromEntries(steps.map(s => [s.id, s]));
-      TEMPLATE.forEach(t => {
-        const g = document.querySelector(`[data-step="${t.id}"]`);
-        if (g) g.setAttribute('class', 'g ' + ((byId[t.id] && byId[t.id].status) || 'pending'));
+    function initShown() {
+      shown = {};
+      animated.clear();
+      ORDER.forEach(id => { shown[id] = { id, title: TITLES[id], status: 'pending' }; });
+    }
+
+    function render() {
+      stepsEl.innerHTML = ORDER.map(id => {
+        const s = shown[id];
+        const status = s.status || 'pending';
+        const detail = s.detail ? `<div class="step-detail">${escapeHtml(s.detail)}</div>` : '';
+        let body = '';
+        if (status === 'error') body = `<div class="err-msg">${escapeHtml(s.error || 'error')}</div>`;
+        else if (s.decoded) body = `<pre>${escapeHtml(JSON.stringify(s.decoded, null, 2))}</pre>`;
+        const reveal = (status !== 'pending' && !animated.has(id)) ? ' reveal' : '';
+        return `<div class="step${reveal}">
+          <div class="step-head">
+            <span class="step-title">${escapeHtml(s.title || TITLES[id])}</span>
+            <span class="badge ${status}">${status}</span>
+          </div>
+          ${detail}${body}
+        </div>`;
+      }).join('');
+      ORDER.forEach(id => { if (shown[id].status !== 'pending') animated.add(id); });
+      updateDiagram();
+    }
+
+    function updateDiagram() {
+      ORDER.forEach(id => {
+        const g = document.querySelector(`[data-step="${id}"]`);
+        if (g) g.setAttribute('class', 'g ' + (shown[id].status || 'pending'));
       });
     }
 
-    function setStates(steps) { render(steps); updateDiagram(steps); }
+    function updateButtons() {
+      runBtn.disabled = busy;
+      stepBtn.disabled = busy || cursor >= ORDER.length;
+      resetBtn.disabled = busy || cursor === 0;
+      stepBtn.textContent = cursor === 0 ? 'Next step \u25B6' : (cursor < ORDER.length ? `Next: ${cursor + 1} \u25B6` : 'Done');
+    }
+
+    async function callStep(id) {
+      const opts = { method: 'POST', headers: { 'Content-Type': 'application/json' } };
+      if (id === 'exchange') opts.body = JSON.stringify({ assertion: assertion || '' });
+      const res = await fetch('/api/step/' + id, opts);
+      return res.json();
+    }
+
+    // Execute one hop live and update its card. Returns true on success.
+    async function runHop(index) {
+      const id = ORDER[index];
+      shown[id] = { id, title: TITLES[id], status: 'running' };
+      render();
+      try {
+        const data = await callStep(id);
+        shown[id] = data.step;
+        if (id === 'mint' && data.ok) assertion = data.step.token;
+        render();
+        return data.ok;
+      } catch (e) {
+        shown[id] = { id, title: TITLES[id], status: 'error', error: String(e) };
+        render();
+        return false;
+      }
+    }
+
+    function reset() {
+      if (busy) return;
+      initShown();
+      assertion = null;
+      cursor = 0;
+      render();
+      updateButtons();
+    }
+
+    // Animated auto-run: execute each hop with a pause in between.
+    runBtn.addEventListener('click', async () => {
+      if (busy) return;
+      reset();
+      busy = true; updateButtons();
+      for (let i = 0; i < ORDER.length; i++) {
+        const ok = await runHop(i);
+        cursor = i + 1;
+        if (!ok) break;
+        if (i < ORDER.length - 1) await sleep(STEP_DELAY);
+      }
+      busy = false; updateButtons();
+    });
+
+    // Manual step-through: one hop per click.
+    stepBtn.addEventListener('click', async () => {
+      if (busy || cursor >= ORDER.length) return;
+      if (cursor === 0) reset();
+      busy = true; updateButtons();
+      const ok = await runHop(cursor);
+      cursor += 1;
+      if (!ok) cursor = ORDER.length; // stop on failure
+      busy = false; updateButtons();
+    });
+
+    resetBtn.addEventListener('click', reset);
 
     async function loadConfig() {
       try {
@@ -191,22 +286,10 @@
       } catch (e) { /* ignore */ }
     }
 
-    runBtn.addEventListener('click', async () => {
-      runBtn.disabled = true;
-      setStates(TEMPLATE.map(t => ({ id: t.id, status: 'running' })));
-      try {
-        const res = await fetch('/api/run', { method: 'POST' });
-        const data = await res.json();
-        setStates(data.steps);
-      } catch (e) {
-        setStates([{ id: 'login', status: 'error', error: String(e) }]);
-      } finally {
-        runBtn.disabled = false;
-      }
-    });
-
     loadConfig();
-    setStates(TEMPLATE.map(t => ({ id: t.id, status: 'pending' })));
+    initShown();
+    render();
+    updateButtons();
   </script>
 </body>
 </html>
