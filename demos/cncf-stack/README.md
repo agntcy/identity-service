@@ -271,10 +271,18 @@ volumes:
 
 ## Testing the ID-JAG (Cross-App Access) sequence
 
-Open the web app at <http://localhost:8000> and click **Run ID-JAG sequence**.
-The demo shows the **Requesting App** obtaining access to the **Receiving App**
-on behalf of the signed-in user. Everything runs server-side (no browser CORS)
-across three hops:
+Open the web app at <http://localhost:8000>. The demo shows the **Requesting
+App** obtaining access to the **Receiving App** on behalf of the signed-in
+user. Two playback modes are available:
+
+- **Run (animated)** — plays all three hops automatically with a short pause
+  between each, highlighting the sequence diagram as it goes.
+- **Next step** — executes one hop per click, so you can narrate each step
+  during a presentation.
+
+Each hop is a real, live call (backed by `POST /api/step/<login|mint|exchange>`;
+`POST /api/run` runs all three at once). Everything runs server-side (no browser
+CORS) across three hops:
 
 1. **Requesting App — user sign-in** — OIDC password grant against Keycloak
    (`cncf-demo` realm, `requesting-app`) for the demo user `user`.

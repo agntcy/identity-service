@@ -115,3 +115,47 @@ def test_run_stops_when_exchange_fails():
     assert data["ok"] is False
     assert [s["id"] for s in data["steps"]] == ["login", "mint", "exchange"]
     assert data["steps"][2]["status"] == "error"
+
+
+# --- stepped endpoints (manual step-through / animated mode) ---------------
+
+
+@respx.mock
+def test_step_login_returns_single_ok_step():
+    respx.post(webapp.TOKEN_ENDPOINT).mock(
+        return_value=httpx.Response(200, json={"access_token": _jwt(sub="uid-1", azp="requesting-app")})
+    )
+    data = client.post("/api/step/login").json()
+    assert data["ok"] is True
+    assert data["step"]["id"] == "login"
+    assert data["step"]["decoded"]["claims"]["azp"] == "requesting-app"
+
+
+@respx.mock
+def test_step_mint_returns_assertion_as_token():
+    assertion = _jwt(sub="user@example.com", azp="receiving-app")
+    respx.post(f"{webapp.ISSUER_URL}/mint").mock(
+        return_value=httpx.Response(200, json={"assertion": assertion, "claims": {}})
+    )
+    data = client.post("/api/step/mint").json()
+    assert data["ok"] is True
+    assert data["step"]["token"] == assertion
+
+
+@respx.mock
+def test_step_exchange_uses_supplied_assertion():
+    exchanged = _jwt(sub="uid-1", azp="receiving-app")
+    route = respx.post(webapp.TOKEN_ENDPOINT).mock(
+        return_value=httpx.Response(200, json={"access_token": exchanged})
+    )
+    data = client.post("/api/step/exchange", json={"assertion": "some.jwt.assertion"}).json()
+    assert data["ok"] is True
+    assert data["step"]["decoded"]["claims"]["azp"] == "receiving-app"
+    # The assertion we passed must be forwarded to Keycloak's token endpoint.
+    sent = route.calls.last.request.content.decode()
+    assert "assertion=some.jwt.assertion" in sent
+
+
+def test_step_exchange_requires_assertion_field():
+    # Missing the required body field -> 422 from FastAPI validation.
+    assert client.post("/api/step/exchange", json={}).status_code == 422

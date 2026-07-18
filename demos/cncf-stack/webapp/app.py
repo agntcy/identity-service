@@ -12,7 +12,9 @@ issuer directly (no CORS):
   3. Receiving App exchange — present the assertion to Keycloak's receiving-app token
                           endpoint via the jwt-bearer grant -> access token
 
-The UI shows each hop's status and the decoded token/assertion claims.
+Each hop is exposed both as part of /api/run (all three at once) and as an
+individual /api/step/<id> endpoint, so the UI can either animate the sequence
+or let the presenter step through it one hop at a time.
 """
 
 from __future__ import annotations
@@ -23,6 +25,7 @@ import httpx
 import jwt as pyjwt
 from fastapi import FastAPI
 from fastapi.responses import FileResponse, JSONResponse
+from pydantic import BaseModel
 from fastapi.staticfiles import StaticFiles
 
 KEYCLOAK_URL = os.environ.get("KEYCLOAK_URL", "http://keycloak:8080").rstrip("/")
@@ -53,6 +56,100 @@ def _decode(token: str) -> dict:
         return {"error": f"could not decode: {exc}"}
 
 
+# --- individual hops -------------------------------------------------------
+# Each returns a "step" dict with status ok/error. On success it also carries
+# the raw `token` (the access token, or the assertion for the mint step) so the
+# next hop / the caller can reuse it.
+
+
+async def _login(client: httpx.AsyncClient) -> dict:
+    step = {
+        "id": "login",
+        "title": "1. Requesting App — user sign-in (OIDC password grant)",
+        "detail": f"POST {TOKEN_ENDPOINT}  (client={USER_CLIENT_ID}, user={DEMO_USER})",
+    }
+    try:
+        r = await client.post(
+            TOKEN_ENDPOINT,
+            data={
+                "grant_type": "password",
+                "client_id": USER_CLIENT_ID,
+                "client_secret": USER_CLIENT_SECRET,
+                "username": DEMO_USER,
+                "password": DEMO_PASSWORD,
+                "scope": "openid profile email",
+            },
+        )
+        if r.status_code != 200:
+            step.update(status="error", error=f"HTTP {r.status_code}: {r.text[:300]}")
+            return step
+        token = r.json()["access_token"]
+        step.update(status="ok", token=token, decoded=_decode(token))
+    except Exception as exc:  # noqa: BLE001
+        step.update(status="error", error=str(exc))
+    return step
+
+
+async def _mint(client: httpx.AsyncClient) -> dict:
+    step = {
+        "id": "mint",
+        "title": "2. Mint ID-JAG assertion (for the Receiving App)",
+        "detail": f"POST {ISSUER_URL}/mint  (sub={SUBJECT}, aud={REALM_ISSUER})",
+    }
+    try:
+        r = await client.post(
+            f"{ISSUER_URL}/mint",
+            json={
+                # Subject = the end user; actor = the Requesting App acting
+                # on the user's behalf (RFC 8693 `act`). client_id must match
+                # the client that presents the assertion (the Receiving App).
+                "sub": SUBJECT,
+                "aud": REALM_ISSUER,
+                "client_id": BACKEND_CLIENT_ID,
+                "act_chain": [USER_CLIENT_ID],
+                "scope": "openid",
+            },
+        )
+        if r.status_code != 200:
+            step.update(status="error", error=f"HTTP {r.status_code}: {r.text[:300]}")
+            return step
+        assertion = r.json()["assertion"]
+        step.update(status="ok", token=assertion, decoded=_decode(assertion))
+    except Exception as exc:  # noqa: BLE001
+        step.update(status="error", error=str(exc))
+    return step
+
+
+async def _exchange(client: httpx.AsyncClient, assertion: str) -> dict:
+    step = {
+        "id": "exchange",
+        "title": "3. Receiving App — exchange (Keycloak ID-JAG / jwt-bearer)",
+        "detail": f"POST {TOKEN_ENDPOINT}  (grant_type=jwt-bearer, client={BACKEND_CLIENT_ID})",
+    }
+    if not assertion:
+        step.update(status="error", error="no assertion provided (run the mint step first)")
+        return step
+    try:
+        r = await client.post(
+            TOKEN_ENDPOINT,
+            data={
+                "grant_type": "urn:ietf:params:oauth:grant-type:jwt-bearer",
+                "assertion": assertion,
+                "client_id": BACKEND_CLIENT_ID,
+                "client_secret": BACKEND_CLIENT_SECRET,
+                "scope": "openid",
+            },
+        )
+        if r.status_code != 200:
+            step.update(status="error", error=f"HTTP {r.status_code}: {r.text[:300]}")
+            return step
+        token = r.json()["access_token"]
+        step.update(status="ok", token=token, decoded=_decode(token))
+    except Exception as exc:  # noqa: BLE001
+        step.update(status="error", error=str(exc))
+    return step
+
+
 @app.get("/api/health")
 def health():
     return {"status": "ok"}
@@ -73,100 +170,47 @@ def config():
 
 @app.post("/api/run")
 async def run():
+    """Run all three hops in sequence, stopping at the first failure."""
     steps: list[dict] = []
     async with httpx.AsyncClient(timeout=15) as client:
-        # --- Step 1: user login (password grant) ---
-        step = {
-            "id": "login",
-            "title": "1. Requesting App — user sign-in (OIDC password grant)",
-            "detail": f"POST {TOKEN_ENDPOINT}  (client={USER_CLIENT_ID}, user={DEMO_USER})",
-        }
-        try:
-            r = await client.post(
-                TOKEN_ENDPOINT,
-                data={
-                    "grant_type": "password",
-                    "client_id": USER_CLIENT_ID,
-                    "client_secret": USER_CLIENT_SECRET,
-                    "username": DEMO_USER,
-                    "password": DEMO_PASSWORD,
-                    "scope": "openid profile email",
-                },
-            )
-            if r.status_code != 200:
-                step.update(status="error", error=f"HTTP {r.status_code}: {r.text[:300]}")
-                steps.append(step)
-                return JSONResponse({"ok": False, "steps": steps})
-            user_token = r.json()["access_token"]
-            step.update(status="ok", token=user_token, decoded=_decode(user_token))
-            steps.append(step)
-        except Exception as exc:  # noqa: BLE001
-            step.update(status="error", error=str(exc))
-            steps.append(step)
+        login = await _login(client)
+        steps.append(login)
+        if login["status"] != "ok":
             return JSONResponse({"ok": False, "steps": steps})
 
-        # --- Step 2: mint ID-JAG assertion at the issuer ---
-        step = {
-            "id": "mint",
-            "title": "2. Mint ID-JAG assertion (for the Receiving App)",
-            "detail": f"POST {ISSUER_URL}/mint  (sub={SUBJECT}, aud={REALM_ISSUER})",
-        }
-        try:
-            r = await client.post(
-                f"{ISSUER_URL}/mint",
-                json={
-                    # Subject = the end user; actor = the Requesting App acting
-                    # on the user's behalf (RFC 8693 `act`). client_id must match
-                    # the client that presents the assertion (the Receiving App).
-                    "sub": SUBJECT,
-                    "aud": REALM_ISSUER,
-                    "client_id": BACKEND_CLIENT_ID,
-                    "act_chain": [USER_CLIENT_ID],
-                    "scope": "openid",
-                },
-            )
-            if r.status_code != 200:
-                step.update(status="error", error=f"HTTP {r.status_code}: {r.text[:300]}")
-                steps.append(step)
-                return JSONResponse({"ok": False, "steps": steps})
-            assertion = r.json()["assertion"]
-            step.update(status="ok", token=assertion, decoded=_decode(assertion))
-            steps.append(step)
-        except Exception as exc:  # noqa: BLE001
-            step.update(status="error", error=str(exc))
-            steps.append(step)
+        mint = await _mint(client)
+        steps.append(mint)
+        if mint["status"] != "ok":
             return JSONResponse({"ok": False, "steps": steps})
 
-        # --- Step 3: receiver exchange (jwt-bearer) ---
-        step = {
-            "id": "exchange",
-            "title": "3. Receiving App — exchange (Keycloak ID-JAG / jwt-bearer)",
-            "detail": f"POST {TOKEN_ENDPOINT}  (grant_type=jwt-bearer, client={BACKEND_CLIENT_ID})",
-        }
-        try:
-            r = await client.post(
-                TOKEN_ENDPOINT,
-                data={
-                    "grant_type": "urn:ietf:params:oauth:grant-type:jwt-bearer",
-                    "assertion": assertion,
-                    "client_id": BACKEND_CLIENT_ID,
-                    "client_secret": BACKEND_CLIENT_SECRET,
-                    "scope": "openid",
-                },
-            )
-            if r.status_code != 200:
-                step.update(status="error", error=f"HTTP {r.status_code}: {r.text[:300]}")
-                steps.append(step)
-                return JSONResponse({"ok": False, "steps": steps})
-            access_token = r.json()["access_token"]
-            step.update(status="ok", token=access_token, decoded=_decode(access_token))
-            steps.append(step)
-        except Exception as exc:  # noqa: BLE001
-            step.update(status="error", error=str(exc))
-            steps.append(step)
-            return JSONResponse({"ok": False, "steps": steps})
+        exchange = await _exchange(client, mint.get("token", ""))
+        steps.append(exchange)
+        return JSONResponse({"ok": exchange["status"] == "ok", "steps": steps})
 
-    return JSONResponse({"ok": True, "steps": steps})
+
+@app.post("/api/step/login")
+async def step_login():
+    async with httpx.AsyncClient(timeout=15) as client:
+        step = await _login(client)
+    return JSONResponse({"ok": step["status"] == "ok", "step": step})
+
+
+@app.post("/api/step/mint")
+async def step_mint():
+    async with httpx.AsyncClient(timeout=15) as client:
+        step = await _mint(client)
+    return JSONResponse({"ok": step["status"] == "ok", "step": step})
+
+
+class ExchangeRequest(BaseModel):
+    assertion: str
+
+
+@app.post("/api/step/exchange")
+async def step_exchange(body: ExchangeRequest):
+    async with httpx.AsyncClient(timeout=15) as client:
+        step = await _exchange(client, body.assertion)
+    return JSONResponse({"ok": step["status"] == "ok", "step": step})
 
 
 @app.get("/")
