@@ -45,6 +45,24 @@ services:
       start_period: 20s
 
   # ---------------------------------------------------------------------------
+  # ID-JAG issuer — mints Identity Assertion JWTs (stands in for the central
+  # enterprise IdP, since Keycloak can only *receive* ID-JAG today).
+  # ---------------------------------------------------------------------------
+  idjag-issuer:
+    build: ./idjag-issuer
+    container_name: cncf-idjag-issuer
+    environment:
+      ISSUER_URL: http://idjag-issuer:9000
+    networks:
+      - cncf-net
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:9000/healthz').status==200 else 1)\""]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+
+  # ---------------------------------------------------------------------------
   # Gitea — self-hosted git hosting
   # ---------------------------------------------------------------------------
   gitea:
@@ -152,6 +170,39 @@ services:
       timeout: 5s
       retries: 20
       start_period: 20s
+
+  # ---------------------------------------------------------------------------
+  # Web app — drives the ID-JAG (Cross-App Access) sequence end to end
+  # ---------------------------------------------------------------------------
+  webapp:
+    build: ./webapp
+    container_name: cncf-webapp
+    depends_on:
+      keycloak:
+        condition: service_healthy
+      idjag-issuer:
+        condition: service_healthy
+    ports:
+      - "${WEBAPP_PORT:-8000}:8000"
+    environment:
+      KEYCLOAK_URL: http://keycloak:8080
+      KEYCLOAK_REALM: cncf-demo
+      USER_CLIENT_ID: cncf-demo-client
+      USER_CLIENT_SECRET: ${CNCF_CLIENT_SECRET:-demo-client-secret-change-me}
+      BACKEND_CLIENT_ID: backend-client
+      BACKEND_CLIENT_SECRET: ${CNCF_BACKEND_SECRET:-demo-backend-secret-change-me}
+      DEMO_USER: ${CNCF_DEMO_USER:-sarah}
+      DEMO_PASSWORD: ${CNCF_DEMO_PASSWORD:-demo-password-change-me}
+      IDJAG_SUBJECT: ${CNCF_IDJAG_SUBJECT:-sarah@enterprisex.com}
+      IDJAG_ISSUER_URL: http://idjag-issuer:9000
+    networks:
+      - cncf-net
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/api/health').status==200 else 1)\""]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
 
 networks:
   cncf-net:

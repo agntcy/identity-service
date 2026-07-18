@@ -11,6 +11,8 @@ Docker Compose stack for the CNCF conference demo of the AGNTCY Identity Service
 | `identity-postgres` | `postgres:16`                        | _(internal)_        | Database for the identity node           |
 | `identity-vault`    | `hashicorp/vault:1.17`               | _(internal)_        | Key material storage (Vault dev mode)    |
 | `identity-node`     | `ghcr.io/agntcy/identity/node:0.0.23`| `4003` (REST), `4004` (gRPC) | AGNTCY identity node             |
+| `idjag-issuer`      | built from `./idjag-issuer`          | _(internal)_        | Mints ID-JAG assertions (stand-in issuer) |
+| `webapp`            | built from `./webapp`                | `8000`              | ID-JAG Cross-App Access demo UI          |
 
 All image versions are pinned (no `latest`). All credentials are supplied via
 environment variables — none are hardcoded in `docker-compose.yaml`.
@@ -31,10 +33,38 @@ docker compose ps
 
 ## Default URLs
 
+- **ID-JAG demo web app: <http://localhost:8000>**
 - Keycloak admin console: <http://localhost:8080> (user/password from `.env`)
 - Gitea: <http://localhost:3000>
 - Identity node REST API: <http://localhost:4003>
 - Identity node gRPC: `localhost:4004`
+
+## Testing the ID-JAG (Cross-App Access) sequence
+
+Open the web app at <http://localhost:8000> and click **Run ID-JAG sequence**.
+Everything runs server-side (no browser CORS) across three hops:
+
+1. **User login** — OIDC password grant against Keycloak (`cncf-demo` realm,
+   `cncf-demo-client`) for the demo user `sarah`.
+2. **Mint ID-JAG** — the `idjag-issuer` service signs an Identity Assertion JWT
+   (`iss` = issuer, `sub` = `sarah@enterprisex.com`, `aud` = the realm issuer,
+   `client_id`/`azp` = `backend-client`).
+3. **Receiver exchange** — the assertion is presented to Keycloak's token
+   endpoint with `grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer` and
+   `client_id=backend-client`; Keycloak validates it against the `id-jag`
+   identity provider (JWKS from the issuer), maps `sub` to the local user via
+   its federated identity link, and returns a **local access token**.
+
+The UI shows the decoded header + claims for each token.
+
+### Why the separate issuer?
+
+Keycloak 26.7 only implements the **Receiver** side of ID-JAG — it cannot mint
+assertions yet. The small `idjag-issuer` service stands in for the central
+enterprise IdP so the full flow is self-contained and testable locally. Swap it
+for a real issuer by editing the `id-jag` identity provider config in
+`keycloak/cncf-demo-realm.json` (issuer / JWKS URLs) and the matching federated
+identity link on the user.
 
 ## Configuration
 
