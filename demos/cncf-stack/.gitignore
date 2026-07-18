@@ -1,0 +1,5 @@
+# Local env file with real values — never commit
+.env
+
+# Keep the example template tracked (root .gitignore ignores .env.*)
+!.env.example
