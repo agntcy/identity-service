@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CNCF Demo — ID-JAG (Cross-App Access)</title>
+  <style>
+    :root {
+      --bg: #0d1117; --panel: #161b22; --border: #30363d;
+      --text: #e6edf3; --muted: #8b949e; --accent: #2f81f7;
+      --ok: #3fb950; --err: #f85149; --run: #d29922;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg); color: var(--text); line-height: 1.5;
+    }
+    header {
+      padding: 24px 32px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+    }
+    header h1 { font-size: 20px; margin: 0; }
+    header .sub { color: var(--muted); font-size: 13px; margin-top: 4px; }
+    main { max-width: 960px; margin: 0 auto; padding: 24px 32px; }
+    .config { font-size: 12px; color: var(--muted); background: var(--panel);
+      border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; margin-bottom: 20px;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 4px 20px; }
+    .config b { color: var(--text); font-weight: 600; }
+    button {
+      background: var(--accent); color: white; border: 0; border-radius: 6px;
+      padding: 10px 18px; font-size: 14px; font-weight: 600; cursor: pointer;
+    }
+    button:disabled { opacity: 0.55; cursor: default; }
+    .step {
+      background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+      margin: 14px 0; overflow: hidden;
+    }
+    .step-head { padding: 14px 16px; display: flex; align-items: center; gap: 10px; }
+    .step-title { font-weight: 600; flex: 1; }
+    .step-detail { color: var(--muted); font-size: 12px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      padding: 0 16px 12px; word-break: break-all; }
+    .badge { font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 3px 8px; border-radius: 20px; }
+    .badge.pending { background: #21262d; color: var(--muted); }
+    .badge.running { background: rgba(210,153,34,.15); color: var(--run); }
+    .badge.ok { background: rgba(63,185,80,.15); color: var(--ok); }
+    .badge.error { background: rgba(248,81,73,.15); color: var(--err); }
+    pre {
+      margin: 0; padding: 14px 16px; background: #0b0f14; border-top: 1px solid var(--border);
+      font-size: 12px; overflow-x: auto; color: #c9d1d9; max-height: 320px;
+    }
+    .err-msg { color: var(--err); padding: 0 16px 14px; font-family: ui-monospace, monospace; font-size: 12px; }
+    .flow { color: var(--muted); font-size: 13px; margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>CNCF Demo &mdash; ID-JAG (Cross-App Access)</h1>
+      <div class="sub">External issuer &rarr; Keycloak 26.7 receiver (<code>jwt-bearer</code>) &rarr; local access token</div>
+    </div>
+    <button id="run">Run ID-JAG sequence</button>
+  </header>
+  <main>
+    <div class="config" id="config"></div>
+    <div class="flow">Three server-side hops. Each card shows the decoded JWT header + claims.</div>
+    <div id="steps"></div>
+  </main>
+
+  <script>
+    const stepsEl = document.getElementById('steps');
+    const runBtn = document.getElementById('run');
+
+    const TEMPLATE = [
+      { id: 'login',    title: '1. User login (OIDC password grant)' },
+      { id: 'mint',     title: '2. Mint ID-JAG assertion (external issuer)' },
+      { id: 'exchange', title: '3. Receiver exchange (Keycloak jwt-bearer)' },
+    ];
+
+    function render(steps) {
+      const byId = Object.fromEntries(steps.map(s => [s.id, s]));
+      stepsEl.innerHTML = TEMPLATE.map(t => {
+        const s = byId[t.id] || {};
+        const status = s.status || 'pending';
+        const detail = s.detail ? `<div class="step-detail">${escapeHtml(s.detail)}</div>` : '';
+        let body = '';
+        if (s.status === 'error') body = `<div class="err-msg">${escapeHtml(s.error || 'error')}</div>`;
+        else if (s.decoded) body = `<pre>${escapeHtml(JSON.stringify(s.decoded, null, 2))}</pre>`;
+        return `<div class="step">
+          <div class="step-head">
+            <span class="step-title">${escapeHtml(t.title)}</span>
+            <span class="badge ${status}">${status}</span>
+          </div>
+          ${detail}${body}
+        </div>`;
+      }).join('');
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    async function loadConfig() {
+      try {
+        const c = await (await fetch('/api/config')).json();
+        document.getElementById('config').innerHTML =
+          `<div><b>Keycloak:</b> ${escapeHtml(c.keycloak)}</div>
+           <div><b>Realm:</b> ${escapeHtml(c.realm)}</div>
+           <div><b>User client:</b> ${escapeHtml(c.user_client)}</div>
+           <div><b>Backend client:</b> ${escapeHtml(c.backend_client)}</div>
+           <div><b>Demo user:</b> ${escapeHtml(c.demo_user)}</div>
+           <div><b>ID-JAG issuer:</b> ${escapeHtml(c.issuer)}</div>`;
+      } catch (e) { /* ignore */ }
+    }
+
+    runBtn.addEventListener('click', async () => {
+      runBtn.disabled = true;
+      render(TEMPLATE.map(t => ({ id: t.id, status: 'running' })));
+      try {
+        const res = await fetch('/api/run', { method: 'POST' });
+        const data = await res.json();
+        render(data.steps);
+      } catch (e) {
+        render([{ id: 'login', status: 'error', error: String(e) }]);
+      } finally {
+        runBtn.disabled = false;
+      }
+    });
+
+    loadConfig();
+    render(TEMPLATE.map(t => ({ id: t.id, status: 'pending' })));
+  </script>
+</body>
+</html>
