@@ -9,9 +9,9 @@ test.describe('CNCF ID-JAG cross-app access + Gitea narrow-scoping demo', () => 
   });
 
   test('renders the cross-app access UI with logical app names', async ({ page }) => {
-    await expect(page.locator('h1')).toContainText('Cross-App Access');
-    await expect(page.locator('h1')).toContainText('Requesting App');
-    await expect(page.locator('h1')).toContainText('Gitea');
+    await expect(page.locator('header')).toContainText('Cross-App Access');
+    await expect(page.locator('header')).toContainText('Requesting App');
+    await expect(page.locator('header')).toContainText('Gitea');
 
     const config = page.locator('#config');
     await expect(config).toContainText('requesting-app');
@@ -24,13 +24,37 @@ test.describe('CNCF ID-JAG cross-app access + Gitea narrow-scoping demo', () => 
   });
 
   test('shows a sequence diagram with five message steps and Gitea', async ({ page }) => {
-    await expect(page.locator('.diagram svg')).toBeVisible();
+    await expect(page.locator('#tab-demo .diagram svg')).toBeVisible();
     for (const id of STEPS) {
       await expect(page.locator(`[data-step="${id}"]`)).toBeVisible();
       await expect(page.locator(`[data-step="${id}"]`)).toHaveClass(/pending/);
     }
-    await expect(page.locator('.diagram')).toContainText('Mint ID-JAG');
-    await expect(page.locator('.diagram')).toContainText('gitea:write');
+    await expect(page.locator('#tab-demo .diagram')).toContainText('Mint ID-JAG');
+    await expect(page.locator('#tab-demo .diagram')).toContainText('gitea:write');
+  });
+
+  test('has a How it works tab explaining Keycloak config and VCs', async ({ page }) => {
+    // Demo tab is active by default; the how tab is hidden.
+    await expect(page.locator('#tab-how')).toBeHidden();
+
+    await page.getByRole('button', { name: 'How it works' }).click();
+
+    await expect(page.locator('#tab-how')).toBeVisible();
+    await expect(page.locator('#tab-demo')).toBeHidden();
+
+    const how = page.locator('#tab-how');
+    await expect(how).toContainText('identity-assertion-jwt');
+    await expect(how).toContainText('oauth2.jwt.authorization.grant.enabled');
+    await expect(how).toContainText('Verifiable Credentials');
+    await expect(how).toContainText('/vc/publish');
+    await expect(how).toContainText('VC-backed ID-JAG');
+    // Extra explainer sequence diagrams are present.
+    await expect(how.locator('.diagram.doc svg').first()).toBeVisible();
+
+    // Switching back restores the live demo.
+    await page.getByRole('button', { name: 'Live demo' }).click();
+    await expect(page.locator('#tab-demo')).toBeVisible();
+    await expect(page.locator('#tab-how')).toBeHidden();
   });
 
   test('read-only run: lists repos but is denied the write (narrow scoping)', async ({ page }) => {
