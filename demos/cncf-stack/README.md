@@ -406,6 +406,56 @@ runs the whole sequence at once). Everything runs server-side (no browser CORS):
 The UI shows the decoded header + claims for each token, and the gateway's JSON
 response for the Gitea hops.
 
+### "How it works" tab
+
+The web app has a second tab, **How it works**, that documents the demo for
+presenters rather than running it. It explains how Keycloak is configured for
+token exchange and ID-JAG / Cross-App Access (the experimental feature flags,
+the `receiving-app` client attributes, the `id-jag` identity provider, and the
+`kcadm`-registered narrow scopes) with copy-pasteable snippets, and adds extra
+sequence diagrams beyond the live flow:
+
+- **One-time trust setup** — how Keycloak learns to trust the issuer's JWKS and
+  how `kc-init` registers the narrow scopes.
+- **Exchange & narrow-scoping enforcement** — a close-up of the `jwt-bearer`
+  exchange and the gateway's scope check (including the 403 on write).
+- **Issuing a VC (Badge) with the identity node** — how the identity node
+  registers an issuer, generates a resolvable identity, and publishes/verifies a
+  Verifiable Credential.
+- **VC-backed ID-JAG (proposed)** — how an agent VC would be verified via the
+  identity node alongside the user-delegated ID-JAG token, combining delegated
+  access with verifiable agent identity.
+
+The identity node is included in this section because ID-JAG proves *the user
+authorized this app*, while a VC proves *this app/agent is who it claims to be*.
+See [Identity node & Verifiable Credentials](#identity-node--verifiable-credentials-not-yet-wired-in)
+below for the integration status.
+
+### Identity node & Verifiable Credentials (not yet wired in)
+
+The stack runs the AGNTCY identity node (REST `:4003`, gRPC `:4004`), a registry
+and resolver for agent/app identities and their VCs (AGNTCY **Badges** —
+`AgentBadge` / `McpBadge`, W3C VCs in a JOSE envelope). Relevant endpoints:
+
+| Node endpoint (`/v1alpha1`) | Purpose |
+| --------------------------- | ------- |
+| `POST /issuer/register` | Register a tenant issuer + its public JWK |
+| `POST /id/generate` | Mint a resolvable identity (`ResolverMetadata`) from an OIDC proof |
+| `POST /vc/publish` | Store a signed VC (validates the OIDC proof against the subject) |
+| `POST /vc/verify` | Cryptographically verify a VC |
+| `GET /vc/{id}/.well-known/vcs.json` | Public resolution of an identity's VCs |
+
+VC **signing** happens in the Identity Service BFF (with the tenant key from
+Vault); the node **publishes / resolves / verifies**. This stack currently runs
+the node but **not** the BFF, so live VC issuance is not yet wired into the
+ID-JAG flow — the "VC-backed ID-JAG" sequence is a design (per AGNTCY's DCR
+`vc+jwt` / Client-ID-Metadata proposal). To make it live you would either run
+the Identity Service BFF, or have `idjag-issuer` double as a VC issuer (it
+already holds an RSA key + JWKS): register with the node, sign a Badge for
+`requesting-app`, publish it, add the `resolver_metadata_id` as a claim in the
+ID-JAG assertion, and have the gateway call `/vc/verify` before allowing the
+Gitea call.
+
 ### Narrow scoping with Gitea
 
 Gitea is the demo's **protected resource**, fronted by the `gitea-gateway`. The

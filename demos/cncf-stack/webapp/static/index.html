@@ -9,6 +9,7 @@
       --bg: #0d1117; --panel: #161b22; --border: #30363d;
       --text: #e6edf3; --muted: #8b949e; --accent: #2f81f7;
       --ok: #3fb950; --err: #f85149; --run: #d29922; --denied: #db8f2f;
+      --teal: #39c5cf; --purple: #bc8cff;
     }
     * { box-sizing: border-box; }
     body {
@@ -21,17 +22,24 @@
     }
     header h1 { font-size: 20px; margin: 0; }
     header .sub { color: var(--muted); font-size: 13px; margin-top: 4px; }
-    main { max-width: 960px; margin: 0 auto; padding: 24px 32px; }
+    main { max-width: 980px; margin: 0 auto; padding: 24px 32px; }
+    .tabs { display: flex; gap: 4px; }
+    .tab {
+      background: transparent; color: var(--muted); border: 1px solid var(--border);
+      border-radius: 8px; padding: 9px 16px; font-size: 14px; font-weight: 600; cursor: pointer;
+    }
+    .tab.active { background: var(--panel); color: var(--text); border-color: var(--accent); }
     .config { font-size: 12px; color: var(--muted); background: var(--panel);
       border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; margin-bottom: 20px;
       display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 4px 20px; }
     .config b { color: var(--text); font-weight: 600; }
-    .controls { display: flex; gap: 8px; flex-wrap: wrap; }
-    button {
+    .controls { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+    button.action {
       background: var(--accent); color: white; border: 0; border-radius: 6px;
       padding: 10px 18px; font-size: 14px; font-weight: 600; cursor: pointer;
     }
-    button.secondary { background: #21262d; color: var(--text); border: 1px solid var(--border); }
+    button.secondary { background: #21262d; color: var(--text); border: 1px solid var(--border);
+      border-radius: 6px; padding: 10px 18px; font-size: 14px; font-weight: 600; cursor: pointer; }
     button:disabled { opacity: 0.55; cursor: default; }
     .step {
       background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
@@ -67,7 +75,7 @@
     .seq-actor-box { fill: #21262d; stroke: var(--border); }
     .seq-actor { fill: var(--text); font-size: 13px; font-weight: 600; }
     .seq-life { stroke: var(--border); stroke-dasharray: 4 4; }
-    /* message groups — colored by step status */
+    /* message groups — colored by step status (live demo) */
     .g .seq-msg { stroke: var(--muted); stroke-width: 1.6; }
     .g .seq-msg.ret { stroke-dasharray: 6 4; }
     .g .seq-label { fill: var(--muted); font-size: 12px; }
@@ -76,107 +84,444 @@
     .g.ok .seq-msg { stroke: var(--ok); } .g.ok .seq-label, .g.ok .seq-num { fill: var(--ok); }
     .g.error .seq-msg { stroke: var(--err); } .g.error .seq-label, .g.error .seq-num { fill: var(--err); }
     .g.denied .seq-msg { stroke: var(--denied); } .g.denied .seq-label, .g.denied .seq-num { fill: var(--denied); }
+    /* static (documentation) diagrams */
+    .diagram.doc .seq-msg { stroke: var(--accent); stroke-width: 1.6; }
+    .diagram.doc .seq-msg.ret { stroke: var(--muted); stroke-dasharray: 6 4; }
+    .diagram.doc .seq-msg.alt { stroke: var(--purple); }
+    .diagram.doc .seq-label { fill: #c9d1d9; font-size: 12px; }
+    .diagram.doc .seq-num { fill: var(--accent); font-size: 12px; font-weight: 700; }
+    .diagram.doc .seq-note { fill: var(--muted); font-size: 11px; font-style: italic; }
+    /* prose (How it works) */
+    .prose h2 { font-size: 18px; margin: 30px 0 6px; }
+    .prose h3 { font-size: 15px; margin: 22px 0 4px; color: var(--text); }
+    .prose p { color: #c9d1d9; font-size: 14px; margin: 8px 0; }
+    .prose ul { color: #c9d1d9; font-size: 14px; margin: 8px 0; padding-left: 22px; }
+    .prose li { margin: 4px 0; }
+    .prose code { background: #0b0f14; border: 1px solid var(--border); border-radius: 4px;
+      padding: 1px 5px; font-size: 12px; color: var(--teal); }
+    .prose pre { border: 1px solid var(--border); border-radius: 8px; margin: 10px 0; }
+    .prose pre code { background: none; border: 0; padding: 0; color: #c9d1d9; }
+    .prose table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 13px; }
+    .prose th, .prose td { border: 1px solid var(--border); padding: 7px 10px; text-align: left; vertical-align: top; }
+    .prose th { background: var(--panel); color: var(--text); }
+    .caption { color: var(--muted); font-size: 12px; margin: -8px 0 18px; }
+    .tag { font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 2px 7px; border-radius: 20px; vertical-align: middle; margin-left: 8px; }
+    .tag.live { background: rgba(63,185,80,.15); color: var(--ok); }
+    .tag.today { background: rgba(47,129,247,.15); color: var(--accent); }
+    .tag.proposed { background: rgba(188,140,255,.16); color: var(--purple); }
+    .note { background: rgba(47,129,247,.08); border: 1px solid rgba(47,129,247,.35);
+      border-radius: 8px; padding: 12px 16px; margin: 14px 0; font-size: 13px; color: #c9d1d9; }
+    [hidden] { display: none !important; }
   </style>
 </head>
 <body>
   <header>
     <div>
-      <h1>Cross-App Access &mdash; Requesting App &rarr; Receiving App &rarr; Gitea</h1>
-      <div class="sub">ID-JAG issuer &rarr; Keycloak 26.7 receiver (<code>jwt-bearer</code>) &rarr; scoped access token &rarr; Gitea via gateway</div>
+      <h1>AGNTCY Identity &mdash; Cross-App Access (ID-JAG)</h1>
+      <div class="sub">Requesting App &rarr; ID-JAG issuer &rarr; Keycloak 26.7 receiver (<code>jwt-bearer</code>) &rarr; scoped token &rarr; Gitea</div>
     </div>
-    <div class="controls">
-      <button id="run">Run (animated)</button>
-      <button id="step" class="secondary">Next step &#9654;</button>
-      <button id="reset" class="secondary" disabled>Reset</button>
-    </div>
+    <nav class="tabs">
+      <button class="tab active" data-tab="demo">Live demo</button>
+      <button class="tab" data-tab="how">How it works</button>
+    </nav>
   </header>
+
   <main>
-    <div class="config" id="config"></div>
+    <!-- ============================ LIVE DEMO ============================ -->
+    <section id="tab-demo">
+      <div class="controls">
+        <button id="run" class="action">Run (animated)</button>
+        <button id="step" class="secondary">Next step &#9654;</button>
+        <button id="reset" class="secondary" disabled>Reset</button>
+      </div>
 
-    <div class="scope-pick">
-      <span><b>Requested scope:</b></span>
-      <label><input type="radio" name="scope" value="openid gitea:read" checked> Read-only <code>gitea:read</code></label>
-      <label><input type="radio" name="scope" value="openid gitea:read gitea:write"> Read + write <code>gitea:read gitea:write</code></label>
-    </div>
+      <div class="config" id="config"></div>
 
-    <div class="flow">The Requesting App gets access to the Receiving App on the user's behalf, then the Receiving App calls Gitea with the exchanged token. The gateway enforces the requested scope: with <b>read-only</b>, listing repos succeeds but creating one is <b>denied (403)</b> — narrow scoping in action. <b>Run (animated)</b> plays all hops with a pause between each; <b>Next step</b> runs them one at a time.</div>
+      <div class="scope-pick">
+        <span><b>Requested scope:</b></span>
+        <label><input type="radio" name="scope" value="openid gitea:read" checked> Read-only <code>gitea:read</code></label>
+        <label><input type="radio" name="scope" value="openid gitea:read gitea:write"> Read + write <code>gitea:read gitea:write</code></label>
+      </div>
 
-    <div class="diagram">
-      <svg viewBox="0 0 1000 480" role="img" aria-label="ID-JAG cross-app access with Gitea narrow scoping sequence diagram">
-        <defs>
-          <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-            <path d="M0,0 L10,5 L0,10 z" fill="context-stroke" />
-          </marker>
-        </defs>
+      <div class="flow">The Requesting App gets access to the Receiving App on the user's behalf, then the Receiving App calls Gitea with the exchanged token. The gateway enforces the requested scope: with <b>read-only</b>, listing repos succeeds but creating one is <b>denied (403)</b> — narrow scoping in action. <b>Run (animated)</b> plays all hops with a pause between each; <b>Next step</b> runs them one at a time.</div>
 
-        <!-- actors -->
-        <g>
-          <rect class="seq-actor-box" x="45"  y="10" width="150" height="30" rx="5" />
-          <text class="seq-actor" x="120" y="30" text-anchor="middle">Requesting App</text>
-          <rect class="seq-actor-box" x="305" y="10" width="150" height="30" rx="5" />
-          <text class="seq-actor" x="380" y="30" text-anchor="middle">ID-JAG Issuer</text>
-          <rect class="seq-actor-box" x="560" y="10" width="170" height="30" rx="5" />
-          <text class="seq-actor" x="645" y="30" text-anchor="middle">Keycloak / Receiving</text>
-          <rect class="seq-actor-box" x="830" y="10" width="150" height="30" rx="5" />
-          <text class="seq-actor" x="905" y="30" text-anchor="middle">Gitea (gateway)</text>
-          <!-- lifelines -->
-          <line class="seq-life" x1="120" y1="40" x2="120" y2="470" />
-          <line class="seq-life" x1="380" y1="40" x2="380" y2="470" />
-          <line class="seq-life" x1="645" y1="40" x2="645" y2="470" />
-          <line class="seq-life" x1="905" y1="40" x2="905" y2="470" />
-        </g>
+      <div class="diagram">
+        <svg viewBox="0 0 1000 480" role="img" aria-label="ID-JAG cross-app access with Gitea narrow scoping sequence diagram">
+          <defs>
+            <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="context-stroke" />
+            </marker>
+          </defs>
 
-        <!-- 1. sign in -->
-        <g data-step="login" class="g">
-          <text class="seq-num"   x="130" y="82">1</text>
-          <text class="seq-label" x="148" y="82">User sign-in — password grant</text>
-          <line class="seq-msg"      x1="120" y1="90"  x2="645" y2="90"  marker-end="url(#arrow)" />
-          <text class="seq-label" x="637" y="118" text-anchor="end">user access token</text>
-          <line class="seq-msg ret"  x1="645" y1="126" x2="120" y2="126" marker-end="url(#arrow)" />
-        </g>
+          <g>
+            <rect class="seq-actor-box" x="45"  y="10" width="150" height="30" rx="5" />
+            <text class="seq-actor" x="120" y="30" text-anchor="middle">Requesting App</text>
+            <rect class="seq-actor-box" x="305" y="10" width="150" height="30" rx="5" />
+            <text class="seq-actor" x="380" y="30" text-anchor="middle">ID-JAG Issuer</text>
+            <rect class="seq-actor-box" x="560" y="10" width="170" height="30" rx="5" />
+            <text class="seq-actor" x="645" y="30" text-anchor="middle">Keycloak / Receiving</text>
+            <rect class="seq-actor-box" x="830" y="10" width="150" height="30" rx="5" />
+            <text class="seq-actor" x="905" y="30" text-anchor="middle">Gitea (gateway)</text>
+            <line class="seq-life" x1="120" y1="40" x2="120" y2="470" />
+            <line class="seq-life" x1="380" y1="40" x2="380" y2="470" />
+            <line class="seq-life" x1="645" y1="40" x2="645" y2="470" />
+            <line class="seq-life" x1="905" y1="40" x2="905" y2="470" />
+          </g>
 
-        <!-- 2. mint -->
-        <g data-step="mint" class="g">
-          <text class="seq-num"   x="130" y="162">2</text>
-          <text class="seq-label" x="148" y="162">Mint ID-JAG (sub = user, act = Requesting App, scope)</text>
-          <line class="seq-msg"      x1="120" y1="170" x2="380" y2="170" marker-end="url(#arrow)" />
-          <text class="seq-label" x="372" y="198" text-anchor="end">signed assertion</text>
-          <line class="seq-msg ret"  x1="380" y1="206" x2="120" y2="206" marker-end="url(#arrow)" />
-        </g>
+          <g data-step="login" class="g">
+            <text class="seq-num"   x="130" y="82">1</text>
+            <text class="seq-label" x="148" y="82">User sign-in — password grant</text>
+            <line class="seq-msg"      x1="120" y1="90"  x2="645" y2="90"  marker-end="url(#arrow)" />
+            <text class="seq-label" x="637" y="118" text-anchor="end">user access token</text>
+            <line class="seq-msg ret"  x1="645" y1="126" x2="120" y2="126" marker-end="url(#arrow)" />
+          </g>
 
-        <!-- 3. exchange -->
-        <g data-step="exchange" class="g">
-          <text class="seq-num"   x="130" y="242">3</text>
-          <text class="seq-label" x="148" y="242">jwt-bearer exchange (assertion + requested scope)</text>
-          <line class="seq-msg"      x1="120" y1="250" x2="645" y2="250" marker-end="url(#arrow)" />
-          <text class="seq-label" x="637" y="278" text-anchor="end">downscoped access token</text>
-          <line class="seq-msg ret"  x1="645" y1="286" x2="120" y2="286" marker-end="url(#arrow)" />
-        </g>
+          <g data-step="mint" class="g">
+            <text class="seq-num"   x="130" y="162">2</text>
+            <text class="seq-label" x="148" y="162">Mint ID-JAG (sub = user, act = Requesting App, scope)</text>
+            <line class="seq-msg"      x1="120" y1="170" x2="380" y2="170" marker-end="url(#arrow)" />
+            <text class="seq-label" x="372" y="198" text-anchor="end">signed assertion</text>
+            <line class="seq-msg ret"  x1="380" y1="206" x2="120" y2="206" marker-end="url(#arrow)" />
+          </g>
 
-        <!-- 4. gitea read -->
-        <g data-step="gitea-list" class="g">
-          <text class="seq-num"   x="130" y="322">4</text>
-          <text class="seq-label" x="148" y="322">GET repos — Bearer token (needs gitea:read)</text>
-          <line class="seq-msg"      x1="120" y1="330" x2="905" y2="330" marker-end="url(#arrow)" />
-          <text class="seq-label" x="897" y="358" text-anchor="end">repo list</text>
-          <line class="seq-msg ret"  x1="905" y1="366" x2="120" y2="366" marker-end="url(#arrow)" />
-        </g>
+          <g data-step="exchange" class="g">
+            <text class="seq-num"   x="130" y="242">3</text>
+            <text class="seq-label" x="148" y="242">jwt-bearer exchange (assertion + requested scope)</text>
+            <line class="seq-msg"      x1="120" y1="250" x2="645" y2="250" marker-end="url(#arrow)" />
+            <text class="seq-label" x="637" y="278" text-anchor="end">downscoped access token</text>
+            <line class="seq-msg ret"  x1="645" y1="286" x2="120" y2="286" marker-end="url(#arrow)" />
+          </g>
 
-        <!-- 5. gitea write -->
-        <g data-step="gitea-create" class="g">
-          <text class="seq-num"   x="130" y="402">5</text>
-          <text class="seq-label" x="148" y="402">POST repo — Bearer token (needs gitea:write)</text>
-          <line class="seq-msg"      x1="120" y1="410" x2="905" y2="410" marker-end="url(#arrow)" />
-          <text class="seq-label" x="897" y="438" text-anchor="end">created — or 403 denied if read-only</text>
-          <line class="seq-msg ret"  x1="905" y1="446" x2="120" y2="446" marker-end="url(#arrow)" />
-        </g>
-      </svg>
-    </div>
+          <g data-step="gitea-list" class="g">
+            <text class="seq-num"   x="130" y="322">4</text>
+            <text class="seq-label" x="148" y="322">GET repos — Bearer token (needs gitea:read)</text>
+            <line class="seq-msg"      x1="120" y1="330" x2="905" y2="330" marker-end="url(#arrow)" />
+            <text class="seq-label" x="897" y="358" text-anchor="end">repo list</text>
+            <line class="seq-msg ret"  x1="905" y1="366" x2="120" y2="366" marker-end="url(#arrow)" />
+          </g>
 
-    <div id="steps"></div>
+          <g data-step="gitea-create" class="g">
+            <text class="seq-num"   x="130" y="402">5</text>
+            <text class="seq-label" x="148" y="402">POST repo — Bearer token (needs gitea:write)</text>
+            <line class="seq-msg"      x1="120" y1="410" x2="905" y2="410" marker-end="url(#arrow)" />
+            <text class="seq-label" x="897" y="438" text-anchor="end">created — or 403 denied if read-only</text>
+            <line class="seq-msg ret"  x1="905" y1="446" x2="120" y2="446" marker-end="url(#arrow)" />
+          </g>
+        </svg>
+      </div>
+
+      <div id="steps"></div>
+    </section>
+
+    <!-- ============================ HOW IT WORKS ============================ -->
+    <section id="tab-how" class="prose" hidden>
+      <h2>What is Cross-App Access (ID-JAG)?</h2>
+      <p><b>Cross-App Access (XAA)</b> lets one application (the <b>Requesting
+      App</b>) obtain access to another (the <b>Receiving App</b>) <i>on behalf
+      of a signed-in user</i> — without the Receiving App ever seeing the user's
+      password, and without the user re-consenting for every app pair.</p>
+      <p>It is built on two OAuth 2.0 building blocks:</p>
+      <ul>
+        <li><b>ID-JAG</b> (Identity Assertion JWT Authorization Grant) — a
+        central IdP mints a short-lived, signed <b>assertion</b> that says
+        "this user authorizes this app to act". <code>draft-ietf-oauth-identity-assertion-authz-grant</code>.</li>
+        <li><b>Token exchange</b> (<code>RFC 8693</code>) — a service swaps one
+        token for another, optionally <b>downscoping</b> it to just what the next
+        call needs.</li>
+      </ul>
+      <div class="note"><b>Keycloak's role today:</b> Keycloak 26.7 implements
+      the ID-JAG <b>Receiver</b> only — it accepts an externally-signed assertion
+      at its token endpoint and issues a local access token. It cannot yet
+      <b>mint</b> assertions, so this demo uses a small <code>idjag-issuer</code>
+      service as the stand-in enterprise IdP.</div>
+
+      <h2>How Keycloak is configured</h2>
+
+      <h3>1. Experimental feature flags</h3>
+      <p>Keycloak is started with the flags from the
+      <a href="https://www.keycloak.org/securing-apps/identity-assertion-jwt-authorization-grant">ID-JAG guide</a>:</p>
+      <pre><code>start-dev --import-realm \
+  --features=identity-assertion-jwt,token-exchange-delegation,parameterized-scopes</code></pre>
+      <ul>
+        <li><code>identity-assertion-jwt</code> — enables the ID-JAG receiver (the <code>jwt-bearer</code> grant). Needs Keycloak 26.7+.</li>
+        <li><code>token-exchange-delegation</code> — enables the delegation scope for RFC 8693 token exchange.</li>
+        <li><code>parameterized-scopes</code> — dependency of the delegation feature.</li>
+      </ul>
+
+      <h3>2. The Receiving App client (the ID-JAG receiver)</h3>
+      <p>In <code>keycloak/cncf-demo-realm.json</code>, <code>receiving-app</code>
+      is a confidential client with the ID-JAG grant enabled:</p>
+      <pre><code>{
+  "clientId": "receiving-app",
+  "serviceAccountsEnabled": true,
+  "attributes": {
+    "oauth2.jwt.authorization.grant.enabled": "true",
+    "oauth2.jwt.authorization.grant.idp": "id-jag"
+  }
+}</code></pre>
+      <p>The <code>...grant.idp</code> attribute points at the identity provider
+      Keycloak trusts to have signed incoming assertions.</p>
+
+      <h3>3. The <code>id-jag</code> identity provider (the trust anchor)</h3>
+      <p>An OIDC identity provider named <code>id-jag</code> tells Keycloak where
+      to fetch the issuer's public keys (JWKS) so it can verify assertion
+      signatures, and <code>jwtAuthorizationGrantEnabled=true</code> allows it to
+      be used for the grant. In this demo it points at <code>idjag-issuer</code>;
+      swap the issuer/JWKS URLs for your real enterprise IdP.</p>
+
+      <h3>4. Narrow scopes (registered by <code>kc-init</code>)</h3>
+      <p>The <code>gitea:read</code> / <code>gitea:write</code> client scopes are
+      registered with <code>kcadm</code> after the realm import and assigned as
+      <b>optional</b> scopes on <code>receiving-app</code> — so they are only
+      granted when explicitly requested:</p>
+      <pre><code>kcadm.sh create client-scopes -r cncf-demo \
+  -s name=gitea:read -s protocol=openid-connect \
+  -s 'attributes."include.in.token.scope"=true'
+# then assign as an OPTIONAL scope on receiving-app</code></pre>
+      <div class="note">Hand-authoring <code>clientScopes</code> in a realm
+      import <b>replaces</b> Keycloak's built-in scopes (profile, email, …), so
+      the demo registers the gitea scopes via <code>kcadm</code> after import
+      instead — keeping the standard scopes intact.</div>
+
+      <h3>5. The exchange call</h3>
+      <p>The Receiving App presents the assertion to Keycloak's token endpoint.
+      Keycloak verifies the signature (against the issuer JWKS), the audience and
+      client, maps <code>sub</code> to the local user via the federated identity
+      link, and returns a <b>downscoped</b> access token:</p>
+      <pre><code>POST /realms/cncf-demo/protocol/openid-connect/token
+  grant_type = urn:ietf:params:oauth:grant-type:jwt-bearer
+  assertion  = &lt;signed ID-JAG JWT&gt;
+  client_id  = receiving-app
+  scope      = openid gitea:read        # request only what you need</code></pre>
+
+      <h2>More sequences</h2>
+
+      <h3>A. One-time trust setup <span class="tag today">today</span></h3>
+      <div class="diagram doc">
+        <svg viewBox="0 0 1000 300" role="img" aria-label="Trust setup sequence">
+          <g>
+            <rect class="seq-actor-box" x="30"  y="10" width="220" height="30" rx="5" />
+            <text class="seq-actor" x="140" y="30" text-anchor="middle">Realm import / kc-init</text>
+            <rect class="seq-actor-box" x="410" y="10" width="180" height="30" rx="5" />
+            <text class="seq-actor" x="500" y="30" text-anchor="middle">Keycloak</text>
+            <rect class="seq-actor-box" x="760" y="10" width="200" height="30" rx="5" />
+            <text class="seq-actor" x="860" y="30" text-anchor="middle">ID-JAG Issuer</text>
+            <line class="seq-life" x1="140" y1="40" x2="140" y2="290" />
+            <line class="seq-life" x1="500" y1="40" x2="500" y2="290" />
+            <line class="seq-life" x1="860" y1="40" x2="860" y2="290" />
+          </g>
+          <g>
+            <text class="seq-num" x="150" y="82">1</text>
+            <text class="seq-label" x="168" y="82">import realm: receiving-app (jwt-bearer) + id-jag IdP</text>
+            <line class="seq-msg" x1="140" y1="90" x2="500" y2="90" marker-end="url(#arrow)" />
+          </g>
+          <g>
+            <text class="seq-num" x="150" y="142">2</text>
+            <text class="seq-label" x="168" y="142">kc-init: register gitea:read / gitea:write (optional scopes)</text>
+            <line class="seq-msg" x1="140" y1="150" x2="500" y2="150" marker-end="url(#arrow)" />
+          </g>
+          <g>
+            <text class="seq-num" x="510" y="212">3</text>
+            <text class="seq-label" x="528" y="212">at runtime: fetch issuer JWKS to verify assertions</text>
+            <line class="seq-msg" x1="500" y1="220" x2="860" y2="220" marker-end="url(#arrow)" />
+            <text class="seq-label" x="852" y="248" text-anchor="end">JWKS (public keys)</text>
+            <line class="seq-msg ret" x1="860" y1="256" x2="500" y2="256" marker-end="url(#arrow)" />
+          </g>
+        </svg>
+      </div>
+      <p class="caption">Keycloak learns to trust the issuer's signatures via the
+      <code>id-jag</code> IdP's JWKS URL; <code>kc-init</code> adds the narrow
+      scopes.</p>
+
+      <h3>B. The exchange &amp; narrow-scoping enforcement <span class="tag live">live</span></h3>
+      <div class="diagram doc">
+        <svg viewBox="0 0 1000 380" role="img" aria-label="Exchange and enforcement sequence">
+          <g>
+            <rect class="seq-actor-box" x="30"  y="10" width="200" height="30" rx="5" />
+            <text class="seq-actor" x="130" y="30" text-anchor="middle">Receiving App</text>
+            <rect class="seq-actor-box" x="400" y="10" width="200" height="30" rx="5" />
+            <text class="seq-actor" x="500" y="30" text-anchor="middle">Keycloak</text>
+            <rect class="seq-actor-box" x="770" y="10" width="200" height="30" rx="5" />
+            <text class="seq-actor" x="870" y="30" text-anchor="middle">Gitea gateway</text>
+            <line class="seq-life" x1="130" y1="40" x2="130" y2="370" />
+            <line class="seq-life" x1="500" y1="40" x2="500" y2="370" />
+            <line class="seq-life" x1="870" y1="40" x2="870" y2="370" />
+          </g>
+          <g>
+            <text class="seq-num" x="140" y="82">1</text>
+            <text class="seq-label" x="158" y="82">jwt-bearer + scope=gitea:read</text>
+            <line class="seq-msg" x1="130" y1="90" x2="500" y2="90" marker-end="url(#arrow)" />
+            <text class="seq-note" x="500" y="118" text-anchor="middle">verify sig (JWKS), aud, client; map sub; grant requested optional scopes only</text>
+            <text class="seq-label" x="492" y="146" text-anchor="end">access token (scope: gitea:read)</text>
+            <line class="seq-msg ret" x1="500" y1="154" x2="130" y2="154" marker-end="url(#arrow)" />
+          </g>
+          <g>
+            <text class="seq-num" x="140" y="212">2</text>
+            <text class="seq-label" x="158" y="212">GET /repos + Bearer</text>
+            <line class="seq-msg" x1="130" y1="220" x2="870" y2="220" marker-end="url(#arrow)" />
+            <text class="seq-note" x="870" y="246" text-anchor="middle">verify token; require gitea:read</text>
+            <text class="seq-label" x="862" y="272" text-anchor="end">200 — repo list</text>
+            <line class="seq-msg ret" x1="870" y1="280" x2="130" y2="280" marker-end="url(#arrow)" />
+          </g>
+          <g>
+            <text class="seq-num" x="140" y="330">3</text>
+            <text class="seq-label" x="158" y="330">POST /repos + Bearer (no gitea:write)</text>
+            <line class="seq-msg alt" x1="130" y1="338" x2="870" y2="338" marker-end="url(#arrow)" />
+            <text class="seq-label" x="862" y="366" text-anchor="end">403 — insufficient_scope</text>
+            <line class="seq-msg ret" x1="870" y1="358" x2="130" y2="358" marker-end="url(#arrow)" />
+          </g>
+        </svg>
+      </div>
+      <p class="caption">The token is only as powerful as the scope requested;
+      the gateway (an OAuth resource server) refuses out-of-scope operations.</p>
+
+      <h2>Identity node &amp; Verifiable Credentials</h2>
+      <p>The stack also runs the <b>AGNTCY identity node</b> (REST
+      <code>:4003</code>, gRPC <code>:4004</code>). It is a <b>registry and
+      resolver</b> for agent/app identities and their <b>Verifiable Credentials
+      (VCs)</b> — AGNTCY calls these <b>Badges</b> (e.g. <code>AgentBadge</code>,
+      <code>McpBadge</code>), which are W3C VCs carried in a JOSE envelope.</p>
+
+      <table>
+        <tr><th>Node endpoint (<code>/v1alpha1</code>)</th><th>Purpose</th></tr>
+        <tr><td><code>POST /issuer/register</code></td><td>Register a tenant issuer + its public JWK</td></tr>
+        <tr><td><code>POST /id/generate</code></td><td>Mint a resolvable identity (<code>ResolverMetadata</code>) from an OIDC proof</td></tr>
+        <tr><td><code>POST /vc/publish</code></td><td>Store a signed VC (validates the OIDC proof against the subject)</td></tr>
+        <tr><td><code>POST /vc/verify</code></td><td>Cryptographically verify a VC</td></tr>
+        <tr><td><code>GET /vc/{id}/.well-known/vcs.json</code></td><td>Public resolution of an identity's VCs</td></tr>
+      </table>
+      <p class="caption">VC <b>signing</b> happens in the Identity Service BFF
+      (with the tenant key from Vault); the node <b>publishes / resolves /
+      verifies</b>. The CNCF stack currently runs the node but not the BFF.</p>
+
+      <h3>C. Issuing a VC (Badge) with the identity node <span class="tag today">today</span></h3>
+      <div class="diagram doc">
+        <svg viewBox="0 0 1000 420" role="img" aria-label="VC issuance sequence">
+          <g>
+            <rect class="seq-actor-box" x="30"  y="10" width="220" height="30" rx="5" />
+            <text class="seq-actor" x="140" y="30" text-anchor="middle">Issuer / BFF</text>
+            <rect class="seq-actor-box" x="410" y="10" width="180" height="30" rx="5" />
+            <text class="seq-actor" x="500" y="30" text-anchor="middle">Keycloak</text>
+            <rect class="seq-actor-box" x="760" y="10" width="210" height="30" rx="5" />
+            <text class="seq-actor" x="865" y="30" text-anchor="middle">Identity Node</text>
+            <line class="seq-life" x1="140" y1="40" x2="140" y2="410" />
+            <line class="seq-life" x1="500" y1="40" x2="500" y2="410" />
+            <line class="seq-life" x1="865" y1="40" x2="865" y2="410" />
+          </g>
+          <g>
+            <text class="seq-num" x="150" y="82">1</text>
+            <text class="seq-label" x="168" y="82">client_credentials &rarr; OIDC proof JWT</text>
+            <line class="seq-msg" x1="140" y1="90" x2="500" y2="90" marker-end="url(#arrow)" />
+            <text class="seq-label" x="492" y="118" text-anchor="end">proof token</text>
+            <line class="seq-msg ret" x1="500" y1="126" x2="140" y2="126" marker-end="url(#arrow)" />
+          </g>
+          <g>
+            <text class="seq-num" x="150" y="182">2</text>
+            <text class="seq-label" x="168" y="182">POST /issuer/register (JWK + proof), POST /id/generate</text>
+            <line class="seq-msg" x1="140" y1="190" x2="865" y2="190" marker-end="url(#arrow)" />
+            <text class="seq-label" x="857" y="218" text-anchor="end">resolver_metadata_id</text>
+            <line class="seq-msg ret" x1="865" y1="226" x2="140" y2="226" marker-end="url(#arrow)" />
+          </g>
+          <g>
+            <text class="seq-num" x="150" y="286">3</text>
+            <text class="seq-note" x="150" y="270">sign Badge VC locally with tenant key</text>
+            <text class="seq-label" x="168" y="286">POST /vc/publish (JOSE VC + OIDC proof)</text>
+            <line class="seq-msg" x1="140" y1="294" x2="865" y2="294" marker-end="url(#arrow)" />
+            <text class="seq-label" x="857" y="322" text-anchor="end">stored</text>
+            <line class="seq-msg ret" x1="865" y1="330" x2="140" y2="330" marker-end="url(#arrow)" />
+          </g>
+          <g>
+            <text class="seq-num" x="150" y="386">4</text>
+            <text class="seq-label" x="168" y="386">GET /vc/{id}/.well-known/vcs.json &nbsp;·&nbsp; POST /vc/verify</text>
+            <line class="seq-msg" x1="140" y1="394" x2="865" y2="394" marker-end="url(#arrow)" />
+          </g>
+        </svg>
+      </div>
+      <p class="caption">A Badge binds an app/agent's <code>resolver_metadata_id</code>
+      to signed metadata (agent card / MCP definition), publicly resolvable via
+      well-known.</p>
+
+      <h3>D. VC-backed ID-JAG — how VCs plug into this flow <span class="tag proposed">proposed</span></h3>
+      <div class="diagram doc">
+        <svg viewBox="0 0 1000 400" role="img" aria-label="VC-backed ID-JAG sequence">
+          <g>
+            <rect class="seq-actor-box" x="10"  y="10" width="170" height="30" rx="5" />
+            <text class="seq-actor" x="95" y="30" text-anchor="middle">Requesting App</text>
+            <rect class="seq-actor-box" x="215" y="10" width="150" height="30" rx="5" />
+            <text class="seq-actor" x="290" y="30" text-anchor="middle">ID-JAG Issuer</text>
+            <rect class="seq-actor-box" x="415" y="10" width="150" height="30" rx="5" />
+            <text class="seq-actor" x="490" y="30" text-anchor="middle">Keycloak</text>
+            <rect class="seq-actor-box" x="620" y="10" width="150" height="30" rx="5" />
+            <text class="seq-actor" x="695" y="30" text-anchor="middle">Gitea gateway</text>
+            <rect class="seq-actor-box" x="820" y="10" width="160" height="30" rx="5" />
+            <text class="seq-actor" x="900" y="30" text-anchor="middle">Identity Node</text>
+            <line class="seq-life" x1="95"  y1="40" x2="95"  y2="390" />
+            <line class="seq-life" x1="290" y1="40" x2="290" y2="390" />
+            <line class="seq-life" x1="490" y1="40" x2="490" y2="390" />
+            <line class="seq-life" x1="695" y1="40" x2="695" y2="390" />
+            <line class="seq-life" x1="900" y1="40" x2="900" y2="390" />
+          </g>
+          <g>
+            <text class="seq-num" x="105" y="82">1</text>
+            <text class="seq-label" x="123" y="82">mint ID-JAG incl. agent VC ref (resolver_metadata_id / vc+jwt)</text>
+            <line class="seq-msg alt" x1="95" y1="90" x2="290" y2="90" marker-end="url(#arrow)" />
+            <text class="seq-label" x="282" y="118" text-anchor="end">assertion (+ VC claim)</text>
+            <line class="seq-msg ret" x1="290" y1="126" x2="95" y2="126" marker-end="url(#arrow)" />
+          </g>
+          <g>
+            <text class="seq-num" x="105" y="182">2</text>
+            <text class="seq-label" x="123" y="182">jwt-bearer exchange</text>
+            <line class="seq-msg" x1="95" y1="190" x2="490" y2="190" marker-end="url(#arrow)" />
+            <text class="seq-label" x="482" y="218" text-anchor="end">scoped access token</text>
+            <line class="seq-msg ret" x1="490" y1="226" x2="95" y2="226" marker-end="url(#arrow)" />
+          </g>
+          <g>
+            <text class="seq-num" x="105" y="282">3</text>
+            <text class="seq-label" x="123" y="282">call API + Bearer</text>
+            <line class="seq-msg" x1="95" y1="290" x2="695" y2="290" marker-end="url(#arrow)" />
+          </g>
+          <g>
+            <text class="seq-num" x="705" y="332">4</text>
+            <text class="seq-label" x="723" y="332">verify agent VC (/vc/verify, resolve)</text>
+            <line class="seq-msg alt" x1="695" y1="340" x2="900" y2="340" marker-end="url(#arrow)" />
+            <text class="seq-label" x="892" y="368" text-anchor="end">VC valid + subject match</text>
+            <line class="seq-msg ret" x1="900" y1="376" x2="695" y2="376" marker-end="url(#arrow)" />
+          </g>
+        </svg>
+      </div>
+      <p class="caption">The gateway (or Keycloak, via the DCR
+      <code>vc+jwt</code> / Client-ID-Metadata proposal) verifies the agent's VC
+      through the identity node before honoring the token — adding
+      <b>cryptographic proof of the calling agent's identity</b> on top of the
+      user-delegated access.</p>
+
+      <div class="note"><b>Why this matters:</b> ID-JAG proves <i>the user
+      authorized this app</i>. The VC proves <i>this app/agent is who it claims
+      to be</i> (issued and signed by a trusted issuer, resolvable and
+      revocable). Together you get delegated access <b>plus</b> verifiable agent
+      identity — least privilege with provenance.</div>
+
+      <div class="note"><b>Wiring it live (next step):</b> issuing a VC needs a
+      signer. Two options: (1) run the Identity Service BFF, which signs Badges
+      with the tenant key and publishes them to the node; or (2) have
+      <code>idjag-issuer</code> double as a VC issuer — it already holds an RSA
+      key + JWKS, so it can register with the node, sign a Badge for
+      <code>requesting-app</code>, publish it, and add the
+      <code>resolver_metadata_id</code> as a claim in the ID-JAG assertion, with
+      the gateway calling <code>/vc/verify</code> before allowing the Gitea call.</div>
+    </section>
   </main>
 
   <script>
+    // ---- tab switching -------------------------------------------------
+    const tabs = document.querySelectorAll('.tab');
+    tabs.forEach(t => t.addEventListener('click', () => {
+      tabs.forEach(x => x.classList.toggle('active', x === t));
+      document.getElementById('tab-demo').hidden = t.dataset.tab !== 'demo';
+      document.getElementById('tab-how').hidden = t.dataset.tab !== 'how';
+    }));
+
+    // ---- live demo -----------------------------------------------------
     const stepsEl = document.getElementById('steps');
     const runBtn = document.getElementById('run');
     const stepBtn = document.getElementById('step');
