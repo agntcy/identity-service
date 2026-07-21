@@ -1,5 +1,7 @@
 # CNCF Demo Stack
 
+Video: https://app.vidcast.io/share/a943d056-fb63-4840-9083-a4fbb72508a3
+
 Docker Compose stack for the CNCF conference demo of the AGNTCY Identity Service.
 
 ## Services
