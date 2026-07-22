@@ -154,7 +154,7 @@ async def _login(client: httpx.AsyncClient) -> dict:
                 "sarah-login",
                 "1. Sarah logs in → KC-A issues access token (opencode-agent client)",
                 detail=f"POST {KC_A_TOKEN_URL}  grant=password  client={OPENCODE_CLIENT_ID}",
-                result={"token_preview": token[:48] + "…", "token_type": data.get("token_type", "Bearer")},
+                result={"token_preview": token[:48] + "…", "token": token, "token_type": data.get("token_type", "Bearer")},
                 status="ok",
             )
         return _step(
@@ -501,6 +501,7 @@ async def _mint_idjag(client: httpx.AsyncClient, sarah_email: str) -> dict:
                 status="ok",
                 result={
                     "assertion_preview": assertion[:48] + "…" if assertion else "",
+                    "assertion": assertion,
                     "claims": data.get("claims", {}),
                 },
             )
@@ -538,11 +539,12 @@ async def _kc_b_exchange(client: httpx.AsyncClient, assertion: str) -> dict:
                 status="ok",
                 result={
                     "token_preview": token[:48] + "…",
+                    "token": token,
                     "token_type": data.get("token_type", "Bearer"),
                     "scope": data.get("scope", ""),
                 },
             )
-            step["_token"] = token  # full token, not rendered by the UI — assertions are single-use
+            step["_token"] = token  # used internally to chain into create-ticket (assertions are single-use)
             return step
         return _step(
             "kc-b-exchange",

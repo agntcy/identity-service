@@ -111,25 +111,42 @@
       position: fixed; top: 96px; right: 24px; width: 300px; max-width: calc(100vw - 48px);
       background: var(--panel); border: 1px solid var(--accent); border-radius: 10px;
       padding: 16px 18px; box-shadow: 0 10px 30px rgba(0,0,0,.45);
-      transform: translateX(340px); opacity: 0; transition: transform .35s ease, opacity .35s ease;
-      z-index: 50; pointer-events: none;
+      transform: translateX(340px); opacity: 0;
+      transition: transform .35s ease, opacity .35s ease, width .25s ease, max-height .25s ease;
+      z-index: 50; pointer-events: none; max-height: calc(100vh - 130px); display: flex; flex-direction: column;
     }
-    .side-toast.show { transform: translateX(0); opacity: 1; }
+    .side-toast.show { transform: translateX(0); opacity: 1; pointer-events: auto; }
+    .side-toast.expanded { width: min(620px, calc(100vw - 48px)); }
     .side-toast .toast-num {
       font-size: 11px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: .05em;
-      display: flex; justify-content: space-between; align-items: center;
+      display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-shrink: 0;
     }
-    .side-toast .toast-progress { color: var(--muted); font-weight: 600; letter-spacing: 0; }
-    .side-toast .toast-title { font-size: 14px; font-weight: 600; margin: 8px 0 8px; color: var(--text); }
-    .side-toast .toast-body { font-size: 13px; color: #c9d1d9; line-height: 1.55; }
+    .side-toast .toast-progress { color: var(--muted); font-weight: 600; letter-spacing: 0; margin-right: auto; margin-left: 8px; }
+    .toast-expand-btn {
+      background: #21262d; color: var(--muted); border: 1px solid var(--border); border-radius: 5px;
+      padding: 3px 8px; font-size: 11px; font-weight: 700; cursor: pointer; pointer-events: auto;
+      text-transform: none; letter-spacing: 0;
+    }
+    .toast-expand-btn:hover { color: var(--text); border-color: var(--accent); }
+    .side-toast .toast-title { font-size: 14px; font-weight: 600; margin: 8px 0 8px; color: var(--text); flex-shrink: 0; }
+    .side-toast .toast-body { font-size: 13px; color: #c9d1d9; line-height: 1.55; flex-shrink: 0; }
     .side-toast .toast-fact { margin-top: 10px; background: #0b0f14; border: 1px solid var(--border);
-      border-radius: 6px; padding: 8px 10px; max-height: 160px; overflow-y: auto; }
-    .side-toast .toast-fact .fact-row { margin: 4px 0; }
+      border-radius: 6px; padding: 8px 10px; max-height: 160px; overflow-y: auto; pointer-events: auto; }
+    .side-toast.expanded .toast-fact { max-height: min(60vh, 520px); }
+    .side-toast .toast-fact .fact-row { margin: 8px 0; }
+    .side-toast .toast-fact .fact-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2px; }
     .side-toast .toast-fact .fact-label { font-size: 10px; font-weight: 700; text-transform: uppercase;
-      color: var(--teal); letter-spacing: .04em; display: block; margin-bottom: 2px; }
+      color: var(--teal); letter-spacing: .04em; }
+    .fact-copy-btn {
+      background: transparent; color: var(--muted); border: 1px solid var(--border); border-radius: 4px;
+      padding: 1px 6px; font-size: 10px; font-weight: 600; cursor: pointer; pointer-events: auto;
+    }
+    .fact-copy-btn:hover { color: var(--accent); border-color: var(--accent); }
+    .fact-copy-btn.copied { color: var(--ok); border-color: var(--ok); }
     .side-toast .toast-fact .fact-value { font-size: 11.5px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      color: #c9d1d9; word-break: break-all; white-space: pre-wrap; }
-    .side-toast .toast-bar { height: 3px; border-radius: 2px; background: #21262d; margin-top: 12px; overflow: hidden; }
+      color: #c9d1d9; word-break: break-all; white-space: pre-wrap; max-height: 4.6em; overflow-y: auto; }
+    .side-toast.expanded .toast-fact .fact-value { max-height: none; }
+    .side-toast .toast-bar { height: 3px; border-radius: 2px; background: #21262d; margin-top: 12px; overflow: hidden; flex-shrink: 0; }
     .side-toast .toast-bar > div { height: 100%; background: var(--accent); width: 0%; transition: width linear; }
     @media (max-width: 980px) { .side-toast { display: none; } }
   </style>
@@ -163,14 +180,14 @@
 
     <!-- ── Sequence diagram ── -->
     <div class="diagram">
-      <svg viewBox="0 0 1010 726" role="img" aria-label="Cross-domain remediation sequence diagram">
+      <svg viewBox="0 0 1140 800" role="img" aria-label="Cross-domain remediation sequence diagram">
         <defs>
           <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
             <path d="M0,0 L10,5 L0,10 z" fill="context-stroke" />
           </marker>
         </defs>
 
-        <!-- Actor boxes — 8 columns -->
+        <!-- Actor boxes — 9 columns -->
         <!-- col 1: OpenCode x=62 -->
         <rect class="seq-actor-box" x="10"  y="10" width="104" height="36" rx="5"/>
         <text class="seq-actor"     x="62"  y="28">OpenCode</text>
@@ -187,32 +204,37 @@
         <rect class="seq-actor-box" x="368" y="10" width="104" height="36" rx="5"/>
         <text class="seq-actor"     x="420" y="28">Identity Node</text>
         <text class="seq-actor-sub" x="420" y="41">badge / VC</text>
-        <!-- col 5: ID-JAG x=540 -->
+        <!-- col 5: Vault x=540 -->
         <rect class="seq-actor-box" x="488" y="10" width="104" height="36" rx="5"/>
-        <text class="seq-actor"     x="540" y="28">ID-JAG Issuer</text>
-        <text class="seq-actor-sub" x="540" y="41">idjag-issuer</text>
-        <!-- col 6: KC-B x=660 -->
+        <text class="seq-actor"     x="540" y="28">Vault</text>
+        <text class="seq-actor-sub" x="540" y="41">transit engine</text>
+        <!-- col 6: ID-JAG x=660 -->
         <rect class="seq-actor-box" x="608" y="10" width="104" height="36" rx="5"/>
-        <text class="seq-actor"     x="660" y="28">Keycloak B</text>
-        <text class="seq-actor-sub" x="660" y="41">org-b realm</text>
-        <!-- col 7: Triage x=800 -->
-        <rect class="seq-actor-box" x="744" y="10" width="116" height="36" rx="5"/>
-        <text class="seq-actor"     x="802" y="28">Triage + Sub</text>
-        <text class="seq-actor-sub" x="802" y="41">Org B agents</text>
-        <!-- col 8: Gitea x=942 -->
-        <rect class="seq-actor-box" x="890" y="10" width="104" height="36" rx="5"/>
-        <text class="seq-actor"     x="942" y="28">Gitea</text>
-        <text class="seq-actor-sub" x="942" y="41">via gateway</text>
+        <text class="seq-actor"     x="660" y="28">ID-JAG Issuer</text>
+        <text class="seq-actor-sub" x="660" y="41">idjag-issuer</text>
+        <!-- col 7: KC-B x=780 -->
+        <rect class="seq-actor-box" x="728" y="10" width="104" height="36" rx="5"/>
+        <text class="seq-actor"     x="780" y="28">Keycloak B</text>
+        <text class="seq-actor-sub" x="780" y="41">org-b realm</text>
+        <!-- col 8: Triage x=922 -->
+        <rect class="seq-actor-box" x="864" y="10" width="116" height="36" rx="5"/>
+        <text class="seq-actor"     x="922" y="28">Triage + Sub</text>
+        <text class="seq-actor-sub" x="922" y="41">Org B agents</text>
+        <!-- col 9: Gitea x=1062 -->
+        <rect class="seq-actor-box" x="1010" y="10" width="104" height="36" rx="5"/>
+        <text class="seq-actor"     x="1062" y="28">Gitea</text>
+        <text class="seq-actor-sub" x="1062" y="41">via gateway</text>
 
         <!-- Lifelines -->
-        <line class="seq-life" x1="62"  y1="46" x2="62"  y2="718"/>
-        <line class="seq-life" x1="180" y1="46" x2="180" y2="718"/>
-        <line class="seq-life" x1="300" y1="46" x2="300" y2="718"/>
-        <line class="seq-life" x1="420" y1="46" x2="420" y2="718"/>
-        <line class="seq-life" x1="540" y1="46" x2="540" y2="718"/>
-        <line class="seq-life" x1="660" y1="46" x2="660" y2="718"/>
-        <line class="seq-life" x1="802" y1="46" x2="802" y2="718"/>
-        <line class="seq-life" x1="942" y1="46" x2="942" y2="718"/>
+        <line class="seq-life" x1="62"  y1="46" x2="62"  y2="790"/>
+        <line class="seq-life" x1="180" y1="46" x2="180" y2="790"/>
+        <line class="seq-life" x1="300" y1="46" x2="300" y2="790"/>
+        <line class="seq-life" x1="420" y1="46" x2="420" y2="790"/>
+        <line class="seq-life" x1="540" y1="46" x2="540" y2="790"/>
+        <line class="seq-life" x1="660" y1="46" x2="660" y2="790"/>
+        <line class="seq-life" x1="780" y1="46" x2="780" y2="790"/>
+        <line class="seq-life" x1="922" y1="46" x2="922" y2="790"/>
+        <line class="seq-life" x1="1062" y1="46" x2="1062" y2="790"/>
 
         <!-- ── Step 1: sarah-login ── -->
         <g data-step="sarah-login" class="g">
@@ -252,70 +274,74 @@
         <g data-step="cimd-generate-id" class="g">
           <text class="seq-num"   x="72"  y="254">5</text>
           <text class="seq-label" x="90"  y="254">generate id for triage-agent (Vault-signed proof, org-a authority)</text>
-          <line class="seq-msg"      x1="62" y1="260" x2="414" y2="260" marker-end="url(#arr)"/>
-          <text class="seq-label" x="412" y="278" text-anchor="end">id = AGNTCY-triage-agent</text>
-          <line class="seq-msg ret"  x1="414" y1="284" x2="68"  y2="284" marker-end="url(#arr)"/>
+          <text class="seq-label" x="90"  y="272">sign self-issued proof JWT (iss=agntcy:org-a) via Vault transit/sign</text>
+          <line class="seq-msg"      x1="62" y1="278" x2="540" y2="278" marker-end="url(#arr)"/>
+          <text class="seq-label" x="538" y="296" text-anchor="end">RS256 signature (private key stays in Vault)</text>
+          <line class="seq-msg ret"  x1="540" y1="302" x2="68"  y2="302" marker-end="url(#arr)"/>
+          <line class="seq-msg"      x1="62" y1="316" x2="414" y2="316" marker-end="url(#arr)"/>
+          <text class="seq-label" x="412" y="334" text-anchor="end">id = AGNTCY-triage-agent</text>
+          <line class="seq-msg ret"  x1="414" y1="340" x2="68"  y2="340" marker-end="url(#arr)"/>
         </g>
 
         <!-- ── Step 6: cimd-resolve-id ── -->
         <g data-step="cimd-resolve-id" class="g">
-          <text class="seq-num"   x="72"  y="304">6</text>
-          <text class="seq-label" x="90"  y="304">resolve id → ResolverMetadata (verification method + public key)</text>
-          <line class="seq-msg"      x1="62" y1="310" x2="414" y2="310" marker-end="url(#arr)"/>
-          <text class="seq-label" x="412" y="328" text-anchor="end">ResolverMetadata + JWK</text>
-          <line class="seq-msg ret"  x1="414" y1="334" x2="68"  y2="334" marker-end="url(#arr)"/>
+          <text class="seq-num"   x="72"  y="384">6</text>
+          <text class="seq-label" x="90"  y="384">resolve id → ResolverMetadata (verification method + public key)</text>
+          <line class="seq-msg"      x1="62" y1="390" x2="414" y2="390" marker-end="url(#arr)"/>
+          <text class="seq-label" x="412" y="408" text-anchor="end">ResolverMetadata + JWK</text>
+          <line class="seq-msg ret"  x1="414" y1="414" x2="68"  y2="414" marker-end="url(#arr)"/>
         </g>
 
         <!-- ── Step 7: kc-a-exchange (mocked) ── -->
         <g data-step="kc-a-exchange" class="g">
-          <text class="seq-num"   x="72"  y="354">7</text>
-          <text class="seq-label" x="90"  y="354">RFC 8693 token exchange — subject=Sarah, actor=opencode (mocked)</text>
-          <line class="seq-msg"      x1="62" y1="360" x2="174" y2="360" marker-end="url(#arr)"/>
+          <text class="seq-num"   x="72"  y="434">7</text>
+          <text class="seq-label" x="90"  y="434">RFC 8693 token exchange — subject=Sarah, actor=opencode (mocked)</text>
+          <line class="seq-msg"      x1="62" y1="440" x2="174" y2="440" marker-end="url(#arr)"/>
         </g>
 
         <!-- ── Step 8: mint-idjag ── -->
         <g data-step="mint-idjag" class="g">
-          <text class="seq-num"   x="72"  y="380">8</text>
-          <text class="seq-label" x="92"  y="380">mint ID-JAG  sub=sarah  act_chain=[opencode]  aud=KC-B  scope=triage:create</text>
-          <line class="seq-msg"      x1="62" y1="386" x2="534" y2="386" marker-end="url(#arr)"/>
-          <text class="seq-label" x="532" y="404" text-anchor="end">signed assertion (RS256)</text>
-          <line class="seq-msg ret"  x1="534" y1="410" x2="68"  y2="410" marker-end="url(#arr)"/>
+          <text class="seq-num"   x="72"  y="460">8</text>
+          <text class="seq-label" x="92"  y="460">mint ID-JAG  sub=sarah  act_chain=[opencode]  aud=KC-B  scope=triage:create</text>
+          <line class="seq-msg"      x1="62" y1="466" x2="654" y2="466" marker-end="url(#arr)"/>
+          <text class="seq-label" x="652" y="484" text-anchor="end">signed assertion (RS256)</text>
+          <line class="seq-msg ret"  x1="654" y1="490" x2="68"  y2="490" marker-end="url(#arr)"/>
         </g>
 
         <!-- ── Step 9: kc-b-exchange ── -->
         <g data-step="kc-b-exchange" class="g">
-          <text class="seq-num"   x="72"  y="430">9</text>
-          <text class="seq-label" x="92"  y="430">jwt-bearer grant  assertion=…  scope=triage:create</text>
-          <line class="seq-msg"      x1="62" y1="436" x2="654" y2="436" marker-end="url(#arr)"/>
-          <text class="seq-label" x="652" y="454" text-anchor="end">access token (triage:create, act=opencode)</text>
-          <line class="seq-msg ret"  x1="654" y1="460" x2="68"  y2="460" marker-end="url(#arr)"/>
+          <text class="seq-num"   x="72"  y="510">9</text>
+          <text class="seq-label" x="92"  y="510">jwt-bearer grant  assertion=…  scope=triage:create</text>
+          <line class="seq-msg"      x1="62" y1="516" x2="774" y2="516" marker-end="url(#arr)"/>
+          <text class="seq-label" x="772" y="534" text-anchor="end">access token (triage:create, act=opencode)</text>
+          <line class="seq-msg ret"  x1="774" y1="540" x2="68"  y2="540" marker-end="url(#arr)"/>
         </g>
 
         <!-- ── Step 10: create-ticket (cascade) ── -->
         <g data-step="create-ticket" class="g">
-          <text class="seq-num"   x="72"  y="480">10</text>
-          <text class="seq-label" x="92"  y="480">POST /api/ticket  Bearer=triage_token  cve=…  intent=create-pr-fix</text>
-          <line class="seq-msg"      x1="62" y1="486" x2="796" y2="486" marker-end="url(#arr)"/>
+          <text class="seq-num"   x="72"  y="560">10</text>
+          <text class="seq-label" x="92"  y="560">POST /api/ticket  Bearer=triage_token  cve=…  intent=create-pr-fix</text>
+          <line class="seq-msg"      x1="62" y1="566" x2="916" y2="566" marker-end="url(#arr)"/>
           <!-- Triage: OPA + plan + mint sub-badge -->
-          <text class="seq-label" x="804" y="506">OPA ingress ✓  plan  mint sub-badge (gitea:write gitea:pr)</text>
-          <line class="seq-msg"      x1="802" y1="512" x2="534" y2="512" marker-end="url(#arr)"/>
-          <text class="seq-label" x="532" y="530" text-anchor="end">sub-badge (act_chain: sarah→opencode→triage→sub)</text>
-          <line class="seq-msg ret"  x1="534" y1="536" x2="808" y2="536" marker-end="url(#arr)"/>
+          <text class="seq-label" x="924" y="586">OPA ingress ✓  plan  mint sub-badge (gitea:write gitea:pr)</text>
+          <line class="seq-msg"      x1="922" y1="592" x2="654" y2="592" marker-end="url(#arr)"/>
+          <text class="seq-label" x="652" y="610" text-anchor="end">sub-badge (act_chain: sarah→opencode→triage→sub)</text>
+          <line class="seq-msg ret"  x1="654" y1="616" x2="928" y2="616" marker-end="url(#arr)"/>
           <!-- Sub-agent: KC-B exchange + push file + PR -->
-          <text class="seq-label" x="804" y="556">Sub-Agent: jwt-bearer (sub-badge) → KC-B → gitea:write gitea:pr token</text>
-          <line class="seq-msg"      x1="802" y1="562" x2="654" y2="562" marker-end="url(#arr)"/>
-          <line class="seq-msg ret"  x1="654" y1="572" x2="808" y2="572" marker-end="url(#arr)"/>
+          <text class="seq-label" x="924" y="636">Sub-Agent: jwt-bearer (sub-badge) → KC-B → gitea:write gitea:pr token</text>
+          <line class="seq-msg"      x1="922" y1="642" x2="774" y2="642" marker-end="url(#arr)"/>
+          <line class="seq-msg ret"  x1="774" y1="652" x2="928" y2="652" marker-end="url(#arr)"/>
           <!-- push file + open PR -->
-          <text class="seq-label" x="804" y="592">push fix file + open PR</text>
-          <line class="seq-msg"      x1="802" y1="598" x2="936" y2="598" marker-end="url(#arr)"/>
-          <text class="seq-label" x="934" y="616" text-anchor="end">PR created ✓</text>
-          <line class="seq-msg ret"  x1="936" y1="622" x2="808" y2="622" marker-end="url(#arr)"/>
+          <text class="seq-label" x="924" y="672">push fix file + open PR</text>
+          <line class="seq-msg"      x1="922" y1="678" x2="1056" y2="678" marker-end="url(#arr)"/>
+          <text class="seq-label" x="1054" y="696" text-anchor="end">PR created ✓</text>
+          <line class="seq-msg ret"  x1="1056" y1="702" x2="928" y2="702" marker-end="url(#arr)"/>
           <!-- OPA egress -->
-          <text class="seq-label" x="804" y="642">OPA egress: delegation depth ✓ sub-scope ⊆ parent ✓ → ALLOW</text>
-          <path class="seq-msg" d="M802,648 L830,648 L830,658 L804,658" marker-end="url(#arr)"/>
+          <text class="seq-label" x="924" y="722">OPA egress: delegation depth ✓ sub-scope ⊆ parent ✓ → ALLOW</text>
+          <path class="seq-msg" d="M922,728 L950,728 L950,738 L924,738" marker-end="url(#arr)"/>
           <!-- final return -->
-          <text class="seq-label" x="798" y="684" text-anchor="end">PR created ✓ — Sarah → OpenCode → Triage → Sub-Agent</text>
-          <line class="seq-msg ret"  x1="796" y1="690" x2="68"  y2="690" marker-end="url(#arr)"/>
+          <text class="seq-label" x="918" y="764" text-anchor="end">PR created ✓ — Sarah → OpenCode → Triage → Sub-Agent</text>
+          <line class="seq-msg ret"  x1="916" y1="770" x2="68"  y2="770" marker-end="url(#arr)"/>
         </g>
 
       </svg>
@@ -474,7 +500,11 @@ POST /realms/org-b/protocol/openid-connect/token
 </main>
 
 <div id="sideToast" class="side-toast" aria-live="polite">
-  <div class="toast-num"><span id="toastNum"></span><span class="toast-progress" id="toastProgress"></span></div>
+  <div class="toast-num">
+    <span id="toastNum"></span>
+    <span class="toast-progress" id="toastProgress"></span>
+    <button class="toast-expand-btn" id="toastExpandBtn" type="button">Expand ⤢</button>
+  </div>
   <div class="toast-title" id="toastTitle"></div>
   <div class="toast-body" id="toastBody"></div>
   <div class="toast-fact" id="toastFact" hidden></div>
@@ -510,6 +540,14 @@ POST /realms/org-b/protocol/openid-connect/token
     }
   }
 
+  // ── Story overview (shown once, before the animated run starts) ───────────
+  const INTRO_STORY = "Sarah (Org A) found a CVE in a repo she has no access to — it lives in Org B. " +
+    "Watch her AI agent, OpenCode, cross that boundary on her behalf: it registers a real, " +
+    "Vault-backed cryptographic identity for the remote agent, mints a signed ID-JAG assertion " +
+    "asserting Sarah's delegation, and hands off to Triage — who narrows the privilege even further " +
+    "before spawning a bounded Sub-Agent that opens the actual fix PR. Every hop is recorded in the " +
+    "token's act-chain, so the whole delegation is auditable end to end.";
+
   // ── Step explainer (right-side toast) ─────────────────────────────────────
   const STEP_EXPLAIN = {
     'sarah-login': "Sarah authenticates directly with Org A's Keycloak. This is the only step with a human in the loop — everything downstream is machine-to-machine delegation on her behalf.",
@@ -540,28 +578,31 @@ POST /realms/org-b/protocol/openid-connect/token
   const toastBody = document.getElementById('toastBody');
   const toastFact = document.getElementById('toastFact');
   const toastBar = document.getElementById('toastBar');
+  const toastExpandBtn = document.getElementById('toastExpandBtn');
   let toastBarTimer = null;
 
-  // Pull out the "show me the actual content" fields for a step — token
-  // previews, decoded JWT claims, the OASF record's CID, CIMD ids, etc.
-  // Different steps stash these in different shapes (some under `result`,
-  // some at the top level of the step object), so check both.
+  // Pull out the "show me the actual content" fields for a step — the full
+  // JWT/assertion (not just a preview), decoded claims, the OASF record's
+  // CID, CIMD ids, etc. Different steps stash these in different shapes
+  // (some under `result`, some at the top level of the step object), so
+  // check both. `copyable: true` gets a Copy button (long values worth
+  // grabbing); short ids/CIDs don't need one.
   function extractFacts(step) {
     const r = step.result || {};
     const facts = [];
-    const tokenPreview = r.token_preview || step.token_preview;
-    if (tokenPreview) facts.push(['Token', tokenPreview]);
-    const assertionPreview = r.assertion_preview || step.assertion_preview;
-    if (assertionPreview) facts.push(['ID-JAG assertion', assertionPreview]);
+    const token = r.token || step.token;
+    if (token) facts.push({ label: 'Token (full JWT)', value: token, copyable: true });
+    const assertion = r.assertion || step.assertion;
+    if (assertion) facts.push({ label: 'ID-JAG assertion (full JWT)', value: assertion, copyable: true });
     const claims = r.claims || step.claims;
-    if (claims) facts.push(['Decoded JWT claims', JSON.stringify(claims, null, 2)]);
-    if (r.cid) facts.push(['OASF record CID', r.cid]);
-    if (r.schema_version) facts.push(['OASF schema_version', r.schema_version]);
-    if (r.id) facts.push(['CIMD id', r.id]);
-    if (r.verification_method_id) facts.push(['Verification method', r.verification_method_id]);
-    if (r.record_name) facts.push(['Directory record', r.record_name]);
-    if (r.pull_request && r.pull_request.html_url) facts.push(['Pull request', r.pull_request.html_url]);
-    if (r.pushed && r.pushed.branch) facts.push(['Branch', r.pushed.branch]);
+    if (claims) facts.push({ label: 'Decoded JWT claims', value: JSON.stringify(claims, null, 2), copyable: true });
+    if (r.cid) facts.push({ label: 'OASF record CID', value: r.cid, copyable: true });
+    if (r.schema_version) facts.push({ label: 'OASF schema_version', value: r.schema_version });
+    if (r.id) facts.push({ label: 'CIMD id', value: r.id, copyable: true });
+    if (r.verification_method_id) facts.push({ label: 'Verification method', value: r.verification_method_id });
+    if (r.record_name) facts.push({ label: 'Directory record', value: r.record_name });
+    if (r.pull_request && r.pull_request.html_url) facts.push({ label: 'Pull request', value: r.pull_request.html_url, copyable: true });
+    if (r.pushed && r.pushed.branch) facts.push({ label: 'Branch', value: r.pushed.branch });
     return facts;
   }
 
@@ -573,11 +614,20 @@ POST /realms/org-b/protocol/openid-connect/token
 
     const facts = extractFacts(step);
     if (facts.length) {
-      toastFact.innerHTML = facts.map(([label, value]) =>
-        `<div class="fact-row"><span class="fact-label">${esc(label)}</span><span class="fact-value">${esc(value)}</span></div>`
-      ).join('');
+      toastFact.innerHTML = facts.map((f, i) => {
+        const copyBtn = f.copyable ? `<button class="fact-copy-btn" data-fact-index="${i}" type="button">Copy</button>` : '';
+        return `<div class="fact-row">
+          <div class="fact-head"><span class="fact-label">${esc(f.label)}</span>${copyBtn}</div>
+          <div class="fact-value">${esc(f.value)}</div>
+        </div>`;
+      }).join('');
+      // Store raw (unescaped) values for copy — re-reading from the DOM would
+      // hand back HTML-escaped text for values containing &, <, >, etc.
+      toastFact.dataset.factsJson = JSON.stringify(facts.map(f => f.value));
       toastFact.hidden = false;
     } else {
+      toastFact.innerHTML = '';
+      toastFact.dataset.factsJson = '';
       toastFact.hidden = true;
     }
 
@@ -598,6 +648,53 @@ POST /realms/org-b/protocol/openid-connect/token
     toastEl.classList.remove('show');
     clearTimeout(toastBarTimer);
   }
+
+  // Shown once, before the animated run's first step — sets up the story
+  // so the per-step toasts that follow read like chapters, not isolated facts.
+  function showIntroToast(durationMs) {
+    toastNum.textContent = 'Story overview';
+    toastProgress.textContent = '';
+    toastTitle.textContent = 'Cross-domain remediation, step by step';
+    toastBody.textContent = INTRO_STORY;
+    toastFact.hidden = true;
+    toastFact.innerHTML = '';
+    toastEl.classList.add('show');
+    clearTimeout(toastBarTimer);
+    toastBar.style.transition = 'none';
+    toastBar.style.width = '0%';
+    void toastBar.offsetWidth;
+    if (durationMs) {
+      toastBar.style.transition = `width ${durationMs}ms linear`;
+      toastBar.style.width = '100%';
+    }
+  }
+
+  // Expand/collapse persists across steps until the user toggles it back —
+  // once you want to read full JWTs, you probably want to keep reading them.
+  toastExpandBtn.addEventListener('click', () => {
+    const expanded = toastEl.classList.toggle('expanded');
+    toastExpandBtn.textContent = expanded ? 'Collapse ⤡' : 'Expand ⤢';
+  });
+
+  // Event delegation: one listener handles every Copy button, including
+  // ones added by later showToast() calls.
+  toastFact.addEventListener('click', async (e) => {
+    const btn = e.target.closest('.fact-copy-btn');
+    if (!btn) return;
+    const idx = parseInt(btn.dataset.factIndex, 10);
+    const values = JSON.parse(toastFact.dataset.factsJson || '[]');
+    const value = values[idx];
+    if (value === undefined) return;
+    try {
+      await navigator.clipboard.writeText(value);
+      btn.textContent = 'Copied ✓';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1500);
+    } catch (err) {
+      btn.textContent = 'Failed';
+      setTimeout(() => { btn.textContent = 'Copy'; }, 1500);
+    }
+  });
 
   // ── State ──────────────────────────────────────────────────────────────────
   // SVG groups that map to step IDs for diagram highlighting — 10 groups,
@@ -703,9 +800,14 @@ POST /realms/org-b/protocol/openid-connect/token
     busy = true; updateButtons();
     setStatus('Running full sequence…');
     try {
+      const delay = currentStepDelay();
+      const introDelay = Math.round(delay * 1.6);
+      showIntroToast(introDelay);
+      setStatus('Setting the scene…');
+      await sleep(introDelay);
+
       const data = await fetchAllSteps();
       allSteps = data.steps || [];
-      const delay = currentStepDelay();
       for (let i = 0; i < allSteps.length; i++) {
         cursor = i + 1;
         setStatus(`Step ${cursor}/${allSteps.length}: ${allSteps[i].id}`);

@@ -151,6 +151,7 @@ async def receive_ticket(
                 sub_badge = r.json()["assertion"]
                 s.update(status="ok",
                          token_preview=sub_badge[:48] + "…",
+                         token=sub_badge,
                          claims=r.json().get("claims", {}))
             else:
                 s.update(status="error", error=f"HTTP {r.status_code}: {r.text[:300]}")
