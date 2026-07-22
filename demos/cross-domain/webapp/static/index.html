@@ -130,6 +130,9 @@
     .toast-expand-btn:hover { color: var(--text); border-color: var(--accent); }
     .side-toast .toast-title { font-size: 14px; font-weight: 600; margin: 8px 0 8px; color: var(--text); flex-shrink: 0; }
     .side-toast .toast-body { font-size: 13px; color: #c9d1d9; line-height: 1.55; flex-shrink: 0; }
+    .side-toast .toast-detail { margin-top: 8px; font-size: 11px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      color: var(--muted); word-break: break-all; flex-shrink: 0; }
+    .side-toast .toast-detail::before { content: "→ "; color: var(--accent); }
     .side-toast .toast-fact { margin-top: 10px; background: #0b0f14; border: 1px solid var(--border);
       border-radius: 6px; padding: 8px 10px; max-height: 160px; overflow-y: auto; pointer-events: auto; }
     .side-toast.expanded .toast-fact { max-height: min(60vh, 520px); }
@@ -322,24 +325,35 @@
           <text class="seq-num"   x="72"  y="560">10</text>
           <text class="seq-label" x="92"  y="560">POST /api/ticket  Bearer=triage_token  cve=…  intent=create-pr-fix</text>
           <line class="seq-msg"      x1="62" y1="566" x2="916" y2="566" marker-end="url(#arr)"/>
-          <!-- Triage: OPA + plan + mint sub-badge -->
+        </g>
+
+        <!-- Triage: OPA + plan + mint sub-badge — lights up once mint-sub-badge (step 13) is revealed -->
+        <g data-step="mint-sub-badge" class="g">
           <text class="seq-label" x="924" y="586">OPA ingress ✓  plan  mint sub-badge (gitea:write gitea:pr)</text>
           <line class="seq-msg"      x1="922" y1="592" x2="654" y2="592" marker-end="url(#arr)"/>
           <text class="seq-label" x="652" y="610" text-anchor="end">sub-badge (act_chain: sarah→opencode→triage→sub)</text>
           <line class="seq-msg ret"  x1="654" y1="616" x2="928" y2="616" marker-end="url(#arr)"/>
-          <!-- Sub-agent: KC-B exchange + push file + PR -->
+        </g>
+
+        <!-- Sub-agent: KC-B exchange — lights up once idjag-gitea (step 16) is revealed -->
+        <g data-step="idjag-gitea" class="g">
           <text class="seq-label" x="924" y="636">Sub-Agent: jwt-bearer (sub-badge) → KC-B → gitea:write gitea:pr token</text>
           <line class="seq-msg"      x1="922" y1="642" x2="774" y2="642" marker-end="url(#arr)"/>
           <line class="seq-msg ret"  x1="774" y1="652" x2="928" y2="652" marker-end="url(#arr)"/>
-          <!-- push file + open PR -->
+        </g>
+
+        <!-- push file + open PR — lights up once open-pr (step 18) is revealed -->
+        <g data-step="open-pr" class="g">
           <text class="seq-label" x="924" y="672">push fix file + open PR</text>
           <line class="seq-msg"      x1="922" y1="678" x2="1056" y2="678" marker-end="url(#arr)"/>
           <text class="seq-label" x="1054" y="696" text-anchor="end">PR created ✓</text>
           <line class="seq-msg ret"  x1="1056" y1="702" x2="928" y2="702" marker-end="url(#arr)"/>
-          <!-- OPA egress -->
+        </g>
+
+        <!-- OPA egress + final return — lights up once pr-created (step 20) is revealed -->
+        <g data-step="pr-created" class="g">
           <text class="seq-label" x="924" y="722">OPA egress: delegation depth ✓ sub-scope ⊆ parent ✓ → ALLOW</text>
           <path class="seq-msg" d="M922,728 L950,728 L950,738 L924,738" marker-end="url(#arr)"/>
-          <!-- final return -->
           <text class="seq-label" x="918" y="764" text-anchor="end">PR created ✓ — Sarah → OpenCode → Triage → Sub-Agent</text>
           <line class="seq-msg ret"  x1="916" y1="770" x2="68"  y2="770" marker-end="url(#arr)"/>
         </g>
@@ -507,6 +521,7 @@ POST /realms/org-b/protocol/openid-connect/token
   </div>
   <div class="toast-title" id="toastTitle"></div>
   <div class="toast-body" id="toastBody"></div>
+  <div class="toast-detail" id="toastDetail" hidden></div>
   <div class="toast-fact" id="toastFact" hidden></div>
   <div class="toast-bar"><div id="toastBar"></div></div>
 </div>
@@ -567,6 +582,7 @@ POST /realms/org-b/protocol/openid-connect/token
     'idjag-gitea': "The access token Sub-Agent already holds carries exactly gitea:write and gitea:pr — no extra ID-JAG hop is needed to reach Gitea.",
     'push-file': "Sub-Agent pushes the fix to a fresh, randomly-named feature branch. The gateway checks for gitea:write before allowing this.",
     'open-pr': "Sub-Agent opens a pull request. The gateway checks gitea:pr — a separate scope from gitea:write, so a push-only token couldn't do this step.",
+    'denied-pr-attempt': "Sub-Agent tries the exact same PR call against demo-protected — a deny-listed repo. Same token, same gitea:pr scope, same everything — but the gateway's policy layer refuses it anyway. Scope says what a token *could* do; policy still gets the final word on *where*.",
     'opa-egress': "(Mocked) Org B's egress policy would verify delegation depth and that Sub-Agent's scope is a subset of Triage's — defense in depth beyond the token alone.",
     'pr-created': "The PR is live. Every hop — Sarah, OpenCode, Triage, Sub-Agent — is recorded in the token's act chain: a full causal audit trail for one code change.",
   };
@@ -576,6 +592,7 @@ POST /realms/org-b/protocol/openid-connect/token
   const toastProgress = document.getElementById('toastProgress');
   const toastTitle = document.getElementById('toastTitle');
   const toastBody = document.getElementById('toastBody');
+  const toastDetail = document.getElementById('toastDetail');
   const toastFact = document.getElementById('toastFact');
   const toastBar = document.getElementById('toastBar');
   const toastExpandBtn = document.getElementById('toastExpandBtn');
@@ -598,11 +615,17 @@ POST /realms/org-b/protocol/openid-connect/token
     if (claims) facts.push({ label: 'Decoded JWT claims', value: JSON.stringify(claims, null, 2), copyable: true });
     if (r.cid) facts.push({ label: 'OASF record CID', value: r.cid, copyable: true });
     if (r.schema_version) facts.push({ label: 'OASF schema_version', value: r.schema_version });
+    if (r.record && Object.keys(r.record).length) facts.push({ label: 'OASF record (payload)', value: JSON.stringify(r.record, null, 2), copyable: true });
     if (r.id) facts.push({ label: 'CIMD id', value: r.id, copyable: true });
     if (r.verification_method_id) facts.push({ label: 'Verification method', value: r.verification_method_id });
     if (r.record_name) facts.push({ label: 'Directory record', value: r.record_name });
     if (r.pull_request && r.pull_request.html_url) facts.push({ label: 'Pull request', value: r.pull_request.html_url, copyable: true });
     if (r.pushed && r.pushed.branch) facts.push({ label: 'Branch', value: r.pushed.branch });
+    // Fallback: nothing was specifically curated above, but the step still
+    // has a response payload — show it raw rather than nothing at all.
+    if (!facts.length && r && Object.keys(r).length) {
+      facts.push({ label: 'Response payload', value: JSON.stringify(r, null, 2), copyable: true });
+    }
     return facts;
   }
 
@@ -703,7 +726,11 @@ POST /realms/org-b/protocol/openid-connect/token
   const SVG_STEPS = [
     'sarah-login', 'scan', 'dir-push', 'dir-search',
     'cimd-generate-id', 'cimd-resolve-id',
-    'kc-a-exchange', 'mint-idjag', 'kc-b-exchange', 'create-ticket'
+    'kc-a-exchange', 'mint-idjag', 'kc-b-exchange', 'create-ticket',
+    // The create-ticket cascade is split into sub-groups so the diagram lights
+    // up at the same pace as the nested step cards reveal, instead of jumping
+    // to fully-green the instant step 10 (the outer POST) completes.
+    'mint-sub-badge', 'idjag-gitea', 'open-pr', 'pr-created'
   ];
 
   let allSteps  = [];   // full list from /api/run
