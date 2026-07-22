@@ -16,7 +16,7 @@ name: cross-domain-stack
 #   Sub-Agent      → Org B sub-agent (mock, bounded privilege), steps 20-25
 #   Gitea          → resource (repository for PRs)
 #
-# Ports (non-conflicting with idjag-cross-app-access defaults):
+# Ports (non-conflicting with single-org-id-jag-app-access defaults):
 #   keycloak-a      → host:8082  (Org A IdP)
 #   keycloak-b      → host:8083  (Org B IdP)
 #   idjag-issuer    → host:9002  (AGNTCY assertion minter)
@@ -141,7 +141,7 @@ services:
   # ---------------------------------------------------------------------------
   idjag-issuer:
     build:
-      context: ../idjag-cross-app-access/idjag-issuer
+      context: ../archive/single-org-id-jag-app-access/idjag-issuer
     image: cd-idjag-issuer
     container_name: cd-idjag-issuer
     environment:
@@ -292,7 +292,7 @@ services:
   # ---------------------------------------------------------------------------
   gitea-gateway:
     build:
-      context: ../idjag-cross-app-access/gitea-gateway
+      context: ../archive/single-org-id-jag-app-access/gitea-gateway
     image: cd-gitea-gateway
     container_name: cd-gitea-gateway
     depends_on:

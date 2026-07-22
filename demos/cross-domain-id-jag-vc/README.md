@@ -1,4 +1,4 @@
-# Cross-Domain AI Agent Remediation Demo
+# Cross-Domain AI Agent Remediation Demo (ID-JAG + VC)
 
 A cross-domain agent delegation scenario: **Sarah** (an engineer at **Org A**)
 asks **OpenCode** (her Org A AI agent) to fix a CVE found in a repo owned by
@@ -54,7 +54,7 @@ Sarah → OpenCode (Org A) ──ID-JAG──> Keycloak B (Org B) → Triage →
 | `kc-a-init` | `quay.io/keycloak/keycloak:26.7` | _(one-shot)_ | Registers `triage:create` optional scope |
 | `keycloak-b` | `quay.io/keycloak/keycloak:26.7` | `8083` | Org B IdP (`org-b` realm), redeems ID-JAG assertions |
 | `kc-b-init` | `quay.io/keycloak/keycloak:26.7` | _(one-shot)_ | Registers `triage:create`/`gitea:*` optional scopes |
-| `idjag-issuer` | built from `../idjag-cross-app-access/idjag-issuer` | `9002` | Mints ID-JAG assertions (stand-in issuer) |
+| `idjag-issuer` | built from `../archive/single-org-id-jag-app-access/idjag-issuer` | `9002` | Mints ID-JAG assertions (stand-in issuer) |
 | `identity-postgres` | `postgres:16` | _(internal)_ | DB for identity-node |
 | `identity-vault` | `hashicorp/vault:1.17` | _(internal)_ | Holds the org-a trust-authority signing key (Transit engine) |
 | `identity-node` | `ghcr.io/agntcy/identity/node:0.0.23` | `4005` (REST), `4006` (gRPC) | AGNTCY identity node — CIMD id generate/resolve |
@@ -65,7 +65,7 @@ Sarah → OpenCode (Org A) ──ID-JAG──> Keycloak B (Org B) → Triage →
 | `agent-dir-init` | built from `./agent-dir-init` | _(one-shot)_ | Pushes static OASF records for all 3 demo agents |
 | `gitea` | `gitea/gitea:1.22` | `3002` (HTTP), `2223` (SSH) | Protected resource (repo server) |
 | `gitea-init` | `gitea/gitea:1.22` | _(one-shot)_ | Seeds the Gitea admin + demo repo |
-| `gitea-gateway` | built from `../idjag-cross-app-access/gitea-gateway` | `9103` | Enforces narrow scope + deny-list in front of Gitea |
+| `gitea-gateway` | built from `../archive/single-org-id-jag-app-access/gitea-gateway` | `9103` | Enforces narrow scope + deny-list in front of Gitea |
 | `opencode-agent` | built from `./opencode-agent` | `8101` | Org A mock agent (Phase A/B driver) |
 | `triage-agent` | built from `./triage-agent` | `8200` | Org B mock agent (ticket → sub-badge → spawn) |
 | `sub-agent` | built from `./sub-agent` | `8300` | Org B bounded-privilege mock agent (push + PR) |
@@ -74,7 +74,7 @@ Sarah → OpenCode (Org A) ──ID-JAG──> Keycloak B (Org B) → Triage →
 ## Quick start
 
 ```bash
-cd demos/cross-domain
+cd demos/cross-domain-id-jag-vc
 cp .env.example .env
 # SARAH_PASSWORD / OPENCODE_CLIENT_SECRET / TRIAGE_CLIENT_SECRET /
 # SUB_AGENT_CLIENT_SECRET must stay as the .env.example defaults (or be
@@ -178,17 +178,17 @@ omit either and you'll get an opaque failure with no useful error message.
   real OASF taxonomy entries (e.g. `software_engineering/code_quality/code_review`),
   not made-up strings.
 - **Repeat `/api/run` calls fail at push-file/open-pr with "branch already
-  exists"** — `gitea-gateway` (shared with the `idjag-cross-app-access` demo)
-  now randomizes the branch name per push; if you're on an older image,
+  exists"** — `gitea-gateway` (shared with the archived `single-org-id-jag-app-access`
+  demo) now randomizes the branch name per push; if you're on an older image,
   rebuild it (`docker compose build gitea-gateway`).
 - **Port already in use** — this stack's default ports are chosen to avoid
-  colliding with `idjag-cross-app-access`'s defaults; if something else on
-  your machine still collides, override the `*_PORT` variables in `.env`.
+  colliding with `single-org-id-jag-app-access`'s defaults; if something else
+  on your machine still collides, override the `*_PORT` variables in `.env`.
 
 ## Repo layout
 
 ```
-cross-domain/
+cross-domain-id-jag-vc/
 ├── docker-compose.yaml        # the 18-service stack (source of truth)
 ├── .env.example
 ├── identity-node-init.py      # Vault Transit bootstrap + org-a issuer registration

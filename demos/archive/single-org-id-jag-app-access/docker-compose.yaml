@@ -1,4 +1,4 @@
-name: idjag-cross-app-access
+name: single-org-id-jag-app-access
 
 # ID-JAG (Identity Assertion JWT Authorization Grant) Cross-App Access demo
 # stack for the AGNTCY Identity Service — originally built for a CNCF

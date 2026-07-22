@@ -1,10 +1,14 @@
-# ID-JAG Cross-App Access Demo Stack
+# Single-Org ID-JAG Cross-App Access Demo Stack (archived)
 
 Video: https://app.vidcast.io/share/a943d056-fb63-4840-9083-a4fbb72508a3
 
 Docker Compose stack demonstrating ID-JAG (Identity Assertion JWT Authorization
 Grant) Cross-App Access with the AGNTCY Identity Service — originally built for
-a CNCF conference demo. This folder was previously named `cncf-stack`.
+a CNCF conference demo. This folder was previously named `cncf-stack`, then
+`idjag-cross-app-access`. It's archived (kept for reference / shared build
+context — `../cross-domain-id-jag-vc` still builds its `idjag-issuer` and
+`gitea-gateway` from here) but superseded for new demo work by the two-org
+scenario in [`../../cross-domain-id-jag-vc`](../../cross-domain-id-jag-vc).
 
 ## Services
 
@@ -27,7 +31,7 @@ environment variables — none are hardcoded in `docker-compose.yaml`.
 ## Quick start
 
 ```bash
-cd demos/idjag-cross-app-access
+cd demos/archive/single-org-id-jag-app-access
 cp .env.example .env      # then edit .env and change the change-me-* values
 docker compose up -d
 ```
@@ -49,7 +53,7 @@ file):
 <summary>Full <code>docker-compose.yaml</code></summary>
 
 ```yaml
-name: idjag-cross-app-access
+name: single-org-id-jag-app-access
 
 # ID-JAG Cross-App Access demo stack for AGNTCY Identity Service.
 #
