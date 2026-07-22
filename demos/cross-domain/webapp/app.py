@@ -198,8 +198,7 @@ async def _dir_push_turn(cve: str, repo: str) -> dict:
         from google.protobuf import struct_pb2
         import asyncio
 
-        record_data = struct_pb2.Struct()
-        record_data.update({
+        record_dict = {
             "name": "opencode-agent",
             "version": "0.1.0",
             "schema_version": OASF_SCHEMA_VERSION,
@@ -214,7 +213,9 @@ async def _dir_push_turn(cve: str, repo: str) -> dict:
                 {"name": "technology/security", "id": 107},
             ],
             "annotations": {"cve": cve, "repo": repo, "turn": "remediation"},
-        })
+        }
+        record_data = struct_pb2.Struct()
+        record_data.update(record_dict)
         record = record_pb2.Record(data=record_data)
 
         def _push():
@@ -231,7 +232,7 @@ async def _dir_push_turn(cve: str, repo: str) -> dict:
             "3. Directory: push OpenCode turn record → CID",
             detail=f"gRPC Push({DIR_APISERVER_URL})  schema_version={OASF_SCHEMA_VERSION}  cve={cve}  repo={repo}",
             status="ok",
-            result={"cid": cid, "schema_version": OASF_SCHEMA_VERSION, "agent": "opencode-agent"},
+            result={"cid": cid, "schema_version": OASF_SCHEMA_VERSION, "agent": "opencode-agent", "record": record_dict},
         )
     except Exception as exc:  # noqa: BLE001
         return _step("dir-push", "3. Directory: push turn record", status="error", error=str(exc))
@@ -269,15 +270,17 @@ async def _dir_search(agent_name: str = "triage-agent") -> dict:
         results = await asyncio.get_event_loop().run_in_executor(None, _search)
         found = len(results) > 0
         record_name = ""
+        record_dict: dict = {}
         if found:
-            data = results[0].record.data
-            record_name = data.get("name", "") if hasattr(data, "get") else ""
+            from google.protobuf.json_format import MessageToDict
+            record_dict = MessageToDict(results[0].record.data)
+            record_name = record_dict.get("name", "")
         return _step(
             "dir-search",
             f"4. Directory: search for {agent_name} → {'found' if found else 'not found'}",
             detail=f"gRPC SearchRecords({DIR_APISERVER_URL})  name={agent_name}",
             status="ok",
-            result={"found": found, "record_name": record_name, "count": len(results)},
+            result={"found": found, "record_name": record_name, "count": len(results), "record": record_dict},
         )
     except Exception as exc:  # noqa: BLE001
         return _step("dir-search", f"4. Directory: search for {agent_name}", status="error", error=str(exc))

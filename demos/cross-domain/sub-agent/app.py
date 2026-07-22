@@ -173,6 +173,40 @@ async def run(body: RunRequest):
             s.update(status="error", error=str(exc))
         steps.append(s)
 
+        # ── Step 22c: Attempt a PR against the deny-listed repo — always
+        # refused by gitea-gateway's policy layer, even though this same
+        # access token just successfully opened a PR elsewhere with the
+        # identical gitea:pr scope. Demonstrates: policy beats scope.
+        s = {
+            "id": "denied-pr-attempt",
+            "title": "22c. Attempt PR on demo-protected (deny-listed — refused regardless of scope)",
+            "detail": f"POST {GITEA_GATEWAY_URL}/api/gitea/pulls/{owner}/demo-protected",
+        }
+        try:
+            r = await client.post(
+                f"{GITEA_GATEWAY_URL}/api/gitea/pulls/{owner}/demo-protected",
+                headers={"Authorization": f"Bearer {access_token}",
+                         "Content-Type": "application/json"},
+                json={
+                    "head": branch,
+                    "base": "main",
+                    "title": "fix: attempted change to a protected repo (expected to be denied)",
+                },
+            )
+            if r.status_code == 403:
+                s.update(status="denied", result=r.json())
+            elif r.status_code in (200, 201):
+                s.update(
+                    status="error",
+                    error="expected 403 policy_deny but the PR succeeded — deny-list not enforced",
+                    result=r.json(),
+                )
+            else:
+                s.update(status="error", error=f"HTTP {r.status_code}: {r.text[:300]}")
+        except Exception as exc:  # noqa: BLE001
+            s.update(status="error", error=str(exc))
+        steps.append(s)
+
         # ── Steps 23-24: OPA egress (mocked — ALLOW) ───────────────────────
         steps.append({
             "id": "opa-egress",
