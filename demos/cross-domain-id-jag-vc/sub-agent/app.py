@@ -1,3 +1,6 @@
+# Copyright 2026 AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
 """Sub-Agent (mock) — Org B, spawned by Triage with narrowed badge.
 
 Performs the bounded-privilege remediation action:

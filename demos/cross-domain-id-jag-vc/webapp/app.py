@@ -1,3 +1,6 @@
+# Copyright 2026 AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
 # assisted-by claude code claude-sonnet-4-6
 """Cross-Domain AI Agent Remediation Demo — orchestration backend.
 

@@ -1,3 +1,6 @@
+# Copyright 2026 AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
 """Triage Agent (mock) — Org B remediation agent.
 
 Receives a cross-domain remediation ticket from OpenCode (Org A), plans the
