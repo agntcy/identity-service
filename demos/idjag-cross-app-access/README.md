@@ -1,8 +1,10 @@
-# CNCF Demo Stack
+# ID-JAG Cross-App Access Demo Stack
 
 Video: https://app.vidcast.io/share/a943d056-fb63-4840-9083-a4fbb72508a3
 
-Docker Compose stack for the CNCF conference demo of the AGNTCY Identity Service.
+Docker Compose stack demonstrating ID-JAG (Identity Assertion JWT Authorization
+Grant) Cross-App Access with the AGNTCY Identity Service — originally built for
+a CNCF conference demo. This folder was previously named `cncf-stack`.
 
 ## Services
 
@@ -25,7 +27,7 @@ environment variables — none are hardcoded in `docker-compose.yaml`.
 ## Quick start
 
 ```bash
-cd demos/cncf-stack
+cd demos/idjag-cross-app-access
 cp .env.example .env      # then edit .env and change the change-me-* values
 docker compose up -d
 ```
@@ -47,9 +49,9 @@ file):
 <summary>Full <code>docker-compose.yaml</code></summary>
 
 ```yaml
-name: cncf-stack
+name: idjag-cross-app-access
 
-# CNCF conference demo stack for AGNTCY Identity Service.
+# ID-JAG Cross-App Access demo stack for AGNTCY Identity Service.
 #
 # Services:
 #   - keycloak          OIDC provider + ID-JAG (Cross-App Access) receiver
@@ -214,6 +216,8 @@ services:
       GITEA_ADMIN_PASSWORD: ${GITEA_ADMIN_PASSWORD:?set GITEA_ADMIN_PASSWORD in .env}
       GITEA_READ_SCOPE: gitea:read
       GITEA_WRITE_SCOPE: gitea:write
+      GITEA_PR_SCOPE: gitea:pr
+      GITEA_DENY_LIST: demo-protected
     networks:
       - cncf-net
     healthcheck:
@@ -331,6 +335,7 @@ services:
       IDJAG_SUBJECT: ${CNCF_IDJAG_SUBJECT:-user@example.com}
       IDJAG_ISSUER_URL: http://idjag-issuer:9000
       GITEA_GATEWAY_URL: http://gitea-gateway:9100
+      GITEA_ADMIN_USER: ${GITEA_ADMIN_USER:-demo-admin}
     networks:
       - cncf-net
     healthcheck:

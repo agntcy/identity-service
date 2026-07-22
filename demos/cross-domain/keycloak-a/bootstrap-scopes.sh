@@ -1,23 +1,20 @@
 #!/usr/bin/env bash
-# Registers the narrow "gitea:read" / "gitea:write" client scopes in the
-# cncf-demo realm and assigns them as OPTIONAL scopes to the Receiving App.
-#
-# Run after Keycloak has imported the realm (see the kc-init service). It uses
-# kcadm.sh and is idempotent — re-running is safe.
+# Registers cross-domain scopes in Org A (org-a realm).
+# OpenCode requests triage:create when minting the ID-JAG assertion for Org B.
 set -euo pipefail
 
-KC="${KC_URL:-http://keycloak:8080}"
-REALM="${KC_REALM:-cncf-demo}"
+KC="${KC_URL:-http://keycloak-a:8080}"
+REALM="${KC_REALM:-org-a}"
 ADMIN="${KC_ADMIN:-admin}"
 ADMIN_PW="${KC_ADMIN_PASSWORD:?KC_ADMIN_PASSWORD required}"
-CLIENT_ID="${RECEIVER_CLIENT:-receiving-app}"
+CLIENT_ID="${REQUESTER_CLIENT:-opencode-agent}"
 KCADM=/opt/keycloak/bin/kcadm.sh
 
-echo "[kc-init] waiting for Keycloak at ${KC} ..."
+echo "[kc-a-init] waiting for Keycloak A at ${KC} ..."
 for i in $(seq 1 60); do
   if "$KCADM" config credentials --server "$KC" --realm master \
        --user "$ADMIN" --password "$ADMIN_PW" >/dev/null 2>&1; then
-    echo "[kc-init] authenticated to Keycloak admin"
+    echo "[kc-a-init] authenticated to Keycloak A admin"
     break
   fi
   sleep 3
@@ -26,9 +23,9 @@ done
 create_scope() {
   local name="$1" desc="$2"
   if "$KCADM" get client-scopes -r "$REALM" --fields name --format csv --noquotes 2>/dev/null | grep -qx "$name"; then
-    echo "[kc-init] client scope '$name' already exists"
+    echo "[kc-a-init] scope '$name' already exists"
   else
-    echo "[kc-init] creating client scope '$name'"
+    echo "[kc-a-init] creating scope '$name'"
     "$KCADM" create client-scopes -r "$REALM" \
       -s name="$name" \
       -s description="$desc" \
@@ -45,16 +42,14 @@ assign_optional() {
   sid=$("$KCADM" get client-scopes -r "$REALM" --fields id,name --format csv --noquotes \
         | grep ",${scope_name}$" | cut -d, -f1 | head -n1)
   if [ -z "$cid" ] || [ -z "$sid" ]; then
-    echo "[kc-init] ERROR: could not resolve client ($cid) or scope ($scope_name -> $sid)"
+    echo "[kc-a-init] ERROR: could not resolve client ($cid) or scope ($scope_name -> $sid)"
     return 1
   fi
-  echo "[kc-init] assigning optional scope '$scope_name' to '$CLIENT_ID'"
+  echo "[kc-a-init] assigning optional scope '$scope_name' to '$CLIENT_ID'"
   "$KCADM" update "clients/${cid}/optional-client-scopes/${sid}" -r "$REALM" >/dev/null 2>&1 || true
 }
 
-create_scope "gitea:read"  "Read-only access to Gitea repositories"
-create_scope "gitea:write" "Write access to Gitea repositories (create/modify)"
-assign_optional "gitea:read"
-assign_optional "gitea:write"
+create_scope "triage:create" "Cross-domain scope: create remediation tickets in Org B Triage"
+assign_optional "triage:create"
 
-echo "[kc-init] done."
+echo "[kc-a-init] done."

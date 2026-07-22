@@ -13,10 +13,16 @@ issuer directly (no CORS):
                           endpoint via the jwt-bearer grant -> access token
   4. Read Gitea           — call the gitea-gateway to LIST repos (needs gitea:read)
   5. Write Gitea          — call the gitea-gateway to CREATE a repo (needs gitea:write)
+  6. Agent push           — AI agent pushes AGENTS.md to a feature branch (needs gitea:write)
+  7. Agent open PR        — AI agent opens a PR on the new repo (needs gitea:pr)
+  8. Agent PR (protected) — AI agent tries a PR on demo-protected; gateway deny-list blocks it
+                            regardless of scope — policy beats token
 
-The requested scope is chosen by the caller. With a read-only scope the write
-hop is *correctly refused* (HTTP 403) by the gateway — that is the narrow
-scoping payoff.
+The requested scope is chosen by the caller. A read-only scope causes the write
+hop to be refused (HTTP 403). With write scope but no gitea:pr, the PR step is
+refused. With all scopes, the protected-repo step is still refused by the
+gateway's deny-list — demonstrating that policy enforcement is a layer above
+token scope.
 
 Each hop is exposed both as part of /api/run (the whole sequence at once) and
 as an individual /api/step/<id> endpoint, so the UI can either animate the
@@ -46,6 +52,7 @@ DEMO_PASSWORD = os.environ.get("DEMO_PASSWORD", "")
 SUBJECT = os.environ.get("IDJAG_SUBJECT", "user@example.com")
 ISSUER_URL = os.environ.get("IDJAG_ISSUER_URL", "http://idjag-issuer:9000").rstrip("/")
 GATEWAY_URL = os.environ.get("GITEA_GATEWAY_URL", "http://gitea-gateway:9100").rstrip("/")
+GITEA_ADMIN_USER = os.environ.get("GITEA_ADMIN_USER", "demo-admin")
 
 TOKEN_ENDPOINT = f"{KEYCLOAK_URL}/realms/{REALM}/protocol/openid-connect/token"
 REALM_ISSUER = f"{KEYCLOAK_URL}/realms/{REALM}"
@@ -192,6 +199,106 @@ async def _gitea_list(client: httpx.AsyncClient, access_token: str) -> dict:
     return step
 
 
+async def _agent_push(client: httpx.AsyncClient, access_token: str, owner: str, repo: str) -> dict:
+    step = {
+        "id": "agent-push",
+        "title": "6. AI agent pushes file to feature branch (needs gitea:write)",
+        "detail": f"POST {GATEWAY_URL}/api/gitea/push/{owner}/{repo}  (Bearer access token)",
+    }
+    if not access_token:
+        step.update(status="error", error="no access token (run the exchange step first)")
+        return step
+    if not owner or not repo:
+        step.update(status="denied", result={"error": "no repository to push to (create step was denied)"})
+        return step
+    try:
+        r = await client.post(
+            f"{GATEWAY_URL}/api/gitea/push/{owner}/{repo}",
+            headers={"Authorization": f"Bearer {access_token}"},
+        )
+        if r.status_code in (200, 201):
+            step.update(status="ok", result=r.json())
+        elif r.status_code == 403:
+            step.update(status="denied", result=r.json())
+        else:
+            step.update(status="error", error=f"HTTP {r.status_code}: {r.text[:300]}")
+    except Exception as exc:  # noqa: BLE001
+        step.update(status="error", error=str(exc))
+    return step
+
+
+async def _agent_pr(
+    client: httpx.AsyncClient, access_token: str, owner: str, repo: str, branch: str
+) -> dict:
+    step = {
+        "id": "agent-pr",
+        "title": "7. AI agent opens PR (needs gitea:pr)",
+        "detail": (
+            f"POST {GATEWAY_URL}/api/gitea/pulls/{owner}/{repo}"
+            f"  head={branch or 'agent/feature-1'}  (Bearer access token)"
+        ),
+    }
+    if not access_token:
+        step.update(status="error", error="no access token (run the exchange step first)")
+        return step
+    if not owner or not repo:
+        step.update(status="denied", result={"error": "no repository available (create step was denied)"})
+        return step
+    try:
+        r = await client.post(
+            f"{GATEWAY_URL}/api/gitea/pulls/{owner}/{repo}",
+            headers={"Authorization": f"Bearer {access_token}"},
+            json={
+                "head": branch or "agent/feature-1",
+                "base": "main",
+                "title": "feat: agent-initiated changes via ID-JAG",
+            },
+        )
+        if r.status_code in (200, 201):
+            step.update(status="ok", result=r.json())
+        elif r.status_code == 403:
+            step.update(status="denied", result=r.json())
+        else:
+            step.update(status="error", error=f"HTTP {r.status_code}: {r.text[:300]}")
+    except Exception as exc:  # noqa: BLE001
+        step.update(status="error", error=str(exc))
+    return step
+
+
+async def _agent_pr_deny(client: httpx.AsyncClient, access_token: str, owner: str) -> dict:
+    protected = "demo-protected"
+    step = {
+        "id": "agent-pr-deny",
+        "title": "8. AI agent PR to protected repo — policy deny (deny-list beats scope)",
+        "detail": (
+            f"POST {GATEWAY_URL}/api/gitea/pulls/{owner}/{protected}"
+            "  (Bearer — gateway deny-list blocks regardless of scope)"
+        ),
+    }
+    if not access_token:
+        step.update(status="error", error="no access token (run the exchange step first)")
+        return step
+    try:
+        r = await client.post(
+            f"{GATEWAY_URL}/api/gitea/pulls/{owner}/{protected}",
+            headers={"Authorization": f"Bearer {access_token}"},
+            json={
+                "head": "agent/feature-1",
+                "base": "main",
+                "title": "feat: agent tries to PR to protected repo",
+            },
+        )
+        if r.status_code in (200, 201):
+            step.update(status="ok", result=r.json())
+        elif r.status_code == 403:
+            step.update(status="denied", result=r.json())
+        else:
+            step.update(status="error", error=f"HTTP {r.status_code}: {r.text[:300]}")
+    except Exception as exc:  # noqa: BLE001
+        step.update(status="error", error=str(exc))
+    return step
+
+
 async def _gitea_create(client: httpx.AsyncClient, access_token: str, name: str) -> dict:
     step = {
         "id": "gitea-create",
@@ -236,6 +343,7 @@ def config():
         "issuer": ISSUER_URL,
         "gateway": GATEWAY_URL,
         "default_scope": DEFAULT_SCOPE,
+        "gitea_admin_user": GITEA_ADMIN_USER,
     }
 
 
@@ -279,6 +387,30 @@ async def run(body: RunRequest | None = None):
         gitea_create = await _gitea_create(client, access_token, repo_name)
         steps.append(gitea_create)
 
+        # Parse owner/repo from the created repo's full_name (e.g. "demo-admin/repo-name").
+        full_name = (
+            gitea_create.get("result", {}).get("created", {}).get("full_name", "")
+            if gitea_create["status"] == "ok"
+            else ""
+        )
+        parts = full_name.split("/", 1) if "/" in full_name else []
+        repo_owner = parts[0] if len(parts) == 2 else ""
+        repo_slug = parts[1] if len(parts) == 2 else ""
+
+        agent_push = await _agent_push(client, access_token, repo_owner, repo_slug)
+        steps.append(agent_push)
+        pushed_branch = (
+            agent_push.get("result", {}).get("pushed", {}).get("branch", "agent/feature-1")
+            if agent_push["status"] == "ok"
+            else "agent/feature-1"
+        )
+
+        agent_pr = await _agent_pr(client, access_token, repo_owner, repo_slug, pushed_branch)
+        steps.append(agent_pr)
+
+        agent_pr_deny = await _agent_pr_deny(client, access_token, GITEA_ADMIN_USER)
+        steps.append(agent_pr_deny)
+
         return JSONResponse({"ok": all(_ok(s["status"]) for s in steps), "steps": steps})
 
 
@@ -294,6 +426,22 @@ class ExchangeRequest(BaseModel):
 class GiteaRequest(BaseModel):
     access_token: str
     repo_name: str = ""
+
+
+class AgentPushRequest(BaseModel):
+    access_token: str
+    repo_full_name: str = ""  # "owner/repo"
+
+
+class AgentPRRequest(BaseModel):
+    access_token: str
+    repo_full_name: str = ""  # "owner/repo"
+    branch_name: str = "agent/feature-1"
+
+
+class AgentPRDenyRequest(BaseModel):
+    access_token: str
+    repo_owner: str = ""  # falls back to GITEA_ADMIN_USER
 
 
 @app.post("/api/step/login")
@@ -330,6 +478,32 @@ async def step_gitea_create(body: GiteaRequest):
     name = body.repo_name or _default_repo_name()
     async with httpx.AsyncClient(timeout=15) as client:
         step = await _gitea_create(client, body.access_token, name)
+    return JSONResponse({"ok": _ok(step["status"]), "step": step})
+
+
+@app.post("/api/step/agent-push")
+async def step_agent_push(body: AgentPushRequest):
+    parts = body.repo_full_name.split("/", 1) if "/" in body.repo_full_name else []
+    owner, repo = (parts[0], parts[1]) if len(parts) == 2 else ("", "")
+    async with httpx.AsyncClient(timeout=15) as client:
+        step = await _agent_push(client, body.access_token, owner, repo)
+    return JSONResponse({"ok": _ok(step["status"]), "step": step})
+
+
+@app.post("/api/step/agent-pr")
+async def step_agent_pr(body: AgentPRRequest):
+    parts = body.repo_full_name.split("/", 1) if "/" in body.repo_full_name else []
+    owner, repo = (parts[0], parts[1]) if len(parts) == 2 else ("", "")
+    async with httpx.AsyncClient(timeout=15) as client:
+        step = await _agent_pr(client, body.access_token, owner, repo, body.branch_name)
+    return JSONResponse({"ok": _ok(step["status"]), "step": step})
+
+
+@app.post("/api/step/agent-pr-deny")
+async def step_agent_pr_deny(body: AgentPRDenyRequest):
+    owner = body.repo_owner or GITEA_ADMIN_USER
+    async with httpx.AsyncClient(timeout=15) as client:
+        step = await _agent_pr_deny(client, body.access_token, owner)
     return JSONResponse({"ok": _ok(step["status"]), "step": step})
 
 

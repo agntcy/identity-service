@@ -1,0 +1,775 @@
+<!-- assisted-by claude code claude-sonnet-4-6 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cross-Domain AI Agent Remediation — ID-JAG + AGNTCY</title>
+  <style>
+    :root {
+      --bg: #0d1117; --panel: #161b22; --border: #30363d;
+      --text: #e6edf3; --muted: #8b949e; --accent: #2f81f7;
+      --ok: #3fb950; --err: #f85149; --run: #d29922; --denied: #db8f2f;
+      --teal: #39c5cf; --purple: #bc8cff; --pink: #f78166;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg); color: var(--text); line-height: 1.5; }
+    header { padding: 20px 32px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    header h1 { font-size: 19px; margin: 0; }
+    header .sub { color: var(--muted); font-size: 13px; margin-top: 2px; }
+    main { max-width: 1060px; margin: 0 auto; padding: 24px 32px; }
+    .tabs { display: flex; gap: 4px; }
+    .tab { background: transparent; color: var(--muted); border: 1px solid var(--border);
+      border-radius: 8px; padding: 8px 16px; font-size: 14px; font-weight: 600; cursor: pointer; }
+    .tab.active { background: var(--panel); color: var(--text); border-color: var(--accent); }
+    .controls { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; align-items: center; }
+    button.action { background: var(--accent); color: white; border: 0; border-radius: 6px;
+      padding: 9px 18px; font-size: 14px; font-weight: 600; cursor: pointer; }
+    button.secondary { background: #21262d; color: var(--text); border: 1px solid var(--border);
+      border-radius: 6px; padding: 9px 16px; font-size: 14px; font-weight: 600; cursor: pointer; }
+    button:disabled { opacity: 0.5; cursor: default; }
+    .field { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); }
+    .field input { background: var(--panel); border: 1px solid var(--border); border-radius: 5px;
+      color: var(--text); padding: 5px 9px; font-size: 13px; font-family: ui-monospace, monospace; width: 200px; }
+    .config { font-size: 12px; color: var(--muted); background: var(--panel);
+      border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; margin-bottom: 16px;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 3px 18px; }
+    .config b { color: var(--text); }
+    .diagram { background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+      padding: 12px; margin-bottom: 18px; overflow-x: auto; }
+    .diagram svg { width: 100%; min-width: 900px; height: auto; display: block; }
+    /* actor boxes */
+    .seq-actor-box { fill: #21262d; stroke: var(--border); }
+    .seq-actor { fill: var(--text); font-size: 11px; font-weight: 700; text-anchor: middle; }
+    .seq-actor-sub { fill: var(--muted); font-size: 9px; text-anchor: middle; }
+    .seq-life { stroke: var(--border); stroke-dasharray: 4 4; stroke-width: 1; }
+    /* step groups — color driven by status class */
+    .g .seq-msg { stroke: #30363d; stroke-width: 1.6; fill: none; }
+    .g .seq-msg.ret { stroke-dasharray: 6 4; }
+    .g .seq-msg.alt { stroke-dasharray: 3 3; }
+    .g .seq-label { fill: var(--muted); font-size: 10.5px; }
+    .g .seq-num { fill: var(--muted); font-size: 11px; font-weight: 700; }
+    .g.running .seq-msg { stroke: var(--run); }
+    .g.running .seq-label, .g.running .seq-num { fill: var(--run); }
+    .g.ok .seq-msg { stroke: var(--ok); }
+    .g.ok .seq-label, .g.ok .seq-num { fill: var(--ok); }
+    .g.error .seq-msg { stroke: var(--err); }
+    .g.error .seq-label, .g.error .seq-num { fill: var(--err); }
+    .g.denied .seq-msg { stroke: var(--denied); }
+    .g.denied .seq-label, .g.denied .seq-num { fill: var(--denied); }
+    /* static doc diagrams */
+    .diagram.doc .seq-msg { stroke: var(--accent); stroke-width: 1.6; fill: none; }
+    .diagram.doc .seq-msg.ret { stroke: var(--muted); stroke-dasharray: 6 4; }
+    .diagram.doc .seq-label { fill: #c9d1d9; font-size: 11px; }
+    .diagram.doc .seq-num { fill: var(--accent); font-size: 11px; font-weight: 700; }
+    /* step cards */
+    .step { background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+      margin: 10px 0; overflow: hidden; }
+    .step.reveal { animation: fade-in .4s ease both; }
+    @keyframes fade-in { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+    .step-head { padding: 12px 14px; display: flex; align-items: center; gap: 10px; }
+    .step-title { font-weight: 600; font-size: 14px; flex: 1; }
+    .step-detail { color: var(--muted); font-size: 11.5px; font-family: ui-monospace, monospace;
+      padding: 0 14px 10px; word-break: break-all; }
+    .badge { font-size: 11px; font-weight: 700; text-transform: uppercase;
+      padding: 3px 8px; border-radius: 20px; white-space: nowrap; }
+    .badge.pending { background: #21262d; color: var(--muted); }
+    .badge.running { background: rgba(210,153,34,.15); color: var(--run); }
+    .badge.ok { background: rgba(63,185,80,.15); color: var(--ok); }
+    .badge.error { background: rgba(248,81,73,.15); color: var(--err); }
+    .badge.denied { background: rgba(219,143,47,.18); color: var(--denied); }
+    .badge.skip { background: rgba(139,148,158,.12); color: var(--muted); }
+    pre { margin: 0; padding: 12px 14px; background: #0b0f14; border-top: 1px solid var(--border);
+      font-size: 11.5px; overflow-x: auto; color: #c9d1d9; max-height: 280px; }
+    .err-msg { color: var(--err); padding: 0 14px 12px; font-family: ui-monospace, monospace; font-size: 12px; }
+    .note { background: rgba(47,129,247,.08); border: 1px solid rgba(47,129,247,.3);
+      border-radius: 8px; padding: 11px 14px; margin: 12px 0; font-size: 13px; color: #c9d1d9; }
+    /* prose */
+    .prose h2 { font-size: 18px; margin: 28px 0 6px; }
+    .prose h3 { font-size: 15px; margin: 20px 0 4px; }
+    .prose p { color: #c9d1d9; font-size: 14px; margin: 7px 0; }
+    .prose ul { color: #c9d1d9; font-size: 14px; margin: 7px 0; padding-left: 20px; }
+    .prose li { margin: 4px 0; }
+    .prose code { background: #0b0f14; border: 1px solid var(--border); border-radius: 4px;
+      padding: 1px 5px; font-size: 12px; color: var(--teal); }
+    .prose pre { border: 1px solid var(--border); border-radius: 8px; margin: 10px 0; }
+    .prose pre code { background: none; border: 0; padding: 0; color: #c9d1d9; font-size: 12px; }
+    .prose table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 13px; }
+    .prose th, .prose td { border: 1px solid var(--border); padding: 7px 10px; text-align: left; }
+    .prose th { background: var(--panel); }
+    .tag { font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 2px 7px;
+      border-radius: 20px; vertical-align: middle; margin-left: 6px; }
+    .tag.org-a { background: rgba(47,129,247,.15); color: var(--accent); }
+    .tag.org-b { background: rgba(63,185,80,.12); color: var(--ok); }
+    .tag.agntcy { background: rgba(188,140,255,.15); color: var(--purple); }
+    [hidden] { display: none !important; }
+    .status-bar { font-size: 12px; color: var(--muted); padding: 6px 0; margin-bottom: 4px; min-height: 22px; }
+    /* Right-side step explainer toast */
+    .side-toast {
+      position: fixed; top: 96px; right: 24px; width: 300px; max-width: calc(100vw - 48px);
+      background: var(--panel); border: 1px solid var(--accent); border-radius: 10px;
+      padding: 16px 18px; box-shadow: 0 10px 30px rgba(0,0,0,.45);
+      transform: translateX(340px); opacity: 0; transition: transform .35s ease, opacity .35s ease;
+      z-index: 50; pointer-events: none;
+    }
+    .side-toast.show { transform: translateX(0); opacity: 1; }
+    .side-toast .toast-num {
+      font-size: 11px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: .05em;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .side-toast .toast-progress { color: var(--muted); font-weight: 600; letter-spacing: 0; }
+    .side-toast .toast-title { font-size: 14px; font-weight: 600; margin: 8px 0 8px; color: var(--text); }
+    .side-toast .toast-body { font-size: 13px; color: #c9d1d9; line-height: 1.55; }
+    .side-toast .toast-fact { margin-top: 10px; background: #0b0f14; border: 1px solid var(--border);
+      border-radius: 6px; padding: 8px 10px; max-height: 160px; overflow-y: auto; }
+    .side-toast .toast-fact .fact-row { margin: 4px 0; }
+    .side-toast .toast-fact .fact-label { font-size: 10px; font-weight: 700; text-transform: uppercase;
+      color: var(--teal); letter-spacing: .04em; display: block; margin-bottom: 2px; }
+    .side-toast .toast-fact .fact-value { font-size: 11.5px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      color: #c9d1d9; word-break: break-all; white-space: pre-wrap; }
+    .side-toast .toast-bar { height: 3px; border-radius: 2px; background: #21262d; margin-top: 12px; overflow: hidden; }
+    .side-toast .toast-bar > div { height: 100%; background: var(--accent); width: 0%; transition: width linear; }
+    @media (max-width: 980px) { .side-toast { display: none; } }
+  </style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Cross-Domain AI Agent Remediation &mdash; ID-JAG + AGNTCY Directory &amp; Identity</h1>
+    <div class="sub">Sarah (Org A) &rarr; OpenCode &rarr; <b>ID-JAG</b> &rarr; Keycloak B &rarr; Triage (Org B) &rarr; Sub-Agent &rarr; Gitea PR &nbsp;|&nbsp; <b>AGNTCY</b> dir + identity-node for agent VC registry</div>
+  </div>
+  <nav class="tabs">
+    <button class="tab active" data-tab="demo">Live demo</button>
+    <button class="tab" data-tab="how">How it works</button>
+  </nav>
+</header>
+
+<main>
+  <!-- ========================== LIVE DEMO ========================== -->
+  <section id="tab-demo">
+    <div class="controls">
+      <button id="run" class="action">&#9654; Run (animated)</button>
+      <button id="step" class="secondary">Next step &#9654;</button>
+      <button id="reset" class="secondary" disabled>Reset</button>
+      <div class="field"><label>CVE:</label><input id="cve" value="CVE-2024-12345" /></div>
+      <div class="field"><label>Repo:</label><input id="repo" value="demo-admin/payments-service" /></div>
+      <div class="field"><label>Step delay (ms):</label><input id="stepDelay" type="number" min="200" max="10000" step="100" value="2200" style="width:90px" /></div>
+    </div>
+
+    <div class="config" id="config"><div><i>Loading config…</i></div></div>
+    <div class="status-bar" id="status"></div>
+
+    <!-- ── Sequence diagram ── -->
+    <div class="diagram">
+      <svg viewBox="0 0 1010 726" role="img" aria-label="Cross-domain remediation sequence diagram">
+        <defs>
+          <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="context-stroke" />
+          </marker>
+        </defs>
+
+        <!-- Actor boxes — 8 columns -->
+        <!-- col 1: OpenCode x=62 -->
+        <rect class="seq-actor-box" x="10"  y="10" width="104" height="36" rx="5"/>
+        <text class="seq-actor"     x="62"  y="28">OpenCode</text>
+        <text class="seq-actor-sub" x="62"  y="41">Org A agent</text>
+        <!-- col 2: KC-A x=180 -->
+        <rect class="seq-actor-box" x="128" y="10" width="104" height="36" rx="5"/>
+        <text class="seq-actor"     x="180" y="28">Keycloak A</text>
+        <text class="seq-actor-sub" x="180" y="41">org-a realm</text>
+        <!-- col 3: Directory x=300 -->
+        <rect class="seq-actor-box" x="248" y="10" width="104" height="36" rx="5"/>
+        <text class="seq-actor"     x="300" y="28">AGNTCY Dir</text>
+        <text class="seq-actor-sub" x="300" y="41">dir-apiserver</text>
+        <!-- col 4: Identity Node x=420 -->
+        <rect class="seq-actor-box" x="368" y="10" width="104" height="36" rx="5"/>
+        <text class="seq-actor"     x="420" y="28">Identity Node</text>
+        <text class="seq-actor-sub" x="420" y="41">badge / VC</text>
+        <!-- col 5: ID-JAG x=540 -->
+        <rect class="seq-actor-box" x="488" y="10" width="104" height="36" rx="5"/>
+        <text class="seq-actor"     x="540" y="28">ID-JAG Issuer</text>
+        <text class="seq-actor-sub" x="540" y="41">idjag-issuer</text>
+        <!-- col 6: KC-B x=660 -->
+        <rect class="seq-actor-box" x="608" y="10" width="104" height="36" rx="5"/>
+        <text class="seq-actor"     x="660" y="28">Keycloak B</text>
+        <text class="seq-actor-sub" x="660" y="41">org-b realm</text>
+        <!-- col 7: Triage x=800 -->
+        <rect class="seq-actor-box" x="744" y="10" width="116" height="36" rx="5"/>
+        <text class="seq-actor"     x="802" y="28">Triage + Sub</text>
+        <text class="seq-actor-sub" x="802" y="41">Org B agents</text>
+        <!-- col 8: Gitea x=942 -->
+        <rect class="seq-actor-box" x="890" y="10" width="104" height="36" rx="5"/>
+        <text class="seq-actor"     x="942" y="28">Gitea</text>
+        <text class="seq-actor-sub" x="942" y="41">via gateway</text>
+
+        <!-- Lifelines -->
+        <line class="seq-life" x1="62"  y1="46" x2="62"  y2="718"/>
+        <line class="seq-life" x1="180" y1="46" x2="180" y2="718"/>
+        <line class="seq-life" x1="300" y1="46" x2="300" y2="718"/>
+        <line class="seq-life" x1="420" y1="46" x2="420" y2="718"/>
+        <line class="seq-life" x1="540" y1="46" x2="540" y2="718"/>
+        <line class="seq-life" x1="660" y1="46" x2="660" y2="718"/>
+        <line class="seq-life" x1="802" y1="46" x2="802" y2="718"/>
+        <line class="seq-life" x1="942" y1="46" x2="942" y2="718"/>
+
+        <!-- ── Step 1: sarah-login ── -->
+        <g data-step="sarah-login" class="g">
+          <text class="seq-num"   x="72"  y="64">1</text>
+          <text class="seq-label" x="90"  y="64">OIDC password grant (Sarah)</text>
+          <line class="seq-msg"      x1="62" y1="70" x2="174" y2="70" marker-end="url(#arr)"/>
+          <text class="seq-label" x="172" y="90" text-anchor="end">access token (opencode-agent client)</text>
+          <line class="seq-msg ret"  x1="174" y1="96" x2="68"  y2="96" marker-end="url(#arr)"/>
+        </g>
+
+        <!-- ── Step 2: scan ── -->
+        <g data-step="scan" class="g">
+          <text class="seq-num"   x="72"  y="116">2</text>
+          <text class="seq-label" x="90"  y="116">scan repo → CVE found (HIGH) → decide cross-domain remediation</text>
+          <path class="seq-msg" d="M62,122 Q46,128 46,134 Q46,140 62,140" marker-end="url(#arr)"/>
+        </g>
+
+        <!-- ── Step 3: dir-push ── -->
+        <g data-step="dir-push" class="g">
+          <text class="seq-num"   x="72"  y="158">3</text>
+          <text class="seq-label" x="90"  y="158">push turn record (OASF, schema_version=1.1.0)</text>
+          <line class="seq-msg"      x1="62" y1="164" x2="294" y2="164" marker-end="url(#arr)"/>
+          <text class="seq-label" x="292" y="182" text-anchor="end">CID (content-addressed)</text>
+          <line class="seq-msg ret"  x1="294" y1="188" x2="68"  y2="188" marker-end="url(#arr)"/>
+        </g>
+
+        <!-- ── Step 4: dir-search ── -->
+        <g data-step="dir-search" class="g">
+          <text class="seq-num"   x="72"  y="206">4</text>
+          <text class="seq-label" x="90"  y="206">search: name=triage-agent</text>
+          <line class="seq-msg"      x1="62" y1="212" x2="294" y2="212" marker-end="url(#arr)"/>
+          <text class="seq-label" x="292" y="230" text-anchor="end">agent record + CID</text>
+          <line class="seq-msg ret"  x1="294" y1="236" x2="68"  y2="236" marker-end="url(#arr)"/>
+        </g>
+
+        <!-- ── Step 5: cimd-generate-id (real: Vault-signed proof JWT) ── -->
+        <g data-step="cimd-generate-id" class="g">
+          <text class="seq-num"   x="72"  y="254">5</text>
+          <text class="seq-label" x="90"  y="254">generate id for triage-agent (Vault-signed proof, org-a authority)</text>
+          <line class="seq-msg"      x1="62" y1="260" x2="414" y2="260" marker-end="url(#arr)"/>
+          <text class="seq-label" x="412" y="278" text-anchor="end">id = AGNTCY-triage-agent</text>
+          <line class="seq-msg ret"  x1="414" y1="284" x2="68"  y2="284" marker-end="url(#arr)"/>
+        </g>
+
+        <!-- ── Step 6: cimd-resolve-id ── -->
+        <g data-step="cimd-resolve-id" class="g">
+          <text class="seq-num"   x="72"  y="304">6</text>
+          <text class="seq-label" x="90"  y="304">resolve id → ResolverMetadata (verification method + public key)</text>
+          <line class="seq-msg"      x1="62" y1="310" x2="414" y2="310" marker-end="url(#arr)"/>
+          <text class="seq-label" x="412" y="328" text-anchor="end">ResolverMetadata + JWK</text>
+          <line class="seq-msg ret"  x1="414" y1="334" x2="68"  y2="334" marker-end="url(#arr)"/>
+        </g>
+
+        <!-- ── Step 7: kc-a-exchange (mocked) ── -->
+        <g data-step="kc-a-exchange" class="g">
+          <text class="seq-num"   x="72"  y="354">7</text>
+          <text class="seq-label" x="90"  y="354">RFC 8693 token exchange — subject=Sarah, actor=opencode (mocked)</text>
+          <line class="seq-msg"      x1="62" y1="360" x2="174" y2="360" marker-end="url(#arr)"/>
+        </g>
+
+        <!-- ── Step 8: mint-idjag ── -->
+        <g data-step="mint-idjag" class="g">
+          <text class="seq-num"   x="72"  y="380">8</text>
+          <text class="seq-label" x="92"  y="380">mint ID-JAG  sub=sarah  act_chain=[opencode]  aud=KC-B  scope=triage:create</text>
+          <line class="seq-msg"      x1="62" y1="386" x2="534" y2="386" marker-end="url(#arr)"/>
+          <text class="seq-label" x="532" y="404" text-anchor="end">signed assertion (RS256)</text>
+          <line class="seq-msg ret"  x1="534" y1="410" x2="68"  y2="410" marker-end="url(#arr)"/>
+        </g>
+
+        <!-- ── Step 9: kc-b-exchange ── -->
+        <g data-step="kc-b-exchange" class="g">
+          <text class="seq-num"   x="72"  y="430">9</text>
+          <text class="seq-label" x="92"  y="430">jwt-bearer grant  assertion=…  scope=triage:create</text>
+          <line class="seq-msg"      x1="62" y1="436" x2="654" y2="436" marker-end="url(#arr)"/>
+          <text class="seq-label" x="652" y="454" text-anchor="end">access token (triage:create, act=opencode)</text>
+          <line class="seq-msg ret"  x1="654" y1="460" x2="68"  y2="460" marker-end="url(#arr)"/>
+        </g>
+
+        <!-- ── Step 10: create-ticket (cascade) ── -->
+        <g data-step="create-ticket" class="g">
+          <text class="seq-num"   x="72"  y="480">10</text>
+          <text class="seq-label" x="92"  y="480">POST /api/ticket  Bearer=triage_token  cve=…  intent=create-pr-fix</text>
+          <line class="seq-msg"      x1="62" y1="486" x2="796" y2="486" marker-end="url(#arr)"/>
+          <!-- Triage: OPA + plan + mint sub-badge -->
+          <text class="seq-label" x="804" y="506">OPA ingress ✓  plan  mint sub-badge (gitea:write gitea:pr)</text>
+          <line class="seq-msg"      x1="802" y1="512" x2="534" y2="512" marker-end="url(#arr)"/>
+          <text class="seq-label" x="532" y="530" text-anchor="end">sub-badge (act_chain: sarah→opencode→triage→sub)</text>
+          <line class="seq-msg ret"  x1="534" y1="536" x2="808" y2="536" marker-end="url(#arr)"/>
+          <!-- Sub-agent: KC-B exchange + push file + PR -->
+          <text class="seq-label" x="804" y="556">Sub-Agent: jwt-bearer (sub-badge) → KC-B → gitea:write gitea:pr token</text>
+          <line class="seq-msg"      x1="802" y1="562" x2="654" y2="562" marker-end="url(#arr)"/>
+          <line class="seq-msg ret"  x1="654" y1="572" x2="808" y2="572" marker-end="url(#arr)"/>
+          <!-- push file + open PR -->
+          <text class="seq-label" x="804" y="592">push fix file + open PR</text>
+          <line class="seq-msg"      x1="802" y1="598" x2="936" y2="598" marker-end="url(#arr)"/>
+          <text class="seq-label" x="934" y="616" text-anchor="end">PR created ✓</text>
+          <line class="seq-msg ret"  x1="936" y1="622" x2="808" y2="622" marker-end="url(#arr)"/>
+          <!-- OPA egress -->
+          <text class="seq-label" x="804" y="642">OPA egress: delegation depth ✓ sub-scope ⊆ parent ✓ → ALLOW</text>
+          <path class="seq-msg" d="M802,648 L830,648 L830,658 L804,658" marker-end="url(#arr)"/>
+          <!-- final return -->
+          <text class="seq-label" x="798" y="684" text-anchor="end">PR created ✓ — Sarah → OpenCode → Triage → Sub-Agent</text>
+          <line class="seq-msg ret"  x1="796" y1="690" x2="68"  y2="690" marker-end="url(#arr)"/>
+        </g>
+
+      </svg>
+    </div><!-- /diagram -->
+
+    <div id="steps"></div>
+  </section>
+
+  <!-- ========================== HOW IT WORKS ========================== -->
+  <section id="tab-how" class="prose" hidden>
+
+    <h2>What this demo shows</h2>
+    <p>A cross-domain AI agent remediation scenario where <b>Sarah</b> (an engineer at Org A) asks
+    <b>OpenCode</b> (her Org A AI agent) to fix a CVE found in a repo owned by <b>Org B</b>.
+    Because Org B has its own IdP and access control, OpenCode cannot act directly — it must
+    <i>assert</i> Sarah's delegation cross-domain using the ID-JAG protocol.</p>
+
+    <table>
+      <tr><th>Layer</th><th>Standard / Protocol</th><th>What it does in this demo</th></tr>
+      <tr><td><b>AGNTCY Directory</b></td><td>OASF v1.1.0 records, gRPC</td><td>Stores per-turn and per-agent records, content-addressed by CID — immutable audit trail</td></tr>
+      <tr><td><b>AGNTCY Identity Node (CIMD)</b></td><td>Self-issued proof JWTs, Vault-backed keys</td><td>org-a is a registered local trust authority; OpenCode generates/resolves a real cryptographic id for triage-agent before delegating</td></tr>
+      <tr><td><b>ID-JAG assertion</b></td><td>IETF draft-ietf-oauth-identity-assertion-authz-grant</td><td>OpenCode mints a signed JWT asserting "Sarah authorises me to act as triage-agent in Org B"</td></tr>
+      <tr><td><b>jwt-bearer grant</b></td><td>RFC 7523 / Keycloak 26.7</td><td>Org B's Keycloak validates the ID-JAG assertion and issues a scoped access token</td></tr>
+      <tr><td><b>Act-chain</b></td><td>RFC 8693 <code>act</code> claim</td><td>Nested delegation: Sarah → OpenCode → Triage → Sub-Agent — every token carries the full chain</td></tr>
+      <tr><td><b>Bounded privilege</b></td><td>Parameterized scopes</td><td>Triage mints a <i>narrowed</i> sub-badge for Sub-Agent: <code>gitea:write gitea:pr</code> only — no <code>triage:create</code></td></tr>
+    </table>
+
+    <h2>Step-by-step walkthrough</h2>
+
+    <h3>Phase A — Org A setup (steps 1–2)</h3>
+    <p>Sarah signs in via OIDC password grant using the <code>opencode-agent</code> client in Org A's Keycloak realm.
+    OpenCode then runs a mock CVE scan and decides the fix requires cross-domain action.</p>
+
+    <h3>AGNTCY Directory — per-turn record &amp; agent discovery (steps 3–4)</h3>
+    <p>OpenCode pushes an OASF record to the <b>AGNTCY Directory Node</b> (<code>dir-apiserver:8888</code>, gRPC).
+    The directory returns a <b>CID</b> — a content-addressed, immutable identifier that proves this remediation turn happened.
+    OpenCode then searches the directory by agent name to discover the triage-agent's endpoint.</p>
+    <pre><code># Push turn record (gRPC bidirectional stream)
+stub.Push([Record(data={
+    "name": "opencode-agent", "schema_version": "1.1.0",
+    "annotations": {"cve": "CVE-2024-12345", "repo": "…"}
+})])
+→ RecordRef(cid="baeare…")   # immutable, content-addressed
+
+# Discover triage-agent
+stub.SearchRecords(SearchRecordsRequest(queries=[RecordQuery(
+    type=RECORD_QUERY_TYPE_NAME, value="triage-agent"
+)]))
+→ [SearchRecordsResponse(record=...)]</code></pre>
+
+    <h3>CIMD — real local trust authority (steps 5–6)</h3>
+    <p>identity-node's actual REST API has no "register app / issue badge" concept — it needs a
+    <b>self-issued proof JWT</b> to mint or resolve an id. At startup, <code>identity-node-init</code>
+    registers <b>org-a</b> as a local trust authority: it creates an RSA-2048 key in <b>Vault's transit
+    engine</b> (the private key never leaves Vault), reads back the public key, and self-signs a proof
+    JWT (<code>iss=agntcy:org-a</code>, a <code>sub_jwk</code> claim carrying the public key) via
+    Vault's <code>/transit/sign</code> API to register the issuer. Every subsequent call — including
+    the ones below, from the webapp itself — signs a fresh proof JWT the same way to mint or resolve
+    an id for <b>triage-agent</b> under org-a's authority.</p>
+    <pre><code>POST /v1alpha1/id/generate
+{
+  "issuer": {"organization": "org-a", "commonName": "org-a"},
+  "proof": {"type": "JWT", "proofValue": "&lt;Vault-signed JWT, iss=agntcy:org-a, sub=triage-agent&gt;"}
+}
+→ {"resolverMetadata": {"id": "AGNTCY-triage-agent", "verificationMethod": [...]}}
+
+POST /v1alpha1/id/resolve
+{"id": "AGNTCY-triage-agent"}
+→ {"resolverMetadata": {...}}   # same ResolverMetadata, read back</code></pre>
+
+    <h3>Cross-domain token exchange (steps 7–10)</h3>
+    <p>OpenCode mints an ID-JAG assertion at <code>idjag-issuer</code>:
+    a short-lived RS256 JWT with <code>sub=sarah@org-a.example</code>, <code>act_chain=[opencode-agent]</code>,
+    <code>aud=KC-B org-b realm</code>, and <code>scope=triage:create</code>.
+    Org B's Keycloak validates the assertion against the issuer's JWKS, maps Sarah's identity,
+    and issues a scoped access token.</p>
+    <pre><code>POST /mint   # idjag-issuer
+{
+  "sub": "sarah@org-a.example",
+  "aud": "http://keycloak-b:8080/realms/org-b",
+  "client_id": "triage-agent",
+  "act_chain": ["opencode-agent"],
+  "scope": "openid triage:create"
+}
+→ {"assertion": "eyJ…"}
+
+POST /realms/org-b/protocol/openid-connect/token
+  grant_type = urn:ietf:params:oauth:grant-type:jwt-bearer
+  assertion  = eyJ…
+  client_id  = triage-agent
+  scope      = triage:create
+→ {"access_token": "eyJ…", "scope": "triage:create"}</code></pre>
+
+    <h3>Org B — Triage agent &amp; bounded sub-agent (steps 11+)</h3>
+    <p>OpenCode calls <code>POST /api/ticket</code> on the Triage agent with the scoped token.
+    Triage runs an OPA policy check, plans the fix, then mints a <b>narrowed sub-badge</b> for Sub-Agent:
+    caps ⊆ parent — only <code>gitea:write gitea:pr</code> (no <code>triage:create</code>),
+    with a nested act-chain: <code>Sarah → OpenCode → Triage → Sub-Agent</code>.
+    Sub-Agent redeems the sub-badge at Keycloak B, pushes the fix file to a feature branch,
+    and opens a PR through the Gitea gateway.</p>
+
+    <h2>Architecture</h2>
+    <div class="diagram doc">
+      <svg viewBox="0 0 900 220" role="img" aria-label="Architecture overview">
+        <g>
+          <rect class="seq-actor-box" x="10"  y="10" width="120" height="30" rx="4"/>
+          <text class="seq-actor" x="70" y="30">KC-A (Org A)</text>
+          <rect class="seq-actor-box" x="180" y="10" width="120" height="30" rx="4"/>
+          <text class="seq-actor" x="240" y="30">AGNTCY Dir</text>
+          <rect class="seq-actor-box" x="350" y="10" width="120" height="30" rx="4"/>
+          <text class="seq-actor" x="410" y="30">Identity Node</text>
+          <rect class="seq-actor-box" x="520" y="10" width="120" height="30" rx="4"/>
+          <text class="seq-actor" x="580" y="30">ID-JAG Issuer</text>
+          <rect class="seq-actor-box" x="690" y="10" width="120" height="30" rx="4"/>
+          <text class="seq-actor" x="750" y="30">KC-B (Org B)</text>
+
+          <line class="seq-life" x1="70"  y1="40" x2="70"  y2="210"/>
+          <line class="seq-life" x1="240" y1="40" x2="240" y2="210"/>
+          <line class="seq-life" x1="410" y1="40" x2="410" y2="210"/>
+          <line class="seq-life" x1="580" y1="40" x2="580" y2="210"/>
+          <line class="seq-life" x1="750" y1="40" x2="750" y2="210"/>
+        </g>
+        <g>
+          <text class="seq-num" x="80" y="70">1</text>
+          <text class="seq-label" x="96" y="70">Sarah OIDC login</text>
+          <line class="seq-msg" x1="70" y1="76" x2="174" y2="76" marker-end="url(#arr)"/>
+          <line class="seq-msg ret" x1="174" y1="86" x2="76" y2="86" marker-end="url(#arr)"/>
+        </g>
+        <g>
+          <text class="seq-num" x="80" y="110">2</text>
+          <text class="seq-label" x="96" y="110">push turn + search agent</text>
+          <line class="seq-msg" x1="70" y1="116" x2="234" y2="116" marker-end="url(#arr)"/>
+          <line class="seq-msg ret" x1="234" y1="126" x2="76" y2="126" marker-end="url(#arr)"/>
+        </g>
+        <g>
+          <text class="seq-num" x="80" y="150">3</text>
+          <text class="seq-label" x="96" y="150">generate + resolve id (Vault-signed proof)</text>
+          <line class="seq-msg" x1="70" y1="156" x2="404" y2="156" marker-end="url(#arr)"/>
+          <line class="seq-msg ret" x1="404" y1="166" x2="76" y2="166" marker-end="url(#arr)"/>
+        </g>
+        <g>
+          <text class="seq-num" x="80" y="190">4</text>
+          <text class="seq-label" x="96" y="190">mint ID-JAG → KC-B exchange → triage token</text>
+          <line class="seq-msg" x1="70" y1="196" x2="574" y2="196" marker-end="url(#arr)"/>
+          <line class="seq-msg" x1="580" y1="196" x2="744" y2="196" marker-end="url(#arr)"/>
+          <line class="seq-msg ret" x1="744" y1="206" x2="76" y2="206" marker-end="url(#arr)"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="note"><b>Keycloak 26.7 feature flags required:</b>
+    <code>--features=identity-assertion-jwt,token-exchange-delegation,parameterized-scopes</code><br/>
+    These enable the ID-JAG receiver (<code>jwt-bearer</code> grant), RFC 8693 delegation scope, and parameterized scopes for narrow tokens.</div>
+
+  </section>
+</main>
+
+<div id="sideToast" class="side-toast" aria-live="polite">
+  <div class="toast-num"><span id="toastNum"></span><span class="toast-progress" id="toastProgress"></span></div>
+  <div class="toast-title" id="toastTitle"></div>
+  <div class="toast-body" id="toastBody"></div>
+  <div class="toast-fact" id="toastFact" hidden></div>
+  <div class="toast-bar"><div id="toastBar"></div></div>
+</div>
+
+<script>
+  // ── Tab switching ──────────────────────────────────────────────────────────
+  document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById('tab-demo').hidden = t.dataset.tab !== 'demo';
+    document.getElementById('tab-how').hidden  = t.dataset.tab !== 'how';
+  }));
+
+  // ── Config ─────────────────────────────────────────────────────────────────
+  async function loadConfig() {
+    try {
+      const c = await (await fetch('/api/config')).json();
+      document.getElementById('config').innerHTML =
+        `<div><b>KC-A:</b> ${esc(c.kc_a_url)} / ${esc(c.kc_a_realm)}</div>
+         <div><b>KC-B:</b> ${esc(c.kc_b_url)} / ${esc(c.kc_b_realm)}</div>
+         <div><b>OpenCode client:</b> ${esc(c.opencode_client_id)}</div>
+         <div><b>Triage client:</b> ${esc(c.triage_client_id)}</div>
+         <div><b>User:</b> ${esc(c.sarah_user)} (${esc(c.sarah_email)})</div>
+         <div><b>ID-JAG issuer:</b> ${esc(c.idjag_issuer_url)}</div>
+         <div><b>Identity node:</b> ${esc(c.identity_node_url)}</div>
+         <div><b>Directory:</b> ${esc(c.dir_apiserver_url)}</div>
+         <div><b>Trust authority:</b> ${esc(c.org_a_common_name)} (Vault key: ${esc(c.vault_key_name)})</div>
+         <div><b>Scan repo:</b> ${esc(c.scan_repo)}</div>`;
+    } catch(e) {
+      document.getElementById('config').innerHTML = '<div style="color:var(--err)">Could not reach /api/config — is the webapp running?</div>';
+    }
+  }
+
+  // ── Step explainer (right-side toast) ─────────────────────────────────────
+  const STEP_EXPLAIN = {
+    'sarah-login': "Sarah authenticates directly with Org A's Keycloak. This is the only step with a human in the loop — everything downstream is machine-to-machine delegation on her behalf.",
+    'scan': "OpenCode scans the repo and finds a HIGH-severity CVE. Mocked step — no real vulnerability scanner runs in this demo.",
+    'dir-push': "OpenCode records this remediation turn in the AGNTCY Directory. The record is content-addressed (a CID) — an immutable, tamper-evident audit entry.",
+    'dir-search': "OpenCode looks up triage-agent in the Directory by name, discovering it before delegating any authority.",
+    'cimd-generate-id': "OpenCode asks identity-node to mint a cryptographic id for triage-agent. The request is proven with a JWT self-signed by a key held in Vault — the private key never leaves Vault.",
+    'cimd-resolve-id': "OpenCode resolves the id back to its ResolverMetadata, confirming the identity and public key are correctly registered before trusting triage-agent.",
+    'kc-a-exchange': "(Mocked) OpenCode would exchange Sarah's token for its own actor token via RFC 8693, formally recording 'OpenCode acting on Sarah's behalf' in the token.",
+    'mint-idjag': "OpenCode mints a signed ID-JAG assertion — a portable, cryptographically-signed statement that Sarah authorizes OpenCode to act as triage-agent in Org B, scoped to only triage:create.",
+    'kc-b-exchange': "Org B's Keycloak verifies the assertion's signature and issues a scoped local access token. This is where the cross-domain trust boundary is actually crossed.",
+    'create-ticket': "OpenCode hands the remediation ticket to Triage using the scoped token. That token can't do anything beyond triage:create.",
+    'opa-ingress': "(Mocked) Org B's policy layer would check the badge signature, delegation chain, and scope before letting Triage process the ticket.",
+    'plan': "Triage plans the fix and decides the actual code change should be delegated to a bounded sub-agent, not done itself.",
+    'mint-sub-badge': "Triage mints a narrower sub-badge for Sub-Agent — scoped only to gitea:write and gitea:pr, deliberately excluding triage:create. The delegation chain now has 3 links: Sarah → OpenCode → Triage → Sub-Agent.",
+    'spawn-sub-agent': "Triage spawns Sub-Agent with the narrowed badge. Even though Triage launched it, Sub-Agent can't exceed what that badge grants.",
+    'idjag-gitea': "The access token Sub-Agent already holds carries exactly gitea:write and gitea:pr — no extra ID-JAG hop is needed to reach Gitea.",
+    'push-file': "Sub-Agent pushes the fix to a fresh, randomly-named feature branch. The gateway checks for gitea:write before allowing this.",
+    'open-pr': "Sub-Agent opens a pull request. The gateway checks gitea:pr — a separate scope from gitea:write, so a push-only token couldn't do this step.",
+    'opa-egress': "(Mocked) Org B's egress policy would verify delegation depth and that Sub-Agent's scope is a subset of Triage's — defense in depth beyond the token alone.",
+    'pr-created': "The PR is live. Every hop — Sarah, OpenCode, Triage, Sub-Agent — is recorded in the token's act chain: a full causal audit trail for one code change.",
+  };
+
+  const toastEl = document.getElementById('sideToast');
+  const toastNum = document.getElementById('toastNum');
+  const toastProgress = document.getElementById('toastProgress');
+  const toastTitle = document.getElementById('toastTitle');
+  const toastBody = document.getElementById('toastBody');
+  const toastFact = document.getElementById('toastFact');
+  const toastBar = document.getElementById('toastBar');
+  let toastBarTimer = null;
+
+  // Pull out the "show me the actual content" fields for a step — token
+  // previews, decoded JWT claims, the OASF record's CID, CIMD ids, etc.
+  // Different steps stash these in different shapes (some under `result`,
+  // some at the top level of the step object), so check both.
+  function extractFacts(step) {
+    const r = step.result || {};
+    const facts = [];
+    const tokenPreview = r.token_preview || step.token_preview;
+    if (tokenPreview) facts.push(['Token', tokenPreview]);
+    const assertionPreview = r.assertion_preview || step.assertion_preview;
+    if (assertionPreview) facts.push(['ID-JAG assertion', assertionPreview]);
+    const claims = r.claims || step.claims;
+    if (claims) facts.push(['Decoded JWT claims', JSON.stringify(claims, null, 2)]);
+    if (r.cid) facts.push(['OASF record CID', r.cid]);
+    if (r.schema_version) facts.push(['OASF schema_version', r.schema_version]);
+    if (r.id) facts.push(['CIMD id', r.id]);
+    if (r.verification_method_id) facts.push(['Verification method', r.verification_method_id]);
+    if (r.record_name) facts.push(['Directory record', r.record_name]);
+    if (r.pull_request && r.pull_request.html_url) facts.push(['Pull request', r.pull_request.html_url]);
+    if (r.pushed && r.pushed.branch) facts.push(['Branch', r.pushed.branch]);
+    return facts;
+  }
+
+  function showToast(step, index, total, durationMs) {
+    toastNum.textContent = `Step ${index + 1} of ${total}`;
+    toastProgress.textContent = (step.status || 'ok').toUpperCase();
+    toastTitle.textContent = step.title || step.id;
+    toastBody.textContent = STEP_EXPLAIN[step.id] || 'See the step card below for the raw request/response.';
+
+    const facts = extractFacts(step);
+    if (facts.length) {
+      toastFact.innerHTML = facts.map(([label, value]) =>
+        `<div class="fact-row"><span class="fact-label">${esc(label)}</span><span class="fact-value">${esc(value)}</span></div>`
+      ).join('');
+      toastFact.hidden = false;
+    } else {
+      toastFact.hidden = true;
+    }
+
+    toastEl.classList.add('show');
+    // Progress bar fills over the dwell time so the reader can see how long they have.
+    clearTimeout(toastBarTimer);
+    toastBar.style.transition = 'none';
+    toastBar.style.width = '0%';
+    // Force reflow so the next transition actually animates from 0%.
+    void toastBar.offsetWidth;
+    if (durationMs) {
+      toastBar.style.transition = `width ${durationMs}ms linear`;
+      toastBar.style.width = '100%';
+    }
+  }
+
+  function hideToast() {
+    toastEl.classList.remove('show');
+    clearTimeout(toastBarTimer);
+  }
+
+  // ── State ──────────────────────────────────────────────────────────────────
+  // SVG groups that map to step IDs for diagram highlighting — 10 groups,
+  // matching the real backend step order (cimd-generate-id/resolve-id are
+  // real Vault-backed identity-node calls, not mocks).
+  const SVG_STEPS = [
+    'sarah-login', 'scan', 'dir-push', 'dir-search',
+    'cimd-generate-id', 'cimd-resolve-id',
+    'kc-a-exchange', 'mint-idjag', 'kc-b-exchange', 'create-ticket'
+  ];
+
+  let allSteps  = [];   // full list from /api/run
+  let cursor    = 0;    // how many steps have been revealed
+  let busy      = false;
+  const animated = new Set();
+
+  const stepsEl  = document.getElementById('steps');
+  const statusEl = document.getElementById('status');
+  const runBtn   = document.getElementById('run');
+  const stepBtn  = document.getElementById('step');
+  const resetBtn = document.getElementById('reset');
+
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+  function esc(s) {
+    return String(s ?? '').replace(/[&<>"']/g, c =>
+      ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  // ── Diagram ────────────────────────────────────────────────────────────────
+  function updateDiagram() {
+    // Build a map: step-id → last status seen
+    const statusMap = {};
+    for (const s of allSteps.slice(0, cursor)) {
+      statusMap[s.id] = s.status || 'ok';
+    }
+    SVG_STEPS.forEach(id => {
+      const g = document.querySelector(`[data-step="${id}"]`);
+      if (!g) return;
+      const st = statusMap[id] || 'pending';
+      g.setAttribute('class', 'g ' + st);
+    });
+  }
+
+  // ── Step cards ─────────────────────────────────────────────────────────────
+  function render() {
+    stepsEl.innerHTML = allSteps.slice(0, cursor).map(s => {
+      const st = s.status || 'ok';
+      const reveal = animated.has(s.id + s.title) ? '' : ' reveal';
+      animated.add(s.id + s.title);
+      const detail = s.detail ? `<div class="step-detail">${esc(s.detail)}</div>` : '';
+      let body = '';
+      if (st === 'error') body = `<div class="err-msg">${esc(s.error || 'error')}</div>`;
+      else if (s.result) body = `<pre>${esc(JSON.stringify(s.result, null, 2))}</pre>`;
+      return `<div class="step${reveal}">
+        <div class="step-head">
+          <span class="step-title">${esc(s.title || s.id)}</span>
+          <span class="badge ${st}">${st}</span>
+        </div>${detail}${body}</div>`;
+    }).join('');
+    updateDiagram();
+  }
+
+  function updateButtons() {
+    runBtn.disabled  = busy;
+    stepBtn.disabled = busy || (allSteps.length > 0 && cursor >= allSteps.length);
+    resetBtn.disabled = busy || (cursor === 0 && allSteps.length === 0);
+    stepDelayInput.disabled = busy;
+    if (allSteps.length === 0) stepBtn.textContent = 'Next step ▶';
+    else if (cursor < allSteps.length) stepBtn.textContent = `Next (${cursor+1}/${allSteps.length}) ▶`;
+    else stepBtn.textContent = 'Done ✓';
+  }
+
+  function setStatus(msg) { statusEl.textContent = msg; }
+
+  // ── Fetch all steps ────────────────────────────────────────────────────────
+  async function fetchAllSteps() {
+    const cve  = document.getElementById('cve').value.trim()  || 'CVE-2024-12345';
+    const repo = document.getElementById('repo').value.trim() || 'demo-admin/payments-service';
+    const res  = await fetch('/api/run', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({cve, repo})
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return res.json();
+  }
+
+  // Dwell time per step during animated playback — configurable via the
+  // "Step delay" field in the controls bar (default 2.2s/step: enough to
+  // read the right-side explainer toast; a literal "+5s total" would only
+  // allow ~750ms/step, too fast to read a sentence).
+  const stepDelayInput = document.getElementById('stepDelay');
+  function currentStepDelay() {
+    const v = parseInt(stepDelayInput.value, 10);
+    return Number.isFinite(v) && v > 0 ? v : 2200;
+  }
+
+  // ── Run (animated) ─────────────────────────────────────────────────────────
+  runBtn.addEventListener('click', async () => {
+    if (busy) return;
+    resetState();
+    busy = true; updateButtons();
+    setStatus('Running full sequence…');
+    try {
+      const data = await fetchAllSteps();
+      allSteps = data.steps || [];
+      const delay = currentStepDelay();
+      for (let i = 0; i < allSteps.length; i++) {
+        cursor = i + 1;
+        setStatus(`Step ${cursor}/${allSteps.length}: ${allSteps[i].id}`);
+        render();
+        showToast(allSteps[i], i, allSteps.length, delay);
+        if (i < allSteps.length - 1) await sleep(delay);
+      }
+      const ok = data.ok;
+      setStatus(ok ? `✓ All ${allSteps.length} steps complete.` : `⚠ Sequence finished with errors.`);
+    } catch(e) {
+      setStatus(`Error: ${e.message}`);
+    }
+    busy = false; updateButtons();
+  });
+
+  // ── Next step (step-through) ───────────────────────────────────────────────
+  stepBtn.addEventListener('click', async () => {
+    if (busy) return;
+    if (allSteps.length === 0) {
+      // First click: fetch everything, reveal first step
+      busy = true; updateButtons();
+      setStatus('Fetching all steps…');
+      try {
+        const data = await fetchAllSteps();
+        allSteps = data.steps || [];
+        cursor = 1;
+        setStatus(`Step 1/${allSteps.length}: ${allSteps[0]?.id || ''}`);
+        render();
+        if (allSteps[0]) showToast(allSteps[0], 0, allSteps.length);
+      } catch(e) {
+        setStatus(`Error: ${e.message}`);
+      }
+      busy = false; updateButtons();
+      return;
+    }
+    if (cursor >= allSteps.length) return;
+    cursor++;
+    setStatus(`Step ${cursor}/${allSteps.length}: ${allSteps[cursor-1]?.id || ''}`);
+    render();
+    showToast(allSteps[cursor - 1], cursor - 1, allSteps.length);
+    updateButtons();
+  });
+
+  // ── Reset ──────────────────────────────────────────────────────────────────
+  function resetState() {
+    allSteps = []; cursor = 0; animated.clear();
+    stepsEl.innerHTML = '';
+    setStatus('');
+    hideToast();
+    SVG_STEPS.forEach(id => {
+      const g = document.querySelector(`[data-step="${id}"]`);
+      if (g) g.setAttribute('class', 'g');
+    });
+  }
+
+  resetBtn.addEventListener('click', () => {
+    if (busy) return;
+    resetState();
+    updateButtons();
+  });
+
+  // ── Init ───────────────────────────────────────────────────────────────────
+  loadConfig();
+  updateButtons();
+</script>
+</body>
+</html>

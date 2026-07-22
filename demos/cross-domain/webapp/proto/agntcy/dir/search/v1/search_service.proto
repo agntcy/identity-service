@@ -1,0 +1,55 @@
+syntax = "proto3";
+package agntcy.dir.search.v1;
+option go_package = "github.com/agntcy/dir/api/search/v1";
+
+import "agntcy/dir/core/v1/record.proto";
+
+enum RecordQueryType {
+  RECORD_QUERY_TYPE_UNSPECIFIED = 0;
+  RECORD_QUERY_TYPE_NAME = 1;
+  RECORD_QUERY_TYPE_VERSION = 2;
+  RECORD_QUERY_TYPE_SKILL_ID = 3;
+  RECORD_QUERY_TYPE_SKILL_NAME = 4;
+  RECORD_QUERY_TYPE_LOCATOR = 5;
+  RECORD_QUERY_TYPE_MODULE_NAME = 6;
+  RECORD_QUERY_TYPE_DOMAIN_ID = 7;
+  RECORD_QUERY_TYPE_DOMAIN_NAME = 8;
+  RECORD_QUERY_TYPE_CREATED_AT = 9;
+  RECORD_QUERY_TYPE_AUTHOR = 10;
+  RECORD_QUERY_TYPE_SCHEMA_VERSION = 11;
+  RECORD_QUERY_TYPE_MODULE_ID = 12;
+  RECORD_QUERY_TYPE_VERIFIED = 13;
+  RECORD_QUERY_TYPE_TRUSTED = 14;
+  RECORD_QUERY_TYPE_ANNOTATION = 15;
+  RECORD_QUERY_TYPE_SCAN_SEVERITY = 17;
+  RECORD_QUERY_TYPE_SCAN_SAFE = 18;
+  RECORD_QUERY_TYPE_DESCRIPTION = 19;
+}
+
+enum SortMode {
+  SORT_MODE_UNSPECIFIED = 0;
+  SORT_MODE_RECENCY = 1;
+  SORT_MODE_POPULARITY = 2;
+  SORT_MODE_PROVIDER_COUNT = 3;
+  SORT_MODE_RELEVANCE = 4;
+}
+
+message RecordQuery {
+  RecordQueryType type = 1;
+  string value = 2;
+}
+
+message SearchRecordsRequest {
+  repeated RecordQuery queries = 1;
+  optional uint32 limit = 2;
+  optional uint32 offset = 3;
+  SortMode sort_mode = 4;
+}
+
+message SearchRecordsResponse {
+  agntcy.dir.core.v1.Record record = 1;
+}
+
+service SearchService {
+  rpc SearchRecords(SearchRecordsRequest) returns (stream SearchRecordsResponse);
+}

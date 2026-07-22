@@ -138,15 +138,16 @@
       <div class="config" id="config"></div>
 
       <div class="scope-pick">
-        <span><b>Requested scope:</b></span>
-        <label><input type="radio" name="scope" value="openid gitea:read" checked> Read-only <code>gitea:read</code></label>
-        <label><input type="radio" name="scope" value="openid gitea:read gitea:write"> Read + write <code>gitea:read gitea:write</code></label>
+        <span><b>Agent scope:</b></span>
+        <label><input type="radio" name="scope" value="openid gitea:read" checked> Read-only agent <code>gitea:read</code></label>
+        <label><input type="radio" name="scope" value="openid gitea:read gitea:write"> Read+write agent <code>gitea:read gitea:write</code></label>
+        <label><input type="radio" name="scope" value="openid gitea:read gitea:write gitea:pr"> Full agent <code>gitea:read gitea:write gitea:pr</code></label>
       </div>
 
-      <div class="flow">The Requesting App gets access to the Receiving App on the user's behalf, then the Receiving App calls Gitea with the exchanged token. The gateway enforces the requested scope: with <b>read-only</b>, listing repos succeeds but creating one is <b>denied (403)</b> — narrow scoping in action. <b>Run (animated)</b> plays all hops with a pause between each; <b>Next step</b> runs them one at a time.</div>
+      <div class="flow">An AI agent gets a narrowly-scoped token (via ID-JAG) and acts on the user's behalf against Gitea. Steps 4–7 show the two enforcement layers: <b>scope</b> (the token must carry the right claim) and <b>policy</b> (the gateway deny-list blocks the protected repo regardless of scope). Step 8 is always <b>denied</b> — even with all scopes granted. <b>Run (animated)</b> plays all 8 hops with a pause between each; <b>Next step</b> runs them one at a time.</div>
 
       <div class="diagram">
-        <svg viewBox="0 0 1000 480" role="img" aria-label="ID-JAG cross-app access with Gitea narrow scoping sequence diagram">
+        <svg viewBox="0 0 1000 710" role="img" aria-label="ID-JAG cross-app access with agent workflow and deny-list sequence diagram">
           <defs>
             <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
               <path d="M0,0 L10,5 L0,10 z" fill="context-stroke" />
@@ -155,17 +156,17 @@
 
           <g>
             <rect class="seq-actor-box" x="45"  y="10" width="150" height="30" rx="5" />
-            <text class="seq-actor" x="120" y="30" text-anchor="middle">Requesting App</text>
+            <text class="seq-actor" x="120" y="30" text-anchor="middle">AI Agent</text>
             <rect class="seq-actor-box" x="305" y="10" width="150" height="30" rx="5" />
             <text class="seq-actor" x="380" y="30" text-anchor="middle">ID-JAG Issuer</text>
             <rect class="seq-actor-box" x="560" y="10" width="170" height="30" rx="5" />
             <text class="seq-actor" x="645" y="30" text-anchor="middle">Keycloak / Receiving</text>
-            <rect class="seq-actor-box" x="830" y="10" width="150" height="30" rx="5" />
-            <text class="seq-actor" x="905" y="30" text-anchor="middle">Gitea (gateway)</text>
-            <line class="seq-life" x1="120" y1="40" x2="120" y2="470" />
-            <line class="seq-life" x1="380" y1="40" x2="380" y2="470" />
-            <line class="seq-life" x1="645" y1="40" x2="645" y2="470" />
-            <line class="seq-life" x1="905" y1="40" x2="905" y2="470" />
+            <rect class="seq-actor-box" x="820" y="10" width="160" height="30" rx="5" />
+            <text class="seq-actor" x="900" y="30" text-anchor="middle">Gitea (gateway)</text>
+            <line class="seq-life" x1="120" y1="40" x2="120" y2="700" />
+            <line class="seq-life" x1="380" y1="40" x2="380" y2="700" />
+            <line class="seq-life" x1="645" y1="40" x2="645" y2="700" />
+            <line class="seq-life" x1="900" y1="40" x2="900" y2="700" />
           </g>
 
           <g data-step="login" class="g">
@@ -178,7 +179,7 @@
 
           <g data-step="mint" class="g">
             <text class="seq-num"   x="130" y="162">2</text>
-            <text class="seq-label" x="148" y="162">Mint ID-JAG (sub = user, act = Requesting App, scope)</text>
+            <text class="seq-label" x="148" y="162">Mint ID-JAG (sub=user, act=agent, scope)</text>
             <line class="seq-msg"      x1="120" y1="170" x2="380" y2="170" marker-end="url(#arrow)" />
             <text class="seq-label" x="372" y="198" text-anchor="end">signed assertion</text>
             <line class="seq-msg ret"  x1="380" y1="206" x2="120" y2="206" marker-end="url(#arrow)" />
@@ -194,18 +195,42 @@
 
           <g data-step="gitea-list" class="g">
             <text class="seq-num"   x="130" y="322">4</text>
-            <text class="seq-label" x="148" y="322">GET repos — Bearer token (needs gitea:read)</text>
-            <line class="seq-msg"      x1="120" y1="330" x2="905" y2="330" marker-end="url(#arrow)" />
-            <text class="seq-label" x="897" y="358" text-anchor="end">repo list</text>
-            <line class="seq-msg ret"  x1="905" y1="366" x2="120" y2="366" marker-end="url(#arrow)" />
+            <text class="seq-label" x="148" y="322">Agent lists repos — scope check: gitea:read</text>
+            <line class="seq-msg"      x1="120" y1="330" x2="900" y2="330" marker-end="url(#arrow)" />
+            <text class="seq-label" x="892" y="358" text-anchor="end">repo list — or 403 denied</text>
+            <line class="seq-msg ret"  x1="900" y1="366" x2="120" y2="366" marker-end="url(#arrow)" />
           </g>
 
           <g data-step="gitea-create" class="g">
             <text class="seq-num"   x="130" y="402">5</text>
-            <text class="seq-label" x="148" y="402">POST repo — Bearer token (needs gitea:write)</text>
-            <line class="seq-msg"      x1="120" y1="410" x2="905" y2="410" marker-end="url(#arrow)" />
-            <text class="seq-label" x="897" y="438" text-anchor="end">created — or 403 denied if read-only</text>
-            <line class="seq-msg ret"  x1="905" y1="446" x2="120" y2="446" marker-end="url(#arrow)" />
+            <text class="seq-label" x="148" y="402">Agent creates repo — scope check: gitea:write</text>
+            <line class="seq-msg"      x1="120" y1="410" x2="900" y2="410" marker-end="url(#arrow)" />
+            <text class="seq-label" x="892" y="438" text-anchor="end">created — or 403 denied</text>
+            <line class="seq-msg ret"  x1="900" y1="446" x2="120" y2="446" marker-end="url(#arrow)" />
+          </g>
+
+          <g data-step="agent-push" class="g">
+            <text class="seq-num"   x="130" y="482">6</text>
+            <text class="seq-label" x="148" y="482">Agent pushes AGENTS.md to feature branch — scope check: gitea:write</text>
+            <line class="seq-msg"      x1="120" y1="490" x2="900" y2="490" marker-end="url(#arrow)" />
+            <text class="seq-label" x="892" y="518" text-anchor="end">branch + file created — or 403 denied</text>
+            <line class="seq-msg ret"  x1="900" y1="526" x2="120" y2="526" marker-end="url(#arrow)" />
+          </g>
+
+          <g data-step="agent-pr" class="g">
+            <text class="seq-num"   x="130" y="562">7</text>
+            <text class="seq-label" x="148" y="562">Agent opens PR — scope check: gitea:pr</text>
+            <line class="seq-msg"      x1="120" y1="570" x2="900" y2="570" marker-end="url(#arrow)" />
+            <text class="seq-label" x="892" y="598" text-anchor="end">PR created — or 403 denied (scope)</text>
+            <line class="seq-msg ret"  x1="900" y1="606" x2="120" y2="606" marker-end="url(#arrow)" />
+          </g>
+
+          <g data-step="agent-pr-deny" class="g">
+            <text class="seq-num"   x="130" y="642">8</text>
+            <text class="seq-label" x="148" y="642">Agent PR to demo-protected — policy deny (deny-list beats scope)</text>
+            <line class="seq-msg"      x1="120" y1="650" x2="900" y2="650" marker-end="url(#arrow)" />
+            <text class="seq-label" x="892" y="678" text-anchor="end">403 policy_deny — always</text>
+            <line class="seq-msg ret"  x1="900" y1="686" x2="120" y2="686" marker-end="url(#arrow)" />
           </g>
         </svg>
       </div>
@@ -530,18 +555,24 @@
     // Delay (ms) between hops in animated mode — enough to follow along.
     const STEP_DELAY = 900;
 
-    const ORDER = ['login', 'mint', 'exchange', 'gitea-list', 'gitea-create'];
+    const ORDER = ['login', 'mint', 'exchange', 'gitea-list', 'gitea-create', 'agent-push', 'agent-pr', 'agent-pr-deny'];
     const TITLES = {
-      login:         '1. Requesting App — user sign-in (OIDC password grant)',
-      mint:          '2. Mint ID-JAG assertion (for the Receiving App)',
-      exchange:      '3. Receiving App — exchange (Keycloak jwt-bearer)',
-      'gitea-list':  '4. Receiving App reads Gitea (needs gitea:read)',
-      'gitea-create':'5. Receiving App writes to Gitea (needs gitea:write)',
+      login:            '1. AI Agent — user sign-in (OIDC password grant)',
+      mint:             '2. Mint ID-JAG assertion (sub=user, act=agent, scope)',
+      exchange:         '3. Receiving App — exchange (Keycloak jwt-bearer)',
+      'gitea-list':     '4. Agent lists repos (needs gitea:read)',
+      'gitea-create':   '5. Agent creates repo (needs gitea:write)',
+      'agent-push':     '6. Agent pushes AGENTS.md to feature branch (needs gitea:write)',
+      'agent-pr':       '7. Agent opens PR (needs gitea:pr)',
+      'agent-pr-deny':  '8. Agent PR to protected repo — policy deny (deny-list beats scope)',
     };
 
     let shown = {};          // id -> step object (status/decoded/error/result/...)
     let assertion = null;    // carried from the mint hop into the exchange hop
     let accessToken = null;  // carried from the exchange hop into the gitea hops
+    let repoFullName = '';   // "owner/repo" from gitea-create, used by agent-push/agent-pr
+    let branchName = '';     // feature branch from agent-push, used by agent-pr
+    let giteaAdminUser = ''; // populated from /api/config, used by agent-pr-deny
     let cursor = 0;          // index of the next hop to run
     let busy = false;
     const animated = new Set();
@@ -602,9 +633,19 @@
     async function callStep(id) {
       const opts = { method: 'POST', headers: { 'Content-Type': 'application/json' } };
       const scope = selectedScope();
-      if (id === 'mint') opts.body = JSON.stringify({ scope });
-      else if (id === 'exchange') opts.body = JSON.stringify({ assertion: assertion || '', scope });
-      else if (id === 'gitea-list' || id === 'gitea-create') opts.body = JSON.stringify({ access_token: accessToken || '' });
+      if (id === 'mint') {
+        opts.body = JSON.stringify({ scope });
+      } else if (id === 'exchange') {
+        opts.body = JSON.stringify({ assertion: assertion || '', scope });
+      } else if (id === 'gitea-list' || id === 'gitea-create') {
+        opts.body = JSON.stringify({ access_token: accessToken || '' });
+      } else if (id === 'agent-push') {
+        opts.body = JSON.stringify({ access_token: accessToken || '', repo_full_name: repoFullName || '' });
+      } else if (id === 'agent-pr') {
+        opts.body = JSON.stringify({ access_token: accessToken || '', repo_full_name: repoFullName || '', branch_name: branchName || 'agent/feature-1' });
+      } else if (id === 'agent-pr-deny') {
+        opts.body = JSON.stringify({ access_token: accessToken || '', repo_owner: giteaAdminUser || '' });
+      }
       const res = await fetch('/api/step/' + id, opts);
       return res.json();
     }
@@ -619,6 +660,8 @@
         shown[id] = data.step;
         if (id === 'mint' && data.ok) assertion = data.step.token;
         if (id === 'exchange' && data.ok) accessToken = data.step.token;
+        if (id === 'gitea-create' && data.ok) repoFullName = data.step.result?.created?.full_name || '';
+        if (id === 'agent-push' && data.ok) branchName = data.step.result?.pushed?.branch || '';
         render();
         return data.ok;
       } catch (e) {
@@ -633,6 +676,8 @@
       initShown();
       assertion = null;
       accessToken = null;
+      repoFullName = '';
+      branchName = '';
       cursor = 0;
       render();
       updateButtons();
@@ -668,10 +713,11 @@
     async function loadConfig() {
       try {
         const c = await (await fetch('/api/config')).json();
+        giteaAdminUser = c.gitea_admin_user || 'demo-admin';
         document.getElementById('config').innerHTML =
           `<div><b>Keycloak:</b> ${escapeHtml(c.keycloak)}</div>
            <div><b>Realm:</b> ${escapeHtml(c.realm)}</div>
-           <div><b>Requesting App:</b> ${escapeHtml(c.user_client)}</div>
+           <div><b>AI Agent (requesting):</b> ${escapeHtml(c.user_client)}</div>
            <div><b>Receiving App:</b> ${escapeHtml(c.backend_client)}</div>
            <div><b>Demo user:</b> ${escapeHtml(c.demo_user)}</div>
            <div><b>Subject:</b> ${escapeHtml(c.subject)}</div>

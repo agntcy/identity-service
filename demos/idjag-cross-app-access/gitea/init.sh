@@ -56,5 +56,6 @@ seed_repo() {
 
 seed_repo "payments-service" "Payments microservice configuration (demo)"
 seed_repo "audit-logs"       "Read-only audit log archive (demo)"
+seed_repo "demo-protected"   "Protected repository — deny-listed; agent PR access is blocked by gateway policy regardless of token scope (demo)"
 
 echo "[gitea-init] done."
