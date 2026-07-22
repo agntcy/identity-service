@@ -1,3 +1,5 @@
+# Cross-Domain Agent Remediation — Sequence
+
 ```mermaid
 ---
 title: Cross-Domain Agent Remediation — Sequence
