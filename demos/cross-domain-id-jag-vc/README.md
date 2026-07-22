@@ -39,11 +39,49 @@ Mocked steps are intentionally out of scope for this demo — see
 
 ## Architecture
 
-```
-Sarah → OpenCode (Org A) ──ID-JAG──> Keycloak B (Org B) → Triage → Sub-Agent → Gitea PR
-              │                                                        ▲
-              ├─→ AGNTCY Directory (per-turn OASF records, gRPC)       │
-              └─→ AGNTCY Identity Node (CIMD, Vault-backed trust) ─────┘
+```mermaid
+flowchart TB
+    Sarah(("Sarah"))
+
+    subgraph OrgA[" Org A "]
+        KCA["Keycloak A\norg-a realm"]
+        OC["OpenCode Agent"]
+    end
+
+    subgraph AGNTCY[" AGNTCY shared infrastructure "]
+        Dir["Directory Node\ngRPC, OASF records"]
+        IdNode["Identity Node\nCIMD"]
+        Vault[("Vault\ntransit engine")]
+        IDJAG["ID-JAG Issuer"]
+    end
+
+    subgraph OrgB[" Org B "]
+        KCB["Keycloak B\norg-b realm"]
+        Triage["Triage Agent"]
+        Sub["Sub-Agent\nbounded privilege"]
+        GW["Gitea Gateway\nscope + deny-list"]
+        Gitea[("Gitea")]
+    end
+
+    Sarah -->|"OIDC login"| OC
+    OC -->|"push / search records"| Dir
+    OC -->|"generate / resolve id"| IdNode
+    IdNode -.->|"proof JWT signing"| Vault
+    OC -->|"mint assertion"| IDJAG
+    OC -->|"jwt-bearer exchange"| KCB
+    OC -->|"POST /api/ticket"| Triage
+    Triage -->|"mint narrowed sub-badge"| IDJAG
+    Triage -->|"spawn"| Sub
+    Sub -->|"jwt-bearer exchange"| KCB
+    Sub -->|"push file + open PR"| GW
+    GW -->|"admin API"| Gitea
+
+    classDef orgA fill:#dbe9fe,stroke:#1f6feb,color:#0d1117;
+    classDef orgB fill:#dafbe1,stroke:#1a7f37,color:#0d1117;
+    classDef shared fill:#f1e4ff,stroke:#8250df,color:#0d1117;
+    class KCA,OC orgA;
+    class KCB,Triage,Sub,GW,Gitea orgB;
+    class Dir,IdNode,Vault,IDJAG shared;
 ```
 
 18 services on one Docker network (`cd-net`):
@@ -70,6 +108,79 @@ Sarah → OpenCode (Org A) ──ID-JAG──> Keycloak B (Org B) → Triage →
 | `triage-agent` | built from `./triage-agent` | `8200` | Org B mock agent (ticket → sub-badge → spawn) |
 | `sub-agent` | built from `./sub-agent` | `8300` | Org B bounded-privilege mock agent (push + PR) |
 | `webapp` | built from `./webapp` | `8090` | Animated sequence-diagram demo UI |
+
+## Sequence flow
+
+Every hop below actually happens against the real services in this stack
+(Keycloak, Vault, identity-node, dir-apiserver, Gitea) — the only mocked
+steps are the CVE scan itself and the two OPA policy checkpoints, called out
+explicitly in the diagram. This is the same flow the webapp's UI animates
+step by step.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Sarah
+    participant OC as OpenCode (Org A)
+    participant KCA as Keycloak A
+    participant Dir as AGNTCY Directory
+    participant IdNode as Identity Node
+    participant Vault
+    participant IDJAG as ID-JAG Issuer
+    participant KCB as Keycloak B
+    participant Triage as Triage (Org B)
+    participant Sub as Sub-Agent (Org B)
+    participant GW as Gitea Gateway
+    participant Gitea
+
+    Sarah->>OC: "Fix the CVE in the Org B repo"
+    OC->>KCA: OIDC password grant
+    KCA-->>OC: access token
+    Note over OC: mock CVE scan → HIGH severity (mocked)
+
+    OC->>Dir: push turn record (OASF)
+    Dir-->>OC: CID
+    OC->>Dir: search "triage-agent"
+    Dir-->>OC: agent record
+
+    OC->>Vault: sign proof JWT (transit/sign)
+    Vault-->>OC: RS256 signature — private key never leaves Vault
+    OC->>IdNode: generate id (proof JWT)
+    IdNode-->>OC: id = AGNTCY-triage-agent
+    OC->>IdNode: resolve id
+    IdNode-->>OC: ResolverMetadata + public key
+
+    Note over OC,KCA: RFC 8693 token exchange (mocked)
+    OC->>IDJAG: mint ID-JAG assertion (sub=Sarah, aud=Org B, scope=triage:create)
+    IDJAG-->>OC: signed assertion (RS256)
+    OC->>KCB: jwt-bearer grant
+    KCB-->>OC: scoped access token
+
+    OC->>Triage: POST /api/ticket
+    Note over Triage: OPA ingress + plan (mocked)
+    Triage->>IDJAG: mint narrowed sub-badge (gitea:write, gitea:pr only)
+    IDJAG-->>Triage: sub-badge (act_chain: Sarah→OpenCode→Triage→Sub-Agent)
+    Triage->>Sub: spawn with sub-badge
+
+    Sub->>KCB: jwt-bearer exchange
+    KCB-->>Sub: scoped token (gitea:write, gitea:pr)
+    Sub->>GW: push fix file
+    GW->>Gitea: create branch + commit
+    Gitea-->>GW: ok
+    GW-->>Sub: branch created
+    Sub->>GW: open PR
+    GW->>Gitea: create PR
+    Gitea-->>GW: ok
+    GW-->>Sub: PR created ✓
+
+    Sub->>GW: open PR on demo-protected (same token, same scope)
+    GW--xSub: 403 policy_deny — refused regardless of scope
+
+    Note over Sub,Triage: OPA egress (mocked)
+    Sub-->>Triage: PR link + denied-attempt result
+    Triage-->>OC: ticket complete
+    OC-->>Sarah: PR ready — full act-chain audit trail
+```
 
 ## Quick start
 
