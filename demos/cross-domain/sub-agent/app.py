@@ -94,7 +94,7 @@ async def run(body: RunRequest):
             })
             if r.status_code == 200:
                 access_token = r.json()["access_token"]
-                s.update(status="ok", token_preview=access_token[:48] + "…")
+                s.update(status="ok", token_preview=access_token[:48] + "…", token=access_token)
             else:
                 s.update(status="error", error=f"HTTP {r.status_code}: {r.text[:300]}")
                 steps.append(s)
