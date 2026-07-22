@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Copyright 2026 AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
 # Registers cross-domain scopes in Org A (org-a realm).
 # OpenCode requests triage:create when minting the ID-JAG assertion for Org B.
 set -euo pipefail

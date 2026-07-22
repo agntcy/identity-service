@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Copyright 2026 AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
 # Registers scopes in Org B (org-b realm):
 #   triage:create — create tickets (triage-agent receives from Org A)
 #   gitea:read    — narrow read scope for Gitea

@@ -1,4 +1,7 @@
 #!/bin/sh
+# Copyright 2026 AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
 # Bootstraps Gitea for the cross-domain remediation demo.
 # Seeds the admin user and the target repositories.
 set -eu

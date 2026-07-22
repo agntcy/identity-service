@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# Copyright 2026 AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
 # assisted-by claude code claude-sonnet-4-6
 """identity-node-init — bootstrap a Vault-backed local trust authority for org-a.
 

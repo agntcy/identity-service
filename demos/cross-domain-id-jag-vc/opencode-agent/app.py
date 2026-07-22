@@ -1,3 +1,6 @@
+# Copyright 2026 AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
 """OpenCode Agent (mock) — Org A AI coding agent.
 
 Drives Phase A + Discovery + Phase B of the cross-domain remediation sequence:
