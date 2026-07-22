@@ -5,18 +5,23 @@ The Receiving App presents the access token it obtained from Keycloak's ID-JAG
 
   1. verifies the token (RS256 signature via Keycloak JWKS, issuer, expiry),
   2. enforces the required *narrow* scope for the operation
-     (``gitea:read`` to list, ``gitea:write`` to create),
-  3. only then proxies to Gitea, using a server-side admin credential the
+     (``gitea:read`` to list, ``gitea:write`` to create/push, ``gitea:pr`` to
+     open pull requests),
+  3. enforces a policy-level deny-list (GITEA_DENY_LIST) that blocks PR
+     creation against certain repos regardless of scope — policy beats token,
+  4. only then proxies to Gitea, using a server-side admin credential the
      caller never sees.
 
 This is the "the token actually grants access to something" moment: a
 read-only token can list repositories but is refused (HTTP 403) when it tries
-to create one.
+to create one; a token with full scopes is still refused for deny-listed repos.
 """
 
 from __future__ import annotations
 
+import base64
 import os
+import secrets
 
 import httpx
 import jwt as pyjwt
@@ -34,6 +39,12 @@ GITEA_ADMIN_PASSWORD = os.environ.get("GITEA_ADMIN_PASSWORD", "")
 
 READ_SCOPE = os.environ.get("GITEA_READ_SCOPE", "gitea:read")
 WRITE_SCOPE = os.environ.get("GITEA_WRITE_SCOPE", "gitea:write")
+PR_SCOPE = os.environ.get("GITEA_PR_SCOPE", "gitea:pr")
+
+# Repos the gateway denies PR creation for regardless of token scope.
+DENY_LIST: frozenset[str] = frozenset(
+    r.strip() for r in os.environ.get("GITEA_DENY_LIST", "demo-protected").split(",") if r.strip()
+)
 
 app = FastAPI(title="CNCF Demo — Gitea Gateway", version="0.1.0")
 
@@ -93,6 +104,20 @@ class CreateRepo(BaseModel):
     private: bool = False
 
 
+class OpenPR(BaseModel):
+    head: str = "agent/feature-1"
+    base: str = "main"
+    title: str = "feat: agent-initiated changes via ID-JAG"
+
+
+_AGENT_FILE_CONTENT = base64.b64encode(
+    b"# Agent Work\n\nThis file was pushed by an AI coding agent using a "
+    b"narrowly-scoped ID-JAG access token.\n\n"
+    b"- Token scope: `gitea:write` (push only, no PR rights)\n"
+    b"- Delegated by: the authenticated user via Cross-App Access\n"
+).decode()
+
+
 @app.get("/healthz")
 def healthz():
     return {"status": "ok"}
@@ -140,4 +165,66 @@ async def create_repo(body: CreateRepo, claims: dict = Depends(require_token)):
         "subject": claims.get("sub"),
         "scope": sorted(_scopes(claims)),
         "created": {"full_name": item.get("full_name"), "html_url": item.get("html_url")},
+    }
+
+
+@app.post("/api/gitea/push/{owner}/{repo}")
+async def push_file(owner: str, repo: str, claims: dict = Depends(require_token)):
+    """Push AGENTS.md to a new feature branch. Requires ``gitea:write`` scope."""
+    require_scope(claims, WRITE_SCOPE)
+    # Randomized per push so repeat demo runs never collide with an existing branch.
+    branch = f"agent/feature-{secrets.token_hex(3)}"
+    async with httpx.AsyncClient(timeout=15) as client:
+        r = await client.post(
+            f"{GITEA_URL}/api/v1/repos/{owner}/{repo}/contents/AGENTS.md",
+            json={
+                "message": "feat: agent pushes AGENTS.md via ID-JAG scoped token",
+                "content": _AGENT_FILE_CONTENT,
+                "branch": "main",
+                "new_branch": branch,
+            },
+            auth=_gitea_auth(),
+        )
+    if r.status_code not in (200, 201):
+        raise HTTPException(status_code=502, detail=f"gitea error: {r.text[:200]}")
+    return {
+        "subject": claims.get("sub"),
+        "scope": sorted(_scopes(claims)),
+        "pushed": {"branch": branch, "file": "AGENTS.md", "repo": f"{owner}/{repo}"},
+    }
+
+
+@app.post("/api/gitea/pulls/{owner}/{repo}")
+async def open_pr(owner: str, repo: str, body: OpenPR, claims: dict = Depends(require_token)):
+    """Open a pull request. Requires ``gitea:pr`` scope; deny-listed repos are always blocked."""
+    require_scope(claims, PR_SCOPE)
+    # Policy layer: deny-list blocks PRs to protected repos regardless of scope.
+    if repo in DENY_LIST:
+        raise HTTPException(
+            status_code=403,
+            detail={
+                "error": "policy_deny",
+                "repo": repo,
+                "reason": f"repo '{repo}' is deny-listed — policy blocks PR creation regardless of token scope",
+            },
+        )
+    async with httpx.AsyncClient(timeout=15) as client:
+        r = await client.post(
+            f"{GITEA_URL}/api/v1/repos/{owner}/{repo}/pulls",
+            json={"title": body.title, "head": body.head, "base": body.base},
+            auth=_gitea_auth(),
+        )
+    if r.status_code not in (200, 201):
+        raise HTTPException(status_code=502, detail=f"gitea error: {r.text[:200]}")
+    item = r.json()
+    return {
+        "subject": claims.get("sub"),
+        "scope": sorted(_scopes(claims)),
+        "pull_request": {
+            "number": item.get("number"),
+            "title": item.get("title"),
+            "html_url": item.get("html_url"),
+            "head": body.head,
+            "base": body.base,
+        },
     }

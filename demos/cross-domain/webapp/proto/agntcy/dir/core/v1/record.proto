@@ -1,0 +1,17 @@
+syntax = "proto3";
+package agntcy.dir.core.v1;
+option go_package = "github.com/agntcy/dir/api/core/v1";
+import "google/protobuf/struct.proto";
+
+message Record {
+  google.protobuf.Struct data = 1;
+}
+
+message RecordRef {
+  string cid = 1;
+}
+
+message RecordMeta {
+  string cid = 1;
+  google.protobuf.Struct annotations = 2;
+}

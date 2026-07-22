@@ -1,0 +1,74 @@
+{
+  "realm": "org-b",
+  "enabled": true,
+  "registrationAllowed": false,
+  "resetPasswordAllowed": false,
+  "sslRequired": "external",
+  "identityProviders": [
+    {
+      "alias": "id-jag",
+      "displayName": "ID-JAG Issuer (AGNTCY)",
+      "providerId": "keycloak-oidc",
+      "enabled": true,
+      "trustEmail": true,
+      "storeToken": false,
+      "addReadTokenRoleOnCreate": false,
+      "config": {
+        "issuer": "http://idjag-issuer:9000",
+        "authorizationUrl": "http://idjag-issuer:9000/auth",
+        "tokenUrl": "http://idjag-issuer:9000/token",
+        "jwksUrl": "http://idjag-issuer:9000/jwks",
+        "useJwksUrl": "true",
+        "clientId": "idjag-receiver",
+        "clientSecret": "demo-idjag-secret-change-me",
+        "jwtAuthorizationGrantEnabled": "true",
+        "jwtAuthorizationGrantAssertionReuseAllowed": "false",
+        "jwtAuthorizationGrantMaxAllowedAssertionExpiration": "300"
+      }
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "triage-agent",
+      "name": "Triage Agent (Org B receiver)",
+      "description": "Org B remediation agent. Receives cross-domain ID-JAG assertions from OpenCode (Org A) and issues downscoped access tokens.",
+      "enabled": true,
+      "publicClient": false,
+      "secret": "demo-triage-secret-change-me",
+      "serviceAccountsEnabled": true,
+      "consentRequired": false,
+      "attributes": {
+        "oauth2.jwt.authorization.grant.enabled": "true",
+        "oauth2.jwt.authorization.grant.idp": "id-jag"
+      }
+    },
+    {
+      "clientId": "sub-agent",
+      "name": "Sub-Agent (Org B, bounded privilege)",
+      "description": "Sub-agent spawned by Triage with narrowed badge (caps ⊆ parent, nested act-chain). Redeems sub-badge for a token scoped only to Gitea.",
+      "enabled": true,
+      "publicClient": false,
+      "secret": "demo-subagent-secret-change-me",
+      "serviceAccountsEnabled": true,
+      "consentRequired": false,
+      "attributes": {
+        "oauth2.jwt.authorization.grant.enabled": "true",
+        "oauth2.jwt.authorization.grant.idp": "id-jag"
+      }
+    }
+  ],
+  "users": [
+    {
+      "username": "sarah",
+      "email": "sarah@org-a.example",
+      "firstName": "Sarah",
+      "lastName": "Org-A (federated)",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [],
+      "federatedIdentities": [
+        { "identityProvider": "id-jag", "userId": "sarah@org-a.example", "userName": "sarah" }
+      ]
+    }
+  ]
+}

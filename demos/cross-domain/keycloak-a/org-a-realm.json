@@ -1,0 +1,65 @@
+{
+  "realm": "org-a",
+  "enabled": true,
+  "registrationAllowed": false,
+  "resetPasswordAllowed": false,
+  "sslRequired": "external",
+  "identityProviders": [
+    {
+      "alias": "id-jag",
+      "displayName": "ID-JAG Issuer (AGNTCY)",
+      "providerId": "keycloak-oidc",
+      "enabled": true,
+      "trustEmail": true,
+      "storeToken": false,
+      "addReadTokenRoleOnCreate": false,
+      "config": {
+        "issuer": "http://idjag-issuer:9000",
+        "authorizationUrl": "http://idjag-issuer:9000/auth",
+        "tokenUrl": "http://idjag-issuer:9000/token",
+        "jwksUrl": "http://idjag-issuer:9000/jwks",
+        "useJwksUrl": "true",
+        "clientId": "idjag-receiver",
+        "clientSecret": "demo-idjag-secret-change-me",
+        "jwtAuthorizationGrantEnabled": "true",
+        "jwtAuthorizationGrantAssertionReuseAllowed": "false",
+        "jwtAuthorizationGrantMaxAllowedAssertionExpiration": "300"
+      }
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "opencode-agent",
+      "name": "OpenCode Agent (Org A)",
+      "description": "Org A AI coding agent. Authenticates Sarah, initiates cross-domain remediation via ID-JAG.",
+      "enabled": true,
+      "publicClient": false,
+      "secret": "demo-opencode-secret-change-me",
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": true,
+      "redirectUris": ["*"],
+      "webOrigins": ["+"],
+      "attributes": {
+        "standard.token.exchange.enabled": "true",
+        "post.logout.redirect.uris": "+"
+      }
+    }
+  ],
+  "users": [
+    {
+      "username": "sarah",
+      "email": "sarah@org-a.example",
+      "firstName": "Sarah",
+      "lastName": "Org-A",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        { "type": "password", "value": "demo-sarah-password-change-me", "temporary": false }
+      ],
+      "federatedIdentities": [
+        { "identityProvider": "id-jag", "userId": "sarah@org-a.example", "userName": "sarah" }
+      ]
+    }
+  ]
+}

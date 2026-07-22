@@ -1,0 +1,9 @@
+syntax = "proto3";
+package agntcy.dir.store.v1;
+option go_package = "github.com/agntcy/dir/api/store/v1";
+
+import "agntcy/dir/core/v1/record.proto";
+
+service StoreService {
+  rpc Push(stream agntcy.dir.core.v1.Record) returns (stream agntcy.dir.core.v1.RecordRef);
+}
