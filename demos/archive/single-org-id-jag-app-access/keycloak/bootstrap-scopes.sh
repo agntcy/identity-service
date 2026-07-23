@@ -17,7 +17,7 @@ CLIENT_ID="${RECEIVER_CLIENT:-receiving-app}"
 KCADM=/opt/keycloak/bin/kcadm.sh
 
 echo "[kc-init] waiting for Keycloak at ${KC} ..."
-for i in $(seq 1 60); do
+for _ in $(seq 1 60); do
   if "$KCADM" config credentials --server "$KC" --realm master \
        --user "$ADMIN" --password "$ADMIN_PW" >/dev/null 2>&1; then
     echo "[kc-init] authenticated to Keycloak admin"

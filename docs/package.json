@@ -30,7 +30,9 @@
     "prism-react-renderer": "^2.3.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "webpack": "^5.98.0"
+    "shell-quote": "^1.8.4",
+    "webpack": "^5.98.0",
+    "websocket-driver": "^0.7.5"
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "3.7.0",
@@ -53,5 +55,9 @@
   },
   "engines": {
     "node": ">=18.0"
+  },
+  "resolutions": {
+    "shell-quote": "^1.8.4",
+    "websocket-driver": "^0.7.5"
   }
 }
