@@ -1,3 +1,6 @@
+# Copyright 2026 AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
 """Unit tests for the CNCF demo web app.
 
 The three-hop /api/run orchestration is exercised with respx, mocking the

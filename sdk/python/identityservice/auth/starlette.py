@@ -127,14 +127,14 @@ class IdentityServiceA2AMiddleware(IdentityServiceMiddleware):
         # Process the Security Requirements Object to make sure
         # that the IdentityServiceAuthScheme is used
         for sec_scheme in security_schemes.values():
-            if isinstance(sec_scheme.root, HTTPAuthSecurityScheme):
-                if sec_scheme.root.scheme != "bearer":
+            if isinstance(sec_scheme.root, HTTPAuthSecurityScheme):  # type: ignore[attr-defined]
+                if sec_scheme.root.scheme != "bearer":  # type: ignore[attr-defined]
                     raise ValueError(
                         "IdentityServiceMiddleware requires a bearer token scheme."
                     )
-                bearer_format = sec_scheme.root.bearer_format
-                if hasattr(sec_scheme.root, "bearerFormat"):
-                    bearer_format = sec_scheme.root.bearerFormat
+                bearer_format = sec_scheme.root.bearer_format  # type: ignore[attr-defined]
+                if hasattr(sec_scheme.root, "bearerFormat"):  # type: ignore[attr-defined]
+                    bearer_format = sec_scheme.root.bearerFormat  # type: ignore[attr-defined]
 
                 if bearer_format != "JWT":
                     raise ValueError(

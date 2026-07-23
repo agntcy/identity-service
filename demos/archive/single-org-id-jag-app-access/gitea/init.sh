@@ -1,4 +1,7 @@
 #!/bin/sh
+# Copyright 2026 AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
 # Bootstraps Gitea for the ID-JAG narrow-scoping demo:
 #   1. creates an admin user (idempotent),
 #   2. seeds a couple of demo repositories the Receiving App can read/write.

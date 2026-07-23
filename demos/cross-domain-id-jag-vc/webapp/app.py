@@ -23,7 +23,7 @@ import os
 from typing import Any
 
 import httpx
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
@@ -631,7 +631,7 @@ async def run_all(body: RunBody) -> JSONResponse:
         steps.append(login_step)
         if login_step["status"] != "ok":
             return JSONResponse({"ok": False, "steps": steps})
-        sarah_token: str = login_step["result"]["token_preview"]  # preview only in result
+        login_step["result"]["token_preview"]  # preview only in result
         # Re-fetch full token (re-run login for the actual token value)
         try:
             r = await client.post(
@@ -646,7 +646,7 @@ async def run_all(body: RunBody) -> JSONResponse:
                 },
                 headers={"Content-Type": "application/x-www-form-urlencoded"},
             )
-            sarah_token = r.json()["access_token"]
+            r.json()["access_token"]
         except Exception:  # noqa: BLE001
             pass
 

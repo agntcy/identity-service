@@ -1,3 +1,6 @@
+# Copyright 2026 AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
 """Unit tests for the Gitea gateway.
 
 These focus on the security contract the demo depends on: the token is verified

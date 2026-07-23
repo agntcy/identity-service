@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Copyright 2026 AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
 # Registers the narrow "gitea:read" / "gitea:write" client scopes in the
 # cncf-demo realm and assigns them as OPTIONAL scopes to the Receiving App.
 #

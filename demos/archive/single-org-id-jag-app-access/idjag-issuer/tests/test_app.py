@@ -1,3 +1,6 @@
+# Copyright 2026 AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
 """Unit tests for the CNCF demo ID-JAG issuer.
 
 Covers the JWKS/discovery endpoints and the /mint assertion contract that

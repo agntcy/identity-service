@@ -1,3 +1,6 @@
+# Copyright 2026 AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
 """CNCF demo web app — drives the ID-JAG (Cross-App Access) sequence.
 
 Cross-App Access lets the **Requesting App** obtain access to the

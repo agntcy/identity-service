@@ -1,3 +1,6 @@
+# Copyright 2026 AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
 """Gitea gateway — enforces ID-JAG narrow scoping in front of Gitea.
 
 The Receiving App presents the access token it obtained from Keycloak's ID-JAG

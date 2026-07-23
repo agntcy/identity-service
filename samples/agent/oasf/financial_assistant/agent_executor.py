@@ -3,7 +3,6 @@
 """Main entry point for the AgentExecutor API server."""
 
 import logging
-import os
 from pathlib import Path
 
 from fastapi import FastAPI, Request

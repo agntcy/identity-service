@@ -1,3 +1,6 @@
+# Copyright 2026 AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
 """Minimal ID-JAG issuer for the CNCF demo.
 
 Stands in for the "central enterprise IdP" that mints Identity Assertion JWT
