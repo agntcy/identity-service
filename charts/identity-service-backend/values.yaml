@@ -54,8 +54,8 @@ externalSecrets:
 configmap:
   SERVER_HTTP_HOST: ":4003"
   SERVER_GRPC_HOST: ":4002"
-  GO_ENV: "development"
-  LOG_LEVEL: "DebugLevel"
+  GO_ENV: "production"
+  LOG_LEVEL: "InfoLevel"
   API_URL: ""
   DB_HOST: "identity-service-postgresql"
   DB_PORT: "5432"
@@ -64,7 +64,7 @@ configmap:
 
   VAULT_HOST: "0.0.0.0"
   VAULT_PORT: "8200"
-  VAULT_USE_SSL: "false"
+  VAULT_USE_SSL: "true"
 
   IDENTITY_HOST: "0.0.0.0"
   IDENTITY_PORT: "4000"
