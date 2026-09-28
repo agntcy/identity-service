@@ -29,16 +29,12 @@ from identityservice.sdk import IdentityServiceSdk as Sdk
 
 load_dotenv()
 
-identity_sdk = Sdk(
-    api_key="{YOUR_ORGANIZATION_API_KEY}"
-)
+identity_sdk = Sdk(api_key="{YOUR_ORGANIZATION_API_KEY}")
 
 try:
     print(
         "Got badge: ",
-        identity_sdk.verify_badge(
-           {JOSE_ENVELOPED_BADGE}
-        ),
+        identity_sdk.verify_badge({JOSE_ENVELOPED_BADGE}),
     )
 except Exception as e:
     print("Error verifying badge: ", e)

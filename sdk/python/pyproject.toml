@@ -71,3 +71,7 @@ exclude = "^(protoc_gen_openapiv2)"
 [[tool.mypy.overrides]]
 module = ["google.*", "protoc_gen_openapiv2.*"]
 ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = ["agntcy.identity.service.v1alpha1.*"]
+disable_error_code = ["import-untyped"]

@@ -2,19 +2,19 @@
 # SPDX-License-Identifier: Apache-2.0
 """Contains the different functions to handle errors and exceptions."""
 
+# The generated local google package makes Pylint classify google.rpc as first party.
+# pylint: disable=wrong-import-order
+
 import json
-from typing import Dict
 
 import grpc
+from google.rpc import error_details_pb2  # type: ignore
+from google.rpc.status_pb2 import Status  # type: ignore
 from grpc_status import rpc_status
-
 from rich.console import Console
 from rich.emoji import Emoji
 from rich.panel import Panel
 from rich.text import Text
-
-from google.rpc.status_pb2 import Status  # type: ignore
-from google.rpc import error_details_pb2  # type: ignore
 
 from identityservice.exceptions import SdkError
 
@@ -60,7 +60,7 @@ def _get_grpc_status(rpc_error: grpc.RpcError) -> str:
     return rpc_error.code().value[-1]
 
 
-def _get_grpc_response_headers(call: grpc.Call) -> Dict[str, str]:
+def _get_grpc_response_headers(call: grpc.Call) -> dict[str, str]:
     # We only care about the x-request-id
     return {
         md.key: md.value  # type: ignore
@@ -72,7 +72,7 @@ def _get_grpc_response_headers(call: grpc.Call) -> Dict[str, str]:
 def _print_error(
     msg: str | None,
     grpc_status: str | None = None,
-    metadata: Dict[str, str] | None = None,
+    metadata: dict[str, str] | None = None,
 ):
     err_console.print(f"\n{Emoji(name='x')} Command failed...\n")
     text = Text()

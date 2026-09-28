@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
 # SPDX-License-Identifier: Apache-2.0
 """Setup script for the package."""

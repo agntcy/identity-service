@@ -55,9 +55,11 @@ async def test_discover_should_return_tools_and_resources():
     mock_client.__aexit__ = AsyncMock(return_value=None)
 
     # Act
-    with _patch_streamablehttp_client(mock_client):
-        with _patch_client_session(mock_session):
-            actual = await discover(server_name, base_url)
+    with (
+        _patch_streamablehttp_client(mock_client),
+        _patch_client_session(mock_session),
+    ):
+        actual = await discover(server_name, base_url)
 
     # Assert
     result_dict = json.loads(actual)
@@ -104,9 +106,11 @@ async def test_discover_url_formatting():
 
     for input_url, expected_url in test_cases:
         # Act
-        with _patch_streamablehttp_client(mock_client):
-            with _patch_client_session(mock_session):
-                result = await discover("test-server", input_url)
+        with (
+            _patch_streamablehttp_client(mock_client),
+            _patch_client_session(mock_session),
+        ):
+            result = await discover("test-server", input_url)
 
         # Assert
         result_dict = json.loads(result)
@@ -189,9 +193,11 @@ async def test_discover_empty_tools_and_resources():
     mock_client.__aexit__ = AsyncMock(return_value=None)
 
     # Act
-    with _patch_streamablehttp_client(mock_client):
-        with _patch_client_session(mock_session):
-            result = await discover(server_name, base_url)
+    with (
+        _patch_streamablehttp_client(mock_client),
+        _patch_client_session(mock_session),
+    ):
+        result = await discover(server_name, base_url)
 
     # Assert
     result_dict = json.loads(result)

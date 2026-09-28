@@ -16,12 +16,16 @@ A2A_WELL_KNOWN_URL_V3 = "/.well-known/agent-card.json"
 logger = logging.getLogger("identityservice.badge.a2a")
 
 
+class AgentCardFetchError(RuntimeError):
+    """The agent card endpoint returned an unsuccessful response."""
+
+
 async def discover(well_known_url: str) -> str:
     """Fetch the agent card from the well-known URL asynchronously."""
     # Try V3 first, then fallback to V2
     try:
         return await _discover(well_known_url, A2A_WELL_KNOWN_URL_V3)
-    except Exception:  # pylint: disable=broad-except
+    except Exception:  # noqa: BLE001  # pylint: disable=broad-except
         logger.warning("Failed to fetch V3 agent card, falling back to V2")
 
         return await _discover(well_known_url, A2A_WELL_KNOWN_URL_V2)
@@ -38,7 +42,7 @@ async def _discover(well_known_url: str, url: str) -> str:
             response = await client.get(well_known_url)
 
             if response.status_code != 200:
-                raise Exception(
+                raise AgentCardFetchError(
                     f"Failed to get agent card with status code: {response.status_code}"
                 )
 
