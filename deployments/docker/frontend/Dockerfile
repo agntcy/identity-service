@@ -1,16 +1,14 @@
 # Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
 # SPDX-License-Identifier: Apache-2.0
 
-FROM node:22-alpine AS build
+FROM node:22-alpine@sha256:0a7108bf6c7bf5de370ffb1a3ed6be93d405b43ff159f681a8d18c0e2bc2e402 AS build
 
 # Install packages
 RUN apk upgrade --no-cache openssl && \
-  apk add --update \
-  libpng-dev \
-  build-base \
-  nodejs \
-  npm \
-  yarn
+  apk add --no-cache \
+  libpng-dev=~1.6 \
+  build-base=~0.5 \
+  yarn=~1.22
 
 # Set workdir
 WORKDIR /home/web
@@ -19,16 +17,15 @@ WORKDIR /home/web
 COPY ./frontend .
 
 # Install libs
-RUN yarn install
-RUN yarn build
+RUN yarn install && yarn build
 
-FROM alpine:3.22
+FROM alpine:3.22@sha256:5291449c3df73caf6ed85e649dec1b9e818b39a5d8c871e97afc13e9cd5e8fa8
 
 # Install packages
 RUN apk upgrade --no-cache openssl && \
-  apk add --update \
-  gettext \
-  nginx
+  apk add --no-cache \
+  gettext=~0.24 \
+  nginx=~1.28
 
 # Create a group and user
 RUN addgroup -S web && adduser -S -G web -u 999 web
@@ -50,7 +47,7 @@ RUN mkdir ./nginx/logs && \
 RUN sed -i 's|<head>|<head><script src="/config.js"></script>|g' ./dist/index.html
 
 # Set non root user
-USER web
+USER 999
 
 ENTRYPOINT ["./entrypoint.sh"]
 CMD ["/usr/sbin/nginx", "-c", "/home/web/nginx/nginx.conf", "-g", "daemon off;pid /home/web/nginx/nginx.pid;", "-p", "/home/web/nginx"]
