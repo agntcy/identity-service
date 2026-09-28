@@ -18,7 +18,7 @@ Mockery, Testify
 
 ## 📋 Prerequisites
 
-- Golang 1.24+
+- Golang 1.26+
 
 ## 🛠 Development Setup
 
