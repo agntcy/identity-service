@@ -44,6 +44,8 @@ jobs:
           VALIDATE_JSCPD: false
           VALIDATE_CHECKOV: false
           VALIDATE_GO: false
+          # Super-Linter v8.5.0 bundles Go 1.25, but backend/go.mod requires Go 1.26.
+          VALIDATE_GO_MODULES: false
           VALIDATE_ENV: false
           VALIDATE_SHELL_SHFMT: false
           VALIDATE_PYTHON_PYLINT: false
@@ -64,6 +66,20 @@ jobs:
           VALIDATE_GITHUB_ACTIONS_ZIZMOR: false
           VALIDATE_BIOME_LINT: false
           VALIDATE_BIOME_FORMAT: false
+
+  go-mod-verify:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v4.1.7
+      - uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
+        with:
+          go-version-file: backend/go.mod
+          cache-dependency-path: backend/go.sum
+      - name: Verify Go modules
+        working-directory: backend
+        run: go mod verify
 
   helm-lint:
     runs-on: ubuntu-latest
@@ -137,7 +153,7 @@ jobs:
       - name: Running MYPY
         working-directory: ./sdk/python
         run: |
-          echo "Remove unsued imports related to protoc_gen_openapiv2"
+          echo "Remove unused imports related to protoc_gen_openapiv2"
           ruff check --select F401 agntcy --fix
 
           echo "Running mypy on identityservice/"

@@ -12,6 +12,7 @@ import (
 	mcpcore "github.com/agntcy/identity-service/internal/core/badge/mcp"
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
+	"github.com/mark3labs/mcp-go/server/servertest"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -48,7 +49,7 @@ func TestDiscover(t *testing.T) {
 		clientType string
 	}{
 		"should return tools for SSE client": {
-			testServer: server.NewTestServer(mcpServer,
+			testServer: servertest.NewTestServer(mcpServer,
 				server.WithSSEContextFunc(func(ctx context.Context, r *http.Request) context.Context {
 					ctx = context.WithValue(ctx, testHeaderKey, r.Header.Get("X-Test-Header"))
 					ctx = context.WithValue(ctx, testHeaderFuncKey, r.Header.Get("X-Test-Header-Func"))
@@ -60,7 +61,7 @@ func TestDiscover(t *testing.T) {
 			clientType: mcpcore.McpClientTypeSSE,
 		},
 		"should return tools for streamable HTTP client": {
-			testServer: server.NewTestStreamableHTTPServer(mcpServer),
+			testServer: servertest.NewTestStreamableHTTPServer(mcpServer),
 			path:       "",
 			clientType: mcpcore.McpClientTypeStreamableHTTP,
 		},
