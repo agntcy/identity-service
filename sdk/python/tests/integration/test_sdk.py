@@ -108,11 +108,13 @@ class TestAccessToken:
         """Test access_token should throw grpc.RpcError."""
         token = "access_token"
 
-        with _patch_grpc_service_stub_with_error(
-            AuthServiceStub, {"Authorize": grpc.RpcError()}
+        with (
+            _patch_grpc_service_stub_with_error(
+                AuthServiceStub, {"Authorize": grpc.RpcError()}
+            ),
+            pytest.raises(grpc.RpcError) as ext_info,
         ):
-            with pytest.raises(grpc.RpcError) as ext_info:
-                sdk_with_mock_client.access_token(token)
+            sdk_with_mock_client.access_token(token)
 
         assert isinstance(ext_info.value, grpc.RpcError)
 
@@ -141,16 +143,18 @@ class TestIssueBadge:
         """Test issue_badge should succeed."""
         url = "http://some_url"
 
-        with _patch_http_client(mock_a2a_client):
-            with _patch_grpc_service_stub(
+        with (
+            _patch_http_client(mock_a2a_client),
+            _patch_grpc_service_stub(
                 AuthServiceStub,
                 {
                     "AppInfo": AppInfoResponse(
                         app=App(type=AppType.APP_TYPE_AGENT_A2A)
                     ),
                 },
-            ):
-                badge = sdk_with_mock_client.issue_badge(url)
+            ),
+        ):
+            badge = sdk_with_mock_client.issue_badge(url)
 
         assert badge is not None
 
@@ -158,11 +162,13 @@ class TestIssueBadge:
         """Test issue_badge should throw grpc.RpcError."""
         url = "http://some_url"
 
-        with _patch_grpc_service_stub_with_error(
-            AuthServiceStub, {"AppInfo": grpc.RpcError()}
+        with (
+            _patch_grpc_service_stub_with_error(
+                AuthServiceStub, {"AppInfo": grpc.RpcError()}
+            ),
+            pytest.raises(grpc.RpcError) as ext_info,
         ):
-            with pytest.raises(grpc.RpcError) as ext_info:
-                sdk_with_mock_client.issue_badge(url)
+            sdk_with_mock_client.issue_badge(url)
 
         assert isinstance(ext_info.value, grpc.RpcError)
 

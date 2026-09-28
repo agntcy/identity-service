@@ -5,7 +5,10 @@
 
 import logging
 
-from a2a.types import AgentCard, HTTPAuthSecurityScheme  # pylint: disable=import-error,no-name-in-module
+from a2a.types import (  # pylint: disable=import-error,no-name-in-module
+    AgentCard,
+    HTTPAuthSecurityScheme,
+)
 from starlette.applications import Starlette
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
@@ -47,7 +50,7 @@ class IdentityServiceMiddleware(BaseHTTPMiddleware):
         # Get access token from the request
         try:
             access_token = self._parse_access_token(request)
-        except Exception as _:
+        except ValueError:
             return self._unauthorized(
                 "Missing or malformed Authorization header.", request
             )
@@ -55,7 +58,7 @@ class IdentityServiceMiddleware(BaseHTTPMiddleware):
         try:
             # Authorize the access token
             self.sdk.authorize(access_token=access_token)
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 - SDK transport errors become 403 responses.
             return self._forbidden(f"Authentication failed: {e}", request)
 
         return await call_next(request)
@@ -127,14 +130,23 @@ class IdentityServiceA2AMiddleware(IdentityServiceMiddleware):
         # Process the Security Requirements Object to make sure
         # that the IdentityServiceAuthScheme is used
         for sec_scheme in security_schemes.values():
-            if isinstance(sec_scheme.root, HTTPAuthSecurityScheme):
-                if sec_scheme.root.scheme != "bearer":
+            # a2a-sdk 0.x wraps the scheme in `root`; 1.x uses protobuf oneofs.
+            http_scheme = getattr(sec_scheme, "root", None)
+            if (
+                http_scheme is None
+                and hasattr(sec_scheme, "HasField")
+                and sec_scheme.HasField("http_auth_security_scheme")
+            ):
+                http_scheme = sec_scheme.http_auth_security_scheme
+
+            if isinstance(http_scheme, HTTPAuthSecurityScheme):
+                if http_scheme.scheme != "bearer":
                     raise ValueError(
                         "IdentityServiceMiddleware requires a bearer token scheme."
                     )
-                bearer_format = sec_scheme.root.bearer_format
-                if hasattr(sec_scheme.root, "bearerFormat"):
-                    bearer_format = sec_scheme.root.bearerFormat
+                bearer_format = http_scheme.bearer_format
+                if hasattr(http_scheme, "bearerFormat"):
+                    bearer_format = http_scheme.bearerFormat
 
                 if bearer_format != "JWT":
                     raise ValueError(
@@ -169,7 +181,7 @@ class IdentityServiceMCPMiddleware(IdentityServiceMiddleware):
             if tool_name is None:
                 # If the tool name is not found, allow the request to pass through
                 return await call_next(request)
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 - malformed MCP requests become 403 responses.
             return self._forbidden(f"Authentication failed: {e}", request)
 
         logger.debug(
@@ -180,7 +192,7 @@ class IdentityServiceMCPMiddleware(IdentityServiceMiddleware):
         # Get access token from the request
         try:
             access_token = self._parse_access_token(request)
-        except Exception as _:
+        except ValueError:
             return self._unauthorized(
                 "Missing or malformed Authorization header.", request
             )
@@ -188,7 +200,7 @@ class IdentityServiceMCPMiddleware(IdentityServiceMiddleware):
         try:
             # Authorize the access token for the specific tool
             self.sdk.authorize(access_token=access_token, tool_name=tool_name)
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 - SDK transport errors become 403 responses.
             return self._forbidden(f"Authentication failed: {e}", request)
 
         return await call_next(request)

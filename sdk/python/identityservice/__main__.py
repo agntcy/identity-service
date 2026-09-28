@@ -3,9 +3,10 @@
 """Main cli for the Identity Service Python SDK."""
 
 import dataclasses
+from typing import Annotated
+
 import grpc
 import typer
-from typing_extensions import Annotated
 
 from identityservice import cli
 from identityservice.error import (
@@ -48,7 +49,7 @@ if __name__ == "__main__":
         cli.app()
     except Exception as e:  # pylint: disable=broad-exception-caught
         if state.debug:
-            raise e
+            raise
         if isinstance(e, grpc.RpcError):
             handle_grpc_error(e)
         elif isinstance(e, SdkError):

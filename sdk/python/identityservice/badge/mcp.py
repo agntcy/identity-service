@@ -4,7 +4,6 @@
 """MCP Discover for the Identity Service Python SDK."""
 
 import json
-from typing import Dict, List
 
 from httpx import HTTPError
 from mcp import ClientSession
@@ -42,8 +41,8 @@ class McpServer:
         self,
         name: str,
         url: str,
-        tools: List[McpTool],
-        resources: List[McpResource],
+        tools: list[McpTool],
+        resources: list[McpResource],
     ):
         """Initialize a McpServer instance."""
         self.name = name
@@ -66,34 +65,35 @@ async def discover(name: str, url: str) -> str:
             url = url.rstrip("/") + MCP_SUFFIX
 
         # Connect to a streamable HTTP server
-        async with streamablehttp_client(f"{url}") as (
-            read_stream,
-            write_stream,
-            _,
+        async with (
+            streamablehttp_client(f"{url}") as (
+                read_stream,
+                write_stream,
+                _,
+            ),
+            ClientSession(read_stream, write_stream) as session,  # pylint: disable=used-before-assignment
         ):
-            # Create a session using the client streams
-            async with ClientSession(read_stream, write_stream) as session:
-                # Initialize the connection
-                await session.initialize()
+            # Initialize the connection
+            await session.initialize()
 
-                available_tools = await _discover_tools(session)
+            available_tools = await _discover_tools(session)
 
-                available_resources = await _discover_resources(session)
+            available_resources = await _discover_resources(session)
 
-                # Return the discovered MCP server
-                return McpServer(
-                    name=name,
-                    url=url,
-                    tools=available_tools,
-                    resources=available_resources,
-                ).to_json()
+            # Return the discovered MCP server
+            return McpServer(
+                name=name,
+                url=url,
+                tools=available_tools,
+                resources=available_resources,
+            ).to_json()
 
     except Exception as e:
         if isinstance(e, ExceptionGroup):
             eg: ExceptionGroup = e
             metadata = _get_http_error_metadata(eg.exceptions[0])
             raise SdkError(
-                f"MCP client: {str(eg.exceptions[0])}",
+                f"MCP client: {eg.exceptions[0]!s}",
                 metadata=metadata,
                 inner_exception=eg,
             ) from e
@@ -138,7 +138,7 @@ async def _discover_resources(session: ClientSession):
     return available_resources
 
 
-def _get_http_error_metadata(err: Exception) -> Dict[str, str]:
+def _get_http_error_metadata(err: Exception) -> dict[str, str]:
     if not isinstance(err, HTTPError):
         return {}
 

@@ -3,9 +3,10 @@
 # SPDX-License-Identifier: Apache-2.0
 """Badge services for the Identity Service Python SDK."""
 
+from typing import Annotated
+
 import typer
 from rich import print
-from typing_extensions import Annotated
 
 from agntcy.identity.service.v1alpha1.app_pb2 import AppType
 from identityservice.sdk import IdentityServiceSdk as Sdk

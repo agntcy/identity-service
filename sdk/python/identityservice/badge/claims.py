@@ -6,9 +6,7 @@ import base64
 import logging
 
 from agntcy.identity.service.v1alpha1.app_pb2 import AppType
-from identityservice.badge import a2a
-from identityservice.badge import mcp
-from identityservice.badge import oasf
+from identityservice.badge import a2a, mcp, oasf
 from identityservice.exceptions import SdkError
 
 logger = logging.getLogger(__name__)

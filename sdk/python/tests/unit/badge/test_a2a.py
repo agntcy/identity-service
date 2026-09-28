@@ -170,9 +170,8 @@ async def test_discover_error():
         mock_client.__aexit__ = AsyncMock(return_value=None)
 
         # Act
-        with _patch_http_client(mock_client):
-            with pytest.raises(SdkError) as ex:
-                await discover(base_url)
+        with _patch_http_client(mock_client), pytest.raises(SdkError) as ex:
+            await discover(base_url)
 
         # Assert
         assert ex.value.inner_exception == in_err

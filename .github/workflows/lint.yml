@@ -153,9 +153,6 @@ jobs:
       - name: Running MYPY
         working-directory: ./sdk/python
         run: |
-          echo "Remove unused imports related to protoc_gen_openapiv2"
-          ruff check --select F401 agntcy --fix
-
           echo "Running mypy on identityservice/"
           mypy identityservice/
 
