@@ -1,6 +1,6 @@
 FROM golang:1.26.8-alpine3.23@sha256:a8fa79c5bd40d880b52bd3b6d7669ecdcfd00e85facdd427d279efb5ddd79cb1 AS gobin
 
-FROM python:3.13-alpine AS builder
+FROM python:3.13-alpine@sha256:79e7a9b9ff1cbceff819f856fb374477792a5967759d94df266de7b7b4120e6f AS builder
 
 ARG BIN="/usr/local/bin"
 ARG BUF_VERSION="1.28.1"
@@ -30,18 +30,18 @@ RUN curl -sSL \
     -o "${BIN}/buf" && \
     chmod +x "${BIN}/buf"
 
-RUN go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest
-RUN go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest
+RUN go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@v2.30.0
+RUN go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@v2.30.0
 RUN go install github.com/google/gnostic/cmd/protoc-gen-openapi@v0.7.0
-RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
-RUN go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
-RUN go install github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc@latest
-RUN go install github.com/bufbuild/protoschema-plugins/cmd/protoc-gen-jsonschema@latest
+RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.36.12
+RUN go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.6.2
+RUN go install github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc@v1.5.1
+RUN go install github.com/bufbuild/protoschema-plugins/cmd/protoc-gen-jsonschema@v0.6.0
 
 # Go to Protobuf
 RUN go install k8s.io/code-generator/cmd/go-to-protobuf@v0.34.3
 RUN go install k8s.io/code-generator/cmd/go-to-protobuf/protoc-gen-gogo@v0.34.3
-RUN go install golang.org/x/tools/cmd/goimports@latest
+RUN go install golang.org/x/tools/cmd/goimports@v0.49.0
 RUN go get k8s.io/apimachinery@v0.34.3
 
 # Custom tools
@@ -51,8 +51,8 @@ RUN go mod download
 RUN cd /identity/proto-enum-generator/cmd/go-enum-to-proto && go install .
 RUN cd /identity/proto-enum-generator/cmd/go-enum-patch && go install .
 
-RUN python3 -m pip install --upgrade pip
-RUN python3 -m pip install grpcio-tools mypy-protobuf
+COPY scripts/proto/docker/requirements.txt /tmp/proto-requirements.txt
+RUN python3 -m pip install --require-hashes -r /tmp/proto-requirements.txt
 
 WORKDIR /identity
 
