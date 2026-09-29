@@ -20,12 +20,16 @@ github.com/agntcy/identity v0.0.22 h1:LxjdR4Anl9Zf2cVN67tkOZ4YIoRZTWNRS8aIuKLOv0
 github.com/agntcy/identity v0.0.22/go.mod h1:Zw4UYdHXrwnkwPgqwra9YGYGoR+N4t8bL4gyL2tMuSo=
 github.com/agntcy/identity v0.0.25 h1:GLHgsYcUifXPFuycSpGXIBNAvkQdG4oIlJvXmy46LMM=
 github.com/agntcy/identity v0.0.25/go.mod h1:Xjr3gyFyH11VoSHxKh5SBgBS3MpMEUraiXTFXvjxuGY=
+github.com/agntcy/identity v0.0.26 h1:NY6gIe5n7j/gtESNmO2ykRotr17gqc6m41GNGnvoyQk=
+github.com/agntcy/identity v0.0.26/go.mod h1:Xjr3gyFyH11VoSHxKh5SBgBS3MpMEUraiXTFXvjxuGY=
 github.com/agntcy/identity/api/client v0.0.0-20250729164130-011baf2c4074 h1:OYi1EsKK/eq5JhAYHdINWceCZSpZ6N9xro58IdpFxK8=
 github.com/agntcy/identity/api/client v0.0.0-20250729164130-011baf2c4074/go.mod h1:hpLI3UidcyPaOee9xtj7h4bsxUY7eEaX9E/DLLJKvGo=
 github.com/agntcy/identity/api/client v0.0.0-20260928100534-61ebb5d8eee7 h1:wqbJVSBc69So/50gNed+5nrmyjndDUvDywanmjkm3mk=
 github.com/agntcy/identity/api/client v0.0.0-20260928100534-61ebb5d8eee7/go.mod h1:WWuxsBqlbbmnMAxqnL6a2cQz2+9Pi8S97qPOPPSPxQ0=
 github.com/agntcy/identity/api/client v0.0.0-20260928113405-36a643a53733 h1:fQPEgPfrrxFzPNyA9LF4acCqcsfzxwAuD7DVEAktTlg=
 github.com/agntcy/identity/api/client v0.0.0-20260928113405-36a643a53733/go.mod h1:WWuxsBqlbbmnMAxqnL6a2cQz2+9Pi8S97qPOPPSPxQ0=
+github.com/agntcy/identity/api/client v0.0.0-20260929120157-d974bb917327 h1:zl8+nkuf5UvMGcNo+rptzHFVH5ydOXdJ3fAiariPVlI=
+github.com/agntcy/identity/api/client v0.0.0-20260929120157-d974bb917327/go.mod h1:WWuxsBqlbbmnMAxqnL6a2cQz2+9Pi8S97qPOPPSPxQ0=
 github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 h1:DklsrG3dyBCFEj5IhUbnKptjxatkF07cF2ak3yi77so=
 github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2/go.mod h1:WaHUgvxTVq04UNunO+XhnAqY/wQc+bxr74GqbsZ/Jqw=
 github.com/avast/retry-go/v5 v5.0.0 h1:kf1Qc2UsTZ4qq8elDymqfbISvkyMuhgRxuJqX2NHP7k=

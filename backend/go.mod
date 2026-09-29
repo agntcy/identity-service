@@ -20,8 +20,8 @@ require (
 require (
 	github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.13.1
 	github.com/SherClockHolmes/webpush-go v1.4.0
-	github.com/agntcy/identity v0.0.25
-	github.com/agntcy/identity/api/client v0.0.0-20260928100534-61ebb5d8eee7
+	github.com/agntcy/identity v0.0.26
+	github.com/agntcy/identity/api/client v0.0.0-20260929120157-d974bb917327
 	github.com/avast/retry-go/v5 v5.0.0
 	github.com/aws/aws-sdk-go-v2 v1.47.0
 	github.com/aws/aws-sdk-go-v2/config v1.31.2
