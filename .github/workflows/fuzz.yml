@@ -29,4 +29,4 @@ jobs:
           cache: false
       - name: Fuzz untrusted JWTs
         working-directory: backend
-        run: go test ./internal/pkg/jwtutil -run '^$' -fuzz '^FuzzJWTVerify$' -fuzztime=30s -parallel=2
+        run: go test ./internal/pkg/jwtutil -run '^$' -fuzz '^FuzzJWTVerify$' -fuzztime=250000x -parallel=2
