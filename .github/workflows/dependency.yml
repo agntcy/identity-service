@@ -30,4 +30,5 @@ jobs:
           fail-on-severity: "high"
           deny-licenses: "AGPL-1.0, AGPL-3.0"
           comment-summary-in-pr: true
-          warn-on-openssf-scorecard-level: 3
+          # Large lockfile updates can exceed GitHub's step summary size limit.
+          show-openssf-scorecard: false
