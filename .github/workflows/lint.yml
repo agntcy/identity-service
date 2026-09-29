@@ -126,6 +126,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    env:
+      PYTHONPATH: ${{ github.workspace }}/sdk/python
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
@@ -138,8 +140,7 @@ jobs:
       - name: Install Identity SDK dependencies and lint toolings
         working-directory: ./sdk/python
         run: |
-          pip install ".[test]"
-          pip install ".[lint]"
+          python -m pip install --require-hashes -r lint-requirements.txt
 
       - name: Running RUFF linter
         working-directory: ./sdk/python

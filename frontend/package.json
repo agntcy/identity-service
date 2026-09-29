@@ -116,7 +116,7 @@
     "user-agent-data-types": "^0.4.2",
     "vite": "^6.4.2",
     "vite-plugin-svgr": "^4.3.0",
-    "vitest": "^3.2.6",
+    "vitest": "3.2.6",
     "workbox-cacheable-response": "^7.3.0",
     "workbox-core": "^7.3.0",
     "workbox-expiration": "^7.3.0",
@@ -128,7 +128,7 @@
   },
   "resolutions": {
     "qs": "^6.15.2",
-    "vitest": "^3.2.6",
+    "vitest": "3.2.6",
     "rollup": "^4.60.3",
     "minimatch": "^10.2.5",
     "flatted": "^3.4.2",

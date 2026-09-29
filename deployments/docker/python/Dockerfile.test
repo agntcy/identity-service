@@ -3,4 +3,5 @@ FROM python:3.13-alpine@sha256:79e7a9b9ff1cbceff819f856fb374477792a5967759d94df2
 WORKDIR /src
 COPY ./sdk/python ./sdk
 WORKDIR /src/sdk
-RUN pip install .[test]
+RUN pip install --no-cache-dir --require-hashes -r test-requirements.txt
+ENV PYTHONPATH=/src/sdk

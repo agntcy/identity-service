@@ -8,7 +8,7 @@ WORKDIR /build
 # Generate docs
 COPY docs .
 COPY backend/api/spec/static/api ./static/api
-RUN yarn install && npx docusaurus generate-proto-docs && yarn build
+RUN yarn install --frozen-lockfile && npx docusaurus generate-proto-docs && yarn build && yarn cache clean
 
 # Build final image for running the APIs and docs
 FROM httpd:2.4@sha256:03f858efb82c25cb0f9962946615cdcdaf26927cb971722149b563197cfd0fdd
