@@ -152,9 +152,11 @@ vi.mock('axios', () => {
 
 // Mock the Analytics
 vi.mock('@segment/analytics-next', () => ({
-  AnalyticsBrowser: vi.fn().mockImplementation(() => ({
-    track: vi.fn()
-  }))
+  AnalyticsBrowser: vi.fn().mockImplementation(function () {
+    return {
+      track: vi.fn()
+    };
+  })
 }));
 
 // Create a proper mock AccessToken that matches the required interface

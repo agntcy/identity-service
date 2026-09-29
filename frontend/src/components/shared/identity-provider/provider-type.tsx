@@ -24,7 +24,9 @@ export const ProviderType = ({type, className}: {type?: IdpType; className?: str
       {type === IdpType.IDP_TYPE_ORY && <OryLogo className="h-[22px] w-[22px]" />}
       {type === IdpType.IDP_TYPE_ENTRA_ID && <EntraLogo className="h-[20px] w-[20px]" />}
       {type === IdpType.IDP_TYPE_KEYCLOAK && <img src={KeycloakLogo} alt="Keycloak" className="h-[20px] w-[20px]" />}
-      {type === IdpType.IDP_TYPE_PING && <img src={PingLogo} alt="Ping" className="h-[22px] w-[22px]" />}
+      {type === IdpType.IDP_TYPE_PING && (
+        <img src={PingLogo} alt="Ping" data-testid="ping-logo" className="h-[22px] w-[22px]" />
+      )}
       <Typography
         variant="body1"
         fontSize={14}

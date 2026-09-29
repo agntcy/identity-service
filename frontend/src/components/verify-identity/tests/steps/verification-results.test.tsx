@@ -247,10 +247,12 @@ describe('VerificationResults', () => {
     });
 
     // Mock Blob constructor
-    global.Blob = vi.fn((content, options) => ({
-      size: content[0].length,
-      type: options?.type || 'text/plain'
-    })) as any;
+    global.Blob = vi.fn(function (content, options) {
+      return {
+        size: content[0].length,
+        type: options?.type || 'text/plain'
+      };
+    }) as any;
   });
 
   afterEach(() => {
