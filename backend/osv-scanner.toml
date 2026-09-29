@@ -1,0 +1,6 @@
+# Copyright 2025 AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+
+[[IgnoredVulns]]
+id = "GO-2026-5932"
+reason = "The advisory affects only golang.org/x/crypto/openpgp. The backend does not import that package, including through its dependencies. govulncheck reports no affected code."
