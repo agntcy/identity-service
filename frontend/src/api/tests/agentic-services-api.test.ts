@@ -189,9 +189,11 @@ vi.mock('../generated/identity/app_service.swagger.api', () => {
 
 // Mock the Analytics
 vi.mock('@segment/analytics-next', () => ({
-  AnalyticsBrowser: vi.fn().mockImplementation(() => ({
-    track: vi.fn()
-  }))
+  AnalyticsBrowser: vi.fn().mockImplementation(function () {
+    return {
+      track: vi.fn()
+    };
+  })
 }));
 
 // Mock config
@@ -273,7 +275,7 @@ describe('AgenticServicesAPIClass', () => {
       api.setAuthInfo(mockAuthInfo);
 
       expect(api['authInfo']).toEqual(mockAuthInfo);
-      expect(api['instance'].defaults.timeout).toBe(15000);
+      expect(api['instance'].defaults.timeout).toBe(120000);
       expect(api['instance'].interceptors.request.use).toHaveBeenCalled();
       expect(api['instance'].interceptors.response.use).toHaveBeenCalled();
     });

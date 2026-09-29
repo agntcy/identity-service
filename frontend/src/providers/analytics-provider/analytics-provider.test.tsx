@@ -93,8 +93,12 @@ describe('AnalyticsProvider', () => {
     };
 
     // Mock constructors
-    mockSegmentAnalytics.mockImplementation(() => mockAnalyticsInstance);
-    mockNoOpAnalytics.mockImplementation(() => mockNoOpInstance);
+    mockSegmentAnalytics.mockImplementation(function () {
+      return mockAnalyticsInstance;
+    });
+    mockNoOpAnalytics.mockImplementation(function () {
+      return mockNoOpInstance;
+    });
 
     // Default mock implementations
     mockUseAuth.mockReturnValue({

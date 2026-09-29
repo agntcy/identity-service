@@ -6,13 +6,8 @@
 import {describe, it, vi, expect, beforeEach} from 'vitest';
 import {render, screen, fireEvent} from '@testing-library/react';
 import {MemoryRouter} from 'react-router-dom';
+import {EmptyState} from '@open-ui-kit/core';
 import NotFound from '../404';
-
-// Suppress uncaught exception warnings in tests
-vi.stubGlobal('process', {
-  ...process,
-  on: vi.fn()
-});
 
 // Mock react-router-dom
 const mockNavigate = vi.fn();
@@ -220,24 +215,19 @@ describe('NotFound', () => {
 
   describe('error handling', () => {
     it('calls navigate and allows errors to propagate', () => {
-      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-
       mockNavigate.mockImplementationOnce(() => {
         throw new Error('Navigation error');
       });
 
       renderNotFound();
 
-      const actionButton = screen.getByTestId('action-button');
-
-      // Click the button - the error will be thrown but caught by React's error boundary
-      fireEvent.click(actionButton);
+      const actionCallback = vi.mocked(EmptyState).mock.calls.at(-1)?.[0].actionCallback;
+      expect(actionCallback).toBeTypeOf('function');
+      expect(() => actionCallback!()).toThrow('Navigation error');
 
       // Verify navigate was called despite the error
       expect(mockNavigate).toHaveBeenCalledTimes(1);
       expect(mockNavigate).toHaveBeenCalledWith(-1);
-
-      consoleSpy.mockRestore();
     });
 
     it('successfully navigates when no errors occur', () => {

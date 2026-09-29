@@ -38,14 +38,16 @@ vi.mock('@tanstack/react-query', async () => {
   return {
     ...actual,
     useQueryClient: vi.fn(),
-    QueryClient: vi.fn().mockImplementation(() => ({
-      invalidateQueries: vi.fn(),
-      mount: vi.fn(),
-      unmount: vi.fn(),
-      clear: vi.fn(),
-      getQueryData: vi.fn(),
-      setQueryData: vi.fn()
-    }))
+    QueryClient: vi.fn().mockImplementation(function () {
+      return {
+        invalidateQueries: vi.fn(),
+        mount: vi.fn(),
+        unmount: vi.fn(),
+        clear: vi.fn(),
+        getQueryData: vi.fn(),
+        setQueryData: vi.fn()
+      };
+    })
   };
 });
 

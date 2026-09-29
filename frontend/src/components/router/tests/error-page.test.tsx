@@ -4,7 +4,7 @@
  */
 
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-import {describe, it, vi, expect, beforeEach, afterEach} from 'vitest';
+import {describe, it, vi, expect, beforeEach, afterEach, type Mock} from 'vitest';
 import {render, screen, fireEvent} from '@testing-library/react';
 import {ErrorPage} from '../error-page';
 
@@ -45,7 +45,7 @@ vi.mock('@open-ui-kit/core', () => ({
 import {useRouteError, isRouteErrorResponse} from 'react-router-dom';
 
 describe('ErrorPage', () => {
-  let mockResetErrorBoundary: ReturnType<typeof vi.fn>;
+  let mockResetErrorBoundary: Mock<(...args: any[]) => void>;
   let mockUseRouteError: ReturnType<typeof vi.fn>;
   let mockIsRouteErrorResponse: ReturnType<typeof vi.fn>;
   let consoleSpy: ReturnType<typeof vi.spyOn>;

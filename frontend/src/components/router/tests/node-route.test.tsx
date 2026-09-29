@@ -5,7 +5,7 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-import {describe, it, vi, expect, beforeEach, afterEach} from 'vitest';
+import {describe, it, vi, expect, beforeEach, afterEach, type Mock} from 'vitest';
 import {render, screen} from '@testing-library/react';
 import {NodeRoute} from '../node-route';
 import {ErrorBoundary} from 'react-error-boundary';
@@ -46,7 +46,7 @@ describe('NodeRoute', () => {
   let mockErrorBoundary: ReturnType<typeof vi.mocked>;
   let mockLoading: ReturnType<typeof vi.mocked>;
   let mockUseAnalytics: ReturnType<typeof vi.mocked<typeof useAnalytics>>;
-  let mockAnalyticsPage: ReturnType<typeof vi.fn>;
+  let mockAnalyticsPage: Mock<(pageCategory: string, pageName: string, properties?: Record<string, any>) => void>;
   let mockErrorPageComponent: ReturnType<typeof vi.fn>;
 
   beforeEach(async () => {

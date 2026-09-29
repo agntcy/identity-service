@@ -192,7 +192,8 @@ describe('useRoutes', () => {
         const result = selectorCall(mockState);
         expect(result).toEqual({
           isEmptyIdp: true,
-          isAdmin: false
+          isAdmin: false,
+          totalAgenticServices: 0
         });
       }
     });
