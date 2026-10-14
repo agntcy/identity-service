@@ -1,0 +1,5 @@
+Initial proposal for first integration with K8s based gateways
+The envoy proxy AI gateway project has added support for fine grained - read tool based authZ for MCP servers
+https://github.com/envoyproxy/ai-gateway/issues/1459 
+We propose to leverage this to provide a PoC implementation on envoy AI gateway. Please note that Envoy proxy AI gateway is currently at release 0.5.
+Another follow-up task is to evaluate https://github.com/kubernetes-sigs/kube-agentic-networking/pull/17
